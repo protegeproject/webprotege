@@ -1,0 +1,22 @@
+<module rename-to="webprotege">
+
+    <!-- Inherit the core Google Web Toolkit stuff -->
+    <inherits name="com.google.gwt.user.User"/>
+
+    <!-- Inherit the GWT-Ext Toolkit stff -->
+    <inherits name='com.gwtext.GwtExt'/>
+    <inherits name='com.googlecode.gwt.crypto.Crypto'/>
+    <inherits name="com.google.gwt.http.HTTP"/>
+    <inherits name="com.google.gwt.junit.JUnit"/>
+    <inherits name="edu.stanford.bmir.protege.web.WebProtege"/>
+
+
+    <entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
+
+    <stylesheet src="js/ext/resources/css/ext-all.css"/>
+
+    <!-- "-Dgwt.args=-out www-test" -->
+    <script src="js/ext/adapter/ext/ext-base.js"/>
+    <script src="js/ext/ext-all.js"/>
+
+</module>
