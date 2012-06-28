@@ -1,0 +1,63 @@
+/******************************************************************
+ Styles for Classes tab
+ *****************************************************************/
+
+/* Styles for ClassTreePortlet */
+.protege-class-icon {
+    background-image: url(../images/tree/class.gif) !important;
+   /* background-image: url(../images/button-blue_benji_park_01.gif) !important;*/
+}
+
+.protege-class-create-icon {
+	background-image: url(../images/tree/class.create.gif) !important;
+}
+
+.protege-class-delete-icon {
+	background-image: url(../images/tree/class.delete.gif) !important;
+}
+
+/* Styles for NotesPortlet */
+.x-grid3-td-topic b {
+    font-family: tahoma, verdana;
+    display: block;
+}
+
+.x-grid3-td-topic b i {
+    font-weight: normal;
+    font-style: normal;
+    color: #000000;
+}
+
+.x-grid3-td-topic .x-grid3-cell-inner {
+    white-space: normal;
+}
+
+.x-grid3-td-topic a {
+    color: #385F95;
+    text-decoration: none;
+}
+
+.x-grid3-td-topic a:hover {
+    text-decoration: underline;
+}
+
+.details .x-btn-text {
+    background-image: url(images/details.gif);
+}
+
+.discussion-link {
+	color: #0000FF !important;
+	font-weight: bold;
+  	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 3px;
+}
+
+.discussion-link-inactive a {
+	color: #BBBBBB !important;
+}
+	
+.p-button {
+	font-size: 70%;
+	color: #15428B;
+}

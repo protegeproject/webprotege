@@ -1,0 +1,115 @@
+<project>
+    <tabs>
+
+        <tab>
+            <name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>
+            <label>OBO Term Text Editor</label>
+            <columns>
+                <column>
+                    <width>0.3</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
+                            <height>740</height>
+                            <width>0</width>
+                            <index>0</index>
+                        </portlet>
+                    </portlets>
+                </column>
+                <column>
+                    <width>0.7</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductPortlet</name>
+                            <height>200</height>
+                            <width>0</width>
+                            <index>3</index>
+                        </portlet>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermRelationshipPortlet</name>
+                            <height>200</height>
+                            <width>0</width>
+                            <index>2</index>
+                        </portlet>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermDefinitionPortlet</name>
+                            <height>180</height>
+                            <width>0</width>
+                            <index>1</index>
+                        </portlet>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermIdEditorPortlet</name>
+                            <height>200</height>
+                            <width>0</width>
+                            <index>0</index>
+                        </portlet>
+                    </portlets>
+                </column>
+            </columns>
+        </tab>
+
+        <tab>
+            <name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>
+            <label>OBO Term Synonyms</label>
+            <columns>
+                <column>
+                    <width>0.3</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
+                            <height>740</height>
+                            <width>0</width>
+                            <index>1</index>
+                        </portlet>
+                    </portlets>
+                </column>
+                <column>
+                    <width>0.7</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermIdEditorPortlet</name>
+                            <height>200</height>
+                            <width>0</width>
+                            <index>0</index>
+                        </portlet>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermSynonymsPortlet</name>
+                            <height>550</height>
+                            <width>0</width>
+                            <index>1</index>
+                        </portlet>
+                    </portlets>
+                </column>
+            </columns>
+        </tab>
+
+
+        <tab>
+            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTab</name>
+            <label>Notes and Discussions</label>
+            <columns>
+                <column>
+                    <width>0.33</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
+                            <height>600</height>
+                            <width>200</width>
+                        </portlet>
+                    </portlets>
+                </column>
+                <column>
+                    <width>0.66</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
+                            <height>600</height>
+                            <width>0</width>
+                        </portlet>
+                    </portlets>
+                </column>
+            </columns>
+            <controllingPortlet reference="../columns/column/portlets/portlet"/>
+        </tab>
+    </tabs>
+</project>

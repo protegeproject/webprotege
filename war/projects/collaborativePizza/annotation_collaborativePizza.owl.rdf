@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE rdf:RDF [
+	 <!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	 <!ENTITY kb 'http://protege.stanford.edu/kb#'>
+	 <!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+]>
+<rdf:RDF xmlns:rdf="&rdf;"
+	 xmlns:kb="&kb;"
+	 xmlns:rdfs="&rdfs;">
+<kb:Comment rdf:about="&kb;annotation_collaborativePizza.owl_Class0"
+	 kb:author="ttania"
+	 kb:subject="This is a comment on the DomainConcept class"
+	 rdfs:label="This is a comment on the DomainConcept class">
+	<kb:body xml:space='preserve'><![CDATA[<html>
+  <head>
+    <style type="text/css">
+      <!--
+        body { font-family: arial; font-size: 12pt }
+        p { margin-top: 2; margin-bottom: 2; font-family: arial; margin-right: 2; margin-left: 2 }
+      -->
+    </style>
+        
+  </head>
+  <body>
+    This is an <u><b>example</b></u> of a <font style="background-color: yellow" color="blue">comment</font> on a class.<br><br>You may also insert internal links to other entities in the ontology. For example, if you refer to class Pizza, you select from the &quot;Add Internal Link&quot; combo box, Class and select the class Pizza. This will generate the following link:<br><br><a href="internalLink">@'http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#Pizza'</a><br><br>If you <font style="background-color: yellow" color="blue">click on the link above</font>, a window will pop up with the details of class Pizza.</body>
+</html>]]></kb:body>
+	<kb:created rdf:resource="&kb;annotation_collaborativePizza.owl_Class1"/>
+	<kb:annotates rdf:resource="&kb;annotation_collaborativePizza.owl_Class2"/>
+	<kb:associatedAnnotations rdf:resource="&kb;annotation_collaborativePizza.owl_Class3"/>
+</kb:Comment>
+<kb:Timestamp rdf:about="&kb;annotation_collaborativePizza.owl_Class1"
+	 kb:date="10/23/2008 21:59:18 GMT-08:00"
+	 kb:sequence="0"
+	 rdfs:label="10/23/2008 21:59:18 GMT-08:00"/>
+<kb:Ontology_Individual rdf:about="&kb;annotation_collaborativePizza.owl_Class10">
+	<kb:currentName>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#America</kb:currentName>
+	<rdfs:label>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#America</rdfs:label>
+	<kb:associatedAnnotations rdf:resource="&kb;annotation_collaborativePizza.owl_Class8"/>
+</kb:Ontology_Individual>
+<kb:Status rdf:about="&kb;annotation_collaborativePizza.owl_Class10000"
+	 kb:description="Under review"
+	 rdfs:label="Under review"/>
+<kb:AnnotationStatus rdf:about="&kb;annotation_collaborativePizza.owl_Class10001"
+	 kb:description="Active"
+	 rdfs:label="Active"/>
+<kb:AnnotationStatus rdf:about="&kb;annotation_collaborativePizza.owl_Class10002"
+	 kb:description="Inactive"
+	 rdfs:label="Inactive"/>
+<kb:ChangeStatus rdf:about="&kb;annotation_collaborativePizza.owl_Class10003"
+	 kb:description="Approved"
+	 rdfs:label="Approved"/>
+<kb:ChangeStatus rdf:about="&kb;annotation_collaborativePizza.owl_Class10004"
+	 kb:description="Proposed"
+	 rdfs:label="Proposed"/>
+<kb:ChangeStatus rdf:about="&kb;annotation_collaborativePizza.owl_Class10005"
+	 kb:description="Rejected"
+	 rdfs:label="Rejected"/>
+<kb:Ontology_Class rdf:about="&kb;annotation_collaborativePizza.owl_Class2">
+	<kb:currentName>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#DomainConcept</kb:currentName>
+	<rdfs:label>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#DomainConcept</rdfs:label>
+	<kb:associatedAnnotations rdf:resource="&kb;annotation_collaborativePizza.owl_Class0"/>
+</kb:Ontology_Class>
+<kb:Explanation rdf:about="&kb;annotation_collaborativePizza.owl_Class3"
+	 kb:author="ttania"
+	 kb:subject="Re: This is a comment on the DomainConcept class"
+	 rdfs:label="Re: This is a comment on the DomainConcept class">
+	<kb:body xml:space='preserve'><![CDATA[<html>
+  <head>
+    <style type="text/css">
+      <!--
+        body { font-family: arial; font-size: 12pt }
+        p { margin-top: 2; margin-bottom: 2; font-family: arial; margin-right: 2; margin-left: 2 }
+      -->
+    </style>
+        
+  </head>
+  <body>
+    This is an explanation annotation.<br><br>The types of the annotations are defined in the <b>changes and annotation ontology</b>.<br><br><br>=== On 10/23/2008 21:59, ttania wrote:<br><br>This is an <u><b>example</b></u> of a <font style="background-color: yellow" color="blue">comment</font> on a class.<br><br>You may also insert internal links to other entities in the ontology. For example, if you refer to class Pizza, you select from the &quot;Add Internal Link&quot; combo box, Class and select the class Pizza. This will generate the following link:<br><br><a href="internalLink">@'http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#Pizza'</a><br><br>If you <font style="background-color: yellow" color="blue">click on the link above</font>, a window will pop up with the details of class Pizza.</body>
+</html>]]></kb:body>
+	<kb:annotates rdf:resource="&kb;annotation_collaborativePizza.owl_Class0"/>
+	<kb:created rdf:resource="&kb;annotation_collaborativePizza.owl_Class4"/>
+</kb:Explanation>
+<kb:Timestamp rdf:about="&kb;annotation_collaborativePizza.owl_Class4"
+	 kb:date="10/23/2008 22:02:59 GMT-08:00"
+	 kb:sequence="1"
+	 rdfs:label="10/23/2008 22:02:59 GMT-08:00"/>
+<kb:Question rdf:about="&kb;annotation_collaborativePizza.owl_Class5"
+	 kb:author="ttania"
+	 kb:subject="A question on the hasCountryOfOrigin property"
+	 rdfs:label="A question on the hasCountryOfOrigin property">
+	<kb:body xml:space='preserve'><![CDATA[<html>
+  <head>
+    <style type="text/css">
+      <!--
+        body { font-family: arial; font-size: 12pt }
+        p { margin-top: 2; margin-bottom: 2; font-family: arial; margin-right: 2; margin-left: 2 }
+      -->
+    </style>
+        
+  </head>
+  <body>
+    You may add annotations to properties, too..</body>
+</html>]]></kb:body>
+	<kb:created rdf:resource="&kb;annotation_collaborativePizza.owl_Class6"/>
+	<kb:annotates rdf:resource="&kb;annotation_collaborativePizza.owl_Class7"/>
+</kb:Question>
+<kb:Timestamp rdf:about="&kb;annotation_collaborativePizza.owl_Class6"
+	 kb:date="10/23/2008 22:04:12 GMT-08:00"
+	 kb:sequence="2"
+	 rdfs:label="10/23/2008 22:04:12 GMT-08:00"/>
+<kb:Ontology_Property rdf:about="&kb;annotation_collaborativePizza.owl_Class7">
+	<kb:currentName>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#hasCountryOfOrigin</kb:currentName>
+	<rdfs:label>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#hasCountryOfOrigin</rdfs:label>
+	<kb:associatedAnnotations rdf:resource="&kb;annotation_collaborativePizza.owl_Class5"/>
+</kb:Ontology_Property>
+<kb:SeeAlso rdf:about="&kb;annotation_collaborativePizza.owl_Class8"
+	 kb:author="ttania"
+	 kb:subject="See also the other individuals"
+	 rdfs:label="See also the other individuals">
+	<kb:body xml:space='preserve'><![CDATA[<html>
+  <head>
+    <style type="text/css">
+      <!--
+        body { font-family: arial; font-size: 12pt }
+        p { margin-top: 2; margin-bottom: 2; font-family: arial; margin-right: 2; margin-left: 2 }
+      -->
+    </style>
+        
+  </head>
+  <body>
+    For example, <br><br><a href="internalLink">@'http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#Italy'</a><br><a href="internalLink"><br></a><br><a href="internalLink"><br></a><br></body>
+</html>]]></kb:body>
+	<kb:annotates rdf:resource="&kb;annotation_collaborativePizza.owl_Class10"/>
+	<kb:created rdf:resource="&kb;annotation_collaborativePizza.owl_Class9"/>
+</kb:SeeAlso>
+<kb:Timestamp rdf:about="&kb;annotation_collaborativePizza.owl_Class9"
+	 kb:date="10/23/2008 22:05:20 GMT-08:00"
+	 kb:sequence="3"
+	 rdfs:label="10/23/2008 22:05:20 GMT-08:00"/>
+</rdf:RDF>

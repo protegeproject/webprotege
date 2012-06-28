@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.5+" codebase="http://bmir-protege-dev1.stanford.edu/webprotege" href="collabProtege_OWL.jnlp">
+	
+	<information>
+		<title>Collaborative Protege</title>
+		<vendor>Stanford Center for Biomedical Informatics Research (BMIR)</vendor>
+		<homepage href="http://protegewiki.stanford.edu/index.php/Collaborative_Protege"/>
+		<icon href="Protege64x64.jpg"/>
+		<offline-allowed/> 
+	</information>
+	
+	<resources>
+		<j2se version="1.5+" />
+		<property name="log4j.configuration" value="log4j.xml"/>
+
+		<!-- Protege JARs -->
+		<jar href="lib/protege.jar"/>
+		<jar href="lib/looks-2.1.3.jar"/>
+		
+		<!-- Collaborative Protege JARs -->
+		<jar href="lib/change-management.jar"/>		
+		<jar href="lib/chat.jar"/>
+		<jar href="lib/protege-collab.jar"/>
+		
+		<!-- Protege-OWL JAR files -->
+		<jar href="lib/antlr-2.7.5.jar"/>
+		<jar href="lib/arq.jar"/>
+		<jar href="lib/arq-extra.jar"/>
+		<jar href="lib/commons-lang-2.0.jar"/>   
+		<jar href="lib/commons-logging-1.1.1.jar"/>   
+		<jar href="lib/concurrent.jar"/>
+		<jar href="lib/edtftpj-1.5.2.jar"/>
+		<jar href="lib/icu4j_3_4.jar"/>
+		<jar href="lib/iri.jar"/>
+		<jar href="lib/jcalendar.jar"/>
+		<jar href="lib/jdom.jar"/>
+		<jar href="lib/jena.jar"/>
+		<jar href="lib/jep-2.4.0.jar"/>
+		<jar href="lib/log4j-1.2.12.jar"/>
+		<jar href="lib/orphanNodesAlg.jar"/>   
+		<jar href="lib/owlsyntax.jar"/>
+		<jar href="lib/protege-owl.jar"/>
+		<jar href="lib/stax-api-1.0.jar"/>
+		<jar href="lib/wstx-asl-3.0.0.jar"/>
+		<jar href="lib/xercesImpl.jar"/>
+		<jar href="lib/xml-apis.jar"/>
+		
+		<!-- RDF back-end & Standard Extensions JARs -->
+		<jar href="lib/rdf-backend.jar"/>
+		<jar href="lib/rdf-api.jar"/>
+		<jar href="lib/standard-extensions.jar"/>
+		
+	</resources>
+	
+	<application-desc main-class="edu.stanford.smi.protege.Application">
+		<!-- <argument>-propedu.stanford.smi.protege.server.ServerPanel.host_name=bmir-protege-dev1.stanford.edu:5200</argument> -->
+		<argument>-propui.welcomedialog.start.in.server.panel=true</argument>   
+		<argument>-propserver.client.preload.skip=true</argument>
+		<argument>-propedu.stanford.smi.protege.server.ServerPanel.user_name=Your_user_name_here</argument>
+	</application-desc> 
+	
+</jnlp> 
+

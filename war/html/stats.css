@@ -1,0 +1,10 @@
+body.stats { font: 12px Verdana, Geneva, Arial, Helvetica, sans-serif; }
+table.stats-table { border: 1px solid #99bbe8; margin: 5px;  }
+.stats-table th { font: 14px Verdana, Geneva, Arial, Helvetica, sans-serif; font-weight: bold; padding:2px; }
+.stats-table tr { font: 14px Verdana, Geneva, Arial, Helvetica, sans-serif; }
+.stats-table tr.alt-row { background-color: #ecf4fd; }
+.stats-table td { border: 1px solid #99bbe8; }
+.stats-table a { text-decoration: none; }
+.stats-table a:link { color: #327BAA; }  /* medium blue */
+.stats-table a:visited { color: #6F1488; }  /* purple */
+.stats-table a:hover { color: #DC7317;}  /* bright orange */

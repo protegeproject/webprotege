@@ -1,0 +1,159 @@
+<project>
+<tabs>
+  <tab>
+    <name>edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsTab</name>
+    <label>Pizzas</label>
+    <columns>
+      <column>
+        <width>0.30</width>
+        <portlets>
+          <portlet>
+            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
+            <height>600</height>
+            <width>0</width>
+			<properties>
+				<entry>
+					<string>topClass</string>
+					<string>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#Pizza</string>
+				</entry>
+				<entry>
+					<string>label</string>
+					<string>Pizza Hierarchy</string>
+				</entry>
+			</properties>
+          </portlet>
+        </portlets>
+      </column>
+      <column>
+        <width>0.25</width>
+        <portlets>
+          <portlet>
+            <name>edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet</name>
+            <height>600</height>
+            <width>0</width>
+          </portlet>
+        </portlets>
+      </column>
+      <column>
+        <width>0.45</width>
+        <portlets>
+          <portlet>
+            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
+            <height>340</height>
+            <width>200</width>
+          </portlet>
+          <portlet>
+            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.AllPropertiesPortlet</name>
+            <height>250</height>
+            <width>0</width>
+          </portlet>
+        </portlets>
+      </column>
+    </columns>
+  </tab>
+  <tab>
+    <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTab</name>
+    <label>Notes and Discussions</label>
+    <columns>
+      <column>      
+        <width>0.33</width>
+        <portlets>
+          <portlet>
+            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
+            <height>600</height>
+            <width>200</width>
+          </portlet>
+        </portlets>
+      </column>
+      <column>
+        <width>0.66</width>
+        <portlets>          
+          <portlet>
+            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
+            <height>600</height>
+            <width>0</width>
+          </portlet>
+        </portlets>
+      </column>
+    </columns>
+    <controllingPortlet reference="../columns/column/portlets/portlet"/>
+  </tab>	
+  <tab>
+    <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.OntologyNotesTab</name>
+    <label>Ontology Info</label>
+    <columns>
+      <column>
+        <width>0.66</width>
+        <portlets>          
+          <!-- portlet>
+            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
+            <height>600</height>
+            <width>0</width>
+          </portlet -->
+        </portlets>
+      </column>
+      <column>      
+        <width>0.33</width>
+        <portlets>
+					<portlet>
+					<name>edu.stanford.bmir.protege.web.client.ui.portlet.html.HtmlMessagePortlet</name>
+		            <height>600</height>
+		            <width>200</width>
+					<properties>
+						<entry>
+							<string>label</string>
+							<string>Twitter updates</string>
+						</entry>
+						<entry>
+							<!-- >string>load_url</string>
+							<string>../html/twitter.html</string -->
+							<string>text</string>
+							<string>
+Twitter widget to be included...
+
+&lt;script src="http://widgets.twimg.com/j/2/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+new TWTR.Widget({
+  version: 2,
+  type: 'search',
+  search: 'semtech',
+  interval: 6000,
+  title: 'What\'s going on at Semtech?',
+  subject: 'Lots!',
+  width: 250,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#8ec1da',
+      color: '#ffffff'
+    },
+    tweets: {
+      background: '#ffffff',
+      color: '#444444',
+      links: '#1985b5'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: true,
+    live: true,
+    hashtags: true,
+    timestamp: true,
+    avatars: true,
+    toptweets: true,
+    behavior: 'default'
+  }
+}).render().start();
+&lt;/script&gt;
+							</string>
+						</entry>
+					</properties>
+					</portlet>
+        </portlets>
+      </column>
+    </columns>
+    <controllingPortlet reference="../columns/column/portlets/portlet"/>
+  </tab>	
+	
+</tabs>
+</project>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+        PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+
+
+    <context-param>
+        <param-name>web-protege-data-directory</param-name>
+        <param-value>/apps/bmir.apps/web-protege-data</param-value>
+    </context-param>
+
+    <!-- Listener for initializing and disposing WebProtege -->
+    <listener>
+        <listener-class>edu.stanford.bmir.protege.web.server.LifeCycleListener</listener-class>
+    </listener>
+
+	<!-- WebProtege servlets -->
+
+    <servlet>
+        <servlet-name>DownloadServlet</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.filedownload.FileDownloadServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AdminServiceImpl</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.AdminServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>NotificationServiceImpl</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.NotificationServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>NotificationSchedulerServlet</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.NotificationSchedulerServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ChAOServiceImpl</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.owlapi.ChAOServiceOWLAPIImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>OntologyServiceImpl</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.owlapi.OntologyServiceOWLAPIImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ProjectConfigurationServiceImpl</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.ProjectConfigurationServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ICDServiceImpl</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.ICDServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AccessPolicyServiceImpl</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.AccessPolicyServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>SharingSettingsService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.SharingSettingsServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SharingSettingsService</servlet-name>
+        <url-pattern>/webprotege/sharingsettings</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>FileServerServlet</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.FileServerServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>HierarchyServiceImpl</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.HierarchyServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>chAOStatsServiceImpl</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.ChAOStatsServiceImpl</servlet-class>
+    </servlet>
+    
+     <servlet>
+        <servlet-name>bpProposals</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.bioportal.BioPortalProposalsImpl</servlet-class>
+    </servlet>
+
+	<servlet>
+		<servlet-name>OpenIdServiceImpl</servlet-name>
+		<servlet-class>edu.stanford.bmir.protege.web.server.OpenIdServiceImpl</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>OpenIdAuthenticationResServlet</servlet-name>
+		<servlet-class>edu.stanford.bmir.protege.web.server.openid.OpenIdAuthenticationResponseServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>OpenIdAuthenticationServlet</servlet-name>
+		<servlet-class>edu.stanford.bmir.protege.web.server.openid.OpenIdAuthenticationServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>AuthenticateServiceImpl</servlet-name>
+		<servlet-class>edu.stanford.bmir.protege.web.server.AuthenticateServiceImpl</servlet-class>
+	</servlet>
+
+    <servlet>
+        <servlet-name>edu.stanford.bmir.protege.web.iCat ApplicationPropertiesService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.ApplicationPropertiesServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ProjectManagerService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.ProjectManagerServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PropertyGridService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.PropertyGridServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>OBOTextEditorService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.OBOTextEditorServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EntityLookupService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.EntityLookupServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>RecaptchaService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.RecaptchaServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DownloadServlet</servlet-name>
+        <url-pattern>/download</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>RecaptchaService</servlet-name>
+        <url-pattern>/webprotege/recaptchaservice</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>NotificationServiceImpl</servlet-name>
+        <url-pattern>/webprotege/notification</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ChAOServiceImpl</servlet-name>
+        <url-pattern>/webprotege/chao</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OntologyServiceImpl</servlet-name>
+        <url-pattern>/webprotege/ontology</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ProjectConfigurationServiceImpl</servlet-name>
+        <url-pattern>/webprotege/projectconfig</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICDServiceImpl</servlet-name>
+        <url-pattern>/webprotege/icd</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>FileServerServlet</servlet-name>
+        <url-pattern>/webprotege/fileserver</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AdminServiceImpl</servlet-name>
+        <url-pattern>/webprotege/admin</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>HierarchyServiceImpl</servlet-name>
+        <url-pattern>/webprotege/hierarchy</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OpenIdServiceImpl</servlet-name>
+        <url-pattern>/webprotege/openid</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>chAOStatsServiceImpl</servlet-name>
+        <url-pattern>/webprotege/chaostats</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>bpProposals</servlet-name>
+        <url-pattern>/webprotege/bpProposals</url-pattern>
+    </servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>OpenIdAuthenticationResServlet</servlet-name>
+		<url-pattern>/openidresponse</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>OpenIdAuthenticationServlet</servlet-name>
+		<url-pattern>/openidauthservlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AuthenticateServiceImpl</servlet-name>
+		<url-pattern>/authenticate/authenticate/authen</url-pattern>
+	</servlet-mapping>
+
+    <!-- there are two mappings for the application properties service, one for normal operation, and the other for https mode -->
+    <servlet-mapping>
+        <servlet-name>edu.stanford.bmir.protege.web.iCat ApplicationPropertiesService</servlet-name>
+        <url-pattern>/webprotege/applicationProperties</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>edu.stanford.bmir.protege.web.iCat ApplicationPropertiesService</servlet-name>
+        <url-pattern>/authenticate/applicationProperties</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AccessPolicyServiceImpl</servlet-name>
+        <url-pattern>/accesspolicy</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ProjectUploadServlet</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.filesubmission.FileUploadServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ProjectUploadServlet</servlet-name>
+        <url-pattern>/webprotege/submitfile</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>ProjectManagerService</servlet-name>
+        <url-pattern>/webprotege/projectmanager</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>UserProfileManagerService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.UserProfileManagerServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UserProfileManagerService</servlet-name>
+        <url-pattern>/webprotege/userprofilemanager</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>PropertyGridService</servlet-name>
+        <url-pattern>/webprotege/propertygridservice</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OBOTextEditorService</servlet-name>
+        <url-pattern>/webprotege/obotexteditorservice</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EntityLookupService</servlet-name>
+        <url-pattern>/webprotege/entitylookupservice</url-pattern>
+    </servlet-mapping>
+
+
+
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>WebProtege.html</welcome-file>
+    </welcome-file-list>
+
+    <security-constraint>
+        <display-name>excluded</display-name>
+        <web-resource-collection>
+            <web-resource-name>No Access</web-resource-name>
+            <url-pattern>/protege.properties</url-pattern>
+        </web-resource-collection>
+        <auth-constraint/>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
+
+
+
+</web-app>

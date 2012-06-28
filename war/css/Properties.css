@@ -1,0 +1,38 @@
+/******************************************************************
+ Styles for Properties tab
+ *****************************************************************/
+
+.propertiesView-Banner {
+	background-color: #336699; /* Web safe version of Protege's "slot" color */
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 11px;
+	margin: 0 0 10px 0;
+	padding: 5px 0px 5px 5px;
+    width: 100%;
+}
+
+/* Styles for PropertyTreePortlet */
+.protege-slot-icon {
+    background-image: url(../images/tree/slot.gif) !important;
+}
+
+.protege-slot-create-icon {
+	background-image: url(../images/tree/slot.create.gif) !important;
+}
+
+.protege-slot-delete-icon {
+	background-image: url(../images/tree/slot.delete.gif) !important;
+}
+
+.protege-object-property-icon {
+    background-image: url(../images/tree/OWLObjectProperty.gif) !important;
+}
+
+.protege-datatype-property-icon {
+    background-image: url(../images/tree/OWLDatatypeProperty.gif) !important;
+}
+
+.protege-annotation-property-icon {
+    background-image: url(../images/tree/RDFProperty.gif) !important;
+}

@@ -1,0 +1,593 @@
+; Mon Feb 10 17:37:10 PST 2003
+; 
+;+ (version "1.8")
+;+ (build "Build 1031")
+
+
+(defclass %3ACLIPS_TOP_LEVEL_SLOT_CLASS
+	(is-a USER)
+	(role concrete)
+	(single-slot current_job_title
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot article_type
+		(type SYMBOL)
+		(allowed-values Advice Opinion News)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot other_information
+;+		(comment "A slot to add infomation about the person that isn't covered by the hierarchy (annotations like \"Not available Fridays\" or \"Prefers voice mail to e-mail\" or \"This reporter is never around when Superman appears\"). ")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot responsible_for
+		(type INSTANCE)
+;+		(allowed-classes Employee)
+		(create-accessor read-write))
+	(single-slot containing_section
+;+		(comment "Lists the sections this piece of content could go in. They are ordered by preferences (e.g. the first section in the list is the best one for this article). ")
+		(type INSTANCE)
+;+		(allowed-classes Section)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot number_of_pages
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot author
+;+		(comment "Usually a reporter or editor. Could be left blank if it's from one of the big 3 (UP, API, Reuters). ")
+		(type INSTANCE)
+;+		(allowed-classes Author)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot contact_person
+		(type INSTANCE)
+;+		(allowed-classes Person)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot employees
+		(type INSTANCE)
+;+		(allowed-classes Employee)
+		(create-accessor read-write))
+	(single-slot breakable
+		(type SYMBOL)
+		(allowed-values FALSE TRUE)
+		(default FALSE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot date_hired
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot urgent
+;+		(comment "Urgent content is usually news, advertisements, or opinions (editorials that comment on recent events are a principle example of the latter). If content is urgent, it will be added to the next possible newspaper. ")
+		(type SYMBOL)
+		(allowed-values FALSE TRUE)
+		(default FALSE)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot weekday
+		(type SYMBOL)
+		(allowed-values Sunday Monday Tuesday Wednesday Thursday Friday Saturday)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot prototype_billing_chart
+		(type INSTANCE)
+;+		(allowed-classes Billing_Chart)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot published_in
+		(type INSTANCE)
+;+		(allowed-classes Newspaper)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot salesperson
+		(type INSTANCE)
+;+		(allowed-classes Salesperson)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot billing_charts
+		(type INSTANCE)
+;+		(allowed-classes Billing_Chart)
+		(create-accessor read-write))
+	(multislot prototypes
+		(type INSTANCE)
+;+		(allowed-classes Prototype_Newspaper)
+		(create-accessor read-write))
+	(single-slot reading_level
+;+		(comment "We want to have a good mix in our paper-- from 3'rd grade through adult reading levels. ")
+		(type SYMBOL)
+		(allowed-values Elementary Middle_school High_school College)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot articles
+		(type INSTANCE)
+;+		(allowed-classes Article)
+		(create-accessor read-write))
+	(multislot sections
+		(type INSTANCE)
+;+		(allowed-classes Section)
+		(create-accessor read-write))
+	(single-slot purchaser
+		(type INSTANCE)
+;+		(allowed-classes Person)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot headline
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot page_number
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot issues
+		(type INSTANCE)
+;+		(allowed-classes Newspaper)
+		(create-accessor read-write))
+	(single-slot quality
+		(type SYMBOL)
+		(allowed-values good ok poor)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot text
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot height
+;+		(comment "In \"points\" (the publishing industry's unit of measurement)")
+		(type FLOAT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot advertisements
+		(type INSTANCE)
+;+		(allowed-classes Advertisement)
+		(create-accessor read-write))
+	(multislot employee_relationships
+		(type INSTANCE)
+;+		(allowed-classes Manager+Supervision+Relation)
+		(create-accessor read-write))
+	(single-slot supervision_type
+		(type SYMBOL)
+		(allowed-values administrative editorial)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot name_
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot image
+;+		(comment "pointer to the file containing the fully laid out ad. ")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot sub_rectangles
+;+		(comment "If the content_layout is breakable, then it breaks into these rectangles. ")
+		(type INSTANCE)
+;+		(allowed-classes Rectangle)
+		(create-accessor read-write))
+	(single-slot salary
+		(type FLOAT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot date
+;+		(comment "When the paper was published")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot keywords
+		(type STRING)
+		(create-accessor read-write))
+	(single-slot width
+;+		(comment "In \"points\" (the publishing industry's unit of measurement)")
+		(type FLOAT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot cost_chart
+		(type FLOAT)
+		(create-accessor read-write))
+	(single-slot organization
+		(type INSTANCE)
+;+		(allowed-classes Organization)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot prototype
+		(type INSTANCE)
+;+		(allowed-classes Prototype_Newspaper)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot contents
+;+		(comment "Lists what's in the paper")
+		(type INSTANCE)
+;+		(allowed-classes Content)
+		(create-accessor read-write))
+	(single-slot expiration_date
+;+		(comment "Expiration date is really only relevant if an article isn't urgent. For example, an article on the Spring fashions in Paris probably isn't urgent (and could thus be bumped from an issue if urgent news came up). But, it shouldn't be included in Autumn-- thus it needs an expiration date. ")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot phone_number
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot layout
+		(type INSTANCE)
+;+		(allowed-classes Content_Layout)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot main_rectangle
+		(type INSTANCE)
+;+		(allowed-classes Rectangle)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Manager+Supervision+Relation
+	(is-a %3ADIRECTED-BINARY-RELATION)
+	(role concrete)
+	(single-slot quality
+		(type SYMBOL)
+		(allowed-values good ok poor)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot name_
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot supervision_type
+		(type SYMBOL)
+		(allowed-values administrative editorial)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot %3AFROM
+		(type INSTANCE)
+;+		(allowed-classes Manager)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot %3ATO
+		(type INSTANCE)
+;+		(allowed-classes Employee)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass Director+Supervision+Relation
+	(is-a Manager+Supervision+Relation)
+	(role concrete)
+	(single-slot %3AFROM
+		(type INSTANCE)
+;+		(allowed-classes Director)
+;+		(cardinality 1 1)
+		(create-accessor read-write))
+	(single-slot %3ATO
+		(type INSTANCE)
+;+		(allowed-classes Manager)
+;+		(cardinality 1 1)
+		(create-accessor read-write)))
+
+(defclass Author "Authors are the people or organizations which provide articles"
+	(is-a USER)
+	(role abstract)
+	(single-slot name_
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass News_Service "This is a use of classes as abstract placeholders. We need some way to indicate a fixed (yet changeable) list of values. In a way, this is just a list of strings, but with constraints in place. "
+	(is-a Author)
+	(role concrete)
+	(single-slot contact_person
+		(type INSTANCE)
+;+		(allowed-classes Person)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Content "This is an abstract superclass of both advertisements and articles, containing the the information common to them both. "
+	(is-a USER)
+	(role abstract)
+	(single-slot layout
+		(type INSTANCE)
+;+		(allowed-classes Content_Layout)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot expiration_date
+;+		(comment "Expiration date is really only relevant if an article isn't urgent. For example, an article on the Spring fashions in Paris probably isn't urgent (and could thus be bumped from an issue if urgent news came up). But, it shouldn't be included in Autumn-- thus it needs an expiration date. ")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot containing_section
+;+		(comment "Lists the sections this piece of content could go in. They are ordered by preferences (e.g. the first section in the list is the best one for this article). ")
+		(type INSTANCE)
+;+		(allowed-classes Section)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot page_number
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot published_in
+		(type INSTANCE)
+;+		(allowed-classes Newspaper)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot urgent
+;+		(comment "Urgent content is usually news, advertisements, or opinions (editorials that comment on recent events are a principle example of the latter). If content is urgent, it will be added to the next possible newspaper. ")
+		(type SYMBOL)
+		(allowed-values FALSE TRUE)
+		(default FALSE)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Advertisement
+	(is-a Content)
+	(role abstract)
+	(single-slot purchaser
+		(type INSTANCE)
+;+		(allowed-classes Person)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot salesperson
+		(type INSTANCE)
+;+		(allowed-classes Salesperson)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot name_
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Personals_Ad
+	(is-a Advertisement)
+	(role concrete)
+	(single-slot text
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Standard_Ad
+	(is-a Advertisement)
+	(role concrete)
+	(single-slot image
+;+		(comment "pointer to the file containing the fully laid out ad. ")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Article "Articles are included here as soon as they are written--they could go for a while without being published. For example, an article on gardening could be submitted on Monday and not be published until Thursday (when the gardening section is included in the paper). "
+	(is-a Content)
+	(role concrete)
+	(single-slot reading_level
+;+		(comment "We want to have a good mix in our paper-- from 3'rd grade through adult reading levels. ")
+		(type SYMBOL)
+		(allowed-values Elementary Middle_school High_school College)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot article_type
+		(type SYMBOL)
+		(allowed-values Advice Opinion News)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot keywords
+		(type STRING)
+		(create-accessor read-write))
+	(single-slot headline
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot text
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot author
+;+		(comment "Usually a reporter or editor. Could be left blank if it's from one of the big 3 (UP, API, Reuters). ")
+		(type INSTANCE)
+;+		(allowed-classes Author)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Layout_info
+	(is-a USER)
+	(role abstract))
+
+(defclass Billing_Chart
+	(is-a Layout_info)
+	(role concrete)
+	(single-slot name_
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot cost_chart
+		(type FLOAT)
+		(create-accessor read-write)))
+
+(defclass Content_Layout "Defines a rectangle of space on a page"
+	(is-a Layout_info)
+	(role concrete)
+	(single-slot main_rectangle
+		(type INSTANCE)
+;+		(allowed-classes Rectangle)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot sub_rectangles
+;+		(comment "If the content_layout is breakable, then it breaks into these rectangles. ")
+		(type INSTANCE)
+;+		(allowed-classes Rectangle)
+		(create-accessor read-write))
+	(single-slot breakable
+		(type SYMBOL)
+		(allowed-values FALSE TRUE)
+		(default FALSE)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Prototype_Newspaper "This is basically a reified relationship that must always hold.Entries here reflect facts like \"On Wednesday, the paper has a Gardening Section and ads in it cost this much...\""
+	(is-a Layout_info)
+	(role concrete)
+	(single-slot weekday
+		(type SYMBOL)
+		(allowed-values Sunday Monday Tuesday Wednesday Thursday Friday Saturday)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot sections
+		(type INSTANCE)
+;+		(allowed-classes Section)
+		(create-accessor read-write))
+	(single-slot prototype_billing_chart
+		(type INSTANCE)
+;+		(allowed-classes Billing_Chart)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Rectangle "Defines a rectangle for space upon the page"
+	(is-a Layout_info)
+	(role concrete)
+	(single-slot height
+;+		(comment "In \"points\" (the publishing industry's unit of measurement)")
+		(type FLOAT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot width
+;+		(comment "In \"points\" (the publishing industry's unit of measurement)")
+		(type FLOAT)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Section "List of possible sections of the paper"
+	(is-a Layout_info)
+	(role concrete)
+	(single-slot name_
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Library
+	(is-a USER)
+	(role concrete)
+	(multislot issues
+		(type INSTANCE)
+;+		(allowed-classes Newspaper)
+		(create-accessor read-write))
+	(multislot prototypes
+		(type INSTANCE)
+;+		(allowed-classes Prototype_Newspaper)
+		(create-accessor read-write))
+	(multislot billing_charts
+		(type INSTANCE)
+;+		(allowed-classes Billing_Chart)
+		(create-accessor read-write))
+	(multislot advertisements
+		(type INSTANCE)
+;+		(allowed-classes Advertisement)
+		(create-accessor read-write))
+	(multislot articles
+		(type INSTANCE)
+;+		(allowed-classes Article)
+		(create-accessor read-write))
+	(single-slot organization
+		(type INSTANCE)
+;+		(allowed-classes Organization)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Newspaper
+	(is-a USER)
+	(role concrete)
+	(multislot contents
+;+		(comment "Lists what's in the paper")
+		(type INSTANCE)
+;+		(allowed-classes Content)
+		(create-accessor read-write))
+	(single-slot prototype
+		(type INSTANCE)
+;+		(allowed-classes Prototype_Newspaper)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot date
+;+		(comment "When the paper was published")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot number_of_pages
+		(type INTEGER)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Organization
+	(is-a USER)
+	(role concrete)
+	(single-slot name_
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(multislot employees
+		(type INSTANCE)
+;+		(allowed-classes Employee)
+		(create-accessor read-write))
+	(multislot employee_relationships
+		(type INSTANCE)
+;+		(allowed-classes Manager+Supervision+Relation)
+		(create-accessor read-write)))
+
+(defclass Person
+	(is-a USER)
+	(role concrete)
+	(single-slot name_
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot other_information
+;+		(comment "A slot to add infomation about the person that isn't covered by the hierarchy (annotations like \"Not available Fridays\" or \"Prefers voice mail to e-mail\" or \"This reporter is never around when Superman appears\"). ")
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot phone_number
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Employee
+	(is-a Person)
+	(role abstract)
+	(single-slot salary
+		(type FLOAT)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot date_hired
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write))
+	(single-slot current_job_title
+		(type STRING)
+;+		(cardinality 0 1)
+		(create-accessor read-write)))
+
+(defclass Columnist
+	(is-a Author Employee)
+	(role concrete))
+
+(defclass Editor "Editors are responsible for the content of sections."
+	(is-a Author Employee)
+	(role concrete)
+	(multislot sections
+		(type INSTANCE)
+;+		(allowed-classes Section)
+		(create-accessor read-write))
+	(multislot responsible_for
+		(type INSTANCE)
+;+		(allowed-classes Employee)
+		(create-accessor read-write)))
+
+(defclass Reporter "A reporter is an employee who writes articles."
+	(is-a Author Employee)
+	(role concrete))
+
+(defclass Salesperson "A salesperson sells, and is reponsible for the content of, advertisements."
+	(is-a Employee)
+	(role concrete))
+
+(defclass Manager
+	(is-a Employee)
+	(role concrete))
+
+(defclass Director
+	(is-a Manager)
+	(role concrete))

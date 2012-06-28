@@ -1,0 +1,11 @@
+.web-protege-delete-button {
+    color: #757575;
+    width: 3em;
+    font-size: large;
+}
+
+.web-protege-delete-button:hover {
+    color: #db0002;
+    height: 3em;
+    font-size: large;
+}

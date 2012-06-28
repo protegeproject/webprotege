@@ -1,0 +1,3545 @@
+; Mon Feb 10 17:37:10 PST 2003
+; 
+;+ (version "1.8")
+;+ (build "Build 1031")
+
+([CLASS_WIDGET] of Widget
+	(width 600)
+	(name ":STANDARD-CLASS")
+	(property_list [newspaper_ProjectKB_00301])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 420))
+
+([CLS_INVERSE_RELATIONSHIP_WIDGET] of Widget
+	(width 315)
+	(name "cls_inverse_relationship_widget")
+	(property_list [KB_INSTANCE_00004])
+	(label "Inverse Relationship")
+	(widget_class_name "edu.stanford.smi.protege.ui.ClsInverseRelationshipWidget")
+	(x 0)
+	(y 410)
+	(height 120))
+
+([CLSES_TAB] of Widget
+	(width 876)
+	(name "Classes")
+	(is_hidden FALSE)
+	(property_list [CLSES_TAB_PROPERTIES])
+	(label "Classes")
+	(widget_class_name "edu.stanford.smi.protege.widget.ClsesTab")
+	(x 0)
+	(y 0)
+	(height 539))
+
+([CLSES_TAB_PROPERTIES] of Property_List
+	(properties
+		[CLSES_WIDGET]
+		[CLS_INVERSE_RELATIONSHIP_WIDGET]
+		[newspaper_ProjectKB_00024]
+		[newspaper_ProjectKB_00025])
+	(name "classes tab properties"))
+
+([CLSES_WIDGET] of Widget
+	(width 315)
+	(name "clses_widget")
+	(label "Relationship:")
+	(widget_class_name "edu.stanford.smi.protege.ui.ClsesWidget")
+	(x 0)
+	(y 0)
+	(height 400))
+
+([FACTORY_CLASS_NAME] of String
+	(name "factory_class_name")
+	(string_value "edu.stanford.smi.protege.storage.clips.ClipsKnowledgeBaseFactory"))
+
+([FORMS_TAB] of Widget
+	(width 424)
+	(name "Forms")
+	(is_hidden FALSE)
+	(property_list [FORMS_TAB_PROPERTIES])
+	(label "Forms")
+	(widget_class_name "edu.stanford.smi.protege.widget.FormsTab")
+	(x 0)
+	(y 0)
+	(height 353))
+
+([FORMS_TAB_PROPERTIES] of Property_List
+	(properties
+		[FORMS_WIDGET]
+		[newspaper_ProjectKB_00028]))
+
+([FORMS_WIDGET] of Widget
+	(width 300)
+	(name "forms_widget")
+	(label "Forms")
+	(widget_class_name "edu.stanford.smi.protege.ui.FormsWidget")
+	(x 0)
+	(y 0)
+	(height 530))
+
+([INSTANCES_TAB] of Widget
+	(width 451)
+	(name "Instances")
+	(is_hidden FALSE)
+	(property_list [INSTANCES_TAB_PROPERTIES])
+	(label "Instances")
+	(widget_class_name "edu.stanford.smi.protege.widget.InstancesTab")
+	(x 0)
+	(y 0)
+	(height 373))
+
+([INSTANCES_TAB_PROPERTIES] of Property_List
+	(properties
+		[INSTANCES_WIDGET]
+		[REFERENCERS_WIDGET]
+		[newspaper_ProjectKB_00029]
+		[newspaper_ProjectKB_00030]))
+
+([INSTANCES_WIDGET] of Widget
+	(width 300)
+	(name "instances_widget")
+	(label "Relationship")
+	(widget_class_name "edu.stanford.smi.protege.ui.InstancesWidget")
+	(x 0)
+	(y 0)
+	(height 400))
+
+([KB_INSTANCE_00001] of Property_List
+	(properties
+		[newspaper_ProjectKB_00002]
+		[newspaper_ProjectKB_00003]
+		[newspaper_ProjectKB_00004]
+		[newspaper_ProjectKB_00005]
+		[newspaper_ProjectKB_00006]
+		[newspaper_ProjectKB_00007]
+		[newspaper_ProjectKB_00008]
+		[newspaper_ProjectKB_00009]
+		[newspaper_ProjectKB_00010]
+		[newspaper_ProjectKB_00011]
+		[newspaper_ProjectKB_00012]
+		[newspaper_ProjectKB_00013]
+		[newspaper_ProjectKB_00014]
+		[newspaper_ProjectKB_00015]
+		[newspaper_ProjectKB_00016]
+		[newspaper_ProjectKB_00017]
+		[newspaper_ProjectKB_00018]))
+
+([KB_INSTANCE_00002] of String
+	(name "classes_file_name")
+	(string_value "newspaper.pont"))
+
+([KB_INSTANCE_00003] of String
+	(name "instances_file_name")
+	(string_value "newspaper.pins"))
+
+([KB_INSTANCE_00004] of Property_List)
+
+([KB_INSTANCE_00027] of Widget
+	(width 1409)
+	(name "Editor")
+	(property_list [KB_INSTANCE_00028])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 996))
+
+([KB_INSTANCE_00028] of Property_List
+	(properties
+		[newspaper_ProjectKB_01521]
+		[newspaper_ProjectKB_01523]
+		[newspaper_ProjectKB_01524]
+		[newspaper_ProjectKB_01526]
+		[newspaper_ProjectKB_01534]
+		[newspaper_ProjectKB_01536]
+		[newspaper_ProjectKB_01538]
+		[newspaper_ProjectKB_01540]
+		[newspaper_ProjectKB_01548]))
+
+([KB_INSTANCE_00049] of Widget
+	(width 1409)
+	(name "Reporter")
+	(property_list [newspaper_ProjectKB_00214])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 996))
+
+([KB_INSTANCE_00119] of Widget
+	(width 1409)
+	(name "Article")
+	(property_list [KB_INSTANCE_00120])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 996))
+
+([KB_INSTANCE_00120] of Property_List
+	(properties
+		[newspaper_ProjectKB_01250]
+		[newspaper_ProjectKB_01258]
+		[newspaper_ProjectKB_01266]
+		[newspaper_ProjectKB_01274]
+		[newspaper_ProjectKB_01282]
+		[newspaper_ProjectKB_01284]
+		[newspaper_ProjectKB_01286]
+		[newspaper_ProjectKB_01288]
+		[newspaper_ProjectKB_01293]
+		[newspaper_ProjectKB_01295]
+		[newspaper_ProjectKB_01297]
+		[newspaper_ProjectKB_01299]
+		[newspaper_ProjectKB_01724]))
+
+([newspaper_ProjectKB_00000] of Widget
+	(width 973)
+	(name ":THING")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00001])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 820))
+
+([newspaper_ProjectKB_00001] of Property_List)
+
+([newspaper_ProjectKB_00002] of String
+	(name "Organization")
+	(string_value "name"))
+
+([newspaper_ProjectKB_00003] of String
+	(name "Manager Supervision Relation")
+	(string_value "name"))
+
+([newspaper_ProjectKB_00004] of String
+	(name "Library")
+	(string_value "organization"))
+
+([newspaper_ProjectKB_00005] of String
+	(name ":PAL-CONSTRAINT")
+	(string_value ":PAL-NAME"))
+
+([newspaper_ProjectKB_00006] of String
+	(name "Article")
+	(string_value "headline"))
+
+([newspaper_ProjectKB_00007] of String
+	(name "Columnist")
+	(string_value "name"))
+
+([newspaper_ProjectKB_00008] of String
+	(name "Prototype_Newspaper")
+	(string_value "weekday"))
+
+([newspaper_ProjectKB_00009] of String
+	(name ":STANDARD-SLOT")
+	(string_value ":NAME"))
+
+([newspaper_ProjectKB_00010] of String
+	(name "Billing_Chart")
+	(string_value "name"))
+
+([newspaper_ProjectKB_00011] of String
+	(name "Section")
+	(string_value "name"))
+
+([newspaper_ProjectKB_00012] of String
+	(name "Rectangle")
+	(string_value "name"))
+
+([newspaper_ProjectKB_00013] of String
+	(name ":STANDARD-CLASS")
+	(string_value ":NAME"))
+
+([newspaper_ProjectKB_00014] of String
+	(name "Editor")
+	(string_value "name"))
+
+([newspaper_ProjectKB_00015] of String
+	(name "Newspaper")
+	(string_value "date"))
+
+([newspaper_ProjectKB_00016] of String
+	(name "Reporter")
+	(string_value "name"))
+
+([newspaper_ProjectKB_00017] of String
+	(name "Person")
+	(string_value "name"))
+
+([newspaper_ProjectKB_00018] of String
+	(name "Advertisement")
+	(string_value "name"))
+
+([newspaper_ProjectKB_00019] of Map
+	(entries
+		[newspaper_ProjectKB_00020]
+		[newspaper_ProjectKB_00021]
+		[newspaper_ProjectKB_00022]
+		[newspaper_ProjectKB_00023]
+		[newspaper_ProjectKB_00125]
+		[newspaper_ProjectKB_00225]
+		[newspaper_ProjectKB_00226]
+		[newspaper_ProjectKB_00227]
+		[newspaper_ProjectKB_00228]
+		[newspaper_ProjectKB_00229]
+		[newspaper_ProjectKB_00230]
+		[newspaper_ProjectKB_00231]
+		[newspaper_ProjectKB_00232]
+		[newspaper_ProjectKB_00233]))
+
+([newspaper_ProjectKB_00020] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00068")
+	(value_class "java.awt.Rectangle")
+	(value "370 520 60 60"))
+
+([newspaper_ProjectKB_00021] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00039")
+	(value_class "java.awt.Rectangle")
+	(value "170 670 60 60"))
+
+([newspaper_ProjectKB_00022] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00067")
+	(value_class "java.awt.Rectangle")
+	(value "220 520 60 60"))
+
+([newspaper_ProjectKB_00023] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00093")
+	(value_class "java.awt.Rectangle")
+	(value "320 670 60 60"))
+
+([newspaper_ProjectKB_00024] of Integer
+	(integer_value 319)
+	(name "ClsesTab.left_right"))
+
+([newspaper_ProjectKB_00025] of Integer
+	(integer_value 483)
+	(name "ClsesTab.left.top_bottom"))
+
+([newspaper_ProjectKB_00026] of Integer
+	(integer_value 209)
+	(name "SlotsTab.left_right"))
+
+([newspaper_ProjectKB_00027] of Integer
+	(integer_value 715)
+	(name "SlotTab.left.top_bottom"))
+
+([newspaper_ProjectKB_00028] of Integer
+	(integer_value 279)
+	(name "FormsTab.left_right"))
+
+([newspaper_ProjectKB_00029] of Integer
+	(integer_value 321)
+	(name "InstancesTab.left_right"))
+
+([newspaper_ProjectKB_00030] of Integer
+	(integer_value 148)
+	(name "InstancesTab.right.left_right"))
+
+([newspaper_ProjectKB_00125] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00055")
+	(value_class "java.awt.Rectangle")
+	(value "220 370 60 60"))
+
+([newspaper_ProjectKB_00214] of Property_List
+	(properties
+		[newspaper_ProjectKB_00215]
+		[newspaper_ProjectKB_00217]
+		[newspaper_ProjectKB_00218]
+		[newspaper_ProjectKB_00428]
+		[newspaper_ProjectKB_00430]
+		[newspaper_ProjectKB_00432]
+		[newspaper_ProjectKB_00442]))
+
+([newspaper_ProjectKB_00215] of Widget
+	(width 250)
+	(name "phone_number")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00216])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 180)
+	(height 60))
+
+([newspaper_ProjectKB_00216] of Property_List)
+
+([newspaper_ProjectKB_00217] of Property_List
+	(name "layout properties"))
+
+([newspaper_ProjectKB_00218] of Widget
+	(width 250)
+	(name "date_hired")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00219])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_00219] of Property_List)
+
+([newspaper_ProjectKB_00225] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00021")
+	(value_class "java.awt.Rectangle")
+	(value "520 370 60 60"))
+
+([newspaper_ProjectKB_00226] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00020")
+	(value_class "java.awt.Rectangle")
+	(value "370 370 60 60"))
+
+([newspaper_ProjectKB_00227] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00051")
+	(value_class "java.awt.Rectangle")
+	(value "70 370 60 60"))
+
+([newspaper_ProjectKB_00228] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00013")
+	(value_class "java.awt.Rectangle")
+	(value "370 220 60 60"))
+
+([newspaper_ProjectKB_00229] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00012")
+	(value_class "java.awt.Rectangle")
+	(value "220 220 60 60"))
+
+([newspaper_ProjectKB_00230] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00045")
+	(value_class "java.awt.Rectangle")
+	(value "70 520 60 60"))
+
+([newspaper_ProjectKB_00231] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00011")
+	(value_class "java.awt.Rectangle")
+	(value "70 220 60 60"))
+
+([newspaper_ProjectKB_00232] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00010")
+	(value_class "java.awt.Rectangle")
+	(value "220 70 60 60"))
+
+([newspaper_ProjectKB_00233] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00043")
+	(value_class "java.awt.Rectangle")
+	(value "470 670 60 60"))
+
+([newspaper_ProjectKB_00234] of Map_Entry
+	(key_class "java.lang.String")
+	(key "InstanceGraphWidget.instance_00064.employees")
+	(value_class "java.util.Map")
+	(value "newspaper_ProjectKB_00019"))
+
+([newspaper_ProjectKB_00260] of Property_List
+	(properties [newspaper_ProjectKB_00478]))
+
+([newspaper_ProjectKB_00301] of Property_List
+	(properties
+		[newspaper_ProjectKB_00401]
+		[newspaper_ProjectKB_00402]
+		[newspaper_ProjectKB_00403]
+		[newspaper_ProjectKB_00404]
+		[newspaper_ProjectKB_00405]
+		[newspaper_ProjectKB_00406]
+		[newspaper_ProjectKB_00407]
+		[newspaper_ProjectKB_00408]
+		[newspaper_ProjectKB_00409]
+		[newspaper_ProjectKB_00410])
+	(name "class widget properties"))
+
+([newspaper_ProjectKB_00401] of Widget
+	(width 200)
+	(name ":SLOT-CONSTRAINTS")
+	(property_list [newspaper_ProjectKB_00642])
+	(label "Constraints")
+	(widget_class_name "edu.stanford.smi.protege.widget.ConstraintsWidget")
+	(x 400)
+	(y 0)
+	(height 120))
+
+([newspaper_ProjectKB_00402] of Widget
+	(name ":DIRECT-INSTANCES"))
+
+([newspaper_ProjectKB_00403] of Widget
+	(name ":DIRECT-SUBCLASSES"))
+
+([newspaper_ProjectKB_00404] of Widget
+	(name ":DIRECT-SUPERCLASSES"))
+
+([newspaper_ProjectKB_00405] of Widget
+	(width 200)
+	(name ":DOCUMENTATION")
+	(label "Documentation")
+	(widget_class_name "edu.stanford.smi.protege.widget.DocumentationWidget")
+	(x 200)
+	(y 0)
+	(height 120))
+
+([newspaper_ProjectKB_00406] of Widget
+	(width 200)
+	(name ":NAME")
+	(label "Name")
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceNameWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_00407] of Widget
+	(width 200)
+	(name ":ROLE")
+	(label "Role")
+	(widget_class_name "edu.stanford.smi.protege.widget.RoleWidget")
+	(x 0)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_00408] of Widget
+	(name ":DIRECT-TYPE"))
+
+([newspaper_ProjectKB_00409] of Widget
+	(width 600)
+	(name ":DIRECT-TEMPLATE-SLOTS")
+	(property_list [newspaper_ProjectKB_00649])
+	(label "Template Slots")
+	(widget_class_name "edu.stanford.smi.protege.widget.TemplateSlotsWidget")
+	(x 0)
+	(y 120)
+	(height 150))
+
+([newspaper_ProjectKB_00410] of Property_List
+	(properties [newspaper_ProjectKB_00411])
+	(name "layout properties"))
+
+([newspaper_ProjectKB_00411] of String
+	(name "vertical_stretcher")
+	(string_value ":DIRECT-TEMPLATE-SLOTS"))
+
+([newspaper_ProjectKB_00412] of Property_List
+	(properties
+		[newspaper_ProjectKB_00413]
+		[newspaper_ProjectKB_00414]
+		[newspaper_ProjectKB_00415]
+		[newspaper_ProjectKB_00416]
+		[newspaper_ProjectKB_00417]
+		[newspaper_ProjectKB_00418]
+		[newspaper_ProjectKB_00419]
+		[newspaper_ProjectKB_00420]
+		[newspaper_ProjectKB_00421]
+		[newspaper_ProjectKB_00422]
+		[newspaper_ProjectKB_00423]
+		[newspaper_ProjectKB_00424]
+		[newspaper_ProjectKB_00425]
+		[newspaper_ProjectKB_00527]
+		[newspaper_ProjectKB_00627]
+		[newspaper_ProjectKB_00668])
+	(name "slot widget properties"))
+
+([newspaper_ProjectKB_00413] of Widget
+	(width 200)
+	(name ":SLOT-MINIMUM-CARDINALITY")
+	(label "Cardinality")
+	(widget_class_name "edu.stanford.smi.protege.widget.MinimumCardinalityWidget")
+	(x 200)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_00414] of Widget
+	(width 200)
+	(name ":SLOT-MAXIMUM-CARDINALITY")
+	(widget_class_name "edu.stanford.smi.protege.widget.MaximumCardinalityWidget")
+	(x 200)
+	(y 175)
+	(height 35))
+
+([newspaper_ProjectKB_00415] of Widget
+	(name ":SLOT-CONSTRAINTS"))
+
+([newspaper_ProjectKB_00416] of Widget
+	(name ":DIRECT-TYPE"))
+
+([newspaper_ProjectKB_00417] of Widget
+	(width 200)
+	(name ":SLOT-VALUES")
+	(property_list [newspaper_ProjectKB_00658])
+	(label "Template Values")
+	(widget_class_name "edu.stanford.smi.protege.widget.SlotValuesWidget")
+	(x 400)
+	(y 0)
+	(height 120))
+
+([newspaper_ProjectKB_00418] of Widget
+	(name ":DIRECT-SUPERSLOTS"))
+
+([newspaper_ProjectKB_00419] of Widget
+	(name ":DIRECT-SUBSLOTS"))
+
+([newspaper_ProjectKB_00420] of Widget
+	(width 200)
+	(name ":SLOT-DEFAULTS")
+	(property_list [newspaper_ProjectKB_00663])
+	(label "Default")
+	(widget_class_name "edu.stanford.smi.protege.widget.DefaultValuesWidget")
+	(x 400)
+	(y 120)
+	(height 150))
+
+([newspaper_ProjectKB_00421] of Widget
+	(width 200)
+	(name ":DOCUMENTATION")
+	(label "Documentation")
+	(widget_class_name "edu.stanford.smi.protege.widget.DocumentationWidget")
+	(x 200)
+	(y 0)
+	(height 120))
+
+([newspaper_ProjectKB_00422] of Widget
+	(width 100)
+	(name ":SLOT-NUMERIC-MAXIMUM")
+	(label "Maximum")
+	(widget_class_name "edu.stanford.smi.protege.widget.NumericMaximumWidget")
+	(x 100)
+	(y 210)
+	(height 60))
+
+([newspaper_ProjectKB_00423] of Widget
+	(width 100)
+	(name ":SLOT-NUMERIC-MINIMUM")
+	(label "Minimum")
+	(widget_class_name "edu.stanford.smi.protege.widget.NumericMinimumWidget")
+	(x 0)
+	(y 210)
+	(height 60))
+
+([newspaper_ProjectKB_00424] of Widget
+	(name ":ASSOCIATED-FACET"))
+
+([newspaper_ProjectKB_00425] of Widget
+	(width 200)
+	(name ":NAME")
+	(label "Name")
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceNameWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_00428] of Widget
+	(width 250)
+	(name "name")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00429])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_00429] of Property_List)
+
+([newspaper_ProjectKB_00430] of Widget
+	(width 125)
+	(name "salary")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00431])
+	(widget_class_name "edu.stanford.smi.protege.widget.FloatFieldWidget")
+	(x 250)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_00431] of Property_List)
+
+([newspaper_ProjectKB_00432] of Widget
+	(width 250)
+	(name "other_information")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00433])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
+	(x 250)
+	(y 60)
+	(height 180))
+
+([newspaper_ProjectKB_00433] of Property_List)
+
+([newspaper_ProjectKB_00442] of Widget
+	(width 250)
+	(name "current_job_title")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00443])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_00443] of Property_List)
+
+([newspaper_ProjectKB_00444] of Widget
+	(width 1409)
+	(name "Personals_Ad")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00445])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 996))
+
+([newspaper_ProjectKB_00445] of Property_List
+	(properties
+		[newspaper_ProjectKB_00446]
+		[newspaper_ProjectKB_00448]
+		[newspaper_ProjectKB_00450]
+		[newspaper_ProjectKB_00458]
+		[newspaper_ProjectKB_00466]
+		[newspaper_ProjectKB_00575]
+		[newspaper_ProjectKB_00882]
+		[newspaper_ProjectKB_00890]
+		[newspaper_ProjectKB_00892]
+		[newspaper_ProjectKB_00894]
+		[newspaper_ProjectKB_00896]))
+
+([newspaper_ProjectKB_00446] of Widget
+	(width 125)
+	(name "page_number")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00447])
+	(widget_class_name "edu.stanford.smi.protege.widget.IntegerFieldWidget")
+	(x 125)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_00447] of Property_List)
+
+([newspaper_ProjectKB_00448] of Widget
+	(width 125)
+	(name "urgent")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00449])
+	(widget_class_name "edu.stanford.smi.protege.widget.CheckBoxWidget")
+	(x 0)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_00449] of Property_List)
+
+([newspaper_ProjectKB_00450] of Widget
+	(width 250)
+	(name "containing_section")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00451])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 0)
+	(y 180)
+	(height 60))
+
+([newspaper_ProjectKB_00451] of Property_List
+	(properties
+		[newspaper_ProjectKB_00452]
+		[newspaper_ProjectKB_00453]
+		[newspaper_ProjectKB_00454]
+		[newspaper_ProjectKB_00455]
+		[newspaper_ProjectKB_00456]
+		[newspaper_ProjectKB_00457]))
+
+([newspaper_ProjectKB_00452] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_00453] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_00454] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_00455] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00456] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00457] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_00458] of Widget
+	(width 250)
+	(name "purchaser")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00459])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_00459] of Property_List
+	(properties
+		[newspaper_ProjectKB_00460]
+		[newspaper_ProjectKB_00461]
+		[newspaper_ProjectKB_00462]
+		[newspaper_ProjectKB_00463]
+		[newspaper_ProjectKB_00464]
+		[newspaper_ProjectKB_00465]))
+
+([newspaper_ProjectKB_00460] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_00461] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_00462] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_00463] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00464] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00465] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_00466] of Widget
+	(width 250)
+	(name "salesperson")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00467])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 180)
+	(height 60))
+
+([newspaper_ProjectKB_00467] of Property_List
+	(properties
+		[newspaper_ProjectKB_00468]
+		[newspaper_ProjectKB_00469]
+		[newspaper_ProjectKB_00470]
+		[newspaper_ProjectKB_00471]
+		[newspaper_ProjectKB_00472]
+		[newspaper_ProjectKB_00474]))
+
+([newspaper_ProjectKB_00468] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_00469] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_00470] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_00471] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00472] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00474] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_00478] of String
+	(name "SearchTab_Query")
+	(string_value "Query Name: People with salary greater than 100,000\nMatch All:true\nLength: 1\n 	salary	is greater than	Other:100000	1	\n\nQuery Name: Articles whose authors are highly paid\nMatch All:true\nLength: 1\nArticle	author	contains	Query:People with salary greater than 100,000|People with salary greater than 100,000	1	\n\nQuery Name: Articles whose authors are highly paid and articles are urgent with less than 50 pages\nMatch All:true\nLength: 3\nArticle	page_number	is less than	Other:50	1	\nArticle	urgent	is	Other:true	1	\nArticle	author	contains	Query:People with salary greater than 100,000|People with salary greater than 100,000	1	\n\n"))
+
+([newspaper_ProjectKB_00527] of Widget
+	(width 200)
+	(name ":SLOT-INVERSE")
+	(label "Inverse Slot")
+	(widget_class_name "edu.stanford.smi.protege.widget.InverseSlotWidget")
+	(x 200)
+	(y 210)
+	(height 60))
+
+([newspaper_ProjectKB_00575] of Widget
+	(width 250)
+	(name "layout")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00675])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_00627] of Widget
+	(width 200)
+	(name ":SLOT-VALUE-TYPE")
+	(label "Value Type")
+	(widget_class_name "edu.stanford.smi.protege.widget.ValueTypeWidget")
+	(x 0)
+	(y 60)
+	(height 150))
+
+([newspaper_ProjectKB_00628] of Property_List
+	(properties
+		[newspaper_ProjectKB_00629]
+		[newspaper_ProjectKB_00630]
+		[newspaper_ProjectKB_00631])
+	(name "facet widget properties"))
+
+([newspaper_ProjectKB_00629] of Widget
+	(width 200)
+	(name ":NAME")
+	(label "Name")
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceNameWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_00630] of Widget
+	(width 200)
+	(name ":DOCUMENTATION")
+	(label "Documentation")
+	(widget_class_name "edu.stanford.smi.protege.widget.DocumentationWidget")
+	(x 200)
+	(y 0)
+	(height 120))
+
+([newspaper_ProjectKB_00631] of Widget
+	(width 200)
+	(name ":ASSOCIATED-SLOT")
+	(label "Associated Slot")
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 0)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_00632] of Property_List
+	(properties
+		[newspaper_ProjectKB_00633]
+		[newspaper_ProjectKB_00634]
+		[newspaper_ProjectKB_00635]
+		[newspaper_ProjectKB_00636]))
+
+([newspaper_ProjectKB_00633] of Widget
+	(name ":ANNOTATED-INSTANCE"))
+
+([newspaper_ProjectKB_00634] of Widget
+	(name ":CREATOR"))
+
+([newspaper_ProjectKB_00635] of Widget
+	(name ":CREATION-TIMESTAMP"))
+
+([newspaper_ProjectKB_00636] of Widget
+	(width 200)
+	(name ":ANNOTATION-TEXT")
+	(is_hidden FALSE)
+	(widget_class_name "edu.stanford.smi.protege.widget.YellowStickyWidget")
+	(x 0)
+	(y 0)
+	(height 100))
+
+([newspaper_ProjectKB_00637] of Property_List
+	(properties
+		[newspaper_ProjectKB_00638]
+		[newspaper_ProjectKB_00639]
+		[newspaper_ProjectKB_00640]
+		[newspaper_ProjectKB_00641]))
+
+([newspaper_ProjectKB_00638] of Widget
+	(width 275)
+	(name ":PAL-NAME")
+	(is_hidden FALSE)
+	(label "Name")
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_00639] of Widget
+	(width 250)
+	(name ":PAL-RANGE")
+	(is_hidden FALSE)
+	(label "Range")
+	(widget_class_name "edu.stanford.smi.protegex.widget.pal.constraint.PalRangeWidget")
+	(x 275)
+	(y 180)
+	(height 180))
+
+([newspaper_ProjectKB_00640] of Widget
+	(width 250)
+	(name ":PAL-DESCRIPTION")
+	(is_hidden FALSE)
+	(label "Description")
+	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
+	(x 275)
+	(y 0)
+	(height 180))
+
+([newspaper_ProjectKB_00641] of Widget
+	(width 275)
+	(name ":PAL-STATEMENT")
+	(is_hidden FALSE)
+	(label "Statement")
+	(widget_class_name "edu.stanford.smi.protegex.widget.pal.constraint.PalConstraintWidget")
+	(x 0)
+	(y 60)
+	(height 300))
+
+([newspaper_ProjectKB_00642] of Property_List
+	(properties
+		[newspaper_ProjectKB_00643]
+		[newspaper_ProjectKB_00644]
+		[newspaper_ProjectKB_00645]
+		[newspaper_ProjectKB_00646]
+		[newspaper_ProjectKB_00647]
+		[newspaper_ProjectKB_00648]))
+
+([newspaper_ProjectKB_00643] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Selected Instances"))
+
+([newspaper_ProjectKB_00644] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_00645] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_00646] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00647] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00648] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Selected Instances"))
+
+([newspaper_ProjectKB_00649] of Property_List
+	(properties
+		[newspaper_ProjectKB_00650]
+		[newspaper_ProjectKB_00651]
+		[newspaper_ProjectKB_00652]
+		[newspaper_ProjectKB_00653]
+		[newspaper_ProjectKB_00654]
+		[newspaper_ProjectKB_00655]
+		[newspaper_ProjectKB_00656]
+		[newspaper_ProjectKB_00657]))
+
+([newspaper_ProjectKB_00650] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View selected slots"))
+
+([newspaper_ProjectKB_00651] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View selected slots at class"))
+
+([newspaper_ProjectKB_00652] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create slot and attach to class"))
+
+([newspaper_ProjectKB_00653] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove overrides from selected slots"))
+
+([newspaper_ProjectKB_00654] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00655] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00656] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Move up"))
+
+([newspaper_ProjectKB_00657] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Move down"))
+
+([newspaper_ProjectKB_00658] of Property_List
+	(properties
+		[newspaper_ProjectKB_00659]
+		[newspaper_ProjectKB_00660]
+		[newspaper_ProjectKB_00661]
+		[newspaper_ProjectKB_00662]))
+
+([newspaper_ProjectKB_00659] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View the selected value"))
+
+([newspaper_ProjectKB_00660] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create a new value"))
+
+([newspaper_ProjectKB_00661] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00662] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00663] of Property_List
+	(properties
+		[newspaper_ProjectKB_00664]
+		[newspaper_ProjectKB_00665]
+		[newspaper_ProjectKB_00666]
+		[newspaper_ProjectKB_00667]))
+
+([newspaper_ProjectKB_00664] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View the selected value"))
+
+([newspaper_ProjectKB_00665] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create a new value"))
+
+([newspaper_ProjectKB_00666] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00667] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00668] of Property_List
+	(name "layout properties"))
+
+([newspaper_ProjectKB_00675] of Property_List
+	(properties
+		[newspaper_ProjectKB_00676]
+		[newspaper_ProjectKB_00677]
+		[newspaper_ProjectKB_00779]
+		[newspaper_ProjectKB_00879]
+		[newspaper_ProjectKB_00880]
+		[newspaper_ProjectKB_00881]))
+
+([newspaper_ProjectKB_00676] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_00677] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_00678] of Widget
+	(width 1409)
+	(name "Advertisement")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00679])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 996))
+
+([newspaper_ProjectKB_00679] of Property_List
+	(properties
+		[newspaper_ProjectKB_00846]
+		[newspaper_ProjectKB_00848]
+		[newspaper_ProjectKB_00850]
+		[newspaper_ProjectKB_00858]
+		[newspaper_ProjectKB_00866]
+		[newspaper_ProjectKB_01074]
+		[newspaper_ProjectKB_01082]
+		[newspaper_ProjectKB_01090]
+		[newspaper_ProjectKB_01092]))
+
+([newspaper_ProjectKB_00779] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_00846] of Widget
+	(width 125)
+	(name "page_number")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00847])
+	(widget_class_name "edu.stanford.smi.protege.widget.IntegerFieldWidget")
+	(x 125)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_00847] of Property_List)
+
+([newspaper_ProjectKB_00848] of Widget
+	(width 125)
+	(name "urgent")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00849])
+	(widget_class_name "edu.stanford.smi.protege.widget.CheckBoxWidget")
+	(x 0)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_00849] of Property_List)
+
+([newspaper_ProjectKB_00850] of Widget
+	(width 250)
+	(name "containing_section")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00851])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 0)
+	(y 180)
+	(height 60))
+
+([newspaper_ProjectKB_00851] of Property_List
+	(properties
+		[newspaper_ProjectKB_00852]
+		[newspaper_ProjectKB_00853]
+		[newspaper_ProjectKB_00854]
+		[newspaper_ProjectKB_00855]
+		[newspaper_ProjectKB_00856]
+		[newspaper_ProjectKB_00857]))
+
+([newspaper_ProjectKB_00852] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_00853] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_00854] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_00855] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00856] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00857] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_00858] of Widget
+	(width 250)
+	(name "purchaser")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00859])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_00859] of Property_List
+	(properties
+		[newspaper_ProjectKB_00860]
+		[newspaper_ProjectKB_00861]
+		[newspaper_ProjectKB_00862]
+		[newspaper_ProjectKB_00863]
+		[newspaper_ProjectKB_00864]
+		[newspaper_ProjectKB_00865]))
+
+([newspaper_ProjectKB_00860] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_00861] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_00862] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_00863] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00864] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00865] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_00866] of Widget
+	(width 250)
+	(name "salesperson")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00867])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 180)
+	(height 60))
+
+([newspaper_ProjectKB_00867] of Property_List
+	(properties
+		[newspaper_ProjectKB_00868]
+		[newspaper_ProjectKB_00869]
+		[newspaper_ProjectKB_00870]
+		[newspaper_ProjectKB_00972]
+		[newspaper_ProjectKB_01072]
+		[newspaper_ProjectKB_01073]))
+
+([newspaper_ProjectKB_00868] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_00869] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_00870] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_00879] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00880] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00881] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_00882] of Widget
+	(width 250)
+	(name "published_in")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00883])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_00883] of Property_List
+	(properties
+		[newspaper_ProjectKB_00884]
+		[newspaper_ProjectKB_00885]
+		[newspaper_ProjectKB_00886]
+		[newspaper_ProjectKB_00887]
+		[newspaper_ProjectKB_00888]
+		[newspaper_ProjectKB_00889]))
+
+([newspaper_ProjectKB_00884] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_00885] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_00886] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_00887] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_00888] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_00889] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_00890] of Widget
+	(width 250)
+	(name "name")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00891])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_00891] of Property_List)
+
+([newspaper_ProjectKB_00892] of Widget
+	(width 250)
+	(name "expiration_date")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00893])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_00893] of Property_List)
+
+([newspaper_ProjectKB_00894] of Widget
+	(width 500)
+	(name "text")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00895])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
+	(x 0)
+	(y 240)
+	(height 120))
+
+([newspaper_ProjectKB_00895] of Property_List)
+
+([newspaper_ProjectKB_00896] of Property_List
+	(name "layout properties"))
+
+([newspaper_ProjectKB_00928] of Widget
+	(name ":STANDARD-FACET")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00628])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
+
+([newspaper_ProjectKB_00933] of Widget
+	(name ":INSTANCE-ANNOTATION")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00632])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget"))
+
+([newspaper_ProjectKB_00939] of Widget
+	(width 935)
+	(name ":PAL-CONSTRAINT")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00637])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 642))
+
+([newspaper_ProjectKB_00949] of Widget
+	(is_hidden TRUE)
+	(property_list [newspaper_ProjectKB_00950])
+	(widget_class_name "edu.stanford.smi.protege.widget.KAToolTab"))
+
+([newspaper_ProjectKB_00950] of Property_List)
+
+([newspaper_ProjectKB_00955] of Widget
+	(is_hidden TRUE)
+	(property_list [newspaper_ProjectKB_00956])
+	(widget_class_name "edu.stanford.smi.protege.widget.ClsesAndInstancesTab"))
+
+([newspaper_ProjectKB_00956] of Property_List)
+
+([newspaper_ProjectKB_00972] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_01008] of Map
+	(entries
+		[newspaper_ProjectKB_02037]
+		[newspaper_ProjectKB_02070]
+		[newspaper_ProjectKB_02128]
+		[newspaper_ProjectKB_02184]
+		[newspaper_ProjectKB_02217]
+		[newspaper_ProjectKB_02250]
+		[newspaper_ProjectKB_02283]
+		[newspaper_ProjectKB_02316]
+		[newspaper_ProjectKB_00234])
+	(referenced_maps
+		[newspaper_ProjectKB_02022]
+		[newspaper_ProjectKB_02055]
+		[newspaper_ProjectKB_02113]
+		[newspaper_ProjectKB_02169]
+		[newspaper_ProjectKB_02202]
+		[newspaper_ProjectKB_02235]
+		[newspaper_ProjectKB_02268]
+		[newspaper_ProjectKB_02301]
+		[newspaper_ProjectKB_00019]))
+
+([newspaper_ProjectKB_01072] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_01073] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_01074] of Widget
+	(width 250)
+	(name "layout")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01075])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_01075] of Property_List
+	(properties
+		[newspaper_ProjectKB_01076]
+		[newspaper_ProjectKB_01077]
+		[newspaper_ProjectKB_01078]
+		[newspaper_ProjectKB_01079]
+		[newspaper_ProjectKB_01080]
+		[newspaper_ProjectKB_01081]))
+
+([newspaper_ProjectKB_01076] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_01077] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_01078] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_01079] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_01080] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_01081] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_01082] of Widget
+	(width 250)
+	(name "published_in")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01083])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_01083] of Property_List
+	(properties
+		[newspaper_ProjectKB_01084]
+		[newspaper_ProjectKB_01085]
+		[newspaper_ProjectKB_01086]
+		[newspaper_ProjectKB_01087]
+		[newspaper_ProjectKB_01088]
+		[newspaper_ProjectKB_01089]))
+
+([newspaper_ProjectKB_01084] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_01085] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_01086] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_01087] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_01088] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_01089] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_01090] of Widget
+	(width 250)
+	(name "name")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01091])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_01091] of Property_List)
+
+([newspaper_ProjectKB_01092] of Widget
+	(width 250)
+	(name "expiration_date")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01093])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_01093] of Property_List)
+
+([newspaper_ProjectKB_01250] of Widget
+	(width 250)
+	(name "author")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01251])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 0)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_01251] of Property_List
+	(properties
+		[newspaper_ProjectKB_01252]
+		[newspaper_ProjectKB_01253]
+		[newspaper_ProjectKB_01254]
+		[newspaper_ProjectKB_01255]
+		[newspaper_ProjectKB_01256]
+		[newspaper_ProjectKB_01257]))
+
+([newspaper_ProjectKB_01252] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_01253] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_01254] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_01255] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_01256] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_01257] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_01258] of Widget
+	(width 250)
+	(name "layout")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01259])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_01259] of Property_List
+	(properties
+		[newspaper_ProjectKB_01260]
+		[newspaper_ProjectKB_01261]
+		[newspaper_ProjectKB_01262]
+		[newspaper_ProjectKB_01263]
+		[newspaper_ProjectKB_01264]
+		[newspaper_ProjectKB_01265]))
+
+([newspaper_ProjectKB_01260] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_01261] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_01262] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_01263] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_01264] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_01265] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_01266] of Widget
+	(width 250)
+	(name "published_in")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01267])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_01267] of Property_List
+	(properties
+		[newspaper_ProjectKB_01268]
+		[newspaper_ProjectKB_01269]
+		[newspaper_ProjectKB_01270]
+		[newspaper_ProjectKB_01271]
+		[newspaper_ProjectKB_01272]
+		[newspaper_ProjectKB_01273]))
+
+([newspaper_ProjectKB_01268] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_01269] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_01270] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_01271] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_01272] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_01273] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_01274] of Widget
+	(width 250)
+	(name "containing_section")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01275])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceFieldWidget")
+	(x 250)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_01275] of Property_List
+	(properties
+		[newspaper_ProjectKB_01276]
+		[newspaper_ProjectKB_01277]
+		[newspaper_ProjectKB_01278]
+		[newspaper_ProjectKB_01279]
+		[newspaper_ProjectKB_01280]
+		[newspaper_ProjectKB_01281]))
+
+([newspaper_ProjectKB_01276] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Instance"))
+
+([newspaper_ProjectKB_01277] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_01278] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_01279] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_01280] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_01281] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Instance"))
+
+([newspaper_ProjectKB_01282] of Widget
+	(width 125)
+	(name "page_number")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01283])
+	(widget_class_name "edu.stanford.smi.protege.widget.IntegerFieldWidget")
+	(x 125)
+	(y 180)
+	(height 60))
+
+([newspaper_ProjectKB_01283] of Property_List)
+
+([newspaper_ProjectKB_01284] of Widget
+	(width 500)
+	(name "text")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01285])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
+	(x 0)
+	(y 300)
+	(height 120))
+
+([newspaper_ProjectKB_01285] of Property_List)
+
+([newspaper_ProjectKB_01286] of Widget
+	(width 125)
+	(name "reading_level")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01287])
+	(widget_class_name "edu.stanford.smi.protege.widget.ComboBoxWidget")
+	(x 125)
+	(y 240)
+	(height 60))
+
+([newspaper_ProjectKB_01287] of Property_List)
+
+([newspaper_ProjectKB_01288] of Widget
+	(width 250)
+	(name "keywords")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01289])
+	(widget_class_name "edu.stanford.smi.protege.widget.StringListWidget")
+	(x 250)
+	(y 180)
+	(height 120))
+
+([newspaper_ProjectKB_01289] of Property_List
+	(properties
+		[newspaper_ProjectKB_01290]
+		[newspaper_ProjectKB_01291]
+		[newspaper_ProjectKB_01292]))
+
+([newspaper_ProjectKB_01290] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Edit the selected strings"))
+
+([newspaper_ProjectKB_01291] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create a new string"))
+
+([newspaper_ProjectKB_01292] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_01293] of Widget
+	(width 250)
+	(name "headline")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01294])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_01294] of Property_List)
+
+([newspaper_ProjectKB_01295] of Widget
+	(width 125)
+	(name "article_type")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01296])
+	(widget_class_name "edu.stanford.smi.protege.widget.ComboBoxWidget")
+	(x 0)
+	(y 240)
+	(height 60))
+
+([newspaper_ProjectKB_01296] of Property_List)
+
+([newspaper_ProjectKB_01297] of Widget
+	(width 250)
+	(name "expiration_date")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01298])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_01298] of Property_List)
+
+([newspaper_ProjectKB_01299] of Widget
+	(width 125)
+	(name "urgent")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01300])
+	(widget_class_name "edu.stanford.smi.protege.widget.CheckBoxWidget")
+	(x 0)
+	(y 180)
+	(height 60))
+
+([newspaper_ProjectKB_01300] of Property_List)
+
+([newspaper_ProjectKB_01487] of Widget
+	(width 973)
+	(name "Organization")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01488])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 820))
+
+([newspaper_ProjectKB_01488] of Property_List
+	(properties
+		[newspaper_ProjectKB_01489]
+		[newspaper_ProjectKB_01497]
+		[newspaper_ProjectKB_01904]
+		[newspaper_ProjectKB_02003]))
+
+([newspaper_ProjectKB_01489] of Widget
+	(width 500)
+	(name "employees")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01490])
+	(label "Employees")
+	(widget_class_name "edu.stanford.smi.protegex.widget.graph.GraphWidget")
+	(x 0)
+	(y 60)
+	(height 480))
+
+([newspaper_ProjectKB_01490] of Property_List
+	(properties
+		[newspaper_ProjectKB_01515]
+		[newspaper_ProjectKB_01516]
+		[newspaper_ProjectKB_01517]
+		[newspaper_ProjectKB_01518]
+		[newspaper_ProjectKB_01519]
+		[newspaper_ProjectKB_01520]
+		[newspaper_ProjectKB_01622]
+		[newspaper_ProjectKB_01722]
+		[newspaper_ProjectKB_01723]
+		[newspaper_ProjectKB_01725]
+		[newspaper_ProjectKB_01825]
+		[newspaper_ProjectKB_01826]
+		[newspaper_ProjectKB_01827]
+		[newspaper_ProjectKB_01828]
+		[newspaper_ProjectKB_01829]
+		[newspaper_ProjectKB_01830]
+		[newspaper_ProjectKB_01831]
+		[newspaper_ProjectKB_01832]
+		[newspaper_ProjectKB_01833]
+		[newspaper_ProjectKB_01834]
+		[newspaper_ProjectKB_01835]
+		[newspaper_ProjectKB_01836]
+		[newspaper_ProjectKB_01837]
+		[newspaper_ProjectKB_01838]
+		[newspaper_ProjectKB_01839]
+		[newspaper_ProjectKB_01840]
+		[newspaper_ProjectKB_01841]
+		[newspaper_ProjectKB_01842]
+		[newspaper_ProjectKB_01843]
+		[newspaper_ProjectKB_01844]
+		[newspaper_ProjectKB_01845]
+		[newspaper_ProjectKB_01846]
+		[newspaper_ProjectKB_01847]
+		[newspaper_ProjectKB_01848]
+		[newspaper_ProjectKB_01849]
+		[newspaper_ProjectKB_01850]
+		[newspaper_ProjectKB_01851]
+		[newspaper_ProjectKB_01852]
+		[newspaper_ProjectKB_01853]
+		[newspaper_ProjectKB_01854]
+		[newspaper_ProjectKB_01855]
+		[newspaper_ProjectKB_01856]
+		[newspaper_ProjectKB_01857]
+		[newspaper_ProjectKB_01858]
+		[newspaper_ProjectKB_01859]
+		[newspaper_ProjectKB_01860]
+		[newspaper_ProjectKB_01861]
+		[newspaper_ProjectKB_01862]
+		[newspaper_ProjectKB_01863]
+		[newspaper_ProjectKB_01864]
+		[newspaper_ProjectKB_01865]
+		[newspaper_ProjectKB_01866]
+		[newspaper_ProjectKB_01867]
+		[newspaper_ProjectKB_01868]
+		[newspaper_ProjectKB_01869]
+		[newspaper_ProjectKB_01870]
+		[newspaper_ProjectKB_01871]
+		[newspaper_ProjectKB_01872]
+		[newspaper_ProjectKB_01873]
+		[newspaper_ProjectKB_01874]
+		[newspaper_ProjectKB_01875]
+		[newspaper_ProjectKB_01876]
+		[newspaper_ProjectKB_01877]
+		[newspaper_ProjectKB_01878]
+		[newspaper_ProjectKB_01879]
+		[newspaper_ProjectKB_01880]
+		[newspaper_ProjectKB_01881]
+		[newspaper_ProjectKB_01882]
+		[newspaper_ProjectKB_01883]
+		[newspaper_ProjectKB_01884]
+		[newspaper_ProjectKB_01885]
+		[newspaper_ProjectKB_01886]
+		[newspaper_ProjectKB_01887]
+		[newspaper_ProjectKB_01934]
+		[newspaper_ProjectKB_01935]
+		[newspaper_ProjectKB_01936]
+		[newspaper_ProjectKB_01937]
+		[newspaper_ProjectKB_01938]
+		[newspaper_ProjectKB_01939]
+		[newspaper_ProjectKB_01940]
+		[newspaper_ProjectKB_01941]
+		[newspaper_ProjectKB_01942]
+		[newspaper_ProjectKB_01943]
+		[newspaper_ProjectKB_01944]
+		[newspaper_ProjectKB_01945]))
+
+([newspaper_ProjectKB_01497] of Widget
+	(width 250)
+	(name "name")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01498])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_01498] of Property_List)
+
+([newspaper_ProjectKB_01515] of String
+	(name "Columnist_shape")
+	(string_value "Ellipse"))
+
+([newspaper_ProjectKB_01516] of Integer
+	(integer_value 255)
+	(name "Columnist_shapeColorRed"))
+
+([newspaper_ProjectKB_01517] of Integer
+	(integer_value 0)
+	(name "Columnist_shapeColorGreen"))
+
+([newspaper_ProjectKB_01518] of Integer
+	(integer_value 255)
+	(name "Columnist_shapeColorBlue"))
+
+([newspaper_ProjectKB_01519] of Integer
+	(integer_value 0)
+	(name "Columnist_textColorRed"))
+
+([newspaper_ProjectKB_01520] of Integer
+	(integer_value 0)
+	(name "Columnist_textColorGreen"))
+
+([newspaper_ProjectKB_01521] of Widget
+	(width 250)
+	(name "phone_number")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01522])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 180)
+	(height 60))
+
+([newspaper_ProjectKB_01522] of Property_List)
+
+([newspaper_ProjectKB_01523] of Property_List
+	(name "layout properties"))
+
+([newspaper_ProjectKB_01524] of Widget
+	(width 250)
+	(name "date_hired")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01525])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_01525] of Property_List)
+
+([newspaper_ProjectKB_01526] of Widget
+	(width 250)
+	(name "responsible_for")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01527])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceListWidget")
+	(x 250)
+	(y 60)
+	(height 120))
+
+([newspaper_ProjectKB_01527] of Property_List
+	(properties
+		[newspaper_ProjectKB_01528]
+		[newspaper_ProjectKB_01529]
+		[newspaper_ProjectKB_01530]
+		[newspaper_ProjectKB_01531]
+		[newspaper_ProjectKB_01532]
+		[newspaper_ProjectKB_01533]))
+
+([newspaper_ProjectKB_01528] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Selected Instances"))
+
+([newspaper_ProjectKB_01529] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_01530] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_01531] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_01532] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_01533] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Selected Instances"))
+
+([newspaper_ProjectKB_01534] of Widget
+	(width 250)
+	(name "name")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01535])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_01535] of Property_List)
+
+([newspaper_ProjectKB_01536] of Widget
+	(width 125)
+	(name "salary")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01537])
+	(widget_class_name "edu.stanford.smi.protege.widget.FloatFieldWidget")
+	(x 250)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_01537] of Property_List)
+
+([newspaper_ProjectKB_01538] of Widget
+	(width 250)
+	(name "other_information")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01539])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextAreaWidget")
+	(x 0)
+	(y 240)
+	(height 120))
+
+([newspaper_ProjectKB_01539] of Property_List)
+
+([newspaper_ProjectKB_01540] of Widget
+	(width 250)
+	(name "sections")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01541])
+	(widget_class_name "edu.stanford.smi.protege.widget.InstanceListWidget")
+	(x 250)
+	(y 180)
+	(height 180))
+
+([newspaper_ProjectKB_01541] of Property_List
+	(properties
+		[newspaper_ProjectKB_01542]
+		[newspaper_ProjectKB_01543]
+		[newspaper_ProjectKB_01544]
+		[newspaper_ProjectKB_01545]
+		[newspaper_ProjectKB_01546]
+		[newspaper_ProjectKB_01547]))
+
+([newspaper_ProjectKB_01542] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-View Selected Instances"))
+
+([newspaper_ProjectKB_01543] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Create Instance"))
+
+([newspaper_ProjectKB_01544] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-References"))
+
+([newspaper_ProjectKB_01545] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Add"))
+
+([newspaper_ProjectKB_01546] of Boolean
+	(boolean_value TRUE)
+	(name "ButtonDisplayed-Remove"))
+
+([newspaper_ProjectKB_01547] of Boolean
+	(boolean_value FALSE)
+	(name "ButtonDisplayed-Delete Selected Instances"))
+
+([newspaper_ProjectKB_01548] of Widget
+	(width 250)
+	(name "current_job_title")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01549])
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_01549] of Property_List)
+
+([newspaper_ProjectKB_01622] of Integer
+	(integer_value 0)
+	(name "Columnist_textColorBlue"))
+
+([newspaper_ProjectKB_01722] of Boolean
+	(boolean_value FALSE)
+	(name "Columnist_bold"))
+
+([newspaper_ProjectKB_01723] of Boolean
+	(boolean_value FALSE)
+	(name "Columnist_italic"))
+
+([newspaper_ProjectKB_01724] of Property_List
+	(name "layout properties"))
+
+([newspaper_ProjectKB_01725] of String
+	(name "Columnist_connectorSlot")
+	(string_value "< none >"))
+
+([newspaper_ProjectKB_01825] of String
+	(name "Columnist_lineType")
+	(string_value "Solid"))
+
+([newspaper_ProjectKB_01826] of String
+	(name "Columnist_arrowheadType")
+	(string_value "Arrowhead"))
+
+([newspaper_ProjectKB_01827] of String
+	(name "Director_shape")
+	(string_value "Rectangle"))
+
+([newspaper_ProjectKB_01828] of Integer
+	(integer_value 192)
+	(name "Director_shapeColorRed"))
+
+([newspaper_ProjectKB_01829] of Integer
+	(integer_value 192)
+	(name "Director_shapeColorGreen"))
+
+([newspaper_ProjectKB_01830] of Integer
+	(integer_value 192)
+	(name "Director_shapeColorBlue"))
+
+([newspaper_ProjectKB_01831] of Integer
+	(integer_value 0)
+	(name "Director_textColorRed"))
+
+([newspaper_ProjectKB_01832] of Integer
+	(integer_value 0)
+	(name "Director_textColorGreen"))
+
+([newspaper_ProjectKB_01833] of Integer
+	(integer_value 0)
+	(name "Director_textColorBlue"))
+
+([newspaper_ProjectKB_01834] of Boolean
+	(boolean_value FALSE)
+	(name "Director_bold"))
+
+([newspaper_ProjectKB_01835] of Boolean
+	(boolean_value FALSE)
+	(name "Director_italic"))
+
+([newspaper_ProjectKB_01836] of String
+	(name "Director_connectorSlot")
+	(string_value "< none >"))
+
+([newspaper_ProjectKB_01837] of String
+	(name "Director_lineType")
+	(string_value "Solid"))
+
+([newspaper_ProjectKB_01838] of String
+	(name "Director_arrowheadType")
+	(string_value "Arrowhead"))
+
+([newspaper_ProjectKB_01839] of String
+	(name "Editor_shape")
+	(string_value "Ellipse"))
+
+([newspaper_ProjectKB_01840] of Integer
+	(integer_value 70)
+	(name "Editor_shapeColorRed"))
+
+([newspaper_ProjectKB_01841] of Integer
+	(integer_value 130)
+	(name "Editor_shapeColorGreen"))
+
+([newspaper_ProjectKB_01842] of Integer
+	(integer_value 180)
+	(name "Editor_shapeColorBlue"))
+
+([newspaper_ProjectKB_01843] of Integer
+	(integer_value 0)
+	(name "Editor_textColorRed"))
+
+([newspaper_ProjectKB_01844] of Integer
+	(integer_value 0)
+	(name "Editor_textColorGreen"))
+
+([newspaper_ProjectKB_01845] of Integer
+	(integer_value 0)
+	(name "Editor_textColorBlue"))
+
+([newspaper_ProjectKB_01846] of Boolean
+	(boolean_value FALSE)
+	(name "Editor_bold"))
+
+([newspaper_ProjectKB_01847] of Boolean
+	(boolean_value FALSE)
+	(name "Editor_italic"))
+
+([newspaper_ProjectKB_01848] of String
+	(name "Editor_connectorSlot")
+	(string_value "responsible_for"))
+
+([newspaper_ProjectKB_01849] of String
+	(name "Editor_lineType")
+	(string_value "Solid"))
+
+([newspaper_ProjectKB_01850] of String
+	(name "Editor_arrowheadType")
+	(string_value "Arrowhead"))
+
+([newspaper_ProjectKB_01851] of String
+	(name "Manager_shape")
+	(string_value "Rectangle"))
+
+([newspaper_ProjectKB_01852] of Integer
+	(integer_value 0)
+	(name "Manager_shapeColorRed"))
+
+([newspaper_ProjectKB_01853] of Integer
+	(integer_value 255)
+	(name "Manager_shapeColorGreen"))
+
+([newspaper_ProjectKB_01854] of Integer
+	(integer_value 255)
+	(name "Manager_shapeColorBlue"))
+
+([newspaper_ProjectKB_01855] of Integer
+	(integer_value 0)
+	(name "Manager_textColorRed"))
+
+([newspaper_ProjectKB_01856] of Integer
+	(integer_value 0)
+	(name "Manager_textColorGreen"))
+
+([newspaper_ProjectKB_01857] of Integer
+	(integer_value 0)
+	(name "Manager_textColorBlue"))
+
+([newspaper_ProjectKB_01858] of Boolean
+	(boolean_value FALSE)
+	(name "Manager_bold"))
+
+([newspaper_ProjectKB_01859] of Boolean
+	(boolean_value FALSE)
+	(name "Manager_italic"))
+
+([newspaper_ProjectKB_01860] of String
+	(name "Manager_connectorSlot")
+	(string_value "< none >"))
+
+([newspaper_ProjectKB_01861] of String
+	(name "Manager_lineType")
+	(string_value "Solid"))
+
+([newspaper_ProjectKB_01862] of String
+	(name "Manager_arrowheadType")
+	(string_value "Arrowhead"))
+
+([newspaper_ProjectKB_01863] of String
+	(name "Reporter_shape")
+	(string_value "Ellipse"))
+
+([newspaper_ProjectKB_01864] of Integer
+	(integer_value 0)
+	(name "Reporter_shapeColorRed"))
+
+([newspaper_ProjectKB_01865] of Integer
+	(integer_value 255)
+	(name "Reporter_shapeColorGreen"))
+
+([newspaper_ProjectKB_01866] of Integer
+	(integer_value 0)
+	(name "Reporter_shapeColorBlue"))
+
+([newspaper_ProjectKB_01867] of Integer
+	(integer_value 0)
+	(name "Reporter_textColorRed"))
+
+([newspaper_ProjectKB_01868] of Integer
+	(integer_value 0)
+	(name "Reporter_textColorGreen"))
+
+([newspaper_ProjectKB_01869] of Integer
+	(integer_value 0)
+	(name "Reporter_textColorBlue"))
+
+([newspaper_ProjectKB_01870] of Boolean
+	(boolean_value FALSE)
+	(name "Reporter_bold"))
+
+([newspaper_ProjectKB_01871] of Boolean
+	(boolean_value FALSE)
+	(name "Reporter_italic"))
+
+([newspaper_ProjectKB_01872] of String
+	(name "Reporter_connectorSlot")
+	(string_value "< none >"))
+
+([newspaper_ProjectKB_01873] of String
+	(name "Reporter_lineType")
+	(string_value "Solid"))
+
+([newspaper_ProjectKB_01874] of String
+	(name "Reporter_arrowheadType")
+	(string_value "Arrowhead"))
+
+([newspaper_ProjectKB_01875] of String
+	(name "Salesperson_shape")
+	(string_value "Ellipse"))
+
+([newspaper_ProjectKB_01876] of Integer
+	(integer_value 255)
+	(name "Salesperson_shapeColorRed"))
+
+([newspaper_ProjectKB_01877] of Integer
+	(integer_value 200)
+	(name "Salesperson_shapeColorGreen"))
+
+([newspaper_ProjectKB_01878] of Integer
+	(integer_value 0)
+	(name "Salesperson_shapeColorBlue"))
+
+([newspaper_ProjectKB_01879] of Integer
+	(integer_value 0)
+	(name "Salesperson_textColorRed"))
+
+([newspaper_ProjectKB_01880] of Integer
+	(integer_value 0)
+	(name "Salesperson_textColorGreen"))
+
+([newspaper_ProjectKB_01881] of Integer
+	(integer_value 0)
+	(name "Salesperson_textColorBlue"))
+
+([newspaper_ProjectKB_01882] of Boolean
+	(boolean_value FALSE)
+	(name "Salesperson_bold"))
+
+([newspaper_ProjectKB_01883] of Boolean
+	(boolean_value FALSE)
+	(name "Salesperson_italic"))
+
+([newspaper_ProjectKB_01884] of String
+	(name "Salesperson_connectorSlot")
+	(string_value "< none >"))
+
+([newspaper_ProjectKB_01885] of String
+	(name "Salesperson_lineType")
+	(string_value "Solid"))
+
+([newspaper_ProjectKB_01886] of String
+	(name "Salesperson_arrowheadType")
+	(string_value "Arrowhead"))
+
+([newspaper_ProjectKB_01887] of String
+	(name "slotForRelations")
+	(string_value "employee_relationships"))
+
+([newspaper_ProjectKB_01904] of Widget
+	(width 0)
+	(name "employee_relationships")
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_01905])
+	(x 0)
+	(y 0)
+	(height 0))
+
+([newspaper_ProjectKB_01905] of Property_List)
+
+([newspaper_ProjectKB_01934] of Integer
+	(integer_value 255)
+	(name "Director Supervision Relation_lineColorRed"))
+
+([newspaper_ProjectKB_01935] of Integer
+	(integer_value 0)
+	(name "Director Supervision Relation_lineColorGreen"))
+
+([newspaper_ProjectKB_01936] of Integer
+	(integer_value 0)
+	(name "Director Supervision Relation_lineColorBlue"))
+
+([newspaper_ProjectKB_01937] of String
+	(name "Director Supervision Relation_lineType")
+	(string_value "Solid"))
+
+([newspaper_ProjectKB_01938] of String
+	(name "Director Supervision Relation_arrowheadType")
+	(string_value "Arrowhead"))
+
+([newspaper_ProjectKB_01939] of Boolean
+	(boolean_value TRUE)
+	(name "Director Supervision Relation_displayText"))
+
+([newspaper_ProjectKB_01940] of Integer
+	(integer_value 0)
+	(name "Manager Supervision Relation_lineColorRed"))
+
+([newspaper_ProjectKB_01941] of Integer
+	(integer_value 0)
+	(name "Manager Supervision Relation_lineColorGreen"))
+
+([newspaper_ProjectKB_01942] of Integer
+	(integer_value 255)
+	(name "Manager Supervision Relation_lineColorBlue"))
+
+([newspaper_ProjectKB_01943] of String
+	(name "Manager Supervision Relation_lineType")
+	(string_value "Solid"))
+
+([newspaper_ProjectKB_01944] of String
+	(name "Manager Supervision Relation_arrowheadType")
+	(string_value "Arrowhead"))
+
+([newspaper_ProjectKB_01945] of Boolean
+	(boolean_value TRUE)
+	(name "Manager Supervision Relation_displayText"))
+
+([newspaper_ProjectKB_02003] of Property_List
+	(name "layout properties"))
+
+([newspaper_ProjectKB_02022] of Map
+	(entries
+		[newspaper_ProjectKB_02023]
+		[newspaper_ProjectKB_02024]
+		[newspaper_ProjectKB_02025]
+		[newspaper_ProjectKB_02026]
+		[newspaper_ProjectKB_02027]
+		[newspaper_ProjectKB_02028]
+		[newspaper_ProjectKB_02029]
+		[newspaper_ProjectKB_02030]
+		[newspaper_ProjectKB_02031]
+		[newspaper_ProjectKB_02032]
+		[newspaper_ProjectKB_02033]
+		[newspaper_ProjectKB_02034]
+		[newspaper_ProjectKB_02035]
+		[newspaper_ProjectKB_02036]))
+
+([newspaper_ProjectKB_02023] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00068")
+	(value_class "java.awt.Rectangle")
+	(value "370 520 60 60"))
+
+([newspaper_ProjectKB_02024] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00039")
+	(value_class "java.awt.Rectangle")
+	(value "170 670 60 60"))
+
+([newspaper_ProjectKB_02025] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00067")
+	(value_class "java.awt.Rectangle")
+	(value "220 520 60 60"))
+
+([newspaper_ProjectKB_02026] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00093")
+	(value_class "java.awt.Rectangle")
+	(value "320 670 60 60"))
+
+([newspaper_ProjectKB_02027] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00055")
+	(value_class "java.awt.Rectangle")
+	(value "220 370 60 60"))
+
+([newspaper_ProjectKB_02028] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00021")
+	(value_class "java.awt.Rectangle")
+	(value "520 370 60 60"))
+
+([newspaper_ProjectKB_02029] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00020")
+	(value_class "java.awt.Rectangle")
+	(value "370 370 60 60"))
+
+([newspaper_ProjectKB_02030] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00051")
+	(value_class "java.awt.Rectangle")
+	(value "70 370 60 60"))
+
+([newspaper_ProjectKB_02031] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00013")
+	(value_class "java.awt.Rectangle")
+	(value "370 220 60 60"))
+
+([newspaper_ProjectKB_02032] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00012")
+	(value_class "java.awt.Rectangle")
+	(value "220 220 60 60"))
+
+([newspaper_ProjectKB_02033] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00045")
+	(value_class "java.awt.Rectangle")
+	(value "70 520 60 60"))
+
+([newspaper_ProjectKB_02034] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00011")
+	(value_class "java.awt.Rectangle")
+	(value "70 220 60 60"))
+
+([newspaper_ProjectKB_02035] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00010")
+	(value_class "java.awt.Rectangle")
+	(value "220 70 60 60"))
+
+([newspaper_ProjectKB_02036] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00043")
+	(value_class "java.awt.Rectangle")
+	(value "470 670 60 60"))
+
+([newspaper_ProjectKB_02037] of Map_Entry
+	(key_class "java.lang.String")
+	(key "InstanceGraphWidget.instance_00064.employees")
+	(value_class "java.util.Map")
+	(value "newspaper_ProjectKB_02022"))
+
+([newspaper_ProjectKB_02055] of Map
+	(entries
+		[newspaper_ProjectKB_02056]
+		[newspaper_ProjectKB_02057]
+		[newspaper_ProjectKB_02058]
+		[newspaper_ProjectKB_02059]
+		[newspaper_ProjectKB_02060]
+		[newspaper_ProjectKB_02061]
+		[newspaper_ProjectKB_02062]
+		[newspaper_ProjectKB_02063]
+		[newspaper_ProjectKB_02064]
+		[newspaper_ProjectKB_02065]
+		[newspaper_ProjectKB_02066]
+		[newspaper_ProjectKB_02067]
+		[newspaper_ProjectKB_02068]
+		[newspaper_ProjectKB_02069]))
+
+([newspaper_ProjectKB_02056] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00068")
+	(value_class "java.awt.Rectangle")
+	(value "370 520 60 60"))
+
+([newspaper_ProjectKB_02057] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00039")
+	(value_class "java.awt.Rectangle")
+	(value "170 670 60 60"))
+
+([newspaper_ProjectKB_02058] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00067")
+	(value_class "java.awt.Rectangle")
+	(value "220 520 60 60"))
+
+([newspaper_ProjectKB_02059] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00093")
+	(value_class "java.awt.Rectangle")
+	(value "320 670 60 60"))
+
+([newspaper_ProjectKB_02060] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00055")
+	(value_class "java.awt.Rectangle")
+	(value "220 370 60 60"))
+
+([newspaper_ProjectKB_02061] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00021")
+	(value_class "java.awt.Rectangle")
+	(value "520 370 60 60"))
+
+([newspaper_ProjectKB_02062] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00020")
+	(value_class "java.awt.Rectangle")
+	(value "370 370 60 60"))
+
+([newspaper_ProjectKB_02063] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00051")
+	(value_class "java.awt.Rectangle")
+	(value "70 370 60 60"))
+
+([newspaper_ProjectKB_02064] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00013")
+	(value_class "java.awt.Rectangle")
+	(value "370 220 60 60"))
+
+([newspaper_ProjectKB_02065] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00012")
+	(value_class "java.awt.Rectangle")
+	(value "220 220 60 60"))
+
+([newspaper_ProjectKB_02066] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00045")
+	(value_class "java.awt.Rectangle")
+	(value "70 520 60 60"))
+
+([newspaper_ProjectKB_02067] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00011")
+	(value_class "java.awt.Rectangle")
+	(value "70 220 60 60"))
+
+([newspaper_ProjectKB_02068] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00010")
+	(value_class "java.awt.Rectangle")
+	(value "220 70 60 60"))
+
+([newspaper_ProjectKB_02069] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00043")
+	(value_class "java.awt.Rectangle")
+	(value "470 670 60 60"))
+
+([newspaper_ProjectKB_02070] of Map_Entry
+	(key_class "java.lang.String")
+	(key "InstanceGraphWidget.instance_00064.employees")
+	(value_class "java.util.Map")
+	(value "newspaper_ProjectKB_02055"))
+
+([newspaper_ProjectKB_02113] of Map
+	(entries
+		[newspaper_ProjectKB_02114]
+		[newspaper_ProjectKB_02115]
+		[newspaper_ProjectKB_02116]
+		[newspaper_ProjectKB_02117]
+		[newspaper_ProjectKB_02118]
+		[newspaper_ProjectKB_02119]
+		[newspaper_ProjectKB_02120]
+		[newspaper_ProjectKB_02121]
+		[newspaper_ProjectKB_02122]
+		[newspaper_ProjectKB_02123]
+		[newspaper_ProjectKB_02124]
+		[newspaper_ProjectKB_02125]
+		[newspaper_ProjectKB_02126]
+		[newspaper_ProjectKB_02127]))
+
+([newspaper_ProjectKB_02114] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00068")
+	(value_class "java.awt.Rectangle")
+	(value "370 520 60 60"))
+
+([newspaper_ProjectKB_02115] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00039")
+	(value_class "java.awt.Rectangle")
+	(value "170 670 60 60"))
+
+([newspaper_ProjectKB_02116] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00067")
+	(value_class "java.awt.Rectangle")
+	(value "220 520 60 60"))
+
+([newspaper_ProjectKB_02117] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00093")
+	(value_class "java.awt.Rectangle")
+	(value "320 670 60 60"))
+
+([newspaper_ProjectKB_02118] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00055")
+	(value_class "java.awt.Rectangle")
+	(value "220 370 60 60"))
+
+([newspaper_ProjectKB_02119] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00021")
+	(value_class "java.awt.Rectangle")
+	(value "520 370 60 60"))
+
+([newspaper_ProjectKB_02120] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00020")
+	(value_class "java.awt.Rectangle")
+	(value "370 370 60 60"))
+
+([newspaper_ProjectKB_02121] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00051")
+	(value_class "java.awt.Rectangle")
+	(value "70 370 60 60"))
+
+([newspaper_ProjectKB_02122] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00013")
+	(value_class "java.awt.Rectangle")
+	(value "370 220 60 60"))
+
+([newspaper_ProjectKB_02123] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00012")
+	(value_class "java.awt.Rectangle")
+	(value "220 220 60 60"))
+
+([newspaper_ProjectKB_02124] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00045")
+	(value_class "java.awt.Rectangle")
+	(value "70 520 60 60"))
+
+([newspaper_ProjectKB_02125] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00011")
+	(value_class "java.awt.Rectangle")
+	(value "70 220 60 60"))
+
+([newspaper_ProjectKB_02126] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00010")
+	(value_class "java.awt.Rectangle")
+	(value "220 70 60 60"))
+
+([newspaper_ProjectKB_02127] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00043")
+	(value_class "java.awt.Rectangle")
+	(value "470 670 60 60"))
+
+([newspaper_ProjectKB_02128] of Map_Entry
+	(key_class "java.lang.String")
+	(key "InstanceGraphWidget.instance_00064.employees")
+	(value_class "java.util.Map")
+	(value "newspaper_ProjectKB_02113"))
+
+([newspaper_ProjectKB_02169] of Map
+	(entries
+		[newspaper_ProjectKB_02170]
+		[newspaper_ProjectKB_02171]
+		[newspaper_ProjectKB_02172]
+		[newspaper_ProjectKB_02173]
+		[newspaper_ProjectKB_02174]
+		[newspaper_ProjectKB_02175]
+		[newspaper_ProjectKB_02176]
+		[newspaper_ProjectKB_02177]
+		[newspaper_ProjectKB_02178]
+		[newspaper_ProjectKB_02179]
+		[newspaper_ProjectKB_02180]
+		[newspaper_ProjectKB_02181]
+		[newspaper_ProjectKB_02182]
+		[newspaper_ProjectKB_02183]))
+
+([newspaper_ProjectKB_02170] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00068")
+	(value_class "java.awt.Rectangle")
+	(value "370 520 60 60"))
+
+([newspaper_ProjectKB_02171] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00039")
+	(value_class "java.awt.Rectangle")
+	(value "170 670 60 60"))
+
+([newspaper_ProjectKB_02172] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00067")
+	(value_class "java.awt.Rectangle")
+	(value "220 520 60 60"))
+
+([newspaper_ProjectKB_02173] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00093")
+	(value_class "java.awt.Rectangle")
+	(value "320 670 60 60"))
+
+([newspaper_ProjectKB_02174] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00055")
+	(value_class "java.awt.Rectangle")
+	(value "220 370 60 60"))
+
+([newspaper_ProjectKB_02175] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00021")
+	(value_class "java.awt.Rectangle")
+	(value "520 370 60 60"))
+
+([newspaper_ProjectKB_02176] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00020")
+	(value_class "java.awt.Rectangle")
+	(value "370 370 60 60"))
+
+([newspaper_ProjectKB_02177] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00051")
+	(value_class "java.awt.Rectangle")
+	(value "70 370 60 60"))
+
+([newspaper_ProjectKB_02178] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00013")
+	(value_class "java.awt.Rectangle")
+	(value "370 220 60 60"))
+
+([newspaper_ProjectKB_02179] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00012")
+	(value_class "java.awt.Rectangle")
+	(value "220 220 60 60"))
+
+([newspaper_ProjectKB_02180] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00045")
+	(value_class "java.awt.Rectangle")
+	(value "70 520 60 60"))
+
+([newspaper_ProjectKB_02181] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00011")
+	(value_class "java.awt.Rectangle")
+	(value "70 220 60 60"))
+
+([newspaper_ProjectKB_02182] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00010")
+	(value_class "java.awt.Rectangle")
+	(value "220 70 60 60"))
+
+([newspaper_ProjectKB_02183] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00043")
+	(value_class "java.awt.Rectangle")
+	(value "470 670 60 60"))
+
+([newspaper_ProjectKB_02184] of Map_Entry
+	(key_class "java.lang.String")
+	(key "InstanceGraphWidget.instance_00064.employees")
+	(value_class "java.util.Map")
+	(value "newspaper_ProjectKB_02169"))
+
+([newspaper_ProjectKB_02202] of Map
+	(entries
+		[newspaper_ProjectKB_02203]
+		[newspaper_ProjectKB_02204]
+		[newspaper_ProjectKB_02205]
+		[newspaper_ProjectKB_02206]
+		[newspaper_ProjectKB_02207]
+		[newspaper_ProjectKB_02208]
+		[newspaper_ProjectKB_02209]
+		[newspaper_ProjectKB_02210]
+		[newspaper_ProjectKB_02211]
+		[newspaper_ProjectKB_02212]
+		[newspaper_ProjectKB_02213]
+		[newspaper_ProjectKB_02214]
+		[newspaper_ProjectKB_02215]
+		[newspaper_ProjectKB_02216]))
+
+([newspaper_ProjectKB_02203] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00068")
+	(value_class "java.awt.Rectangle")
+	(value "370 520 60 60"))
+
+([newspaper_ProjectKB_02204] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00039")
+	(value_class "java.awt.Rectangle")
+	(value "170 670 60 60"))
+
+([newspaper_ProjectKB_02205] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00067")
+	(value_class "java.awt.Rectangle")
+	(value "220 520 60 60"))
+
+([newspaper_ProjectKB_02206] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00093")
+	(value_class "java.awt.Rectangle")
+	(value "320 670 60 60"))
+
+([newspaper_ProjectKB_02207] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00055")
+	(value_class "java.awt.Rectangle")
+	(value "220 370 60 60"))
+
+([newspaper_ProjectKB_02208] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00021")
+	(value_class "java.awt.Rectangle")
+	(value "520 370 60 60"))
+
+([newspaper_ProjectKB_02209] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00020")
+	(value_class "java.awt.Rectangle")
+	(value "370 370 60 60"))
+
+([newspaper_ProjectKB_02210] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00051")
+	(value_class "java.awt.Rectangle")
+	(value "70 370 60 60"))
+
+([newspaper_ProjectKB_02211] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00013")
+	(value_class "java.awt.Rectangle")
+	(value "370 220 60 60"))
+
+([newspaper_ProjectKB_02212] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00012")
+	(value_class "java.awt.Rectangle")
+	(value "220 220 60 60"))
+
+([newspaper_ProjectKB_02213] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00045")
+	(value_class "java.awt.Rectangle")
+	(value "70 520 60 60"))
+
+([newspaper_ProjectKB_02214] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00011")
+	(value_class "java.awt.Rectangle")
+	(value "70 220 60 60"))
+
+([newspaper_ProjectKB_02215] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00010")
+	(value_class "java.awt.Rectangle")
+	(value "220 70 60 60"))
+
+([newspaper_ProjectKB_02216] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00043")
+	(value_class "java.awt.Rectangle")
+	(value "470 670 60 60"))
+
+([newspaper_ProjectKB_02217] of Map_Entry
+	(key_class "java.lang.String")
+	(key "InstanceGraphWidget.instance_00064.employees")
+	(value_class "java.util.Map")
+	(value "newspaper_ProjectKB_02202"))
+
+([newspaper_ProjectKB_02235] of Map
+	(entries
+		[newspaper_ProjectKB_02236]
+		[newspaper_ProjectKB_02237]
+		[newspaper_ProjectKB_02238]
+		[newspaper_ProjectKB_02239]
+		[newspaper_ProjectKB_02240]
+		[newspaper_ProjectKB_02241]
+		[newspaper_ProjectKB_02242]
+		[newspaper_ProjectKB_02243]
+		[newspaper_ProjectKB_02244]
+		[newspaper_ProjectKB_02245]
+		[newspaper_ProjectKB_02246]
+		[newspaper_ProjectKB_02247]
+		[newspaper_ProjectKB_02248]
+		[newspaper_ProjectKB_02249]))
+
+([newspaper_ProjectKB_02236] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00068")
+	(value_class "java.awt.Rectangle")
+	(value "370 520 60 60"))
+
+([newspaper_ProjectKB_02237] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00039")
+	(value_class "java.awt.Rectangle")
+	(value "170 670 60 60"))
+
+([newspaper_ProjectKB_02238] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00067")
+	(value_class "java.awt.Rectangle")
+	(value "220 520 60 60"))
+
+([newspaper_ProjectKB_02239] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00093")
+	(value_class "java.awt.Rectangle")
+	(value "320 670 60 60"))
+
+([newspaper_ProjectKB_02240] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00055")
+	(value_class "java.awt.Rectangle")
+	(value "220 370 60 60"))
+
+([newspaper_ProjectKB_02241] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00021")
+	(value_class "java.awt.Rectangle")
+	(value "520 370 60 60"))
+
+([newspaper_ProjectKB_02242] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00020")
+	(value_class "java.awt.Rectangle")
+	(value "370 370 60 60"))
+
+([newspaper_ProjectKB_02243] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00051")
+	(value_class "java.awt.Rectangle")
+	(value "70 370 60 60"))
+
+([newspaper_ProjectKB_02244] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00013")
+	(value_class "java.awt.Rectangle")
+	(value "370 220 60 60"))
+
+([newspaper_ProjectKB_02245] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00012")
+	(value_class "java.awt.Rectangle")
+	(value "220 220 60 60"))
+
+([newspaper_ProjectKB_02246] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00045")
+	(value_class "java.awt.Rectangle")
+	(value "70 520 60 60"))
+
+([newspaper_ProjectKB_02247] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00011")
+	(value_class "java.awt.Rectangle")
+	(value "70 220 60 60"))
+
+([newspaper_ProjectKB_02248] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00010")
+	(value_class "java.awt.Rectangle")
+	(value "220 70 60 60"))
+
+([newspaper_ProjectKB_02249] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00043")
+	(value_class "java.awt.Rectangle")
+	(value "470 670 60 60"))
+
+([newspaper_ProjectKB_02250] of Map_Entry
+	(key_class "java.lang.String")
+	(key "InstanceGraphWidget.instance_00064.employees")
+	(value_class "java.util.Map")
+	(value "newspaper_ProjectKB_02235"))
+
+([newspaper_ProjectKB_02268] of Map
+	(entries
+		[newspaper_ProjectKB_02269]
+		[newspaper_ProjectKB_02270]
+		[newspaper_ProjectKB_02271]
+		[newspaper_ProjectKB_02272]
+		[newspaper_ProjectKB_02273]
+		[newspaper_ProjectKB_02274]
+		[newspaper_ProjectKB_02275]
+		[newspaper_ProjectKB_02276]
+		[newspaper_ProjectKB_02277]
+		[newspaper_ProjectKB_02278]
+		[newspaper_ProjectKB_02279]
+		[newspaper_ProjectKB_02280]
+		[newspaper_ProjectKB_02281]
+		[newspaper_ProjectKB_02282]))
+
+([newspaper_ProjectKB_02269] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00068")
+	(value_class "java.awt.Rectangle")
+	(value "370 520 60 60"))
+
+([newspaper_ProjectKB_02270] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00039")
+	(value_class "java.awt.Rectangle")
+	(value "170 670 60 60"))
+
+([newspaper_ProjectKB_02271] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00067")
+	(value_class "java.awt.Rectangle")
+	(value "220 520 60 60"))
+
+([newspaper_ProjectKB_02272] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00093")
+	(value_class "java.awt.Rectangle")
+	(value "320 670 60 60"))
+
+([newspaper_ProjectKB_02273] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00055")
+	(value_class "java.awt.Rectangle")
+	(value "220 370 60 60"))
+
+([newspaper_ProjectKB_02274] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00021")
+	(value_class "java.awt.Rectangle")
+	(value "520 370 60 60"))
+
+([newspaper_ProjectKB_02275] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00020")
+	(value_class "java.awt.Rectangle")
+	(value "370 370 60 60"))
+
+([newspaper_ProjectKB_02276] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00051")
+	(value_class "java.awt.Rectangle")
+	(value "70 370 60 60"))
+
+([newspaper_ProjectKB_02277] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00013")
+	(value_class "java.awt.Rectangle")
+	(value "370 220 60 60"))
+
+([newspaper_ProjectKB_02278] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00012")
+	(value_class "java.awt.Rectangle")
+	(value "220 220 60 60"))
+
+([newspaper_ProjectKB_02279] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00045")
+	(value_class "java.awt.Rectangle")
+	(value "70 520 60 60"))
+
+([newspaper_ProjectKB_02280] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00011")
+	(value_class "java.awt.Rectangle")
+	(value "70 220 60 60"))
+
+([newspaper_ProjectKB_02281] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00010")
+	(value_class "java.awt.Rectangle")
+	(value "220 70 60 60"))
+
+([newspaper_ProjectKB_02282] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00043")
+	(value_class "java.awt.Rectangle")
+	(value "470 670 60 60"))
+
+([newspaper_ProjectKB_02283] of Map_Entry
+	(key_class "java.lang.String")
+	(key "InstanceGraphWidget.instance_00064.employees")
+	(value_class "java.util.Map")
+	(value "newspaper_ProjectKB_02268"))
+
+([newspaper_ProjectKB_02301] of Map
+	(entries
+		[newspaper_ProjectKB_02302]
+		[newspaper_ProjectKB_02303]
+		[newspaper_ProjectKB_02304]
+		[newspaper_ProjectKB_02305]
+		[newspaper_ProjectKB_02306]
+		[newspaper_ProjectKB_02307]
+		[newspaper_ProjectKB_02308]
+		[newspaper_ProjectKB_02309]
+		[newspaper_ProjectKB_02310]
+		[newspaper_ProjectKB_02311]
+		[newspaper_ProjectKB_02312]
+		[newspaper_ProjectKB_02313]
+		[newspaper_ProjectKB_02314]
+		[newspaper_ProjectKB_02315]))
+
+([newspaper_ProjectKB_02302] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00068")
+	(value_class "java.awt.Rectangle")
+	(value "370 520 60 60"))
+
+([newspaper_ProjectKB_02303] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00039")
+	(value_class "java.awt.Rectangle")
+	(value "170 670 60 60"))
+
+([newspaper_ProjectKB_02304] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00067")
+	(value_class "java.awt.Rectangle")
+	(value "220 520 60 60"))
+
+([newspaper_ProjectKB_02305] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00093")
+	(value_class "java.awt.Rectangle")
+	(value "320 670 60 60"))
+
+([newspaper_ProjectKB_02306] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00055")
+	(value_class "java.awt.Rectangle")
+	(value "220 370 60 60"))
+
+([newspaper_ProjectKB_02307] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00021")
+	(value_class "java.awt.Rectangle")
+	(value "520 370 60 60"))
+
+([newspaper_ProjectKB_02308] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00020")
+	(value_class "java.awt.Rectangle")
+	(value "370 370 60 60"))
+
+([newspaper_ProjectKB_02309] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00051")
+	(value_class "java.awt.Rectangle")
+	(value "70 370 60 60"))
+
+([newspaper_ProjectKB_02310] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00013")
+	(value_class "java.awt.Rectangle")
+	(value "370 220 60 60"))
+
+([newspaper_ProjectKB_02311] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00012")
+	(value_class "java.awt.Rectangle")
+	(value "220 220 60 60"))
+
+([newspaper_ProjectKB_02312] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00045")
+	(value_class "java.awt.Rectangle")
+	(value "70 520 60 60"))
+
+([newspaper_ProjectKB_02313] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00011")
+	(value_class "java.awt.Rectangle")
+	(value "70 220 60 60"))
+
+([newspaper_ProjectKB_02314] of Map_Entry
+	(key_class "java.lang.String")
+	(key "newspaper_00010")
+	(value_class "java.awt.Rectangle")
+	(value "220 70 60 60"))
+
+([newspaper_ProjectKB_02315] of Map_Entry
+	(key_class "java.lang.String")
+	(key "instance_00043")
+	(value_class "java.awt.Rectangle")
+	(value "470 670 60 60"))
+
+([newspaper_ProjectKB_02316] of Map_Entry
+	(key_class "java.lang.String")
+	(key "InstanceGraphWidget.instance_00064.employees")
+	(value_class "java.util.Map")
+	(value "newspaper_ProjectKB_02301"))
+
+([newspaper_ProjectKB_INSTANCE_00001] of Options
+	(display_multi_parent_class_icon TRUE)
+	(update_modification_slots FALSE)
+	(display_abstract_class_icon TRUE)
+	(is_readonly FALSE)
+	(display_hidden_classes TRUE)
+	(confirm_on_remove FALSE))
+
+([newspaper_ProjectKB_INSTANCE_00105] of Property_List
+	(name "layout properties"))
+
+([newspaper_ProjectKB_INSTANCE_00242] of Widget
+	(width 615)
+	(name "Salesperson")
+	(property_list [newspaper_ProjectKB_INSTANCE_00243])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 477))
+
+([newspaper_ProjectKB_INSTANCE_00243] of Property_List
+	(properties
+		[newspaper_ProjectKB_INSTANCE_00244]
+		[newspaper_ProjectKB_INSTANCE_00245]
+		[newspaper_ProjectKB_INSTANCE_00246]
+		[newspaper_ProjectKB_INSTANCE_00247]
+		[newspaper_ProjectKB_INSTANCE_00248]
+		[newspaper_ProjectKB_INSTANCE_00249]
+		[newspaper_ProjectKB_INSTANCE_00105]))
+
+([newspaper_ProjectKB_INSTANCE_00244] of Widget
+	(width 250)
+	(name "other_information")
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 250)
+	(y 0)
+	(height 60))
+
+([newspaper_ProjectKB_INSTANCE_00245] of Widget
+	(width 250)
+	(name "current_job_title")
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_INSTANCE_00246] of Widget
+	(width 250)
+	(name "date_hired")
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_INSTANCE_00247] of Widget
+	(width 125)
+	(name "salary")
+	(widget_class_name "edu.stanford.smi.protege.widget.FloatFieldWidget")
+	(x 250)
+	(y 120)
+	(height 60))
+
+([newspaper_ProjectKB_INSTANCE_00248] of Widget
+	(width 250)
+	(name "phone_number")
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 250)
+	(y 60)
+	(height 60))
+
+([newspaper_ProjectKB_INSTANCE_00249] of Widget
+	(width 250)
+	(name "name")
+	(widget_class_name "edu.stanford.smi.protege.widget.TextFieldWidget")
+	(x 0)
+	(y 0)
+	(height 60))
+
+([PROJECT] of Project
+	(default_instance_widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(default_cls_metaclass ":STANDARD-CLASS")
+	(tabs
+		[CLSES_TAB]
+		[SLOTS_TAB]
+		[FORMS_TAB]
+		[INSTANCES_TAB]
+		[QUERIES_TAB]
+		[newspaper_ProjectKB_00949]
+		[newspaper_ProjectKB_00955])
+	(property_map [newspaper_ProjectKB_01008])
+	(default_slot_metaclass ":STANDARD-SLOT")
+	(sources [SOURCES])
+	(browser_slot_names [KB_INSTANCE_00001])
+	(default_facet_metaclass ":STANDARD-FACET")
+	(next_frame_number 24)
+	(customized_instance_widgets
+		[newspaper_ProjectKB_01487]
+		[newspaper_ProjectKB_00444]
+		[newspaper_ProjectKB_00939]
+		[KB_INSTANCE_00119]
+		[newspaper_ProjectKB_INSTANCE_00242]
+		[newspaper_ProjectKB_00928]
+		[newspaper_ProjectKB_00933]
+		[SLOT_WIDGET]
+		[CLASS_WIDGET]
+		[KB_INSTANCE_00027]
+		[KB_INSTANCE_00049]
+		[newspaper_ProjectKB_00678])
+	(options [newspaper_ProjectKB_INSTANCE_00001]))
+
+([QUERIES_TAB] of Widget
+	(is_hidden FALSE)
+	(property_list [newspaper_ProjectKB_00260])
+	(label "Queries")
+	(widget_class_name "edu.stanford.smi.protegex.queries_tab.QueriesTab"))
+
+([REFERENCERS_WIDGET] of Widget
+	(width 300)
+	(name "referencers_widget")
+	(label "Referencing Instances")
+	(widget_class_name "edu.stanford.smi.protege.ui.ReferencersWidget")
+	(x 0)
+	(y 0)
+	(height 120))
+
+([SLOT_CLSES_WIDGET] of Widget
+	(width 300)
+	(name "slot_clses_widget")
+	(label "Associated Classes")
+	(widget_class_name "edu.stanford.smi.protege.ui.SlotClsesWidget")
+	(x 0)
+	(y 0)
+	(height 120))
+
+([SLOT_WIDGET] of Widget
+	(width 1409)
+	(name ":STANDARD-SLOT")
+	(property_list [newspaper_ProjectKB_00412])
+	(widget_class_name "edu.stanford.smi.protege.widget.FormWidget")
+	(x 0)
+	(y 0)
+	(height 996))
+
+([SLOTS_TAB] of Widget
+	(width 821)
+	(name "Slots")
+	(is_hidden FALSE)
+	(property_list [SLOTS_TAB_PROPERTIES])
+	(label "Slots")
+	(widget_class_name "edu.stanford.smi.protege.widget.SlotsTab")
+	(x 0)
+	(y 0)
+	(height 347))
+
+([SLOTS_TAB_PROPERTIES] of Property_List
+	(properties
+		[SLOTS_WIDGET]
+		[SLOT_CLSES_WIDGET]
+		[newspaper_ProjectKB_00026]
+		[newspaper_ProjectKB_00027]))
+
+([SLOTS_WIDGET] of Widget
+	(width 300)
+	(name "slots_widget")
+	(label "Slots")
+	(widget_class_name "edu.stanford.smi.protege.ui.SlotsWidget")
+	(x 0)
+	(y 0)
+	(height 400))
+
+([SOURCES] of Property_List
+	(properties
+		[FACTORY_CLASS_NAME]
+		[KB_INSTANCE_00002]
+		[KB_INSTANCE_00003])
+	(name "knowledge base sources"))

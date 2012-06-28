@@ -1,0 +1,208 @@
+/*
+    A marker style for new components that use non-gwtext styling
+*/
+.web-protege-laf {
+    font-size: 12px;
+}
+
+.web-protege-100-percent-width {
+    width: 100%;
+}
+
+
+*.web-protege-laf * .gwt-TextArea {
+    border-style: solid;
+    border-width: 1px;
+    border-color: silver;
+    font-size: 12px;
+    font-family: Verdana,Arial,sans-serif;
+    padding: 2px;
+    box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -webkit-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+}
+
+*.web-protege-laf .gwt-TextBox {
+    border-style: solid;
+    border-width: 1px;
+    border-color: silver;
+    font-size: 12px;
+    padding: 2px;
+    box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -webkit-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+
+}
+
+*.web-protege-laf :focus {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #4779be;
+    outline: none;
+}
+
+.web-protege-form-label {
+    color: #4779be;
+    text-align: right;
+    font-size: 12px;
+    padding-right: 2px;
+}
+
+*.web-protege-laf .gwt-PasswordTextBox {
+    border-style: solid;
+    border-width: 1px;
+    border-color: silver;
+    font-size: 12px;
+    padding: 2px;
+    box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -webkit-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+}
+
+.web-protege-form-horizontal-padding {
+    padding-left: 2px;
+}
+
+.web-protege-form-vertical-padding {
+    padding-top: 2px;
+}
+
+.web-protege-form-horizontal-component-spacing {
+    padding-left: 10px;
+}
+
+
+.web-protege-component-group-left-padding {
+    padding-left: 10px;
+}
+
+
+.web-protege-component-group-top-padding {
+    padding-top: 10px;
+}
+
+.web-protege-component-group-right-padding {
+    padding-right: 10px;
+}
+
+.web-protege-component-group-bottom-padding {
+    padding-bottom: 10px;
+}
+.web-protege-component-group-padding {
+    padding: 10px;
+}
+
+
+.gwt-SuggestBox {
+    border-style: solid;
+    border-width: 1px;
+    border-color: silver;
+    font-size: 12px;
+    padding: 2px;
+    box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    font-family: verdana,arial,sans-serif;
+}
+
+.gwt-SuggestBoxPopup {
+    font-size: 12px;
+    font-family: Verdana,Arial,Helvetica,SANS-SERIF;
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+    border: 1px solid #ACACAC;
+    border: 1px solid rgba(0, 0, 0, .333);
+    font-size: 12px;
+}
+
+.gwt-SuggestBoxPopup .item {
+    background: white;
+    color: #000000;
+}
+
+.gwt-SuggestBoxPopup .item-selected {
+    color: white;
+    background: #4779be;
+}
+
+::-webkit-input-placeholder {  color: rgba(220, 220, 220, 1.0);}
+:-moz-placeholder { color: rgba(220, 220, 220, 1.0);}
+
+
+.web-protege-entity-match-substring {
+    font-weight: bold;
+}
+
+
+.web-protege-vertical-spacer {
+    height: 1.5em;
+}
+
+.web-protege-button-red {
+    border-radius: 3px 3px 3px 3px;
+    cursor: default;
+    font-size: 11px;
+    font-weight: bold;
+    height: 30px;
+    line-height: 27px;
+    margin-left: 16px;
+    min-width: 54px;
+    outline: 0 none;
+    padding: 0 8px;
+    text-align: center;
+    color: white;
+
+    border: 1px solid #DD4B39;
+
+    background-image: -webkit-linear-gradient(top,#DD4B39,#D14836);
+    background-image: -moz-linear-gradient(top,#DD4B39,#D14836);
+    background-image: -ms-linear-gradient(top,#DD4B39,#D14836);
+    background-image: -o-linear-gradient(top,#DD4B39,#D14836);
+    background-image: linear-gradient(top,#DD4B39,#D14836);
+}
+
+.web-protege-button-red:hover {
+    border: 1px solid rgba(150, 150, 150, 1.0);
+    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
+    box-shadow: 0px 0px 2px 1px rgba(20, 20, 20, 0.2);
+}
+
+.web-protege-button-red:active {
+    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
+    box-shadow: 0px 0px 2px 3px rgba(150, 50, 50, 0.5) inset;
+}
+
+.web-protege-error-background {
+    background: #edb3b1;
+}
+
+.web-protege-red-foreground {
+    color: red;
+}
+
+
+
+
+
+
+
+.gwt-Tree {
+    /*overflow: scroll;*/
+}
+.gwt-Tree .gwt-TreeItem {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ff00ff;
+    background: #add8e6;
+    display: inline-block;
+}
+.gwt-Tree .gwt-TreeItem-selected {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #7cfc00;
+    background: #008200;
+    display: inline-block;
+}
+

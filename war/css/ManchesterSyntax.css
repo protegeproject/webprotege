@@ -1,0 +1,29 @@
+.cm-s-manchester-syntax span.cm-quantifier {
+    color: #c528eb;
+    font-family: verdana,arial,helvetica,sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.cm-s-manchester-syntax span.cm-boolean-connective {
+    color: #0669eb;
+    font-family: verdana,arial,helvetica,sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.cm-s-manchester-syntax span.cm-string {
+    font-family: verdana,arial,helvetica,sans-serif;
+    font-size: 12px;
+}
+
+
+/*.CodeMirror pre {*/
+    /*font-size: 12px;*/
+    /*line-height: 12px;*/
+    /*height: 14px;*/
+/*}*/
+
+.CodeMirror pre {
+    line-height: 16px;
+}

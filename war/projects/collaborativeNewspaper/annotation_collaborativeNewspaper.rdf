@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE rdf:RDF [
+	 <!ENTITY rdf 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+	 <!ENTITY kb 'http://protege.stanford.edu/kb#'>
+	 <!ENTITY rdfs 'http://www.w3.org/2000/01/rdf-schema#'>
+]>
+<rdf:RDF xmlns:rdf="&rdf;"
+	 xmlns:kb="&kb;"
+	 xmlns:rdfs="&rdfs;">
+<kb:Advice rdf:about="&kb;annotation_collaborativeNewspaper_Class0"
+	 kb:author="Guest"
+	 kb:subject="A piece of advice for all authors"
+	 rdfs:label="A piece of advice for all authors">
+	<kb:body xml:space='preserve'><![CDATA[<html>
+  <head>
+    <style type="text/css">
+      <!--
+        body { font-size: 12pt; font-family: arial }
+        p { margin-bottom: 2; margin-left: 2; font-family: arial; margin-top: 2; margin-right: 2 }
+      -->
+    </style>
+        
+  </head>
+  <body>
+    <b><u>Advice</u></b> is one annotation type defined in the <i>changes and annotations ontology</i>.<br><br>You can add internal links to ontology entities, for example:<br><a href="internalLink">@'Newspaper'</a><br><a href="internalLink"><br></a>If you click on the link above a new window will pop up with the details of the class Newspaper.<br><a href="internalLink"><br></a><br></body>
+</html>]]></kb:body>
+	<kb:created rdf:resource="&kb;annotation_collaborativeNewspaper_Class1"/>
+	<kb:annotates rdf:resource="&kb;annotation_collaborativeNewspaper_Class2"/>
+	<kb:associatedAnnotations rdf:resource="&kb;annotation_collaborativeNewspaper_Class3"/>
+</kb:Advice>
+<kb:Timestamp rdf:about="&kb;annotation_collaborativeNewspaper_Class1"
+	 kb:date="10/23/2008 21:23:30 GMT-08:00"
+	 kb:sequence="0"
+	 rdfs:label="10/23/2008 21:23:30 GMT-08:00"/>
+<kb:SeeAlso rdf:about="&kb;annotation_collaborativeNewspaper_Class10000"
+	 kb:author="Guest"
+	 kb:subject="SeeAlso: annotations on slots"
+	 rdfs:label="SeeAlso: annotations on slots">
+	<kb:body xml:space='preserve'><![CDATA[<html>
+  <head>
+    <style type="text/css">
+      <!--
+        body { font-size: 12pt; font-family: arial }
+        p { margin-bottom: 2; margin-left: 2; margin-top: 2; margin-right: 2; font-family: arial }
+      -->
+    </style>
+        
+  </head>
+  <body>
+    You may also add annotations on slots</body>
+</html>]]></kb:body>
+	<kb:created rdf:resource="&kb;annotation_collaborativeNewspaper_Class10001"/>
+	<kb:annotates rdf:resource="&kb;annotation_collaborativeNewspaper_Class10002"/>
+</kb:SeeAlso>
+<kb:Timestamp rdf:about="&kb;annotation_collaborativeNewspaper_Class10001"
+	 kb:date="10/23/2008 21:53:27 GMT-08:00"
+	 kb:sequence="0"
+	 rdfs:label="10/23/2008 21:53:27 GMT-08:00"/>
+<kb:Ontology_Property rdf:about="&kb;annotation_collaborativeNewspaper_Class10002"
+	 kb:currentName="advertisements"
+	 rdfs:label="advertisements">
+	<kb:associatedAnnotations rdf:resource="&kb;annotation_collaborativeNewspaper_Class10000"/>
+</kb:Ontology_Property>
+<kb:Question rdf:about="&kb;annotation_collaborativeNewspaper_Class10003"
+	 kb:author="Guest"
+	 kb:subject="How about this instance?"
+	 rdfs:label="How about this instance?">
+	<kb:body xml:space='preserve'><![CDATA[<html>
+  <head>
+    <style type="text/css">
+      <!--
+        body { font-size: 12pt; font-family: arial }
+        p { margin-bottom: 2; margin-left: 2; margin-top: 2; margin-right: 2; font-family: arial }
+      -->
+    </style>
+        
+  </head>
+  <body>
+    This is an example of a <u>question annotation</u> on an instance</body>
+</html>]]></kb:body>
+	<kb:created rdf:resource="&kb;annotation_collaborativeNewspaper_Class10004"/>
+	<kb:annotates rdf:resource="&kb;annotation_collaborativeNewspaper_Class10005"/>
+</kb:Question>
+<kb:Timestamp rdf:about="&kb;annotation_collaborativeNewspaper_Class10004"
+	 kb:date="10/23/2008 21:54:19 GMT-08:00"
+	 kb:sequence="1"
+	 rdfs:label="10/23/2008 21:54:19 GMT-08:00"/>
+<kb:Ontology_Individual rdf:about="&kb;annotation_collaborativeNewspaper_Class10005"
+	 kb:currentName="instance_00057"
+	 rdfs:label="instance_00057">
+	<kb:associatedAnnotations rdf:resource="&kb;annotation_collaborativeNewspaper_Class10003"/>
+</kb:Ontology_Individual>
+<kb:Ontology_Class rdf:about="&kb;annotation_collaborativeNewspaper_Class2"
+	 kb:currentName="Author"
+	 rdfs:label="Author">
+	<kb:associatedAnnotations rdf:resource="&kb;annotation_collaborativeNewspaper_Class0"/>
+</kb:Ontology_Class>
+<kb:Status rdf:about="&kb;annotation_collaborativeNewspaper_Class20000"
+	 kb:description="Under review"
+	 rdfs:label="Under review"/>
+<kb:AnnotationStatus rdf:about="&kb;annotation_collaborativeNewspaper_Class20001"
+	 kb:description="Active"
+	 rdfs:label="Active"/>
+<kb:AnnotationStatus rdf:about="&kb;annotation_collaborativeNewspaper_Class20002"
+	 kb:description="Inactive"
+	 rdfs:label="Inactive"/>
+<kb:ChangeStatus rdf:about="&kb;annotation_collaborativeNewspaper_Class20003"
+	 kb:description="Approved"
+	 rdfs:label="Approved"/>
+<kb:ChangeStatus rdf:about="&kb;annotation_collaborativeNewspaper_Class20004"
+	 kb:description="Proposed"
+	 rdfs:label="Proposed"/>
+<kb:ChangeStatus rdf:about="&kb;annotation_collaborativeNewspaper_Class20005"
+	 kb:description="Rejected"
+	 rdfs:label="Rejected"/>
+<kb:Example rdf:about="&kb;annotation_collaborativeNewspaper_Class3"
+	 kb:author="Guest"
+	 kb:subject="Re: A piece of advice for all authors"
+	 rdfs:label="Re: A piece of advice for all authors">
+	<kb:body xml:space='preserve'><![CDATA[<html>
+  <head>
+    <style type="text/css">
+      <!--
+        body { font-size: 12pt; font-family: arial }
+        p { margin-bottom: 2; margin-left: 2; font-family: arial; margin-top: 2; margin-right: 2 }
+      -->
+    </style>
+        
+  </head>
+  <body>
+    This is an <font color="blue" style="background-color: yellow">Example</font> - another annotation type.<br><br>=== On 10/23/2008 21:23, Guest wrote:<br><br><b><u>Advice</u></b> is one annotation type defined in the <i>changes and annotations ontology</i>.<br><br>You can add internal links to ontology entities, for example:<br><a href="internalLink">@'Newspaper'</a><br><a href="internalLink"><br></a>If you click on the link above a new window will pop up with the details of the class Newspaper.<br><a href="internalLink"><br></a><br></body>
+</html>]]></kb:body>
+	<kb:annotates rdf:resource="&kb;annotation_collaborativeNewspaper_Class0"/>
+	<kb:created rdf:resource="&kb;annotation_collaborativeNewspaper_Class4"/>
+</kb:Example>
+<kb:Timestamp rdf:about="&kb;annotation_collaborativeNewspaper_Class4"
+	 kb:date="10/23/2008 21:28:28 GMT-08:00"
+	 kb:sequence="1"
+	 rdfs:label="10/23/2008 21:28:28 GMT-08:00"/>
+<kb:Explanation rdf:about="&kb;annotation_collaborativeNewspaper_Class5"
+	 kb:author="Guest"
+	 kb:subject="What are discussion threads"
+	 rdfs:label="What are discussion threads">
+	<kb:body xml:space='preserve'><![CDATA[<html>
+  <head>
+    <style type="text/css">
+      <!--
+        body { font-size: 12pt; font-family: arial }
+        p { margin-bottom: 2; margin-left: 2; font-family: arial; margin-top: 2; margin-right: 2 }
+      -->
+    </style>
+    
+  </head>
+  <body>
+    A discussion thread is attached to the <b>ontology as a whole</b>, rather than to a specific ontology entity.</body>
+</html>]]></kb:body>
+	<kb:created rdf:resource="&kb;annotation_collaborativeNewspaper_Class6"/>
+</kb:Explanation>
+<kb:Timestamp rdf:about="&kb;annotation_collaborativeNewspaper_Class6"
+	 kb:date="10/23/2008 21:30:40 GMT-08:00"
+	 kb:sequence="2"
+	 rdfs:label="10/23/2008 21:30:40 GMT-08:00"/>
+</rdf:RDF>

@@ -1,0 +1,18 @@
+/******************************************************************
+ Styles for Individuals tab
+ *****************************************************************/
+
+.individualsView-Banner {
+	background-color: #660066; /* Web safe version of Protege's "instance" color */
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 11px;
+	margin: 0 0 10px 0;
+	padding: 5px 0px 5px 5px;
+    width: 100%;
+}
+
+/* Styles for Individuals List */
+.protege-individuals-icon {
+    background-image: url(../images/tree/instance.gif) !important;
+}

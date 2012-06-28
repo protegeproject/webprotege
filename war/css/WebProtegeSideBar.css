@@ -1,0 +1,47 @@
+
+/**********************************************************************************
+ * SideBar
+ **********************************************************************************/
+
+.web-protege-sidebar {
+    border: 8px;
+}
+
+
+.web-protege-sidebar-item-base {
+    height: 30px;
+    cursor: pointer;
+    border-bottom: silver;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+.web-protege-sidebar-item-base:hover {
+    background: #e8e8e8;
+}
+
+.web-protege-sidebar-item-selected {
+    /*background: #bec8dc;*/
+    color: #4779be;
+    border-left-style: solid;
+    border-left-width: 4px;
+    border-left-color: #4779be;
+
+}
+
+.web-protege-sidebar-item-deselected {
+    color: #808080;
+    border-left-style: solid;
+    border-left-width: 4px;
+    border-left-color: transparent;
+}
+
+.web-protege-sidebar-item-label {
+    width: 100%;
+    padding-left: 20px;
+    vertical-align: middle;
+    height: 20px;
+    font-size: 14px;
+    top: 5px;
+    position: relative;
+}

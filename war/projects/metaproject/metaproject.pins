@@ -1,0 +1,423 @@
+; Thu Mar 01 13:43:47 PST 2012
+; 
+;+ (version "3.4.7")
+;+ (build "Build 620")
+
+([metaproject_Class0] of  User
+
+	(group [metaproject_Instance_0])
+	(name "Csongor Nyulas")
+	(password "fc31e1e527224b8819358c8c7de26db0")
+	(salt "f31290896d4576db"))
+
+([metaproject_Class1] of  User
+
+	(group [metaproject_Instance_0])
+	(name "Samson Tu")
+	(password "fe83f7198cae4ed1e9065cbc9d04b33c")
+	(salt "cb67da39cf045f47"))
+
+([metaproject_Class10000] of  ServerAppliedOperation
+
+	(description "The operation of shutting down the server.")
+	(name "ShutdownServer"))
+
+([metaproject_Class10001] of  User
+
+	(group [metaproject_Instance_0])
+	(name "Dilvan Moreira")
+	(password "bda0d06e2e6b6516c73cbf33035cd1a0")
+	(salt "3071102d65b0b679"))
+
+([metaproject_Class2] of  ProjectAppliedOperation
+
+	(description "The operation of displaying the project in the project list.\n\nThis is used to control the projects displayed when a user connects to a server.")
+	(name "DisplayInProjectList"))
+
+([metaproject_Class20000] of  ServerAppliedOperation
+
+	(description "This  operation allows a user to make alterations to his credentials.  This privilege should probably only be  used by fake users representing server processes.")
+	(name "Delegate"))
+
+([metaproject_Class20003] of  Group
+
+	(description "The group of adminsitrators of the Protege server.")
+	(member
+		[metaproject_Class20008]
+		[metaproject_Class30001])
+	(name "AdminGroup"))
+
+([metaproject_Class20004] of  ServerAppliedOperation
+
+	(description "A super-right: a user who has this right can kill other users' sessions, stop and start server projects without having these rights set for each ptoject individually.")
+	(name "AdministerServer"))
+
+([metaproject_Class20005] of  ServerAppliedOperation
+
+	(description "The operation of killing another user's session.")
+	(name "KillOtherUserSession"))
+
+([metaproject_Class20006] of  ServerAppliedOperation
+
+	(description "The operation of starting a (previously stopped) server project.")
+	(name "StartRemoteProject"))
+
+([metaproject_Class20007] of  ServerAppliedOperation
+
+	(description "The operation of stopping/closing a running server project.")
+	(name "StopRemoteProject"))
+
+([metaproject_Class20008] of  User
+
+	(description "A admin user that can perform adminisitrative operations on the Protege server.")
+	(group
+		[metaproject_Instance_0]
+		[metaproject_Class20003])
+	(name "Admin")
+	(password "0235b8f25cacfecdb0adb560c95da1a9")
+	(salt "0b209d16f20a5dac"))
+
+([metaproject_Class20009] of  Server
+
+	(allowedGroupOperation
+		[metaproject_Class20010]
+		[metaproject_Class30003])
+	(description "The server on which the policies apply.\nCurrent implementaion does not take into account the hostname, so all the policies (allowed group operations) are applied to this one instance.")
+	(name "MyServer"))
+
+([metaproject_Class20010] of  GroupOperation
+
+	(allowedGroup [metaproject_Class20003])
+	(allowedOperation
+		[metaproject_Class20004]
+		[metaproject_Class20005]
+		[metaproject_Class20006]
+		[metaproject_Class20007]
+		[metaproject_Class10000]))
+
+([metaproject_Class3] of  GroupOperation
+
+	(allowedGroup [metaproject_Instance_0])
+	(allowedOperation [metaproject_Class2]))
+
+([metaproject_Class30000] of  GroupAppliedOperation
+
+	(description "The operation of adding or removing users to a group. (not enforced)")
+	(name "EditGroup"))
+
+([metaproject_Class30001] of  User
+
+	(group
+		[metaproject_Instance_0]
+		[metaproject_Class30002]
+		[metaproject_Class20003])
+	(name "webprotege")
+	(password "f7bcce407455edd3befd66e6405da28d")
+	(salt "574c25cbabe1feed"))
+
+([metaproject_Class30002] of  Group
+
+	(member [metaproject_Class30001])
+	(name "WebProtegeGroup"))
+
+([metaproject_Class30003] of  GroupOperation
+
+	(allowedGroup [metaproject_Class30002])
+	(allowedOperation [metaproject_Class20000]))
+
+([metaproject_Class40000] of  Project
+
+	(allowedGroupOperation
+		[metaproject_Instance_10008]
+		[metaproject_Class3])
+	(description "Frames project")
+	(inTrash FALSE)
+	(location "projects/newspaper/newspaper.pprj")
+	(name "Newspaper")
+	(owner [metaproject_Instance_10005]))
+
+([metaproject_Class40001] of  Project
+
+	(allowedGroupOperation [metaproject_Instance_10008])
+	(description "The annotation project for Collaborative Pizza")
+	(inTrash FALSE)
+	(location "projects/collaborativePizza/annotation_collaborativePizza.owl.pprj")
+	(name "Collaborative Pizza Annotations")
+	(owner [metaproject_Instance_10006]))
+
+([metaproject_Class50000] of  User
+
+	(email "matthew.horridge@stanford.edu")
+	(group [metaproject_Instance_0])
+	(name "matthewhorridge")
+	(password "701b19ec9bc1748c2db6139feff70403")
+	(salt "8d8cf823248929db"))
+
+([metaproject_Class60000] of  Project
+
+	(allowedGroupOperation
+		[metaproject_Instance_10008]
+		[metaproject_Class3])
+	(description "A small test project")
+	(inTrash FALSE)
+	(location "projects/mytest/mytest.pprj")
+	(name "mytest")
+	(owner [metaproject_Class50000]))
+
+([metaproject_Class70000] of  GroupOperation
+
+	(allowedGroup [MyNewProject_Readers])
+	(allowedOperation
+		[metaproject_Class2]
+		[nci_metaproject_Instance_60009]))
+
+([metaproject_Class70001] of  GroupOperation
+
+	(allowedGroup [MyNewProject_Commenters])
+	(allowedOperation
+		[metaproject_Class2]
+		[nci_metaproject_Instance_60009]))
+
+([metaproject_Class70002] of  GroupOperation
+
+	(allowedGroup [MyNewProject_Writers])
+	(allowedOperation
+		[nci_metaproject_Instance_60010]
+		[metaproject_Class2]
+		[nci_metaproject_Instance_60009]))
+
+([metaproject_Class70003] of  GroupOperation
+
+	(allowedGroup [MyNewProject_None]))
+
+([metaproject_Class70004] of  GroupOperation
+
+	(allowedGroup [metaproject_Instance_0])
+	(allowedOperation
+		[metaproject_Class2]
+		[nci_metaproject_Instance_60009]))
+
+([metaproject_Class70005] of  GroupOperation
+
+	(allowedGroup [MyNewProject_Readers])
+	(allowedOperation
+		[metaproject_Class2]
+		[nci_metaproject_Instance_60009]))
+
+([metaproject_Class70006] of  GroupOperation
+
+	(allowedGroup [MyNewProject_Commenters])
+	(allowedOperation
+		[metaproject_Class2]
+		[nci_metaproject_Instance_60009]))
+
+([metaproject_Class70007] of  GroupOperation
+
+	(allowedGroup [MyNewProject_Writers])
+	(allowedOperation
+		[nci_metaproject_Instance_60010]
+		[metaproject_Class2]
+		[nci_metaproject_Instance_60009]))
+
+([metaproject_Class70008] of  GroupOperation
+
+	(allowedGroup [MyNewProject_None]))
+
+([metaproject_Class70009] of  GroupOperation
+
+	(allowedGroup [metaproject_Instance_0])
+	(allowedOperation
+		[metaproject_Class2]
+		[nci_metaproject_Instance_60009]))
+
+([metaproject_Class80000] of  ProjectAppliedOperation
+
+	(description "Specifies a comment operation.  This is not the same as an arbitrary write.")
+	(name "Comment"))
+
+([metaproject_Instance_0] of  Group
+
+	(description "This group is intended to represent all the users.\n\nNewly created users are added to this group by default.")
+	(member
+		[metaproject_Instance_10002]
+		[metaproject_Instance_10003]
+		[metaproject_Instance_10004]
+		[metaproject_Instance_10005]
+		[metaproject_Instance_10006]
+		[metaproject_Instance_10007]
+		[metaproject_Class0]
+		[metaproject_Class1]
+		[metaproject_Class10001]
+		[metaproject_Class20008]
+		[metaproject_Class30001]
+		[metaproject_Class50000])
+	(name "World"))
+
+([metaproject_Instance_10000] of  Project
+
+	(allowedGroupOperation
+		[metaproject_Instance_10008]
+		[metaproject_Class3])
+	(description "The ICD pre-alpha draft")
+	(inTrash FALSE)
+	(location "projects/icd/ICD.pprj")
+	(name "ICD")
+	(owner [metaproject_Instance_10005]))
+
+([metaproject_Instance_10002] of  User
+
+	(group [metaproject_Instance_0])
+	(name "Guest")
+	(password "d376e3cdc24b4fdfbe012b28b7114d46")
+	(salt "db699848b1a45b2c"))
+
+([metaproject_Instance_10003] of  User
+
+	(group [metaproject_Instance_0])
+	(name "Jennifer Vendetti")
+	(password "c4985f0ea03cd107a973590af106d667")
+	(salt "abe3c5a657a429b3"))
+
+([metaproject_Instance_10004] of  User
+
+	(group [metaproject_Instance_0])
+	(name "Natasha Noy")
+	(password "5255d56b90b79cdd93acd5894ee55709")
+	(salt "8b2c9745dd21d0a9"))
+
+([metaproject_Instance_10005] of  User
+
+	(group [metaproject_Instance_0])
+	(name "Ray Fergerson")
+	(password "2f659e40c792b01f6caa9d4fa3ca99c6")
+	(salt "57d803513a2f468e"))
+
+([metaproject_Instance_10006] of  User
+
+	(group
+		[metaproject_Instance_0]
+		[MyNewProject_Writers])
+	(name "Tania Tudorache")
+	(password "9c83beacd15689a57a2c993f5b0a570a")
+	(salt "391cfea10ef1406a"))
+
+([metaproject_Instance_10007] of  User
+
+	(group
+		[metaproject_Instance_0]
+		[MyNewProject_Commenters])
+	(name "Timothy Redmond")
+	(password "af10c84508bd08042aad6ea1d88c6206")
+	(salt "5dd198d580069580"))
+
+([metaproject_Instance_10008] of  GroupOperation
+
+	(allowedGroup [metaproject_Instance_0])
+	(allowedOperation
+		[nci_metaproject_Instance_60009]
+		[nci_metaproject_Instance_60010]))
+
+([metaproject_Instance_20000] of  Project
+
+	(allowedGroupOperation
+		[metaproject_Instance_10008]
+		[metaproject_Class3])
+	(description "OWL project")
+	(inTrash FALSE)
+	(location "projects/pizza/pizza.owl.pprj")
+	(name "Pizza"))
+
+([metaproject_Instance_20002] of  Project
+
+	(allowedGroupOperation
+		[metaproject_Instance_10008]
+		[metaproject_Class3])
+	(description "Frames project")
+	(inTrash FALSE)
+	(location "projects/wines/wines.pprj")
+	(name "Wines")
+	(owner [metaproject_Instance_10004]))
+
+([metaproject_Instance_30000] of  Project
+
+	(allowedGroupOperation
+		[metaproject_Instance_10008]
+		[metaproject_Class3])
+	(annotationProject [metaproject_Instance_40001])
+	(description "The OWL pizza project with collaborative toppings :)")
+	(inTrash FALSE)
+	(location "projects/collaborativePizza/collaborativePizza.owl.pprj")
+	(name "Collaborative Pizza")
+	(owner [metaproject_Instance_10006]))
+
+([metaproject_Instance_30001] of  Project
+
+	(allowedGroupOperation [metaproject_Instance_10008])
+	(description "Annotation project for the \"Collaborative Newspaper\" project as an RDFS ontology.")
+	(inTrash FALSE)
+	(location "projects/collaborativeNewspaper/annotation_collaborativeNewspaper.pprj")
+	(name "Collaborative Newspaper Annotations")
+	(owner [metaproject_Instance_10006]))
+
+([metaproject_Instance_40000] of  Project
+
+	(allowedGroupOperation
+		[metaproject_Instance_10008]
+		[metaproject_Class3])
+	(annotationProject [metaproject_Instance_30001])
+	(description "Example on how to configure a collaborative project.")
+	(inTrash FALSE)
+	(location "projects/collaborativeNewspaper/collaborativeNewspaper.pprj")
+	(name "Collaborative Newspaper")
+	(owner [metaproject_Instance_10006]))
+
+([metaproject_Instance_40001] of  Project
+
+	(allowedGroupOperation [metaproject_Instance_10008])
+	(description "annotation prj of ICD")
+	(inTrash FALSE)
+	(location "projects/icd/annotation_ICD.pprj")
+	(name "ICD annotation")
+	(owner [metaproject_Instance_10006]))
+
+([MyNewProject] of  Project
+
+	(allowedGroupOperation
+		[metaproject_Class70005]
+		[metaproject_Class70006]
+		[metaproject_Class70007]
+		[metaproject_Class70008]
+		[metaproject_Class70009])
+	(description "A new test project.")
+	(inTrash FALSE)
+	(location "file:/Users/matthewhorridge/Library/Caches/IntelliJIdea11/gwt/gwt-web-protege.90dfd37b/gwt-web-protege.cb7d8640/run/www/projects/MyNewProject/MyNewProject.pprj")
+	(name "MyNewProject")
+	(owner [metaproject_Class50000]))
+
+([MyNewProject_Commenters] of  Group
+
+	(member [metaproject_Instance_10007])
+	(name "MyNewProject_Commenters"))
+
+([MyNewProject_None] of  Group
+
+	(name "MyNewProject_None"))
+
+([MyNewProject_Readers] of  Group
+
+	(name "MyNewProject_Readers"))
+
+([MyNewProject_Writers] of  Group
+
+	(member [metaproject_Instance_10006])
+	(name "MyNewProject_Writers"))
+
+([nci_metaproject_Instance_60009] of  ProjectAppliedOperation
+
+	(description "The operation of reading an ontology project.\n\nThis controls who can open a remote project.")
+	(name "Read"))
+
+([nci_metaproject_Instance_60010] of  ProjectAppliedOperation
+
+	(description "The operation of writing to an ontology project.\n\n(Enforcement not implemented yet)")
+	(name "Write"))

@@ -1,0 +1,80 @@
+/*
+ * Cascading Style Sheet for iCAT - contains global styles and 
+ * styles used in application entry points iCat.java and iCatPS.java.
+ *
+ * Note: try to use GWT naming conventions of projectname-component when possible
+ */
+
+
+/*
+* Special tab header styles
+*/
+.spec-tab-header1 {    /*GREEN*/
+	background-color:#D7DEBD !important;
+}
+.spec-tab-header1 span.x-tab-strip-text {
+	/*color: #578C85;*/
+	/*color: #19545F;*/
+	color: #4A4A00;
+}
+
+.spec-tab-header2 {    /*ORANGE*/
+	background-color:#FFC8AE !important;
+	/*background-color:#EED8C1 !important;*/
+}
+.spec-tab-header2 span.x-tab-strip-text {
+	/*color: #FF5500;*/
+	/*color: #CC000B;*/
+	color: #EB5321;
+}
+
+.spec-tab-header3 {    /*RED*/
+	background-color:#FFCCCC !important;
+}
+.spec-tab-header3 span.x-tab-strip-text {
+	color: #7F0000;
+}
+
+.spec-tab-header4 {    /*NEON GREEN*/
+	background-color:#CCFFCC !important;
+}
+.spec-tab-header4 span.x-tab-strip-text {
+	color: #007F00;
+}
+
+.spec-tab-header5 {    /*GRAY*/
+	background-color:#C8C8C8 !important;
+}
+.spec-tab-header5 span.x-tab-strip-text {
+	color: #585858;
+}
+
+.x-tree-node-icon{
+	background-image:none;
+	width:0px;
+}
+.x-tree-node-leaf .x-tree-node-icon {
+    background-image:none;
+}
+.x-tree-node-collapsed .x-tree-node-icon {
+    background-image:none;
+}
+.x-tree-node-expanded .x-tree-node-icon {
+    background-image:none;
+}
+
+/*
+ * Display status icons for the ICD class tree
+ */
+ 
+ .blue-display-status-icon {
+    background-image: url(../images/blue.png) !important;   
+}
+
+ .yellow-display-status-icon {
+    background-image: url(../images/warning.png) !important;   
+}
+
+ .red-display-status-icon {
+    background-image: url(../images/no.png) !important;   
+}
