@@ -1,0 +1,13 @@
+<module rename-to="authenticate">
+
+	<!-- Inherit the core Google Web Toolkit stuff -->
+	<inherits name="com.google.gwt.user.User"/>
+	
+	<!-- Inherit the GWT-Ext Toolkit stff -->
+	<inherits name='com.gwtext.GwtExt' />
+	<entry-point class="edu.stanford.bmir.protege.web.client.Authenticate"/> 
+
+    <inherits name="com.google.gwt.json.JSON"/>
+    <servlet path="/authen" class="edu.stanford.bmir.protege.web.server.AuthenticateServiceImpl"/>
+    
+</module>
