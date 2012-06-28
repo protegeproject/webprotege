@@ -1,0 +1,456 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<project name = "Web Protege Build File" default = "tomcat" basedir = ".">    
+
+   <property file="local.properties"/>
+
+   <property environment="env"/>
+   <property name="protege.home"       location = "${env.PROTEGE_HOME}"/>
+   <property name="catalina.home"      location = "${env.CATALINA_HOME}"/>
+    
+   <property name="war.name"           value    = "webprotege"/>
+
+   <property name="server.dir"         location = "./war"/>
+   <property name="server.metaproject" location = "./war/projects/metaproject/metaproject.pprj"/>
+   <property name="wp.projects"        location = "./war/projects"/>
+   <property name="wp.user"            value    = "webprotege"/>
+   <property name="wp.password"        value    = "webprotege"/>
+
+    <!--<taskdef name="junit" classname="org.apache" classpath="${gwt.dir}/gwt-dev.jar"/>-->
+
+   <property name = "src"              location = "./src"/>  
+   <property name = "test-src"         location = "./test"/>
+   <property name = "war.template"     location = "./war"/>
+   <property name = "lib"              location = "${war.template}/WEB-INF/lib"/>
+   <property name = "test.lib"         location = "test-lib"/>
+
+   <property name = "build"            location = "./build"/>
+   <property name = "war"              location = "${build}/war"/>
+   <property name = "classes"          location = "${build}/classes"/>
+   <property name = "test-classes"     location = "${build}/test-classes"/>
+   <property name = "owl.path"         value    = "edu.stanford.smi.protegex.owl"/>
+   <property name = "test-results"     location = "${build}/test-results"/>
+   <property name = "gwt-temp"         location = "${build}/gwt-temp"/>
+   <property name = "dev-mode-reports" location = "${build}/reports/htmlunit.dev"/>
+
+
+     <path id = "test.classpath">
+        <fileset dir="${test.lib}"/>
+        <path   refid = "project.classpath"/>
+        <pathelement location="${classes}"/>
+      </path>
+
+
+   <!-- 
+     #  ********** Finding Protege Libraries. *************
+     -->
+
+   <target name="checkProtegeHome">
+       <condition property="protege.home.set">
+           <available file="${protege.home}/protege.jar" type="file"/>
+       </condition>
+   </target>
+
+   <target name="useProtegeHome" depends="checkProtegeHome" if="protege.home.set">
+       <echo message="Using Protege Home = ${protege.home} to find protege jars"/>
+       <property name="protege.lib"     location="${protege.home}/protege.jar"/>
+       <property name="protege.owl.lib" location="${protege.home}/plugins/${owl.path}/protege-owl.jar"/>
+       <property name="changes.lib"     location="${protege.home}/plugins/edu.stanford.smi.protegex.changes/change-management.jar"/>
+       <property name="chat.lib"        location="${protege.home}/plugins/edu.stanford.smi.protegex.chatPlugin/chat.jar"/>
+       <property name="collab.lib"      location="${protege.home}/plugins/edu.stanford.smi.protege.collab/protege-collab.jar"/>
+       <property name="rdf.lib"         location="${protege.home}/plugins/edu.stanford.smi.protegex.rdf_backend/rdf-backend.jar"/>
+       <property name="standard.lib"    location="${protege.home}/plugins/edu.stanford.smi.protegex.standard_extensions/standard-extensions.jar"/>
+       <property name="bioportal1.lib"  location="${protege.home}/plugins/edu.stanford.bmir.protegex.bp.ref/bioportalReference.jar"/>
+       <property name="bioportal2.lib"  location="${protege.home}/plugins/edu.stanford.bmir.protegex.bp.ref/bioportal-services-lib.jar"/> 
+       <property name="lucene1.lib"     location="${protege.home}/plugins/edu.stanford.smi.protegex.query.lucene/luceneQueryPlugin.jar"/>
+       <property name="lucene2.lib"     location="${protege.home}/plugins/edu.stanford.smi.protegex.query.lucene/lucene-core.jar"/>        
+   </target>
+    
+
+    <target name = "checkProtegeLibs" depends="useProtegeHome">
+      <condition property="libs.found">
+        <and>
+          <available file="${protege.lib}"                 type = "file"/>
+          <available file="${protege.owl.lib}"             type = "file"/>
+          <available file="${changes.lib}"                 type = "file"/>
+          <available file="${chat.lib}"                    type = "file"/>
+          <available file="${collab.lib}"                  type = "file"/>
+          <available file="${rdf.lib}"                     type = "file"/>
+          <available file="${standard.lib}"                type = "file"/>
+          <available file="${gwt.dir}/gwt-user.jar"        type = "file"/>
+          <available file="${gwt.dir}/gwt-dev.jar" type = "file"/>
+          <available file="${bioportal1.lib}"              type = "file"/>
+          <available file="${bioportal2.lib}"              type = "file"/>
+          <available file="${lucene1.lib}"                 type = "file"/>
+          <available file="${lucene2.lib}"                 type = "file"/>
+        </and>
+      </condition>
+      <path id = "project.classpath">    
+        <pathelement location = "${protege.lib}"/>
+        <pathelement location = "${protege.owl.lib}"/>
+        <pathelement location="${changes.lib}"/>
+        <pathelement location="${chat.lib}"/>
+        <pathelement location="${collab.lib}"/>
+        <pathelement location="${rdf.lib}"/>
+        <pathelement location="${standard.lib}"/>
+        <pathelement location="${gwt.dir}/gwt-user.jar"/>
+        <pathelement location="${gwt.dir}/gwt-dev.jar"/>
+        <pathelement location="${bioportal1.lib}"/>
+        <pathelement location="${bioportal2.lib}"/>
+        <pathelement location="${lucene1.lib}"/>
+        <pathelement location="${lucene2.lib}"/>
+        <fileset dir="${lib}"/>
+      </path>       
+    </target>
+
+
+    <target name="checkProtegeLibsAndReport" depends="checkProtegeLibs"
+            unless="libs.found">
+      <echo message="Missing protege or gwt libraries.  See the readme.txt"/>
+      <echo message="for the location of the gwt libraries and update the"/>
+      <echo message="local.properties file to point to these locations."/>
+      <echo message="You also need to set the PROTEGE_HOME environment variable to an"/>
+      <echo message="protege installation directory where the"/>
+      <echo message="appropriate plugins have been installed."/>
+      <echo message="Use the -v option to ant to see what jars are missing."/>
+      <fail message = "missing protege libraries"/>
+    </target>
+      
+   <!-- 
+     #  ********** Finding Protege Libraries Done. *************
+     -->
+
+   <!-- 
+    #   ********** Initialization and staging *************
+    -->
+
+   <target name = "init">
+     <tstamp>
+       <format property="build.time" pattern="MM/dd/yyyy hh:mm aa"/>
+     </tstamp>
+     <mkdir dir = "${build}"/>
+     <mkdir dir = "${classes}"/>
+     <condition property="set.if.use.server">
+       <istrue value="${use.server}"/>
+     </condition>    
+         <condition property="set.if.deploy.in.root">
+       <equals arg1="${deploy.in.root}" arg2="true"/>
+         </condition>
+     <available property="alt.war.template.exists"
+                file="${alt.war.template}"
+                type="dir"/>
+     <available property="alt.projects.template.exists"
+                file="${alt.war.template}/projects"
+                type="dir"/>
+   </target>
+
+
+     <!-- 
+          Workaround for gwt eclipse plugin bug.  
+
+          It appears that the gwt eclipse plugin writes some files to
+          the ./war area.  These files are dropped from the copy to
+          ensure a consistent and predictable build.  This could cause
+          trouble later if someone commits some of these files and
+          they don't get installed.
+       -->
+   <target name = "copy.war"  depends="checkProtegeLibsAndReport, init">
+     <mkdir dir = "${war}"/>
+     <copy todir="${war}">
+       <fileset dir="${war.template}">
+         <exclude name="webprotege/**"/>
+         <exclude name="webprotege"/>
+         <exclude name="authenticate/**"/>
+         <exclude name="authenticate"/>
+         <exclude name="WEB-INF/classes/**"/>
+         <exclude name="WEB-INF/classes"/>
+         <exclude name="WEB-INF/deploy/**"/>
+         <exclude name="WEB-INF/deploy"/>
+         <exclude name="WEB-INF/lib/gwt-servlet.jar"/>
+       </fileset>
+     </copy>
+   </target>
+
+   <target name = "stage.war" depends="copy.war">
+     <!-- Protege dependencies -->
+     <copy todir = "${war}/WEB-INF/lib">
+       <!-- protege-core -->
+       <fileset dir = "${protege.home}" includes = "looks-2.1.3.jar, unicode_panel.jar"/>
+       
+       <!-- protege-owl -->
+       <fileset dir = "${protege.home}/plugins/${owl.path}" 
+                includes = "**/*.jar" 
+                excludes = "ekitspell.jar, json.jar, junit.jar, kazuki.jar, lucene-core-2.3.1.jar, swrl-jess-bridge.jar"/>
+       <fileset dir = "${protege.home}/plugins/edu.stanford.smi.protegex.rdf_backend" 
+                includes = "**/*.jar"
+                excludes = "xerces.jar"/>
+       <fileset dir = "${protege.home}/plugins/edu.stanford.bmir.protegex.bp.ref"
+                includes = "**/*.jar"
+                excludes="**/xpp*.jar,**/xstream*.jar"/>
+        <fileset dir = "${protege.home}/plugins/edu.stanford.smi.protegex.query.lucene"
+                 includes = "**/*.jar"
+                 excludes="**/phonetix*.jar,**/xstream*.jar"/>
+     </copy>
+
+     <copy todir = "${war}/WEB-INF/lib" file="${protege.lib}"/>
+     <copy todir = "${war}/WEB-INF/lib" file="${changes.lib}"/>
+     <copy todir = "${war}/WEB-INF/lib" file="${chat.lib}"/>
+     <copy todir = "${war}/WEB-INF/lib" file="${collab.lib}"/>
+     <copy todir = "${war}/WEB-INF/lib" file="${standard.lib}"/>
+     <antcall target="replace.projects"/>
+     <antcall target="copy.alt.war.template"/>
+     
+   </target>
+
+   <target name="replace.projects" if="alt.projects.template.exists">
+      <delete dir="${war}/projects"/>
+   </target>
+    
+   <target name="copy.alt.war.template" if="alt.war.template.exists">
+      <copy todir="${war}" overwrite="true">
+        <fileset dir="${alt.war.template}"/>
+      </copy>
+   </target>
+
+   <!-- 
+    #   ********** Compilation *************
+    -->
+
+   <target name = "compile" depends = "init, checkProtegeLibsAndReport">
+     <javac srcdir = "${src}"
+            destdir = "${classes}" 
+            debug="on"
+            includeAntRuntime="false">
+       <classpath refid = "project.classpath"/>  
+     </javac>
+     <copy todir="${classes}">
+       <fileset dir="${src}">
+         <include name="**/*"/>
+         <exclude name="**/*.java"/>
+         <exclude name="**/MANIFEST.MF"/>
+         <exclude name="**/manifest.mf"/>
+       </fileset>
+     </copy>
+   </target>
+
+   <target name="webprotege.lib" depends="stage.war, compile">
+       <jar file="${war}/WEB-INF/lib/webprotege-lib.jar" basedir="${classes}"/>
+   </target>
+    
+   <target name = "check.js.compiled">
+       <uptodate property="js.up.to.date"
+                 targetfile="${war}/BUILT">
+           <srcfiles dir="${src}"/>
+       </uptodate>
+   </target>
+
+   <target name    = "compile.js" 
+           depends = "compile,check.js.compiled, stage.war" 
+           unless  = "js.up.to.date">
+       <!-- Must use fork="true" here.  If not, GWTCompiler fails with
+           "No source path entries; expect subsequent failures".   
+            No explanation is given in forums about why adding this
+           attribute solves errors.  See thread on GWT forum: 
+http://groups.google.com/group/Google-Web-Toolkit/browse_thread/thread/086d288e06aba18b 
+          -->
+       <java classname = "com.google.gwt.dev.Compiler" 
+             fork = "true" 
+             maxmemory = "500M">
+           <classpath>
+               <path refid="project.classpath"/>
+               <pathelement path="${classes}"/>
+               <pathelement path="${src}"/>
+           </classpath>
+           <jvmarg value="-Xss100M"/>
+
+           <arg line = "-war"/>
+           <arg line = "${war}"/>
+
+           <arg line = "-style"/>
+           <arg line = "OBF"/>
+
+           <arg line = "-logLevel"/>
+           <arg line = "INFO"/>
+
+           <arg value = "${gwt.xml.target}"/>
+
+           <arg value = "${gwt.xml.target.authenticate}"/>
+       </java>
+       <touch file="${war}/BUILT"/>
+
+       <antcall target="copy.rpc.in.war" />
+   </target>
+    
+   <target name="copy.rpc.in.war" if="set.if.deploy.in.root">
+    <echo message="Copying the rpc files in war (workaround for GWT + proxy bug)"/>     
+       <copy todir="${war}">
+       <fileset dir="${war}/${gwt.module}">
+         <include name="**/*.rpc"/>
+       </fileset>
+     </copy> 
+   </target>
+
+
+   <!-- 
+     #  ********** Tomcat *************
+     -->
+
+   <target name = "tomcat" depends="webprotege.lib,compile.js">
+     <delete file="${war}/WEB-INF/lib/gwt-user.jar"/>
+     <copy  file="${gwt.dir}/gwt-servlet.jar" 
+            todir="${war}/WEB-INF/lib"/>
+     <war destfile="${build}/${war.name}.war"
+          basedir = "${war}" />
+   </target>
+        
+   <target name = "deploy" depends="tomcat">
+       <delete dir = "${catalina.home}/webapps/${war.name}"/>
+       <copy tofile="${catalina.home}/webapps/${war.name}.war"
+             file="${build}/${war.name}.war"/>
+   </target>
+
+   <target name = "update"  depends="webprotege.lib, compile.js">
+       <copy todir="${catalina.home}/webapps/${war.name}">
+         <fileset dir="${war}">
+            <exclude name="projectConfigurations/*"/>
+            <exclude name="projects/**"/>
+            <exclude name="WEB-INF/web.xml"/>
+         </fileset>
+       </copy>
+   </target>
+
+   <!-- 
+     #  ********** Running *************
+     -->
+
+   <target name="run.server">
+       <java fork="true" dir="${server.dir}"
+             maxmemory="${server.memory}"
+             classname="edu.stanford.smi.protege.server.Server">
+           <classpath>
+               <pathelement path="${protege.home}/protege.jar"/>
+               <pathelement path="${protege.home}/looks-2.1.3.jar"/>
+               <pathelement path="${protege.home}/unicode_panel.jar"/>
+               <fileset dir="${protege.home}" includes="driver*.jar"/>
+           </classpath>
+
+           <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8200,server=y,suspend=n"/>
+
+           <jvmarg value="-Dprotege.rmi.registry.port=${server.rmi.port}"/>
+           <jvmarg value="-Dprotege.rmi.server.port=${server.port}"/>
+           <jvmarg value="-Dprotege.dir=${protege.home}"/>
+           <jvmarg value="-Djava.awt.headless=true"/>
+           <jvmarg value="-Djava.rmi.server.codebase=file:${protege.home}/protege.jar"/>
+           <jvmarg value="-Dlog4j.configuration=file:${protege.home}/log4j.xml"/>
+           <arg    value="${server.metaproject}"/>
+       </java>
+   </target>
+
+   <target name    = "hosted" 
+           depends = "webprotege.lib,stage.war">
+     <copy todir="${war}/WEB-INF/lib" file="${gwt.dir}/gwt-user.jar"/>
+     
+     <java classname = "com.google.gwt.dev.DevMode" 
+           fork = "true" maxmemory = "${hosted.memory}"
+           dir="${war}">
+       <classpath>
+         <path refid="project.classpath"/>
+         <pathelement path="${classes}"/>
+         <pathelement path="${src}"/>
+       </classpath>
+       <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8100,server=y,suspend=n"/>
+       <jvmarg value = "-Dlog4j.configuration=file:${protege.home}/log4j.xml"/>
+       <jvmarg value = "${extra.hosted.jvm.arg}"/>
+       <arg value = "-war"/>
+       <arg value = "${war}"/>
+       <arg value = "${gwt.xml.target}"/>
+       <arg value = "-startupUrl"/>
+       <arg value = "${gwt.html.target}"/>
+     </java>
+   </target>
+
+    <target name = "test.server" depends="compile,compile.tests">
+        <mkdir dir="${test-results}"/>
+        <echo message="${test-results}"/>
+        <junit fork="yes" >
+              <classpath refid="test.classpath"/>
+              <classpath location="${test-classes}"/>
+              <batchtest todir="${test-results}">
+                <fileset dir="test" includes="**/server/**/*Test.java" excludes="**/*PortletTest*"/>
+                  <formatter type="plain" usefile="false"/>
+
+              </batchtest>
+            </junit>
+      
+    </target>
+
+    <target name="compile.tests" depends="compile" description="Compiles test code">
+        <mkdir dir="${test-classes}"/>
+        <mkdir dir="${test-results}"/>
+        <property name="myclasspath" refid="test.classpath"/>
+            <echo message="classpath= ${myclasspath}"/>
+      <javac srcdir="test" includes="**" encoding="utf-8"
+        source="1.5" target="1.5" nowarn="true"
+        destdir="${test-classes}"
+        debug="true" debuglevel="lines,vars,source">
+        <classpath location="/home/jacke/Projects/who/test-lib/junit.jar"/>
+        <classpath refid="test.classpath"/>
+      </javac>
+    </target>
+
+    <target name="test.dev" depends="compile.tests" description="Run development mode tests">
+      <mkdir dir="${dev-mode-reports}" />
+
+      <copy todir="${gwt-temp}/edu.stanford.bmir.protege.web.WebProtegeTest.JUnit/js">
+          <fileset dir="${war.template}/js"/>
+      </copy>
+
+      <copy todir="${gwt-temp}/edu.stanford.bmir.protege.web.WebProtegeTest.JUnit/css">
+          <fileset dir="${war.template}/css"/>
+      </copy>
+
+      <junit fork="yes" printsummary="yes" haltonfailure="yes">
+        <jvmarg line="-Xmx256m" />
+        <sysproperty key="gwt.args" value="-standardsMode -logLevel WARN -out ${gwt-temp}" />
+        <sysproperty key="java.awt.headless" value="true" />
+        <classpath>
+          <pathelement location="${src}" />
+          <pathelement location="${test-src}" />
+          <pathelement location="${test-classes}" />
+          <path refid="project.classpath" />
+          <fileset dir="${test.lib}"/>
+        </classpath>
+        <batchtest todir="${dev-mode-reports}" >
+          <fileset dir="test" >
+            <include name="**/client/**/*Test.java" />
+          </fileset>
+        </batchtest>
+        <formatter type="plain" />
+        <formatter type="xml" />
+      </junit>
+    </target>
+
+   <!-- 
+     #  ********** Usage *************
+     -->
+
+   <target name="usage">
+       <echo message="tomcat - makes a war file"/>
+       <echo message="deploy - makes a war file and deploys it to ${CATALINA_HOME}"/>
+       <echo message="hosted - runs web-protege in hosted mode with remote debug support"/>
+       <echo message="run.server - runs the protege server configured for web-protege"/>
+       <echo message="stage.war - makes a copy of the war directory in ./build/war"/>
+       <echo message="usage - prints a help message"/>
+       <echo message="clean - cleans the build directory"/>
+   </target>
+
+   <!-- 
+     #  ********** Clean *************
+     -->
+   
+   <target name = "clean">
+       <delete dir  = "${build}"/>   
+       <delete dir  = "${gwt-temp}"/>
+   </target>
+   
+</project>
+
