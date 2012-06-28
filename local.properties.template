@@ -1,0 +1,77 @@
+#
+# Also look at the protege.properties file in the war directory
+# A sample showing what some of the important properties mean can be
+# found in the etc directory.
+#
+
+# ============= COMPULSORY PROPERTIES =====================
+
+# Directory where you have your Protege installation. Compulsory, if not set as a 
+# environment variable.
+#
+# protege.home=/usr/local/protege
+#
+
+# The directory where you have installed gwt. Compulsory.
+gwt.dir=/usr/local/gwt
+
+# The location of the gwt-dev.jar. No need to change.
+gwt.dev.jar=${gwt.dir}/gwt-dev.jar
+
+# The full name of the module to compile. Compulsory (usually you would not change this)
+gwt.xml.target=edu.stanford.bmir.protege.web.WebProtege
+
+# The full name of the authentication module to compile. Compulsory (usually you would not change this)
+gwt.xml.target.authenticate=edu.stanford.bmir.protege.web.authenticate
+
+# The name of the war file to generate. Compulsory.
+war.name=webprotege
+
+# ============= OPTIONAL PROPERTIES =====================
+
+# If you want to override some of the files from the war directory
+# (e.g. for production use, you may customize protege.properties, etc.)
+# then add those files in the alt.war.template folder. Optional.
+#
+#alt.war.template=./alt.war
+#
+
+# Not a common option. If you use apache with tomcat and want
+# to deploy WebProtege in root (e.g. http://myproject.mydomain.edu)
+# then set this prop to true. This will copy the generated rpc files in 
+# the root of war. Optional.
+# deploy.in.root=true
+
+# Only needed if deploy.in.root=true. Should correspond to the module name. Optional.
+# gwt.module=webprotege
+
+
+# ============= OPTIONAL PROPERTIES IF YOU RUN HOSTED MODE =====================
+
+
+# The name of the html file to show. Only needed if you run hosted most from the build script.
+gwt.html.target=WebProtege.html
+
+#
+# osx users must use the second version of the 
+# extra.hosted.jvm.arg below.  For other developers,
+# the default is a harmless and even recommended setting.
+# Only needed if running hosted mode from build.xml.
+
+hosted.memory=1000M
+extra.hosted.jvm.arg=-Xms${hosted.memory}
+# extra.hosted.jvm.arg=-XstartOnFirstThread
+
+# Only needed if running Protege server from build.xml
+#server.memory=1500M
+#server.rmi.port=1099
+#server.port=5200
+
+# can set custom server dir and metaproject
+# server dir is different from protege.dir and allows
+# meta project to use relative paths from server.dir
+# These  both default to the examples directory.
+
+#server.dir=/home/tredmond/Shared
+#server.metaproject=/home/tredmond/Shared/ontologies/metaproject-nci.pprj
+

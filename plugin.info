@@ -1,0 +1,54 @@
+
+ /*
+  * Removed tabs:
+  * MyICDTab.class.getName()
+  * OtherTerminologiesTab.class.getName(),
+  *
+  */
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassesTab;
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTab;
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsTab;
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.metadata.MetadataTab;
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTab;
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.search.OtherTerminologiesTab;
+tab: edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.home.MyICDTab;
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.reviews.ReviewsTab;
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ManageHierarchyTab;
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.notes.OntologyNotesTab;
+tab: edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeAnalysisTab;
+
+ /*
+  * Removed portlets:
+  * PropertyFieldPortlet.class.getName()
+  * ChangeTreePortlet.class.getName(), ChangeSummaryPortlet.class.getName(), ChangeTablePortlet.class.getName(),
+  * NotesPortlet.class.getName(),
+  * ICDClassTreePortlet.class.getName(), ICDExportImportPortlet.class.getName(),
+  */
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.classes.AllPropertiesPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.metadata.AnnotationsPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.classes.LabelingClassTreePortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.metadata.ImportsTreePortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.metadata.MetricsPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.home.OntologiesPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.restrictions.HTMLRestrictionsPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.PropertyFieldPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.reviews.ReviewsPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ManageHierarchyPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.portlet.html.HtmlMessagePortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.classes.SuperclassesPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.classes.PropertiesViewPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.icd.ICDClassTreePortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeTablePortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeTreePortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.icd.ICDExportImportPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.restrictions.RestrictionsPortlet;
