@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyChangeLog;
@@ -26,7 +27,7 @@ public class ChangeSerializationTask implements Callable<Integer> {
 
     private long timestamp;
 
-    private long revision;
+    private RevisionNumber revisionNumber;
     
     private String highlevelDescription;
 
@@ -34,12 +35,12 @@ public class ChangeSerializationTask implements Callable<Integer> {
 
     private RevisionType type;
 
-    public ChangeSerializationTask(File file, UserId userId, long timestamp, long revision, RevisionType type, String highlevelDescription, List<OWLOntologyChange> changes) {
+    public ChangeSerializationTask(File file, UserId userId, long timestamp, RevisionNumber revisionNumber, RevisionType type, String highlevelDescription, List<OWLOntologyChange> changes) {
         this.file = file;
         this.type = type;
         this.userId = userId;
         this.timestamp = timestamp;
-        this.revision = revision;
+        this.revisionNumber = revisionNumber;
         this.highlevelDescription = highlevelDescription == null ? "" : highlevelDescription;
         this.changes = new ArrayList<OWLOntologyChange>(changes);
     }
@@ -47,7 +48,7 @@ public class ChangeSerializationTask implements Callable<Integer> {
     public Integer call() throws IOException {
         BinaryOWLMetadata metadata = new BinaryOWLMetadata();
         metadata.setStringAttribute(OWLAPIChangeManager.USERNAME_METADATA_ATTRIBUTE, userId.getUserName());
-        metadata.setLongAttribute(OWLAPIChangeManager.REVISION_META_DATA_ATTRIBUTE, revision);
+        metadata.setLongAttribute(OWLAPIChangeManager.REVISION_META_DATA_ATTRIBUTE, revisionNumber.getValue());
         metadata.setStringAttribute(OWLAPIChangeManager.DESCRIPTION_META_DATA_ATTRIBUTE, highlevelDescription);
         metadata.setStringAttribute(OWLAPIChangeManager.REVISION_TYPE_META_DATA_ATTRIBUTE, type.name());
         BinaryOWLOntologyChangeLog changeLog = new BinaryOWLOntologyChangeLog();

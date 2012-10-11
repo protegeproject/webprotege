@@ -4,16 +4,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.model.Project;
-import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
-import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermDefinition;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Cls;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.WebProtegeIRI;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 
 import java.util.Arrays;
 import java.util.Collection;

@@ -13,7 +13,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/01/2012
  */
-public class WebProtegeDialogForm extends WebProtegePanel {
+public class WebProtegeDialogForm extends WebProtegePanel implements HasInitialFocusable {
 
     /**
      * The column that holds the widgets.
@@ -27,10 +27,18 @@ public class WebProtegeDialogForm extends WebProtegePanel {
 
     public static final String LABEL_SUFFIX = ":";
 
+    public static final String WEB_PROTEGE_VERTICAL_SPACER_STYLE_NAME = "web-protege-vertical-spacer";
+
+    public static final String PLACEHOLDER_TEXT_ELEMENT_ATTRIBUTE_NAME = "placeholder";
+
+    public static final int DEFAULT_TEXT_BOX_VISIBILE_LENGTH = 60;
+
 
     private final FlexTable formTable = new FlexTable();
 
     private final FormPanel formPanel;
+
+    private Focusable initialFocusable;
     
     private List<WebProtegeDialogValidator> validators = new ArrayList<WebProtegeDialogValidator>();
 
@@ -81,6 +89,45 @@ public class WebProtegeDialogForm extends WebProtegePanel {
         }
     }
 
+    /**
+     * Adds a textbox to the form.
+     * @param label The label for the text box. Not <code>null</code>.
+     * @param placeholderText The placeholder text. May be <code>null</code>, or use the empty string for no placeholder.
+     * @param initialValue The initial value for the TextBox.  May be <code>null</code>, or use the empty string for no
+     * initial value.
+     * @return The TextBox that was added to the form.
+     */
+    public TextBox addTextBox(String label, String placeholderText, String initialValue) {
+        TextBox textBox = new TextBox();
+        return addTextBox(textBox, label, placeholderText, initialValue);
+    }
+
+    private TextBox addTextBox(TextBox textBox, String label, String placeholderText, String initialValue) {
+        if(placeholderText != null && !placeholderText.isEmpty()) {
+            textBox.getElement().setAttribute(PLACEHOLDER_TEXT_ELEMENT_ATTRIBUTE_NAME, placeholderText);
+        }
+        if(initialValue != null && !initialValue.isEmpty()) {
+            textBox.setText(initialValue);
+        }
+        textBox.setVisibleLength(DEFAULT_TEXT_BOX_VISIBILE_LENGTH);
+        addWidget(label, textBox);
+        return textBox;
+    }
+
+    /**
+     * Adds a {@link PasswordTextBox} to the form.
+     * @param label The label for the text box. Not <code>null</code>.
+     * @param placeholderText The placeholder text.  May be <code>null</code>, or use the empty string for no placeholder.
+     * @param initialValue The initial value for the PasswordTextBox.  May be <code>null</code>, or use the empty string
+     * for no initial value.
+     * @return The PasswordTextBox that was added to the form.
+     */
+    public PasswordTextBox addPasswordTextBox(String label, String placeholderText, String initialValue) {
+        PasswordTextBox passwordTextBox = new PasswordTextBox();
+        addTextBox(passwordTextBox, label, placeholderText, initialValue);
+        return passwordTextBox;
+    }
+
     public void addWidget(String label, Widget widget) {
         int insertionRow = formTable.getRowCount();
         String labelText = getLabelText(label);
@@ -90,7 +137,8 @@ public class WebProtegeDialogForm extends WebProtegePanel {
         formTable.setWidget(insertionRow, WIDGET_COLUMN, widget);
         formTable.getCellFormatter().setVerticalAlignment(insertionRow, LABEL_COLUMN, HasVerticalAlignment.ALIGN_TOP);
         if(insertionRow == 0 && widget instanceof Focusable) {
-            ((Focusable) widget).setFocus(true);
+            initialFocusable = ((Focusable) widget);
+            initialFocusable.setFocus(true);
         }
         formTable.setCellSpacing(5);
     }
@@ -103,7 +151,7 @@ public class WebProtegeDialogForm extends WebProtegePanel {
 
     private static SimplePanel createSpacer() {
         SimplePanel spacer = new SimplePanel();
-        spacer.addStyleName("web-protege-vertical-spacer");
+        spacer.addStyleName(WEB_PROTEGE_VERTICAL_SPACER_STYLE_NAME);
         return spacer;
     }
 
@@ -114,5 +162,9 @@ public class WebProtegeDialogForm extends WebProtegePanel {
      */
     private String getLabelText(String label) {
         return label.endsWith(LABEL_SUFFIX) ? label : label + LABEL_SUFFIX;
+    }
+    
+    public Focusable getInitialFocusable() {
+        return initialFocusable;
     }
 }

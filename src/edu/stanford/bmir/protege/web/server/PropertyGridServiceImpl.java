@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server;
 import edu.stanford.bmir.protege.web.client.rpc.PropertyGridService;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.WebProtegeIRI;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.IRI;
 import edu.stanford.bmir.protege.web.client.rpc.data.tuple.TripleTuple;
 import edu.stanford.bmir.protege.web.client.ui.propertygrid.PropertyGrid;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
@@ -31,8 +31,8 @@ public class PropertyGridServiceImpl extends WebProtegeRemoteServiceServlet impl
     public PropertyGrid getPropertyGrid(ProjectId projectId, final Entity entity) {
         final OWLAPIProject project = getProject(projectId);
         return entity.accept(new EntityVisitor<PropertyGrid, RuntimeException>() {
-            public PropertyGrid visit(Cls c) throws RuntimeException {
-                WebProtegeIRI iri = c.getIRI();
+            public PropertyGrid visit(NamedClass c) throws RuntimeException {
+                IRI iri = c.getIRI();
                 OWLClass cls = project.getDataFactory().getOWLClass(toIRI(iri));
                 Collection<TripleTuple<?,?,?>> result = new HashSet<TripleTuple<?, ?, ?>>();
                 Set<OWLSubClassOfAxiom> axioms = project.getRootOntology().getSubClassAxiomsForSubClass(cls);
@@ -65,7 +65,7 @@ public class PropertyGridServiceImpl extends WebProtegeRemoteServiceServlet impl
         });
     }
 
-    private org.semanticweb.owlapi.model.IRI toIRI(WebProtegeIRI iri) {
+    private org.semanticweb.owlapi.model.IRI toIRI(IRI iri) {
         return org.semanticweb.owlapi.model.IRI.create(iri.getIRI());
     }
 }

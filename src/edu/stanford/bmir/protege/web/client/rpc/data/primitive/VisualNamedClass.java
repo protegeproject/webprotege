@@ -1,0 +1,24 @@
+package edu.stanford.bmir.protege.web.client.rpc.data.primitive;
+
+import java.io.Serializable;
+
+/**
+ * Author: Matthew Horridge<br>
+ * Stanford University<br>
+ * Bio-Medical Informatics Research Group<br>
+ * Date: 17/05/2012
+ */
+public class VisualNamedClass extends VisualEntity<NamedClass> implements Serializable {
+
+    private VisualNamedClass() {
+        super();
+    }
+
+    public VisualNamedClass(NamedClass entity) {
+        super(entity);
+    }
+
+    public VisualNamedClass(NamedClass entity, String browserText) {
+        super(entity, browserText);
+    }
+}

@@ -25,7 +25,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.SubclassEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.GenericConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
 
 public class UIUtil {
@@ -233,20 +233,20 @@ public class UIUtil {
     }
     
     public static String getStringConfigurationProperty(
-            Map<String, Object> config, ProjectConfiguration projectConfiguration, String prop, String defaultValue) {
-        String projectDefaultValue = getStringConfigurationProperty(projectConfiguration, prop, defaultValue);
+            Map<String, Object> config, ProjectLayoutConfiguration projectLayoutConfiguration, String prop, String defaultValue) {
+        String projectDefaultValue = getStringConfigurationProperty(projectLayoutConfiguration, prop, defaultValue);
         return getStringConfigurationProperty(config, prop, projectDefaultValue);
     }
 
     public static int getIntegerConfigurationProperty(
-            Map<String, Object> config, ProjectConfiguration projectConfiguration, String prop, int defaultValue) {
-        int projectDefaultValue = getIntegerConfigurationProperty(projectConfiguration, prop, defaultValue);
+            Map<String, Object> config, ProjectLayoutConfiguration projectLayoutConfiguration, String prop, int defaultValue) {
+        int projectDefaultValue = getIntegerConfigurationProperty(projectLayoutConfiguration, prop, defaultValue);
         return getIntegerConfigurationProperty(config, prop, projectDefaultValue);
     }
 
     public static boolean getBooleanConfigurationProperty(
-            Map<String, Object> config, ProjectConfiguration projectConfiguration, String prop, boolean defaultValue) {
-        boolean projectDefaultValue = getBooleanConfigurationProperty(projectConfiguration, prop, defaultValue);
+            Map<String, Object> config, ProjectLayoutConfiguration projectLayoutConfiguration, String prop, boolean defaultValue) {
+        boolean projectDefaultValue = getBooleanConfigurationProperty(projectLayoutConfiguration, prop, defaultValue);
         return UIUtil.getBooleanConfigurationProperty(config, prop, projectDefaultValue);
     }
 

@@ -13,7 +13,11 @@ public abstract class Property extends Entity implements Serializable {
     protected Property() {
     }
 
-    public Property(WebProtegeIRI iri) {
+    protected Property(Prefix prefix, String localName) {
+        super(prefix, localName);
+    }
+
+    public Property(IRI iri) {
         super(iri);
     }
 }

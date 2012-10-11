@@ -13,9 +13,12 @@ import edu.stanford.smi.protege.server.metaproject.Group;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
 import edu.stanford.smi.protege.server.metaproject.User;
+import edu.stanford.smi.protege.util.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
@@ -171,5 +174,16 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     public String processCall(String payload) throws SerializationException {
         // TODO: Log timing in here
         return super.processCall(payload);
+    }
+
+    @Override
+    protected void doUnexpectedFailure(Throwable e) {
+        super.doUnexpectedFailure(e);
+        // TODO: Log Exception Properly!
+        Log.getLogger().severe("UNEXPECTED FAILURE");
+        Log.getLogger().severe(e.getMessage());
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        Log.getLogger().severe(sw.toString());
     }
 }

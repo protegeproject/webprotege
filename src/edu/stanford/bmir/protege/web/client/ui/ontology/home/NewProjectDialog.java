@@ -36,7 +36,7 @@ public class NewProjectDialog extends WebProtegeDialog<NewProjectInfo> {
         if(userName == null) {
             throw new RuntimeException("User name is null");
         }
-        NewProjectSettings newProjectSettings = new NewProjectSettings(UserId.getUserId(userName), data.getProjectName(), data.getProjectDescription());
+        NewProjectSettings newProjectSettings = new NewProjectSettings(UserId.getUserId(userName), data.getProjectName(), data.getProjectDescription(), data.getProjectType());
         ProjectManagerServiceAsync projectManagerService = GWT.create(ProjectManagerService.class);
         projectManagerService.createNewProject(newProjectSettings, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {

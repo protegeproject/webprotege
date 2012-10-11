@@ -5,9 +5,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Cls;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.NamedClass;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
-import edu.stanford.bmir.protege.web.client.ui.obo.XRefEditor;
 
 import java.util.Collection;
 import java.util.List;
@@ -66,14 +65,14 @@ public interface OBOTextEditorService extends RemoteService {
 
 
 
-    OBOTermRelationships getRelationships(ProjectId projectId, Cls term);
+    OBOTermRelationships getRelationships(ProjectId projectId, NamedClass term);
 
-    void setRelationships(ProjectId projectId, Cls lastEntity, OBOTermRelationships relationships) throws NotSignedInException;
+    void setRelationships(ProjectId projectId, NamedClass lastEntity, OBOTermRelationships relationships) throws NotSignedInException;
 
 
     
-    OBOTermCrossProduct getCrossProduct(ProjectId projectId, Cls term);
+    OBOTermCrossProduct getCrossProduct(ProjectId projectId, NamedClass term);
 
-    void setCrossProduct(ProjectId projectId, Cls term, OBOTermCrossProduct crossProduct) throws NotSignedInException;
+    void setCrossProduct(ProjectId projectId, NamedClass term, OBOTermCrossProduct crossProduct) throws NotSignedInException;
 
 }

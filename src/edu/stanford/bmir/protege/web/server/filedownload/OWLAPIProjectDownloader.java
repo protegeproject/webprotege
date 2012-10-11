@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStoreImpl;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
@@ -23,16 +24,34 @@ public class OWLAPIProjectDownloader {
 
     private ProjectId projectId;
 
+    private RevisionNumber revision;
+
     public OWLAPIProjectDownloader(ProjectId projectId) {
+        this(projectId, RevisionNumber.getHeadRevisionNumber());
+    }
+
+    /**
+     * Creates a project downloader that downloads the specified revision of the specified project.
+     * @param projectId The project to be downloaded.  Not <code>null</code>.
+     * @param revision The revision of the project to be downloaded.
+     */
+    public OWLAPIProjectDownloader(ProjectId projectId, RevisionNumber revision) {
         this.projectId = projectId;
+        this.revision = revision;
     }
     
     public void writeProject(HttpServletResponse response, OutputStream outputStream) throws IOException {
         try {
-            OWLAPIProjectDocumentStoreImpl documentStore = OWLAPIProjectDocumentStoreImpl.getProjectDocumentStore(projectId);
+            OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
             setFileType(response);
             setFileName(response);
-            documentStore.exportProject(outputStream, new RDFXMLOntologyFormat());
+            if(revision.isHead()) {
+                documentStore.exportProject(outputStream, new RDFXMLOntologyFormat());
+            }
+            else {
+                documentStore.exportProjectRevision(revision, outputStream, new RDFXMLOntologyFormat());
+            }
+
         }
         catch (OWLOntologyStorageException e) {
             e.printStackTrace();
@@ -46,7 +65,7 @@ public class OWLAPIProjectDownloader {
     }
 
     private void setFileName(HttpServletResponse response) {
-        String fileName = projectId.getProjectName().replaceAll("\\s+", "-") + "-ontologies.zip";
+        String fileName = projectId.getProjectName().replaceAll("\\s+", "-") + "-REVISION-" + revision.getValue() + "-ontologies.zip";
         fileName = fileName.toLowerCase();
         response.setHeader(CONTENT_DISPOSITION_HEADER_FIELD, "attachment; filename=\"" + fileName + "\"");
     }

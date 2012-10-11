@@ -37,7 +37,11 @@ public class BioPortalConstants {
     public static String DEFAULT_BIOPORTAL_REST_BASE_URL = "http://rest.bioontology.org/bioportal/";   //production
     //public static String DEFAULT_BIOPORTAL_REST_BASE_URL = "http://stagerest.bioontology.org/bioportal/";    //stage
 
-    public static String DEFAULT_BIOPORTAL_REST_CALL_SUFFIX = "apikey=5a15a173-dac1-4ea4-b2cf-61ac033bb026";    //production - account: webprotege
+    public static final String API_KEY_PROPERTY = "apikey";
+
+    public static final String DEFAULT_API_KEY = "5a15a173-dac1-4ea4-b2cf-61ac033bb026";
+
+    public static String DEFAULT_BIOPORTAL_REST_CALL_SUFFIX = API_KEY_PROPERTY + "=" + DEFAULT_API_KEY;    //production - account: webprotege
     //public static String DEFAULT_BIOPORTAL_REST_CALL_SUFFIX = "apikey=5a15a173-dac1-4ea4-b2cf-61ac033bb026 ";    //stage - account: webprotege
     static String DEFAULT_BIOPORTAL_SEARCH_ONE_PAGE_OPTION = "pagesize=10&pagenum=1";
 

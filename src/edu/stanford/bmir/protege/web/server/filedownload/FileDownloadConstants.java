@@ -9,4 +9,6 @@ package edu.stanford.bmir.protege.web.server.filedownload;
 public class FileDownloadConstants {
 
     public static final String PROJECT_NAME_PARAMETER = "ontology";
+    
+    public static final String REVISION = "revision";
 }

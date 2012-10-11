@@ -191,28 +191,28 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
      */
 
     protected void createActionLinks() {
-        if (InstanceGridWidgetConstants.showAddExistingActionLink(getWidgetConfiguration(), getProject().getProjectConfiguration())) {
+        if (InstanceGridWidgetConstants.showAddExistingActionLink(getWidgetConfiguration(), getProject().getProjectLayoutConfiguration())) {
             addExistingLink = createAddExistingHyperlink();
             if (addExistingLink != null) {
                 labelPanel.add(addExistingLink);
             }
         }
 
-        if (InstanceGridWidgetConstants.showAddNewActionLink(getWidgetConfiguration(), getProject().getProjectConfiguration())) {
+        if (InstanceGridWidgetConstants.showAddNewActionLink(getWidgetConfiguration(), getProject().getProjectLayoutConfiguration())) {
             addNewLink = createAddNewValueHyperlink();
             if (addNewLink != null) {
                 labelPanel.add(addNewLink);
             }
         }
 
-        if (InstanceGridWidgetConstants.showReplaceExistingActionLink(getWidgetConfiguration(), getProject().getProjectConfiguration())) {
+        if (InstanceGridWidgetConstants.showReplaceExistingActionLink(getWidgetConfiguration(), getProject().getProjectLayoutConfiguration())) {
             replaceExistingLink = createReplaceExistingHyperlink();
             if (replaceExistingLink != null && isReplace()) {
                 labelPanel.add(replaceExistingLink);
             }
         }
 
-        if (InstanceGridWidgetConstants.showReplaceNewActionLink(getWidgetConfiguration(), getProject().getProjectConfiguration())) {
+        if (InstanceGridWidgetConstants.showReplaceNewActionLink(getWidgetConfiguration(), getProject().getProjectLayoutConfiguration())) {
             replaceNewLink = createReplaceNewValueHyperlink();
             if (replaceNewLink != null && isReplace()) {
                 labelPanel.add(replaceNewLink);
@@ -222,7 +222,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
 
     protected Anchor createAddNewValueHyperlink() {
         Anchor addNewLink = new Anchor(
-                InstanceGridWidgetConstants.getAddNewLink(getWidgetConfiguration(), getProject().getProjectConfiguration()), true);
+                InstanceGridWidgetConstants.getAddNewLink(getWidgetConfiguration(), getProject().getProjectLayoutConfiguration()), true);
         addNewLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (isWriteOperationAllowed()) {
@@ -235,7 +235,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
 
     protected Anchor createAddExistingHyperlink() {
         Anchor addExistingLink = new Anchor(
-                InstanceGridWidgetConstants.getAddExistingLink(getWidgetConfiguration(), getProject().getProjectConfiguration()), true);
+                InstanceGridWidgetConstants.getAddExistingLink(getWidgetConfiguration(), getProject().getProjectLayoutConfiguration()), true);
         addExistingLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (isWriteOperationAllowed()) {
@@ -248,7 +248,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
 
     protected Anchor createReplaceNewValueHyperlink() {
         Anchor replaceNewLink = new Anchor(
-                InstanceGridWidgetConstants.getReplaceNewLink(getWidgetConfiguration(), getProject().getProjectConfiguration()), true);
+                InstanceGridWidgetConstants.getReplaceNewLink(getWidgetConfiguration(), getProject().getProjectLayoutConfiguration()), true);
         replaceNewLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (isWriteOperationAllowed()) {
@@ -261,7 +261,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
 
     protected Anchor createReplaceExistingHyperlink() {
         Anchor replaceExistingLink = new Anchor(
-                InstanceGridWidgetConstants.getReplaceExistingLink(getWidgetConfiguration(), getProject().getProjectConfiguration()), true);
+                InstanceGridWidgetConstants.getReplaceExistingLink(getWidgetConfiguration(), getProject().getProjectLayoutConfiguration()), true);
         replaceExistingLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (isWriteOperationAllowed()) {
@@ -425,7 +425,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         grid.setAutoWidth(true);
         grid.setStripeRows(true);
         int clicksToEdit = UIUtil.getIntegerConfigurationProperty(
-                getProject().getProjectConfiguration(), 
+                getProject().getProjectLayoutConfiguration(),
                 FormConstants.CLICKS_TO_EDIT, 
                 FormConstants.DEFAULT_CLICKS_TO_EDIT);
         grid.setClicksToEdit(clicksToEdit);
@@ -478,11 +478,11 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         grid.addGridCellListener(new GridCellListenerAdapter() {
             double timeOfLastClick = 0;
             int clicksToEdit = UIUtil.getIntegerConfigurationProperty(
-                    getProject().getProjectConfiguration(), 
+                    getProject().getProjectLayoutConfiguration(),
                     FormConstants.CLICKS_TO_EDIT, 
                     FormConstants.DEFAULT_CLICKS_TO_EDIT);
             boolean oneClickComboboxEditingEnabled = UIUtil.getBooleanConfigurationProperty(
-                    getProject().getProjectConfiguration(), 
+                    getProject().getProjectLayoutConfiguration(),
                     FormConstants.ONE_CLICK_COMBOBOX_EDITING, 
                     true);
             

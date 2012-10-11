@@ -100,7 +100,7 @@
     font-size: 12px;
     padding: 2px;
     box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
-    font-family: verdana,arial,sans-serif;
+    /*font-family: verdana,arial,sans-serif;*/
 }
 
 .gwt-SuggestBoxPopup {

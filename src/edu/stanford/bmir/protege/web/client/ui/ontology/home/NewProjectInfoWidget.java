@@ -10,10 +10,14 @@ import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.MessageBoxConfig;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
+import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDown;
+import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDownModel;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +52,10 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm {
 
     private Set<String> ownedProjectNameCache = new HashSet<String>();
 
+    private static final String PROJECT_TYPE_LABEL = "Project type";
+
+    private final DropDown<ProjectType> projectTypeDropDown;
+
     public NewProjectInfoWidget() {
         fillProjectNamesCache();
 
@@ -68,6 +76,9 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm {
         projectDescriptionTextArea.setWidth(FIELD_WIDTH);
         addWidget(PROJECT_DESCRIPTION_LABEL, projectDescriptionTextArea);
 
+        projectTypeDropDown = new DropDown<ProjectType>(new ProjectTypeDropDownModel());
+        addWidget(PROJECT_TYPE_LABEL, projectTypeDropDown);
+        
         addDialogValidator(new EmptyProjectNameValidator());
         addDialogValidator(new ExistingProjectNameValidator());
         addDialogValidator(new ProjectDescriptionValidator());
@@ -124,7 +135,7 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm {
     }
 
     public NewProjectInfo getNewProjectInfo() {
-        return new NewProjectInfo(getProjectName(), getProjectDescription());
+        return new NewProjectInfo(getProjectName(), getProjectDescription(), getProjectType());
     }
 
     public String getProjectName() {
@@ -133,6 +144,10 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm {
 
     public String getProjectDescription() {
         return projectDescriptionTextArea.getText().trim();
+    }
+
+    public ProjectType getProjectType() {
+        return projectTypeDropDown.getSelectedItem();
     }
 
     public Focusable getDefaultWidget() {
@@ -172,5 +187,42 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm {
         public String getValidationMessage() {
             return "Please enter a description for the project.";
         }
+    }
+
+
+    private class ProjectTypeDropDownModel implements DropDownModel<ProjectType> {
+
+        private List<ProjectType> projectTypeList = new ArrayList<ProjectType>();
+
+        private ProjectTypeDropDownModel() {
+            ProjectManagerServiceAsync managerService = GWT.create(ProjectManagerService.class);
+            managerService.getAvailableProjectTypes(new AsyncCallback<List<ProjectType>>() {
+                public void onFailure(Throwable caught) {
+                    GWT.log("Error retrieving project types", caught);
+                }
+
+                public void onSuccess(List<ProjectType> result) {
+                    projectTypeList.clear();
+                    projectTypeList.addAll(result);
+                    if(projectTypeDropDown != null) {
+                        projectTypeDropDown.setSelectedItem(projectTypeList.get(0));
+                    }
+                }
+            });
+        }
+
+        public int getSize() {
+            return projectTypeList.size();
+        }
+
+        public ProjectType getItemAt(int index) {
+            return projectTypeList.get(index);
+        }
+
+        public String getRendering(int index) {
+            return projectTypeList.get(index).getName();
+        }
+
+
     }
 }

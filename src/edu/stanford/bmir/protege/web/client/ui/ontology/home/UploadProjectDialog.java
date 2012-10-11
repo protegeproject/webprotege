@@ -74,7 +74,8 @@ public class UploadProjectDialog extends WebProtegeDialog<UploadFileInfo> {
         DocumentId documentId = result.getDocumentId();
         String projectName = data.getProjectSettings().getProjectName();
         String projectDescription = data.getProjectSettings().getProjectDescription();
-        NewProjectSettings newProjectSettings = new NewProjectSettings(userId, projectName, projectDescription, documentId);
+        ProjectType projectType = data.getProjectSettings().getProjectType();
+        NewProjectSettings newProjectSettings = new NewProjectSettings(userId, projectName, projectDescription, projectType, documentId);
 
         projectManagerService.createNewProject(newProjectSettings, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {

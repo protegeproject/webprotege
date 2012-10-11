@@ -60,8 +60,7 @@ public class ICat implements EntryPoint {
     public void onModuleLoad() {
         initServletMagagers();
 
-        ProjectData data = new ProjectData();
-        data.setName(getProjectName());
+        ProjectData data = new ProjectData("", "", getProjectName(), "", false);
         project = new Project(data);
 
         //start the loading of the project in background

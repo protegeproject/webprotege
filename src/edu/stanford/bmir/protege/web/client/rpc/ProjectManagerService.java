@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationInfo;
 
 import java.util.List;
 import java.util.Set;
@@ -35,6 +36,8 @@ public interface ProjectManagerService extends RemoteService {
      * @return A list of projects that are owned by the user with the specified Id.
      */
     List<ProjectData> getProjects(UserId userId);
+
+    ProjectData getProjectData(ProjectId projectId) throws ProjectNotRegisteredException;
 
     /**
      * Gets a list of ALL project names in the system whether or not the caller can list them.
@@ -103,4 +106,20 @@ public interface ProjectManagerService extends RemoteService {
 
     long getLastAccessTime(ProjectId projectId);
 
+    /**
+     * Gets the list of available project types.
+     * @see ProjectType
+     * @return A list of project types.  Not null.
+     */
+    List<ProjectType> getAvailableProjectTypes();
+
+
+    ProjectType getProjectType(ProjectId projectId) throws ProjectNotRegisteredException;
+
+    void setProjectType(ProjectId projectId, ProjectType projectType) throws NotProjectOwnerException, ProjectNotRegisteredException;
+    
+    
+    ProjectConfigurationInfo getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException;
+
+    void setProjectConfiguration(ProjectConfigurationInfo configuration) throws ProjectNotRegisteredException, NotProjectOwnerException;
 }

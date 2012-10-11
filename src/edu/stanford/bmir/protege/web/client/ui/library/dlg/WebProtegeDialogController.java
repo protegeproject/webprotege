@@ -15,7 +15,7 @@ import java.util.List;
  *     Describes the content and appearance of a dialog.
  * </p>
  */
-public abstract class WebProtegeDialogController<D> {
+public abstract class WebProtegeDialogController<D> implements HasInitialFocusable {
 
     private String title;
     

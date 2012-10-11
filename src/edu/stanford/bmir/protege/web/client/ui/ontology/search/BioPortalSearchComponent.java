@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
+import com.gwtext.client.core.ExtElement;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.data.FieldDef;
 import com.gwtext.client.data.Record;
@@ -324,7 +325,7 @@ public class BioPortalSearchComponent extends GridPanel {
         panel.setAutoScroll(true);
         window.add(panel);
         window.show();
-        panel.getEl().mask("Loading details...");
+        doMask(panel);
 
         BioPortalSearchData bpSearchData = new BioPortalSearchData();
         initBioPortalSearchData(bpSearchData);
@@ -333,17 +334,31 @@ public class BioPortalSearchComponent extends GridPanel {
         OntologyServiceManager.getInstance().getBioPortalSearchContentDetails(project.getProjectName(), bpSearchData,
                 bpRefData, new AsyncCallback<String>() {
                     public void onFailure(Throwable caught) {
-                        panel.getEl().unmask();
+                        doUnmask(panel);
                         window.close();
                         MessageBox.alert("Getting details from server failed. Please try it later.<BR>"
                                 + "Reason for failure: " + caught.getMessage());
                     }
 
                     public void onSuccess(String result) {
-                        panel.getEl().unmask();
+                        doUnmask(panel);
                         panel.setHtml(result);
                     }
                 });
+    }
+
+    private void doUnmask(Panel panel) {
+        ExtElement el = panel.getEl();
+        if (el != null) {
+            el.unmask();
+        }
+    }
+
+    private void doMask(Panel panel) {
+        ExtElement el = panel.getEl();
+        if (el != null) {
+            el.mask("Loading details...");
+        }
     }
 
     private void onViewGraph(Record record) {
@@ -715,7 +730,7 @@ public class BioPortalSearchComponent extends GridPanel {
         @Override
         public void handleFailure(Throwable caught) {
             if (getEl() != null) { //how can it be null?
-                getEl().unmask();
+                doUnmask(BioPortalSearchComponent.this);
             }
             GWT.log("Could not retrive BioPortal search results for " + currentEntity, null);
         }
@@ -723,7 +738,7 @@ public class BioPortalSearchComponent extends GridPanel {
         @Override
         public void handleSuccess(String searchXml) {
             if (getEl() != null) { //how can it be null?
-                getEl().unmask();
+                doUnmask(BioPortalSearchComponent.this);
             }
             store.loadXmlData(searchXml, true);
             searchCountText.setText(store.getTotalCount() + " / " + extractNumResultsTotal(searchXml) + " results shown.");
@@ -764,16 +779,17 @@ public class BioPortalSearchComponent extends GridPanel {
     class ImportBioPortalConceptHandler extends AbstractAsyncHandler<EntityData> {
         @Override
         public void handleFailure(Throwable caught) {
-            getEl().unmask();
+            doUnmask(BioPortalSearchComponent.this);
             GWT.log("Could not import BioPortal concept for " + currentEntity, null);
             MessageBox.alert("Import operation failed!");
         }
 
         @Override
         public void handleSuccess(EntityData refInstance) {
-            getEl().unmask();
+            doUnmask(BioPortalSearchComponent.this);
             MessageBox.alert(refInstance != null ? "Import operation succeeded. Reference instance: " + refInstance
                     : "Import operation did not succeed");
+            project.forceGetEvents();
         }
     }
 
@@ -784,14 +800,14 @@ public class BioPortalSearchComponent extends GridPanel {
     class CreateManualreferenceHandler extends AbstractAsyncHandler<EntityData> {
         @Override
         public void handleFailure(Throwable caught) {
-            getEl().unmask();
+            doUnmask(BioPortalSearchComponent.this);
             GWT.log("Could not create manual reference for " + currentEntity, null);
             MessageBox.alert("Reference creation failed!");
         }
 
         @Override
         public void handleSuccess(EntityData refInstance) {
-            getEl().unmask();
+            doUnmask(BioPortalSearchComponent.this);
             MessageBox.alert(refInstance != null ? "Reference creation SUCCEDED! Reference instance: " + refInstance
                     : "Reference creation DID NOT SUCCEDED!");
         }
@@ -810,14 +826,14 @@ public class BioPortalSearchComponent extends GridPanel {
 
         @Override
         public void handleFailure(Throwable caught) {
-            getEl().unmask();
+            doUnmask(BioPortalSearchComponent.this);
             GWT.log("Could not create DNF reference for " + currentEntity, null);
             MessageBox.alert("Reference creation failed!");
         }
 
         @Override
         public void handleSuccess(EntityData refInstance) {
-            getEl().unmask();
+            doUnmask(BioPortalSearchComponent.this);
             MessageBox.alert(refInstance != null ? "Reference creation SUCCEDED! Reference instance: " + refInstance
                     : "Reference creation DID NOT SUCCEDED!");
             this.note.setAnnotatedEntity(refInstance);

@@ -23,7 +23,7 @@ import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalReferenceData;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
@@ -52,11 +52,11 @@ public class ClassInstanceReferenceFieldWidget extends ReferenceFieldWidget {
         final Anchor addNewValueHyperlink = super.createAddNewValueHyperlink();
         
         final Map<String, Object> widgetConfiguration = getWidgetConfiguration();
-        final ProjectConfiguration projectConfiguration = getProject().getProjectConfiguration();
+        final ProjectLayoutConfiguration projectLayoutConfiguration = getProject().getProjectLayoutConfiguration();
         addNewValueHyperlink.setHTML(
                 InstanceGridWidgetConstants.getIconLink(
-                        InstanceGridWidgetConstants.getAddNewValueActionDesc(widgetConfiguration, projectConfiguration, "Add value"), 
-                        InstanceGridWidgetConstants.getAddIcon(widgetConfiguration, projectConfiguration)));
+                        InstanceGridWidgetConstants.getAddNewValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Add value"),
+                        InstanceGridWidgetConstants.getAddIcon(widgetConfiguration, projectLayoutConfiguration)));
         return addNewValueHyperlink;
     }
 
@@ -65,22 +65,22 @@ public class ClassInstanceReferenceFieldWidget extends ReferenceFieldWidget {
         final Anchor replaceNewValueHyperlink = super.createReplaceNewValueHyperlink();
         
         final Map<String, Object> widgetConfiguration = getWidgetConfiguration();
-        final ProjectConfiguration projectConfiguration = getProject().getProjectConfiguration();
+        final ProjectLayoutConfiguration projectLayoutConfiguration = getProject().getProjectLayoutConfiguration();
         replaceNewValueHyperlink.setHTML(
                 InstanceGridWidgetConstants.getIconLink(
-                        InstanceGridWidgetConstants.getReplaceNewValueActionDesc(widgetConfiguration, projectConfiguration, "Replace value"), 
-                        InstanceGridWidgetConstants.getReplaceIcon(widgetConfiguration, projectConfiguration)));
+                        InstanceGridWidgetConstants.getReplaceNewValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Replace value"),
+                        InstanceGridWidgetConstants.getReplaceIcon(widgetConfiguration, projectLayoutConfiguration)));
         return replaceNewValueHyperlink;
     }
 
     @Override
     protected Anchor createAddExistingHyperlink() {
         final Map<String, Object> widgetConfiguration = getWidgetConfiguration();
-        final ProjectConfiguration projectConfiguration = getProject().getProjectConfiguration();
+        final ProjectLayoutConfiguration projectLayoutConfiguration = getProject().getProjectLayoutConfiguration();
         Anchor addNewLink = new Anchor(
                 InstanceGridWidgetConstants.getIconLink(
-                        InstanceGridWidgetConstants.getAddExistingValueActionDesc(widgetConfiguration, projectConfiguration, "Find value"), 
-                        InstanceGridWidgetConstants.getAddIcon(widgetConfiguration, projectConfiguration)), true);
+                        InstanceGridWidgetConstants.getAddExistingValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Find value"),
+                        InstanceGridWidgetConstants.getAddIcon(widgetConfiguration, projectLayoutConfiguration)), true);
         addNewLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (isWriteOperationAllowed()){
@@ -98,11 +98,11 @@ public class ClassInstanceReferenceFieldWidget extends ReferenceFieldWidget {
     @Override
     protected Anchor createReplaceExistingHyperlink() {
         final Map<String, Object> widgetConfiguration = getWidgetConfiguration();
-        final ProjectConfiguration projectConfiguration = getProject().getProjectConfiguration();
+        final ProjectLayoutConfiguration projectLayoutConfiguration = getProject().getProjectLayoutConfiguration();
         Anchor addNewLink = new Anchor(
                 InstanceGridWidgetConstants.getIconLink(
-                        InstanceGridWidgetConstants.getReplaceExistingValueActionDesc(widgetConfiguration, projectConfiguration, "Find & Replace <br/>value"), 
-                        InstanceGridWidgetConstants.getReplaceIcon(widgetConfiguration, projectConfiguration)), true);
+                        InstanceGridWidgetConstants.getReplaceExistingValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Find & Replace <br/>value"),
+                        InstanceGridWidgetConstants.getReplaceIcon(widgetConfiguration, projectLayoutConfiguration)), true);
         addNewLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (isWriteOperationAllowed()){

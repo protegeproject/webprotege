@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalReferenceData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.server.owlapi.extref.BioPortalExternalReferenceData;
+import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceStrategy;
+import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceSubClassStrategy;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
@@ -15,8 +18,7 @@ import java.util.List;
  */
 public class AddExternalReferenceChangeFactory extends OWLOntologyChangeFactory {
 
-    private static final String BIOPORTAL_METADATA_BASE = "http://bioportal.bioontology.org/metadata/def/";
-    
+
     private String entityName;
     
     private BioPortalReferenceData referenceData;
@@ -32,10 +34,11 @@ public class AddExternalReferenceChangeFactory extends OWLOntologyChangeFactory 
         OWLAPIProject project = getProject();
         OWLDataFactory df = project.getDataFactory();
 
-        IRI subject = IRI.create(entityName);
-
-        ExternalReferenceFactory refFac = new ExternalReferenceFactory(getProject(), subject, referenceData);
-        changeListToFill.addAll(refFac.createAddReferenceChanges());
+        ExternalReferenceStrategy<OWLClass> strategy = new ExternalReferenceSubClassStrategy();
+        IRI subjectIRI = IRI.create(entityName);
+        OWLClass subjectCls = df.getOWLClass(subjectIRI);
+        List<OWLOntologyChange> changes = strategy.generateOntologyChanges(subjectCls, new BioPortalExternalReferenceData(project, referenceData), project);
+        changeListToFill.addAll(changes);
 
 
     }

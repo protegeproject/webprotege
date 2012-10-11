@@ -18,8 +18,12 @@ public class ProjectData implements Serializable {
     private String owner;
 
     private boolean inTrash;
+    
+    private long lastModified = 0;
+    
+    private String lastModifiedBy = "";
 
-	public ProjectData() {
+	private ProjectData() {
 	}
 
     public ProjectData(String description, String location,
@@ -29,6 +33,8 @@ public class ProjectData implements Serializable {
 		this.name = name;
 		this.owner = owner;
         this.inTrash = inTrash;
+        this.lastModified = 0;
+        this.lastModifiedBy = "";
 	}
 
     public String getDescription() {
@@ -69,5 +75,21 @@ public class ProjectData implements Serializable {
 
     public boolean isInTrash() {
         return this.inTrash;
+    }
+
+    public long getLastModified() {
+        return lastModified;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 }

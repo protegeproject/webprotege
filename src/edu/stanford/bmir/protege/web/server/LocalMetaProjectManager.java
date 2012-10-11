@@ -187,23 +187,17 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
             }
 
             try {
-                ProjectData pd = new ProjectData();
-
-                // JV: I think there is a problem with the getDescription method
-                // in protege-core, i.e., if the metaproject has a null value for
-                // the description, the getDescription method throws an exception.
-                // Why is this value required in the metaproject?
-                pd.setDescription(projectInstance.getDescription());
-
-                pd.setLocation(projectInstance.getLocation());
-                pd.setName(projectInstance.getName());
-
-                pd.setInTrash(isInTrash(projectInstance));
-
-                User owner = projectInstance.getOwner();
-                if (owner != null) {
-                    pd.setOwner(owner.getName());
+                String description = projectInstance.getDescription();
+                String location = projectInstance.getLocation();
+                String name = projectInstance.getName();
+                User projectUser = projectInstance.getOwner();
+                String owner = "";
+                if(projectUser != null) {
+                    owner = projectUser.getName();
                 }
+                boolean inTrash = isInTrash(projectInstance);
+                
+                ProjectData pd = new ProjectData(description, location, name, owner, inTrash);
 
                 Log.getLogger().info("Found project def in metaproject: " + pd.getName() + " at: " + pd.getLocation());
                 projectData.add(pd);

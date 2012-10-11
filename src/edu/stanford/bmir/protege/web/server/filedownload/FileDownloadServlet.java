@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +16,8 @@ import java.io.IOException;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/06/2012
  * <p>
- *     A servlet which allows ontologies to be downloaded from WebProtege
+ *     A servlet which allows ontologies to be downloaded from WebProtege.  See {@link OWLAPIProjectDownloader} for
+ *     the piece of machinery that actually does the processing of request parameters and the downloading.
  * </p>
  */
 public class FileDownloadServlet extends HttpServlet {
@@ -25,7 +27,8 @@ public class FileDownloadServlet extends HttpServlet {
         FileDownloadParameters downloadParameters = new FileDownloadParameters(req);
         if(downloadParameters.isProjectDownload()) {
             ProjectId projectId = downloadParameters.getProjectId();
-            OWLAPIProjectDownloader downloader = new OWLAPIProjectDownloader(projectId);
+            RevisionNumber revisionNumber = downloadParameters.getRequestedRevision();
+            OWLAPIProjectDownloader downloader = new OWLAPIProjectDownloader(projectId, revisionNumber);
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(resp.getOutputStream());
             downloader.writeProject(resp, bufferedOutputStream);
             bufferedOutputStream.flush();

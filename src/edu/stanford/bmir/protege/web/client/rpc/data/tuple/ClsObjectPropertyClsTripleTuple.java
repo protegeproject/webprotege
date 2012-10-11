@@ -10,12 +10,12 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/05/2012
  */
-public class ClsObjectPropertyClsTripleTuple extends TripleTuple<Cls, ObjectProperty, Cls> implements Serializable {
+public class ClsObjectPropertyClsTripleTuple extends TripleTuple<NamedClass, ObjectProperty, NamedClass> implements Serializable {
 
     private ClsObjectPropertyClsTripleTuple() {
     }
 
-    public ClsObjectPropertyClsTripleTuple(VisualCls subject, VisualObjectProperty property, VisualCls object) {
+    public ClsObjectPropertyClsTripleTuple(VisualNamedClass subject, VisualObjectProperty property, VisualNamedClass object) {
         super(subject, property, object);
     }
 }

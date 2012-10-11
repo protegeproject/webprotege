@@ -3,13 +3,16 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
+
+import java.util.List;
 
 @RemoteServiceRelativePath("projectconfig")
 public interface ProjectConfigurationService extends RemoteService {
 
-	public ProjectConfiguration getProjectConfiguration(String projectName, String userName);
+	ProjectLayoutConfiguration getProjectLayoutConfiguration(String projectName, String userName);
 
-	public void saveProjectConfiguration(String projectName, String userName, ProjectConfiguration config);
-
+	void saveProjectLayoutConfiguration(String projectName, String userName, ProjectLayoutConfiguration config);
 }

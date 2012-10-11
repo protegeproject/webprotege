@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.obo;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualCls;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualNamedClass;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import java.util.Collections;
  */
 public class OBOTermCrossProduct implements Serializable {
 
-    private VisualCls genus;
+    private VisualNamedClass genus;
 
     private OBOTermRelationships relationships;
 
@@ -25,16 +25,16 @@ public class OBOTermCrossProduct implements Serializable {
         return new OBOTermCrossProduct(null, new OBOTermRelationships(Collections.<OBORelationship>emptySet()));
     }
 
-    public OBOTermCrossProduct(VisualCls genus, OBOTermRelationships relationships) {
+    public OBOTermCrossProduct(VisualNamedClass genus, OBOTermRelationships relationships) {
         this.genus = genus;
         this.relationships = relationships;
     }
 
-    public OBOTermCrossProduct(VisualCls genus) {
+    public OBOTermCrossProduct(VisualNamedClass genus) {
         this(genus, new OBOTermRelationships(Collections.<OBORelationship>emptySet()));
     }
 
-    public VisualCls getGenus() {
+    public VisualNamedClass getGenus() {
         return genus;
     }
 

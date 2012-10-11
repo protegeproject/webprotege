@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermRelationships;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Cls;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.NamedClass;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
 
 import java.util.Collection;
@@ -35,21 +33,21 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void commitChangesForEntity(Entity entity) {
-        if(!(entity instanceof Cls)) {
+        if(!(entity instanceof NamedClass)) {
             return;
         }
         OBOTermRelationships relationships = editor.getValue();
-        getService().setRelationships(getProjectId(), (Cls) entity, relationships, new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term relationships have not been applied"));
+        getService().setRelationships(getProjectId(), (NamedClass) entity, relationships, new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term relationships have not been applied"));
     }
 
     @Override
     protected void displayEntity(Entity entity) {
         Entity current = getCurrentEntity();
-        if(!(current instanceof Cls)) {
+        if(!(current instanceof NamedClass)) {
             editor.clearValue();
             return;
         }
-        getService().getRelationships(getProjectId(),  (Cls) current, new AsyncCallback<OBOTermRelationships>() {
+        getService().getRelationships(getProjectId(),  (NamedClass) current, new AsyncCallback<OBOTermRelationships>() {
             public void onFailure(Throwable caught) {
                 MessageBox.alert(caught.getMessage());
             }

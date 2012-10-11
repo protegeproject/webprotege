@@ -65,6 +65,7 @@ public class BioPortalProposalsPortlet extends AbstractEntityPortlet {
     }
 
     private void initUsersCache() {
+        BioPortalUsersCache.setBpRestBase(bpRestBase);
         BioPortalUsersCache.initBioPortalUsersMap(new AbstractAsyncHandler<Void>() {
             @Override
             public void handleFailure(Throwable caught) { }
@@ -114,6 +115,7 @@ public class BioPortalProposalsPortlet extends AbstractEntityPortlet {
     protected BioPortalNotePanel createNotePanel() {
         BioPortalNotePanel bpNotePanel = new BioPortalNotePanel();
         bpNotePanel.setEntityData(getEntity());
+        bpNotePanel.setBpRestBase(bpRestBase);
 
         bpNotePanel.setUpdateNotesCallback(new AbstractAsyncHandler<Void>() {
             @Override
@@ -261,6 +263,7 @@ public class BioPortalProposalsPortlet extends AbstractEntityPortlet {
         NewNotePanel newNotePanel = new NewNotePanel();
         newNotePanel.setEntityData(getEntity());
         newNotePanel.setOntologyVersionId(bpOntologyId);
+        newNotePanel.setBpRestBase(bpRestBase);
 
         newNotePanel.showPopup("New note on " + UIUtil.getDisplayText(getEntity()));
         newNotePanel.setNoteSentCallback(new AbstractAsyncHandler<Void>() {
@@ -295,6 +298,10 @@ public class BioPortalProposalsPortlet extends AbstractEntityPortlet {
         //bpUserId = UIUtil.getStringConfigurationProperty(getPortletConfiguration(), BioPortalConstants.BP_USER_ID, BioPortalUsersCache.getWebProtegeBpUserId() ); //TODO: should be stored in the metaproject
     }
 
+    private void updateComponents() {
+        bpNotePanel.setBpRestBase(bpRestBase);
+        BioPortalUsersCache.setBpRestBase(bpRestBase);
+    }
 
     @Override
     protected TabPanel getConfigurationPanel() {
@@ -308,20 +315,21 @@ public class BioPortalProposalsPortlet extends AbstractEntityPortlet {
         formPanel.setLabelWidth(100);
         formPanel.setPaddings(10);
 
-        final TextField bpRestBase = new TextField("BioPortal REST Base", "bpRestBase");
-        bpRestBase.setValue(UIUtil.getStringConfigurationProperty(getPortletConfiguration(), BioPortalConstants.CONFIG_PROPERTY_BIOPORTAL_REST_BASE_URL, null));
+        final TextField bpRestBaseField = new TextField("BioPortal REST Base", "bpRestBase");
+        bpRestBaseField.setValue(UIUtil.getStringConfigurationProperty(getPortletConfiguration(), BioPortalConstants.CONFIG_PROPERTY_BIOPORTAL_REST_BASE_URL, null));
         final TextField ontIdField = new TextField("Linked BioPortal Ontology Id", "bpOntId");
         ontIdField.setValue(UIUtil.getStringConfigurationProperty(getPortletConfiguration(), BioPortalConstants.CONFIG_PROPERTY_ONTOLGY_ID_PROPERTY, null));
 
-        formPanel.add(bpRestBase, new AnchorLayoutData("100%"));
+        formPanel.add(bpRestBaseField, new AnchorLayoutData("100%"));
         formPanel.add(ontIdField, new AnchorLayoutData("100%"));
 
         Panel bpConfigPanel = new AbstractValidatableTab() {
             @Override
             public void onSave() {
-                UIUtil.setConfigurationPropertyValue(getPortletConfiguration(), BioPortalConstants.CONFIG_PROPERTY_BIOPORTAL_BASE_URL, bpRestBase.getValueAsString());
+                UIUtil.setConfigurationPropertyValue(getPortletConfiguration(), BioPortalConstants.CONFIG_PROPERTY_BIOPORTAL_REST_BASE_URL, bpRestBaseField.getValueAsString());
                 UIUtil.setConfigurationPropertyValue(getPortletConfiguration(), BioPortalConstants.CONFIG_PROPERTY_ONTOLGY_ID_PROPERTY,ontIdField.getValueAsString());
                 initBioPortalParameters();
+                updateComponents();
             }
 
             @Override

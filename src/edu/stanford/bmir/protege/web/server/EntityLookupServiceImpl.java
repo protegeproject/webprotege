@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequest;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequestEntityMatchType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.IRI;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
@@ -50,7 +51,7 @@ public class EntityLookupServiceImpl extends WebProtegeRemoteServiceServlet impl
                         public VisualEntity<?> visit(OWLClass cls) {
                             if(entityLookupRequest.isMatchType(EntityLookupRequestEntityMatchType.MATCH_CLASSES)) {
                                 String browserText = rm.getBrowserText(cls);
-                                return new VisualCls(new Cls(new WebProtegeIRI(cls.getIRI().toString())), browserText);
+                                return new VisualNamedClass(new NamedClass(IRI.create(cls.getIRI().toString())), browserText);
                             }
                             else {
                                 return null;
@@ -60,7 +61,7 @@ public class EntityLookupServiceImpl extends WebProtegeRemoteServiceServlet impl
                         public VisualEntity<?> visit(OWLObjectProperty property) {
                             if(entityLookupRequest.isMatchType(EntityLookupRequestEntityMatchType.MATCH_OBJECT_PROPERTIES)) {
                                 String browserText = rm.getBrowserText(property);
-                                return new VisualObjectProperty(new ObjectProperty(new WebProtegeIRI(property.getIRI().toString())), browserText);
+                                return new VisualObjectProperty(new ObjectProperty(IRI.create(property.getIRI().toString())), browserText);
                             }
                             else {
                                 return null;
@@ -70,7 +71,7 @@ public class EntityLookupServiceImpl extends WebProtegeRemoteServiceServlet impl
                         public VisualEntity<?> visit(OWLDataProperty property) {
                             if(entityLookupRequest.isMatchType(EntityLookupRequestEntityMatchType.MATCH_DATA_PROPERTIES)) {
                                 String browserText = rm.getBrowserText(property);
-                                return new VisualDataProperty(new DataProperty(new WebProtegeIRI(property.getIRI().toString())), browserText);
+                                return new VisualDataProperty(new DataProperty(IRI.create(property.getIRI().toString())), browserText);
                             }
                             else {
                                 return null;
@@ -80,7 +81,7 @@ public class EntityLookupServiceImpl extends WebProtegeRemoteServiceServlet impl
                         public VisualEntity<?> visit(OWLNamedIndividual individual) {
                             if(entityLookupRequest.isMatchType(EntityLookupRequestEntityMatchType.MATCH_NAMED_INDIVIDUALS)) {
                                 String browserText = rm.getBrowserText(individual);
-                                return new VisualNamedIndividual(new NamedIndividual(new WebProtegeIRI(individual.getIRI().toString())), browserText);
+                                return new VisualNamedIndividual(new NamedIndividual(IRI.create(individual.getIRI().toString())), browserText);
                             }
                             else {
                                 return null;
@@ -90,7 +91,7 @@ public class EntityLookupServiceImpl extends WebProtegeRemoteServiceServlet impl
                         public VisualEntity<?> visit(OWLDatatype datatype) {
                             if(entityLookupRequest.isMatchType(EntityLookupRequestEntityMatchType.MATCH_DATATYPES)) {
                                 String browserText = rm.getBrowserText(datatype);
-                                return new VisualDatatype(new Datatype(new WebProtegeIRI(datatype.getIRI().toString())), browserText);
+                                return new VisualDatatype(new Datatype(IRI.create(datatype.getIRI().toString())), browserText);
                             }
                             else {
                                 return null;
@@ -100,7 +101,7 @@ public class EntityLookupServiceImpl extends WebProtegeRemoteServiceServlet impl
                         public VisualEntity<?> visit(OWLAnnotationProperty property) {
                             if(entityLookupRequest.isMatchType(EntityLookupRequestEntityMatchType.MATCH_ANNOTATION_PROPERTIES)) {
                                 String browserText = rm.getBrowserText(property);
-                                return new VisualAnnotationProperty(new AnnotationProperty(new WebProtegeIRI(property.getIRI().toString())), browserText);
+                                return new VisualAnnotationProperty(new AnnotationProperty(IRI.create(property.getIRI().toString())), browserText);
                             }
                             else {
                                 return null;

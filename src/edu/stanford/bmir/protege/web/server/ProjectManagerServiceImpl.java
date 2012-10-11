@@ -2,15 +2,17 @@ package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStoreImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationInfo;
+import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
 import edu.stanford.smi.protege.server.metaproject.User;
+import edu.stanford.smi.protege.util.Log;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -23,14 +25,18 @@ import java.util.logging.Logger;
 public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet implements ProjectManagerService {
 
 
-    public static final String IN_TRASH_SLOT_NAME = "inTrash";
+
 
     public ProjectManagerServiceImpl() {
     }
 
     public synchronized List<ProjectData> getProjects() {
         List<ProjectData> rawList = getMetaProjectManager().getProjectsData(null);
-        return filterOutNonExistantProjects(rawList);
+        List<ProjectData> filteredProjects = filterOutNonExistantProjects(rawList);
+        for(ProjectData projectData : filteredProjects) {
+            augmentProjectData(new ProjectId(projectData.getName()), projectData);
+        }
+        return filteredProjects;
     }
 
 
@@ -39,16 +45,36 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         String userName = userId.getUserName();
         final List<ProjectData> projectsData = getMetaProjectManager().getProjectsData(userName);
         final ArrayList<ProjectData> rawList = new ArrayList<ProjectData>(projectsData);
-        return filterOutNonExistantProjects(rawList);
+        List<ProjectData> filteredProjects = filterOutNonExistantProjects(rawList);
+        for(ProjectData projectData : filteredProjects) {
+            augmentProjectData(new ProjectId(projectData.getName()), projectData);
+        }
+        return filteredProjects;
     }
 
+    public ProjectData getProjectData(ProjectId projectId) throws ProjectNotRegisteredException {
+        OWLAPIProjectMetadataManager mdm = OWLAPIProjectMetadataManager.getManager();
+        String projectDescripion = mdm.getDescription(projectId);
+        List<UserId> owners = mdm.getOwners(projectId);
+        String owner = owners.isEmpty() ? "" : owners.get(0).getUserName();
+        ProjectData projectData = new ProjectData(projectDescripion, "", projectId.getProjectName(), owner, false);
+        augmentProjectData(projectId, projectData);
+        return projectData;
+    }
+
+    private void augmentProjectData(ProjectId projectId, ProjectData projectData) {
+        OWLAPIProjectMetadataManager mdm = OWLAPIProjectMetadataManager.getManager();
+        projectData.setLastModified(mdm.getLastModifiedTime(projectId));
+        projectData.setLastModifiedBy(mdm.getLastModifiedBy(projectId).getUserName());
+        projectData.setInTrash(mdm.isInTrash(projectId));
+    }
 
     private synchronized List<ProjectData> filterOutNonExistantProjects(List<ProjectData> rawList) {
         List<ProjectData> result = new ArrayList<ProjectData>(rawList.size() + 1);
         for (ProjectData projectData : rawList) {
             String projectName = projectData.getName();
             ProjectId projectId = new ProjectId(projectName);
-            OWLAPIProjectDocumentStoreImpl docMan = OWLAPIProjectDocumentStoreImpl.getProjectDocumentStore(projectId);
+            OWLAPIProjectDocumentStore docMan = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
             if (docMan.exists()) {
                 result.add(projectData);
             }
@@ -131,7 +157,7 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
     }
 
     private boolean isProjectExistsOnDisk(ProjectId projectId) {
-        OWLAPIProjectDocumentStoreImpl docStore = OWLAPIProjectDocumentStoreImpl.getProjectDocumentStore(projectId);
+        OWLAPIProjectDocumentStore docStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
         return docStore.exists();
     }
 
@@ -163,32 +189,63 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
     public synchronized void moveProjectsToTrash(Set<ProjectId> projectIds) throws NotSignedInException, NotProjectOwnerException {
         ensureSignedIn();
         for (ProjectId projectId : projectIds) {
-            MetaProject metaProject = getMetaProjectManager().getMetaProject();
-            ProjectInstance pi = metaProject.getProject(projectId.getProjectName());
-            Instance instance = pi.getProtegeInstance();
-            KnowledgeBase knowledgeBase = instance.getKnowledgeBase();
-            Slot inTrashSlot = knowledgeBase.getSlot(IN_TRASH_SLOT_NAME);
-            if (inTrashSlot != null) {
-                instance.setOwnSlotValue(inTrashSlot, Boolean.TRUE);
-            }
+            OWLAPIProjectMetadataManager.getManager().setInTrash(projectId, true);
         }
     }
 
     public synchronized void removeProjectsFromTrash(Set<ProjectId> projectIds) throws NotSignedInException, NotProjectOwnerException {
         ensureSignedIn();
         for (ProjectId projectId : projectIds) {
-            MetaProject metaProject = getMetaProjectManager().getMetaProject();
-            ProjectInstance pi = metaProject.getProject(projectId.getProjectName());
-            Instance instance = pi.getProtegeInstance();
-            KnowledgeBase knowledgeBase = instance.getKnowledgeBase();
-            Slot inTrashSlot = knowledgeBase.getSlot(IN_TRASH_SLOT_NAME);
-            if (inTrashSlot != null) {
-                instance.setOwnSlotValue(inTrashSlot, Boolean.FALSE);
-            }
+            OWLAPIProjectMetadataManager.getManager().setInTrash(projectId, false);
         }
     }
 
     public long getLastAccessTime(ProjectId projectId) {
         return OWLAPIProjectManager.getProjectManager().getLastAccessTime(projectId);
     }
+
+    /**
+     * Gets the list of available project types.
+     * @return A list of project types.  Not null.
+     * @see edu.stanford.bmir.protege.web.client.rpc.data.ProjectType
+     */
+    public List<ProjectType> getAvailableProjectTypes() {
+        List<ProjectType> projectTypes = new ArrayList<ProjectType>();
+        projectTypes.add(new ProjectType(OWLAPIProjectType.getDefaultProjectType().getProjectTypeName()));
+        projectTypes.add(new ProjectType(OWLAPIProjectType.getOBOProjectType().getProjectTypeName()));
+        return projectTypes;
+    }
+
+    public ProjectType getProjectType(ProjectId projectId) throws ProjectNotRegisteredException {
+        OWLAPIProjectMetadataManager mdm = OWLAPIProjectMetadataManager.getManager();
+        OWLAPIProjectType projectType = mdm.getType(projectId);
+        return new ProjectType(projectType.getProjectTypeName());
+    }
+
+    public void setProjectType(ProjectId projectId, ProjectType projectType) throws NotProjectOwnerException, ProjectNotRegisteredException {
+        if(!isSignedInUserProjectOwner(projectId)) {
+            throw new NotProjectOwnerException(projectId);
+        }
+        OWLAPIProjectMetadataManager mdm = OWLAPIProjectMetadataManager.getManager();
+        mdm.setProjectType(projectId, new OWLAPIProjectType(projectType.getName()));
+    }
+
+    public ProjectConfigurationInfo getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException {
+        ProjectType projectType = getProjectType(projectId);
+        String description = getProjectData(projectId).getDescription();
+        return new ProjectConfigurationInfo(projectId, projectType, description);
+    }
+
+    public void setProjectConfiguration(ProjectConfigurationInfo configuration) throws ProjectNotRegisteredException, NotProjectOwnerException {
+        ProjectId projectId = configuration.getProjectId();
+        if(!isSignedInUserProjectOwner(projectId)) {
+            throw new NotProjectOwnerException(projectId);
+        }
+        OWLAPIProjectMetadataManager mdm = OWLAPIProjectMetadataManager.getManager();
+        OWLAPIProjectType projectType = OWLAPIProjectType.getProjectType(configuration.getProjectType().getName());
+        mdm.setProjectType(projectId, projectType);
+        mdm.setDescription(projectId, configuration.getProjectDescription());
+    }
+
+
 }

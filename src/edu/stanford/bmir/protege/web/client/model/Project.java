@@ -2,7 +2,8 @@ package edu.stanford.bmir.protege.web.client.model;
 
 import edu.stanford.bmir.protege.web.client.model.listener.OntologyListener;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.LayoutManager;
 
 /**
@@ -21,7 +22,7 @@ public class Project {
     private ProjectData projectData;
     private final OntologyEventManager eventManager;
     private final ProjectPermissionManager permissionManager;
-    private ProjectConfiguration projectConfiguration;
+    private ProjectLayoutConfiguration projectLayoutConfiguration;
     private LayoutManager layoutManager;
 
     public Project(String projectName) {
@@ -63,12 +64,12 @@ public class Project {
         eventManager.getEventsFromServer();
     }
 
-    public void setProjectConfiguration(ProjectConfiguration projectConfiguration) {
-        this.projectConfiguration = projectConfiguration;
+    public void setProjectLayoutConfiguration(ProjectLayoutConfiguration projectLayoutConfiguration) {
+        this.projectLayoutConfiguration = projectLayoutConfiguration;
     }
 
-    public ProjectConfiguration getProjectConfiguration() {
-        return projectConfiguration;
+    public ProjectLayoutConfiguration getProjectLayoutConfiguration() {
+        return projectLayoutConfiguration;
     }
 
     public void setLayoutManager(LayoutManager layoutManager) {

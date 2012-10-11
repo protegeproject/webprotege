@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.gwt.user.server.rpc.RPCRequest;
 import edu.stanford.bmir.protege.web.client.model.event.OntologyEvent;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
@@ -9,15 +7,13 @@ import edu.stanford.bmir.protege.web.server.KBUtil;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
-import edu.stanford.bmir.protege.web.server.logging.WPLogIgnore;
 import edu.stanford.bmir.protege.web.server.logging.WPLogParam;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
+import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceStrategy;
+import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceSubClassStrategy;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetric;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricValue;
 import edu.stanford.bmir.protegex.bp.ref.ProtegeUtil;
-import edu.stanford.smi.protege.model.Frame;
-import edu.stanford.smi.protege.model.KnowledgeBase;
-import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.util.Log;
 import org.ncbo.stanford.bean.concept.ClassBean;
 import org.ncbo.stanford.util.BioPortalServerConstants;
@@ -174,7 +170,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     public Integer loadProject(String projectName) {
         getOntology(projectName);
         OWLAPIProject project = getProject(projectName);
-        return (int) project.getChangeManager().getCurrentRevision();
+        return (int) project.getChangeManager().getCurrentRevision().getValueAsInt();
     }
 
 
@@ -182,7 +178,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         // TODO: Log user
         OWLAPIProject project = getProject(projectName);
         OWLAPIChangeManager changeManager = project.getChangeManager();
-        return changeManager.getOntologyEventsSinceVersion(fromVersion);
+        RevisionNumber revisionNumber = RevisionNumber.getRevisionNumber(fromVersion);
+        return changeManager.getOntologyEventsSinceRevisionNumber(revisionNumber);
     }
 
     public Boolean hasWritePermission(String projectName, String userName) {
@@ -939,11 +936,13 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
 
     public EntityData createExternalReference(String projectName, String entityName, BioPortalReferenceData bpRefData, String user, String operationDescription) {
-        System.out.println("TODO: createExternalReference");
-
         OWLAPIProject project = getProject(projectName);
-        applyChanges(new AddExternalReferenceChangeFactory(project, entityName, bpRefData, UserId.getUserId(user), operationDescription));
         RenderingManager rm = project.getRenderingManager();
+
+
+        ExternalReferenceStrategy strategy = new ExternalReferenceSubClassStrategy();
+
+        applyChanges(new AddExternalReferenceChangeFactory(project, entityName, bpRefData, UserId.getUserId(user), operationDescription));
         return rm.getEntityData(bpRefData.getConceptId(), EntityType.CLASS);
     }
 

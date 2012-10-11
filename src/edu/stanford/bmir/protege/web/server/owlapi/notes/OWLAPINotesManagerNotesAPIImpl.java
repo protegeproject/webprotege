@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.owlapi.notes;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStoreImpl;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import org.protege.notesapi.NotesException;
 import org.protege.notesapi.NotesManager;
@@ -47,12 +47,11 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     
     private File notesOntologyDocument;
 
-    private Map<OWLClass, Integer> descendentNotesCount = new HashMap<OWLClass, Integer>();
-    
+
     public OWLAPINotesManagerNotesAPIImpl(OWLAPIProject project) {
         this.project = project;
         try {
-            OWLAPIProjectDocumentStoreImpl documentStore = OWLAPIProjectDocumentStoreImpl.getProjectDocumentStore(project.getProjectId());
+            OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(project.getProjectId());
             File notesDataDirectory = documentStore.getNotesDataDirectory();
             notesOntologyDocument = new File(notesDataDirectory, NOTES_ONTOLOGY_DOCUMENT_NAME);
             if(!notesOntologyDocument.exists()) {
@@ -68,7 +67,6 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
                     handleNotesOntologyChanged(Collections.unmodifiableList(changes));
                 }
             });
-//            rebuildAnnotationsCount();
         }
         catch (OWLOntologyCreationException e) {
             // Can't start - too dangerous to do anything without human intervention
@@ -82,41 +80,6 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     private void loadExistingNotesOntology() throws OWLOntologyCreationException {
         notesOntology = OWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(notesOntologyDocument);
     }
-    
-    
-//    private void rebuildAnnotationsCount() {
-//        Set<OWLClass> clsesWithNotes = new HashSet<OWLClass>();
-//        Map<OWLClass, Collection<OWLClass>> cls2Ancestors = new HashMap<OWLClass, Collection<OWLClass>>();
-//        Map<OWLClass, Integer> annotationCount = new HashMap<OWLClass, Integer>();
-//        for(OWLNamedIndividual individual : notesOntology.getIndividualsInSignature()) {
-//            OWLClass correspondingCls = project.getDataFactory().getOWLClass(individual.getIRI());
-//            if(project.getRootOntology().containsEntityInSignature(correspondingCls)) {
-//                boolean leaf = project.getClassHierarchyProvider().getChildren(correspondingCls).isEmpty();
-//                if(leaf) {
-//                    // Leaf
-//                    annotationCount.put(correspondingCls, 1);
-//                    Set<List<OWLClass>> pathsToRoot = project.getClassHierarchyProvider().getPathsToRoot(correspondingCls);
-//                    for(List<OWLClass> path : pathsToRoot) {
-//                        for(OWLClass pathElement : path) {
-//                            if (!pathElement.equals(correspondingCls)) {
-//                                Integer countForAnc = annotationCount.get(pathElement);
-//                                if(countForAnc == null) {
-//                                    annotationCount.put(pathElement, 1);
-//                                }
-//                                else {
-//                                    countForAnc++;
-//                                    annotationCount.put(pathElement, countForAnc);
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                annotationCount.put(correspondingCls, 1);
-//            }
-//        }
-//        descendentNotesCount.putAll(annotationCount);
-//
-//    }
 
 
     private void createEmptyNotesOntology() {
@@ -142,7 +105,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         try {
             OWLOntologyManager notesOntologyManager = notesOntology.getOWLOntologyManager();
             if(notesOntologyManager.getOntologyFormat(notesOntology) instanceof BinaryOWLOntologyDocumentFormat) {
-                OWLAPIProjectDocumentStoreImpl documentStore = OWLAPIProjectDocumentStoreImpl.getProjectDocumentStore(project.getProjectId());
+                OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(project.getProjectId());
                 List<OWLOntologyChangeRecordInfo> infoList = new ArrayList<OWLOntologyChangeRecordInfo>();
                 for(OWLOntologyChange change : changes) {
                     OWLOntologyChangeRecord rec = new OWLOntologyChangeRecord(change);
@@ -335,12 +298,6 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     }
 
     public int getIndirectNotesCount(OWLClass cls) {
-        Integer count = descendentNotesCount.get(cls);
-        if(count == null) {
-            return 0;
-        }
-        else {
-            return count;
-        }
+        return 0;
     }
 }

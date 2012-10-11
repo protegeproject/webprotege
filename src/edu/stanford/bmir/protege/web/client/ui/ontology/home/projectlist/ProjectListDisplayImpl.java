@@ -77,9 +77,6 @@ public class ProjectListDisplayImpl extends FlowPanel implements ProjectListDisp
 
             public void onSuccess(List<ProjectData> result) {
                 ProjectListDisplayImpl.this.projectData = result;
-                for(int i =0 ; i < 100; i++) {
-                    projectData.add(new ProjectData("Test " + i, "", "Project " + i, "mh", false));
-                }
                 cellTable.setRowData(projectData);
             }
         });

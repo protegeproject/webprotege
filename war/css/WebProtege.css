@@ -692,14 +692,14 @@ Portlets
 GWT popup list
 ************************/
 
-.gwt-DropDown {
-    margin-top: -4px;
-    border: 3px solid #e7e7e7;
-    background: white;
-    font: 11px tahoma,arial,helvetica,sans-serif;
-    color: #15428B;
-    font-weight: bold;
-}
+/*.gwt-DropDown {*/
+    /*margin-top: -4px;*/
+    /*border: 3px solid #e7e7e7;*/
+    /*background: white;*/
+    /*font: 11px tahoma,arial,helvetica,sans-serif;*/
+    /*color: #15428B;*/
+    /*font-weight: bold;*/
+/*}*/
 
 .html-editor {
     font: 11px tahoma,arial,helvetica,sans-serif;
@@ -708,4 +708,20 @@ GWT popup list
 .x-grid3-cell-inner {
     overflow: visible;
     white-space: normal !important;
+}
+
+.webprotege-revision-summary-style {
+    border-bottom: dotted;
+    border-bottom-color: silver;
+    border-bottom-width: 1px;
+    margin-bottom: 5px;
+    padding: 4px;
+}
+
+.webprotege-revision-summary-revision-number-style {
+    font-weight: bold;
+}
+
+.webprotege-revision-summary-userid-style {
+    font-weight: normal;
 }

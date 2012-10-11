@@ -51,7 +51,7 @@ public class OBOTermRelationshipEditor implements OBOTermEditor {
     
     private Map<String, VisualObjectProperty> objectPropertyBrowserText = new HashMap<String, VisualObjectProperty>();
     
-    private Map<String, VisualCls> clsBrowserText = new HashMap<String, VisualCls>();
+    private Map<String, VisualNamedClass> clsBrowserText = new HashMap<String, VisualNamedClass>();
 
     private boolean dirty = false;
     
@@ -85,7 +85,7 @@ public class OBOTermRelationshipEditor implements OBOTermEditor {
             String propertyBrowserText = getTextAt(i, 0);
             VisualObjectProperty prop = objectPropertyBrowserText.get(propertyBrowserText);
             String fillerBrowserText = getTextAt(i, 1);
-            VisualCls cls = clsBrowserText.get(fillerBrowserText);
+            VisualNamedClass cls = clsBrowserText.get(fillerBrowserText);
             if (prop != null && cls != null) {
                 relationships.add(new OBORelationship(prop, cls));
             }
@@ -125,7 +125,7 @@ public class OBOTermRelationshipEditor implements OBOTermEditor {
 
     private void addRow(VisualObject<?> property, VisualObject<?> cls) {
         objectPropertyBrowserText.put(property.getBrowserText(), (VisualObjectProperty) property);
-        clsBrowserText.put(cls.getBrowserText(), (VisualCls) cls);
+        clsBrowserText.put(cls.getBrowserText(), (VisualNamedClass) cls);
         String propertyBrowserText = property.getBrowserText();
         String fillerBrowserText = cls.getBrowserText();
         addRow(propertyBrowserText, fillerBrowserText);
@@ -166,7 +166,7 @@ public class OBOTermRelationshipEditor implements OBOTermEditor {
         fillerField.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
             public void onSelection(SelectionEvent<SuggestOracle.Suggestion> suggestionSelectionEvent) {
                 EntitySuggestion suggestion = (EntitySuggestion) suggestionSelectionEvent.getSelectedItem();
-                clsBrowserText.put(suggestion.getReplacementString(), (VisualCls) suggestion.getEntity());
+                clsBrowserText.put(suggestion.getReplacementString(), (VisualNamedClass) suggestion.getEntity());
                 dirty = true;
             }
         });

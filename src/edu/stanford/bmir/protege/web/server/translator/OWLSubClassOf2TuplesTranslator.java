@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.translator;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualCls;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualNamedClass;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualNamedIndividual;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualObjectProperty;
 import edu.stanford.bmir.protege.web.client.rpc.data.tuple.ClsObjectPropertyClsTripleTuple;
@@ -44,9 +44,9 @@ public class OWLSubClassOf2TuplesTranslator {
                 OWLObjectProperty prop = ce.getProperty().asOWLObjectProperty();
                 OWLClass filler = ce.getFiller().asOWLClass();
                 ObjectTranslator translator = new ObjectTranslator(project);
-                VisualCls visSubject = translator.translateToVisual(subCls);
+                VisualNamedClass visSubject = translator.translateToVisual(subCls);
                 VisualObjectProperty visualProperty = translator.translateToVisual(prop);
-                VisualCls visualFiller = translator.translateToVisual(filler);
+                VisualNamedClass visualFiller = translator.translateToVisual(filler);
                 return Collections.<TripleTuple<?,?,?>>singleton(new ClsObjectPropertyClsTripleTuple(visSubject, visualProperty, visualFiller));
             }
 
@@ -65,7 +65,7 @@ public class OWLSubClassOf2TuplesTranslator {
                 OWLObjectProperty prop = ce.getProperty().asOWLObjectProperty();
                 OWLNamedIndividual filler = ce.getValue().asOWLNamedIndividual();
                 ObjectTranslator translator = new ObjectTranslator(project);
-                VisualCls visSubject = translator.translateToVisual(subCls);
+                VisualNamedClass visSubject = translator.translateToVisual(subCls);
                 VisualObjectProperty visualProperty = translator.translateToVisual(prop);
                 VisualNamedIndividual visualFiller = translator.translateToVisual(filler);
                 return Collections.<TripleTuple<?,?,?>>singleton(new ClsObjectPropertyIndividualTripleTuple(visSubject, visualProperty, visualFiller));

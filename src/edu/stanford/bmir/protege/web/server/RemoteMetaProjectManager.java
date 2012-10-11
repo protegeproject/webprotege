@@ -100,33 +100,34 @@ public class RemoteMetaProjectManager extends AbstractMetaProjectManager {
 
 
     public ArrayList<ProjectData> getProjectsData(String user) {
+        throw new RuntimeException("Not supported");
         //TODO: How to handle this?
-        if (user == null) {
-            user = "Guest";
-        }
-
-        ArrayList<ProjectData> projectData = new ArrayList<ProjectData>();
-        RemoteServer server = getServer();
-        if (server == null) {
-            Log.getLogger().warning("Could not get remote projects. Reason: Cannot connect to remote server.");
-            throw new RuntimeException(
-                    "Could not retrieve the remote projects from the Protege server. Reason: Cannot connect to remote Protege server.");
-        }
-        Collection<ProjectInfo> prjInfos = new ArrayList<ProjectInfo>();
-        try {
-            prjInfos = server.getAvailableProjectInfo(new Session(user, null, false));
-        } catch (Exception e) {
-            Log.getLogger().log(Level.WARNING, "Could not retrieve available projects from the Protege server.", e);
-            throw new RuntimeException("Could not retrieve available projects from the Protege server.");
-        }
-        for (ProjectInfo prjInfo : prjInfos) {
-            ProjectData pd = new ProjectData();
-            pd.setName(prjInfo.getName());
-            pd.setDescription(prjInfo.getDescription());
-            pd.setOwner(prjInfo.getOwner());
-            projectData.add(pd);
-        }
-        return projectData;
+//        if (user == null) {
+//            user = "Guest";
+//        }
+//
+//        ArrayList<ProjectData> projectData = new ArrayList<ProjectData>();
+//        RemoteServer server = getServer();
+//        if (server == null) {
+//            Log.getLogger().warning("Could not get remote projects. Reason: Cannot connect to remote server.");
+//            throw new RuntimeException(
+//                    "Could not retrieve the remote projects from the Protege server. Reason: Cannot connect to remote Protege server.");
+//        }
+//        Collection<ProjectInfo> prjInfos = new ArrayList<ProjectInfo>();
+//        try {
+//            prjInfos = server.getAvailableProjectInfo(new Session(user, null, false));
+//        } catch (Exception e) {
+//            Log.getLogger().log(Level.WARNING, "Could not retrieve available projects from the Protege server.", e);
+//            throw new RuntimeException("Could not retrieve available projects from the Protege server.");
+//        }
+//        for (ProjectInfo prjInfo : prjInfos) {
+//            ProjectData pd = new ProjectData();
+//            pd.setName(prjInfo.getName());
+//            pd.setDescription(prjInfo.getDescription());
+//            pd.setOwner(prjInfo.getOwner());
+//            projectData.add(pd);
+//        }
+//        return projectData;
     }
 
     public void reloadMetaProject() {

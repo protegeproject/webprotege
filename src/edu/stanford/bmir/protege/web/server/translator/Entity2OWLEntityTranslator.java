@@ -23,7 +23,7 @@ public class Entity2OWLEntityTranslator implements EntityVisitor<OWLEntity, Runt
         return IRI.create(entity.getIRI().getIRI());
     }
     
-    public OWLEntity visit(Cls cls) throws RuntimeException {
+    public OWLEntity visit(NamedClass cls) throws RuntimeException {
         return dataFactory.getOWLClass(toIRI(cls));
     }
 

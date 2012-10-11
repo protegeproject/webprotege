@@ -8,7 +8,8 @@ import com.gwtext.client.widgets.portal.Portlet;
 
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
@@ -21,9 +22,9 @@ public class LayoutManager {
 		this.project = project;
 	}
 	
-	public List<AbstractTab> createTabs(ProjectConfiguration projectConfig) {
+	public List<AbstractTab> createTabs(ProjectLayoutConfiguration projectLayoutConfig) {
 		List<AbstractTab> tabs = new ArrayList<AbstractTab>();
-		List<TabConfiguration> tabConfigs = projectConfig.getTabs();
+		List<TabConfiguration> tabConfigs = projectLayoutConfig.getTabs();
 		for (TabConfiguration tabConfig : tabConfigs) {
 			String tabName = tabConfig.getName();
 			AbstractTab tab = createTab(tabName);
@@ -74,14 +75,14 @@ public class LayoutManager {
 	public void removeTab(AbstractTab tab) {
 		TabConfiguration tabConfig = tab.getTabConfiguration();
 		if (tabConfig == null) { return; }
-		project.getProjectConfiguration().removeTab(tabConfig);
+		project.getProjectLayoutConfiguration().removeTab(tabConfig);
 	}
 	
 	public AbstractTab addTab(String javaClassName) {
 		AbstractTab tab = createTab(javaClassName);
 		if (tab == null) { return null; }
 		setupTab(tab, tab.getDefaultTabConfiguration());
-		project.getProjectConfiguration().addTab(tab.getTabConfiguration());
+		project.getProjectLayoutConfiguration().addTab(tab.getTabConfiguration());
 		return tab;
 	}
 

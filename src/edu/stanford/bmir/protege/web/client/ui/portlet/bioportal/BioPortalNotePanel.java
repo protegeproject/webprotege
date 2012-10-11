@@ -43,6 +43,7 @@ public class BioPortalNotePanel extends Panel{
 
     private Record record;
     private EntityData entityData;
+    private String bpRestBase;
 
     private AsyncCallback<Void> updateNotesCallback;
 
@@ -201,7 +202,7 @@ public class BioPortalNotePanel extends Panel{
 
         final String newStatus2 = newStatus.equals(BioPortalNoteConstants.STATUS_NOT_SET) ? "" : newStatus;
 
-        BioportalProposalsManager.getBioportalProposalsManager().changeNoteStatus(null, null,
+        BioportalProposalsManager.getBioportalProposalsManager().changeNoteStatus(null, bpRestBase,
                 record.getAsString(BioPortalNoteConstants.ONTOLOGY_ID),
                 record.getAsString(BioPortalNoteConstants.ID), newStatus2, new AbstractAsyncHandler<String>() {
             @Override
@@ -240,7 +241,7 @@ public class BioPortalNotePanel extends Panel{
             }
         });
 
-        BioportalProposalsManager.getBioportalProposalsManager().deleteNote(null, null,
+        BioportalProposalsManager.getBioportalProposalsManager().deleteNote(null, bpRestBase,
                 record.getAsString(BioPortalNoteConstants.ONTOLOGY_ID), true,
                 record.getAsString(BioPortalNoteConstants.ID),
                 new AbstractAsyncHandler<Void>() {
@@ -276,7 +277,7 @@ public class BioPortalNotePanel extends Panel{
         final Boolean unarchivethread = applyOnThread ? (isArchived ? true : null) : null;
 
         BioportalProposalsManager.getBioportalProposalsManager().updateNote(
-                null, null,
+                null, bpRestBase,
                 record.getAsString(BioPortalNoteConstants.ONTOLOGY_ID), true,
                 record.getAsString(BioPortalNoteConstants.ID),
                 archive, archivethread, unarchive, unarchivethread,
@@ -316,6 +317,7 @@ public class BioPortalNotePanel extends Panel{
         NewNotePanel newNotePanel = new NewNotePanel();
         newNotePanel.setRecord(record);
         newNotePanel.setEntityData(entityData);
+        newNotePanel.setBpRestBase(bpRestBase);
         newNotePanel.showPopup(record == null ? "New note" : "Reply to note");
     }
 
@@ -330,6 +332,14 @@ public class BioPortalNotePanel extends Panel{
 
     public void setUpdateNotesCallback(AsyncCallback<Void> updateNotesCallback) {
         this.updateNotesCallback = updateNotesCallback;
+    }
+
+    public void setBpRestBase(String bpRestBase) {
+        this.bpRestBase = bpRestBase;
+    }
+
+    public String getBpRestBase() {
+        return bpRestBase;
     }
 
     //FIXME: to be figured out later

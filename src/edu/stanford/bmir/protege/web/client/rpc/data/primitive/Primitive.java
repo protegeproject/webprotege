@@ -8,6 +8,6 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/05/2012
  */
-public abstract class Primitive implements Serializable {
+public interface Primitive extends Serializable {
 
 }

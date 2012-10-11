@@ -15,7 +15,7 @@ public abstract class VisualEntity<E extends Entity> extends VisualPrimitive<E> 
     }
 
     protected VisualEntity(E entity) {
-        super(entity, entity.getIRI().getShortForm());
+        super(entity, entity.getIRI().getDefaultShortForm());
     }
     
     protected VisualEntity(E entity, String browserText) {

@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.core.EventObject;
@@ -35,6 +38,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.sidebar.SideBarItem;
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.projectlist.ProjectListDisplayImpl;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
@@ -56,6 +60,8 @@ public class OntologiesPortlet extends AbstractEntityPortlet implements Refresha
     public static final String DESC_FIELD = "desc";
 
     public static final String OWNER_FIELD = "owner";
+    
+    public static final String LAST_MODIFIED_FIELD = "lastModified";
 
 
 
@@ -111,7 +117,6 @@ public class OntologiesPortlet extends AbstractEntityPortlet implements Refresha
         borderLayout.add(ontologiesGrid, new BorderLayoutData(RegionPosition.CENTER));
         //add(createJNLPPanel()) ;
         createToolbar();
-        borderLayout.add(new ProjectListDisplayImpl().getDisplayWidget(), new BorderLayoutData( RegionPosition.SOUTH));
 
     }
 
@@ -225,7 +230,9 @@ public class OntologiesPortlet extends AbstractEntityPortlet implements Refresha
         if(selection.isEmpty()) {
             return;
         }
-        com.google.gwt.user.client.Window.open("download?ontology=" + selection.get(0), "Download ontology", "");
+        String projectName = selection.get(0);
+        String encodedProjectName = URL.encode(projectName);
+        com.google.gwt.user.client.Window.open("download?ontology=" + encodedProjectName, "Download ontology", "");
     }
     
     private List<String> getSelectedOntologies() {
@@ -260,7 +267,8 @@ public class OntologiesPortlet extends AbstractEntityPortlet implements Refresha
 
         createColumns();
 
-        recordDef = new RecordDef(new FieldDef[]{new StringFieldDef(NAME_FIELD), new StringFieldDef(DESC_FIELD), new StringFieldDef(OWNER_FIELD),
+        recordDef = new RecordDef(new FieldDef[]{new StringFieldDef(NAME_FIELD), new StringFieldDef(DESC_FIELD), new StringFieldDef(OWNER_FIELD)
+//                new StringFieldDef(LAST_MODIFIED_FIELD)
                 // new StringFieldDef("action")
         });
 
@@ -352,6 +360,13 @@ public class OntologiesPortlet extends AbstractEntityPortlet implements Refresha
         ownerCol.setResizable(true);
         ownerCol.setSortable(true);
 
+//        ColumnConfig lastModifiedCol = new ColumnConfig();
+//        lastModifiedCol.setHeader("Last Modified");
+//        lastModifiedCol.setId("lastModified");
+//        lastModifiedCol.setDataIndex(LAST_MODIFIED_FIELD);
+//        lastModifiedCol.setResizable(true);
+//        lastModifiedCol.setSortable(true);
+
         /*
          * ColumnConfig actionCol = new ColumnConfig();
          * actionCol.setHeader("Action"); actionCol.setId("action");
@@ -432,7 +447,7 @@ public class OntologiesPortlet extends AbstractEntityPortlet implements Refresha
         public void handleFailure(Throwable caught) {
             store.removeAll();
             GWT.log("RPC error getting ontologies from server", caught);
-            MessageBox.alert("Error", "There was an error retrieving ontologies from server. Please try again");
+            MessageBox.alert("Error", "There was an error retrieving ontologies from server: " + caught.getMessage());
         }
 
         @Override
@@ -442,6 +457,14 @@ public class OntologiesPortlet extends AbstractEntityPortlet implements Refresha
                 ProjectDataListSideBarItem item = sideBar.getSelectedItem();
                 if(item.isIncluded(data)) {
                     ontologies.put(data.getName(), data);
+//                    String modificationHistoryRendering = " - ";
+//                    if (data.getLastModified() != 0) {
+//                        Date lastModifiedDate = new Date(data.getLastModified());
+//                        modificationHistoryRendering = DateTimeFormat.getFormat("EEE dd MMMM 'at' HH:mm").format(lastModifiedDate);
+//                        if(!data.getLastModifiedBy().isEmpty()) {
+//                            modificationHistoryRendering += "<span style=\" color:grey;\"> by " + data.getLastModifiedBy() + "</span>";
+//                        }
+//                    }
                     Record record = recordDef.createRecord(new Object[]{data.getName(), data.getDescription(), data.getOwner()});
                     store.add(record);
                 }

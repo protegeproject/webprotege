@@ -3,8 +3,8 @@ package edu.stanford.bmir.protege.web.client.ui.propertygrid;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Cls;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.WebProtegeIRI;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.NamedClass;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.IRI;
 import edu.stanford.bmir.protege.web.client.ui.obo.OBOTermEditor;
 import edu.stanford.bmir.protege.web.client.ui.obo.OBOTermEditorView;
 import edu.stanford.bmir.protege.web.client.ui.obo.XRefListEditor;
@@ -34,7 +34,7 @@ public class PropertyGridPortlet extends AbstractEntityPortlet implements Entity
     public void reload() {
         EntityData entityData = getEntity();
         if(entityData != null) {
-            propertyGridView.setSubject(new Cls(new WebProtegeIRI(entityData.getName())));
+            propertyGridView.setSubject(new NamedClass(IRI.create(entityData.getName())));
         }
         else {
             propertyGridView.clearSubject();

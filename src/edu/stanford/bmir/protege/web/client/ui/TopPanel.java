@@ -33,13 +33,18 @@ import edu.stanford.bmir.protege.web.client.model.listener.ShareOntologyAccessLi
 import edu.stanford.bmir.protege.web.client.model.listener.SystemListenerAdapter;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
+import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.ui.bioportal.upload.BioPortalUploadDialog;
 import edu.stanford.bmir.protege.web.client.ui.editprofile.EditProfileUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.AccessPolicyUtil;
 import edu.stanford.bmir.protege.web.client.ui.ontology.sharing.SharingSettingsDialog;
+import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationDialog;
 import edu.stanford.bmir.protege.web.client.ui.signup.WebProtegeSignupDialog;
 
 /**
@@ -59,10 +64,18 @@ public class TopPanel extends Panel {
 
     private HTML shareHtml;
 
+    private HTML publishHtml;
+
+    private HTML configureHtml;
+
     //    private final Images images = (Images) GWT.create(Images.class);
     private HorizontalPanel optionsLinks;
 
     private HorizontalPanel shareLinkPanel;
+
+    private HorizontalPanel publishLinkPanel;
+
+    private HorizontalPanel configureLinkPanel;
 
     private HorizontalPanel signupPanel;
 
@@ -149,6 +162,8 @@ public class TopPanel extends Panel {
             public void updateShareLink(UpdateShareLinkEvent projectChangedEvent) {
                 currentSelectedProject = projectChangedEvent.getCurrentSelectedProject();
                 shareLinkPanel.setVisible(projectChangedEvent.isShowShareLink());
+                publishLinkPanel.setVisible(projectChangedEvent.isShowShareLink());
+                updateShareLink(projectChangedEvent.isShowShareLink());
             }
 
             /*
@@ -161,6 +176,8 @@ public class TopPanel extends Panel {
             @Override
             public void updateShareLink(boolean showShareLink) {
                 shareLinkPanel.setVisible(showShareLink);
+                // TODO: This is a temporary hack.  If a person can share then they can configure
+                configureLinkPanel.setVisible(showShareLink);
             }
 
         });
@@ -200,11 +217,13 @@ public class TopPanel extends Panel {
                     GWT.log("Could not get server permission from server", caught);
                 }
             });
+            configureLinkPanel.setVisible(true);
         }
         else { // logout
             signupPanel.setVisible(true);
             verticalOptionsMenu.removeItem(addUser);
             optionsLinks.setVisible(false);
+            configureLinkPanel.setVisible(false);
         }
 //        addUserMenuItem();
     }
@@ -230,6 +249,10 @@ public class TopPanel extends Panel {
 
         // Adding Share Link
         links.add(getShareLinkPanel());
+        
+        links.add(getPublishLinkPanel());
+        
+        links.add(getProjectConfigLinkPanel());
 
         // Feedback link
         links.add(getFeedbackHTML());
@@ -283,9 +306,37 @@ public class TopPanel extends Panel {
         shareLinkPanel = new HorizontalPanel();
         shareLinkPanel.add(shareHtml);
         shareLinkPanel.add(new HTML("<span style='font-size:80%;'>&nbsp;|&nbsp;</span>"));
-//        shareLinkPanel.setVisible(false);
         shareLinkPanel.setVisible(true);
         return shareLinkPanel;
+    }
+
+    protected HorizontalPanel getPublishLinkPanel() {
+        publishHtml = new HTML("<a id='publish' href='javascript:;'><span style='font-size:75%; text-decoration:underline;'>" + "Publish" + "</span></a>");
+        publishHtml.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                handlePublish();
+            }
+        });
+        publishLinkPanel = new HorizontalPanel();
+        publishLinkPanel.add(publishHtml);
+        publishLinkPanel.add(new HTML("<span style='font-size:80%;'>&nbsp;|&nbsp;</span>"));
+        publishLinkPanel.setVisible(true);
+        return publishLinkPanel;
+    }
+
+    protected HorizontalPanel getProjectConfigLinkPanel() {
+        configureHtml = new HTML("<a id='projectconfig' href='javascript:;'><span style='font-size:75%; text-decoration:underline;'>" + "Configure" + "</span></a>");
+        configureHtml.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                ProjectConfigurationDialog dlg = new ProjectConfigurationDialog(new ProjectId(currentSelectedProject));
+                dlg.setVisible(true);
+            }
+        });
+        configureLinkPanel = new HorizontalPanel();
+        configureLinkPanel.add(configureHtml);
+        configureLinkPanel.add(new HTML("<span style='font-size:80%;'>&nbsp;|&nbsp;</span>"));
+        configureLinkPanel.setVisible(true);
+        return configureLinkPanel;
     }
     
     protected HorizontalPanel getSignupPanel() {
@@ -490,6 +541,28 @@ public class TopPanel extends Panel {
         loginUtil.openNewWindow(authUrl, "440", "295", "0");
     }
 
+    public void handlePublish() {
+        ProjectManagerServiceAsync service = GWT.create(ProjectManagerService.class);
+        service.getProjectData(new ProjectId(currentSelectedProject), new AsyncCallback<ProjectData>() {
+            public void onFailure(Throwable caught) {
+                MessageBox.alert("There was a problem getting the project data from the server.  Please try again.");
+            }
+
+            public void onSuccess(ProjectData result) {
+                showBioPortalUploadDialog(result);
+            }
+        });
+    }
+    
+    private void showBioPortalUploadDialog(ProjectData projectData) {
+        UserData userData = GlobalSettings.getGlobalSettings().getUser();
+        if(userData != null && projectData != null) {
+            BioPortalUploadDialog dlg = new BioPortalUploadDialog(projectData, userData);
+            dlg.show();
+        }
+    }
+    
+    
 
     private void handleSignup() {
         WebProtegeSignupDialog dlg = new WebProtegeSignupDialog();

@@ -1,0 +1,124 @@
+package edu.stanford.bmir.protege.web.client.ui.projectconfig;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasFormData;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
+import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDown;
+import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDownModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Author: Matthew Horridge<br>
+ * Stanford University<br>
+ * Bio-Medical Informatics Research Group<br>
+ * Date: 09/07/2012
+ */
+public class ProjectConfigurationForm extends FlowPanel implements HasFormData<ProjectConfigurationInfo> {
+
+    public static final String PROJECT_TYPE_DROPDOWN_FIELD_NAME = "Type";
+
+    public static final String PROJECT_DESCRIPTION_FIELD_NAME = "Description";
+
+    private DropDown<ProjectType> projectTypeDropDown;
+
+    private ProjectId projectId;
+
+    private final TextArea projectDescriptionTextBox;
+
+//    private final TextBox bioPortalRestBaseTextBox;
+
+    public ProjectConfigurationForm(ProjectId id) {
+        this.projectId = id;
+        projectTypeDropDown = new DropDown<ProjectType>(new ProjectTypeDropDownModel());
+
+        WebProtegeDialogForm form = new WebProtegeDialogForm();
+        form.addWidget(PROJECT_TYPE_DROPDOWN_FIELD_NAME, projectTypeDropDown);
+        form.addVerticalSpacer();
+        
+        projectDescriptionTextBox = new TextArea();
+        projectDescriptionTextBox.setVisibleLines(3);
+        projectDescriptionTextBox.setCharacterWidth(60);
+        form.addWidget(PROJECT_DESCRIPTION_FIELD_NAME, projectDescriptionTextBox);
+
+        form.addVerticalSpacer();
+
+//        BioPortalConfigurationManager manager = BioPortalConfigurationManager.getManager();
+//        bioPortalRestBaseTextBox = form.addTextBox("BioPortal Rest API Base", "The URL of the BioPortal Rest API Service", manager.getRestBase());
+
+
+        form.addVerticalSpacer();
+
+        form.addWidget("", new Button("Entity Id Generator Settings ...", new ClickHandler() {
+            public void onClick(ClickEvent event) {
+                EntityIdGeneratorSettingsDialog dlg = new EntityIdGeneratorSettingsDialog(projectId);
+                dlg.show();
+            }
+        }));
+
+        add(form);
+
+
+    }
+    
+    public void setAllowedProjectTypes(List<ProjectType> projectTypes) {
+        projectTypeDropDown.setModel(new ProjectTypeDropDownModel(projectTypes));
+    }
+
+    public void setData(ProjectConfigurationInfo info) {
+        projectTypeDropDown.setSelectedItem(info.getProjectType());
+        projectDescriptionTextBox.setText(info.getProjectDescription());
+    }
+
+
+
+    public ProjectConfigurationInfo getData() {
+        return new ProjectConfigurationInfo(projectId, getProjectType(), getProjectDescription());
+    }
+    
+    public ProjectType getProjectType() {
+        return projectTypeDropDown.getSelectedItem();
+    }
+    
+    public String getProjectDescription() {
+        return projectDescriptionTextBox.getText().trim();
+    }
+
+    
+    
+    private class ProjectTypeDropDownModel implements DropDownModel<ProjectType> {
+
+        private List<ProjectType> projectTypeList = new ArrayList<ProjectType>();
+
+        private ProjectTypeDropDownModel() {
+        }
+
+        private ProjectTypeDropDownModel(List<ProjectType> projectTypes) {
+            this.projectTypeList.addAll(projectTypes);
+        }
+
+        public int getSize() {
+            return projectTypeList.size();
+        }
+
+        public ProjectType getItemAt(int index) {
+            return projectTypeList.get(index);
+        }
+
+        public String getRendering(int index) {
+            return projectTypeList.get(index).getName();
+        }
+
+
+    }
+    
+    public Focusable getInitialFocusable() {
+        return projectTypeDropDown;
+    }
+}

@@ -14,12 +14,16 @@ public class ObjectProperty extends Property implements Serializable {
 
     }
 
-    public ObjectProperty(WebProtegeIRI iri) {
+    public ObjectProperty(IRI iri) {
         super(iri);
     }
 
     @Override
     public <R, E extends Exception> R accept(EntityVisitor<R, E> visitor) throws E {
         return visitor.visit(this);
+    }
+
+    public VisualObjectProperty toVisualObject(String browserText) {
+        return new VisualObjectProperty(this, browserText);
     }
 }

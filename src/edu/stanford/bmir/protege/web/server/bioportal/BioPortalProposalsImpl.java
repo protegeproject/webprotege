@@ -30,9 +30,8 @@ public class BioPortalProposalsImpl  extends WebProtegeRemoteServiceServlet impl
 
         String url = bpRestBase == null ? BioPortalConstants.DEFAULT_BIOPORTAL_REST_BASE_URL : bpRestBase;
         url = url + "notes/" + ontologyVersionId;
-        if (entityURI != null) {
-            url = url + "?conceptid=" + entityURI;
-        }
+        url = url + "?";
+        url = url + "conceptid=" + entityURI;
         //TODO: make configurable
         url = url + "&threaded=true";
         url = url + "&" + BioPortalConstants.DEFAULT_BIOPORTAL_REST_CALL_SUFFIX;

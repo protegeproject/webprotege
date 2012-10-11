@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.*;
  */
 public class DropDown<T> extends FocusPanel implements HasValueChangeHandlers<T> {
     
-    public static final String STYLE_NAME = "web-protege-drop-down";
+    public static final String DROP_DOWN_STYLE_NAME = "web-protege-drop-down";
     
     public static final String ITEM_STYLE_NAME = "web-protege-drop-down-item";
 
@@ -33,30 +33,34 @@ public class DropDown<T> extends FocusPanel implements HasValueChangeHandlers<T>
 
     private final InlineLabel buttonLabel;
 
+    private final FlowPanel contentHolder;
+
+    public DropDown() {
+        this(new DropDownModel<T>() {
+            public int getSize() {
+                return 0;
+            }
+
+            public T getItemAt(int index) {
+                return null;
+            }
+
+            public String getRendering(int index) {
+                return null;
+            }
+        });
+    }
+
     public DropDown(DropDownModel<T> model) {
         this.model = model;
-        addStyleName(STYLE_NAME);
-        FlowPanel contentHolder = new FlowPanel();
+        addStyleName(DROP_DOWN_STYLE_NAME);
+        contentHolder = new FlowPanel();
         contentHolder.addStyleName("web-protege-drop-down-content-holder");
         contentHolder.add(selectedItemDisplayLabel);
         buttonLabel = new InlineLabel(BUTTON_TEXT);
         buttonLabel.addStyleName("web-protege-drop-down-button-holder");
         contentHolder.add(buttonLabel);
-        int maxLength = 0;
-        for(int i = 0; i < model.getSize(); i++) {
-            String rendering = model.getRendering(i);
-            if(rendering.length() > maxLength) {
-                maxLength = rendering.length();
-            }
-        }
         add(contentHolder);
-        contentHolder.setWidth((maxLength * 10) + "px");
-        
-
-        
-        if(model.getSize() > 0) {
-            setSelectedItem(model.getItemAt(0));
-        }
         addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 handleClick();
@@ -67,6 +71,26 @@ public class DropDown<T> extends FocusPanel implements HasValueChangeHandlers<T>
                 handleKeyDown(event);
             }
         });
+        setModel(model);
+    }
+
+    public void setModel(DropDownModel<T> model) {
+        this.model = model;
+        int maxLength = 0;
+        for(int i = 0; i < model.getSize(); i++) {
+            String rendering = model.getRendering(i);
+            if(rendering.length() > maxLength) {
+                maxLength = rendering.length();
+            }
+        }
+        contentHolder.setWidth((maxLength * 10) + "px");
+
+        if(model.getSize() > 0) {
+            setSelectedItem(model.getItemAt(0));
+        }
+        else {
+            clearSelectedItem();
+        }
     }
     
     public void setSelectedItem(T item) {
@@ -79,6 +103,12 @@ public class DropDown<T> extends FocusPanel implements HasValueChangeHandlers<T>
         }
     }
 
+    public void clearSelectedItem() {
+        selIndex = -1;
+        selectedItemDisplayLabel.setText("");
+        ValueChangeEvent.fire(this, getSelectedItem());
+    }
+
     public void setSelectedIndex(int index) {
         if(index < 0 || index > model.getSize() - 1) {
             return;
@@ -88,14 +118,22 @@ public class DropDown<T> extends FocusPanel implements HasValueChangeHandlers<T>
         ValueChangeEvent.fire(this, getSelectedItem());
     }
 
+    /**
+     * Gets the selected item.
+     * @return The selected item, or <code>null</code> if no item is selected.
+     */
     public T getSelectedItem() {
-        if(selIndex < 0 && selIndex >= model.getSize()) {
+        if(!isSelectedIndexValid()) {
             return null;
         }
         return model.getItemAt(selIndex);
     }
-    
-    public int getSelIndex() {
+
+    private boolean isSelectedIndexValid() {
+        return selIndex > -1 && selIndex < model.getSize();
+    }
+
+    public int getSelectedIndex() {
         return selIndex;
     }
 
@@ -115,7 +153,7 @@ public class DropDown<T> extends FocusPanel implements HasValueChangeHandlers<T>
     }
 
     private void handleDown() {
-        int selIndex = getSelIndex();
+        int selIndex = getSelectedIndex();
         selIndex++;
         if(selIndex == model.getSize()) {
             selIndex = 0;
@@ -124,7 +162,7 @@ public class DropDown<T> extends FocusPanel implements HasValueChangeHandlers<T>
     }
 
     private void handleUp() {
-        int selIndex = getSelIndex();
+        int selIndex = getSelectedIndex();
         selIndex--;
         if(selIndex < 0) {
             selIndex = model.getSize() - 1;

@@ -1,13 +1,10 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Cls;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.NamedClass;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.WebProtegeIRI;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,9 +19,9 @@ public interface OBOTextEditorServiceAsync {
 
     void removeSubset(OBOTermSubset subset, AsyncCallback<Void> async);
 
-    void getRelationships(ProjectId projectId, Cls term, AsyncCallback<OBOTermRelationships> async);
+    void getRelationships(ProjectId projectId, NamedClass term, AsyncCallback<OBOTermRelationships> async);
 
-    void getCrossProduct(ProjectId projectId, Cls term, AsyncCallback<OBOTermCrossProduct> async);
+    void getCrossProduct(ProjectId projectId, NamedClass term, AsyncCallback<OBOTermCrossProduct> async);
 
     void getDefinition(ProjectId projectId, Entity term, AsyncCallback<OBOTermDefinition> async);
 
@@ -35,7 +32,7 @@ public interface OBOTextEditorServiceAsync {
     void getSynonyms(ProjectId projectId, Entity term, AsyncCallback<Collection<OBOTermSynonym>> async);
 
 
-    void setRelationships(ProjectId projectId, Cls lastEntity, OBOTermRelationships relationships, AsyncCallback<Void> async);
+    void setRelationships(ProjectId projectId, NamedClass lastEntity, OBOTermRelationships relationships, AsyncCallback<Void> async);
 
     void setTermId(ProjectId projectId, Entity lastEntity, OBOTermId termId, AsyncCallback<Void> async);
 
@@ -43,7 +40,7 @@ public interface OBOTextEditorServiceAsync {
 
     void setSynonyms(ProjectId projectId, Entity term, Collection<OBOTermSynonym> synonyms, AsyncCallback<Void> async);
 
-    void setCrossProduct(ProjectId projectId, Cls term, OBOTermCrossProduct crossProduct, AsyncCallback<Void> async);
+    void setCrossProduct(ProjectId projectId, NamedClass term, OBOTermCrossProduct crossProduct, AsyncCallback<Void> async);
 
     void getXRefs(ProjectId projectId, Entity term, AsyncCallback<List<OBOXRef>> async);
 

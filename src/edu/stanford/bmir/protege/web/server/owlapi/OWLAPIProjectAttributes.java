@@ -8,6 +8,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -18,17 +19,17 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/02/2012
- *
  */
 public final class OWLAPIProjectAttributes {
-    
+
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private final Lock readLock = readWriteLock.readLock();
-    
+
     private final Lock writeLock = readWriteLock.writeLock();
-    
-    
+
+    private final List<OWLAPIProjectAttributesListener> listeners = new ArrayList<OWLAPIProjectAttributesListener>();
+
     private BinaryOWLMetadata metadata = new BinaryOWLMetadata();
 
     public OWLAPIProjectAttributes() {
@@ -47,7 +48,38 @@ public final class OWLAPIProjectAttributes {
         this.metadata = metadata;
     }
 
+    public synchronized void addListener(OWLAPIProjectAttributesListener listener) {
+        listeners.add(listener);
+    }
+
+    public synchronized void removeListener(OWLAPIProjectAttributesListener listener) {
+        listeners.remove(listener);
+    }
     
+    private synchronized ArrayList<OWLAPIProjectAttributesListener> getListenersCopy() {
+        return new ArrayList<OWLAPIProjectAttributesListener>(listeners);
+    }
+
+
+    private void fireAttributeChanged(String attributeName) {
+        for (OWLAPIProjectAttributesListener listener : getListenersCopy()) {
+            listener.attributeChanged(this, attributeName);
+        }
+    }
+
+
+    private void fireAttributeRemoved(String attributeName) {
+        for (OWLAPIProjectAttributesListener listener : getListenersCopy()) {
+            listener.attributeRemoved(this, attributeName);
+        }
+    }
+
+    private void fireAttributesRemoved() {
+        for (OWLAPIProjectAttributesListener listener : getListenersCopy()) {
+            listener.attributesRemoved(this);
+        }
+    }
+
     /**
      * Removes all attributes in this metadata object.
      */
@@ -59,6 +91,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributesRemoved();
     }
 
     /**
@@ -73,6 +106,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeRemoved(name);
     }
 
     /**
@@ -80,8 +114,9 @@ public final class OWLAPIProjectAttributes {
      * @param name The name of the attribute.  Not null.
      * @param defaultValue The default value for the attribute.  May be null.  This value will be returned if this
      * metadata object does not contain a string value for the specified attribute name.
-     * @return Either the string value of the attribute with the specified name, or the value specified by the defaultValue
-     * object if this metadata object does not contain a string value for the specified attribute name.
+     * @return Either the string value of the attribute with the specified name, or the value specified by the
+     *         defaultValue
+     *         object if this metadata object does not contain a string value for the specified attribute name.
      * @throws NullPointerException if name is null.
      */
     public String getStringAttribute(String name, String defaultValue) {
@@ -108,7 +143,9 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeChanged(name);
     }
+
 
     /**
      * Removes a string attribute with the specified name.
@@ -123,6 +160,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeRemoved(name);
     }
 
     /**
@@ -139,6 +177,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeChanged(name);
     }
 
     /**
@@ -146,8 +185,9 @@ public final class OWLAPIProjectAttributes {
      * @param name The name of the attribute.  Not null.
      * @param defaultValue The default value for the attribute.  May be null.  This value will be returned if this
      * metadata object does not contain an int value for the specified attribute name.
-     * @return Either the int value of the attribute with the specified name, or the value specified by the defaultValue
-     * object if this metadata object does not contain an int value for the specified attribute name.
+     * @return Either the int value of the attribute with the specified name, or the value specified by the
+     *         defaultValue
+     *         object if this metadata object does not contain an int value for the specified attribute name.
      * @throws NullPointerException if name is null.
      */
     public Integer getIntAttribute(String name, Integer defaultValue) {
@@ -174,6 +214,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeRemoved(name);
     }
 
     /**
@@ -190,6 +231,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeChanged(name);
     }
 
 
@@ -198,8 +240,9 @@ public final class OWLAPIProjectAttributes {
      * @param name The name of the attribute.  Not null.
      * @param defaultValue The default value for the attribute.  May be null.  This value will be returned if this
      * metadata object does not contain a long value for the specified attribute name.
-     * @return Either the long value of the attribute with the specified name, or the value specified by the defaultValue
-     * object if this metadata object does not contain a long value for the specified attribute name.
+     * @return Either the long value of the attribute with the specified name, or the value specified by the
+     *         defaultValue
+     *         object if this metadata object does not contain a long value for the specified attribute name.
      * @throws NullPointerException if name is null.
      */
     public Long getLongAttribute(String name, Long defaultValue) {
@@ -226,6 +269,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeRemoved(name);
     }
 
     /**
@@ -242,6 +286,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeChanged(name);
     }
 
     /**
@@ -249,8 +294,9 @@ public final class OWLAPIProjectAttributes {
      * @param name The name of the attribute.  Not null.
      * @param defaultValue The default value for the attribute.  May be null.  This value will be returned if this
      * metadata object does not contain a boolean value for the specified attribute name.
-     * @return Either the boolean value of the attribute with the specified name, or the value specified by the defaultValue
-     * object if this metadata object does not contain a boolean value for the specified attribute name.
+     * @return Either the boolean value of the attribute with the specified name, or the value specified by the
+     *         defaultValue
+     *         object if this metadata object does not contain a boolean value for the specified attribute name.
      * @throws NullPointerException if name is null.
      */
     public Boolean getBooleanAttribute(String name, Boolean defaultValue) {
@@ -277,6 +323,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeRemoved(name);
     }
 
 
@@ -294,6 +341,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeChanged(name);
     }
 
     /**
@@ -301,8 +349,9 @@ public final class OWLAPIProjectAttributes {
      * @param name The name of the attribute.  Not null.
      * @param defaultValue The default value for the attribute.  May be null.  This value will be returned if this
      * metadata object does not contain a double value for the specified attribute name.
-     * @return Either the double value of the attribute with the specified name, or the value specified by the defaultValue
-     * object if this metadata object does not contain a double value for the specified attribute name.
+     * @return Either the double value of the attribute with the specified name, or the value specified by the
+     *         defaultValue
+     *         object if this metadata object does not contain a double value for the specified attribute name.
      * @throws NullPointerException if name is null.
      */
     public Double getDoubleAttribute(String name, Double defaultValue) {
@@ -329,6 +378,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeRemoved(name);
     }
 
 
@@ -339,7 +389,7 @@ public final class OWLAPIProjectAttributes {
      * @param value The value of the attribute to set.
      * @throws NullPointerException if the name parameter is null or if the value parameter is null.
      */
-    public void setByteArrayAttribute(String name, byte [] value) {
+    public void setByteArrayAttribute(String name, byte[] value) {
         try {
             writeLock.lock();
             metadata.setByteArrayAttribute(name, value);
@@ -347,6 +397,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeChanged(name);
     }
 
     /**
@@ -355,11 +406,12 @@ public final class OWLAPIProjectAttributes {
      * @param name The name of the attribute.  Not null.
      * @param defaultValue The default value for the attribute.  May be null.  This value will be returned if this
      * metadata object does not contain a byte [] value for the specified attribute name.
-     * @return Either the byte [] value of the attribute with the specified name, or the value specified by the defaultValue
-     * object if this metadata object does not contain a byte [] value for the specified attribute name.
+     * @return Either the byte [] value of the attribute with the specified name, or the value specified by the
+     *         defaultValue
+     *         object if this metadata object does not contain a byte [] value for the specified attribute name.
      * @throws NullPointerException if name is null.
      */
-    public byte [] getByteArrayAttribute(String name, byte [] defaultValue) {
+    public byte[] getByteArrayAttribute(String name, byte[] defaultValue) {
         try {
             readLock.lock();
             return metadata.getByteArrayAttribute(name, defaultValue);
@@ -383,6 +435,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeRemoved(name);
     }
 
 
@@ -390,9 +443,12 @@ public final class OWLAPIProjectAttributes {
      * Gets the {@link org.semanticweb.owlapi.model.OWLObject} list value of an attribute.
      * @param name The name of the attribute.  Not null.
      * @param defaultValue The default value for the attribute.  May be null.  This value will be returned if this
-     * metadata object does not contain an {@link org.semanticweb.owlapi.model.OWLObject} list value for the specified attribute name.
-     * @return Either the {@link org.semanticweb.owlapi.model.OWLObject} list value of the attribute with the specified name, or the value specified by the defaultValue
-     * object if this metadata object does not contain an {@link org.semanticweb.owlapi.model.OWLObject} list value for the specified attribute name.
+     * metadata object does not contain an {@link org.semanticweb.owlapi.model.OWLObject} list value for the specified
+     * attribute name.
+     * @return Either the {@link org.semanticweb.owlapi.model.OWLObject} list value of the attribute with the specified
+     *         name, or the value specified by the defaultValue
+     *         object if this metadata object does not contain an {@link org.semanticweb.owlapi.model.OWLObject} list
+     *         value for the specified attribute name.
      * @throws NullPointerException if name is null.
      */
     public List<OWLObject> getOWLObjectListAttribute(String name, List<OWLObject> defaultValue) {
@@ -419,6 +475,7 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeChanged(name);
     }
 
 
@@ -435,10 +492,10 @@ public final class OWLAPIProjectAttributes {
         finally {
             writeLock.unlock();
         }
+        fireAttributeRemoved(name);
     }
 
-    
-    
+
     public void write(DataOutput output) throws IOException {
         try {
             writeLock.lock();
@@ -448,7 +505,6 @@ public final class OWLAPIProjectAttributes {
             writeLock.unlock();
         }
     }
-    
-    
-    
+
+
 }

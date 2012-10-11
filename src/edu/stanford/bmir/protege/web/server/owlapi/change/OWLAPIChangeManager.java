@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import edu.stanford.bmir.protege.web.client.model.event.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.binaryowl.*;
 import org.semanticweb.owlapi.binaryowl.change.OntologyChangeRecordList;
 import org.semanticweb.owlapi.binaryowl.chunk.SkipSetting;
@@ -74,7 +73,8 @@ public class OWLAPIChangeManager {
                 public void handleChangesRead(OntologyChangeRecordList list, SkipSetting skipSetting, long l) {
                     BinaryOWLMetadata metadata = list.getMetadata();
                     String userName = metadata.getStringAttribute(USERNAME_METADATA_ATTRIBUTE, "");
-                    Long revision = metadata.getLongAttribute(REVISION_META_DATA_ATTRIBUTE, 0l);
+                    Long revisionNumberValue = metadata.getLongAttribute(REVISION_META_DATA_ATTRIBUTE, 0l);
+                    RevisionNumber revisionNumber = RevisionNumber.getRevisionNumber(revisionNumberValue);
 
                     String description = metadata.getStringAttribute(DESCRIPTION_META_DATA_ATTRIBUTE, "");
 
@@ -83,7 +83,7 @@ public class OWLAPIChangeManager {
                     final UserId userId = UserId.getUserId(userName);
                     final List<OWLOntologyChangeRecord> changeRecords = list.getChangeRecords();
 
-                    Revision chgList = new Revision(userId, revision, changeRecords, list.getTimestamp(), description, type);
+                    Revision chgList = new Revision(userId, revisionNumber, changeRecords, list.getTimestamp(), description, type);
                     revisions.add(chgList);
                 }
             }, SkipSetting.SKIP_NONE);
@@ -176,7 +176,7 @@ public class OWLAPIChangeManager {
         writeLock.lock();
         try {
             // Requires a read lock -
-            long revision = getCurrentRevision() + 1;
+            RevisionNumber revision = getCurrentRevision().getNextRevisionNumber();
             long timestamp = System.currentTimeMillis();
             final String highlevelDescription = desc != null ? desc : "";
             List<OWLOntologyChangeRecord> records = new ArrayList<OWLOntologyChangeRecord>(changes.size());
@@ -191,7 +191,7 @@ public class OWLAPIChangeManager {
         }
     }
 
-    private void persistChanges(long timestamp, long revision, RevisionType type, UserId userId, List<? extends OWLOntologyChange> changes, String highlevelDescription, boolean immediately) {
+    private void persistChanges(long timestamp, RevisionNumber revision, RevisionType type, UserId userId, List<? extends OWLOntologyChange> changes, String highlevelDescription, boolean immediately) {
         try {
             writeLock.lock();
             ChangeSerializationTask changeSerializationTask = new ChangeSerializationTask(getChangeHistoryFile(), userId, timestamp, revision, type, highlevelDescription, Collections.unmodifiableList(changes));
@@ -214,7 +214,7 @@ public class OWLAPIChangeManager {
 
 
     private File getChangeHistoryFile() {
-        OWLAPIProjectDocumentStoreImpl documentStore = OWLAPIProjectDocumentStoreImpl.getProjectDocumentStore(project.getProjectId());
+        OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(project.getProjectId());
         File file = documentStore.getChangeDataFile();
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -230,21 +230,21 @@ public class OWLAPIChangeManager {
         e.printStackTrace();
     }
 
-    public long getCurrentRevision() {
+    public RevisionNumber getCurrentRevision() {
         readLock.lock();
         try {
             if (revisions.isEmpty()) {
-                return 0;
+                return RevisionNumber.getRevisionNumber(0);
             }
             Revision lastRevisionChangeList = revisions.get(revisions.size() - 1);
-            return lastRevisionChangeList.getRevision();
+            return lastRevisionChangeList.getRevisionNumber();
         }
         finally {
             readLock.unlock();
         }
     }
 
-    private List<Revision> getRevisionsSinceVersion(long version) {
+    private List<Revision> getRevisionsSinceVersion(RevisionNumber version) {
         readLock.lock();
         try {
             int index = getRevisionIndexForRevision(version);
@@ -259,20 +259,63 @@ public class OWLAPIChangeManager {
         }
     }
 
-    private int getRevisionIndexForRevision(long revision) {
-        if (revisions.isEmpty()) {
-            return -1;
+    public boolean isValidRevision(RevisionNumber revision) {
+        return getRevisionIndexForRevision(revision) != -1;
+    }
+    
+    public OWLOntologyManager getOntologyManagerForRevision(RevisionNumber revision) {
+        try {
+            readLock.lock();
+            int revisionIndex = getRevisionIndexForRevision(revision);
+            if(revisionIndex == -1) {
+                throw new IllegalArgumentException("Unknown revision: " + revision);
+            }
+            OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+            for(int index = 0; index < revisionIndex + 1; index++) {
+                Revision rev = revisions.get(index);
+                List<OWLOntologyChangeRecord> changeRecords = rev.getChanges();
+                for(OWLOntologyChangeRecord changeRecord : changeRecords) {
+                    OWLOntologyID ontologyID = changeRecord.getOntologyID();
+                    if(!manager.contains(ontologyID)) {
+                        manager.createOntology(ontologyID);
+                    }
+                    OWLOntologyChange change = changeRecord.createOntologyChange(manager);
+                    manager.applyChange(change);
+                }
+            }
+            return manager;
         }
-        Revision firstRevision = revisions.get(0);
-        if (revision < firstRevision.getRevision()) {
-            return -1;
+        catch (OWLOntologyCreationException e) {
+            throw new RuntimeException("Problem creating ontology: " + e);
         }
-        Revision lastRevision = revisions.get(revisions.size() - 1);
-        if (lastRevision.getRevision() == revision) {
-            return revisions.size() - 1;
+        finally {
+            readLock.unlock();
         }
-        Revision dummy = Revision.createEmptyRevisionWithRevisionNumber(revision);
-        return Collections.binarySearch(revisions, dummy);
+    }
+
+    private int getRevisionIndexForRevision(RevisionNumber revision) {
+        try {
+            readLock.lock();
+            if (revisions.isEmpty()) {
+                return -1;
+            }
+            if(revision.isHead()) {
+                return revisions.size() - 1;
+            }
+            Revision firstRevision = revisions.get(0);
+            if (revision.compareTo(firstRevision.getRevisionNumber()) < 0) {
+                return -1;
+            }
+            Revision lastRevision = revisions.get(revisions.size() - 1);
+            if (lastRevision.getRevisionNumber() == revision) {
+                return revisions.size() - 1;
+            }
+            Revision dummy = Revision.createEmptyRevisionWithRevisionNumber(revision);
+            return Collections.binarySearch(revisions, dummy);
+        }
+        finally {
+            readLock.unlock();
+        }
     }
 
     private int getRevisionIndexForTimestamp(long timestamp) {
@@ -334,14 +377,14 @@ public class OWLAPIChangeManager {
         return result;
     }
 
-    public List<OntologyEvent> getOntologyEventsSinceVersion(long version) {
+    public List<OntologyEvent> getOntologyEventsSinceRevisionNumber(RevisionNumber revisionNumber) {
         readLock.lock();
         try {
             List<OntologyEvent> result = new ArrayList<OntologyEvent>();
-            long nextRevisionNumber = version + 1;
+            RevisionNumber nextRevisionNumber = revisionNumber.getNextRevisionNumber();
             List<Revision> revisions = getRevisionsSinceVersion(nextRevisionNumber);
             for (Revision revision : revisions) {
-                OWLOntologyChangeTranslator translator = new OWLOntologyChangeTranslator(revision.getUserId(), revision.getRevision());
+                OWLOntologyChangeTranslator translator = new OWLOntologyChangeTranslator(revision.getUserId(), revision.getRevisionNumber());
                 for (OWLOntologyChangeRecord change : revision) {
                     OntologyEvent event = change.getInfo().accept(translator);
                     if (event != null) {
@@ -362,7 +405,7 @@ public class OWLAPIChangeManager {
         List<OWLEntityBrowserTextChangeSet> browserTextChanges = editorKit.getChangedEntities(revision.getChanges());
         for (OWLEntityBrowserTextChangeSet changeSet : browserTextChanges) {
             EntityData entityData = project.getRenderingManager().getEntityData(changeSet.getEntity());
-            resultToFill.add(new EntityBrowserTextChangedEvent(entityData, revision.getUserId().getUserName(), (int) revision.getRevision()));
+            resultToFill.add(new EntityBrowserTextChangedEvent(entityData, revision.getUserId().getUserName(), revision.getRevisionNumber().getValueAsInt()));
         }
     }
 
@@ -383,12 +426,40 @@ public class OWLAPIChangeManager {
         }
     }
 
+    public RevisionSummary getRevisionSummary(RevisionNumber revisionNumber) {
+        int index = getRevisionIndexForRevision(revisionNumber);
+        if(index == -1) {
+            throw new RuntimeException("Unknown revision: " + revisionNumber);
+        }
+        Revision revision = revisions.get(index);
+        return getRevisionSummaryFromRevision(revision);
+    }
+
+    
+    public List<RevisionSummary> getRevisionSummaries() {
+        List<RevisionSummary> result = new ArrayList<RevisionSummary>();
+        try {
+            readLock.lock();
+            for(Revision revision : revisions) {
+                result.add(getRevisionSummaryFromRevision(revision));
+            }
+        }
+        finally {
+            readLock.unlock();
+        }
+        return result;
+    }
+
+    private RevisionSummary getRevisionSummaryFromRevision(Revision revision) {
+        return new RevisionSummary(revision.getRevisionNumber(), revision.getUserId(), revision.getTimestamp(), revision.getChanges().size());
+    }
+
 
     private static class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<Revision> {
 
         private UserId userId;
 
-        private long revision;
+        private RevisionNumber revision;
 
         private long timestamp;
 
@@ -398,7 +469,7 @@ public class OWLAPIChangeManager {
 
         private RevisionType revisionType;
 
-        private Revision(UserId userId, long revision, List<OWLOntologyChangeRecord> changes, long timestamp, String highLevelDescription, RevisionType revisionType) {
+        private Revision(UserId userId, RevisionNumber revision, List<OWLOntologyChangeRecord> changes, long timestamp, String highLevelDescription, RevisionType revisionType) {
             this.changes.addAll(changes);
             this.userId = userId;
             this.revision = revision;
@@ -407,7 +478,7 @@ public class OWLAPIChangeManager {
             this.revisionType = revisionType;
         }
 
-        private Revision(long revision) {
+        private Revision(RevisionNumber revision) {
             this.userId = UserId.getNull();
             this.revision = revision;
             this.timestamp = 0;
@@ -416,12 +487,12 @@ public class OWLAPIChangeManager {
             this.revisionType = RevisionType.EDIT;
         }
 
-        public static Revision createEmptyRevisionWithRevisionNumber(long revision) {
+        public static Revision createEmptyRevisionWithRevisionNumber(RevisionNumber revision) {
             return new Revision(revision);
         }
 
         public static Revision createEmptyRevisionWithTimestamp(long timestamp) {
-            Revision revision = new Revision(0);
+            Revision revision = new Revision(RevisionNumber.getRevisionNumber(0));
             revision.timestamp = timestamp;
             return revision;
         }
@@ -453,7 +524,7 @@ public class OWLAPIChangeManager {
             return userId;
         }
 
-        public long getRevision() {
+        public RevisionNumber getRevisionNumber() {
             return revision;
         }
 
@@ -462,15 +533,7 @@ public class OWLAPIChangeManager {
         }
 
         public int compareTo(Revision o) {
-            if (revision < o.revision) {
-                return -1;
-            }
-            else if (revision == o.revision) {
-                return 0;
-            }
-            else {
-                return 1;
-            }
+            return this.revision.compareTo(o.revision);
         }
 
         public String getHighLevelDescription(final OWLAPIProject project, OWLEntity entity) {
@@ -587,11 +650,11 @@ public class OWLAPIChangeManager {
 
         private UserId userId;
 
-        private long revision;
+        private RevisionNumber revisionNumber;
 
-        private OWLOntologyChangeTranslator(UserId userId, long revision) {
+        private OWLOntologyChangeTranslator(UserId userId, RevisionNumber revision) {
             this.userId = userId;
-            this.revision = revision;
+            this.revisionNumber = revision;
         }
 
         public OntologyEvent visit(AddAxiomChangeRecordInfo addAxiom) {
@@ -600,8 +663,9 @@ public class OWLAPIChangeManager {
                 return null;
             }
             ChangeType changeType = ChangeType.ADDED;
-            Integer eventType = getEventType(addAxiom, changeType);
-            return new AbstractOntologyEvent(sourceEntityData, eventType != null ? eventType : -1, userId.getUserName(), (int) revision);
+            return getEventType(addAxiom, changeType, userId, revisionNumber.getValueAsInt());
+            
+//            return new AbstractOntologyEvent(sourceEntityData, eventType != null ? eventType : -1, userId.getUserName(), (int) revision);
         }
 
 
@@ -611,8 +675,8 @@ public class OWLAPIChangeManager {
                 return null;
             }
             ChangeType changeType = ChangeType.REMOVED;
-            Integer eventType = getEventType(removeAxiom, changeType);
-            return new AbstractOntologyEvent(sourceEntityData, eventType != null ? eventType : -1, userId.getUserName(), (int) revision);
+            return  getEventType(removeAxiom, changeType, userId, revisionNumber.getValueAsInt());
+//            return new AbstractOntologyEvent(sourceEntityData, eventType != null ? eventType : -1, userId.getUserName(), (int) revision);
         }
 
         public OntologyEvent visit(SetOntologyIDChangeRecordInfo setOntologyID) {
@@ -681,15 +745,9 @@ public class OWLAPIChangeManager {
     }
 
 
-    private static Integer getEventType(AxiomChangeRecordInfo change, ChangeType changeType) {
-        OntologyEventIdTranslator translator = new OntologyEventIdTranslator(changeType);
-        Integer eventType = change.getAxiom().accept(translator);
-        if (eventType == null) {
-            return -1;
-        }
-        else {
-            return eventType;
-        }
+    private OntologyEvent getEventType(AxiomChangeRecordInfo change, ChangeType changeType, UserId userId, int revision) {
+        OntologyEventTranslator translator = new OntologyEventTranslator(changeType, userId, revision);
+        return change.getAxiom().accept(translator);
     }
 
 
@@ -699,95 +757,120 @@ public class OWLAPIChangeManager {
         REMOVED
     }
 
-    private static class OntologyEventIdTranslator implements OWLAxiomVisitorEx<Integer> {
+    private class OntologyEventTranslator implements OWLAxiomVisitorEx<OntologyEvent> {
 
         private ChangeType changeType;
+        
+        private UserId userId;
 
-        private OntologyEventIdTranslator(ChangeType changeType) {
+        private int revision;
+
+        private OntologyEventTranslator(ChangeType changeType, UserId userId, int revision) {
             this.changeType = changeType;
+            this.userId = userId;
+            this.revision = revision;
         }
 
-        public Integer visit(OWLSubClassOfAxiom axiom) {
+        public OntologyEvent visit(OWLSubClassOfAxiom axiom) {
+            if(axiom.getSubClass().isAnonymous() || axiom.getSuperClass().isAnonymous()) {
+                return null;
+            }
+            OWLClass subCls = axiom.getSubClass().asOWLClass();
+            EntityData subClsData = project.getRenderingManager().getEntityData(subCls);
+            OWLClass superCls = axiom.getSuperClass().asOWLClass();
+            EntityData superClsData = project.getRenderingManager().getEntityData(superCls);
+
+            // Bizarely, this would be fired as an EntityCreateEvent or an EntityDeleteEvent
             if (changeType == ChangeType.ADDED) {
-                return EventType.SUBCLASS_ADDED;
+                // Seems to be back to front - subs and supers swapped
+                return new EntityCreateEvent(superClsData, EventType.SUBCLASS_ADDED, userId.getUserName(), Arrays.asList(subClsData), revision);
             }
             else {
-                return EventType.SUBCLASS_REMOVED;
+                // Seems to be back to front - subs and supers swapped
+                return new EntityDeleteEvent(subClsData, EventType.SUBCLASS_REMOVED, userId.getUserName(), Arrays.asList(superClsData), revision);
             }
         }
 
-        public Integer visit(OWLNegativeObjectPropertyAssertionAxiom axiom) {
+        public OntologyEvent visit(OWLNegativeObjectPropertyAssertionAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLAsymmetricObjectPropertyAxiom axiom) {
+        public OntologyEvent visit(OWLAsymmetricObjectPropertyAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLReflexiveObjectPropertyAxiom axiom) {
+        public OntologyEvent visit(OWLReflexiveObjectPropertyAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLDisjointClassesAxiom axiom) {
+        public OntologyEvent visit(OWLDisjointClassesAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLDataPropertyDomainAxiom axiom) {
+        public OntologyEvent visit(OWLDataPropertyDomainAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLObjectPropertyDomainAxiom axiom) {
+        public OntologyEvent visit(OWLObjectPropertyDomainAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLEquivalentObjectPropertiesAxiom axiom) {
+        public OntologyEvent visit(OWLEquivalentObjectPropertiesAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLNegativeDataPropertyAssertionAxiom axiom) {
+        public OntologyEvent visit(OWLNegativeDataPropertyAssertionAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLDifferentIndividualsAxiom axiom) {
+        public OntologyEvent visit(OWLDifferentIndividualsAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLDisjointDataPropertiesAxiom axiom) {
+        public OntologyEvent visit(OWLDisjointDataPropertiesAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLDisjointObjectPropertiesAxiom axiom) {
+        public OntologyEvent visit(OWLDisjointObjectPropertiesAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLObjectPropertyRangeAxiom axiom) {
+        public OntologyEvent visit(OWLObjectPropertyRangeAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLObjectPropertyAssertionAxiom axiom) {
+        public OntologyEvent visit(OWLObjectPropertyAssertionAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLFunctionalObjectPropertyAxiom axiom) {
+        public OntologyEvent visit(OWLFunctionalObjectPropertyAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLSubObjectPropertyOfAxiom axiom) {
+        public OntologyEvent visit(OWLSubObjectPropertyOfAxiom axiom) {
+            if(axiom.getSubProperty().isAnonymous() || axiom.getSuperProperty().isAnonymous()) {
+               return null;
+            }
+            final EntityData subPropData = project.getRenderingManager().getEntityData(axiom.getSubProperty().asOWLObjectProperty());
+            final EntityData superPropData = project.getRenderingManager().getEntityData(axiom.getSuperProperty().asOWLObjectProperty());
+
             if (changeType == ChangeType.ADDED) {
-                return EventType.SUBPROPERTY_ADDED;
+                return new EntityCreateEvent(superPropData, EventType.SUBPROPERTY_ADDED, userId.getUserName(), Arrays.<EntityData>asList(subPropData), revision);
             }
             else {
-                return EventType.SUBPROPERTY_REMOVED;
+                return new EntityDeleteEvent(superPropData, EventType.SUBPROPERTY_REMOVED, userId.getUserName(), Arrays.<EntityData>asList(subPropData), revision);
             }
         }
 
-        public Integer visit(OWLDisjointUnionAxiom axiom) {
+        public OntologyEvent visit(OWLDisjointUnionAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLDeclarationAxiom axiom) {
+        public OntologyEvent visit(OWLDeclarationAxiom axiom) {
+            final EntityData entityData = project.getRenderingManager().getEntityData(axiom.getEntity());
             if (changeType == ChangeType.ADDED) {
-                return axiom.getEntity().accept(new OWLEntityVisitorEx<Integer>() {
+
+                int type = axiom.getEntity().accept(new OWLEntityVisitorEx<Integer>() {
                     public Integer visit(OWLClass cls) {
                         return EventType.CLASS_CREATED;
                     }
@@ -812,9 +895,10 @@ public class OWLAPIChangeManager {
                         return EventType.PROPERTY_CREATED;
                     }
                 });
+                return new EntityCreateEvent(entityData, type, userId.getUserName(), Collections.<EntityData>emptyList(), revision);
             }
             else {
-                return axiom.getEntity().accept(new OWLEntityVisitorEx<Integer>() {
+                int eventType = axiom.getEntity().accept(new OWLEntityVisitorEx<Integer>() {
                     public Integer visit(OWLClass cls) {
                         return EventType.CLASS_DELETED;
                     }
@@ -839,110 +923,116 @@ public class OWLAPIChangeManager {
                         return EventType.PROPERTY_DELETED;
                     }
                 });
+                return new EntityDeleteEvent(entityData, eventType, userId.getUserName(), Collections.<EntityData>emptyList(), revision);
             }
         }
 
-        public Integer visit(OWLAnnotationAssertionAxiom axiom) {
-            if (changeType == ChangeType.ADDED) {
-                return EventType.PROPERTY_VALUE_ADDED;
-            }
-            else {
-                return EventType.PROPERTY_DELETED;
-            }
-        }
-
-        public Integer visit(OWLSymmetricObjectPropertyAxiom axiom) {
+        public OntologyEvent visit(OWLAnnotationAssertionAxiom axiom) {
+//            final EntityData entityData = project.getRenderingManager().getEntityData(axiom.getSubject());
+//            if (changeType == ChangeType.ADDED) {
+//                return new PropertyValueEvent(entityData, , );
+//            }
+//            else {
+//                return EventType.PROPERTY_DELETED;
+//            }
             return null;
         }
 
-        public Integer visit(OWLDataPropertyRangeAxiom axiom) {
+        public OntologyEvent visit(OWLSymmetricObjectPropertyAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLFunctionalDataPropertyAxiom axiom) {
+        public OntologyEvent visit(OWLDataPropertyRangeAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLEquivalentDataPropertiesAxiom axiom) {
+        public OntologyEvent visit(OWLFunctionalDataPropertyAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLClassAssertionAxiom axiom) {
-            if (changeType == ChangeType.ADDED) {
-                return EventType.INDIVIDUAL_ADDED_OR_REMOVED;
-            }
-            else {
-                return EventType.INDIVIDUAL_ADDED_OR_REMOVED;
-            }
-        }
-
-        public Integer visit(OWLEquivalentClassesAxiom axiom) {
+        public OntologyEvent visit(OWLEquivalentDataPropertiesAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLDataPropertyAssertionAxiom axiom) {
+        public OntologyEvent visit(OWLClassAssertionAxiom axiom) {
+//            if (changeType == ChangeType.ADDED) {
+//                return EventType.INDIVIDUAL_ADDED_OR_REMOVED;
+//            }
+//            else {
+//                return EventType.INDIVIDUAL_ADDED_OR_REMOVED;
+//            }
             return null;
         }
 
-        public Integer visit(OWLTransitiveObjectPropertyAxiom axiom) {
+        public OntologyEvent visit(OWLEquivalentClassesAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLIrreflexiveObjectPropertyAxiom axiom) {
+        public OntologyEvent visit(OWLDataPropertyAssertionAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLSubDataPropertyOfAxiom axiom) {
-            if (changeType == ChangeType.ADDED) {
-                return EventType.SUBPROPERTY_ADDED;
-            }
-            else {
-                return EventType.SUBPROPERTY_REMOVED;
-            }
-        }
-
-        public Integer visit(OWLInverseFunctionalObjectPropertyAxiom axiom) {
+        public OntologyEvent visit(OWLTransitiveObjectPropertyAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLSameIndividualAxiom axiom) {
+        public OntologyEvent visit(OWLIrreflexiveObjectPropertyAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLSubPropertyChainOfAxiom axiom) {
+        public OntologyEvent visit(OWLSubDataPropertyOfAxiom axiom) {
+//            if (changeType == ChangeType.ADDED) {
+//                return EventType.SUBPROPERTY_ADDED;
+//            }
+//            else {
+//                return EventType.SUBPROPERTY_REMOVED;
+//            }
             return null;
         }
 
-        public Integer visit(OWLInverseObjectPropertiesAxiom axiom) {
+        public OntologyEvent visit(OWLInverseFunctionalObjectPropertyAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLHasKeyAxiom axiom) {
+        public OntologyEvent visit(OWLSameIndividualAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLDatatypeDefinitionAxiom axiom) {
+        public OntologyEvent visit(OWLSubPropertyChainOfAxiom axiom) {
             return null;
         }
 
-        public Integer visit(SWRLRule rule) {
+        public OntologyEvent visit(OWLInverseObjectPropertiesAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLSubAnnotationPropertyOfAxiom axiom) {
-            if (changeType == ChangeType.ADDED) {
-                return EventType.SUBPROPERTY_ADDED;
-            }
-            else {
-                return EventType.SUBPROPERTY_REMOVED;
-            }
-        }
-
-        public Integer visit(OWLAnnotationPropertyDomainAxiom axiom) {
+        public OntologyEvent visit(OWLHasKeyAxiom axiom) {
             return null;
         }
 
-        public Integer visit(OWLAnnotationPropertyRangeAxiom axiom) {
+        public OntologyEvent visit(OWLDatatypeDefinitionAxiom axiom) {
+            return null;
+        }
+
+        public OntologyEvent visit(SWRLRule rule) {
+            return null;
+        }
+
+        public OntologyEvent visit(OWLSubAnnotationPropertyOfAxiom axiom) {
+//            if (changeType == ChangeType.ADDED) {
+//                return EventType.SUBPROPERTY_ADDED;
+//            }
+//            else {
+//                return EventType.SUBPROPERTY_REMOVED;
+//            }
+            return null;
+        }
+
+        public OntologyEvent visit(OWLAnnotationPropertyDomainAxiom axiom) {
+            return null;
+        }
+
+        public OntologyEvent visit(OWLAnnotationPropertyRangeAxiom axiom) {
             return null;
         }
     }

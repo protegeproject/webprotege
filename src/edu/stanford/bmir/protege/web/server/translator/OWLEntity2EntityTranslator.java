@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.translator;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.WebProtegeIRI;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.IRI;
 import org.semanticweb.owlapi.model.*;
 
 /**
@@ -13,26 +13,26 @@ import org.semanticweb.owlapi.model.*;
 public class OWLEntity2EntityTranslator implements OWLEntityVisitorEx<Entity> {
 
     public Entity visit(OWLClass cls) {
-        return new Cls(new WebProtegeIRI(cls.getIRI().toString()));
+        return new NamedClass(IRI.create(cls.getIRI().toString()));
     }
 
     public Entity visit(OWLObjectProperty property) {
-        return new Cls(new WebProtegeIRI(property.getIRI().toString()));
+        return new ObjectProperty(IRI.create(property.getIRI().toString()));
     }
 
     public Entity visit(OWLDataProperty property) {
-        return new DataProperty(new WebProtegeIRI(property.getIRI().toString()));
+        return new DataProperty(IRI.create(property.getIRI().toString()));
     }
 
     public Entity visit(OWLNamedIndividual individual) {
-        return new NamedIndividual(new WebProtegeIRI(individual.getIRI().toString()));
+        return new NamedIndividual(IRI.create(individual.getIRI().toString()));
     }
 
     public Entity visit(OWLDatatype datatype) {
-        return new Datatype(new WebProtegeIRI(datatype.getIRI().toString()));
+        return new Datatype(IRI.create(datatype.getIRI().toString()));
     }
 
     public Entity visit(OWLAnnotationProperty property) {
-        return new AnnotationProperty(new WebProtegeIRI(property.getIRI().toString()));
+        return new AnnotationProperty(IRI.create(property.getIRI().toString()));
     }
 }

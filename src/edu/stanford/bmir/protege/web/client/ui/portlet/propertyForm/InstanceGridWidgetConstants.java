@@ -2,7 +2,8 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
 import java.util.Map;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 public class InstanceGridWidgetConstants {
@@ -42,70 +43,70 @@ public class InstanceGridWidgetConstants {
      * Action descriptions
      */
     
-    public static String getAddNewValueActionDesc(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration, String defaultDesc) {
-        return UIUtil.getStringConfigurationProperty(widgetConfig, projectConfiguration, ADD_NEW_VALUE_PROP, defaultDesc );
+    public static String getAddNewValueActionDesc(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration, String defaultDesc) {
+        return UIUtil.getStringConfigurationProperty(widgetConfig, projectLayoutConfiguration, ADD_NEW_VALUE_PROP, defaultDesc );
     }
     
-    public static String getAddExistingValueActionDesc(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration, String defaultDesc) {
-        return UIUtil.getStringConfigurationProperty(widgetConfig, projectConfiguration, ADD_EXISTING_VALUE_PROP, defaultDesc );
+    public static String getAddExistingValueActionDesc(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration, String defaultDesc) {
+        return UIUtil.getStringConfigurationProperty(widgetConfig, projectLayoutConfiguration, ADD_EXISTING_VALUE_PROP, defaultDesc );
     }
     
-    public static String getReplaceNewValueActionDesc(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration, String defaultDesc) {
-        return UIUtil.getStringConfigurationProperty(widgetConfig, projectConfiguration, REPLACE_WITH_NEW_VALUE_PROP, defaultDesc);
+    public static String getReplaceNewValueActionDesc(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration, String defaultDesc) {
+        return UIUtil.getStringConfigurationProperty(widgetConfig, projectLayoutConfiguration, REPLACE_WITH_NEW_VALUE_PROP, defaultDesc);
     }
     
-    public static String getReplaceExistingValueActionDesc(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration, String defaultDesc) {
-        return UIUtil.getStringConfigurationProperty(widgetConfig, projectConfiguration, REPLACE_WITH_EXISTING_VALUE_PROP, defaultDesc);
+    public static String getReplaceExistingValueActionDesc(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration, String defaultDesc) {
+        return UIUtil.getStringConfigurationProperty(widgetConfig, projectLayoutConfiguration, REPLACE_WITH_EXISTING_VALUE_PROP, defaultDesc);
     }
 
     
     
-    public static String getAddNewValueActionDesc(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getAddNewValueActionDesc(widgetConfig, projectConfiguration, ADD_NEW_VALUE );
+    public static String getAddNewValueActionDesc(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getAddNewValueActionDesc(widgetConfig, projectLayoutConfiguration, ADD_NEW_VALUE );
     }
 
-    public static String getAddExistingValueActionDesc(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getAddExistingValueActionDesc(widgetConfig, projectConfiguration, ADD_EXISTING_VALUE );
+    public static String getAddExistingValueActionDesc(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getAddExistingValueActionDesc(widgetConfig, projectLayoutConfiguration, ADD_EXISTING_VALUE );
     }
 
-    public static String getReplaceNewValueActionDesc(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getReplaceNewValueActionDesc(widgetConfig, projectConfiguration, REPLACE_WITH_NEW_VALUE);
+    public static String getReplaceNewValueActionDesc(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getReplaceNewValueActionDesc(widgetConfig, projectLayoutConfiguration, REPLACE_WITH_NEW_VALUE);
     }
 
-    public static String getReplaceExistingValueActionDesc(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getReplaceExistingValueActionDesc(widgetConfig, projectConfiguration, REPLACE_WITH_EXISTING_VALUE);
+    public static String getReplaceExistingValueActionDesc(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getReplaceExistingValueActionDesc(widgetConfig, projectLayoutConfiguration, REPLACE_WITH_EXISTING_VALUE);
     }
 
     /*
      * Icons
      */
 
-    public static String getAddIcon(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return UIUtil.getStringConfigurationProperty(widgetConfig, projectConfiguration, ADD_ICON_PROP, ADD_ICON);
+    public static String getAddIcon(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return UIUtil.getStringConfigurationProperty(widgetConfig, projectLayoutConfiguration, ADD_ICON_PROP, ADD_ICON);
     }
 
-    public static String getReplaceIcon(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return UIUtil.getStringConfigurationProperty(widgetConfig, projectConfiguration, REPLACE_ICON_PROP, REPLACE_ICON);
+    public static String getReplaceIcon(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return UIUtil.getStringConfigurationProperty(widgetConfig, projectLayoutConfiguration, REPLACE_ICON_PROP, REPLACE_ICON);
     }
 
     /*
      * Action links
      */
 
-    public static String getAddNewLink(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getIconLink(getAddNewValueActionDesc(widgetConfig, projectConfiguration), getAddIcon(widgetConfig, projectConfiguration));
+    public static String getAddNewLink(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getIconLink(getAddNewValueActionDesc(widgetConfig, projectLayoutConfiguration), getAddIcon(widgetConfig, projectLayoutConfiguration));
     }
 
-    public static String getAddExistingLink(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getIconLink(getAddExistingValueActionDesc(widgetConfig, projectConfiguration), getAddIcon(widgetConfig, projectConfiguration));
+    public static String getAddExistingLink(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getIconLink(getAddExistingValueActionDesc(widgetConfig, projectLayoutConfiguration), getAddIcon(widgetConfig, projectLayoutConfiguration));
     }
 
-    public static String getReplaceNewLink(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getIconLink(getReplaceNewValueActionDesc(widgetConfig, projectConfiguration), getReplaceIcon(widgetConfig, projectConfiguration));
+    public static String getReplaceNewLink(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getIconLink(getReplaceNewValueActionDesc(widgetConfig, projectLayoutConfiguration), getReplaceIcon(widgetConfig, projectLayoutConfiguration));
     }
 
-    public static String getReplaceExistingLink(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getIconLink(getReplaceExistingValueActionDesc(widgetConfig, projectConfiguration), getReplaceIcon(widgetConfig, projectConfiguration));
+    public static String getReplaceExistingLink(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getIconLink(getReplaceExistingValueActionDesc(widgetConfig, projectLayoutConfiguration), getReplaceIcon(widgetConfig, projectLayoutConfiguration));
     }
 
     public static String getIconLink(String text, String icon) {
@@ -116,27 +117,27 @@ public class InstanceGridWidgetConstants {
      * Show action links
      */
 
-    public static boolean getShowAction(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration, 
+    public static boolean getShowAction(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration,
             String action, boolean defaultValue) {
-        return UIUtil.getBooleanConfigurationProperty(widgetConfig, projectConfiguration, action, defaultValue);
+        return UIUtil.getBooleanConfigurationProperty(widgetConfig, projectLayoutConfiguration, action, defaultValue);
     }
 
-    public static boolean showAddNewActionLink(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getShowAction(widgetConfig, projectConfiguration, SHOW_ADD_NEW_PROP, true);
+    public static boolean showAddNewActionLink(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getShowAction(widgetConfig, projectLayoutConfiguration, SHOW_ADD_NEW_PROP, true);
     }
 
-    public static boolean showAddExistingActionLink(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getShowAction(widgetConfig, projectConfiguration, SHOW_ADD_EXISTING_NEW_PROP, true);
+    public static boolean showAddExistingActionLink(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getShowAction(widgetConfig, projectLayoutConfiguration, SHOW_ADD_EXISTING_NEW_PROP, true);
     }
 
-    public static boolean showReplaceNewActionLink(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getShowAction(widgetConfig, projectConfiguration, SHOW_REPLACE_NEW_PROP, 
-                showAddNewActionLink(widgetConfig, projectConfiguration));
+    public static boolean showReplaceNewActionLink(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getShowAction(widgetConfig, projectLayoutConfiguration, SHOW_REPLACE_NEW_PROP,
+                showAddNewActionLink(widgetConfig, projectLayoutConfiguration));
     }
 
-    public static boolean showReplaceExistingActionLink(Map<String, Object> widgetConfig, ProjectConfiguration projectConfiguration) {
-        return getShowAction(widgetConfig, projectConfiguration, SHOW_REPLACE_EXISTING_PROP, 
-                showAddExistingActionLink(widgetConfig, projectConfiguration));
+    public static boolean showReplaceExistingActionLink(Map<String, Object> widgetConfig, ProjectLayoutConfiguration projectLayoutConfiguration) {
+        return getShowAction(widgetConfig, projectLayoutConfiguration, SHOW_REPLACE_EXISTING_PROP,
+                showAddExistingActionLink(widgetConfig, projectLayoutConfiguration));
     }
 
 

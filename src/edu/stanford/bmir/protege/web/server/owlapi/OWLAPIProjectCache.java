@@ -19,10 +19,6 @@ import java.util.logging.Level;
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/03/2012
- * <p>
- *     A very simple project cache.  For now, this implementation just caches everything in memory.  Nothing is unloaded.
- *     Further down the line, we will support some kind of time/cost based cache.
- * </p>
  */
 public class OWLAPIProjectCache {
 
@@ -71,18 +67,17 @@ public class OWLAPIProjectCache {
 
     public synchronized OWLAPIProject getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
         try {
+            OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
+
             OWLAPIProject project = projectId2ProjectMap.get(projectId);
             if (project == null) {
-                project = new OWLAPIProject(projectId);
+                project = OWLAPIProject.getProject(documentStore);
                 projectId2ProjectMap.put(projectId, project);
             }
             logProjectAccess(projectId);
             return project;
         }
         catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        catch (OWLOntologyCreationException e) {
             throw new RuntimeException(e);
         }
         catch (OWLParserException e) {
@@ -92,7 +87,8 @@ public class OWLAPIProjectCache {
     
     public synchronized OWLAPIProject getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException {
         try {
-            OWLAPIProject project = new OWLAPIProject(newProjectSettings);
+            OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.createNewProject(newProjectSettings);
+            OWLAPIProject project = OWLAPIProject.getProject(documentStore);
             projectId2ProjectMap.put(project.getProjectId(), project);
             logProjectAccess(project.getProjectId());
             return project;

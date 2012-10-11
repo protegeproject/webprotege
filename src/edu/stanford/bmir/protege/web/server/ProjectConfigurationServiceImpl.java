@@ -6,8 +6,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.logging.Level;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -15,15 +16,13 @@ import com.thoughtworks.xstream.XStream;
 
 import edu.stanford.bmir.protege.web.client.rpc.ProjectConfigurationService;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectConfiguration;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
+import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.smi.protege.util.Log;
 
 public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implements ProjectConfigurationService {
@@ -89,8 +88,10 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
 
     private static String getDefaultProjectConfigurationName(ProjectId projectId) {
         OWLAPIProject project = OWLAPIProjectManager.getProjectManager().getProject(projectId);
-        OWLAPIProjectConfiguration configuration = project.getProjectConfiguration();
-        OWLAPIProjectType projectType = configuration.getProjectType();
+//        OWLAPIProjectConfiguration configuration = project.getProjectConfiguration();
+        OWLAPIProjectMetadataManager metadataManager = OWLAPIProjectMetadataManager.getManager();
+
+        OWLAPIProjectType projectType = metadataManager.getType(projectId);
         return getDefaultProjectConfigurationFileName(projectType);
     }
     
@@ -110,8 +111,8 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
 //    }
 
 
-    public ProjectConfiguration getProjectConfiguration(String projectName, String userName) {
-        ProjectConfiguration config = null;
+    public ProjectLayoutConfiguration getProjectLayoutConfiguration(String projectName, String userName) {
+        ProjectLayoutConfiguration config = null;
 
         File f = getConfigurationFile(projectName, userName);
 
@@ -125,7 +126,7 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
             fileReader.close();
         }
         catch (java.io.FileNotFoundException e) {
-            config = new ProjectConfiguration();
+            config = new ProjectLayoutConfiguration();
         }
         catch (java.io.IOException e) {
             Log.getLogger().log(Level.WARNING, "Failed to read from config file at server. ", e);
@@ -137,7 +138,7 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
     }
 
 
-    public void saveProjectConfiguration(String projectName, String userName, ProjectConfiguration config) {
+    public void saveProjectLayoutConfiguration(String projectName, String userName, ProjectLayoutConfiguration config) {
         String xml = convertConfigDetailsToXML(config);
         File f = getUserProjectConfigurationFile(new ProjectId(projectName), UserId.getUserId(userName));
         try {
@@ -151,25 +152,29 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
 
     }
 
+    public List<ProjectType> getProjectTypes() {
+        return Arrays.asList(new ProjectType(OWLAPIProjectType.getDefaultProjectType().getProjectTypeName()), new ProjectType(OWLAPIProjectType.getOBOProjectType().getProjectTypeName()));
+    }
 
-    public String convertConfigDetailsToXML(ProjectConfiguration config) {
+
+    public String convertConfigDetailsToXML(ProjectLayoutConfiguration config) {
         XStream xstream = new XStream();
-        xstream.alias("project", ProjectConfiguration.class);
+        xstream.alias("project", ProjectLayoutConfiguration.class);
         xstream.alias("tab", TabConfiguration.class);
         xstream.alias("portlet", PortletConfiguration.class);
         xstream.alias("column", TabColumnConfiguration.class);
-        xstream.alias("project", ProjectConfiguration.class);
+        xstream.alias("project", ProjectLayoutConfiguration.class);
         return xstream.toXML(config);
     }
 
-    public ProjectConfiguration convertXMLToConfiguration(Reader reader) {
+    public ProjectLayoutConfiguration convertXMLToConfiguration(Reader reader) {
         XStream xstream = new XStream();
-        xstream.alias("project", ProjectConfiguration.class);
+        xstream.alias("project", ProjectLayoutConfiguration.class);
         xstream.alias("tab", TabConfiguration.class);
         xstream.alias("portlet", PortletConfiguration.class);
         xstream.alias("column", TabColumnConfiguration.class);
         xstream.alias("map", LinkedHashMap.class);
-        ProjectConfiguration config = (ProjectConfiguration) xstream.fromXML(reader);
+        ProjectLayoutConfiguration config = (ProjectLayoutConfiguration) xstream.fromXML(reader);
         return config;
     }
 

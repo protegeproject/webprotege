@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationInfo;
 
 import java.util.List;
 import java.util.Set;
@@ -52,25 +53,23 @@ public interface ProjectManagerServiceAsync {
      */
     void getOwnedProjectNames(AsyncCallback<List<String>> async);
 
-//    /**
-//     * Overwrites the project document for an existing project.
-//     * @param newProjectSettings The settings that describe both a currently registered project and how to overwrite
-//     * the
-//     * current project document.
-//     * @throws edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException
-//     *          If the caller is not signed in.
-//     * @throws edu.stanford.bmir.protege.web.client.rpc.data.ProjectNotRegisteredException
-//     *          If the NewProjectSettings object does not refer to a project that is already
-//     *          registered.  The {@link edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings#getProjectName()}
-//     *          must
-//     *          match a the name of a registered project.
-//     * @throws edu.stanford.bmir.protege.web.client.rpc.data.NotProjectOwnerException
-//     *          If the caller is not the owner of the existing registered project.  Note that
-//     *          there is no requirement for the caller to be the owner of the final overwritten project (i.e. this
-//     *          method supports
-//     *          a change in ownership).
-//     */
-//    void replaceProjectDocument(NewProjectSettings newProjectSettings, AsyncCallback<Void> async);
-
     void getLastAccessTime(ProjectId projectId, AsyncCallback<Long> async);
+
+    void getProjectData(ProjectId projectId, AsyncCallback<ProjectData> async);
+
+
+    /**
+     * Gets the list of available project types.
+     * @return A list of project types.  Not null.
+     * @see edu.stanford.bmir.protege.web.client.rpc.data.ProjectType
+     */
+    void getAvailableProjectTypes(AsyncCallback<List<ProjectType>> async);
+
+    void getProjectType(ProjectId projectId, AsyncCallback<ProjectType> async);
+
+    void setProjectType(ProjectId projectId, ProjectType projectType, AsyncCallback<Void> async);
+
+    void getProjectConfiguration(ProjectId projectId, AsyncCallback<ProjectConfigurationInfo> async);
+
+    void setProjectConfiguration(ProjectConfigurationInfo configuration, AsyncCallback<Void> async);
 }

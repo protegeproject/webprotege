@@ -8,9 +8,9 @@ import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/05/2012
  */
-public class ClsDataPropertyLiteralTripleTuple extends TripleTuple<Cls, DataProperty, Literal> {
+public class ClsDataPropertyLiteralTripleTuple extends TripleTuple<NamedClass, DataProperty, Literal> {
 
-    public ClsDataPropertyLiteralTripleTuple(VisualCls subject, VisualDataProperty property, VisualLiteral object) {
+    public ClsDataPropertyLiteralTripleTuple(VisualNamedClass subject, VisualDataProperty property, VisualLiteral object) {
         super(subject, property, object);
     }
 }

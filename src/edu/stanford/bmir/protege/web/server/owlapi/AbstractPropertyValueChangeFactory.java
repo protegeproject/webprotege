@@ -132,15 +132,20 @@ public abstract  class AbstractPropertyValueChangeFactory extends OWLOntologyCha
 
         if(!rm.isWellFormed(entityData)) {
             String name = entityData.getName() == null ? entityData.getBrowserText() : entityData.getName();
-            IRI iri = getRenderingManager().getIRI(name);
-            if(getRootOntology().containsEntityInSignature(iri, true)) {
-                result = iri;
-            }
-            else {
-                // Oh dear.  Assume a literal.
+            if(name.contains(" ")) {
+                // Assume not an IRI - i.e. a literal
                 result = getRenderingManager().getLiteral(entityData);
             }
-
+            else {
+                IRI iri = getRenderingManager().getIRI(name);
+                if(getRootOntology().containsEntityInSignature(iri, true)) {
+                    result = iri;
+                }
+                else {
+                    // Oh dear.  Assume a literal.
+                    result = getRenderingManager().getLiteral(entityData);
+                }
+            }
         }
         else {
             OWLObject object = rm.getOWLObject(entityData);

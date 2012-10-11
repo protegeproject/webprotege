@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 24/05/2012
  */
-public final class OWLAPIProjectType implements Serializable {
+public final class OWLAPIProjectType {
 
 
     private static final OWLAPIProjectType DEFAULT_PROJECT_TYPE = new OWLAPIProjectType("OWL Project");
@@ -28,8 +28,16 @@ public final class OWLAPIProjectType implements Serializable {
         return OBO_PROJECT_TYPE;
     }
 
+    public static OWLAPIProjectType getProjectType(String typeName) {
+        if(typeName.equals(OBO_PROJECT_TYPE.getProjectTypeName())) {
+            return OBO_PROJECT_TYPE;
+        }
+        else {
+            return DEFAULT_PROJECT_TYPE;
+        }
+    }
 
-    protected OWLAPIProjectType(String projectTypeName) {
+    public OWLAPIProjectType(String projectTypeName) {
         this.projectTypeName = projectTypeName;
     }
 

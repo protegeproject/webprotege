@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.IRI;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -38,7 +39,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
     public OBOTermId getTermId(ProjectId projectId, Entity entity) {
-        IRI iri = IRI.create(entity.getIRI().getIRI());
+        org.semanticweb.owlapi.model.IRI iri = org.semanticweb.owlapi.model.IRI.create(entity.getIRI().getIRI());
         // IRI
         String id = toOBOId(iri);
         // rdfs:label
@@ -52,7 +53,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     public void setTermId(ProjectId projectId, Entity entity, OBOTermId termId) {
         OWLAPIProject project = getProject(projectId);
         OBOTermId existingTermId = getTermId(projectId, entity);
-        IRI iri = IRI.create(entity.getIRI().getIRI());
+        org.semanticweb.owlapi.model.IRI iri = org.semanticweb.owlapi.model.IRI.create(entity.getIRI().getIRI());
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
         StringBuilder description = new StringBuilder();
         if (!existingTermId.getName().equals(termId.getName())) {
@@ -75,7 +76,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     public List<OBOXRef> getXRefs(ProjectId projectId, Entity term) {
         OWLAPIProject project = getProject(projectId);
-        IRI subject = IRI.create(term.getIRI().getIRI());
+        org.semanticweb.owlapi.model.IRI subject = org.semanticweb.owlapi.model.IRI.create(term.getIRI().getIRI());
         List<OBOXRef> xrefs = new ArrayList<OBOXRef>();
         for(OWLAnnotationAssertionAxiom ax : project.getRootOntology().getAnnotationAssertionAxioms(subject)) {
             if(ax.getProperty().getIRI().equals(OBOVocabulary.XREF.getIRI())) {
@@ -88,7 +89,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     public void setXRefs(ProjectId projectId, Entity term, List<OBOXRef> xrefs) throws NotSignedInException {
         ensureSignedIn();
-        IRI subject = IRI.create(term.getIRI().getIRI());
+        org.semanticweb.owlapi.model.IRI subject = org.semanticweb.owlapi.model.IRI.create(term.getIRI().getIRI());
         Set<OWLAnnotation> annotations = convertOBOXRefsToOWLAnnotations(projectId, xrefs);
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
         OWLAPIProject project = getProject(projectId);
@@ -106,7 +107,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         
     }
 
-    private String getStringAnnotationValue(ProjectId projectId, IRI annotationSubject, IRI annotationPropertyIRI, String defaultValue) {
+    private String getStringAnnotationValue(ProjectId projectId, org.semanticweb.owlapi.model.IRI annotationSubject, org.semanticweb.owlapi.model.IRI annotationPropertyIRI, String defaultValue) {
         OWLAPIProject project = getProject(projectId);
         OWLAnnotationAssertionAxiom labelAnnotation = null;
         for (OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
@@ -126,7 +127,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         return label;
     }
 
-    public List<OWLOntologyChange> replaceStringAnnotationValue(ProjectId projectId, IRI annotationSubject, IRI annotationPropertyIRI, String replaceWith) {
+    public List<OWLOntologyChange> replaceStringAnnotationValue(ProjectId projectId, org.semanticweb.owlapi.model.IRI annotationSubject, org.semanticweb.owlapi.model.IRI annotationPropertyIRI, String replaceWith) {
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
         OWLAPIProject project = getProject(projectId);
         OWLOntology rootOntology = project.getRootOntology();
@@ -155,7 +156,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     private String getStringValue(OWLAnnotationAssertionAxiom labelAnnotation) {
         return labelAnnotation.getValue().accept(new OWLAnnotationValueVisitorEx<String>() {
-            public String visit(IRI iri) {
+            public String visit(org.semanticweb.owlapi.model.IRI iri) {
                 return iri.toString();
             }
 
@@ -180,13 +181,13 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
     public OBOTermDefinition getDefinition(ProjectId projectId, Entity term) {
-        if (!(term instanceof Cls)) {
+        if (!(term instanceof NamedClass)) {
             return null;
         }
         OWLAPIProject project = getProject(projectId);
         OWLAnnotationAssertionAxiom definitionAnnotation = null;
         for (OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
-            Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(IRI.create(term.getIRI().getIRI()));
+            Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(org.semanticweb.owlapi.model.IRI.create(term.getIRI().getIRI()));
             for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxioms) {
                 if (ax.getProperty().getIRI().equals(OBOVocabulary.DEF.getIRI())) {
                     definitionAnnotation = ax;
@@ -197,7 +198,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
         if (definitionAnnotation != null) {
             String value = definitionAnnotation.getValue().accept(new OWLAnnotationValueVisitorEx<String>() {
-                public String visit(IRI iri) {
+                public String visit(org.semanticweb.owlapi.model.IRI iri) {
                     return iri.toString();
                 }
 
@@ -222,7 +223,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         Set<OWLAnnotation> xrefAnnotations = convertOBOXRefsToOWLAnnotations(projectId, xRefs);
 
         OWLAPIProject project = getProject(projectId);
-        IRI subject = IRI.create(term.getIRI().getIRI());
+        org.semanticweb.owlapi.model.IRI subject = org.semanticweb.owlapi.model.IRI.create(term.getIRI().getIRI());
         OWLDataFactory df = project.getDataFactory();
         OWLAnnotationProperty defAnnotationProperty = df.getOWLAnnotationProperty(OBOVocabulary.DEF.getIRI());
         OWLLiteral defLiteral = df.getOWLLiteral(definition.getDefinition());
@@ -279,7 +280,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         String oboId = xref.toOBOId();
         String escapedId = escapeSpaces(oboId);
         OBOIdType type = OBOIdType.getIdType(escapedId);
-        IRI xrefIRIValue = type.getIRIFromOBOId(project.getRootOntology().getOntologyID(), new IDSpaceManager(), escapedId);
+        org.semanticweb.owlapi.model.IRI xrefIRIValue = type.getIRIFromOBOId(project.getRootOntology().getOntologyID(), new IDSpaceManager(), escapedId);
         Set<OWLAnnotation> descriptionAnnotations;
         if (xref.getDescription().isEmpty()) {
             descriptionAnnotations = Collections.emptySet();
@@ -307,12 +308,12 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     private OBOXRef toOBOXRef(final OWLAnnotation annotation) {
 
         return annotation.getValue().accept(new OWLAnnotationValueVisitorEx<OBOXRef>() {
-            public OBOXRef visit(IRI iri) {
+            public OBOXRef visit(org.semanticweb.owlapi.model.IRI iri) {
                 String description = "";
                 for (OWLAnnotation anno : annotation.getAnnotations()) {
                     if (anno.getProperty().isComment()) {
                         description = anno.getValue().accept(new OWLAnnotationValueVisitorEx<String>() {
-                            public String visit(IRI iri) {
+                            public String visit(org.semanticweb.owlapi.model.IRI iri) {
                                 return iri.toString();
                             }
 
@@ -342,7 +343,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     private static Pattern SEPARATOR_PATTERN = Pattern.compile("([^#_|_]+)(#_|_)(.+)");
 
-    private OBOXRef toOBOXRef(IRI xrefValue, String description) {
+    private OBOXRef toOBOXRef(org.semanticweb.owlapi.model.IRI xrefValue, String description) {
         // Need to peel apart the ID
         String value = xrefValue.toString();
         if (value.startsWith(OBOPrefix.OBO.getPrefix())) {
@@ -370,7 +371,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     } 
     
 
-    private String toOBOId(IRI iri) {
+    private String toOBOId(org.semanticweb.owlapi.model.IRI iri) {
         String value = iri.toString();
         String localPart = "";
         if (value.startsWith(OBOPrefix.OBO.getPrefix())) {
@@ -414,7 +415,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         Set<OBOTermSynonym> result = new HashSet<OBOTermSynonym>();
         OWLAPIProject project = getProject(projectId);
         for (OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
-            Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(IRI.create(term.getIRI().getIRI()));
+            Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = ontology.getAnnotationAssertionAxioms(org.semanticweb.owlapi.model.IRI.create(term.getIRI().getIRI()));
             for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxioms) {
                 OBOTermSynonymScope synonymScope = getSynonymScope(ax);
                 if (synonymScope != null) {
@@ -428,7 +429,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
     public void setSynonyms(ProjectId projectId, Entity term, Collection<OBOTermSynonym> synonyms) throws NotSignedInException {
-        IRI subject = IRI.create(term.getIRI().getIRI());
+        org.semanticweb.owlapi.model.IRI subject = org.semanticweb.owlapi.model.IRI.create(term.getIRI().getIRI());
         OWLAPIProject project = getProject(projectId);
         OWLOntology rootOntology = project.getRootOntology();
         OWLDataFactory df = project.getDataFactory();
@@ -466,7 +467,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
 
     public OBOTermSynonymScope getSynonymScope(OWLAnnotationAssertionAxiom ax) {
-        IRI iri = ax.getProperty().getIRI();
+        org.semanticweb.owlapi.model.IRI iri = ax.getProperty().getIRI();
         if (iri.equals(OBOVocabulary.EXACT_SYNONYM.getIRI())) {
             return OBOTermSynonymScope.EXACT;
         }
@@ -485,9 +486,9 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     }
 
-    public OBOTermRelationships getRelationships(ProjectId projectId, Cls term) {
+    public OBOTermRelationships getRelationships(ProjectId projectId, NamedClass term) {
         OWLAPIProject project = getProject(projectId);
-        OWLClass cls = project.getDataFactory().getOWLClass(IRI.create(term.getIRI().getIRI()));
+        OWLClass cls = project.getDataFactory().getOWLClass(org.semanticweb.owlapi.model.IRI.create(term.getIRI().getIRI()));
         Set<OWLSubClassOfAxiom> subClassOfAxioms = project.getRootOntology().getSubClassAxiomsForSubClass(cls);
         Set<OBORelationship> rels = new HashSet<OBORelationship>();
         for (OWLSubClassOfAxiom ax : subClassOfAxioms) {
@@ -504,7 +505,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
             if (relationships.size() == conjuncts.size()) {
                 for (OWLObjectSomeValuesFrom rel : relationships) {
                     VisualObjectProperty property = toVisualObjectProperty(rel.getProperty().asOWLObjectProperty(), project);
-                    VisualCls filler = toVisualCls(rel.getFiller().asOWLClass(), project);
+                    VisualNamedClass filler = toVisualCls(rel.getFiller().asOWLClass(), project);
                     OBORelationship oboRel = new OBORelationship(property, filler);
                     rels.add(oboRel);
                 }
@@ -513,7 +514,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         return new OBOTermRelationships(rels);
     }
 
-    public void setRelationships(ProjectId projectId, Cls lastEntity, OBOTermRelationships relationships) {
+    public void setRelationships(ProjectId projectId, NamedClass lastEntity, OBOTermRelationships relationships) {
         ensureSignedIn();
         if (relationships == null) {
             throw new NullPointerException("relationships must not be null");
@@ -532,7 +533,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
 
         OWLOntology ontology = project.getRootOntology();
-        OWLClass cls = dataFactory.getOWLClass(IRI.create(lastEntity.getIRI().getIRI()));
+        OWLClass cls = dataFactory.getOWLClass(org.semanticweb.owlapi.model.IRI.create(lastEntity.getIRI().getIRI()));
         Set<OWLObjectSomeValuesFrom> existingSuperClsesToReplace = new HashSet<OWLObjectSomeValuesFrom>();
         for (OWLSubClassOfAxiom ax : ontology.getSubClassAxiomsForSubClass(cls)) {
             if (ax.getSuperClass() instanceof OWLObjectSomeValuesFrom) {
@@ -577,13 +578,13 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     private OWLObjectSomeValuesFrom toSomeValuesFrom(OWLDataFactory dataFactory, OBORelationship relationship) {
         ObjectProperty property = relationship.getRelation().getObject();
-        OWLObjectProperty owlObjectProperty = dataFactory.getOWLObjectProperty(IRI.create(property.getIRI().getIRI()));
-        Cls filler = relationship.getValue().getObject();
-        OWLClass owlCls = dataFactory.getOWLClass(IRI.create(filler.getIRI().getIRI()));
+        OWLObjectProperty owlObjectProperty = dataFactory.getOWLObjectProperty(org.semanticweb.owlapi.model.IRI.create(property.getIRI().getIRI()));
+        NamedClass filler = relationship.getValue().getObject();
+        OWLClass owlCls = dataFactory.getOWLClass(org.semanticweb.owlapi.model.IRI.create(filler.getIRI().getIRI()));
         return dataFactory.getOWLObjectSomeValuesFrom(owlObjectProperty, owlCls);
     }
 
-    public OBOTermCrossProduct getCrossProduct(ProjectId projectId, Cls term) {
+    public OBOTermCrossProduct getCrossProduct(ProjectId projectId, NamedClass term) {
         OWLAPIProject project = getProject(projectId);
         OWLDataFactory df = project.getDataFactory();
         OWLClass cls = toOWLClass(df, term);
@@ -609,14 +610,14 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
             }
         }
         Set<OBORelationship> discriminatingRelationships = new HashSet<OBORelationship>();
-        VisualCls visualCls = null;
+        VisualNamedClass visualCls = null;
         if (genus != null) {
             visualCls = toVisualCls(genus, project);
         }
 
         for (OWLObjectSomeValuesFrom rel : relationships) {
             VisualObjectProperty property = toVisualObjectProperty(rel.getProperty().asOWLObjectProperty(), project);
-            VisualCls filler = toVisualCls(rel.getFiller().asOWLClass(), project);
+            VisualNamedClass filler = toVisualCls(rel.getFiller().asOWLClass(), project);
             OBORelationship oboRel = new OBORelationship(property, filler);
             discriminatingRelationships.add(oboRel);
         }
@@ -676,7 +677,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
 
-    public void setCrossProduct(ProjectId projectId, Cls term, OBOTermCrossProduct crossProduct) throws NotSignedInException {
+    public void setCrossProduct(ProjectId projectId, NamedClass term, OBOTermCrossProduct crossProduct) throws NotSignedInException {
         if(crossProduct == null) {
             throw new RuntimeException("crossProduct must not be null");
         }
@@ -686,7 +687,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
         Set<OWLClassExpression> intersectionOperands = new HashSet<OWLClassExpression>();
 
-        VisualCls visualGenus = crossProduct.getGenus();
+        VisualNamedClass visualGenus = crossProduct.getGenus();
         if (visualGenus != null) {
             OWLClass cls = toOWLClass(df, visualGenus.getObject());
             intersectionOperands.add(cls);
@@ -714,17 +715,17 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         
     }
 
-    private OWLClass toOWLClass(OWLDataFactory dataFactory, Cls cls) {
-        return dataFactory.getOWLClass(IRI.create(cls.getIRI().getIRI()));
+    private OWLClass toOWLClass(OWLDataFactory dataFactory, NamedClass cls) {
+        return dataFactory.getOWLClass(org.semanticweb.owlapi.model.IRI.create(cls.getIRI().getIRI()));
     }
 
 
-    private VisualCls toVisualCls(OWLClass cls, OWLAPIProject project) {
-        return new VisualCls(new Cls(new WebProtegeIRI(cls.getIRI().toString())), project.getRenderingManager().getBrowserText(cls));
+    private VisualNamedClass toVisualCls(OWLClass cls, OWLAPIProject project) {
+        return new VisualNamedClass(new NamedClass(IRI.create(cls.getIRI().toString())), project.getRenderingManager().getBrowserText(cls));
     }
 
     private VisualObjectProperty toVisualObjectProperty(OWLObjectProperty property, OWLAPIProject project) {
-        return new VisualObjectProperty(new ObjectProperty(new WebProtegeIRI(property.getIRI().toString())), project.getRenderingManager().getBrowserText(property));
+        return new VisualObjectProperty(new ObjectProperty(IRI.create(property.getIRI().toString())), project.getRenderingManager().getBrowserText(property));
     }
 
 }

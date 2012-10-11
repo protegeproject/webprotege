@@ -20,6 +20,7 @@ public class BioPortalSearchPortlet extends AbstractEntityPortlet {
         setTitle("BioPortal Search");
         searchComp = new BioPortalSearchComponent(project, false);
         add(searchComp);
+        reload();
     }
 
     @Override

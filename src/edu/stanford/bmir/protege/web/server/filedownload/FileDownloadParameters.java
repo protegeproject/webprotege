@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,6 +39,33 @@ public class FileDownloadParameters {
         return new ProjectId(projectName);
     }
 
+    /**
+     * Gets the requested revision number from the request parameters.
+     * @return The requested revision.  If no revision in particular has been requested then the revision number
+     * that denotes the head revision will be returned.  Also, if the revision number is malformed in the request then
+     * the RevisionNumber corresponding the head revision will be returned.
+     */
+    public RevisionNumber getRequestedRevision() {
+        String revisionString = getRawRevisionParameter();
+        if(revisionString == null) {
+            return RevisionNumber.getHeadRevisionNumber();
+        }
+        else {
+            try {
+                long rev = Long.parseLong(revisionString);
+                return RevisionNumber.getRevisionNumber(rev);
+            }
+            catch (NumberFormatException e) {
+                // TODO: Log!
+                return RevisionNumber.getHeadRevisionNumber();
+            }
+        }
+    }
+
+
+    private String getRawRevisionParameter() {
+        return request.getParameter(FileDownloadConstants.REVISION);
+    }
 
     /**
      * Gets the raw project name request parameter.

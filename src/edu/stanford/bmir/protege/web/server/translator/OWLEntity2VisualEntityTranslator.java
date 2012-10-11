@@ -21,7 +21,7 @@ public class OWLEntity2VisualEntityTranslator implements OWLEntityVisitorEx<Visu
     }
 
     public VisualEntity<?> visit(OWLClass cls) {
-        return new VisualCls((Cls) cls.accept(entity2EntityTranslator), getShortForm(cls));
+        return new VisualNamedClass((NamedClass) cls.accept(entity2EntityTranslator), getShortForm(cls));
     }
 
     private String getShortForm(OWLEntity cls) {

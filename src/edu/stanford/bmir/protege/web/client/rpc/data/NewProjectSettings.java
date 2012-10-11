@@ -16,6 +16,8 @@ public class NewProjectSettings implements Serializable {
 
     private String projectDescription;
 
+    private ProjectType projectType;
+
     private DocumentId sourceDocumentId = null;
 
 
@@ -30,18 +32,23 @@ public class NewProjectSettings implements Serializable {
      * @param projectOwner The desired owner of the project.  Not null.
      * @param projectName The desired project name for the new project.  Not null.
      * @param projectDescription The desired project description for the new project.  Not null.
+     * @param projectType The type of projectType. Not null.
      * @throws NullPointerException if either projectOwner, projectName or projectDescription are null.
      */
-    public NewProjectSettings(UserId projectOwner, String projectName, String projectDescription) {
+    public NewProjectSettings(UserId projectOwner, String projectName, String projectDescription, ProjectType projectType) {
         if (projectName == null) {
             throw new NullPointerException("projectName must not be null.");
         }
         if (projectDescription == null) {
             throw new NullPointerException("projectDescription must not be null.");
         }
+        if (projectType == null) {
+            throw new NullPointerException("projectType must not be null");
+        }
         this.projectOwner = projectOwner;
         this.projectName = projectName;
         this.projectDescription = projectDescription;
+        this.projectType = projectType;
     }
 
 
@@ -52,13 +59,14 @@ public class NewProjectSettings implements Serializable {
      * @param projectOwner The desired owner of the project.  Not null.
      * @param projectName The desired project name for the new project.  Not null.
      * @param projectDescription The desired project description for the new project.  Not null.
+     * @param projectType The type of projectType. Not null.
      * @param sourceDocumentId A {@link DocumentId} object that should be used to identify the source document with
      * which to initialise a project.  May be null.
      * @throws NullPointerException if either projectOwner, projectName, projectDescription or sourceDocumentId are
      *                              null.
      */
-    public NewProjectSettings(UserId projectOwner, String projectName, String projectDescription, DocumentId sourceDocumentId) {
-        this(projectOwner, projectName, projectDescription);
+    public NewProjectSettings(UserId projectOwner, String projectName, String projectDescription, ProjectType projectType, DocumentId sourceDocumentId) {
+        this(projectOwner, projectName, projectDescription, projectType);
         this.sourceDocumentId = sourceDocumentId;
     }
 
@@ -85,6 +93,14 @@ public class NewProjectSettings implements Serializable {
      */
     public String getProjectDescription() {
         return projectDescription;
+    }
+
+    /**
+     * Gets the desired type of the project.
+     * @return The project type.
+     */
+    public ProjectType getProjectType() {
+        return projectType;
     }
 
     /**

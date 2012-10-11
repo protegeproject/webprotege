@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.SortDir;
@@ -47,8 +46,6 @@ import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.PropertyGridService;
-import edu.stanford.bmir.protege.web.client.rpc.PropertyGridServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
@@ -56,9 +53,6 @@ import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil.SelectionCallback;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
-import org.semanticweb.owlapi.model.IRI;
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 /**
  * A grid that shows all the properties of an entity. Can be used with classes,
@@ -341,7 +335,7 @@ public class AllPropertiesGrid extends EditorGridPanel {
         setAnimCollapse(true);
         setClicksToEdit(
                 UIUtil.getIntegerConfigurationProperty(
-                        project.getProjectConfiguration(), 
+                        project.getProjectLayoutConfiguration(),
                         FormConstants.CLICKS_TO_EDIT, 
                         FormConstants.DEFAULT_CLICKS_TO_EDIT));
         setView(gridView);

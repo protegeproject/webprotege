@@ -273,6 +273,12 @@ public class RenderingManager {
             EntityData entityData = new EntityData(entity.getIRI().toString());
             String browserText = getBrowserText(entity);
             entityData.setBrowserText(browserText);
+            if(entity instanceof OWLClass) {
+                entityData.setValueType(ValueType.Cls);
+            }
+            else if(entity instanceof OWLIndividual) {
+                entityData.setValueType(ValueType.Instance);
+            }
             return entityData;
         }
     }

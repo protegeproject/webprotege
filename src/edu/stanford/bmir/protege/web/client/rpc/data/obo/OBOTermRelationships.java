@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.obo;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Cls;
-
 import java.io.Serializable;
 import java.util.*;
 

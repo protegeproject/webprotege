@@ -8,13 +8,13 @@ import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/05/2012
  */
-public class ClsAnnotationPropertyLiteralTripleTuple extends TripleTuple<Cls, AnnotationProperty, Literal> {
+public class ClsAnnotationPropertyLiteralTripleTuple extends TripleTuple<NamedClass, AnnotationProperty, Literal> {
 
-    public ClsAnnotationPropertyLiteralTripleTuple(VisualObject<Cls> subject, VisualObject<AnnotationProperty> property, VisualObject<Literal> literalVisualObject) {
+    public ClsAnnotationPropertyLiteralTripleTuple(VisualObject<NamedClass> subject, VisualObject<AnnotationProperty> property, VisualObject<Literal> literalVisualObject) {
         super(subject, property, literalVisualObject);
     }
 
-    public ClsAnnotationPropertyLiteralTripleTuple(VisualCls subject, VisualAnnotationProperty property, VisualLiteral object) {
+    public ClsAnnotationPropertyLiteralTripleTuple(VisualNamedClass subject, VisualAnnotationProperty property, VisualLiteral object) {
         super(subject, property, object);
     }
 }

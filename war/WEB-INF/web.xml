@@ -145,6 +145,21 @@
         <servlet-class>edu.stanford.bmir.protege.web.server.RecaptchaServiceImpl</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>RevisionManager</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.RevisionManagerServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EntityIdGeneratorSettingsService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.EntityIdGeneratorSettingsServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>BioPortalAPIService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.BioPortalAPIServiceImpl</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>DownloadServlet</servlet-name>
         <url-pattern>/download</url-pattern>
@@ -285,7 +300,20 @@
         <url-pattern>/webprotege/entitylookupservice</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>RevisionManager</servlet-name>
+        <url-pattern>/webprotege/revisionmanager</url-pattern>
+    </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>EntityIdGeneratorSettingsService</servlet-name>
+        <url-pattern>/webprotege/entityidgeneratorsettings</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>BioPortalAPIService</servlet-name>
+        <url-pattern>/webprotege/bioportalapi</url-pattern>
+    </servlet-mapping>
 
     <!-- Default page to serve -->
     <welcome-file-list>

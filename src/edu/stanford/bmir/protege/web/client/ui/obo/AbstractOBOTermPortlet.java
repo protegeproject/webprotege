@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.WebProtege;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
@@ -39,9 +38,10 @@ public abstract class AbstractOBOTermPortlet extends AbstractEntityPortlet {
     @Override
     final public void setEntity(EntityData newEntityData) {
         try {
-            if(_currentEntity == newEntityData && newEntityData != null) {
-                return;
-            }
+//            if(_currentEntity == newEntityData && newEntityData != null) {
+//                clearDisplay();
+//                return;
+//            }
             Entity entity = getCurrentEntity();
             if (entity != null && isDirty()) {
                 commitChangesForEntity(entity);
@@ -108,9 +108,9 @@ public abstract class AbstractOBOTermPortlet extends AbstractEntityPortlet {
         if(entityData == null) {
             return null;
         }
-        WebProtegeIRI iri = new WebProtegeIRI(entityData.getName());
+        IRI iri = IRI.create(entityData.getName());
         if(entityData.getValueType() == ValueType.Cls) {
-            return new Cls(iri);
+            return new NamedClass(iri);
         }
         else if(entityData.getValueType() == ValueType.Property) {
             return new ObjectProperty(iri);

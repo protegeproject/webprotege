@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -12,9 +13,11 @@ public class OWLAPIProjectConfiguration {
 
     private static final String PROJECT_TYPE_NAME_KEY = "project.type-name";
 
+
     private OWLAPIEntityEditorKitFactory entityEditorKitFactory;
     
     private OWLAPIProjectType projectType;
+
 
     public OWLAPIProjectConfiguration(OWLAPIProjectAttributes attributes) {
         entityEditorKitFactory = createOWLEntityEditorKitFactory(attributes);
@@ -63,5 +66,9 @@ public class OWLAPIProjectConfiguration {
 
     public OWLAPIProjectType getProjectType() {
         return projectType;
+    }
+
+    public void setProjectType(OWLAPIProjectType projectType) {
+        this.projectType = projectType;
     }
 }

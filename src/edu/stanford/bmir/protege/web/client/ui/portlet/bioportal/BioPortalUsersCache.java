@@ -26,6 +26,7 @@ public class BioPortalUsersCache {
 
     //linked BP user; one per WebProtege instance
     private static String currentBpUser = null;
+    private static String bpRestBase = null;
 
 
     public static void initBioPortalUsersMap(final AbstractAsyncHandler<Void> callback, boolean forceInit) {
@@ -45,7 +46,7 @@ public class BioPortalUsersCache {
                                                                                  }));
 
          final Store store = new Store(reader);
-         BioportalProposalsManager.getBioportalProposalsManager().getBioPortalUsers(null, new AbstractAsyncHandler<String>() {
+         BioportalProposalsManager.getBioportalProposalsManager().getBioPortalUsers(bpRestBase, new AbstractAsyncHandler<String>() {
             @Override
             public void handleFailure(Throwable caught) {
                 GWT.log("Could not retrieve BP users");
@@ -57,6 +58,7 @@ public class BioPortalUsersCache {
             @Override
             public void handleSuccess(String usersXml) {
                 computationInProgress = false;
+                id2name.clear();
 
                store.loadXmlData(usersXml, false);
                Record[] records = store.getRecords();
@@ -99,6 +101,18 @@ public class BioPortalUsersCache {
     public static void setCurrentBpUser(String currentBpUser) {
         BioPortalUsersCache.currentBpUser = currentBpUser;
     }
+
+
+    public static void setBpRestBase(String bpRestBase) {
+        BioPortalUsersCache.bpRestBase = bpRestBase;
+        initBioPortalUsersMap(null, true);
+    }
+
+
+    public static String getBpRestBase() {
+        return bpRestBase;
+    }
+
 
     public static void clearCache() {
         id2name.clear();

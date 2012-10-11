@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermCrossProduct;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Cls;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.NamedClass;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
 
 import java.util.Collection;
@@ -42,11 +42,11 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void displayEntity(Entity entity) {
-        if(!(entity instanceof Cls)) {
+        if(!(entity instanceof NamedClass)) {
             editor.clearValue();
         }
         else {
-            getService().getCrossProduct(getProjectId(), (Cls) entity, new AsyncCallback<OBOTermCrossProduct>() {
+            getService().getCrossProduct(getProjectId(), (NamedClass) entity, new AsyncCallback<OBOTermCrossProduct>() {
                 public void onFailure(Throwable caught) {
                     MessageBox.alert(caught.getMessage());
                     GWT.log(caught.getMessage(), caught);
@@ -66,11 +66,11 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void commitChangesForEntity(Entity entity) {
-        if(!(entity instanceof Cls)) {
+        if(!(entity instanceof NamedClass)) {
             return;
         }
         OBOTermCrossProduct crossProduct = editor.getValue();
-        getService().setCrossProduct(getProjectId(), (Cls) entity, crossProduct, new AsyncCallback<Void>() {
+        getService().setCrossProduct(getProjectId(), (NamedClass) entity, crossProduct, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
                 if(caught instanceof NotSignedInException) {
                     MessageBox.alert("You are not signed in.  Changes not saved.  You must be signed in for your changes to be saved.");

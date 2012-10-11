@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.obo;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualCls;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualNamedClass;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualObjectProperty;
 
 import java.io.Serializable;
@@ -16,12 +16,12 @@ public class OBORelationship implements Serializable, Comparable<OBORelationship
 
     private VisualObjectProperty relation;
     
-    private VisualCls value;
+    private VisualNamedClass value;
 
     private OBORelationship() {
     }
 
-    public OBORelationship(VisualObjectProperty relation, VisualCls value) {
+    public OBORelationship(VisualObjectProperty relation, VisualNamedClass value) {
         this.relation = relation;
         this.value = value;
     }
@@ -30,7 +30,7 @@ public class OBORelationship implements Serializable, Comparable<OBORelationship
         return relation;
     }
 
-    public VisualCls getValue() {
+    public VisualNamedClass getValue() {
         return value;
     }
 

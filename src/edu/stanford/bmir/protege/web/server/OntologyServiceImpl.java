@@ -125,12 +125,6 @@ public class OntologyServiceImpl extends RemoteServiceServlet implements Ontolog
 
     }
 
-//    public int createProject(NewProjectInfo newProjectInfo, String userName) {
-//        MetaProjectManager metaProjectManager = Protege3ProjectManager.getProjectManager().getMetaProjectManager();
-//        Project project = metaProjectManager.createProject(newProjectInfo, userName);
-//        return 0;
-//    }
-
     public String getOntologyURI(String projectName) {
         Project project = getProject(projectName);
         RDFResource owlOntology = getOWLOntologyObject(project);

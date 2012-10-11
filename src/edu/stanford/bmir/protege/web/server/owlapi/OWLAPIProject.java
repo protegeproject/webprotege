@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectDocumentNotFoundException;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.notes.OWLAPINotesManagerNotesAPIImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.notes.OWLAPINotesManager;
+import edu.stanford.smi.protege.util.Log;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
 import org.coode.owlapi.rdf.rdfxml.RDFXMLOntologyStorer;
@@ -29,6 +30,9 @@ import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOntol
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -41,7 +45,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class OWLAPIProject {
 
-    private ProjectId projectId;
+    private OWLAPIProjectDocumentStore documentStore;
 
     final private OWLAPIProjectOWLOntologyManager manager;
 
@@ -81,8 +85,22 @@ public class OWLAPIProject {
     
     private final Lock projectChangeWriteLock = projectChangeLock.writeLock();
 
+    private final ExecutorService projectAttributesSaver = Executors.newSingleThreadExecutor();;
 
-    private OWLAPIProject() {
+
+    public static synchronized OWLAPIProject getProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
+        return new OWLAPIProject(documentStore);
+    }
+
+
+    /**
+     * Constructs and OWLAPIProject over the sources specified by the {@link OWLAPIProjectDocumentStore}.
+     * @param documentStore The document store.
+     * @throws IOException If there was a problem reading sources.
+     * @throws OWLParserException If there was a problem parsing sources.
+     */
+    private OWLAPIProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
+        this.documentStore = documentStore;
         final boolean useCachingInDataFactory = false;
         final boolean useCompressionInDataFactory = false;
         OWLDataFactory df = new OWLDataFactoryImpl(useCachingInDataFactory, useCompressionInDataFactory);
@@ -113,42 +131,22 @@ public class OWLAPIProject {
 
         manager.setDelegate(delegateManager);
 
-    }
-    
-    public OWLAPIProject(ProjectId projectId) throws ProjectDocumentNotFoundException, IOException, OWLOntologyCreationException, OWLParserException {
-        this();
-        OWLAPIProjectDocumentStoreImpl documentStore = OWLAPIProjectDocumentStoreImpl.getProjectDocumentStore(projectId);
-        if(!documentStore.exists()) {
-            throw new ProjectDocumentNotFoundException(projectId);
-        }
-        this.projectId = projectId;
-        loadProject(projectId);
+        loadProject();
         initialiseProjectMachinery();
 
     }
-
-
     
 
-    public OWLAPIProject(NewProjectSettings newProjectSettings) throws IOException, OWLParserException {
-        this();
-        OWLAPIProjectDocumentStoreImpl documentStore = OWLAPIProjectDocumentStoreImpl.createNewProject(newProjectSettings);
-        this.projectId = new ProjectId(newProjectSettings.getProjectName());
-        loadProject(projectId);
-        initialiseProjectMachinery();
-    }
 
 
 
     /**
      * Loads the specified project.  This method is only called from the constructor of this class.
-     * @param projectId The project to be loaded.
      */
-    private void loadProject(ProjectId projectId) throws IOException, BinaryOWLParseException {
+    private void loadProject() throws IOException, BinaryOWLParseException {
         try {
-            OWLAPIProjectDocumentStoreImpl documentStore = OWLAPIProjectDocumentStoreImpl.getProjectDocumentStore(projectId);
             if(!documentStore.exists()) {
-                throw new ProjectDocumentNotFoundException(projectId);
+                throw new ProjectDocumentNotFoundException(documentStore.getProjectId());
             }
             ontology = documentStore.loadRootOntologyIntoManager(delegateManager);
             delegateManager.addOntologyChangeListener(new OWLOntologyChangeListener() {
@@ -158,6 +156,19 @@ public class OWLAPIProject {
             });
             manager.sealDelegate();
             projectAttributes = documentStore.getProjectAttributes();
+            projectAttributes.addListener(new OWLAPIProjectAttributesListener() {
+                public void attributeRemoved(OWLAPIProjectAttributes attributes, String attributeName) {
+                    saveProjectAttributes();
+                }
+
+                public void attributeChanged(OWLAPIProjectAttributes attributes, String attributeName) {
+                    saveProjectAttributes();
+                }
+
+                public void attributesRemoved(OWLAPIProjectAttributes attributes) {
+                    saveProjectAttributes();
+                }
+            });
             projectConfiguration = new OWLAPIProjectConfiguration(projectAttributes);
 
 
@@ -165,6 +176,19 @@ public class OWLAPIProject {
         catch (OWLOntologyCreationException e) {
             throw new RuntimeException("Failed to load project: " + e.getMessage(), e);
         }
+    }
+    
+    private void saveProjectAttributes() {
+        projectAttributesSaver.submit(new Runnable() {
+            public void run() {
+                try {
+                    documentStore.saveProjectAttributes(projectAttributes);
+                }
+                catch (IOException e) {
+                    Log.getLogger().severe("Could not save project attributes. Reason: " + e.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -178,10 +202,6 @@ public class OWLAPIProject {
         changeManager = new OWLAPIChangeManager(this);
 
         notesManager = new OWLAPINotesManagerNotesAPIImpl(this);
-
-
-//        entityCreatorFactory = new OBOEntityCreatorFactory(this, 7);
-
 
 
         // MH: All of this is highly dodgy and not at all thread safe.  It is therefore BROKEN!  Needs fixing.
@@ -206,32 +226,15 @@ public class OWLAPIProject {
 
 
     public ProjectId getProjectId() {
-        return projectId;
+        return documentStore.getProjectId();
     }
 
-    public OWLAPIProjectConfiguration getProjectConfiguration() {
-        return projectConfiguration;
-    }
+//    public OWLAPIProjectConfiguration getProjectConfiguration() {
+//        return projectConfiguration;
+//    }
 
     private void handleOntologiesChanged(List<? extends OWLOntologyChange> changes) {
-        OWLAPIProjectDocumentStoreImpl documentStore = OWLAPIProjectDocumentStoreImpl.getProjectDocumentStore(projectId);
         documentStore.saveOntologyChanges(Collections.unmodifiableList(changes));
-        
-//
-//        // Could check here to see if changes were the last ones that were logged.
-//        Collection<OWLOntology> ontologies = new HashSet<OWLOntology>();
-//        for (OWLOntologyChange change : changes) {
-//            ontologies.add(change.getOntology());
-//        }
-//
-//        for (OWLOntology ontology : ontologies) {
-//            try {
-//                manager.saveOntology(ontology);
-//            }
-//            catch (OWLOntologyStorageException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
 
@@ -284,7 +287,7 @@ public class OWLAPIProject {
         return notesManager;
     }
 
-    public long getRevision() {
+    public RevisionNumber getRevisionNumber() {
         try {
             projectChangeReadLock.lock();
             return changeManager.getCurrentRevision();
@@ -300,6 +303,12 @@ public class OWLAPIProject {
             List<OWLOntologyChange> appliedChanges = delegateManager.applyChanges(changes);
             if (!appliedChanges.isEmpty()) {
                 changeManager.logChanges(userId, appliedChanges, changeDescription);
+                OWLAPIProjectMetadataManager metadataManager = OWLAPIProjectMetadataManager.getManager();
+                metadataManager.setLastModifiedTime(getProjectId(), System.currentTimeMillis());
+                metadataManager.setLastModifiedBy(getProjectId(), userId);
+
+//                projectAttributes.setLongAttribute("lastModified", System.currentTimeMillis());
+//                projectAttributes.setStringAttribute("lastModifiedBy", userId.getUserName());
             }
         }
         finally {

@@ -8,7 +8,7 @@ package edu.stanford.bmir.protege.web.client.rpc.data.primitive;
  */
 public interface EntityVisitor<R,E extends Exception> {
 
-    R visit(Cls cls) throws E;
+    R visit(NamedClass cls) throws E;
     
     R visit(ObjectProperty property) throws E;
     

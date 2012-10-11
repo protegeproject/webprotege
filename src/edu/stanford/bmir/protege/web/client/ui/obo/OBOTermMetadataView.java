@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Cls;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.NamedClass;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
 
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class OBOTermMetadataView extends FlowPanel {
                 }
             });
 
-            service.getRelationships(projectId, (Cls) subject, new AsyncCallback<OBOTermRelationships>() {
+            service.getRelationships(projectId, (NamedClass) subject, new AsyncCallback<OBOTermRelationships>() {
                 public void onFailure(Throwable caught) {
                 }
 
@@ -96,7 +96,7 @@ public class OBOTermMetadataView extends FlowPanel {
                 }
             });
 
-            service.getCrossProduct(projectId, (Cls) subject, new AsyncCallback<OBOTermCrossProduct>() {
+            service.getCrossProduct(projectId, (NamedClass) subject, new AsyncCallback<OBOTermCrossProduct>() {
                 public void onFailure(Throwable caught) {
                 }
 
@@ -132,10 +132,10 @@ public class OBOTermMetadataView extends FlowPanel {
             service.setDefinition(projectId, subject, definitionEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
         if(relationshipEditor.isDirty()) {
-            service.setRelationships(projectId, (Cls) subject, relationshipEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
+            service.setRelationships(projectId, (NamedClass) subject, relationshipEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
         if(crossProductEditor.isDirty()) {
-            service.setCrossProduct(projectId, (Cls) subject, crossProductEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
+            service.setCrossProduct(projectId, (NamedClass) subject, crossProductEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
         if(synonymListEditor.isDirty()) {
             service.setSynonyms(projectId, subject, synonymListEditor.getValues(), new OBOTermEditorApplyChangesAsyncCallback());

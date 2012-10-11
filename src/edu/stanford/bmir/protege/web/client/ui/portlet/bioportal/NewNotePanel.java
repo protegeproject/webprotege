@@ -28,6 +28,7 @@ public class NewNotePanel extends FormPanel {
     private Record record;
     private EntityData entityData;
     private String ontologyVersionId; // in case record is null
+    private String bpRestBase;
 
     private TextField subjectField;
     private HtmlEditor bodyField;
@@ -80,6 +81,14 @@ public class NewNotePanel extends FormPanel {
 
     public void setNoteSentCallback(AsyncHandler<Void> noteSentCallback) {
         this.noteSentCallback = noteSentCallback;
+    }
+
+    public void setBpRestBase(String bpRestBase) {
+        this.bpRestBase = bpRestBase;
+    }
+
+    public String getBpRestBase() {
+        return bpRestBase;
     }
 
     public void showPopup(String title) {
@@ -144,7 +153,7 @@ public class NewNotePanel extends FormPanel {
         String ontologyId = record == null ? ontologyVersionId : record.getAsString(BioPortalNoteConstants.ONTOLOGY_ID);
         boolean isVirtual = record == null ? false : true;
 
-        BioportalProposalsManager.getBioportalProposalsManager().createNote(null, null,
+        BioportalProposalsManager.getBioportalProposalsManager().createNote(null, bpRestBase,
                 ontologyId, isVirtual,
                 BioPortalNoteConstants.NOTE_TYPE_COMMENT,
                 appliesToId, appliesToType,

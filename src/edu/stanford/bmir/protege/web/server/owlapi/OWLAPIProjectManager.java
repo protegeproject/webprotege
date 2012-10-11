@@ -33,11 +33,4 @@ public class OWLAPIProjectManager {
     public long getLastAccessTime(ProjectId projectId) {
         return projectCache.getLastAccessTime(projectId);
     }
-    
-    public OWLAPIProject overwriteProject(NewProjectSettings newProjectSettings) {
-        ProjectId projectId = new ProjectId(newProjectSettings.getProjectName());
-        return projectCache.getProject(projectId);
-    }
-
-
 }

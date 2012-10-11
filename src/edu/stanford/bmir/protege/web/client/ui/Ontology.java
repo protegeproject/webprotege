@@ -47,7 +47,8 @@ import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectConfigurationServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
@@ -181,7 +182,7 @@ public class Ontology extends TabPanel {
     }
 
     protected void createOntolgyForm() {
-        List<AbstractTab> tabs = project.getLayoutManager().createTabs(project.getProjectConfiguration());
+        List<AbstractTab> tabs = project.getLayoutManager().createTabs(project.getProjectLayoutConfiguration());
         for (AbstractTab tab : tabs) {
             addTab(tab);
             updateTabStyle(tab);
@@ -189,7 +190,7 @@ public class Ontology extends TabPanel {
         if (tabs.size() > 0) {
             activate(0);
         }
-        if (UIUtil.getBooleanConfigurationProperty(project.getProjectConfiguration(), SHOW_ONTOLOGY_TOOLBAR, true) ) {
+        if (UIUtil.getBooleanConfigurationProperty(project.getProjectLayoutConfiguration(), SHOW_ONTOLOGY_TOOLBAR, true) ) {
             createToolbarButtons();
         }
         doLayout();
@@ -372,7 +373,7 @@ public class Ontology extends TabPanel {
             MessageBox.alert("Not logged in", "To save the layout, you need to login first.");
             return;
         }
-        ProjectConfiguration config = project.getProjectConfiguration();
+        ProjectLayoutConfiguration config = project.getProjectLayoutConfiguration();
         config.setOntologyName(project.getProjectName());
         ProjectConfigurationServiceManager.getInstance().saveProjectConfiguration(project.getProjectName(),
                 GlobalSettings.getGlobalSettings().getUserName(), config, new SaveConfigHandler());
@@ -486,7 +487,7 @@ public class Ontology extends TabPanel {
             UserDefinedTab userDefinedTab = new UserDefinedTab(project);
             TabConfiguration userDefinedTabConfiguration = getUserDefinedTabConfiguration();
             project.getLayoutManager().setupTab(userDefinedTab, userDefinedTabConfiguration);
-            project.getProjectConfiguration().addTab(userDefinedTabConfiguration);
+            project.getProjectLayoutConfiguration().addTab(userDefinedTabConfiguration);
             return userDefinedTab;
         }
 
@@ -544,7 +545,7 @@ public class Ontology extends TabPanel {
         }
     }
 
-    class GetProjectConfigurationHandler extends AbstractAsyncHandler<ProjectConfiguration> {
+    class GetProjectConfigurationHandler extends AbstractAsyncHandler<ProjectLayoutConfiguration> {
         private final Project project;
 
         public GetProjectConfigurationHandler(Project project) {
@@ -560,8 +561,8 @@ public class Ontology extends TabPanel {
         }
 
         @Override
-        public void handleSuccess(ProjectConfiguration config) {
-            project.setProjectConfiguration(config);
+        public void handleSuccess(ProjectLayoutConfiguration config) {
+            project.setProjectLayoutConfiguration(config);
             createOntolgyForm();
             doLayout();
 

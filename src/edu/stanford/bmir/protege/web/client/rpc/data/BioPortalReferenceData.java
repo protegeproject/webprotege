@@ -50,7 +50,7 @@ public class BioPortalReferenceData implements Serializable {
                 + bpRestBaseUrl  + ", bpRestCallSuffix=" + bpRestCallSuffix 
                 + "]";
 	}
-	
+
 	public boolean createAsClass() {
 		return createAsClass;
 	}
