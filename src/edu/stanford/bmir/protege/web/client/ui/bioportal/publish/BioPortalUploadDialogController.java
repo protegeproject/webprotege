@@ -1,12 +1,10 @@
-package edu.stanford.bmir.protege.web.client.ui.bioportal.upload;
+package edu.stanford.bmir.protege.web.client.ui.bioportal.publish;
 
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalUploadInfo;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 
 /**

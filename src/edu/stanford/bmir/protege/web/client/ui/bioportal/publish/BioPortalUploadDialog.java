@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.bioportal.upload;
+package edu.stanford.bmir.protege.web.client.ui.bioportal.publish;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
