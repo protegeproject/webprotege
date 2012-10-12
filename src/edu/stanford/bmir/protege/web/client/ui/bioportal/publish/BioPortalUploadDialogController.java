@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.bioportal.publish;
 
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalUploadInfo;
+import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDia
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/10/2012
  */
-public class BioPortalUploadDialogController extends WebProtegeOKCancelDialogController<BioPortalUploadInfo> {
+public class BioPortalUploadDialogController extends WebProtegeOKCancelDialogController<PublishToBioPortalInfo> {
 
     public static final String TITLE = "Publish Ontology to BioPortal";
 
@@ -35,7 +35,7 @@ public class BioPortalUploadDialogController extends WebProtegeOKCancelDialogCon
     }
 
     @Override
-    public BioPortalUploadInfo getData() {
+    public PublishToBioPortalInfo getData() {
         return publishForm.getData();
     }
 }

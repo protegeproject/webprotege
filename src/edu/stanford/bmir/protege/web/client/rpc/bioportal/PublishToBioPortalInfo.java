@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/10/2012
  */
-public class BioPortalUploadInfo implements Serializable {
+public class PublishToBioPortalInfo implements Serializable {
 
 //    StringBuffer params = new StringBuffer();
 //    addIfNotNull(params, "downloadLocation", downloadLocation);
@@ -69,7 +69,7 @@ public class BioPortalUploadInfo implements Serializable {
     private String publicationLink;
 
 
-    public BioPortalUploadInfo(BioPortalUserId userId,  BioPortalOntologyId bioPortalOntologyId, String ontologyDisplayName, String ontologyAbbreviation, String ontologyDescription, String contactName, String contactEmailAddress, String versionNumber) {
+    public PublishToBioPortalInfo(BioPortalUserId userId, BioPortalOntologyId bioPortalOntologyId, String ontologyDisplayName, String ontologyAbbreviation, String ontologyDescription, String contactName, String contactEmailAddress, String versionNumber) {
         this.userId = userId;
         this.ontologyId = bioPortalOntologyId;
         this.ontologyDisplayName = ontologyDisplayName;
@@ -80,7 +80,7 @@ public class BioPortalUploadInfo implements Serializable {
         this.versionNumber = versionNumber;
     }
 
-    public BioPortalUploadInfo(BioPortalUserId userId, BioPortalOntologyId bioPortalOntologyId, String ontologyDisplayName, String ontologyAbbreviation, String ontologyDescription, String contactName, String contactEmailAddress, String versionNumber, String homepageLink, String documentationLink, String publicationLink) {
+    public PublishToBioPortalInfo(BioPortalUserId userId, BioPortalOntologyId bioPortalOntologyId, String ontologyDisplayName, String ontologyAbbreviation, String ontologyDescription, String contactName, String contactEmailAddress, String versionNumber, String homepageLink, String documentationLink, String publicationLink) {
         this.userId = userId;
         this.ontologyId = bioPortalOntologyId;
         this.ontologyDisplayName = ontologyDisplayName;
@@ -97,7 +97,7 @@ public class BioPortalUploadInfo implements Serializable {
     /**
      * Private constructor for serialization purposes.
      */
-    private BioPortalUploadInfo() {
+    private PublishToBioPortalInfo() {
 
     }
 

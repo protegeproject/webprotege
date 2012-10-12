@@ -38,7 +38,7 @@ import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.ui.bioportal.upload.BioPortalUploadDialog;
+import edu.stanford.bmir.protege.web.client.ui.bioportal.publish.PublishToBioPortalDialog;
 import edu.stanford.bmir.protege.web.client.ui.editprofile.EditProfileUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
@@ -557,7 +557,7 @@ public class TopPanel extends Panel {
     private void showBioPortalUploadDialog(ProjectData projectData) {
         UserData userData = GlobalSettings.getGlobalSettings().getUser();
         if(userData != null && projectData != null) {
-            BioPortalUploadDialog dlg = new BioPortalUploadDialog(projectData, userData);
+            PublishToBioPortalDialog dlg = new PublishToBioPortalDialog(projectData, userData);
             dlg.show();
         }
     }

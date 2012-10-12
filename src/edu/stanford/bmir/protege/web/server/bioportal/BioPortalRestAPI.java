@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.client.rpc.bioportal.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
-import edu.stanford.bmir.protege.web.server.rest.BioPortalRestCall;
 import edu.stanford.bmir.protege.web.server.rest.BioPortalUserInfoRestCall;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
@@ -42,9 +41,9 @@ public class BioPortalRestAPI {
         }
     }
 
-    public void uploadOntologyToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, BioPortalUploadInfo uploadInfo) throws IOException {
+    public void uploadOntologyToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException {
         try {
-            BioPortalUploader uploader = new BioPortalUploader(projectId, revisionNumber, uploadInfo);
+            BioPortalUploader uploader = new BioPortalUploader(projectId, revisionNumber, publishInfo);
             uploader.uploadToBioPortal(bioportalRestAPIBase);
         }
         catch (IOException e) {

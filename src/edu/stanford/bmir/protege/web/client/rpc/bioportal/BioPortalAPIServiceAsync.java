@@ -10,7 +10,7 @@ public interface BioPortalAPIServiceAsync {
 
     void getBioPortalUserInfo(String bioportalAccountName, String bioportalPassword, AsyncCallback<BioPortalUserInfo> async) throws CannotValidateBioPortalCredentials;
 
-    void uploadProjectToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, BioPortalUploadInfo uploadInfo, AsyncCallback<Void> async);
+    void uploadProjectToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo, AsyncCallback<Void> async);
 
     void getBioPortalOntologyInfoForDisplayName(String displayName, AsyncCallback<BioPortalOntologyInfo> async);
 

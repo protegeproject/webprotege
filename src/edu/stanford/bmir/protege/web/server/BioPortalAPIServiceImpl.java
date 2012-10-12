@@ -7,8 +7,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalConfigurationManager;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalMetadataCache;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalRestAPI;
-import edu.stanford.bmir.protegex.bp.importing.BioPortalConfigurationData;
-import edu.stanford.bmir.protegex.bp.importing.BioPortalOntologiesCache;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,9 +32,9 @@ public class BioPortalAPIServiceImpl extends RemoteServiceServlet implements Bio
         return api.getUserInfo(bioportalAccountName, bioportalPassword);
     }
 
-    public void uploadProjectToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, BioPortalUploadInfo uploadInfo) throws IOException {
+    public void uploadProjectToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException {
         BioPortalRestAPI api = getAPI();
-        api.uploadOntologyToBioPortal(projectId, revisionNumber, uploadInfo);
+        api.uploadOntologyToBioPortal(projectId, revisionNumber, publishInfo);
     }
 
 

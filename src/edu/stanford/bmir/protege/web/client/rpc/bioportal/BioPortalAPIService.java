@@ -4,7 +4,6 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,7 +19,7 @@ public interface BioPortalAPIService extends RemoteService {
 
     BioPortalUserInfo getBioPortalUserInfo(String bioportalAccountName, String bioportalPassword) throws CannotValidateBioPortalCredentials;
 
-    void uploadProjectToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, BioPortalUploadInfo uploadInfo) throws IOException;
+    void uploadProjectToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException;
 
     List<BioPortalOntologyInfo> getOwnedOntologies(BioPortalUserId bioPortalUserId) throws BioPortalAPIServiceException;
 

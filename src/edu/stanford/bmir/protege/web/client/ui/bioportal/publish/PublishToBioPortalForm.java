@@ -210,9 +210,9 @@ public class PublishToBioPortalForm extends FlowPanel {
         });
     }
 
-    public BioPortalUploadInfo getData() {
+    public PublishToBioPortalInfo getData() {
         BioPortalOntologyId ontologyId = bioportalOntologyInfo == null ? BioPortalOntologyId.getNull() : bioportalOntologyInfo.getOntologyId();
-        return new BioPortalUploadInfo(bioPortalUserInfo.getUserId(),
+        return new PublishToBioPortalInfo(bioPortalUserInfo.getUserId(),
                 ontologyId,
                 getOntologyDisplayName(),
                 ontologyAbbreviationTextBox.getText().trim(),

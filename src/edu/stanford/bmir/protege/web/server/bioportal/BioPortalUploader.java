@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.bioportal;
 
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalOntologyId;
-import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalUploadInfo;
+import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalUserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
@@ -32,15 +32,15 @@ public class BioPortalUploader {
 
     private File ontologyDocument;
 
-    private BioPortalUploadInfo uploadInfo;
+    private PublishToBioPortalInfo publishInfo;
 
-    public BioPortalUploader(File ontologyDocument, BioPortalUploadInfo bioPortalUploadInfo) {
+    public BioPortalUploader(File ontologyDocument, PublishToBioPortalInfo publishInfo) {
         this.ontologyDocument = ontologyDocument;
-        this.uploadInfo = bioPortalUploadInfo;
+        this.publishInfo = publishInfo;
     }
 
-    public BioPortalUploader(ProjectId projectId, RevisionNumber revisionNumber, BioPortalUploadInfo uploadInfo) throws IOException, OWLOntologyStorageException {
-        this.uploadInfo = uploadInfo;
+    public BioPortalUploader(ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException, OWLOntologyStorageException {
+        this.publishInfo = publishInfo;
         ontologyDocument = getOntologyDocumentFromProjectAndRevision(projectId, revisionNumber);
     }
     
@@ -87,33 +87,33 @@ public class BioPortalUploader {
         
         setParameter(BioPortalConstants.API_KEY_PROPERTY, BioPortalConstants.DEFAULT_API_KEY, reqEntity);
 
-        setParameter("displayLabel", uploadInfo.getDisplayLabel(), reqEntity);
-        setParameter("userId", uploadInfo.getUserId().getIntValue(), reqEntity);
-        setParameter("description", uploadInfo.getOntologyDescription(), reqEntity);
+        setParameter("displayLabel", publishInfo.getDisplayLabel(), reqEntity);
+        setParameter("userId", publishInfo.getUserId().getIntValue(), reqEntity);
+        setParameter("description", publishInfo.getOntologyDescription(), reqEntity);
 
         setParameter("format", BioPortalOntologyFormat.OWL.getFormatName(), reqEntity);
 
         BioPortalReleaseDate releaseDate = BioPortalReleaseDate.createWithToday();
         setParameter("dateReleased", releaseDate.formatForRestService(), reqEntity);
 
-        setParameter("contactName", uploadInfo.getContactName(), reqEntity);
-        setParameter("contactEmail", uploadInfo.getContactEmailAddress(), reqEntity);
+        setParameter("contactName", publishInfo.getContactName(), reqEntity);
+        setParameter("contactEmail", publishInfo.getContactEmailAddress(), reqEntity);
 
-        setParameter("abbreviation", uploadInfo.getOntologyAbbreviation(), reqEntity);
-        setParameter("versionNumber", uploadInfo.getVersionNumber(), reqEntity);
+        setParameter("abbreviation", publishInfo.getOntologyAbbreviation(), reqEntity);
+        setParameter("versionNumber", publishInfo.getVersionNumber(), reqEntity);
 
 
         setParameter("synonymsSlot", OWLRDFVocabulary.RDFS_LABEL.getIRI().toString(), reqEntity);
 
-        BioPortalOntologyId bioPortalOntologyId = uploadInfo.getBioPortalOntologyId();
+        BioPortalOntologyId bioPortalOntologyId = publishInfo.getBioPortalOntologyId();
         if (!bioPortalOntologyId.isNull()) {
             setParameter("ontologyId", bioPortalOntologyId.getIntValue(), reqEntity);
         }
         setParameter("isRemote", "0", reqEntity);
 
-        setParameter("publication", uploadInfo.getPublicationLink(), reqEntity);
-        setParameter("homepage", uploadInfo.getHomepageLink(), reqEntity);
-        setParameter("documentation", uploadInfo.getDocumentationLink(), reqEntity);
+        setParameter("publication", publishInfo.getPublicationLink(), reqEntity);
+        setParameter("homepage", publishInfo.getHomepageLink(), reqEntity);
+        setParameter("documentation", publishInfo.getDocumentationLink(), reqEntity);
 
 
         httppost.setEntity(reqEntity);
@@ -134,7 +134,7 @@ public class BioPortalUploader {
         try {
             File ontologyDocument = new File("/tmp/root-ontology.owl");
 
-            BioPortalUploadInfo uploadInfo = new BioPortalUploadInfo(
+            PublishToBioPortalInfo publishInfo = new PublishToBioPortalInfo(
                     BioPortalUserId.createFromId(38871),
                     BioPortalOntologyId.getId(3142),
                     "Test Ontology 34",
@@ -143,7 +143,7 @@ public class BioPortalUploader {
                     "Matthew Horridge",
                     "matthew.horridge@stanford.edu",
                     "1.0.2");
-            BioPortalUploader uploader = new BioPortalUploader(ontologyDocument, uploadInfo);
+            BioPortalUploader uploader = new BioPortalUploader(ontologyDocument, publishInfo);
             uploader.uploadToBioPortal("http://stagerest.bioontology.org/bioportal/", ontologyDocument);
         }
         catch (IOException e) {
