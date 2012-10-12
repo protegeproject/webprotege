@@ -17,25 +17,25 @@ public class BioPortalUploadDialogController extends WebProtegeOKCancelDialogCon
 
     public static final String TITLE = "Publish Ontology to BioPortal";
 
-    private BioPortalUploadForm uploadForm;
+    private PublishToBioPortalForm publishForm;
 
     public BioPortalUploadDialogController(ProjectData projectData, UserData userData) {
         super(TITLE);
-        this.uploadForm = new BioPortalUploadForm(projectData, userData);
+        this.publishForm = new PublishToBioPortalForm(projectData, userData);
     }
 
     @Override
     public Widget getWidget() {
-        return uploadForm;
+        return publishForm;
     }
 
     @Override
     public Focusable getInitialFocusable() {
-        return uploadForm.getInitialFocusable();
+        return publishForm.getInitialFocusable();
     }
 
     @Override
     public BioPortalUploadInfo getData() {
-        return uploadForm.getData();
+        return publishForm.getData();
     }
 }

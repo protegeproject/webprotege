@@ -1,16 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.client.ui.bioportal.upload.BioPortalUploadDialog;
+import edu.stanford.bmir.protege.web.client.ui.bioportal.publish.PublishToBioPortalDialog;
 
 import java.util.Date;
 
@@ -59,7 +52,7 @@ public class RevisionSummaryPanel extends FlowPanel {
 
 
     private void uploadToBioPortal(ProjectData projectData) {
-        BioPortalUploadDialog dlg = new BioPortalUploadDialog(projectData, userData);
+        PublishToBioPortalDialog dlg = new PublishToBioPortalDialog(projectData, userData);
         dlg.show();
     }
 }

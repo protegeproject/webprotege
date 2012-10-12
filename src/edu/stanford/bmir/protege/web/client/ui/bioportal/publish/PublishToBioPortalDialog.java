@@ -18,9 +18,9 @@ import java.io.IOException;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/10/2012
  */
-public class BioPortalUploadDialog extends WebProtegeDialog<BioPortalUploadInfo> {
+public class PublishToBioPortalDialog extends WebProtegeDialog<BioPortalUploadInfo> {
 
-    public BioPortalUploadDialog(final ProjectData projectData, final UserData userData) {
+    public PublishToBioPortalDialog(final ProjectData projectData, final UserData userData) {
         super(new BioPortalUploadDialogController(projectData, userData));
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<BioPortalUploadInfo>() {
             public void handleHide(BioPortalUploadInfo data, WebProtegeDialogCloser closer) {

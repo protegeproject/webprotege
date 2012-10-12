@@ -20,7 +20,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/10/2012
  */
-public class BioPortalUploadForm extends FlowPanel {
+public class PublishToBioPortalForm extends FlowPanel {
 
 
     private static final int VERIFICATION_CHECK_DELAY_MS = 500;
@@ -59,7 +59,7 @@ public class BioPortalUploadForm extends FlowPanel {
 
     private final Timer verificationCheckTimer;
 
-    public BioPortalUploadForm(ProjectData projectData, UserData userData) {
+    public PublishToBioPortalForm(ProjectData projectData, UserData userData) {
 
         verificationCheckTimer = new Timer() {
             @Override
