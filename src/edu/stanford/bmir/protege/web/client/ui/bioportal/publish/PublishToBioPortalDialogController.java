@@ -13,13 +13,13 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDia
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/10/2012
  */
-public class BioPortalUploadDialogController extends WebProtegeOKCancelDialogController<PublishToBioPortalInfo> {
+public class PublishToBioPortalDialogController extends WebProtegeOKCancelDialogController<PublishToBioPortalInfo> {
 
     public static final String TITLE = "Publish Ontology to BioPortal";
 
     private PublishToBioPortalForm publishForm;
 
-    public BioPortalUploadDialogController(ProjectData projectData, UserData userData) {
+    public PublishToBioPortalDialogController(ProjectData projectData, UserData userData) {
         super(TITLE);
         this.publishForm = new PublishToBioPortalForm(projectData, userData);
     }

@@ -21,7 +21,7 @@ import java.io.IOException;
 public class PublishToBioPortalDialog extends WebProtegeDialog<PublishToBioPortalInfo> {
 
     public PublishToBioPortalDialog(final ProjectData projectData, final UserData userData) {
-        super(new BioPortalUploadDialogController(projectData, userData));
+        super(new PublishToBioPortalDialogController(projectData, userData));
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<PublishToBioPortalInfo>() {
             public void handleHide(PublishToBioPortalInfo data, WebProtegeDialogCloser closer) {
                 try {
