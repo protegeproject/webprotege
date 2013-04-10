@@ -35,7 +35,6 @@ import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.icd.ICDClassTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
@@ -192,7 +191,7 @@ public class ParentsPanel extends Panel {
         if (cls == null) {
             updatePanel(new ArrayList<EntityData>());
         } else {
-            OntologyServiceManager.getInstance().getParents(project.getProjectName(), cls.getName(), true, new GetParentsHandler());
+            OntologyServiceManager.getInstance().getParents(project.getProjectId(), cls.getName(), true, new GetParentsHandler());
         }
     }
 
@@ -369,14 +368,15 @@ public class ParentsPanel extends Panel {
 
     public Selectable getSelectable() {
         if (selectable == null) {
-            //FIXME: ICD specific!!!
-            ClassTreePortlet selectableTree = new ICDClassTreePortlet(project, true, false, false, true, topClass);
-            selectableTree.setDraggable(false);
-            selectableTree.setClosable(false);
-            selectableTree.setCollapsible(false);
-            selectableTree.setHeight(300);
-            selectableTree.setWidth(450);
-            selectable = selectableTree;
+            throw new RuntimeException("BROKEN");
+//            //FIXME: ICD specific!!!
+//            ClassTreePortlet selectableTree = new ICDClassTreePortlet(project, true, false, false, true, topClass);
+//            selectableTree.setDraggable(false);
+//            selectableTree.setClosable(false);
+//            selectableTree.setCollapsible(false);
+//            selectableTree.setHeight(300);
+//            selectableTree.setWidth(450);
+//            selectable = selectableTree;
         }
         return selectable;
     }

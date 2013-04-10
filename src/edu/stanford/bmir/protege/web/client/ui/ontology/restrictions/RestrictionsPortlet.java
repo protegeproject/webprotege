@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.restrictions;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
@@ -29,9 +30,12 @@ import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.ConditionItem;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.event.*;
+import org.semanticweb.owlapi.model.OWLEntity;
 
-public class RestrictionsPortlet extends AbstractEntityPortlet{
+public class RestrictionsPortlet extends AbstractOWLEntityPortlet{
 
     private final static int CONDITION_COL_INDEX = 0;
     private final static int EDIT_COL_INDEX = 1;
@@ -76,6 +80,16 @@ public class RestrictionsPortlet extends AbstractEntityPortlet{
         conditionEditor = new ConditionEditor(getProject());
         conditionEditorWindow = createConditionEditorWindow();
         grid.setCellPadding(8);
+
+        EventBusManager.getManager().registerHandler(ClassFrameChangedEvent.TYPE, new ClassFrameChangedEventHandler() {
+            @Override
+            public void classFrameChanged(ClassFrameChangedEvent event) {
+                if (isSelected(event.getEntity())) {
+                    reload();
+                }
+
+            }
+        });
     }
 
     @Override
@@ -84,7 +98,7 @@ public class RestrictionsPortlet extends AbstractEntityPortlet{
         EntityData entity = getEntity();
         if (entity != null) {
             setTitle("Asserted Conditions for " + entity.getBrowserText());
-            OntologyServiceManager.getInstance().getClassConditions(getProject().getProjectName(), entity.getName(),
+            OntologyServiceManager.getInstance().getClassConditions(getProjectId(), entity.getName(),
                     new GetClassConditionsAsyncHandler(entity));
         } else {
             setTitle("Asserted Conditions (nothing selected)");
@@ -145,7 +159,7 @@ public class RestrictionsPortlet extends AbstractEntityPortlet{
                 int row = cellForEvent.getRowIndex();
                 lastActionRow = row;
 
-                if (!UIUtil.confirmOperationAllowed(project)) {
+                if (!UIUtil.confirmOperationAllowed(getProject())) {
                     return;
                 }
 
@@ -166,7 +180,7 @@ public class RestrictionsPortlet extends AbstractEntityPortlet{
     }
 
     protected void updateButtonStates() {
-        boolean hasWritePermission = project.hasWritePermission();
+        boolean hasWritePermission = hasWritePermission();
         for (int i = 0; i < conditionItems.size(); i++) {
             Widget widget1 = grid.getWidget(i, EDIT_COL_INDEX);
             if (widget1 != null) {
@@ -234,7 +248,7 @@ public class RestrictionsPortlet extends AbstractEntityPortlet{
     }
 
     protected void onDelete(int row) {
-        OntologyServiceManager.getInstance().deleteCondition(getProject().getProjectName(),
+        OntologyServiceManager.getInstance().deleteCondition(getProjectId(),
                 getEntity().getName(), conditionItems.get(row), row, "", new DeleteClassConditionAsyncHandler(getEntity()));
     }
 
@@ -277,13 +291,13 @@ public class RestrictionsPortlet extends AbstractEntityPortlet{
         if (UIUtil.removeHTMLTags(conditionItems.get(row).getBrowserText()).equals(conditionEditor.getCondition())) {
             return;
         }
-        OntologyServiceManager.getInstance().replaceCondition(project.getProjectName(), getEntity().getName(),
+        OntologyServiceManager.getInstance().replaceCondition(getProjectId(), getEntity().getName(),
                 conditionItems.get(row), row, conditionEditor.getCondition(), null,
                 new ReplaceConditionAsyncHandler(conditionItems.get(row)));
     }
 
     protected void addCondition(int row, boolean isNS) {
-        OntologyServiceManager.getInstance().addCondition(project.getProjectName(), getEntity().getName(), row,
+        OntologyServiceManager.getInstance().addCondition(getProjectId(), getEntity().getName(), row,
                 conditionEditor.getCondition(), isNS, null,
                 new AddConditionAsyncHandler());
     }

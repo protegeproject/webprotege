@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -19,7 +21,7 @@ import java.util.List;
  *     A bar of clickable items.  Each item has a label.
  * </p>
  */
-public class SideBar<I extends SideBarItem> extends SimplePanel implements HasSelectionHandlers<I> {
+public class SideBar<I extends SideBarItem> extends Composite implements HasSelectionHandlers<I>, IsWidget {
 
     public static final String SIDEBAR_STYLE_NAME = "web-protege-sidebar";
 
@@ -40,8 +42,24 @@ public class SideBar<I extends SideBarItem> extends SimplePanel implements HasSe
     private FlowPanel itemListHolder = new FlowPanel();
     
     public SideBar() {
-        addStyleName(SIDEBAR_STYLE_NAME);
-        add(itemListHolder);
+        itemListHolder.addStyleName(SIDEBAR_STYLE_NAME);
+        initWidget(itemListHolder);
+
+    }
+
+    public void setSelectedItemByLabel(String label) {
+        checkNotNull(label);
+        if(getSelectedItem().getLabel().equals(label)) {
+            return;
+        }
+        for(ItemWidget i : items) {
+            boolean iSelected = i.getItem().getLabel().equals(label);
+            i.setSelected(iSelected);
+            if(iSelected) {
+                currentSelection = i;
+            }
+        }
+        fireSelectionChanged();
     }
 
     public void addItem(final I item) {
@@ -53,11 +71,15 @@ public class SideBar<I extends SideBarItem> extends SimplePanel implements HasSe
             setSelectedItem(item);
         }
     }
+
+    public void clearSelection() {
+        currentSelection = null;
+    }
     
     public void clearItems() {
         itemListHolder.clear();
         items.clear();
-        setSelectedItem(null);
+        clearSelection();
     }
     
     public int indexOf(I item) {
@@ -72,7 +94,7 @@ public class SideBar<I extends SideBarItem> extends SimplePanel implements HasSe
     private FocusPanel createItemWidget(final I item) {
         FocusPanel itemHolder = new FocusPanel();
         final Label itemLabel = new Label(item.getLabel());
-        itemLabel.setWidth("100%");
+        itemLabel.setWidth("90%");
         itemHolder.addMouseUpHandler(new MouseUpHandler() {
             public void onMouseUp(MouseUpEvent event) {
                 setSelectedItem(item);
@@ -121,7 +143,8 @@ public class SideBar<I extends SideBarItem> extends SimplePanel implements HasSe
     }
 
     public void setSelectedItem(I item) {
-        if (item != currentSelection) {
+        checkNotNull(item, "item must not be null");
+        if (!item.equals(currentSelection)) {
             for(ItemWidget i : items) {
                 boolean iSelected = i.getItem() == item;
                 i.setSelected(iSelected);
@@ -131,6 +154,10 @@ public class SideBar<I extends SideBarItem> extends SimplePanel implements HasSe
             }
             fireSelectionChanged();
         }
+    }
+
+    public void setSelectedItem(int index) {
+        setSelectedItem(items.get(index).getItem());
     }
     
     /**

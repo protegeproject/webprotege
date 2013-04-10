@@ -7,6 +7,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.openid.UserOpenIdAccountSummary;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
@@ -23,15 +27,15 @@ public interface AdminServiceAsync {
 
     void getProjects(String user, AsyncCallback<Collection<ProjectData>> cb);
 
-    void getAllowedOperations(String project, String user, AsyncCallback<Collection<String>> cb);
+    void getAllowedOperations(String project, String user, AsyncCallback<PermissionsSet> cb);
 
-    void getAllowedServerOperations(String userName, AsyncCallback<Collection<String>> callback);
+    void getAllowedServerOperations(String userName, AsyncCallback<PermissionsSet> callback);
 
     void refreshMetaproject(AsyncCallback<Void> cb);
 
     void getUserSaltAndChallenge(String userName, AsyncCallback<LoginChallengeData> callback);
 
-    void authenticateToLogin(String userName, String response, AsyncCallback<UserData> callback);
+    void authenticateToLogin(String userName, String response, AsyncCallback<UserId> callback);
 
     void checkUserLoggedInMethod(AsyncCallback<String> callback);
 
@@ -45,7 +49,7 @@ public interface AdminServiceAsync {
 
     void registerUserViaEncrption(String name, String hashedPassword, String emailId, AsyncCallback<UserData> callback);
 
-    void getCurrentUserInSession(AsyncCallback<UserData> async);
+    void getCurrentUserInSession(AsyncCallback<UserId> async);
 
     void logout(AsyncCallback<Void> async);
 

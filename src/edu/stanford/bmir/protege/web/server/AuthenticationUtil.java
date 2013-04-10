@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.smi.protege.server.metaproject.Group;
 import edu.stanford.smi.protege.server.metaproject.User;
 
@@ -56,36 +57,36 @@ public class AuthenticationUtil {
         return encoded;
     }
 
-    public static UserData createUserData(String userName) {
-        UserData userData = new UserData(userName);
-        fillInGoups(userData, userName);
+    public static UserData createUserData(UserId userId) {
+        UserData userData = new UserData(userId);
+//        fillInGoups(userData, userId);
         fillInEmail(userData);
         return userData;
     }
 
-    public static void fillInGoups(UserData userData, String userName) {
-        User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(userName);
-        if (user == null) {
-            return;
-        }
-        fillInGoups(userData, user);
-    }
+//    public static void fillInGoups(UserData userData, UserId userId) {
+//        User user = MetaProjectManager.getManager().getMetaProject().getUser(userId.getUserName());
+//        if (user == null) {
+//            return;
+//        }
+////        fillInGoups(userData, user);
+//    }
 
-    public static void fillInGoups(UserData userData, User user) {
-        Set<Group> groups = user.getGroups();
-        Collection<String> groupNames = new HashSet<String>();
-        for (Group group : groups) {
-            groupNames.add(group.getName());
-        }
-        userData.setGroups(groupNames);
-    }
+//    public static void fillInGoups(UserData userData, User user) {
+//        Set<Group> groups = user.getGroups();
+//        Collection<String> groupNames = new HashSet<String>();
+//        for (Group group : groups) {
+//            groupNames.add(group.getName());
+//        }
+//        userData.setGroups(groupNames);
+//    }
 
     public static void fillInEmail(UserData userData) {
-        String userName = userData.getName();
-        if (userName == null) {
+        final UserId userId = userData.getUserId();
+        if (userId.isGuest()) {
             return;
         }
-        User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(userName);
+        User user = MetaProjectManager.getManager().getMetaProject().getUser(userId.getUserName());
         if (user == null) {
             return;
         }

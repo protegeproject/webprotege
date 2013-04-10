@@ -7,6 +7,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class HierarchyServiceManager {
 
@@ -25,16 +27,16 @@ public class HierarchyServiceManager {
     }
 
 
-    public void changeParent(String project, String className, Collection<String> parentsToAdd,
-            Collection<String> parentsToRemove, String user, String operationDescription, String reasonForChange,
+    public void changeParent(ProjectId project, String className, Collection<String> parentsToAdd,
+            Collection<String> parentsToRemove, UserId user, String operationDescription, String reasonForChange,
             AsyncCallback<List<EntityData>> callback) {
-        proxy.changeParent(project, className, parentsToAdd, parentsToRemove, user, operationDescription, reasonForChange, callback);
+        proxy.changeParent(project.getProjectName(), className, parentsToAdd, parentsToRemove, user.getUserName(), operationDescription, reasonForChange, callback);
     }
 
-    public void retireClasses(String project, Collection<String> classesToRetireNames, boolean retireChildren,
-            String newParent, String reasonForChange, String operationDescription, String user,
+    public void retireClasses(ProjectId project, Collection<String> classesToRetireNames, boolean retireChildren,
+            String newParent, String reasonForChange, String operationDescription, UserId user,
             AsyncCallback<Void> callback) {
-        proxy.retireClasses(project, classesToRetireNames, retireChildren, newParent,
-                reasonForChange, operationDescription, user, callback);
+        proxy.retireClasses(project.getProjectName(), classesToRetireNames, retireChildren, newParent,
+                reasonForChange, operationDescription, user.getUserName(), callback);
     }
 }

@@ -1,14 +1,16 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>
@@ -32,7 +34,7 @@ public abstract class AbstractOBOTermPortlet extends AbstractEntityPortlet {
     }
     
     public ProjectId getProjectId() {
-        return new ProjectId(getProject().getProjectName());
+        return ProjectId.get(getProject().getProjectName());
     }
 
     @Override
@@ -42,13 +44,13 @@ public abstract class AbstractOBOTermPortlet extends AbstractEntityPortlet {
 //                clearDisplay();
 //                return;
 //            }
-            Entity entity = getCurrentEntity();
+            OWLEntity entity = getCurrentEntity();
             if (entity != null && isDirty()) {
                 commitChangesForEntity(entity);
             }
             _currentEntity = newEntityData;
             if (_currentEntity != null) {
-                Entity newEntity = getCurrentEntity();
+                OWLEntity newEntity = getCurrentEntity();
                 if (newEntity != null) {
                     displayEntity(newEntity);
                 }
@@ -79,13 +81,13 @@ public abstract class AbstractOBOTermPortlet extends AbstractEntityPortlet {
      * {@link #isDirty()} method returns <code>true</code>.
      * @param entity The entity being edited not <code>null</code>.
      */
-    protected abstract void commitChangesForEntity(Entity entity);
+    protected abstract void commitChangesForEntity(OWLEntity entity);
 
     /**
      * Called to update the display so that it displays a given entity.
      * @param entity The entity to be displayed. Not <code>null</code>.
      */
-    protected abstract void displayEntity(Entity entity);
+    protected abstract void displayEntity(OWLEntity entity);
 
     /**
      * Called to clear the display if no entity is should be displayed.
@@ -103,20 +105,20 @@ public abstract class AbstractOBOTermPortlet extends AbstractEntityPortlet {
      * Gets the current entity which should be displayed.
      * @return The current entity.  May be <code>null</code>.
      */
-    public Entity getCurrentEntity() {
+    public OWLEntity getCurrentEntity() {
         EntityData entityData = getEntity();
         if(entityData == null) {
             return null;
         }
         IRI iri = IRI.create(entityData.getName());
         if(entityData.getValueType() == ValueType.Cls) {
-            return new NamedClass(iri);
+            return DataFactory.getOWLClass(iri);
         }
         else if(entityData.getValueType() == ValueType.Property) {
-            return new ObjectProperty(iri);
+            return DataFactory.getOWLObjectProperty(iri);
         }
         else if(entityData.getValueType() == ValueType.Instance) {
-            return new NamedIndividual(iri);
+            return DataFactory.getOWLNamedIndividual(iri);
         }
         else {
             return null;

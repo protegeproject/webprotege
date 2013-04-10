@@ -12,31 +12,32 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PaginationData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.util.GWTProxy;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class SearchResultsProxyImpl extends GWTProxy {
 
-    private String projectName = null;
+    private ProjectId projectId;
+
+    private final AsyncCallback<Boolean> asyncCallback;
+
 
     private String searchText = null;
 
     private ValueType valueType = null;
 
-    private AsyncCallback<Boolean> asyncCallback;
 
-    public SearchResultsProxyImpl() {
-        this(null);
-    }
+
 
     public SearchResultsProxyImpl(AsyncCallback<Boolean> asyncCallback) {
         this.asyncCallback = asyncCallback;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public ProjectId getProjectId() {
+        return projectId;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setProjectName(ProjectId projectId) {
+        this.projectId = projectId;
     }
 
     public String getSearchText() {
@@ -56,7 +57,6 @@ public class SearchResultsProxyImpl extends GWTProxy {
     }
 
     public void resetParams() {
-        this.projectName = null;
         this.searchText = null;
         this.valueType = null;
     }
@@ -64,7 +64,7 @@ public class SearchResultsProxyImpl extends GWTProxy {
     @Override
     public void load(int start, int limit, String sort, String dir, final JavaScriptObject o, UrlParam[] baseParams) {
 
-        OntologyServiceManager.getInstance().search(projectName, searchText, valueType, start, limit, sort, dir, new AsyncCallback<PaginationData<EntityData>>() {
+        OntologyServiceManager.getInstance().search(projectId, searchText, valueType, start, limit, sort, dir, new AsyncCallback<PaginationData<EntityData>>() {
             public void onFailure(Throwable caught) {
                 GWT.log("Error at search", caught);
 

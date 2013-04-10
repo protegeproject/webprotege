@@ -22,7 +22,7 @@ import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
@@ -118,7 +118,7 @@ public class ReviewsGrid extends GridPanel {
 
     public void reload() {
         store.removeAll();
-        ChAOServiceManager.getInstance().getReviews(project.getProjectName(), currentEntity.getName(),
+        ChAOServiceManager.getInstance().getReviews(project.getProjectId(), currentEntity.getName(),
                 new GetReviewsHandler());
     }
 
@@ -155,7 +155,7 @@ public class ReviewsGrid extends GridPanel {
 
     private void addReviewButton_onClick(Button button, EventObject e) {
         // Shortcut
-        if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+        if (Application.get().isGuestUser()) {
             MessageBox.alert("You must be logged in to add a review");
             return;
         }
@@ -182,8 +182,8 @@ public class ReviewsGrid extends GridPanel {
             result.setAnnotatedEntity(currentEntity);
             result.setType("Review");
 
-            ChAOServiceManager.getInstance().addReview(project.getProjectName(),
-                    GlobalSettings.getGlobalSettings().getUserName(), result, new AddReviewHandler(result));
+            ChAOServiceManager.getInstance().addReview(project.getProjectId(),
+                    Application.get().getUserId(), result, new AddReviewHandler(result));
         }
     }
 

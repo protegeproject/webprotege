@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.model;
 
 import edu.stanford.bmir.protege.web.client.model.event.UpdateShareLinkEvent;
 import edu.stanford.bmir.protege.web.client.model.listener.ShareOntologyAccessListener;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +15,7 @@ import java.util.Collection;
  * @author z.khan
  *
  */
-public class ShareOntologyAccessEventManager {
+public class ShareOntologyAccessEventManager implements HasDispose {
 
     private static ShareOntologyAccessEventManager shareOntologyAccessEventManager;
 
@@ -46,7 +48,7 @@ public class ShareOntologyAccessEventManager {
      * @param showShareLink
      * @param currentSelectedProject
      */
-    public void notifyToUpdateShareLink(boolean showShareLink, String currentSelectedProject) {
+    public void notifyToUpdateShareLink(boolean showShareLink, ProjectId currentSelectedProject) {
         for (ShareOntologyAccessListener listener : shareLinkVisibilityListeners) {
             listener.updateShareLink(new UpdateShareLinkEvent(showShareLink, currentSelectedProject));
         }

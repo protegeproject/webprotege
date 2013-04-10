@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
-import edu.stanford.bmir.protege.web.server.owlapi.notes.ArchivesStatus;
-import edu.stanford.bmir.protege.web.server.owlapi.notes.OWLAPINotesManager;
+import edu.stanford.bmir.protege.web.server.notes.ArchivesStatus;
+import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.protege.notesapi.notes.NoteType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -22,7 +23,7 @@ import java.util.*;
 public class ChAOServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet implements ChAOService {
 
     private OWLAPIProject getProject(String projectName) {
-        ProjectId projectId = new ProjectId(projectName);
+        ProjectId projectId = ProjectId.get(projectName);
         return getProject(projectId);
     }
 
@@ -237,24 +238,18 @@ public class ChAOServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet implem
      */
 
     public PaginationData<ChangeData> getWatchedEntities(String projectName, String userName, int start, int limit, String sort, String dir) {
-        return new PaginationData<ChangeData>();
+        OWLAPIProject project = getProject(projectName);
+        OWLAPIChangeManager changeManager = project.getChangeManager();
+        final UserId userId = UserId.getUserId(userName);
+        Set<Watch<?>> watches = project.getWatchManager().getWatches(userId);
+        List<ChangeData> data = changeManager.getChangeDataForWatches(watches);
+        return PaginationServerUtil.pagedRecords(data, start, limit, sort, dir);
     }
 
     public Collection<ChangeData> getWatchedEntities(String projectName, String userName) {
         return Collections.emptyList();
     }
 
-    public EntityData addWatchedEntity(String projectName, String userName, String watchedEntityName) {
-        return null;
-    }
-
-    public void removeAllWatches(String projectName, String userName, String watchedEntityName) {
-
-    }
-
-    public EntityData addWatchedBranch(String projectName, String userName, String watchedEntityName) {
-        return null;
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
@@ -83,7 +82,7 @@ public class OWLAPIProjectImporter {
     }
 
     private OWLOntologyManager createOntologyManager() {
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+        OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
         manager.clearIRIMappers();
         return manager;
     }

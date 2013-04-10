@@ -5,8 +5,8 @@ package edu.stanford.bmir.protege.web.server.openid;
 
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import org.openid4java.consumer.ConsumerManager;
 import org.openid4java.consumer.InMemoryConsumerAssociationStore;
 import org.openid4java.consumer.InMemoryNonceVerifier;
@@ -30,7 +30,7 @@ import java.util.List;
 public class OpenIdAuthenticationServlet extends HttpServlet {
 
     private static final long serialVersionUID = -4764648759333345074L;
-    private static final Log log = LogFactory.getLog(OpenIdAuthenticationServlet.class);
+    private static final WebProtegeLogger log = WebProtegeLoggerManager.get(OpenIdAuthenticationServlet.class);
 
     @Override
     @SuppressWarnings("unchecked")
@@ -52,7 +52,7 @@ public class OpenIdAuthenticationServlet extends HttpServlet {
                     returnUrl = returnUrl.replace(url.getHost(), domainNameAndPort);
                 }
             } catch (MalformedURLException e) {
-                log.warn("Malformed URL for OpenId: " + returnUrl, e);
+                log.severe(e);
             }
         }
 
@@ -92,7 +92,7 @@ public class OpenIdAuthenticationServlet extends HttpServlet {
             httpResp.sendRedirect(authReq.getDestinationUrl(true));
 
         } catch (Exception e) {
-            log.error("Exception OpenIdAuthenticationServlet :" + e);
+            log.severe(e);
         }
 
     }

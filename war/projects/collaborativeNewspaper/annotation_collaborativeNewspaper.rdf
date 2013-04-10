@@ -9,7 +9,7 @@
 	 xmlns:rdfs="&rdfs;">
 <kb:Advice rdf:about="&kb;annotation_collaborativeNewspaper_Class0"
 	 kb:author="Guest"
-	 kb:subject="A piece of advice for all authors"
+	 kb:result="A piece of advice for all authors"
 	 rdfs:label="A piece of advice for all authors">
 	<kb:body xml:space='preserve'><![CDATA[<html>
   <head>
@@ -34,7 +34,7 @@
 	 rdfs:label="10/23/2008 21:23:30 GMT-08:00"/>
 <kb:SeeAlso rdf:about="&kb;annotation_collaborativeNewspaper_Class10000"
 	 kb:author="Guest"
-	 kb:subject="SeeAlso: annotations on slots"
+	 kb:result="SeeAlso: annotations on slots"
 	 rdfs:label="SeeAlso: annotations on slots">
 	<kb:body xml:space='preserve'><![CDATA[<html>
   <head>
@@ -63,7 +63,7 @@
 </kb:Ontology_Property>
 <kb:Question rdf:about="&kb;annotation_collaborativeNewspaper_Class10003"
 	 kb:author="Guest"
-	 kb:subject="How about this instance?"
+	 kb:result="How about this instance?"
 	 rdfs:label="How about this instance?">
 	<kb:body xml:space='preserve'><![CDATA[<html>
   <head>
@@ -115,7 +115,7 @@
 	 rdfs:label="Rejected"/>
 <kb:Example rdf:about="&kb;annotation_collaborativeNewspaper_Class3"
 	 kb:author="Guest"
-	 kb:subject="Re: A piece of advice for all authors"
+	 kb:result="Re: A piece of advice for all authors"
 	 rdfs:label="Re: A piece of advice for all authors">
 	<kb:body xml:space='preserve'><![CDATA[<html>
   <head>
@@ -139,7 +139,7 @@
 	 rdfs:label="10/23/2008 21:28:28 GMT-08:00"/>
 <kb:Explanation rdf:about="&kb;annotation_collaborativeNewspaper_Class5"
 	 kb:author="Guest"
-	 kb:subject="What are discussion threads"
+	 kb:result="What are discussion threads"
 	 rdfs:label="What are discussion threads">
 	<kb:body xml:space='preserve'><![CDATA[<html>
   <head>

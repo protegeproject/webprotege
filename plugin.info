@@ -1,7 +1,6 @@
 
  /*
   * Removed tabs:
-  * MyICDTab.class.getName()
   * OtherTerminologiesTab.class.getName(),
   *
   */
@@ -18,13 +17,7 @@ tab: edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ManageHierarchyT
 tab: edu.stanford.bmir.protege.web.client.ui.ontology.notes.OntologyNotesTab;
 tab: edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeAnalysisTab;
 
- /*
-  * Removed portlets:
-  * PropertyFieldPortlet.class.getName()
-  * ChangeTreePortlet.class.getName(), ChangeSummaryPortlet.class.getName(), ChangeTablePortlet.class.getName(),
-  * NotesPortlet.class.getName(),
-  * ICDClassTreePortlet.class.getName(), ICDExportImportPortlet.class.getName(),
-  */
+
 portlet: edu.stanford.bmir.protege.web.client.ui.ontology.classes.AllPropertiesPortlet;
 portlet: edu.stanford.bmir.protege.web.client.ui.ontology.metadata.AnnotationsPortlet;
 portlet: edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
@@ -40,7 +33,6 @@ portlet: edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.PropertyFi
 portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet;
 portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet;
 portlet: edu.stanford.bmir.protege.web.client.ui.ontology.reviews.ReviewsPortlet;
-portlet: edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ManageHierarchyPortlet;
 portlet: edu.stanford.bmir.protege.web.client.ui.portlet.html.HtmlMessagePortlet;
 portlet: edu.stanford.bmir.protege.web.client.ui.ontology.classes.SuperclassesPortlet;
 portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet;

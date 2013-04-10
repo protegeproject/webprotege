@@ -26,7 +26,7 @@ public class NotificationServiceImpl extends WebProtegeRemoteServiceServlet  imp
 
     public synchronized void setNotificationDelay(final String user, final NotificationType notificationType, final NotificationInterval notificationInterval) {
         //FIXME: everything on this path can be null
-        final User userProperties = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(user);
+        final User userProperties = MetaProjectManager.getManager().getMetaProject().getUser(user);
         String currentUserPropertyValue = userProperties.getPropertyValue(notificationType.getValue());
         while (currentUserPropertyValue != null) {
             userProperties.removePropertyValue(notificationType.getValue(), currentUserPropertyValue);
@@ -42,7 +42,7 @@ public class NotificationServiceImpl extends WebProtegeRemoteServiceServlet  imp
 
     public Map<NotificationType, NotificationInterval> getNotificationDelays(final String user) {
         //FIXME: everything on this path can be null
-        final Collection<PropertyValue> valueCollection = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(user).getPropertyValues();
+        final Collection<PropertyValue> valueCollection = MetaProjectManager.getManager().getMetaProject().getUser(user).getPropertyValues();
         final Map<NotificationType, NotificationInterval> returnValue = new HashMap<NotificationType, NotificationInterval>();
         for (PropertyValue propertyValue : valueCollection) {
             final NotificationType type = NotificationType.fromString(propertyValue.getPropertyName());
@@ -54,23 +54,6 @@ public class NotificationServiceImpl extends WebProtegeRemoteServiceServlet  imp
     }
 
 
-    class ChangeDataWithProject extends ChangeData {
-        private static final long serialVersionUID = -4572613145929459524L;
 
-        private final ServerProject<Project> project;
-
-        public ChangeDataWithProject(EntityData entityData, String author, String description, Date timestamp, ServerProject<Project> project) {
-            super(entityData, author, description, timestamp);
-            this.project = project;
-        }
-
-        public ChangeDataWithProject(ChangeData changeData, ServerProject<Project> project) {
-            this(changeData.getEntityData(), changeData.getDescription(), changeData.getDescription(), changeData.getTimestamp(), project);
-        }
-
-        public ServerProject<Project> getProject() {
-            return project;
-        }
-    }
 
 }

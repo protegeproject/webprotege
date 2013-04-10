@@ -1,0 +1,80 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:projectlist="urn:import:edu.stanford.bmir.protege.web.client.ui.projectlist"
+             xmlns:sidebar="urn:import:edu.stanford.bmir.protege.web.client.ui.library.sidebar">
+
+    <ui:style>
+        .button-bar {
+            padding-top: 10px;
+            padding-bottom: 40px;
+        }
+
+        .left-bar {
+            position: absolute;
+            left: 0px;
+            top: 125px;
+            bottom: 0px;
+            width: 230px;
+        }
+
+        .table-style {
+            font-size: 12px;
+            position: absolute;
+            top: 1px;
+            bottom: 1px;
+            left: 1px;
+            right: 1px;
+            /*border: 1px orange solid;*/
+        }
+
+        .top-button-bar-position {
+            position: absolute;
+            top: 0px;
+            left: 250px;
+            right: 0px;
+            height: 30px;
+            padding-top: 10px;
+        }
+
+        .bottom-button-bar-position {
+            position: absolute;
+            top: 30px;
+            left: 0px;
+            right: 0px;
+            height: 30px;
+            /*border: 1px, solid, #ff00ff;*/
+        }
+
+        .project-list-position {
+            position: absolute;
+            top: 60px;
+            bottom: 0px;
+            left: 250px;
+            right: 0px;
+            /*border: green 1px solid;*/
+        }
+    </ui:style>
+
+
+    <g:HTMLPanel addStyleNames="{style.table-style}">
+        <g:FlowPanel addStyleNames="{style.left-bar}">
+            <sidebar:SideBar ui:field="sideBar"/>
+        </g:FlowPanel>
+        <g:FlowPanel addStyleNames="{style.top-button-bar-position}">
+            <g:Button ui:field="createProjectButton" text="&#x2600; Create Project ..." enabled="false" addStyleNames="web-protege-button"/>
+            <g:Button ui:field="uploadProjectButton" text="&#x21ea; Upload Project ..." addStyleNames="web-protege-button web-protege-button-margin-left"/>
+            <!--<g:Button text="Trash Project..." addStyleNames="web-protege-button-grey"/>-->
+            <!--<g:Button text="Download Project" addStyleNames="web-protege-button-grey"/>-->
+        </g:FlowPanel>
+
+
+        <!--<g:FlowPanel addStyleNames="{style.bottom-button-bar-position}">-->
+            <!--<g:Button text="Owned by me" addStyleNames="web-protege-dialog-button"/>-->
+        <!--</g:FlowPanel>-->
+        <!---->
+        <g:FlowPanel addStyleNames="{style.project-list-position}">
+            <projectlist:ProjectListViewImpl ui:field="projectListView" width="100%" height="100%"/>
+        </g:FlowPanel>
+
+    </g:HTMLPanel>
+</ui:UiBinder>

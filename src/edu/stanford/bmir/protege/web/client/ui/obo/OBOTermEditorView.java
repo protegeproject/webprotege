@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.gwt.user.client.ui.*;
-import com.gwtext.client.widgets.form.Label;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
 import edu.stanford.bmir.protege.web.client.ui.library.common.WebProtegeFormLabel;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +38,7 @@ public class OBOTermEditorView extends FlowPanel {
         rebuild();
     }
 
-    public void setSubject(Entity subject) {
+    public void setSubject(OWLEntity subject) {
         rebuild();
     }
 

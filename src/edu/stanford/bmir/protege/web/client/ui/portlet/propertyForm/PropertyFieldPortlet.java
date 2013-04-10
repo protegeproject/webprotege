@@ -246,7 +246,7 @@ public class PropertyFieldPortlet extends AbstractEntityPortlet {
 
     protected FormGenerator createFormGenerator() {
         Map<String, Object> properties = getPortletConfiguration().getProperties();
-        formGenerator = new FormGenerator(project, properties);
+        formGenerator = new FormGenerator(getProject(), properties);
         formGenerator.addFormToTabPanel(wrappingPanel);
         attachPanelListenerToTabs();
         wrappingPanel.activate(0);

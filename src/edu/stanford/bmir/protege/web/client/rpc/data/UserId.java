@@ -15,9 +15,9 @@ import java.io.Serializable;
  */
 public class UserId implements Serializable, IsSerializable, Comparable<UserId> {
 
-    public static final String NULL_USER_NAME = "";
+    private static final String NULL_USER_NAME = "guest";
 
-    public static final UserId NULL_USER_ID = new UserId(NULL_USER_NAME);
+    private static final UserId NULL_USER_ID = new UserId(NULL_USER_NAME);
 
     private String userName;
 
@@ -28,12 +28,21 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
         userName = NULL_USER_NAME;
     }
 
+//    /**
+//     * Determines if this user id does not represent any user.
+//     * @return <code>true</code> if this user id does not represent a user, otherwise, <code>false</code>.
+//     */
+//    public boolean isNull() {
+//        return NULL_USER_NAME.equals(userName);
+//    }
+
     /**
-     * Determines if this user id does not represent any user.
-     * @return <code>true</code> if this user id does not represent a user, otherwise, <code>false</code>.
+     * Determines if this {@link UserId} represents the guest (non-logged in) user.
+     * @return {@code true} if this {@link UserId} represents the guest user. {@code false} if this {@link UserId}
+     * does not represent the guest user.
      */
-    public boolean isNull() {
-        return NULL_USER_NAME.equals(userName);
+    public boolean isGuest() {
+        return NULL_USER_NAME.endsWith(userName);
     }
 
     /**
@@ -49,6 +58,14 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
         else {
             return new UserId(userName);
         }
+    }
+
+    /**
+     * Gets the id of the guest user.  The guest user is a distinguished id which indicates a non-logged in user.
+     * @return The {@link UserId} of the guest user.  Not {@code null}.
+     */
+    public static UserId getGuest() {
+        return getNull();
     }
 
     public static UserId getNull() {

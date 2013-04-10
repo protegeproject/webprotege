@@ -38,7 +38,7 @@ public class AuthenticationConstants {
 
     public static final String AUTHENICATE_MODULE_HTML_FILE = "Authenticate.html";
 
-    public static final String USERDATA_OBJECT = "userdata.object";
+//    public static final String USERDATA_OBJECT = "userdata.object";
 
     public static final String LOGIN_METHOD = "login.method";
 

@@ -1,14 +1,15 @@
 package edu.stanford.bmir.protege.web.server.filesubmission;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.FileUploadResponseAttributes;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.io.UnparsableOntologyException;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.UnloadableImportException;
@@ -52,35 +53,38 @@ public class FileUploadServlet extends HttpServlet {
 
     public static final String RESPONSE_MIME_TYPE = "text/html";
 
+    public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(FileUploadServlet.class);
+
 
     @Override
     @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("[WebProtege Upload Service] Received upload...");
+        LOGGER.info("Received upload...");
         resp.setHeader("Content-Type", RESPONSE_MIME_TYPE);
         try {
             if (ServletFileUpload.isMultipartContent(req)) {
 
-                System.out.println("POST is multipart (OK)");
+                LOGGER.info("POST is multipart (OK)");
 
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
                 upload.setFileSizeMax(DEFAULT_MAX_FILE_SIZE);
-                System.out.println("Parsing POST request");
+
                 List<FileItem> items = upload.parseRequest(req);
 
                 for (FileItem item : items) {
                     if (!item.isFormField()) {
                         File uploadedFile = createServerSideFile();
-                        System.out.println("Created serverside file: " + uploadedFile.getAbsolutePath());
+                        LOGGER.info("Created server side file: " + uploadedFile.getAbsolutePath());
                         item.write(uploadedFile);
                         resp.setStatus(HttpServletResponse.SC_CREATED);
                         try {
                             processOntology(uploadedFile);
-                            System.out.println("Sending response to client");
+                            LOGGER.info("Sending response to client");
                             sendSuccessMessage(resp, uploadedFile.getName());
                         }
                         catch (OWLOntologyCreationException e) {
+                            LOGGER.info("Caught OWLOntologyCreationException %s", e.toString());
                             sendErrorMessage(resp, e);
                         }
                         return;
@@ -89,13 +93,13 @@ public class FileUploadServlet extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not find form file item");
             }
             else {
-                System.out.println("BAD REQUEST: POST must be multipart encoding.");
+                LOGGER.info("BAD REQUEST: POST must be multipart encoding.");
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "POST must be multipart encoding.");
             }
 
         }
         catch (Throwable e) {
-            e.printStackTrace();
+            LOGGER.severe(e);
             sendErrorMessage(resp, e);
         }
     }
@@ -173,17 +177,17 @@ public class FileUploadServlet extends HttpServlet {
     private File createServerSideFile() throws IOException {
         FileUploadConstants.UPLOADS_DIRECTORY.mkdirs();
         File tempFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX, FileUploadConstants.UPLOADS_DIRECTORY);
-        System.out.println("Created temp file: " + tempFile.getAbsolutePath());
+        LOGGER.info("Created temp file: " + tempFile.getAbsolutePath());
         return tempFile;
     }
 
     
     
     private void processOntology(File ontologyDocument) throws OWLOntologyCreationException {
-        System.out.println("Processing ontology...");
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        OWLOntology ontology = manager.loadOntologyFromOntologyDocument(ontologyDocument);
-        System.out.println("    .... processed: " + ontology);
+        LOGGER.info("Parsing uploaded file ontology...");
+        OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
+        manager.loadOntologyFromOntologyDocument(ontologyDocument);
+        LOGGER.info("    .... parsed");
     }
     
     

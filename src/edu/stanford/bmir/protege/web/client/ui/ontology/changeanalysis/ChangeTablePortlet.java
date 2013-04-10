@@ -30,7 +30,6 @@ public class ChangeTablePortlet extends ChangesPortlet {
 		store.removeAll();
 
 		String entityName = "";
-		String projectName = "";
 
 		EntityData entity = getEntity();
 
@@ -41,14 +40,9 @@ public class ChangeTablePortlet extends ChangesPortlet {
 			setTitle("Change history (nothing selected)");
 		}
 
-		if (project != null) {
-			projectName = project.getProjectName();
-		} else {
-		    return;
-		}
-		
+
 		proxy.resetParams();
-		proxy.setProjectName(projectName);
+		proxy.setProjectName(getProjectId().getProjectName());
 		proxy.setEntityName(entityName);
 		
 		PagingToolbar pToolbar = (PagingToolbar) changesGrid.getBottomToolbar();

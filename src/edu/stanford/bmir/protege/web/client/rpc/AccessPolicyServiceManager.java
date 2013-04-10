@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.AccessPolicyUserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.domain.Invitation;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,49 +29,49 @@ public class AccessPolicyServiceManager {
         return instance;
     }
 
-    public void getOwner(String projectName, AsyncCallback<String> callback) {
-        proxy.getOwner(projectName, callback);
+    public void getOwner(ProjectId projectId, AsyncCallback<String> callback) {
+        proxy.getOwner(projectId.getProjectName(), callback);
     }
 
-    public void canManageProject(String projectName, String userName, AsyncCallback<Boolean> callback) {
-        proxy.canManageProject(projectName, userName, callback);
+    public void canManageProject(ProjectId projectId, UserId userId, AsyncCallback<Boolean> callback) {
+        proxy.canManageProject(projectId.getProjectName(), userId.getUserName(), callback);
     }
 
     public void getUsers(AsyncCallback<List<String>> callback) {
         proxy.getUsers(callback);
     }
 
-    public void addReadPermission(String projectName, List<String> userName, AsyncCallback<Void> callback) {
-        proxy.addReadPermission(projectName, userName, callback);
+    public void addReadPermission(ProjectId projectId, List<String> userName, AsyncCallback<Void> callback) {
+        proxy.addReadPermission(projectId.getProjectName(), userName, callback);
     }
 
-    public void removeReadPermission(String projectName, List<String> userName, AsyncCallback<Void> callback) {
-        proxy.removeReadPermission(projectName, userName, callback);
+    public void removeReadPermission(ProjectId projectId, List<String> userName, AsyncCallback<Void> callback) {
+        proxy.removeReadPermission(projectId.getProjectName(), userName, callback);
     }
 
-    public void addWritePermission(String projectName, List<String> userName, AsyncCallback<Void> callback) {
-        proxy.addWritePermission(projectName, userName, callback);
+    public void addWritePermission(ProjectId projectId, List<String> userName, AsyncCallback<Void> callback) {
+        proxy.addWritePermission(projectId.getProjectName(), userName, callback);
     }
 
-    public void removeWritePermission(String projectName, List<String> userName, AsyncCallback<Void> callback) {
-        proxy.removeWritePermission(projectName, userName, callback);
+    public void removeWritePermission(ProjectId projectId, List<String> userName, AsyncCallback<Void> callback) {
+        proxy.removeWritePermission(projectId.getProjectName(), userName, callback);
     }
 
-    public void getUsersWithReadOnlyAccess(String projectName, AsyncCallback<Collection<AccessPolicyUserData>> callback) {
-        proxy.getUsersWithReadOnlyAccess(projectName, callback);
+    public void getUsersWithReadOnlyAccess(ProjectId projectId, AsyncCallback<Collection<AccessPolicyUserData>> callback) {
+        proxy.getUsersWithReadOnlyAccess(projectId.getProjectName(), callback);
     }
 
-    public void getUsersWithWriteAccess(String projectName, AsyncCallback<Collection<AccessPolicyUserData>> callback) {
-        proxy.getUsersWithWriteAccess(projectName, callback);
+    public void getUsersWithWriteAccess(ProjectId projectId, AsyncCallback<Collection<AccessPolicyUserData>> callback) {
+        proxy.getUsersWithWriteAccess(projectId.getProjectName(), callback);
     }
 
-    public void checkIfAdditionalPolicyPresent(String projectName, AsyncCallback<Boolean> callback) {
-        proxy.checkIfAdditionalPolicyPresent(projectName, callback);
+    public void checkIfAdditionalPolicyPresent(ProjectId projectId, AsyncCallback<Boolean> callback) {
+        proxy.checkIfAdditionalPolicyPresent(projectId.getProjectName(), callback);
     }
 
-    public void createTemporaryAccountForInvitation(String projectName, String invitationBaseURL,
+    public void createTemporaryAccountForInvitation(ProjectId projectId, String invitationBaseURL,
                                                     List<Invitation> invitations, AsyncCallback<Void> callback) {
-        proxy.createTemporaryAccountForInvitation(projectName, invitationBaseURL, invitations, callback);
+        proxy.createTemporaryAccountForInvitation(projectId.getProjectName(), invitationBaseURL, invitations, callback);
     }
 
     public void isInvitedAccountPresent(String invitationId, AsyncCallback<Boolean> callback) {

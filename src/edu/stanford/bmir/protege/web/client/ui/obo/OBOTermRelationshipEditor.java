@@ -11,13 +11,14 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequestEntityMatchType;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermRelationships;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestOracle;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
+import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.*;
 
@@ -49,17 +50,17 @@ public class OBOTermRelationshipEditor implements OBOTermEditor {
 
     private final EntitySuggestOracle fillerSuggestOracle;
     
-    private Map<String, VisualObjectProperty> objectPropertyBrowserText = new HashMap<String, VisualObjectProperty>();
+    private Map<String, OWLObjectPropertyData> objectPropertyBrowserText = new HashMap<String, OWLObjectPropertyData>();
     
-    private Map<String, VisualNamedClass> clsBrowserText = new HashMap<String, VisualNamedClass>();
+    private Map<String, OWLClassData> clsBrowserText = new HashMap<String, OWLClassData>();
 
     private boolean dirty = false;
     
     
     public OBOTermRelationshipEditor(ProjectId projectId) {
         this.projectId = projectId;
-        objectPropertySuggestOracle = new EntitySuggestOracle(this.projectId, 20, EntityLookupRequestEntityMatchType.MATCH_OBJECT_PROPERTIES);
-        fillerSuggestOracle = new EntitySuggestOracle(this.projectId, 20, EntityLookupRequestEntityMatchType.MATCH_CLASSES);
+        objectPropertySuggestOracle = new EntitySuggestOracle(this.projectId, 20, EntityType.OBJECT_PROPERTY);
+        fillerSuggestOracle = new EntitySuggestOracle(this.projectId, 20, EntityType.CLASS);
         table.setBorderWidth(0);
         table.setCellPadding(0);
         table.setCellSpacing(0);
@@ -83,9 +84,9 @@ public class OBOTermRelationshipEditor implements OBOTermEditor {
         List<OBORelationship> relationships = new ArrayList<OBORelationship>();
         for(int i = 0; i < table.getRowCount(); i++) {
             String propertyBrowserText = getTextAt(i, 0);
-            VisualObjectProperty prop = objectPropertyBrowserText.get(propertyBrowserText);
+            OWLObjectPropertyData prop = objectPropertyBrowserText.get(propertyBrowserText);
             String fillerBrowserText = getTextAt(i, 1);
-            VisualNamedClass cls = clsBrowserText.get(fillerBrowserText);
+            OWLClassData cls = clsBrowserText.get(fillerBrowserText);
             if (prop != null && cls != null) {
                 relationships.add(new OBORelationship(prop, cls));
             }
@@ -123,9 +124,9 @@ public class OBOTermRelationshipEditor implements OBOTermEditor {
         return dirty;
     }
 
-    private void addRow(VisualObject<?> property, VisualObject<?> cls) {
-        objectPropertyBrowserText.put(property.getBrowserText(), (VisualObjectProperty) property);
-        clsBrowserText.put(cls.getBrowserText(), (VisualNamedClass) cls);
+    private void addRow(OWLObjectPropertyData property, OWLClassData cls) {
+        objectPropertyBrowserText.put(property.getBrowserText(), property);
+        clsBrowserText.put(cls.getBrowserText(), cls);
         String propertyBrowserText = property.getBrowserText();
         String fillerBrowserText = cls.getBrowserText();
         addRow(propertyBrowserText, fillerBrowserText);
@@ -151,7 +152,7 @@ public class OBOTermRelationshipEditor implements OBOTermEditor {
         propertyField.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
             public void onSelection(SelectionEvent<SuggestOracle.Suggestion> suggestionSelectionEvent) {
                 EntitySuggestion suggestion = (EntitySuggestion) suggestionSelectionEvent.getSelectedItem();
-                objectPropertyBrowserText.put(suggestion.getReplacementString(), (VisualObjectProperty) suggestion.getEntity());
+                objectPropertyBrowserText.put(suggestion.getReplacementString(), (OWLObjectPropertyData) suggestion.getEntity());
                 dirty = true;
             }
         });
@@ -166,7 +167,7 @@ public class OBOTermRelationshipEditor implements OBOTermEditor {
         fillerField.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
             public void onSelection(SelectionEvent<SuggestOracle.Suggestion> suggestionSelectionEvent) {
                 EntitySuggestion suggestion = (EntitySuggestion) suggestionSelectionEvent.getSelectedItem();
-                clsBrowserText.put(suggestion.getReplacementString(), (VisualNamedClass) suggestion.getEntity());
+                clsBrowserText.put(suggestion.getReplacementString(), (OWLClassData) suggestion.getEntity());
                 dirty = true;
             }
         });

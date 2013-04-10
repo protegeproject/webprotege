@@ -17,7 +17,7 @@ import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.HierarchyServiceManager;
@@ -180,8 +180,8 @@ public class ChangeParentPanel extends FormPanel implements Selectable {
     }
 
     protected void performMove(String clsName, Collection<String> parentsToAdd, Collection<String> parentsToRemove, String reasonForChange) {
-        HierarchyServiceManager.getInstance().changeParent(project.getProjectName(), clsName, parentsToAdd, parentsToRemove,
-                GlobalSettings.getGlobalSettings().getUserName(), UIUtil.getAppliedToTransactionString(getOperationDescription(), clsName),
+        HierarchyServiceManager.getInstance().changeParent(project.getProjectId(), clsName, parentsToAdd, parentsToRemove,
+                Application.get().getUserId(), UIUtil.getAppliedToTransactionString(getOperationDescription(), clsName),
                 reasonForChange, new MoveHandler());
     }
 

@@ -26,7 +26,8 @@ public class ItemListSuggestBox<T> extends SuggestBox {
         String [] lines = base.getText().split("\n");
         Set<T> items = new HashSet<T>();
         for(String line : lines) {
-            items.addAll(itemProvider.getItemsMatchingExactly(line.trim()));
+            final List<T> itemsMatchingExactly = itemProvider.getItemsMatchingExactly(line.trim());
+            items.addAll(itemsMatchingExactly);
         }
         return items;
     }

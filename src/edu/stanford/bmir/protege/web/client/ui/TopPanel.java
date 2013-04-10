@@ -1,14 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
-import java.util.Collection;
-
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.regexp.shared.SplitResult;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Random;
@@ -23,22 +18,21 @@ import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
-import edu.stanford.bmir.protege.web.client.model.PermissionConstants;
-import edu.stanford.bmir.protege.web.client.model.ShareOntologyAccessEventManager;
-import edu.stanford.bmir.protege.web.client.model.SystemEventManager;
-import edu.stanford.bmir.protege.web.client.model.event.LoginEvent;
-import edu.stanford.bmir.protege.web.client.model.event.UpdateShareLinkEvent;
-import edu.stanford.bmir.protege.web.client.model.listener.ShareOntologyAccessListenerAdapter;
-import edu.stanford.bmir.protege.web.client.model.listener.SystemListenerAdapter;
+import edu.stanford.bmir.protege.web.client.events.*;
+import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.model.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.ui.bioportal.publish.PublishToBioPortalDialog;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionName;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.ui.editprofile.EditProfileUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
@@ -83,7 +77,7 @@ public class TopPanel extends Panel {
 
     private MenuItem addUser;
 
-    private String currentSelectedProject = null; // Set only if user is owner of the project
+//    private ProjectId currentSelectedProject = null; // Set only if user is owner of the project
 
     private AccessPolicyUtil accessPolicyUtil = null;
 
@@ -96,6 +90,7 @@ public class TopPanel extends Panel {
         setLayout(new FitLayout());
         setAutoWidth(true);
         setCls("top-panel");
+        setId("top-panel");
 
         // Outer panel to house logo and inner panel
         HorizontalPanel outer = new HorizontalPanel();
@@ -120,77 +115,61 @@ public class TopPanel extends Panel {
 
         adjustOptionPanel();
 
-        SystemEventManager.getSystemEventManager().addLoginListener(new SystemListenerAdapter() {
+
+        EventBusManager.getManager().registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
-            public void onLogin(LoginEvent loginEvent) {
-                adjustUserNameText();
-                adjustOptionPanel();
-                AccessPolicyUtil.updateShareLink(currentSelectedProject);
-
-            }
-
-            @Override
-            public void onLogout(LoginEvent loginEvent) {
-                adjustUserNameText();
-                adjustOptionPanel();
-                AccessPolicyUtil.updateShareLink(currentSelectedProject);
-                AdminServiceManager.getInstance().logout(new AsyncCallback<Void>() {
-
-                    public void onSuccess(Void result) {
-                    }
-
-                    public void onFailure(Throwable caught) {
-                        GWT.log("Could not logout from server", caught);
-                    }
-                });
+            public void handleUserLoggedIn(UserLoggedInEvent event) {
+                updateState();
             }
         });
 
-        ShareOntologyAccessEventManager.getShareOntologyAccessManager().addShareLinkVisibilityListener(new ShareOntologyAccessListenerAdapter() {
-
-            /*
-            * (non-Javadoc)
-            *
-            * @see
-            * edu.stanford.bmir.protege.web.client.model.listener
-            * .
-            * SystemListenerAdapter#onProjectChanged(edu.stanford
-            * .bmir.protege.web.client.model.event.
-            * ProjectChangedEvent)
-            */
+        EventBusManager.getManager().registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
             @Override
-            public void updateShareLink(UpdateShareLinkEvent projectChangedEvent) {
-                currentSelectedProject = projectChangedEvent.getCurrentSelectedProject();
-                shareLinkPanel.setVisible(projectChangedEvent.isShowShareLink());
-                publishLinkPanel.setVisible(projectChangedEvent.isShowShareLink());
-                updateShareLink(projectChangedEvent.isShowShareLink());
+            public void handleUserLoggedOut(UserLoggedOutEvent event) {
+                updateState();
             }
-
-            /*
-            * (non-Javadoc)
-            *
-            * @see
-            * edu.stanford.bmir.protege.web.client.model.listener
-            * .SystemListenerAdapter#updateShareLink(boolean)
-            */
-            @Override
-            public void updateShareLink(boolean showShareLink) {
-                shareLinkPanel.setVisible(showShareLink);
-                // TODO: This is a temporary hack.  If a person can share then they can configure
-                configureLinkPanel.setVisible(showShareLink);
-            }
-
         });
 
-        AdminServiceManager.getInstance().getCurrentUserInSession(new AsyncCallback<UserData>() {
-            public void onSuccess(UserData userData) {
-                GlobalSettings.getGlobalSettings().setUser(userData);
-            }
-
-            public void onFailure(Throwable caught) {
-                GWT.log("Could not get server permission from server", caught);
+        EventBusManager.getManager().registerHandler(ActiveProjectChangedEvent.TYPE, new ActiveProjectChangedHandler() {
+            @Override
+            public void handleActiveProjectChanged(ActiveProjectChangedEvent event) {
+                updateState();
             }
         });
+
+        updateState();
+
+    }
+
+    private boolean isCurrentUserCurrentProjectOwner() {
+        Optional<ProjectId> activeProject = Application.get().getActiveProject();
+        if(!activeProject.isPresent()) {
+            return false;
+        }
+        UserId userId = Application.get().getUserId();
+        if(userId.isGuest()) {
+            return false;
+        }
+        Optional<Project> opProject = ProjectManager.get().getProject(activeProject.get());
+        if(!opProject.isPresent()) {
+            return false;
+        }
+        Project project = opProject.get();
+        return userId.equals(project.getProjectDetails().getOwner());
+    }
+
+    private void updateState() {
+
+        boolean currentUserCanAdmin = isCurrentUserCurrentProjectOwner();
+
+        adjustUserNameText();
+        adjustOptionPanel();
+
+        shareLinkPanel.setVisible(currentUserCanAdmin);
+        // TODO: This is a temporary hack.  If a person can share then they can configure
+        configureLinkPanel.setVisible(currentUserCanAdmin);
+//        publishLinkPanel.setVisible(currentUserCanAdmin);
+//        updateShareLink(projectChangedEvent.isShowShareLink());
     }
 
     protected Image getImage() {
@@ -202,13 +181,13 @@ public class TopPanel extends Panel {
      * should be visible otherwise disable
      */
     public void adjustOptionPanel() {
-        String userName = GlobalSettings.getGlobalSettings().getUserName();
-        if (userName != null) { // login
+        UserId userId = Application.get().getUserId();
+        if (!userId.isGuest()) { // login
             signupPanel.setVisible(false);
             optionsLinks.setVisible(true);
-            AdminServiceManager.getInstance().getAllowedServerOperations(userName, new AsyncCallback<Collection<String>>() {
-                public void onSuccess(Collection<String> operations) {
-                    if (operations.contains(PermissionConstants.CREATE_USERS)) {
+            AdminServiceManager.getInstance().getAllowedServerOperations(userId, new AsyncCallback<PermissionsSet>() {
+                public void onSuccess(PermissionsSet permissionsSet) {
+                    if (permissionsSet.contains(Permission.getPermission(PermissionName.CREATE_USERS))) {
                         addUserMenuItem();
                     }
                 }
@@ -249,8 +228,10 @@ public class TopPanel extends Panel {
 
         // Adding Share Link
         links.add(getShareLinkPanel());
-        
-        links.add(getPublishLinkPanel());
+
+        // TODO: Disabled for now.  Needs more testing.
+        createPublishLinkPanel();
+//        links.add(createPublishLinkPanel());
         
         links.add(getProjectConfigLinkPanel());
 
@@ -299,7 +280,12 @@ public class TopPanel extends Panel {
         shareHtml = new HTML("<a id='share' href='javascript:;'><span style='font-size:75%; text-decoration:underline;'>" + "Share" + "</span></a>");
         shareHtml.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                SharingSettingsDialog dlg = new SharingSettingsDialog(new ProjectId(currentSelectedProject));
+                Optional<ProjectId> activeProjectId = Application.get().getActiveProject();
+                if(!activeProjectId.isPresent()) {
+                    MessageBox.alert("No project is selected");
+                    return;
+                }
+                SharingSettingsDialog dlg = new SharingSettingsDialog(activeProjectId.get());
                 dlg.setVisible(true);
             }
         });
@@ -310,7 +296,7 @@ public class TopPanel extends Panel {
         return shareLinkPanel;
     }
 
-    protected HorizontalPanel getPublishLinkPanel() {
+    protected HorizontalPanel createPublishLinkPanel() {
         publishHtml = new HTML("<a id='publish' href='javascript:;'><span style='font-size:75%; text-decoration:underline;'>" + "Publish" + "</span></a>");
         publishHtml.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -328,7 +314,12 @@ public class TopPanel extends Panel {
         configureHtml = new HTML("<a id='projectconfig' href='javascript:;'><span style='font-size:75%; text-decoration:underline;'>" + "Configure" + "</span></a>");
         configureHtml.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                ProjectConfigurationDialog dlg = new ProjectConfigurationDialog(new ProjectId(currentSelectedProject));
+                Optional<ProjectId> activeProjectId = Application.get().getActiveProject();
+                if(!activeProjectId.isPresent()) {
+                    MessageBox.alert("No project is selected");
+                    return;
+                }
+                ProjectConfigurationDialog dlg = new ProjectConfigurationDialog(activeProjectId.get());
                 dlg.setVisible(true);
             }
         });
@@ -379,7 +370,7 @@ public class TopPanel extends Panel {
                     changePasswordWithHttps(loginUtil);
                 }
                 else {
-                    loginUtil.changePassword(GlobalSettings.getGlobalSettings().getUserName(), isLoginWithHttps);
+                    loginUtil.changePassword(Application.get().getUserId(), isLoginWithHttps);
                 }
             }
         });
@@ -415,8 +406,13 @@ public class TopPanel extends Panel {
     }
 
     protected String getUserNameText() {
-        String name = GlobalSettings.getGlobalSettings().getUserName();
-        return name == null ? "You&nbsp;are&nbsp;not&nbsp;signed&nbsp;in." : name;
+        UserId userId = Application.get().getUserId();
+        if(userId.isGuest()) {
+            return "You&nbsp;are&nbsp;not&nbsp;signed&nbsp;in.";
+        }
+        else {
+            return userId.getUserName();
+        }
     }
 
     /*
@@ -424,16 +420,14 @@ public class TopPanel extends Panel {
      */
 
     protected String getSignInOutText() {
-        return GlobalSettings.getGlobalSettings().isLoggedIn() ? "Sign&nbsp;Out" : "Sign&nbsp;In";
+        return Application.get().isGuestUser() ? "Sign&nbsp;In" : "Sign&nbsp;Out";
     }
 
     protected void onSignInOut() {
         final LoginUtil loginUtil = new LoginUtil();
-        String userName = GlobalSettings.getGlobalSettings().getUserName();
-        if (userName == null) {
-
+        UserId userId = Application.get().getUserId();
+        if (userId.isGuest()) {
             Boolean isLoginWithHttps = ClientApplicationPropertiesCache.getLoginWithHttps();
-//            FacebookLoginUtil.loginMethod = AuthenticationConstants.LOGIN_METHOD_FACEBOOK_ACCOUNT;
             if (isLoginWithHttps) {
                 String httpsPort = ClientApplicationPropertiesCache.getApplicationHttpsPort();
                 String authenUrl = loginUtil.getAuthenticateWindowUrl(AuthenticationConstants.AUTHEN_TYPE_LOGIN, httpsPort);
@@ -448,7 +442,7 @@ public class TopPanel extends Panel {
             }
         }
         else {
-            loginUtil.logout();
+            Application.get().doLogOut();
         }
     }
 
@@ -473,7 +467,7 @@ public class TopPanel extends Panel {
         Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
         notifyIfPasswordChanged();
         String authUrl = loginUtil.getAuthenticateWindowUrl(AuthenticationConstants.AUTHEN_TYPE_CHANGE_PASSWORD, httsPort);
-        authUrl = authUrl + "&" + AuthenticationConstants.USERNAME + "=" + GlobalSettings.getGlobalSettings().getUserName();
+        authUrl = authUrl + "&" + AuthenticationConstants.USERNAME + "=" + Application.get().getUserId().getUserName();
         loginUtil.openNewWindow(authUrl, "440", "260", "0");
     }
 
@@ -542,8 +536,13 @@ public class TopPanel extends Panel {
     }
 
     public void handlePublish() {
+        Optional<ProjectId> activeProjectId = Application.get().getActiveProject();
+        if(!activeProjectId.isPresent()) {
+            MessageBox.alert("No project is selected");
+            return;
+        }
         ProjectManagerServiceAsync service = GWT.create(ProjectManagerService.class);
-        service.getProjectData(new ProjectId(currentSelectedProject), new AsyncCallback<ProjectData>() {
+        service.getProjectData(activeProjectId.get(), new AsyncCallback<ProjectData>() {
             public void onFailure(Throwable caught) {
                 MessageBox.alert("There was a problem getting the project data from the server.  Please try again.");
             }
@@ -555,11 +554,11 @@ public class TopPanel extends Panel {
     }
     
     private void showBioPortalUploadDialog(ProjectData projectData) {
-        UserData userData = GlobalSettings.getGlobalSettings().getUser();
-        if(userData != null && projectData != null) {
-            PublishToBioPortalDialog dlg = new PublishToBioPortalDialog(projectData, userData);
-            dlg.show();
-        }
+//        UserData userData = Application.get().getUser();
+//        if(userData != null && projectData != null) {
+//            PublishToBioPortalDialog dlg = new PublishToBioPortalDialog(projectData, userData);
+//            dlg.show();
+//        }
     }
     
     
@@ -567,9 +566,6 @@ public class TopPanel extends Panel {
     private void handleSignup() {
         WebProtegeSignupDialog dlg = new WebProtegeSignupDialog();
         dlg.setVisible(true);
-//        LoginUtil loginUtil = new LoginUtil();
-//        Boolean isLoginWithHttps = ClientApplicationPropertiesCache.getLoginWithHttps();
-//        loginUtil.createNewUser(isLoginWithHttps);
     }
 
 }

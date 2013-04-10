@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.primitive;
 
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+
 import java.io.Serializable;
 
 /**
@@ -8,9 +10,9 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/05/2012
  */
-public class VisualAnnotationProperty extends VisualEntity<AnnotationProperty> implements Serializable {
+public class VisualAnnotationProperty extends VisualEntity<OWLAnnotationProperty> implements Serializable {
 
-    public VisualAnnotationProperty(AnnotationProperty entity, String browserText) {
+    public VisualAnnotationProperty(OWLAnnotationProperty entity, String browserText) {
         super(entity, browserText);
     }
 }

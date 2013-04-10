@@ -41,7 +41,7 @@ import com.gwtext.client.widgets.grid.event.GridRowListener;
 import com.gwtext.client.widgets.grid.event.GridRowListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
@@ -168,8 +168,8 @@ public class AllPropertiesGrid extends EditorGridPanel {
 
 
     protected void addPropertyValue(String entityName, String propName, ValueType propValueType, String newValue, String operationDescription) {
-        propertyValueUtil.addPropertyValue(project.getProjectName(), entityName, propName, propValueType, newValue,
-                GlobalSettings.getGlobalSettings().getUserName(), operationDescription, new ReplacePropertyValueHandler());
+        propertyValueUtil.addPropertyValue(project.getProjectId(), entityName, propName, propValueType, newValue,
+                Application.get().getUserId(), operationDescription, new ReplacePropertyValueHandler());
     }
 
     protected GridRowListener getRowListener() {
@@ -200,7 +200,7 @@ public class AllPropertiesGrid extends EditorGridPanel {
                 public boolean doBeforeEdit(GridPanel grid, Record record, String field, Object value, int rowIndex,
                         int colIndex) {
 
-                    if (!project.hasWritePermission(GlobalSettings.getGlobalSettings().getUserName())) {
+                    if (!project.hasWritePermission(Application.get().getUserId())) {
                         return false;
                     } // this editor only handles the editing of strings and any values
                     return isStringOrAnyValueType((PropertyEntityData) (store.getAt(rowIndex).getAsObject(PROPERTY)));
@@ -259,15 +259,15 @@ public class AllPropertiesGrid extends EditorGridPanel {
     // later
     protected void replacePropertyValue(String entityName, String propName, ValueType propValueType, String oldValue,
             String newValue, String operationDescription) {
-        propertyValueUtil.replacePropertyValue(project.getProjectName(), entityName, propName, propValueType, oldValue,
-                newValue, GlobalSettings.getGlobalSettings().getUserName(), operationDescription,
+        propertyValueUtil.replacePropertyValue(project.getProjectId(), entityName, propName, propValueType, oldValue,
+                newValue, Application.get().getUserId(), operationDescription,
                 new ReplacePropertyValueHandler());
     }
 
     protected void deletePropertyValue(String entityName, String propName, ValueType propValueType, String value,
             String operationDescription) {
-        propertyValueUtil.deletePropertyValue(project.getProjectName(), entityName, propName, propValueType, value,
-                GlobalSettings.getGlobalSettings().getUserName(), operationDescription,
+        propertyValueUtil.deletePropertyValue(project.getProjectId(), entityName, propName, propValueType, value,
+                Application.get().getUserId(), operationDescription,
                 new RemovePropertyValueHandler());
 
     }
@@ -293,13 +293,13 @@ public class AllPropertiesGrid extends EditorGridPanel {
                 onAddPropertyValue();
             }
         });
-        if (!project.hasWritePermission(GlobalSettings.getGlobalSettings().getUserName())) {
+        if (!project.hasWritePermission(Application.get().getUserId())) {
             createButton.disable();
         }
 
         deleteButton = new ToolbarButton("Delete property value");
         deleteButton.setCls("toolbar-button");
-        if (!project.hasWritePermission(GlobalSettings.getGlobalSettings().getUserName())) {
+        if (!project.hasWritePermission(Application.get().getUserId())) {
             deleteButton.disable();
         }
         deleteButton.addListener(new ButtonListenerAdapter() {
@@ -413,7 +413,7 @@ public class AllPropertiesGrid extends EditorGridPanel {
     private ToolbarButton deleteButton;
 
     public void updateButtonStates() {
-        if (project.hasWritePermission(GlobalSettings.getGlobalSettings().getUserName())) {
+        if (project.hasWritePermission(Application.get().getUserId())) {
             createButton.enable();
             deleteButton.enable();
         } else {
@@ -425,7 +425,7 @@ public class AllPropertiesGrid extends EditorGridPanel {
 
     public void reload() {
         store.removeAll();
-        OntologyServiceManager.getInstance().getEntityTriples(project.getProjectName(), _currentEntity.getName(),
+        OntologyServiceManager.getInstance().getEntityTriples(project.getProjectId(), _currentEntity.getName(),
                 new GetTriplesHandler());
     }
 

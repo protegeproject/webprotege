@@ -61,7 +61,7 @@ public class OBOEntityEditorKit extends OWLAPIEntityEditorKit {
     public List<OWLEntityBrowserTextChangeSet> getChangedEntities(List<OWLOntologyChangeRecord> ontologyChanges) {
         List<OWLEntityBrowserTextChangeSet> result = new ArrayList<OWLEntityBrowserTextChangeSet>();
         for(OWLOntologyChangeRecord record : ontologyChanges) {
-            OWLOntologyChangeRecordInfo info = record.getInfo();
+            OWLOntologyChangeData info = record.getData();
             BrowserTextChangeDetector detector = new BrowserTextChangeDetector();
             info.accept(detector);
             for(BrowserTextChange change : detector.getBrowserTextChanges()) {
@@ -106,7 +106,7 @@ public class OBOEntityEditorKit extends OWLAPIEntityEditorKit {
     }
     
     
-    private class BrowserTextChangeDetector extends OWLAxiomVisitorAdapter implements OWLOntologyChangeRecordInfoVisitor<Object, RuntimeException> {
+    private class BrowserTextChangeDetector extends OWLAxiomVisitorAdapter implements OWLOntologyChangeDataVisitor<Object, RuntimeException> {
 
         // Order is important!
         
@@ -133,34 +133,37 @@ public class OBOEntityEditorKit extends OWLAPIEntityEditorKit {
             return changes;
         }
         
-        public Object visit(AddAxiomChangeRecordInfo data) throws RuntimeException {
+        public Object visit(AddAxiomData data) throws RuntimeException {
             OWLAxiom axiom = data.getAxiom();
             changeType = ChangeType.ADD;
             axiom.accept(this);
             return null;
         }
 
-        public Object visit(RemoveAxiomChangeRecordInfo data) throws RuntimeException {
+        public Object visit(RemoveAxiomData data) throws RuntimeException {
+            OWLAxiom axiom = data.getAxiom();
+            changeType = ChangeType.REMOVE;
+            axiom.accept(this);
             return null;
         }
 
-        public Object visit(AddOntologyAnnotationChangeRecordInfo data) throws RuntimeException {
+        public Object visit(AddOntologyAnnotationData data) throws RuntimeException {
             return null;
         }
 
-        public Object visit(RemoveOntologyAnnotationChangeRecordInfo data) throws RuntimeException {
+        public Object visit(RemoveOntologyAnnotationData data) throws RuntimeException {
             return null;
         }
 
-        public Object visit(SetOntologyIDChangeRecordInfo data) throws RuntimeException {
+        public Object visit(SetOntologyIDData data) throws RuntimeException {
             return null;
         }
 
-        public Object visit(AddImportChangeRecordInfo data) throws RuntimeException {
+        public Object visit(AddImportData data) throws RuntimeException {
             return null;
         }
 
-        public Object visit(RemoveImportChangeRecordInfo data) throws RuntimeException {
+        public Object visit(RemoveImportData data) throws RuntimeException {
             return null;
         }
 

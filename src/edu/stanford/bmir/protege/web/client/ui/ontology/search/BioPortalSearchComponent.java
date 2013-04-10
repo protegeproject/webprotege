@@ -35,7 +35,7 @@ import com.gwtext.client.widgets.grid.Renderer;
 import com.gwtext.client.widgets.grid.event.GridCellListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
@@ -283,13 +283,13 @@ public class BioPortalSearchComponent extends GridPanel {
         BioPortalReferenceData bpRefData = createBioPortalReferenceDataFromRecord(record);
         if(replaceExisting && isSingleValued){
             EntityData oldValueEntityData = new EntityData(currentValue);
-            OntologyServiceManager.getInstance().replaceExternalReference(project.getProjectName(), currentEntity.getName(), bpRefData,
-                    oldValueEntityData, GlobalSettings.getGlobalSettings().getUserName(),
+            OntologyServiceManager.getInstance().replaceExternalReference(project.getProjectId(), currentEntity.getName(), bpRefData,
+                    oldValueEntityData, Application.get().getUserId(),
                     getReplaceReferenceApplyToString(bpRefData, oldValueEntityData),
                     getImportBioPortalConceptHandler());
         } else {
-            OntologyServiceManager.getInstance().createExternalReference(project.getProjectName(), currentEntity.getName(), bpRefData,
-                    GlobalSettings.getGlobalSettings().getUserName(),
+            OntologyServiceManager.getInstance().createExternalReference(project.getProjectId(), currentEntity.getName(), bpRefData,
+                    Application.get().getUserId(),
                     getImportReferenceApplyToString(bpRefData),
                     getImportBioPortalConceptHandler());
             replaceExisting = true;
@@ -331,7 +331,7 @@ public class BioPortalSearchComponent extends GridPanel {
         initBioPortalSearchData(bpSearchData);
         BioPortalReferenceData bpRefData = createBioPortalReferenceDataFromRecord(record);
 
-        OntologyServiceManager.getInstance().getBioPortalSearchContentDetails(project.getProjectName(), bpSearchData,
+        OntologyServiceManager.getInstance().getBioPortalSearchContentDetails(project.getProjectId(), bpSearchData,
                 bpRefData, new AsyncCallback<String>() {
                     public void onFailure(Throwable caught) {
                         doUnmask(panel);
@@ -470,7 +470,7 @@ public class BioPortalSearchComponent extends GridPanel {
             if (configPropertiesMap != null) {
                 BioPortalSearchData bpSearchData = new BioPortalSearchData();
                 initBioPortalSearchData(bpSearchData);
-                OntologyServiceManager.getInstance().getBioPortalSearchContent(project.getProjectName(), searchString,
+                OntologyServiceManager.getInstance().getBioPortalSearchContent(project.getProjectId(), searchString,
                         bpSearchData, new GetSearchURLContentHandler());
             } else {
                 GWT.log("configPropertiesMap should have been initialized!", new Exception(
@@ -620,10 +620,10 @@ public class BioPortalSearchComponent extends GridPanel {
         bpRefData.setPreferredName(BioPortalConstants.DNF_CONCEPT_LABEL);
         bpRefData.setBpUrl(null);//do not use the BP rest URL to find out more information about this concept
         OntologyServiceManager.getInstance().createExternalReference(
-                project.getProjectName(),
+                project.getProjectId(),
                 currentEntity.getName(),
                 bpRefData,
-                GlobalSettings.getGlobalSettings().getUserName(),
+                Application.get().getUserId(),
                 UIUtil.getAppliedToTransactionString("Create a 'Did not find' reference on "
                         + getEntity().getBrowserText() + " "
                         + (String) configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
@@ -644,10 +644,10 @@ public class BioPortalSearchComponent extends GridPanel {
         bpRefData.setPreferredName(preferredName);
         bpRefData.setBpUrl(null);//do not use the BP rest URL to find out more information about this concept
         OntologyServiceManager.getInstance().createExternalReference(
-                project.getProjectName(),
+                project.getProjectId(),
                 currentEntity.getName(),
                 bpRefData,
-                GlobalSettings.getGlobalSettings().getUserName(),
+                Application.get().getUserId(),
                 UIUtil.getAppliedToTransactionString("Created reference on " + getEntity().getBrowserText() + " "
                         + (String) configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
                 getCreateManualreferenceHandler());
@@ -669,11 +669,11 @@ public class BioPortalSearchComponent extends GridPanel {
 
         EntityData oldValueEntityData = new EntityData(oldInstanceName);
         OntologyServiceManager.getInstance().replaceExternalReference(
-                project.getProjectName(),
+                project.getProjectId(),
                 currentEntity. getName(),
                 bpRefData,
                 oldValueEntityData,
-                GlobalSettings.getGlobalSettings().getUserName(),
+                Application.get().getUserId(),
                 UIUtil.getAppliedToTransactionString("Created reference on " + getEntity().getBrowserText() + " "
                         + (String) configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
                 getCreateManualreferenceHandler());
@@ -789,7 +789,8 @@ public class BioPortalSearchComponent extends GridPanel {
             doUnmask(BioPortalSearchComponent.this);
             MessageBox.alert(refInstance != null ? "Import operation succeeded. Reference instance: " + refInstance
                     : "Import operation did not succeed");
-            project.forceGetEvents();
+            //
+//            project.forceGetEvents();
         }
     }
 
@@ -837,7 +838,7 @@ public class BioPortalSearchComponent extends GridPanel {
             MessageBox.alert(refInstance != null ? "Reference creation SUCCEDED! Reference instance: " + refInstance
                     : "Reference creation DID NOT SUCCEDED!");
             this.note.setAnnotatedEntity(refInstance);
-            ReferenceFieldWidget.addUserComment(project, note);
+            ReferenceFieldWidget.addUserComment(project.getProjectId(), note);
         }
     }
 }

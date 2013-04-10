@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.primitive;
 
+import org.semanticweb.owlapi.model.OWLObject;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/05/2012
  */
-public class VisualPrimitive<O extends Primitive> extends VisualObject<O> implements Serializable {
+public class VisualPrimitive<O extends OWLObject> extends VisualObject<O> implements Serializable {
 
     protected VisualPrimitive() {
         super();

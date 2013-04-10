@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
-import com.google.gwt.view.client.ProvidesKey;
-
 import java.io.Serializable;
 
 /**
@@ -23,7 +21,7 @@ public class ProjectData implements Serializable {
     
     private String lastModifiedBy = "";
 
-	private ProjectData() {
+	public ProjectData() {
 	}
 
     public ProjectData(String description, String location,

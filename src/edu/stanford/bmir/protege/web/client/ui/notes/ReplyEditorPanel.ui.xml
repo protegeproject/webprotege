@@ -1,0 +1,14 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:t='urn:import:edu.stanford.bmir.protege.web.client.ui.library.text'>
+    <g:HTMLPanel>
+        <div style="width: 100%; background: lightgray; padding: 5px;">
+            <t:ExpandingTextBox mode="MULTI_LINE" anchorVisible="false" placeholder="Enter reply" ui:field="bodyField"/>
+            <div style="padding: 2px;">
+                <g:Button text="Reply" ui:field="saveButton"/>
+                <g:Button text="Cancel" ui:field="cancelButton"/>
+            </div>
+
+        </div>
+    </g:HTMLPanel>
+</ui:UiBinder>

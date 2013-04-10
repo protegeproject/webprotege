@@ -90,7 +90,7 @@ public class MetricsGrid extends GridPanel {
 	}
 	
 	public void reload() {
-		OntologyServiceManager.getInstance().getMetrics(project.getProjectName(),
+		OntologyServiceManager.getInstance().getMetrics(project.getProjectId(),
 				new GetMetrics());
 	}
 	

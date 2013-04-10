@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,13 +17,12 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogClose
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/06/2012
  */
-public class CreateEntityDialog extends WebProtegeDialog<EntityData> {
+public class CreateEntityDialog extends WebProtegeDialog<CreateEntityInfo> {
 
-    public CreateEntityDialog() {
-        super(new CreateEntityDialogController());
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<EntityData>() {
-            public void handleHide(EntityData data, WebProtegeDialogCloser closer) {
-                OntologyServiceAsync service = GWT.create(OntologyService.class);
+    public CreateEntityDialog(EntityType<?> entityType) {
+        super(new CreateEntityDialogController(entityType));
+        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CreateEntityInfo>() {
+            public void handleHide(CreateEntityInfo data, WebProtegeDialogCloser closer) {
                 closer.hide();
             }
         });

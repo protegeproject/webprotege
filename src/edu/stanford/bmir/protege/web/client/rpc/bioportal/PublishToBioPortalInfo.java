@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.client.rpc.bioportal;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
-import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
-
 import java.io.Serializable;
 
 /**

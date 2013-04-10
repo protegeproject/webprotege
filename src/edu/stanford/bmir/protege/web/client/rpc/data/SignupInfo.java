@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
+
 import java.io.Serializable;
 
 /**

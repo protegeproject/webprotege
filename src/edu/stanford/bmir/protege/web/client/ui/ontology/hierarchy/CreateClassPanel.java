@@ -18,15 +18,12 @@ import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.ICDServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
-import edu.stanford.bmir.protege.web.client.ui.icd.ICDClassTreePortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchGridPanel;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
@@ -95,19 +92,20 @@ public class CreateClassPanel extends FormPanel implements Selectable {
 
         //FIXME: ICD specific!!!!
         
-        parentsField = new ClassSelectionField(project, "Parent(s)", true, topClass) {
-            @Override
-            protected edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet createSelectable() {
-                ClassTreePortlet treePortlet = new ICDClassTreePortlet(project, true, false, false, false, topClass);
-                treePortlet.setDraggable(false);
-                treePortlet.setClosable(false);
-                treePortlet.setCollapsible(false);
-                treePortlet.setHeight(300);
-                treePortlet.setWidth(450);
-
-                return treePortlet;
-            };
-        };
+        parentsField = new ClassSelectionField(project, "Parent(s)", true, topClass);
+//        {
+//            @Override
+//            protected edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet createSelectable() {
+//                ClassTreePortlet treePortlet = new ICDClassTreePortlet(project, true, false, false, false, topClass);
+//                treePortlet.setDraggable(false);
+//                treePortlet.setClosable(false);
+//                treePortlet.setCollapsible(false);
+//                treePortlet.setHeight(300);
+//                treePortlet.setWidth(450);
+//
+//                return treePortlet;
+//            };
+//        };
         add(parentsField, new AnchorLayoutData("98%"));
 
         reasonField = new TextAreaField();
@@ -193,19 +191,20 @@ public class CreateClassPanel extends FormPanel implements Selectable {
     }
 
     protected void performCreate() {
-        ICDServiceManager.getInstance().createICDCls(project.getProjectName(), null,
-                UIUtil.getStringCollection(parentsField.getClsValues()), titleField.getValueAsString(), sortingLabelField.getValueAsString(),
-                createICDSpecificEntities, GlobalSettings.getGlobalSettings().getUserName(), getOperationDescription(),
-                "reason for change", new CreateClassHandler()); //TODO: remove the unneeded args
+        throw new RuntimeException("BROKEN");
+//        ICDServiceManager.getInstance().createICDCls(project.getProjectName(), null,
+//                UIUtil.getStringCollection(parentsField.getClsValues()), titleField.getValueAsString(), sortingLabelField.getValueAsString(),
+//                createICDSpecificEntities, GlobalSettings.get().getUserName(), getOperationDescription(),
+//                "reason for change", new CreateClassHandler()); //TODO: remove the unneeded args
     }
 
     protected void createNote(final EntityData newClass, String opDesc, String reasonForChange) {
         NotesData noteData = new NotesData();
-        noteData.setAuthor(GlobalSettings.getGlobalSettings().getUserName());
+        noteData.setAuthor(Application.get().getUserId().getUserName());
         noteData.setSubject("[Reason for change]: " + opDesc);
         noteData.setBody(reasonForChange);
         noteData.setAnnotatedEntity(newClass);
-        ChAOServiceManager.getInstance().createNote(project.getProjectName(), noteData, false, new AbstractAsyncHandler<NotesData>() {
+        ChAOServiceManager.getInstance().createNote(project.getProjectId(), noteData, false, new AbstractAsyncHandler<NotesData>() {
             @Override
             public void handleFailure(Throwable caught) {
                 GWT.log("Could not create note for " + newClass);

@@ -46,11 +46,14 @@ public class IndividualsTab extends AbstractTab {
         if (clsTreePortlet != null && indListPorlet != null) {
             clsTreePortlet.addSelectionListener(new SelectionListener() {
                 public void selectionChanged(SelectionEvent event) {
-                    EntityData selection = clsTreePortlet.getSelection().get(0);
-                    clsTreePortlet.setEntity(selection); //might cause later infinite cycles, if anything will happen in setEntity
-                    Collection<EntityPortlet> portlets = getPortlets();
-                    for (EntityPortlet portlet : portlets) {
-                        portlet.setEntity(selection);
+                    List<EntityData> clsSel = clsTreePortlet.getSelection();
+                    if (!clsSel.isEmpty()) {
+                        EntityData selection = clsSel.get(0);
+                        clsTreePortlet.setEntity(selection); //might cause later infinite cycles, if anything will happen in setEntity
+                        Collection<EntityPortlet> portlets = getPortlets();
+                        for (EntityPortlet portlet : portlets) {
+                            portlet.setEntity(selection);
+                        }
                     }
 
                 }
@@ -79,7 +82,7 @@ public class IndividualsTab extends AbstractTab {
 
         //TODO: support multiple selection
         final EntityData individual = selection.iterator().next();
-        OntologyServiceManager.getInstance().getDirectTypes(this.project.getProjectName(), individual.getName(),
+        OntologyServiceManager.getInstance().getDirectTypes(this.project.getProjectId(), individual.getName(),
                 new AbstractAsyncHandler<List<EntityData>>() {
             @Override
             public void handleFailure(Throwable caught) {

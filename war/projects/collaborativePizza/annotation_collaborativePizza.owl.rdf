@@ -9,7 +9,7 @@
 	 xmlns:rdfs="&rdfs;">
 <kb:Comment rdf:about="&kb;annotation_collaborativePizza.owl_Class0"
 	 kb:author="ttania"
-	 kb:subject="This is a comment on the DomainConcept class"
+	 kb:result="This is a comment on the DomainConcept class"
 	 rdfs:label="This is a comment on the DomainConcept class">
 	<kb:body xml:space='preserve'><![CDATA[<html>
   <head>
@@ -62,7 +62,7 @@
 </kb:Ontology_Class>
 <kb:Explanation rdf:about="&kb;annotation_collaborativePizza.owl_Class3"
 	 kb:author="ttania"
-	 kb:subject="Re: This is a comment on the DomainConcept class"
+	 kb:result="Re: This is a comment on the DomainConcept class"
 	 rdfs:label="Re: This is a comment on the DomainConcept class">
 	<kb:body xml:space='preserve'><![CDATA[<html>
   <head>
@@ -86,7 +86,7 @@
 	 rdfs:label="10/23/2008 22:02:59 GMT-08:00"/>
 <kb:Question rdf:about="&kb;annotation_collaborativePizza.owl_Class5"
 	 kb:author="ttania"
-	 kb:subject="A question on the hasCountryOfOrigin property"
+	 kb:result="A question on the hasCountryOfOrigin property"
 	 rdfs:label="A question on the hasCountryOfOrigin property">
 	<kb:body xml:space='preserve'><![CDATA[<html>
   <head>
@@ -115,7 +115,7 @@
 </kb:Ontology_Property>
 <kb:SeeAlso rdf:about="&kb;annotation_collaborativePizza.owl_Class8"
 	 kb:author="ttania"
-	 kb:subject="See also the other individuals"
+	 kb:result="See also the other individuals"
 	 rdfs:label="See also the other individuals">
 	<kb:body xml:space='preserve'><![CDATA[<html>
   <head>

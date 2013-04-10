@@ -1,19 +1,17 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.client.model.event.OntologyEvent;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.server.KBUtil;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
-import edu.stanford.bmir.protege.web.server.logging.WPLogParam;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceStrategy;
 import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceSubClassStrategy;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetric;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricValue;
-import edu.stanford.bmir.protegex.bp.ref.ProtegeUtil;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.smi.protege.util.Log;
 import org.ncbo.stanford.bean.concept.ClassBean;
 import org.ncbo.stanford.util.BioPortalServerConstants;
@@ -45,6 +43,23 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      */
     public static final String PROPERTY_HIERARCHY_ROOT_NODE_NAME = "RootPropertyNode";
 
+    /**
+     * A constant for the node for annotation properties
+     */
+    public static final String ANNOTATION_PROPERTIES_ROOT_NAME = "Annotation properties";
+
+    /**
+     * The root node for annotation properties
+     */
+    public static final PropertyEntityData ANNOTATION_PROPERTIES_ROOT = new PropertyEntityData(ANNOTATION_PROPERTIES_ROOT_NAME);
+
+
+
+    static {
+        ANNOTATION_PROPERTIES_ROOT.setValueType(ValueType.Property);
+        ANNOTATION_PROPERTIES_ROOT.setPropertyType(PropertyType.ANNOTATION);
+        ANNOTATION_PROPERTIES_ROOT.setBrowserText(ANNOTATION_PROPERTIES_ROOT_NAME);
+    }
 
 
     public OntologyServiceOWLAPIImpl() {
@@ -75,8 +90,18 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         if (projectName == null) {
             throw new NullPointerException("projectName must not be null");
         }
-        ProjectId projectId = new ProjectId(projectName);
+        ProjectId projectId = ProjectId.get(projectName);
         // TODO: Log
+        return getProject(projectId);
+    }
+
+    /**
+     * Gets the OWLAPIProject for a given {@link ProjectId}.If a project with the specified id exists then that project
+     * will be returned, otherwise, a fresh project will be created and that fresh project returned.
+     * @param projectId The id of the project.
+     * @return The OWL API project. Not <code>null</code>.
+     */
+    private OWLAPIProject getProject(ProjectId projectId) {
         OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
         return pm.getProject(projectId);
     }
@@ -86,13 +111,19 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         return project.getRenderingManager();
     }
 
+    private RenderingManager getRenderingManager(ProjectId projectId) {
+        OWLAPIProject project = getProject(projectId);
+        return project.getRenderingManager();
+    }
+
+
     /**
      * Gets the root ontology for a given project name.
      * @param projectName The name of the project.
      * @return The root ontology. Not <code>null</code>.
      */
     private OWLOntology getOntology(String projectName) {
-        ProjectId projectId = new ProjectId(projectName);
+        ProjectId projectId = ProjectId.get(projectName);
         OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
         return pm.getProject(projectId).getRootOntology();
     }
@@ -131,7 +162,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     private UserId getUserId() {
-        return getUserId(KBUtil.getUserInSession(getThreadLocalRequest()));
+        return getUserInSession();
+//        return getUserId(KBUtil.getUserInSession(getThreadLocalRequest()));
     }
 
 
@@ -143,9 +175,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
             if (!changes.isEmpty()) {
                 OWLAPIProject project = cf.getProject();
                 project.applyChanges(cf.getUserId(), changes, cf.getChangeDescription());
-//                OWLAPIChangeManager changeManager = project.getChangeManager();
-//                changeManager.logChanges(cf.getUserId(), changes, cf.getChangeDescription());
-//                project.getRootOntology().getOWLOntologyManager().applyChanges(changes);
             }
         }
 
@@ -174,13 +203,13 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
 
-    public List<OntologyEvent> getEvents(String projectName, long fromVersion) {
-        // TODO: Log user
-        OWLAPIProject project = getProject(projectName);
-        OWLAPIChangeManager changeManager = project.getChangeManager();
-        RevisionNumber revisionNumber = RevisionNumber.getRevisionNumber(fromVersion);
-        return changeManager.getOntologyEventsSinceRevisionNumber(revisionNumber);
-    }
+//    public List<OntologyEvent> getEvents(String projectName, long fromVersion) {
+//        // TODO: Log user
+//        OWLAPIProject project = getProject(projectName);
+//        OWLAPIChangeManager changeManager = project.getChangeManager();
+//        RevisionNumber revisionNumber = RevisionNumber.getRevisionNumber(fromVersion);
+//        return changeManager.getOntologyEventsSinceRevisionNumber(revisionNumber);
+//    }
 
     public Boolean hasWritePermission(String projectName, String userName) {
         return true;
@@ -329,7 +358,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      * Implemented as getting the entity data for the entity corresponding to the specified name.
      * @param projectName The name of the project
      * @param entityName The name of the entity.  This should be an IRI, but this implementation also assumes it could
-     * be browser text. Sigh.
+     * be browser text.
      * @return The entity data for the specified entity.  Web-Protege seems to assume that different types of entities
      *         will not share the same name, and hence methods like this only return one value.  Since different types of
      *         entities CAN share the same name in OWL (due to punning), this method is implemented as getting the first entity
@@ -348,21 +377,21 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         return rm.getEntityData(selectedEntity);
     }
 
-    /**
-     * Deletes any entities that correspond to the specified entity name.  Since more than one entity could have the
-     * specified name, this could delete multiple entities. The actual behaviour of this implementation
-     * is defined in {@link DeleteEntityChangeFactory}.
-     * @param projectName The name of the project in which the deletion will occur.
-     * @param entityName The name of the entity.  Should be an IRI, but could also be browser text for components that
-     * don't do things correctly.
-     * @param user The user (name)
-     * @param operationDescription A high level description of the change.
-     */
-    public void deleteEntity(String projectName, String entityName, String user, String operationDescription) {
-        OWLAPIProject project = getProject(projectName);
-        UserId userId = getUserId(user);
-        applyChanges(new DeleteEntityChangeFactory(project, userId, operationDescription, entityName));
-    }
+//    /**
+//     * Deletes any entities that correspond to the specified entity name.  Since more than one entity could have the
+//     * specified name, this could delete multiple entities. The actual behaviour of this implementation
+//     * is defined in {@link DeleteEntityChangeFactory}.
+//     * @param projectName The name of the project in which the deletion will occur.
+//     * @param entityName The name of the entity.  Should be an IRI, but could also be browser text for components that
+//     * don't do things correctly.
+//     * @param user The user (name)
+//     * @param operationDescription A high level description of the change.
+//     */
+//    public void deleteEntity(String projectName, String entityName, String user, String operationDescription) {
+//        OWLAPIProject project = getProject(projectName);
+//        UserId userId = getUserId(user);
+//        applyChanges(new DeleteEntityChangeFactory(project, userId, operationDescription, entityName));
+//    }
 
 
     /**
@@ -385,36 +414,34 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
     /**
      * "Creates a class".  The behaviour of this implementation is defined in the {@link CreateClassChangeFactory}.
-     * @param projectName The name of the project in which changes will occur.
-     * @param clsName The name of the class to "create" this should be an IRI but could also be the browser text.
-     * @param superClsName A name of a class which the newly created class will be added as a subclass of. This should
-     * be an IRI, but this implementation will tolerate browser text.
-     * @param user The name of the user.
-     * @param operationDescription A high level description.
-     * @return EntityData that represents the newly created class.
-     */
-    public EntityData createCls(String projectName, String clsName, String superClsName, String user, String operationDescription) {
-        OWLAPIProject project = getProject(projectName);
-        CreateClassChangeFactory cf = new CreateClassChangeFactory(project, getUserId(user), operationDescription, clsName, superClsName);
+     *
+     * @param projectId
+     * @param className
+     * @param superCls
+     * @param userId
+     * @param operationDescription A high level description.  @return EntityData that represents the newly created class.
+     * */
+    public EntityData createCls(ProjectId projectId, String className, OWLClass superCls, UserId userId, String operationDescription) {
+        OWLAPIProject project = getProject(projectId);
+        CreateClassChangeFactory cf = new CreateClassChangeFactory(project, userId, operationDescription, className, superCls);
         applyChanges(cf);
-        return getRenderingManager(projectName).getEntityData(clsName, EntityType.CLASS);
+        return getRenderingManager(projectId).getEntityData(className, EntityType.CLASS);
     }
 
     /**
-     * In this implementation, this method delegates to the {@link #createCls(String, String, String, String, String)}
+     * In this implementation, this method delegates to the {@link #createCls(edu.stanford.bmir.protege.web.shared.project.ProjectId, String, org.semanticweb.owlapi.model.OWLClass, edu.stanford.bmir.protege.web.client.rpc.data.UserId, String)}
      * method.
-     * @param projectName The name of the project in which changes will occur.
+     *
+     * @param projectId
      * @param clsName The name of the class to "create" this should be an IRI but could also be the browser text.
-     * @param superClsName A name of a class which the newly created class will be added as a subclass of. This should
-     * be an IRI, but this implementation will tolerate browser text.
-     * @param createMetaClses ?????
-     * @param user The name of the user.
-     * @param operationDescription A high level description.
-     * @return EntityData that represents the newly created class.
+     * @param superCls
+     *@param createMetaClses ?????
+     * @param userId
+     * @param operationDescription A high level description.   @return EntityData that represents the newly created class.
      */
-    public EntityData createCls(String projectName, String clsName, String superClsName, boolean createMetaClses, String user, String operationDescription) {
+    public EntityData createCls(ProjectId projectId, String clsName, OWLClass superCls, boolean createMetaClses, UserId userId, String operationDescription) {
         // Not sure what we should do with the meta class here - delegate to the method without the metaclass
-        return createCls(projectName, clsName, superClsName, user, operationDescription);
+        return createCls(projectId, clsName, superCls, userId, operationDescription);
     }
 
     /**
@@ -424,21 +451,20 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      * doesn't appear to be used anywhere.  In any case, the OWL API implementation approaches this from a different point
      * of view - i.e. it uses different strategies in the form of {@link OWLEntityCreatorFactory} objects (much cleaner
      * really).  I vote for getting rid of this method and its associated junk.
-     * @param projectName The project in which any changes will take place.
+     *
+     * @param projectId
      * @param clsName The name of the class to be "created".  Should be an IRI, but could also be some browser text.
-     * @param superClsName The name of a class (IRI or browser text) which the new class will be specified to be a subclass of.
-     * @param propertyName The name of the property to add.  In this case, this must correspond to an annotation property, otherwise,
+     * @param superCls
+     *@param propertyName The name of the property to add.  In this case, this must correspond to an annotation property, otherwise,
      * it will not be added.
      * @param propertyValue The value of the property to be added.  This should correspond to an OWLAnnotationValue, otherwise
-     * it will not be added.
-     * @param user The user making the changes.
-     * @param operationDescription A high level description of the changes that will take place.
-     * @return EntityData representing the newly "created" class.
+ * it will not be added.
+     * @param userId
+     * @param operationDescription A high level description of the changes that will take place.    @return EntityData representing the newly "created" class.
      */
-    public EntityData createClsWithProperty(String projectName, String clsName, String superClsName, String propertyName, EntityData propertyValue, String user, String operationDescription) {
-        OWLAPIProject project = getProject(projectName);
-        UserId userId = getUserId(user);
-        CreateClassChangeFactory createClassChangeFactory = new CreateClassChangeFactory(project, userId, operationDescription, clsName, superClsName);
+    public EntityData createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls, String propertyName, EntityData propertyValue, UserId userId, String operationDescription) {
+        OWLAPIProject project = getProject(projectId);
+        CreateClassChangeFactory createClassChangeFactory = new CreateClassChangeFactory(project, userId, operationDescription, clsName, superCls);
         AddClassPropertyChangeFactory addClassPropertyChangeFactory = new AddClassPropertyChangeFactory(project, userId, operationDescription, clsName, propertyName, propertyValue);
         applyChanges(createClassChangeFactory, addClassPropertyChangeFactory);
         return project.getRenderingManager().getEntityData(clsName, EntityType.CLASS);
@@ -454,7 +480,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      * an empty list.
      * @return The list of subclasses.
      */
-    public List<SubclassEntityData> getSubclasses(String projectName, @WPLogParam(name="className") String className) {
+    public List<SubclassEntityData> getSubclasses(String projectName, String className) {
         if (projectName == null) {
             throw new NullPointerException("projectName must not be null");
         }
@@ -467,22 +493,40 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         AssertedClassHierarchyProvider hierarchyProvider = project.getClassHierarchyProvider();
         OWLClass cls = rm.getEntity(className, EntityType.CLASS);
 
+        boolean checkForDeprecated = project.getRootOntology().containsAnnotationPropertyInSignature(OWLRDFVocabulary.OWL_DEPRECATED.getIRI());
         for (OWLClass subclass : new ArrayList<OWLClass>(hierarchyProvider.getChildren(cls))) {
-            Set<OWLClass> children = hierarchyProvider.getChildren(subclass);
-            int subClassSubClassesCount = children.size();
-            String browserText = rm.getBrowserText(subclass);
-            String name = subclass.getIRI().toString();
-            SubclassEntityData data = new SubclassEntityData(name, browserText, new HashSet<EntityData>(0), subClassSubClassesCount);
-
-//            int directNotesCount = project.getNotesManager().getDirectNotesCount(cls);
-            int indirectNotesCount = project.getNotesManager().getIndirectNotesCount(cls);
-            data.setChildrenAnnotationsCount(indirectNotesCount);
-
-            data.setValueType(ValueType.Cls);
-            result.add(data);
+            boolean deprecated = false;
+            if(checkForDeprecated) {
+                deprecated = project.isDeprecated(subclass);
+            }
+//            if (!deprecated) {
+                Set<OWLClass> children = hierarchyProvider.getChildren(subclass);
+                int subClassSubClassesCount = children.size();
+                String browserText = rm.getBrowserText(subclass);
+                String name = subclass.getIRI().toString();
+                SubclassEntityData data = new SubclassEntityData(name, browserText, new HashSet<EntityData>(0), subClassSubClassesCount);
+                data.setDeprecated(deprecated);
+                int directNotesCount = project.getNotesManager().getIndirectNotesCount(subclass);
+//                int indirectNotesCount = project.getNotesManager().getIndirectNotesCount(cls);
+                data.setLocalAnnotationsCount(directNotesCount);
+            Set<Watch<?>> directWatches = project.getWatchManager().getDirectWatches(subclass, getUserId());
+            if(!directWatches.isEmpty()) {
+                data.setWatches(directWatches);
+            }
+                data.setValueType(ValueType.Cls);
+                result.add(data);
+//            }
         }
         Collections.sort(result, new Comparator<SubclassEntityData>() {
             public int compare(SubclassEntityData o1, SubclassEntityData o2) {
+                if(o1.isDeprecated()) {
+                    if(!o2.isDeprecated()) {
+                        return 1;
+                    }
+                }
+                else if(o2.isDeprecated()) {
+                    return -1;
+                }
                 String browserText1 = o1.getBrowserText();
                 String browserText2 = o2.getBrowserText();
                 if(browserText1.startsWith("'")) {
@@ -491,11 +535,13 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 if(browserText2.startsWith("'")) {
                     browserText2 = browserText2.substring(1);
                 }
-                return browserText1.compareTo(browserText2);
+                return browserText1.compareToIgnoreCase(browserText2);
             }
         });
         return result;
     }
+
+
 
     /**
      * Makes a class a subclass of another class.  This essentially adds a SubClassOf axiom to the root ontology of the
@@ -750,14 +796,13 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         // NOTE:  ALTHOUGH THIS CAN RETURN A LIST OF ENTITY DATA, VARIOUS PLACES IN THE UI CODE PERFORM AN UNCHECKED CAST
         // TO PROPERTY ENTITY DATA!!!!!
 
-
         OWLAPIProject project = getProject(projectName);
         RenderingManager rm = project.getRenderingManager();
 
         // propertyName can be null!  This means the top property.
         // I'm not sure if RootPropertyNode is a system property or what but the UI asks for it.  Messy - needs tidying.
         // The properties tree asks for sub properties
-        // of this property - very ugly.
+        // of this property
         if (propertyName == null || PROPERTY_HIERARCHY_ROOT_NODE_NAME.equals(propertyName)) {
             List<EntityData> roots = new ArrayList<EntityData>();
             OWLDataFactory df = project.getDataFactory();
@@ -765,43 +810,59 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
             roots.add(topObjectProperty);
             EntityData topDataProperty = rm.getPropertyEntityData(df.getOWLTopDataProperty());
             roots.add(topDataProperty);
+            roots.add(ANNOTATION_PROPERTIES_ROOT);
+            return roots;
+        }
+
+        // Special handling for fake annotation property root
+        if(propertyName.equals(ANNOTATION_PROPERTIES_ROOT_NAME)) {
+            Set<EntityData> annotationPropertyRoots = new LinkedHashSet<EntityData>();
             Set<IRI> addedProperties = new HashSet<IRI>();
             for (OWLAnnotationProperty annotationProperty : project.getAnnotationPropertyHierarchyProvider().getRoots()) {
-                roots.add(rm.getEntityData(annotationProperty));
+                annotationPropertyRoots.add(rm.getEntityData(annotationProperty));
                 addedProperties.add(annotationProperty.getIRI());
             }
             for (IRI iri : OWLRDFVocabulary.BUILT_IN_ANNOTATION_PROPERTY_IRIS) {
                 if (!addedProperties.contains(iri)) {
-                    roots.add(rm.getEntityData(iri));
+                    annotationPropertyRoots.add(rm.getEntityData(iri));
                 }
             }
-            return roots;
+            return new ArrayList<EntityData>(annotationPropertyRoots);
         }
 
 
         List<EntityData> result = new ArrayList<EntityData>();
         Set<OWLEntity> matchingEntities = rm.getEntities(propertyName);
-        // Which damn entity does it refer to?
+        // Which entity does it refer to?  All messed up.
         for (OWLEntity entity : matchingEntities) {
             if (entity.isOWLObjectProperty()) {
                 OWLObjectPropertyHierarchyProvider hierarchyProvider = project.getObjectPropertyHierarchyProvider();
                 Set<OWLObjectProperty> subProperties = hierarchyProvider.getChildren(entity.asOWLObjectProperty());
                 for (OWLObjectProperty subProperty : subProperties) {
-                    result.add(rm.getEntityData(subProperty));
+                    final EntityData entityData = rm.getEntityData(subProperty);
+                    int notesCount = project.getNotesManager().getDirectNotesCount(subProperty);
+                    entityData.setLocalAnnotationsCount(notesCount);
+                    result.add(entityData);
                 }
             }
             else if (entity.isOWLDataProperty()) {
                 OWLDataPropertyHierarchyProvider hierarchyProvider = project.getDataPropertyHierarchyProvider();
                 Set<OWLDataProperty> subProperties = hierarchyProvider.getChildren(entity.asOWLDataProperty());
                 for (OWLDataProperty subProperty : subProperties) {
-                    result.add(rm.getEntityData(subProperty));
+                    final EntityData entityData = rm.getEntityData(subProperty);
+                    int notesCount = project.getNotesManager().getDirectNotesCount(subProperty);
+                    entityData.setLocalAnnotationsCount(notesCount);
+                    result.add(entityData);
                 }
             }
             else if (entity.isOWLAnnotationProperty()) {
                 OWLAnnotationPropertyHierarchyProvider hierarchyProvider = project.getAnnotationPropertyHierarchyProvider();
                 Set<OWLAnnotationProperty> subProperties = hierarchyProvider.getChildren(entity.asOWLAnnotationProperty());
                 for (OWLAnnotationProperty subProperty : subProperties) {
-                    result.add(rm.getEntityData(subProperty));
+                    final EntityData entityData = rm.getEntityData(subProperty);
+                    int notesCount = project.getNotesManager().getDirectNotesCount(subProperty);
+                    entityData.setLocalAnnotationsCount(notesCount);
+                    result.add(entityData);
                 }
             }
         }
@@ -956,59 +1017,11 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    //    public String getBioPortalSearchContent(String projectName, String entityName, BioPortalSearchData bpSearchData) {
-//
-//        System.out.println("TODO: getBioPortalSearchContent");
-//        return "";
-//    }
-//
-//    public String getBioPortalSearchContentDetails(String projectName, BioPortalSearchData bpSearchData, BioPortalReferenceData bpRefData) {
-//        System.out.println("TODO: getBioPortalSearchContentDetails");
-//        return "";
-//    }
 
     // TODO: Copied from the old ontology service - needs tidying up!!!
 
     public String getBioPortalSearchContent(String projectName, String entityName, BioPortalSearchData bpSearchData) {
-//        Project project = getProject(projectName);
-//        KnowledgeBase kb = project.getKnowledgeBase();
-//        Frame frame = kb.getFrame(entityName);
-//        if (frame == null) {
             return URLUtil.getURLContent(getBioPortalSearchUrl(entityName, bpSearchData));
-//        }
-        // try to search the preferred name, if exists
-        /*if (kb instanceof OWLModel) {
-            RDFProperty preferredNameProp = ((OWLModel) kb).getRDFProperty(PREFERRED_NAME_PROP);
-            if (preferredNameProp != null) {
-                try {
-                    String preferredName = (String) frame.getOwnSlotValue(preferredNameProp);
-                    String prefNameSearch = URLUtil.getURLContent(getBioPortalSearchUrl(preferredName, bpSearchData));
-                    if (prefNameSearch != null && prefNameSearch.indexOf("searchBean") > 0) {
-                        return prefNameSearch;
-                    }
-                } catch (Exception e) {
-                }
-            }
-        }
-        // try to search the browser text
-        String nameSearch = URLUtil.getURLContent(getBioPortalSearchUrl(getBrowserText(frame), bpSearchData));
-        if (nameSearch != null && nameSearch.indexOf("searchBean") > 0) {
-            return nameSearch;
-        }
-
-        // search first rdfs:label if exist..
-        if (frame instanceof RDFResource) {
-            RDFProperty rdfsLabelProp = ((OWLModel) kb).getSystemFrames().getRdfsLabelProperty();
-            Object rdfsLabelO = kb.getOwnSlotValue(frame, rdfsLabelProp);
-            if (rdfsLabelO != null) {
-                String rdfsLabelString = "";
-                rdfsLabelString = rdfsLabelO instanceof RDFSLiteral ? ((RDFSLiteral) rdfsLabelO).getString()
-                        : rdfsLabelO.toString();
-                return URLUtil.getURLContent(getBioPortalSearchUrl(rdfsLabelString, bpSearchData));
-            }
-        }
-         */
-//        return "";
     }
 
     public String getBioPortalSearchContentDetails(String projectName, BioPortalSearchData bpSearchData,
@@ -1053,7 +1066,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         for (Object obj : relationsMap.keySet()) {
             Object value = relationsMap.get(obj);
             if (value != null) {
-                String text = HTMLUtil.replaceEOF(ProtegeUtil.getDisplayText(value));
+                String text = HTMLUtil.replaceEOF(HTMLUtil.makeHTMLLinks(value.toString()));
                 if (text.startsWith("[")) {
                     text = text.substring(1, text.length() - 1);
                 }
@@ -1061,7 +1074,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                     String color = i % 2 == 0 ? evenColor : oddColor;
                     buffer.append("<tr>");
                     buffer.append("<td class=\"servBodL\" style=\"background-color:" + color + ";padding:7px;font-weight: bold;\" >");
-                    buffer.append(ProtegeUtil.getDisplayText(obj));
+                    buffer.append(HTMLUtil.makeHTMLLinks(obj.toString()));
                     buffer.append("</td>");
                     buffer.append("<td class=\"servBodL\" style=\"background-color:" + color + ";padding:7px;\" >");
                     buffer.append(text);

@@ -2,8 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,12 +30,12 @@ public class OBOTermMetadataPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void commitChangesForEntity(Entity entity) {
+    protected void commitChangesForEntity(OWLEntity entity) {
         view.commit(getProjectId(), entity);
     }
 
     @Override
-    protected void displayEntity(Entity entity) {
+    protected void displayEntity(OWLEntity entity) {
         view.reload(getProjectId(), entity);
     }
 

@@ -6,18 +6,25 @@
 <web-app>
 
 
-
     <context-param>
         <param-name>web-protege-data-directory</param-name>
         <param-value>/apps/bmir.apps/web-protege-data</param-value>
     </context-param>
+
 
     <!-- Listener for initializing and disposing WebProtege -->
     <listener>
         <listener-class>edu.stanford.bmir.protege.web.server.LifeCycleListener</listener-class>
     </listener>
 
+
+
 	<!-- WebProtege servlets -->
+
+    <servlet>
+        <servlet-name>DispatchService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceImpl</servlet-class>
+    </servlet>
 
     <servlet>
         <servlet-name>DownloadServlet</servlet-name>
@@ -34,11 +41,11 @@
         <servlet-class>edu.stanford.bmir.protege.web.server.NotificationServiceImpl</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>NotificationSchedulerServlet</servlet-name>
-        <servlet-class>edu.stanford.bmir.protege.web.server.NotificationSchedulerServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+    <!--<servlet>-->
+        <!--<servlet-name>NotificationSchedulerServlet</servlet-name>-->
+        <!--<servlet-class>edu.stanford.bmir.protege.web.server.NotificationSchedulerServlet</servlet-class>-->
+        <!--<load-on-startup>1</load-on-startup>-->
+    <!--</servlet>-->
 
     <servlet>
         <servlet-name>ChAOServiceImpl</servlet-name>
@@ -55,10 +62,10 @@
         <servlet-class>edu.stanford.bmir.protege.web.server.ProjectConfigurationServiceImpl</servlet-class>
     </servlet>
 
-    <servlet>
-        <servlet-name>ICDServiceImpl</servlet-name>
-        <servlet-class>edu.stanford.bmir.protege.web.server.ICDServiceImpl</servlet-class>
-    </servlet>
+    <!--<servlet>-->
+        <!--<servlet-name>ICDServiceImpl</servlet-name>-->
+        <!--<servlet-class>edu.stanford.bmir.protege.web.server.ICDServiceImpl</servlet-class>-->
+    <!--</servlet>-->
 
     <servlet>
         <servlet-name>AccessPolicyServiceImpl</servlet-name>
@@ -75,21 +82,7 @@
         <url-pattern>/webprotege/sharingsettings</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>FileServerServlet</servlet-name>
-        <servlet-class>edu.stanford.bmir.protege.web.server.FileServerServlet</servlet-class>
-    </servlet>
 
-    <servlet>
-        <servlet-name>HierarchyServiceImpl</servlet-name>
-        <servlet-class>edu.stanford.bmir.protege.web.server.HierarchyServiceImpl</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>chAOStatsServiceImpl</servlet-name>
-        <servlet-class>edu.stanford.bmir.protege.web.server.ChAOStatsServiceImpl</servlet-class>
-    </servlet>
-    
      <servlet>
         <servlet-name>bpProposals</servlet-name>
         <servlet-class>edu.stanford.bmir.protege.web.server.bioportal.BioPortalProposalsImpl</servlet-class>
@@ -126,11 +119,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>PropertyGridService</servlet-name>
-        <servlet-class>edu.stanford.bmir.protege.web.server.PropertyGridServiceImpl</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>OBOTextEditorService</servlet-name>
         <servlet-class>edu.stanford.bmir.protege.web.server.OBOTextEditorServiceImpl</servlet-class>
     </servlet>
@@ -160,9 +148,29 @@
         <servlet-class>edu.stanford.bmir.protege.web.server.BioPortalAPIServiceImpl</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>IRIService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.IRIServiceImpl</servlet-class>
+    </servlet>
+
+    <!--<servlet>-->
+        <!--<servlet-name>EntityFrameService</servlet-name>-->
+        <!--<servlet-class>edu.stanford.bmir.protege.web.server.EntityFrameServiceImpl</servlet-class>-->
+    <!--</servlet>-->
+
+    <servlet>
+        <servlet-name>RenderingService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.RenderingServiceImpl</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>DispatchService</servlet-name>
+        <url-pattern>/webprotege/dispatchservice</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>DownloadServlet</servlet-name>
-        <url-pattern>/download</url-pattern>
+        <url-pattern>/webprotege/download</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -190,15 +198,15 @@
         <url-pattern>/webprotege/projectconfig</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>ICDServiceImpl</servlet-name>
-        <url-pattern>/webprotege/icd</url-pattern>
-    </servlet-mapping>
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>ICDServiceImpl</servlet-name>-->
+        <!--<url-pattern>/webprotege/icd</url-pattern>-->
+    <!--</servlet-mapping>-->
 
-    <servlet-mapping>
-        <servlet-name>FileServerServlet</servlet-name>
-        <url-pattern>/webprotege/fileserver</url-pattern>
-    </servlet-mapping>
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>FileServerServlet</servlet-name>-->
+        <!--<url-pattern>/webprotege/fileserver</url-pattern>-->
+    <!--</servlet-mapping>-->
 
     <servlet-mapping>
         <servlet-name>AdminServiceImpl</servlet-name>
@@ -206,20 +214,20 @@
     </servlet-mapping>
 
 
-    <servlet-mapping>
-        <servlet-name>HierarchyServiceImpl</servlet-name>
-        <url-pattern>/webprotege/hierarchy</url-pattern>
-    </servlet-mapping>
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>HierarchyServiceImpl</servlet-name>-->
+        <!--<url-pattern>/webprotege/hierarchy</url-pattern>-->
+    <!--</servlet-mapping>-->
 
     <servlet-mapping>
         <servlet-name>OpenIdServiceImpl</servlet-name>
         <url-pattern>/webprotege/openid</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>chAOStatsServiceImpl</servlet-name>
-        <url-pattern>/webprotege/chaostats</url-pattern>
-    </servlet-mapping>
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>chAOStatsServiceImpl</servlet-name>-->
+        <!--<url-pattern>/webprotege/chaostats</url-pattern>-->
+    <!--</servlet-mapping>-->
     
     <servlet-mapping>
         <servlet-name>bpProposals</servlet-name>
@@ -286,11 +294,6 @@
 
 
     <servlet-mapping>
-        <servlet-name>PropertyGridService</servlet-name>
-        <url-pattern>/webprotege/propertygridservice</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>OBOTextEditorService</servlet-name>
         <url-pattern>/webprotege/obotexteditorservice</url-pattern>
     </servlet-mapping>
@@ -313,6 +316,22 @@
     <servlet-mapping>
         <servlet-name>BioPortalAPIService</servlet-name>
         <url-pattern>/webprotege/bioportalapi</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>IRIService</servlet-name>
+        <url-pattern>/webprotege/iriservice</url-pattern>
+    </servlet-mapping>
+
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>EntityFrameService</servlet-name>-->
+        <!--<url-pattern>/webprotege/entityframeservice</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+
+    <servlet-mapping>
+        <servlet-name>RenderingService</servlet-name>
+        <url-pattern>/webprotege/renderingservice</url-pattern>
     </servlet-mapping>
 
     <!-- Default page to serve -->

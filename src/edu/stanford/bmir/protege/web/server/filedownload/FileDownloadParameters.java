@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +36,7 @@ public class FileDownloadParameters {
         if(projectName == null) {
             throw new UnsupportedOperationException("getProjectId can only be called if the request is for a project download (isProjectDownload() returns true)");
         }
-        return new ProjectId(projectName);
+        return ProjectId.get(projectName);
     }
 
     /**

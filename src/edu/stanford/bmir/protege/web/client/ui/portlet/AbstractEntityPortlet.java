@@ -1,9 +1,14 @@
- package edu.stanford.bmir.protege.web.client.ui.portlet;
+package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Timer;
+import com.google.web.bindery.event.shared.Event;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.ExtElement;
 import com.gwtext.client.core.Function;
@@ -24,32 +29,44 @@ import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.portal.Portlet;
 
+import edu.stanford.bmir.protege.web.client.events.*;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.util.AbstractValidatableTab;
 import edu.stanford.bmir.protege.web.client.ui.util.ValidatableTab;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Abstract class that should be extended by all portlets that should be
  * available in the user interface of a tab. This class takes care of the common
  * initializations for portlet (e.g. resizing, dragging, etc.) and the life
  * cycle of a portlet.
- *
  * @author Tania Tudorache <tudorache@stanford.edu>
- *
  */
-public abstract class AbstractEntityPortlet extends Portlet implements EntityPortlet {
+public abstract class AbstractEntityPortlet extends Portlet implements EntityPortlet, HasEventHandlerManagement {
 
-    protected Project project;
+    private Project project;
+
     protected EntityData _currentEntity;
+
     private int revision;
 
     private AbstractTab tab;
+
     private PortletConfiguration portletConfiguration;
+
     private ArrayList<SelectionListener> _selectionListeners = new ArrayList<SelectionListener>();
 
     public AbstractEntityPortlet(Project project) {
@@ -79,10 +96,51 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
             initialize();
         }
 
-       updateIcon(isControllingPortlet());
+        updateIcon(isControllingPortlet());
+
+        addApplicationEventHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
+            @Override
+            public void handleUserLoggedIn(UserLoggedInEvent event) {
+                onLogin(event.getUserId());
+            }
+        });
+
+        addApplicationEventHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
+            @Override
+            public void handleUserLoggedOut(UserLoggedOutEvent event) {
+                onLogout(event.getUserId());
+            }
+        });
+
+        addProjectEventHandler(PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
+            @Override
+            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
+                onPermissionsChanged();
+            }
+        });
+
+        addApplicationEventHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
+            @Override
+            public void onPlaceChange(PlaceChangeEvent event) {
+                GWT.log("DETECTED PLACE CHANGE: COMMITTING CHANGES!");
+                commitChanges();
+            }
+        });
     }
 
-    protected void doOnResize(int width, int height){
+    public ProjectId getProjectId() {
+        return ProjectId.get(project.getProjectName());
+    }
+
+    public UserId getUserId() {
+        return Application.get().getUserId();
+    }
+
+    public boolean hasWritePermission() {
+        return getProject().hasWritePermission(Application.get().getUserId());
+    }
+
+    protected void doOnResize(int width, int height) {
         setWidth(width);
         setHeight(height);
         doLayout();
@@ -115,19 +173,19 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         return project;
     }
 
-    public int getRevision() {
-        return revision;
-    }
-
-    /**
-     * Should only be called after an event has been processed and
-     * the portlet shows a new revision.
-     *
-     * @param revision
-     */
-    public void setRevision(int revision) {
-        this.revision = revision;
-    }
+//    public int getRevision() {
+//        return revision;
+//    }
+//
+//    /**
+//     * Should only be called after an event has been processed and
+//     * the portlet shows a new revision.
+//     *
+//     * @param revision
+//     */
+//    public void setRevision(int revision) {
+//        this.revision = revision;
+//    }
 
     /*
      * (non-Javadoc)
@@ -165,13 +223,24 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
             }
         });
 
-        Tool[] tools = new Tool[] { refresh, gear, close };
+        List<Tool> toolList = new ArrayList<Tool>();
+        if (hasRefreshButton()) {
+            toolList.add(refresh);
+        }
+        toolList.add(gear);
+        toolList.add(close);
+        return toolList.toArray(new Tool[toolList.size()]);
+    }
 
-        return tools;
+    protected boolean hasRefreshButton() {
+        return true;
     }
 
     protected void onRefresh() {
         reload();
+    }
+
+    public void commitChanges() {
     }
 
     protected void onConfigure() {
@@ -192,18 +261,19 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
                 if (isValidConfiguration(configPanel)) {
                     saveConfiguration(configPanel);
                     window.close();
-                } else {
+                }
+                else {
                     MessageBox.alert("Invalid configuration", "The configuration is not valid. Please fix it, and try again");
                 }
             }
-        }) );
+        }));
 
-        window.addButton(new Button("Cancel", new ButtonListenerAdapter(){
+        window.addButton(new Button("Cancel", new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
                 window.close();
             }
-        }) );
+        }));
 
         window.show();
     }
@@ -213,7 +283,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         for (int i = 0; i < tabs.length; i++) {
             Component comp = tabs[i];
             if (comp instanceof ValidatableTab) {
-                ValidatableTab tab = (ValidatableTab)comp;
+                ValidatableTab tab = (ValidatableTab) comp;
                 if (!tab.isValid()) {
                     return false;
                 }
@@ -227,7 +297,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         for (int i = 0; i < tabs.length; i++) {
             Component comp = tabs[i];
             if (comp instanceof ValidatableTab) {
-                ValidatableTab tab = (ValidatableTab)comp;
+                ValidatableTab tab = (ValidatableTab) comp;
                 tab.onSave();
             }
         }
@@ -248,10 +318,13 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
             public void onSave() {
                 if (isControllingPortletCheckbox.getValue()) { //true - is checked
                     setAsControllingPortlet();
-                } else {
+                }
+                else {
                     if (isControllingPortlet()) {
                         AbstractTab tab = getTab();
-                        if (tab == null) { return; }
+                        if (tab == null) {
+                            return;
+                        }
                         tab.setControllingPortlet(null);
                     }
                 }
@@ -271,18 +344,21 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     }
 
 
-
     public boolean isControllingPortlet() {
         AbstractTab tab = getTab();
-        if (tab == null) { return false; }
+        if (tab == null) {
+            return false;
+        }
         return this.equals(tab.getControllingPortlet());
     }
 
     public void setAsControllingPortlet() {
         AbstractTab tab = getTab();
-        if (tab == null) { return; }
+        if (tab == null) {
+            return;
+        }
         EntityPortlet oldCtrlPortlet = tab.getControllingPortlet();
-        if (!( this.equals(oldCtrlPortlet))) {
+        if (!(this.equals(oldCtrlPortlet))) {
             tab.setControllingPortlet(this);
         }
     }
@@ -298,15 +374,19 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     }
 
     protected void onClose() {
+        commitChanges();
         this.hide();
         this.destroy();
     }
 
-    public void onLogin(String userName) {}
+    protected void onLogin(UserId userId) {
+    }
 
-    public void onLogout(String userName) {}
+    protected void onLogout(UserId userId) {
+    }
 
-    public void onPermissionsChanged(Collection<String> permissions) {}
+    public void onPermissionsChanged() {
+    }
 
     public void refreshFromServer(int delay) {
         Timer timer = new Timer() {
@@ -346,7 +426,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     /**
      * Does not do anything to the UI, only stores the new configuration in this
      * portlet
-     *
      * @param portletConfiguration
      */
     public void setPortletConfiguration(PortletConfiguration portletConfiguration) {
@@ -363,5 +442,70 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     public void setTab(AbstractTab tab) {
         this.tab = tab;
+        if (tab != null) {
+            EntityPortlet portlet = tab.getControllingPortlet();
+            if (portlet != null) {
+                Collection<EntityData> entityData = portlet.getSelection();
+                if (entityData != null && !entityData.isEmpty()) {
+                    setEntity(entityData.iterator().next());
+                }
+            }
+        }
+
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private List<HandlerRegistration> handlerRegistrations = new ArrayList<HandlerRegistration>();
+
+    /**
+     * Adds an event handler to the main event bus.  When the portlet is destroyed the handler will automatically be
+     * removed.
+     * @param type The type of event to listen for.  Not {@code null}.
+     * @param handler The handler for the event type. Not {@code null}.
+     * @param <T> The event type
+     * @throws NullPointerException if any parameters are {@code null}.
+     */
+    public <T> void addProjectEventHandler(Event.Type<T> type, T handler) {
+        final EventBusManager manager = EventBusManager.getManager();
+        HandlerRegistration reg = manager.registerHandlerToProject(getProjectId(), checkNotNull(type), checkNotNull(handler));
+        handlerRegistrations.add(reg);
+    }
+
+    public <T> void addApplicationEventHandler(Event.Type<T> type, T handler) {
+        EventBusManager manager = EventBusManager.getManager();
+        HandlerRegistration reg = manager.registerHandler(checkNotNull(type), checkNotNull(handler));
+        handlerRegistrations.add(reg);
+    }
+
+
+    public boolean isEventForThisProject(Event<?> event) {
+        Object source = event.getSource();
+        return source instanceof ProjectId && source.equals(getProjectId());
+    }
+
+
+//     public <T> void addEventHandlerToProject(ProjectId projectId, Event.Type<T> type, T handler) {
+//         final EventBusManager manager = EventBusManager.getManager();
+//         HandlerRegistration reg = manager.registerHandlerToProject(projectId, type, handler);
+//         handlerRegistrations.add(reg);
+//     }
+
+
+    @Override
+    public void destroy() {
+        removeHandlers();
+        super.destroy();
+    }
+
+    private void removeHandlers() {
+        GWT.log("Removing handlers for portlet " + this);
+        for (HandlerRegistration reg : handlerRegistrations) {
+            reg.removeHandler();
+        }
     }
 }

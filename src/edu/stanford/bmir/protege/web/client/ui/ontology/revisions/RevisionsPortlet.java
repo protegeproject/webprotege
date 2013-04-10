@@ -1,11 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 
 import java.util.Collection;
@@ -36,19 +33,9 @@ public class RevisionsPortlet extends AbstractEntityPortlet {
     @Override
     public void initialize() {
         setHeight(INITIAL_HEIGHT);
-        GlobalSettings globalSettings = GlobalSettings.getGlobalSettings();
-        UserData userData = globalSettings.getUser();
-        if(userData == null) {
-            userData = new UserData("");
-            userData.setEmail("");
-        }
-        revisionsList = new RevisionsList(getProjectId(), userData);
+        revisionsList = new RevisionsList(getProjectId());
         add(revisionsList);
         setTitle("Revisions");
-    }
-
-    private ProjectId getProjectId() {
-        return new ProjectId(projectName());
     }
 
     private String projectName() {

@@ -5,7 +5,9 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
+import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,9 +21,12 @@ public class PublishToBioPortalDialogController extends WebProtegeOKCancelDialog
 
     private PublishToBioPortalForm publishForm;
 
-    public PublishToBioPortalDialogController(ProjectData projectData, UserData userData) {
+    public PublishToBioPortalDialogController(ProjectData projectData, UserDetails userDetails) {
         super(TITLE);
-        this.publishForm = new PublishToBioPortalForm(projectData, userData);
+        this.publishForm = new PublishToBioPortalForm(projectData, userDetails);
+        for(WebProtegeDialogValidator validator : publishForm.getValidators()) {
+            addDialogValidator(validator);
+        }
     }
 
     @Override

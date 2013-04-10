@@ -31,7 +31,7 @@ public class NotesPortlet extends AbstractEntityPortlet {
 	
 	public void initialize() {
 		setTitle("Notes");
-		notesGrid = new NotesGrid(project, topLevel);
+		notesGrid = new NotesGrid(getProject(), topLevel);
 		add(notesGrid);
 	}
 

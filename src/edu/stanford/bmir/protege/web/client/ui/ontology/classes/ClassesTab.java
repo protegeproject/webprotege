@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 public class ClassesTab extends AbstractTab {
 
 	public ClassesTab(Project project) {		
-		super(project);	
-	}		
+		super(project);
+	}
 
 }

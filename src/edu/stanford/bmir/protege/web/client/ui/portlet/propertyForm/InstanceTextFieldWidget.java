@@ -13,7 +13,7 @@ import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
@@ -78,7 +78,7 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
         displayValues(null);
         List<String> reifiedProps = new ArrayList<String>();
         reifiedProps.add(property);
-        OntologyServiceManager.getInstance().getEntityTriples(getProject().getProjectName(), subjects, props, reifiedProps,
+        OntologyServiceManager.getInstance().getEntityTriples(getProjectId(), subjects, props, reifiedProps,
                 new GetTriplesHandler(getSubject()));
     }
 
@@ -146,8 +146,8 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
             oldEntityData = oldInstanceEntityData;  //FIXME Check this!!!
         }
         
-        propertyValueUtil.deletePropertyValue(getProject().getProjectName(), subject.getName(), propName, propValueType,
-                oldEntityData.getName(), GlobalSettings.getGlobalSettings().getUserName(), operationDescription,
+        propertyValueUtil.deletePropertyValue(getProjectId(), subject.getName(), propName, propValueType,
+                oldEntityData.getName(), Application.get().getUserId(), operationDescription,
                 new RemoveInstancePropertyValueHandler(subject, oldEntityData, getValues()));
     }
 
@@ -158,9 +158,9 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
         EntityData oldInstanceEntityData = findInstanceForValue(oldEntityData);
         
         if (oldInstanceEntityData != null) {
-            propertyValueUtil.replacePropertyValue(getProject().getProjectName(), oldInstanceEntityData.getName(),
+            propertyValueUtil.replacePropertyValue(getProjectId(), oldInstanceEntityData.getName(),
                     property, null, oldEntityData.getName(), newEntityData.getName(),
-                    GlobalSettings.getGlobalSettings().getUserName(), operationDescription, 
+                    Application.get().getUserId(), operationDescription,
                     new ReplaceInstancePropertyValueHandler(subject, oldInstanceEntityData, 
                             oldEntityData, newEntityData, getValues()));
         }
@@ -176,9 +176,9 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
             type = allowedValues.iterator().next().getName();
         }
 
-        OntologyServiceManager.getInstance().createInstanceValueWithPropertyValue(getProject().getProjectName(), null, type,
+        OntologyServiceManager.getInstance().createInstanceValueWithPropertyValue(getProjectId(), null, type,
         		subject.getName(), propName, new PropertyEntityData(property), newEntityData,
-        		GlobalSettings.getGlobalSettings().getUserName(), operationDescription, 
+        		Application.get().getUserId(), operationDescription,
         		new AddInstanceValueWithPropertyValueHandler(subject, newEntityData, getValues()));
     }
 

@@ -9,13 +9,12 @@ import javax.servlet.http.HttpSession;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.stanford.bmir.protege.web.client.rpc.AdminService;
-import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserNameAlreadyExistsException;
+import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.smi.protege.server.metaproject.Operation;
 import edu.stanford.smi.protege.server.metaproject.User;
 
@@ -30,11 +29,10 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     private static final long serialVersionUID = 7616699639338297327L;
 
 
-    public UserData getCurrentUserInSession() {
+    public UserId getCurrentUserInSession() {
         HttpServletRequest request = getThreadLocalRequest();
         final HttpSession session = request.getSession();
-        final UserData userData = (UserData) session.getAttribute(SessionConstants.USER_DATA_PARAMETER);
-        return userData;
+        return SessionConstants.getUserId(session);
     }
 
     /*
@@ -61,49 +59,49 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     public void logout() {
         HttpServletRequest request = getThreadLocalRequest();
         final HttpSession session = request.getSession();
-        session.setAttribute(SessionConstants.USER_DATA_PARAMETER, null);
+        SessionConstants.removeAttribute(SessionConstants.USER_ID, session);
     }
 
     public void changePassword(String userName, String password) {
-        Protege3ProjectManager.getProjectManager().getMetaProjectManager().changePassword(userName, password);
+        MetaProjectManager.getManager().changePassword(userName, password);
     }
 
     public String getUserEmail(String userName) {
-        return Protege3ProjectManager.getProjectManager().getMetaProjectManager().getUserEmail(userName);
+        return MetaProjectManager.getManager().getUserEmail(userName);
     }
 
     public void setUserEmail(String userName, String email) {
-        Protege3ProjectManager.getProjectManager().getMetaProjectManager().setUserEmail(userName, email);
+        MetaProjectManager.getManager().setUserEmail(userName, email);
     }
 
     public List<ProjectData> getProjects(String user) {
-        return Protege3ProjectManager.getProjectManager().getMetaProjectManager().getProjectsData(user);
+        return MetaProjectManager.getManager().getProjectsData(user);
     }
 
-    public Collection<String> getAllowedOperations(String project, String user) {
-        Collection<Operation> ops = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getAllowedOperations(project, user);
-        Collection<String> opsAsString = new ArrayList<String>();
-        for (Operation op : ops) {
-            opsAsString.add(op.getName());
-        }
-        return opsAsString;
+    public PermissionsSet getAllowedOperations(String project, String user) {
+        Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(project, user);
+        return toPermissionSet(ops);
     }
 
-    public Collection<String> getAllowedServerOperations(String userName) {
-        Collection<Operation> ops = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getAllowedServerOperations(userName);
-        Collection<String> opsAsString = new ArrayList<String>();
+    public PermissionsSet getAllowedServerOperations(String userName) {
+        Collection<Operation> ops = MetaProjectManager.getManager().getAllowedServerOperations(userName);
+        return toPermissionSet(ops);
+    }
+
+    private PermissionsSet toPermissionSet(Collection<Operation> ops) {
+        PermissionsSet.Builder builder = PermissionsSet.builder();
         for (Operation op : ops) {
-            opsAsString.add(op.getName());
+            builder.addPermission(Permission.getPermission(op.getName()));
         }
-        return opsAsString;
+        return builder.build();
     }
 
     public void refreshMetaproject() {
-        Protege3ProjectManager.getProjectManager().getMetaProjectManager().reloadMetaProject();
+        MetaProjectManager.getManager().reloadMetaProject();
     }
 
     public void sendPasswordReminder(String userName) {
-        String email = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getUserEmail(userName);
+        String email = MetaProjectManager.getManager().getUserEmail(userName);
         if (email == null) {
             throw new IllegalArgumentException("User " + userName + " does not have an email configured.");
         }
@@ -113,7 +111,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     }
 
     public LoginChallengeData getUserSaltAndChallenge(String userName) {
-        String userSalt = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getUserSalt(userName);
+        String userSalt = MetaProjectManager.getManager().getUserSalt(userName);
         if (userSalt == null) {
             return null;
         }
@@ -125,30 +123,31 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     }
 
     public boolean allowsCreateUsers() {
-        return Protege3ProjectManager.getProjectManager().getMetaProjectManager().allowsCreateUser();
+        return MetaProjectManager.getManager().allowsCreateUser();
     }
 
-    public UserData authenticateToLogin(String userName, String response) {
+    public UserId authenticateToLogin(String userName, String response) {
         HttpServletRequest request = this.getThreadLocalRequest();
         HttpSession session = request.getSession();
+
         String challenge = (String) session.getAttribute(AuthenticationConstants.LOGIN_CHALLENGE);
         session.setAttribute(AuthenticationConstants.LOGIN_CHALLENGE, null);
 
-        User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(userName);
+        User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
         if (user == null) { //user not in metaproject
-            return null;
+            return UserId.getGuest();
         }
-
-        UserData userData = null;
-
         AuthenticationUtil authenticatinUtil = new AuthenticationUtil();
         boolean isverified = authenticatinUtil.verifyChallengedHash(user.getDigestedPassword(), response, challenge);
         if (isverified) {
-            userData = AuthenticationUtil.createUserData(userName);
-            session.setAttribute(SessionConstants.USER_DATA_PARAMETER, userData);
+            UserId userId = UserId.getUserId(userName);
+            SessionConstants.setAttribute(SessionConstants.USER_ID, userId, session);
+            return userId;
+        }
+        else {
+            return UserId.getGuest();
         }
 
-        return userData;
     }
 
     private static String encodeBytes(byte[] bytes) {
@@ -180,15 +179,13 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     public void clearPreviousLoginAuthenticationData() {
         HttpServletRequest request = this.getThreadLocalRequest();
         HttpSession session = request.getSession();
-        session.setAttribute(AuthenticationConstants.USERDATA_OBJECT, null);
         session.setAttribute(AuthenticationConstants.LOGIN_METHOD, null);
-        session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_ID, null);
-        session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
-        session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_URL, null);
+        SessionConstants.removeAttribute(SessionConstants.USER_ID, session);
+        SessionConstants.removeAttribute(SessionConstants.OPEN_ID_ACCOUNT, session);
     }
 
     public boolean changePasswordEncrypted(String userName, String encryptedPassword, String salt) {
-        User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(userName);
+        User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
         if (user == null) {
             return false;
         }
@@ -209,7 +206,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
 
     //used only for https
     public UserData registerUser(String userName, String password) {
-        MetaProjectManager mpm = Protege3ProjectManager.getProjectManager().getMetaProjectManager();
+        MetaProjectManager mpm = MetaProjectManager.getManager();
         UserData userData = mpm.registerUser(userName, password);
         OWLAPIMetaProjectStore.getStore().saveMetaProject(mpm);
         return userData;
@@ -221,7 +218,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         String salt = (String) session.getAttribute(AuthenticationConstants.NEW_SALT);
         String emptyPassword = "";
 
-        MetaProjectManager metaProjectManager = Protege3ProjectManager.getProjectManager().getMetaProjectManager();
+        MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
         UserData userData = metaProjectManager.registerUser(name, emptyPassword);
 
         User user = metaProjectManager.getMetaProject().getUser(name);

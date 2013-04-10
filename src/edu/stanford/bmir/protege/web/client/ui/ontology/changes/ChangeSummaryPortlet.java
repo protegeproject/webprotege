@@ -38,7 +38,7 @@ public class ChangeSummaryPortlet extends AbstractEntityPortlet {
 		setBorder(true);
 		setPaddings(15);
 
-		setTitle("Change Summary for " + project.getProjectName());
+		setTitle("Change Summary for " + getProject().getProjectName());
 
 		Panel main = new Panel();
 		main.setLayout(new AnchorLayout());
@@ -62,7 +62,7 @@ public class ChangeSummaryPortlet extends AbstractEntityPortlet {
 		main.add(new HTML("<br /><br />"));
 
 		// Change history grid
-		grid = new ChangesGrid(project);
+		grid = new ChangesGrid(getProject());
 
 		/*
 		 * Didn't have time to investigate this much, but it was hard to get the
@@ -119,28 +119,20 @@ public class ChangeSummaryPortlet extends AbstractEntityPortlet {
 		end.setSeconds(0);
 
 		ChAOServiceManager.getInstance().getNumChanges(
-				project.getProjectName(), start, end,
+				getProject().getProjectId(), start, end,
 				new GetNumChangesHandler(0));
 
 		start.setDate(start.getDate() - 1);
 		end.setDate(end.getDate() - 1);
 
 		ChAOServiceManager.getInstance().getNumChanges(
-				project.getProjectName(), start, end,
+				getProject().getProjectId(), start, end,
 				new GetNumChangesHandler(-1));
 
 		grid.reload();
 	}
 
-	@Override
-	public void onLogin(String userName) {
-		// onRefresh();
-	}
 
-	@Override
-	public void onLogout(String userName) {
-		// onRefresh();
-	}
 
 	/*
 	 * Remote calls
@@ -156,7 +148,7 @@ public class ChangeSummaryPortlet extends AbstractEntityPortlet {
 		@Override
 		public void handleFailure(Throwable caught) {
 			GWT.log("RPC error getting number of changes for the "
-					+ project.getProjectName() + "ontology", caught);
+					+ getProject().getProjectName() + "ontology", caught);
 		}
 
 		@Override

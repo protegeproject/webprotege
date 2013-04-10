@@ -8,7 +8,10 @@ import java.util.logging.Level;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
-import edu.stanford.smi.protege.collab.changes.ChAOUtil;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
+import edu.stanford.bmir.protege.web.server.owlapi.UnknownProjectException;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.model.*;
 import edu.stanford.smi.protege.server.ServerProperties;
 import edu.stanford.smi.protege.server.metaproject.*;
@@ -147,7 +150,7 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
             throw new UserNameAlreadyExistsException(userName);
         }
         User newUser = metaproject.createUser(userName, password);
-        return AuthenticationUtil.createUserData(newUser.getName());
+        return AuthenticationUtil.createUserData(UserId.getUserId(newUser.getName()));
     }
 
     private static Slot getInTrashSlot(KnowledgeBase kb) {
@@ -164,6 +167,46 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         Slot inTrashSlot = getInTrashSlot(kb);
         Object ownSlotValue = protegeInstance.getOwnSlotValue(inTrashSlot);
         return ownSlotValue != null && ownSlotValue.equals(Boolean.TRUE);
+    }
+
+    public List<ProjectDetails> getListableReadableProjects(UserId userId) {
+        Policy policy = metaproject.getPolicy();
+        User user = policy.getUserByName(userId.getUserName());
+        List<ProjectDetails> result = new ArrayList<ProjectDetails>();
+        for(ProjectInstance projectInstance : metaproject.getProjects()) {
+            final String name = projectInstance.getName();
+            if (name != null) {
+                final ProjectId projectId = ProjectId.get(name);
+                if(isAuthorisedToReadAndList(policy, user, projectInstance)) {
+                    OWLAPIProjectDocumentStore ds = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
+                    if (ds.exists()) {
+                        final ProjectDetails projectDetails = createProjectDetailsFromProjectInstance(projectInstance);
+                        result.add(projectDetails);
+                    }
+                }
+            }
+        }
+
+
+        return result;
+    }
+
+    @Override
+    public ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException {
+        ProjectInstance pi = metaproject.getProject(projectId.getProjectName());
+        if(pi == null) {
+            throw new UnknownProjectException(projectId);
+        }
+        return createProjectDetailsFromProjectInstance(pi);
+    }
+
+    private static ProjectDetails createProjectDetailsFromProjectInstance(ProjectInstance projectInstance) {
+        final ProjectId projectId = ProjectId.get(projectInstance.getName());
+        final String description = projectInstance.getDescription();
+        final User projectOwner = projectInstance.getOwner();
+        final UserId ownerId = projectOwner != null ? UserId.getUserId(projectOwner.getName()) : UserId.getNull();
+        final boolean inTrash = isInTrash(projectInstance);
+        return new ProjectDetails(projectId, projectId.getProjectName(), description, ownerId, inTrash);
     }
 
 
@@ -336,24 +379,25 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
 
     //just for the local loading of ontologies
     private void saveAllProjects() {
-        try {
-            for (ServerProject<Project> serverProject : Protege3ProjectManager.getProjectManager().getOpenServerProjects()) {
-                Project prj = serverProject.getProject();
-                if (prj != null) {
-                    save(prj);
-                    prj.getKnowledgeBase().setChanged(false);
-
-                    KnowledgeBase changesKb = ChAOUtil.getChangesKb(prj.getKnowledgeBase());
-                    if (changesKb != null && changesKb.hasChanged()) {
-                        save(changesKb.getProject());
-                        changesKb.setChanged(false);
-                    }
-                }
-            }
-        }
-        catch (Exception e) {
-            Log.getLogger().log(Level.WARNING, "Errors at saving server projects", e);
-        }
+//        try {
+//            for (ServerProject<Project> serverProject : Protege3ProjectManager.getProjectManager().getOpenServerProjects()) {
+//                Project prj = serverProject.getProject();
+//                if (prj != null) {
+//                    save(prj);
+//                    prj.getKnowledgeBase().setChanged(false);
+//
+//                    KnowledgeBase changesKb = ChAOUtil.getChangesKb(prj.getKnowledgeBase());
+//                    if (changesKb != null && changesKb.hasChanged()) {
+//                        save(changesKb.getProject());
+//                        changesKb.setChanged(false);
+//                    }
+//                }
+//            }
+//        }
+//        catch (Exception e) {
+//            Log.getLogger().log(Level.WARNING, "Errors at saving server projects", e);
+//        }
+        throw new RuntimeException("BROKEN");
     }
 
     //just for the local loading of ontologies

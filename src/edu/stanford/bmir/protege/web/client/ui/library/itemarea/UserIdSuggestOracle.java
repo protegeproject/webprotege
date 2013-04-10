@@ -56,7 +56,6 @@ public class UserIdSuggestOracle implements ItemProvider<UserId> {
                 result.add(userId);
             }
         }
-        System.out.println("Number of matches: " + result.size());
         return result;
     }
 

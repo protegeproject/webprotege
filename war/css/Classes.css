@@ -4,8 +4,13 @@
 
 /* Styles for ClassTreePortlet */
 .protege-class-icon {
-    background-image: url(../images/tree/class.gif) !important;
+    background-image: url(../images/tree/class.png) !important;
    /* background-image: url(../images/button-blue_benji_park_01.gif) !important;*/
+}
+
+.protege-deprecated-class-icon {
+    background-image: url("../images/tree/class.png") !important;
+    opacity: 0.5;
 }
 
 .protege-class-create-icon {

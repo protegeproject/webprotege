@@ -174,9 +174,9 @@
     height:auto;
 }
 
-.x-panel-body{
-	overflow:auto;
-}
+/*.x-panel-body{*/
+	/*overflow:auto;*/
+/*}*/
 
 .x-panel .x-portlet {
 	/*min-height:150px;*/

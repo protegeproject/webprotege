@@ -119,7 +119,7 @@ new TWTR.Widget({
   search: 'semtech',
   interval: 6000,
   title: 'What\'s going on at Semtech?',
-  subject: 'Lots!',
+  result: 'Lots!',
   width: 250,
   height: 300,
   theme: {

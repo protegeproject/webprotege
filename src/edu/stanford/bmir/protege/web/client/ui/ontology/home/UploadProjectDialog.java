@@ -5,12 +5,16 @@ import com.google.gwt.json.client.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.gwtext.client.widgets.MessageBox;
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.library.common.Refreshable;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEvent;
+import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 
 
 /**
@@ -21,16 +25,19 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
  */
 public class UploadProjectDialog extends WebProtegeDialog<UploadFileInfo> {
 
+    public static final String PROGRESS_DIALOG_TITLE = "Uploading";
+
     public UploadProjectDialog(final Refreshable... refreshables) {
         super(new UploadProjectDialogController());
-
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<UploadFileInfo>() {
             public void handleHide(final UploadFileInfo data, final WebProtegeDialogCloser closer) {
+                UIUtil.showLoadProgessBar(PROGRESS_DIALOG_TITLE, "Uploading file...");
                 data.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
                     public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                        handleSubmissionComplete(data, event);
+                        UIUtil.hideLoadProgessBar();
+                        handleSubmissionComplete(data, event, refreshables);
                         closer.hide();
-                        refreshRefreshables(refreshables);
+
                     }
                 });
                 data.submit();
@@ -45,12 +52,10 @@ public class UploadProjectDialog extends WebProtegeDialog<UploadFileInfo> {
     }
 
 
-    private void handleSubmissionComplete(UploadFileInfo data, FormPanel.SubmitCompleteEvent event) {
-        System.out.println("File uploaded");
+    private void handleSubmissionComplete(UploadFileInfo data, FormPanel.SubmitCompleteEvent event, Refreshable ... refreshables) {
         UploadFileResult result = new UploadFileResult(event.getResults());
         if(result.wasUploadAccepted()) {
-            createProjectFromUpload(data, result);
-
+            createProjectFromUpload(data, result, refreshables);
         }
         else {
             displayProjectUploadError(result);
@@ -67,24 +72,28 @@ public class UploadProjectDialog extends WebProtegeDialog<UploadFileInfo> {
         MessageBox.alert("Upload failed", result.getUploadRejectedMessage());
     }
 
-    private void createProjectFromUpload(UploadFileInfo data, UploadFileResult result) {
+    private void createProjectFromUpload(UploadFileInfo data, UploadFileResult result, final Refreshable ... refreshables) {
+        UIUtil.showLoadProgessBar(PROGRESS_DIALOG_TITLE, "Creating project...");
         ProjectManagerServiceAsync projectManagerService = GWT.create(ProjectManagerService.class);
-        String userName = GlobalSettings.getGlobalSettings().getUserName();
-        UserId userId = UserId.getUserId(userName);
+        UserId userId = Application.get().getUserId();
         DocumentId documentId = result.getDocumentId();
         String projectName = data.getProjectSettings().getProjectName();
         String projectDescription = data.getProjectSettings().getProjectDescription();
         ProjectType projectType = data.getProjectSettings().getProjectType();
         NewProjectSettings newProjectSettings = new NewProjectSettings(userId, projectName, projectDescription, projectType, documentId);
 
-        projectManagerService.createNewProject(newProjectSettings, new AsyncCallback<Void>() {
+        projectManagerService.createNewProject(newProjectSettings, new AsyncCallback<ProjectDetails>() {
             public void onFailure(Throwable caught) {
+                UIUtil.hideLoadProgessBar();
                 caught.printStackTrace();
                 handleCreateProjectFailure(caught);
+                refreshRefreshables(refreshables);
             }
 
-            public void onSuccess(Void result) {
+            public void onSuccess(ProjectDetails result) {
+                UIUtil.hideLoadProgessBar();
                 MessageBox.alert("Ontology imported", "Ontology successfully uploaded.");
+                EventBusManager.getManager().postEvent(new ProjectCreatedEvent(result));
             }
         });
     }

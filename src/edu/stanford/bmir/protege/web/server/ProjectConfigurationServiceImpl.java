@@ -15,7 +15,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.thoughtworks.xstream.XStream;
 
 import edu.stanford.bmir.protege.web.client.rpc.ProjectConfigurationService;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
@@ -70,7 +70,7 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
 
 
     public static File getConfigurationFile(String projectName, String userName) {
-        ProjectId projectId = new ProjectId(projectName);
+        ProjectId projectId = ProjectId.get(projectName);
         UserId userId = UserId.getUserId(userName);
 
         File configFile = getUserProjectConfigurationFile(projectId, userId);
@@ -90,7 +90,6 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
         OWLAPIProject project = OWLAPIProjectManager.getProjectManager().getProject(projectId);
 //        OWLAPIProjectConfiguration configuration = project.getProjectConfiguration();
         OWLAPIProjectMetadataManager metadataManager = OWLAPIProjectMetadataManager.getManager();
-
         OWLAPIProjectType projectType = metadataManager.getType(projectId);
         return getDefaultProjectConfigurationFileName(projectType);
     }
@@ -140,7 +139,7 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
 
     public void saveProjectLayoutConfiguration(String projectName, String userName, ProjectLayoutConfiguration config) {
         String xml = convertConfigDetailsToXML(config);
-        File f = getUserProjectConfigurationFile(new ProjectId(projectName), UserId.getUserId(userName));
+        File f = getUserProjectConfigurationFile(ProjectId.get(projectName), UserId.getUserId(userName));
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
             bw.write(xml);

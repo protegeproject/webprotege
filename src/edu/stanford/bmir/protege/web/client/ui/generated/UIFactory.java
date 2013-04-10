@@ -8,17 +8,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.client.model.Project;
-import edu.stanford.bmir.protege.web.client.ui.hierarchy.HierarchyPortlet;
-import edu.stanford.bmir.protege.web.client.ui.icd.ICDClassTreePortlet;
-import edu.stanford.bmir.protege.web.client.ui.icd.ICDExportImportPortlet;
+import edu.stanford.bmir.protege.web.client.ui.frame.ClassFramePortlet;
+import edu.stanford.bmir.protege.web.client.ui.frame.NamedIndividualFramePortlet;
+import edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet;
 import edu.stanford.bmir.protege.web.client.ui.obo.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeAnalysisTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeTablePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet;
+import edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.AllPropertiesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
@@ -28,7 +28,6 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.classes.PropertiesViewPo
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.SuperclassesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ManageHierarchyPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ManageHierarchyTab;
-import edu.stanford.bmir.protege.web.client.ui.ontology.home.MyICDTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.OntologiesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsTab;
@@ -53,7 +52,6 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.BioPortalProposalsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.html.HtmlMessagePortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.PropertyFieldPortlet;
-import edu.stanford.bmir.protege.web.client.ui.propertygrid.PropertyGridPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
 
@@ -99,9 +97,6 @@ public class UIFactory {
         else if (tabJavaClassName.equals(UserDefinedTab.class.getName())) {
             return new UserDefinedTab(project);
         }
-        else if (tabJavaClassName.equals(MyICDTab.class.getName())) {
-            return new MyICDTab(project);
-        }
         else if (tabJavaClassName.equals(ReviewsTab.class.getName())) {
             return new ReviewsTab(project);
         }
@@ -146,9 +141,6 @@ public class UIFactory {
         else if (portletJavaClassName.equals(NotesPortlet.class.getName())) {
             return new NotesPortlet(project);
         }
-        else if (portletJavaClassName.equals(OntologiesPortlet.class.getName())) {
-            return new OntologiesPortlet();
-        }
         else if (portletJavaClassName.equals(PropertiesTreePortlet.class.getName())) {
             return new PropertiesTreePortlet(project);
         }
@@ -188,9 +180,6 @@ public class UIFactory {
         else if (portletJavaClassName.equals(PropertiesViewPortlet.class.getName())) {
             return new PropertiesViewPortlet(project);
         }
-        else if (portletJavaClassName.equals(ICDClassTreePortlet.class.getName())) {
-            return new ICDClassTreePortlet(project);
-        }
         else if (portletJavaClassName.equals(ChangeTablePortlet.class.getName())) {
             return new ChangeTablePortlet(project);
         }
@@ -199,9 +188,6 @@ public class UIFactory {
         }
         else if (portletJavaClassName.equals(NotesTreePortlet.class.getName())) {
             return new NotesTreePortlet(project);
-        }
-        else if (portletJavaClassName.equals(ICDExportImportPortlet.class.getName())) {
-            return new ICDExportImportPortlet(project);
         }
         else if (portletJavaClassName.equals(BioPortalProposalsPortlet.class.getName())) {
             return new BioPortalProposalsPortlet(project);
@@ -234,8 +220,20 @@ public class UIFactory {
         else if (portletJavaClassName.equals(RevisionsPortlet.class.getName())) {
             return new RevisionsPortlet(project);
         }
-//        else if (portletJavaClassName.equals(HierarchyPortlet.class.getName())) {
-//            return new HierarchyPortlet(project);
+        else if (portletJavaClassName.equals(ClassFramePortlet.class.getName())) {
+            return new ClassFramePortlet(project);
+        }
+        else if (portletJavaClassName.equals(NamedIndividualFramePortlet.class.getName())) {
+            return new NamedIndividualFramePortlet(project);
+        }
+        else if (portletJavaClassName.equals(ProjectFeedPortlet.class.getName())) {
+            return new ProjectFeedPortlet(project);
+        }
+        else if (portletJavaClassName.equals(DiscussionThreadPortlet.class.getName())) {
+            return new DiscussionThreadPortlet(project);
+        }
+//        else if(portletJavaClassName.equals(ObjectPropertyFramePortlet.class.getName())) {
+//            return new ObjectPropertyFramePortlet(project);
 //        }
         return null;
     }
@@ -244,7 +242,6 @@ public class UIFactory {
     public static List<String> getAvailableTabNames() {
         /*
          * Removed tabs:
-         * MyICDTab.class.getName()
          * OtherTerminologiesTab.class.getName(),
          *
          */
@@ -258,9 +255,8 @@ public class UIFactory {
          * PropertyFieldPortlet.class.getName()
          * ChangeTreePortlet.class.getName(), ChangeSummaryPortlet.class.getName(), ChangeTablePortlet.class.getName(),
          * NotesPortlet.class.getName(),
-         * ICDClassTreePortlet.class.getName(), ICDExportImportPortlet.class.getName(),
          */
-        String[] portlets = {AllPropertiesPortlet.class.getName(), PropertiesViewPortlet.class.getName(), ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(), IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(), OntologiesPortlet.class.getName(), PropertiesTreePortlet.class.getName(), HTMLRestrictionsPortlet.class.getName(), RestrictionsPortlet.class.getName(), BioPortalSearchPortlet.class.getName(), ManageHierarchyPortlet.class.getName(), SuperclassesPortlet.class.getName(), ChangesPortlet.class.getName(), WatchedEntitiesPortlet.class.getName(), NotesTreePortlet.class.getName(), NotesTreePortlet.class.getName(), BioPortalProposalsPortlet.class.getName(), OBOTermCrossProductPortlet.class.getName(), OBOTermRelationshipPortlet.class.getName(), OBOTermSynonymsPortlet.class.getName(), OBOTermMetadataPortlet.class.getName(), OBOTermIdEditorPortlet.class.getName(), OBOTermDefinitionPortlet.class.getName(), OBOTermXRefsEditorPortlet.class.getName(), RevisionsPortlet.class.getName()};
+        String[] portlets = {DiscussionThreadPortlet.class.getName(), ChangeSummaryPortlet.class.getName(), ProjectFeedPortlet.class.getName(), AnnotationsPortlet.class.getName(), NamedIndividualFramePortlet.class.getName(), ClassFramePortlet.class.getName(), AllPropertiesPortlet.class.getName(), PropertiesViewPortlet.class.getName(), ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(), IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(), OntologiesPortlet.class.getName(), PropertiesTreePortlet.class.getName(), HTMLRestrictionsPortlet.class.getName(), RestrictionsPortlet.class.getName(), BioPortalSearchPortlet.class.getName(), SuperclassesPortlet.class.getName(), ChangesPortlet.class.getName(), WatchedEntitiesPortlet.class.getName(), NotesTreePortlet.class.getName(), NotesTreePortlet.class.getName(), BioPortalProposalsPortlet.class.getName(), OBOTermCrossProductPortlet.class.getName(), OBOTermRelationshipPortlet.class.getName(), OBOTermSynonymsPortlet.class.getName(), OBOTermMetadataPortlet.class.getName(), OBOTermIdEditorPortlet.class.getName(), OBOTermDefinitionPortlet.class.getName(), OBOTermXRefsEditorPortlet.class.getName(), RevisionsPortlet.class.getName()};
 
         List<String> portletsList = Arrays.asList(portlets);
         Collections.sort(portletsList, new Comparator<String>() {

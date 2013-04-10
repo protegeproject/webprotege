@@ -99,7 +99,7 @@ public class SearchUtil {
         if (searchText == null || searchText.trim().length() == 0) {
             searchGrid.getStore().removeAll();
         } else {
-            searchGrid.reload(project.getProjectName(), searchText, searchedValueType);
+            searchGrid.reload(project.getProjectId(), searchText, searchedValueType);
         }
 
         window.show();

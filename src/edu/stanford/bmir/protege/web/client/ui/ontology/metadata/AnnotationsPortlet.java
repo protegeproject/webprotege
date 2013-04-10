@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 
 /**
@@ -18,7 +21,7 @@ public class AnnotationsPortlet extends AbstractEntityPortlet {
 
 	public void initialize() {
 		setTitle("Ontology Annotations");
-		this.annotationsGrid = new AnnotationsGrid(project.getProjectName());
+		this.annotationsGrid = new AnnotationsGrid(getProject().getProjectName());
 		add(annotationsGrid);
 	}
 
@@ -34,7 +37,8 @@ public class AnnotationsPortlet extends AbstractEntityPortlet {
 		annotationsGrid.setEntity(_currentEntity);
 	}
 
-	public ArrayList getSelection() {
-		return null;
-	}
+    @Override
+    public Collection<EntityData> getSelection() {
+        return Collections.emptySet();
+    }
 }

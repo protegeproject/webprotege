@@ -17,14 +17,16 @@ import com.gwtext.client.widgets.form.event.ComboBoxCallback;
 import com.gwtext.client.widgets.form.event.ComboBoxListenerAdapter;
 
 import edu.stanford.bmir.protege.web.client.model.Project;
-import edu.stanford.bmir.protege.web.client.model.event.OntologyEvent;
-import edu.stanford.bmir.protege.web.client.model.listener.OntologyListenerAdapter;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.PagedIndividualsProxyImpl;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEventHandler;
+import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 
 public class InstanceComboBox extends AbstractFieldWidget {
 
@@ -125,10 +127,11 @@ public class InstanceComboBox extends AbstractFieldWidget {
     }
 
     protected void addOntolgyChangeListener() {
-        getProject().addOntologyListener(new OntologyListenerAdapter() {
+        GWT.log("WARNING:  InstanceComboBox is adding a listener that will never be removed.  This needs cleaning up!");
+        EventBusManager.getManager().registerHandler(NamedIndividualFrameChangedEvent.TYPE, new NamedIndividualFrameChangedEventHandler() {
             @Override
-            public void individualAddedRemoved(OntologyEvent ontologyEvent) {
-                cacheAllowedValues(); //reset cache
+            public void namedIndividualFrameChanged(NamedIndividualFrameChangedEvent event) {
+                cacheAllowedValues();
             }
         });
     }
@@ -139,7 +142,7 @@ public class InstanceComboBox extends AbstractFieldWidget {
             return;
         }
         store.removeAll();
-        OntologyServiceManager.getInstance().getIndividuals(getProject().getProjectName(), allowedType, new FillAllowedValuesCacheHandler());
+        OntologyServiceManager.getInstance().getIndividuals(getProjectId(), allowedType, new FillAllowedValuesCacheHandler());
     }
 
 

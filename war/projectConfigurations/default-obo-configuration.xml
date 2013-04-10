@@ -12,7 +12,7 @@
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
                             <height>740</height>
                             <width>0</width>
-                            <index>0</index>
+                            <ordinal>0</ordinal>
                         </portlet>
                     </portlets>
                 </column>
@@ -23,25 +23,25 @@
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductPortlet</name>
                             <height>200</height>
                             <width>0</width>
-                            <index>3</index>
+                            <ordinal>3</ordinal>
                         </portlet>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermRelationshipPortlet</name>
                             <height>200</height>
                             <width>0</width>
-                            <index>2</index>
+                            <ordinal>2</ordinal>
                         </portlet>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermDefinitionPortlet</name>
                             <height>180</height>
                             <width>0</width>
-                            <index>1</index>
+                            <ordinal>1</ordinal>
                         </portlet>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermIdEditorPortlet</name>
                             <height>200</height>
                             <width>0</width>
-                            <index>0</index>
+                            <ordinal>0</ordinal>
                         </portlet>
                     </portlets>
                 </column>
@@ -59,7 +59,7 @@
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
                             <height>740</height>
                             <width>0</width>
-                            <index>1</index>
+                            <ordinal>1</ordinal>
                         </portlet>
                     </portlets>
                 </column>
@@ -70,13 +70,13 @@
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermIdEditorPortlet</name>
                             <height>200</height>
                             <width>0</width>
-                            <index>0</index>
+                            <ordinal>0</ordinal>
                         </portlet>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermSynonymsPortlet</name>
                             <height>550</height>
                             <width>0</width>
-                            <index>1</index>
+                            <ordinal>1</ordinal>
                         </portlet>
                     </portlets>
                 </column>

@@ -14,14 +14,12 @@ public class OWLEntity2VisualEntityTranslator implements OWLEntityVisitorEx<Visu
 
     private OWLAPIProject project;
 
-    private OWLEntity2EntityTranslator entity2EntityTranslator = new OWLEntity2EntityTranslator();
-
     public OWLEntity2VisualEntityTranslator(OWLAPIProject project) {
         this.project = project;
     }
 
     public VisualEntity<?> visit(OWLClass cls) {
-        return new VisualNamedClass((NamedClass) cls.accept(entity2EntityTranslator), getShortForm(cls));
+        return new VisualNamedClass(cls, getShortForm(cls));
     }
 
     private String getShortForm(OWLEntity cls) {
@@ -29,22 +27,22 @@ public class OWLEntity2VisualEntityTranslator implements OWLEntityVisitorEx<Visu
     }
 
     public VisualEntity<?> visit(OWLObjectProperty property) {
-        return new VisualObjectProperty((ObjectProperty) property.accept(entity2EntityTranslator), getShortForm(property));
+        return new VisualObjectProperty(property, getShortForm(property));
     }
 
     public VisualEntity<?> visit(OWLDataProperty property) {
-        return new VisualDataProperty((DataProperty) property.accept(entity2EntityTranslator), getShortForm(property));
+        return new VisualDataProperty(property, getShortForm(property));
     }
 
     public VisualEntity<?> visit(OWLNamedIndividual individual) {
-        return new VisualNamedIndividual((NamedIndividual) individual.accept(entity2EntityTranslator), getShortForm(individual));
+        return new VisualNamedIndividual(individual, getShortForm(individual));
     }
 
     public VisualEntity<?> visit(OWLDatatype datatype) {
-        return new VisualDatatype((Datatype) datatype.accept(entity2EntityTranslator), getShortForm(datatype));
+        return new VisualDatatype(datatype, getShortForm(datatype));
     }
 
     public VisualEntity<?> visit(OWLAnnotationProperty property) {
-        return new VisualAnnotationProperty((AnnotationProperty) property.accept(entity2EntityTranslator), getShortForm(property));
+        return new VisualAnnotationProperty(property, getShortForm(property));
     }
 }

@@ -26,11 +26,12 @@ import com.gwtext.client.widgets.grid.GridPanel;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
@@ -68,7 +69,7 @@ public class RequestReviewWindow extends Window {
 
         add(formPanel);
 
-        ChAOServiceManager.getInstance().getReviewers(projectName, new GetReviewersHandler());
+        ChAOServiceManager.getInstance().getReviewers(ProjectId.get(projectName), new GetReviewersHandler());
     }
 
     private void createGrid() {
@@ -124,7 +125,7 @@ public class RequestReviewWindow extends Window {
         }
 
         reviewersGrid.getEl().mask("Requesting review...");
-        ChAOServiceManager.getInstance().requestReview(projectName, entity.getName(), reviewerNames,
+        ChAOServiceManager.getInstance().requestReview(ProjectId.get(projectName), entity.getName(), reviewerNames,
                 new RequestReviewHandler());
     }
 
@@ -158,7 +159,7 @@ public class RequestReviewWindow extends Window {
                 + "The review guide is also included in the appendix and in the iCAT software platform.\n\n"
                 + "The basic questions that we would like you to address in this review are as follows: ... \n"
                 + "Thank you for agreeing to review this proposal which will greatly contribute to the creation of an international public good."
-                + "\n\nYours truly,\n" + GlobalSettings.getGlobalSettings().getUserName() + "\nManaging Editor\n"
+                + "\n\nYours truly,\n" + Application.get().getUserId().getUserName() + "\nManaging Editor\n"
                 + "For  TAG on   _______________________";
     }
 

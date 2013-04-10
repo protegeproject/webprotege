@@ -13,34 +13,45 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
  */
 public abstract class OWLEntityCreatorFactory {
 
-    public static final String DEFAULT_BASE = "http://webprotege.stanford.edu/entities";
+    public static final String DEFAULT_BASE = "http://webprotege.stanford.edu/";
     
-    public static final String DEFAULT_BASE_SEPARATOR = "#";
-
     public abstract <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(OWLAPIProject project, UserId userId, String shortName, EntityType<E> entityType);
 
+    public abstract <E extends OWLEntity> OWLEntityCreator<E> setBrowserText(OWLAPIProject project, UserId userId, E entity, String browserText);
 
     public static String escapeShortName(String shortName) {
         return shortName.replace(" ", "_");
     }
     
-    public static String getDefaultIRIBase(OWLOntologyID id) {
-        if(id.isAnonymous()) {
-            return DEFAULT_BASE + DEFAULT_BASE_SEPARATOR;
+    public static String getDefaultIRIBase(OWLOntologyID id, EntityType entityType) {
+//        if(id.isAnonymous()) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(DEFAULT_BASE);
+        sb.append(getEntityTypePathElementName(entityType));
+        sb.append("/");
+        return sb.toString();
+    }
+
+    private static String getEntityTypePathElementName(EntityType entityType) {
+        if(entityType == EntityType.CLASS) {
+            return "classes";
         }
-        else {
-            String base = id.getOntologyIRI().toString();
-            if(base.endsWith("/")) {
-                return base;
-            }
-            if(base.endsWith("#")) {
-                return base;
-            }
-            if(base.endsWith(":")) {
-                return base;
-            }
-            return base + DEFAULT_BASE_SEPARATOR;
+        else if(entityType == EntityType.OBJECT_PROPERTY) {
+            return "object_properties";
         }
+        else if(entityType == EntityType.DATA_PROPERTY) {
+            return "data_properties";
+        }
+        else if(entityType == EntityType.ANNOTATION_PROPERTY) {
+            return "annotation_properties";
+        }
+        else if(entityType == EntityType.NAMED_INDIVIDUAL) {
+            return "named_individuals";
+        }
+        else if(entityType == EntityType.DATATYPE) {
+            return "datatypes";
+        }
+        throw new RuntimeException("Handling for entity type missing: " + entityType);
     }
 
 }

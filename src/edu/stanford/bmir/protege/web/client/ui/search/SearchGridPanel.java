@@ -25,6 +25,7 @@ import com.gwtext.client.widgets.grid.event.GridRowListenerAdapter;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.util.PaginationUtil;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * The panel used for displaying the search results.
@@ -52,9 +53,9 @@ public class SearchGridPanel extends GridPanel {
         addGridRowListener(getRowListener());
     }
 
-    public void reload(String projectName, String searchText, ValueType valueType) {
+    public void reload(ProjectId projectId, String searchText, ValueType valueType) {
         proxy.resetParams();
-        proxy.setProjectName(projectName);
+        proxy.setProjectName(projectId);
         proxy.setSearchText(searchText);
         proxy.setValueType(valueType);
 
@@ -170,7 +171,7 @@ public class SearchGridPanel extends GridPanel {
                         searchText = searchText.trim();
                     }
                     if (searchText.length() > 0) {
-                        reload(proxy.getProjectName(), searchText, proxy.getValueType());
+                        reload(proxy.getProjectId(), searchText, proxy.getValueType());
                     }
                 }
             }
@@ -189,7 +190,7 @@ public class SearchGridPanel extends GridPanel {
         }
         searchText = searchText.trim();
         if (searchText.length() > 2) {
-            reload(proxy.getProjectName(), searchText, proxy.getValueType());
+            reload(proxy.getProjectId(), searchText, proxy.getValueType());
         } else {
             emptyContent();
         }
@@ -200,7 +201,7 @@ public class SearchGridPanel extends GridPanel {
     }
 
     public void setProjectName(String projectName) {
-        proxy.setProjectName(projectName);
+        proxy.setProjectName(ProjectId.get(projectName));
     }
 
     public void setAsyncCallback(AsyncCallback<Boolean> asyncCallback) {

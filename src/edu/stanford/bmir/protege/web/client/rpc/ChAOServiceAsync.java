@@ -58,11 +58,7 @@ public interface ChAOServiceAsync {
 
     void getWatchedEntities(String projectName, String userName, AsyncCallback<Collection<ChangeData>> cb);
 
-    void addWatchedEntity(String projectName, String userName, String watchedEntityName, AsyncCallback<EntityData> cb);
 
-    void removeAllWatches(String projectName, String userName, String watchedEntityName, AsyncCallback<Void> cb);
-
-    void addWatchedBranch(String projectName, String userName, String watchedEntityName, AsyncCallback<EntityData> cb);
 
     /*
      * Reviews

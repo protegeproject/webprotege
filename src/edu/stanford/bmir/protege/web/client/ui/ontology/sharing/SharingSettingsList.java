@@ -6,8 +6,9 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLTable;
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.button.DeleteButton;
 
@@ -58,11 +59,9 @@ public class SharingSettingsList extends FlowPanel {
     private void addData(final UserSharingSetting listItem) {
         final int rowCount = flexTable.getRowCount();
         String userName = listItem.getUserId().getUserName();
-        String loggedInUser = GlobalSettings.getGlobalSettings().getUserName();
-        boolean isLoggedInUser = false;
-        if (userName.equals(loggedInUser)) {
+        UserId userId = Application.get().getUserId();
+        if (userName.equals(userId.getUserName())) {
             userName += " (you)";
-            isLoggedInUser = true;
         }
         flexTable.setText(rowCount, 0, userName);
 
@@ -81,7 +80,7 @@ public class SharingSettingsList extends FlowPanel {
         flexTable.setWidget(rowCount, 1, lb);
         flexTable.getRowFormatter().addStyleName(rowCount, "web-protege-table-row");
 
-        if (!isLoggedInUser) {
+        if (!userId.getUserName().equals(userName)) {
             DeleteButton deleteButton = new DeleteButton();
             deleteButton.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {

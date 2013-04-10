@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
+import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.bioportal.publish.PublishToBioPortalDialog;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Date;
 
@@ -21,17 +23,16 @@ public class RevisionSummaryPanel extends FlowPanel {
     
     private ProjectId projectId;
 
-    private UserData userData;
+//    private UserId userData;
 
-    public RevisionSummaryPanel(ProjectId projectId, UserData userData, RevisionSummary revisionSummary) {
+    public RevisionSummaryPanel(ProjectId projectId, RevisionSummary revisionSummary) {
         this.projectId = projectId;
-        this.userData = userData;
         this.revisionSummary = revisionSummary;
         long revisionNumber = revisionSummary.getRevisionNumber().getValue();
         InlineLabel revisionNumberLabel = new InlineLabel("Revision: " + revisionNumber);
         revisionNumberLabel.addStyleName("webprotege-revision-summary-revision-number-style");
         add(revisionNumberLabel);
-        String encodedProjectName = projectId.getEncodedProjectName();
+        String encodedProjectName = URL.encodeQueryString(projectId.getProjectName());
         add(new Anchor(" [Download]", "download?ontology=" + encodedProjectName + "&revision=" + revisionNumber));
 
         
@@ -51,8 +52,8 @@ public class RevisionSummaryPanel extends FlowPanel {
     
 
 
-    private void uploadToBioPortal(ProjectData projectData) {
-        PublishToBioPortalDialog dlg = new PublishToBioPortalDialog(projectData, userData);
-        dlg.show();
-    }
+//    private void uploadToBioPortal(ProjectData projectData) {
+//        PublishToBioPortalDialog dlg = new PublishToBioPortalDialog(projectData, userData);
+//        dlg.show();
+//    }
 }

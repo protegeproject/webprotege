@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.rpc;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalReferenceData;
 import edu.stanford.bmir.protege.web.client.rpc.data.extref.ExternalReferenceType;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public interface ExternalReferenceService { // extends RemoteService {
      * @param referenceSubject The reference subject.
      * @return A possibly empty list of {@link ExternalReferenceType} objects.
      */
-    List<ExternalReferenceType> getExternalReferenceTypesForSubject(Entity referenceSubject);
+    List<ExternalReferenceType> getExternalReferenceTypesForSubject(OWLEntity referenceSubject);
 
     /**
      * Creates an external reference

@@ -37,7 +37,8 @@ public class BioPortalMetadataCache {
 
     public BioPortalOntologyInfo getOntologyWithDisplayName(String displayName) {
         for(BioPortalOntologyInfo info : ontologies) {
-            if(info.getDisplayLabel().equals(displayName)) {
+            String displayLabel = info.getDisplayLabel();
+            if(displayLabel != null && displayLabel.equals(displayName)) {
                 return info;
             }
         }

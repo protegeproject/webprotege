@@ -17,15 +17,16 @@ import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.ShareOntologyAccessEventManager;
-import edu.stanford.bmir.protege.web.client.model.SystemEventManager;
-import edu.stanford.bmir.protege.web.client.model.event.LoginEvent;
-import edu.stanford.bmir.protege.web.client.model.listener.SystemListenerAdapter;
 import edu.stanford.bmir.protege.web.client.rpc.AccessPolicyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.AccessPolicyUserData;
 import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.*;
 
@@ -38,7 +39,9 @@ import java.util.*;
 public class AccessPolicyUtil {
     protected AcessListScrollPanel readOnlyPermlistPanel = null;
     protected AcessListScrollPanel writePermlistPanel = null;
-    protected String currentSelectedProject = null;
+
+    protected ProjectId currentSelectedProject = null;
+
     protected AccessPolicyVerticalPanel mainPanel;
     protected Window addUserReadOnlyPermWindow;
     protected Window addUserWritePermWindow;
@@ -64,25 +67,16 @@ public class AccessPolicyUtil {
     /**
      * Constructor
      */
-    public AccessPolicyUtil() {
+    private AccessPolicyUtil() {
 
-        SystemEventManager.getSystemEventManager().addLoginListener(new SystemListenerAdapter() {
-
-            /*
-             * (non-Javadoc)
-             *
-             * @see edu.stanford.bmir.protege.web.client.model.listener.
-             * SystemListenerAdapter
-             * #onLogout(edu.stanford.bmir.protege.web.client
-             * .model.event.LoginEvent)
-             */
+        // TODO: This is really dodgy  WTF?
+        EventBusManager.getManager().registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
             @Override
-            public void onLogout(LoginEvent loginEvent) {
+            public void handleUserLoggedOut(UserLoggedOutEvent event) {
                 if (shareAccessWindow != null) {
                     shareAccessWindow.hide();
                 }
             }
-
         });
 
     }
@@ -101,7 +95,7 @@ public class AccessPolicyUtil {
         addListForWriteAccess = new TreeSet<AccessPolicyUserData>(new AccessPolicyUserData());
     }
 
-    public void displayShareAccessWindow(String currentSelectedProject) {
+    public void displayShareAccessWindow(ProjectId currentSelectedProject) {
         initalizeAccessLists();
         if (currentSelectedProject == null) {
             return;
@@ -735,10 +729,9 @@ public class AccessPolicyUtil {
                         new AsyncCallback<Collection<AccessPolicyUserData>>() {
 
                             public void onSuccess(Collection<AccessPolicyUserData> readOnlyAccessCollection) {
-                                List<String> readOnlyAccessList = new ArrayList<String>();
+                                final List<String> readOnlyAccessList = new ArrayList<String>();
                                 if (readOnlyAccessCollection != null) {
-                                    for (Iterator iterator = readOnlyAccessCollection.iterator(); iterator.hasNext();) {
-                                        AccessPolicyUserData userData = (AccessPolicyUserData) iterator.next();
+                                    for (AccessPolicyUserData userData : readOnlyAccessCollection) {
                                         if (userData.getName() != null) {
                                             readOnlyAccessList.add(userData.getName());
                                         }
@@ -746,19 +739,13 @@ public class AccessPolicyUtil {
                                     }
                                 }
 
-                                if (readOnlyAccessList != null) {
-                                    for (Iterator iterator = readOnlyAccessList.iterator(); iterator.hasNext();) {
-                                        String readOnlyAccessUserName = (String) iterator.next();
-                                        allUsersList.remove(readOnlyAccessUserName);
-                                    }
+                                for (String readOnlyAccessUserName : readOnlyAccessList) {
+                                    allUsersList.remove(readOnlyAccessUserName);
                                 }
 
-                                if (GlobalSettings.getGlobalSettings().getUserName() != null) {
-                                    allUsersList.remove(GlobalSettings.getGlobalSettings().getUserName());
-                                }
+                                allUsersList.remove(Application.get().getUserId().getUserName());
                                 if (removeListForReadOnlyAccess != null) {
-                                    for (Iterator iterator = removeListForReadOnlyAccess.iterator(); iterator.hasNext();) {
-                                        AccessPolicyUserData uData = (AccessPolicyUserData) iterator.next();
+                                    for (AccessPolicyUserData uData : removeListForReadOnlyAccess) {
                                         String removedUserName = uData.getName();
                                         if (!allUsersList.contains(removedUserName)) {
                                             allUsersList.add(removedUserName);
@@ -766,8 +753,7 @@ public class AccessPolicyUtil {
                                     }
                                 }
                                 if (addListForReadOnlyAccess != null) {
-                                    for (Iterator iterator = addListForReadOnlyAccess.iterator(); iterator.hasNext();) {
-                                        AccessPolicyUserData uData = (AccessPolicyUserData) iterator.next();
+                                    for (AccessPolicyUserData uData : addListForReadOnlyAccess) {
                                         String addedUserName = uData.getName();
                                         allUsersList.remove(addedUserName);
                                     }
@@ -865,10 +851,9 @@ public class AccessPolicyUtil {
                         new AsyncCallback<Collection<AccessPolicyUserData>>() {
 
                             public void onSuccess(Collection<AccessPolicyUserData> writeAccessCollection) {
-                                List<String> writeAccessList = new ArrayList<String>();
+                                final List<String> writeAccessList = new ArrayList<String>();
                                 if (writeAccessCollection != null) {
-                                    for (Iterator iterator = writeAccessCollection.iterator(); iterator.hasNext();) {
-                                        AccessPolicyUserData userData = (AccessPolicyUserData) iterator.next();
+                                    for (AccessPolicyUserData userData : writeAccessCollection) {
                                         if (userData.getName() != null) {
                                             writeAccessList.add(userData.getName());
                                         }
@@ -876,20 +861,14 @@ public class AccessPolicyUtil {
                                     }
                                 }
 
-                                if (writeAccessList != null) {
-                                    for (Iterator iterator = writeAccessList.iterator(); iterator.hasNext();) {
-                                        String writeAccessUserName = (String) iterator.next();
-                                        allUsersList.remove(writeAccessUserName);
-                                    }
+                                for (String writeAccessUserName : writeAccessList) {
+                                    allUsersList.remove(writeAccessUserName);
                                 }
 
-                                if (GlobalSettings.getGlobalSettings().getUserName() != null) {
-                                    allUsersList.remove(GlobalSettings.getGlobalSettings().getUserName());
-                                }
+                                    allUsersList.remove(Application.get().getUserId().getUserName());
 
                                 if (removeListForWriteAccess != null) {
-                                    for (Iterator iterator = removeListForWriteAccess.iterator(); iterator.hasNext();) {
-                                        AccessPolicyUserData uData = (AccessPolicyUserData) iterator.next();
+                                    for (AccessPolicyUserData uData : removeListForWriteAccess) {
                                         String removedUserName = uData.getName();
                                         if (!allUsersList.contains(removedUserName)) {
                                             allUsersList.add(removedUserName);
@@ -898,8 +877,7 @@ public class AccessPolicyUtil {
                                     }
                                 }
                                 if (addListForWriteAccess != null) {
-                                    for (Iterator iterator = addListForWriteAccess.iterator(); iterator.hasNext();) {
-                                        AccessPolicyUserData uData = (AccessPolicyUserData) iterator.next();
+                                    for (AccessPolicyUserData uData : addListForWriteAccess) {
                                         String addedUserName = uData.getName();
                                         allUsersList.remove(addedUserName);
 
@@ -1065,23 +1043,22 @@ public class AccessPolicyUtil {
         });
     }
 
-    public static void updateShareLink(final String projectName) {
-        ShareOntologyAccessEventManager.getShareOntologyAccessManager().notifyToUpdateShareLink(false, projectName);
-        final String currentUser = GlobalSettings.getGlobalSettings().getUserName();
-        if (currentUser != null) {
-            AccessPolicyServiceManager.getInstance().canManageProject(projectName, currentUser, new AsyncCallback<Boolean>() {
-
-                public void onSuccess(Boolean result) {
-                    ShareOntologyAccessEventManager.getShareOntologyAccessManager().notifyToUpdateShareLink(result, projectName);
-
-                }
-
-                public void onFailure(Throwable caught) {
-                    ShareOntologyAccessEventManager.getShareOntologyAccessManager().notifyToUpdateShareLink(false, projectName);
-
-                }
-            });
-        }
-
-    }
+//    public static void updateShareLink(final ProjectId projectId) {
+//        ShareOntologyAccessEventManager.getShareOntologyAccessManager().notifyToUpdateShareLink(false, projectId);
+//        if (!Application.get().getUserId().isGuest()) {
+//            AccessPolicyServiceManager.getInstance().canManageProject(projectId, Application.get().getUserId(), new AsyncCallback<Boolean>() {
+//
+//                public void onSuccess(Boolean result) {
+//                    ShareOntologyAccessEventManager.getShareOntologyAccessManager().notifyToUpdateShareLink(result, projectId);
+//
+//                }
+//
+//                public void onFailure(Throwable caught) {
+//                    ShareOntologyAccessEventManager.getShareOntologyAccessManager().notifyToUpdateShareLink(false, projectId);
+//
+//                }
+//            });
+//        }
+//
+//    }
 }

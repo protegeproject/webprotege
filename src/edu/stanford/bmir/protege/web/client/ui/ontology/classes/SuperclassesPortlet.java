@@ -25,7 +25,7 @@ public class SuperclassesPortlet extends AbstractEntityPortlet {
     public void initialize() {
        setTitle("Parents");
        setLayout(new FitLayout());
-       parentsPanel = new ParentsPanel(project, false, false, false, false, true);
+       parentsPanel = new ParentsPanel(getProject(), false, false, false, false, true);
        parentsPanel.setContainerPortlet(this);
        parentsPanel.setAutoScroll(false);
        Panel wrappingPanel = new Panel();

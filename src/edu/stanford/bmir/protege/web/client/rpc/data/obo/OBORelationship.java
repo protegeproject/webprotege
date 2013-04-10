@@ -2,6 +2,10 @@ package edu.stanford.bmir.protege.web.client.rpc.data.obo;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualNamedClass;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualObjectProperty;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import java.io.Serializable;
 
@@ -14,23 +18,23 @@ import java.io.Serializable;
 public class OBORelationship implements Serializable, Comparable<OBORelationship> {
 
 
-    private VisualObjectProperty relation;
+    private OWLObjectPropertyData relation;
     
-    private VisualNamedClass value;
+    private OWLClassData value;
 
     private OBORelationship() {
     }
 
-    public OBORelationship(VisualObjectProperty relation, VisualNamedClass value) {
+    public OBORelationship(OWLObjectPropertyData relation, OWLClassData value) {
         this.relation = relation;
         this.value = value;
     }
 
-    public VisualObjectProperty getRelation() {
+    public OWLObjectPropertyData getRelation() {
         return relation;
     }
 
-    public VisualNamedClass getValue() {
+    public OWLClassData getValue() {
         return value;
     }
 

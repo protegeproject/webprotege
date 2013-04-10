@@ -16,7 +16,7 @@ import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
@@ -90,7 +90,7 @@ public class NotesTreePortlet extends AbstractEntityPortlet {
 
         ClickHandler newTopicClickHanlder = new ClickHandler() {
             public void onClick(ClickEvent event) {
-                if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+                if (Application.get().isGuestUser()) {
                     MessageBox.alert("To post a message you need to be logged in.");
                     return;
                 }
@@ -138,7 +138,7 @@ public class NotesTreePortlet extends AbstractEntityPortlet {
     }
 
     private void createNewPost(){
-        NoteInputHandler nih = new NoteInputHandler(this.project, this._currentEntity, new AsyncCallback<NotesData>(){
+        NoteInputHandler nih = new NoteInputHandler(getProject(), this._currentEntity, new AsyncCallback<NotesData>(){
             public void onFailure(Throwable caught) {
                 GWT.log("Error at creating note", caught);
                 com.google.gwt.user.client.Window.alert("There were problems at creating the note.\n"
@@ -150,7 +150,7 @@ public class NotesTreePortlet extends AbstractEntityPortlet {
                             + "Please try again later.");
                     return;
                 }
-                NotesTreeRecord r = new NotesTreeRecord(result, project, _currentEntity, null);
+                NotesTreeRecord r = new NotesTreeRecord(result, getProject(), _currentEntity, null);
                 notesPanel.addNewPost(r);
                 DisclosurePanel w = (DisclosurePanel) r.getUIObject();
                 FlexTable notesTable = (FlexTable)scrollPanel.getWidget();
@@ -226,7 +226,7 @@ public class NotesTreePortlet extends AbstractEntityPortlet {
         scrollPanel.setStylePrimaryName("custom-ScrollPanel");
         add(scrollPanel);
 
-        notesPanel = new NotesTreePanel(project, ontologyLevel);
+        notesPanel = new NotesTreePanel(getProject(), ontologyLevel);
         notesPanel.setContainer(this);
         Widget w = notesPanel.getWidget();
         scrollPanel.add(w);

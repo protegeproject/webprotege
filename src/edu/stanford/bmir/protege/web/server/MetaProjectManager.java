@@ -1,9 +1,10 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserRegistrationException;
+import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.server.owlapi.UnknownProjectException;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.Operation;
@@ -16,47 +17,62 @@ import java.util.List;
  * This interface assumes a particular implementation i.e. a Protege 3 implementation with Project object.
  * i.e. the openProject method.  Is this a problem?
  */
-public interface MetaProjectManager {
+public abstract class MetaProjectManager {
 
-    public boolean hasValidCredentials(String userName, String password);
+    private static MetaProjectManager instance = new LocalMetaProjectManager();
 
-    public UserData registerUser(String userName, String password) throws UserRegistrationException;
+    protected MetaProjectManager() {
 
-    public void changePassword(String userName, String password);
+    }
 
-    public String getUserEmail(String userName);
+    public static MetaProjectManager getManager() {
+        return instance;
+    }
 
-    public void setUserEmail(String userName, String email);
+    public abstract boolean hasValidCredentials(String userName, String password);
 
-    public List<ProjectData> getProjectsData(String userName);
+    public abstract UserData registerUser(String userName, String password) throws UserRegistrationException;
 
-    public Collection<Operation> getAllowedOperations(String project, String userName);
+    public abstract void changePassword(String userName, String password);
 
-    public Collection<Operation> getAllowedServerOperations(String userName);
+    public abstract String getUserEmail(String userName);
 
-    public Project openProject(String name);
+    public abstract void setUserEmail(String userName, String email);
+
+    public abstract List<ProjectDetails> getListableReadableProjects(UserId userId);
+
+    public abstract List<ProjectData> getProjectsData(String userName);
+
+    public abstract Collection<Operation> getAllowedOperations(String project, String userName);
+
+    public abstract Collection<Operation> getAllowedServerOperations(String userName);
+
+    public abstract Project openProject(String name);
 
     /**
      * Creates a new project description inside the meta project (with the default access policy etc.)
      * @param newProjectSettings The {@link edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings} that describes the new project.  Not <code>null</code>.
      */
-    public void createProject(NewProjectSettings newProjectSettings);
+    public abstract void createProject(NewProjectSettings newProjectSettings);
 
-    public MetaProject getMetaProject();
+    public abstract MetaProject getMetaProject();
 
     /**
      * Reloads the metaproject. Should be used with care, because it reloads
      * besides the user/password info, also the projects info. Clients should be
      * notified of the change.
      */
-    public void reloadMetaProject();
+    public abstract void reloadMetaProject();
 
-    public void dispose();
+    public abstract void dispose();
     
-    public UserData getUserAssociatedWithOpenId(String userOpenId);
+    public abstract Optional<UserId> getUserAssociatedWithOpenId(String userOpenId);
 
-    public String getUserSalt(String userName);
+    public abstract String getUserSalt(String userName);
 
-    public boolean allowsCreateUser(); 
+    public abstract boolean allowsCreateUser();
+
+
+    public abstract ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException;
 
 }

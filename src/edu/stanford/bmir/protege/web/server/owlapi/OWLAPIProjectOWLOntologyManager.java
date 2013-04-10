@@ -68,6 +68,21 @@ public class OWLAPIProjectOWLOntologyManager implements OWLOntologyManager {
         return delegate.contains(ontologyIRI);
     }
 
+    @Override
+    public boolean containsVersion(IRI ontologyVersionIRI) {
+        return delegate.containsVersion(ontologyVersionIRI);
+    }
+
+    @Override
+    public Set<OWLOntologyID> getOntologyIDsByVersion(IRI ontologyVersionIRI) {
+        return delegate.getOntologyIDsByVersion(ontologyVersionIRI);
+    }
+
+    @Override
+    public void removeOntology(OWLOntologyID ontologyID) {
+        delegate.removeOntology(ontologyID);
+    }
+
     public boolean contains(OWLOntologyID id) {
         return delegate.contains(id);
     }

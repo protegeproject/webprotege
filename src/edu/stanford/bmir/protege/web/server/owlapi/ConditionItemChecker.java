@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,15 +84,20 @@ public class ConditionItemChecker {
             List<OWLEntity> expectedEntities = getPossibleEntities(e);
             String lastWord = getLastWord(textWithErrorChar);
             String start = lastWord.substring(0, lastWord.length() - 1).toLowerCase();
+            if(start.startsWith("'")) {
+                start = start.substring(1);
+            }
 
             for (OWLEntity entity : expectedEntities) {
+                final EntityData entityData = rm.getEntityData(entity);
+                escapeBrowserTextIfNecessary(entityData);
                 if (lastWord.equals(ERROR_CHARACTER)) {
-                    result.add(rm.getEntityData(entity));
+                    result.add(entityData);
                 }
                 else {
                     String shortForm = rm.getShortForm(entity);
                     if (shortForm.toLowerCase().startsWith(start)) {
-                        result.add(rm.getEntityData(entity));
+                        result.add(entityData);
                     }
                 }
             }
@@ -105,6 +109,12 @@ public class ConditionItemChecker {
             }
         }
         return result;
+    }
+
+    private void escapeBrowserTextIfNecessary(EntityData entityData) {
+        if(entityData.getBrowserText().contains(" ")) {
+            entityData.setBrowserText("'" + entityData.getBrowserText() + "'");
+        }
     }
 
     private List<OWLEntity> getPossibleEntities(ParserException e) {

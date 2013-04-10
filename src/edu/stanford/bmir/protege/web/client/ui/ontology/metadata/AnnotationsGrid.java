@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
-import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.data.ArrayReader;
@@ -14,15 +14,23 @@ import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
+import edu.stanford.bmir.protege.web.client.dispatch.UIDescription;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetEntityAnnotationsAction;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
-import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.AnnotationData;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
  */
-public class AnnotationsGrid extends GridPanel {
+public class AnnotationsGrid extends GridPanel implements HasProjectId {
 
 	protected ColumnModel columnModel;
 	protected String projectName;
@@ -102,21 +110,43 @@ public class AnnotationsGrid extends GridPanel {
 		reload();
 	}
 	
-	public void reload() {		
-		OntologyServiceManager.getInstance().getAnnotationProperties(
-				projectName, _currentEntity.getName(), new GetAnnotations());
+	public void reload() {
+
+//		OntologyServiceManager.getInstance().getAnnotationProperties(
+//				projectName, _currentEntity.getName(), new GetAnnotations());
+
+        IRI entityIRI = IRI.create(_currentEntity.getName());
+        DispatchServiceManager.get().execute(new GetEntityAnnotationsAction(entityIRI, getProjectId()), new GetAnnotationsHandler());
 	}
-	
-	class GetAnnotations extends AbstractAsyncHandler<List<AnnotationData>> {
+
+    public ProjectId getProjectId() {
+        return ProjectId.get(projectName);
+    }
+
+    class GetAnnotationsHandler extends AbstractAsyncHandler<RenderableGetObjectResult<Set<OWLAnnotation>>> {
 
 		public void handleFailure(Throwable caught) {
 			GWT.log("RPC error getting ontology annotations", caught);
 		}
 
-		public void handleSuccess(List<AnnotationData> result) {
-			for (AnnotationData data : result) {
-				Record record = recordDef.createRecord(new Object[] { data.getName(), data.getValue(), data.getLang() });
-				store.add(record);
+		public void handleSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
+			for (OWLAnnotation data : result.getObject()) {
+                final OWLAnnotationProperty property = data.getProperty();
+                String name = result.getBrowserTextMap().getBrowserText(property).or(property.getIRI().toQuotedString());
+                if(data.getValue() instanceof OWLLiteral) {
+                    OWLLiteral literalValue = (OWLLiteral) data.getValue();
+                    final String value = literalValue.getLiteral();
+                    final String lang;
+                    if(literalValue.hasLang()) {
+                        lang = literalValue.getLang();
+                    }
+                    else {
+                        lang = literalValue.getLang();
+                    }
+                    Record record = recordDef.createRecord(new Object[] { name, value, lang });
+                    store.add(record);
+                }
+
 			}
 			
 			/*

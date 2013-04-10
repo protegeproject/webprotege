@@ -1,0 +1,22 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:style>
+        .type-style {
+            color: #464646;
+        }
+        .browser-text-style {
+            color: #464646;
+            font-weight: bold;
+        }
+        .iri-style {
+            padding-left: 10px;
+            color: #a9a9a9;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+        <g:InlineLabel ui:field="typeLabel" addStyleNames="{style.type-style}"/><g:InlineLabel ui:field="browserTextLabel" addStyleNames="{style.browser-text-style}"/>
+        <g:InlineLabel ui:field="iriLabel" addStyleNames="{style.iri-style}" visible="false"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

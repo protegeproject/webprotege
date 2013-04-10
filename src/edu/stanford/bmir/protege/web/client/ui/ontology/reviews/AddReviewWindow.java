@@ -15,7 +15,7 @@ import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 
 /**
@@ -86,7 +86,7 @@ public class AddReviewWindow extends Window {
 		}
 
 		NotesData data = new NotesData();
-		data.setAuthor(GlobalSettings.getGlobalSettings().getUserName());
+		data.setAuthor(Application.get().getUserId().getUserName());
 		data.setSubject(subjectField.getText());
 		data.setBody(htmlEditor.getValueAsString());
 		Date date = new Date();

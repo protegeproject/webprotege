@@ -141,4 +141,19 @@ public class NewProjectSettings implements Serializable {
                 other.projectDescription.equals(this.projectDescription) &&
                 other.sourceDocumentId.equals(sourceDocumentId);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("NewProjectSettings");
+        sb.append("(");
+        sb.append(projectOwner);
+        sb.append(" ");
+        sb.append(" ProjectName(");
+        sb.append(projectName);
+        sb.append(") ProjectDescription(");
+        sb.append(projectDescription);
+        sb.append("))");
+        return sb.toString();
+    }
 }

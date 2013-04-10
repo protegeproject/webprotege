@@ -1,0 +1,95 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.ui.frame'>
+
+    <ui:style>
+        .section-label {
+            text-align: left;
+        }
+    </ui:style>
+
+    <g:HTMLPanel styleName="web-protege-laf">
+
+        <table width="95%">
+            <col width="100px" align="right"/>
+            <tr>
+                <td align="right">
+                    <g:Label text="Display name" styleName="web-protege-form-label" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+                <td valign="top">
+                    <g:TextBox ui:field="displayNameField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top">
+                    <g:Label text="IRI" addStyleNames="web-protege-form-label web-protege-form-layout-editor-input"/>
+                </td>
+                <td valign="top">
+                    <g:TextBox ui:field="iriField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
+                </td>
+            </tr>
+        </table>
+
+        <div style="height: 30px;"/>
+
+
+        <table width="95%">
+            <col width="100px" align="right"/>
+            <tr>
+                <td align="right" valign="top">
+                    <g:Label text="Types" addStyleNames="web-protege-form-label"/>
+                </td>
+                <td valign="top">
+                    <!--<g:TextBox ui:field="iriField" width="100%"/>-->
+                    <wp:PrimitiveDataListEditor ui:field="types"/>
+                </td>
+            </tr>
+        </table>
+
+        <div style="height: 30px;"/>
+
+        <table width="95%">
+            <col width="100px" align="right"/>
+            <tr>
+                <td align="right" valign="top">
+                    <g:Label text="Properties" addStyleNames="web-protege-form-label"/>
+                </td>
+                <td valign="top">
+                    <!--<g:TextBox ui:field="iriField" width="100%"/>-->
+                    <wp:PropertyValueListEditor ui:field="assertions"/>
+                </td>
+            </tr>
+        </table>
+
+        <div style="height: 30px;"/>
+
+        <table width="95%">
+            <col width="100px" align="right"/>
+            <tr>
+                <td align="right" valign="top">
+                    <g:Label text="Same As" addStyleNames="web-protege-form-label"/>
+                </td>
+                <td valign="top">
+                    <!--<g:TextBox ui:field="iriField" width="100%"/>-->
+                    <wp:PrimitiveDataListEditor ui:field="sameAs"/>
+                </td>
+            </tr>
+        </table>
+        <!--<div style="height: 30px;"/>-->
+
+        <!--<table width="95%">-->
+            <!--<col width="100px" align="right"/>-->
+            <!--<tr>-->
+                <!--<td align="right" valign="top">-->
+                    <!--<g:Label text="Properties" addStyleNames="web-protege-form-label"/>-->
+                <!--</td>-->
+                <!--<td valign="top">-->
+                    <!--<wp:PropertyValueGrid ui:field="properties">-->
+                    <!--</wp:PropertyValueGrid>-->
+                <!--</td>-->
+            <!--</tr>-->
+        <!--</table>-->
+
+    </g:HTMLPanel>
+
+</ui:UiBinder>

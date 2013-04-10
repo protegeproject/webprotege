@@ -18,7 +18,7 @@ import java.util.List;
 public class UserProfileManagerServiceImpl extends RemoteServiceServlet implements UserProfileManagerService {
 
     public List<UserId> getUserIds() {
-        MetaProjectManager mpm = Protege3ProjectManager.getProjectManager().getMetaProjectManager();
+        MetaProjectManager mpm = MetaProjectManager.getManager();
         MetaProject mp = mpm.getMetaProject();
         List<UserId> result = new ArrayList<UserId>();
         for(User user : mp.getUsers()) {

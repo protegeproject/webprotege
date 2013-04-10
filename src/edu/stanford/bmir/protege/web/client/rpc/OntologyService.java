@@ -5,21 +5,9 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import edu.stanford.bmir.protege.web.client.model.event.OntologyEvent;
-import edu.stanford.bmir.protege.web.client.rpc.data.AnnotationData;
-import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalReferenceData;
-import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalSearchData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ConditionItem;
-import edu.stanford.bmir.protege.web.client.rpc.data.ConditionSuggestion;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityPropertyValues;
-import edu.stanford.bmir.protege.web.client.rpc.data.ImportsData;
-import edu.stanford.bmir.protege.web.client.rpc.data.MetricData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PaginationData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.SubclassEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
-import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
+import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLClass;
 
 
 /**
@@ -45,21 +33,10 @@ public interface OntologyService extends RemoteService {
     public Integer loadProject(String projectName);
 
 
-    public List<OntologyEvent> getEvents(String projectName, long fromVersion);
+//    public List<OntologyEvent> getEvents(String projectName, long fromVersion);
 
     public Boolean hasWritePermission(String projectName, String userName);
 
-    /*
-     * Ontology methods
-     */
-
-    public String getOntologyURI(String projectName);
-
-    /**
-     * Used by the annotations grid, which is used by the AnnotationPortlet.  This method does in fact
-     * refer to ontology annotations and not annotations in general.
-     */
-    public List<AnnotationData> getAnnotationProperties(String projectName, String entityName);
 
     public ImportsData getImportedOntologies(String projectName);
 
@@ -85,20 +62,18 @@ public interface OntologyService extends RemoteService {
 
     public EntityData getEntity(String projectName, String entityName);
 
-    public void deleteEntity(String projectName, String entityName, String user, String operationDescription);
-
     /*
      * Class methods
      */
 
-    public EntityData createCls(String projectName, String clsName, String superClsName, String user,
-            String operationDescription);
+//    public EntityData createCls(ProjectId projectId, String className, OWLClass superCls, UserId userId,
+//            String operationDescription);
 
-    public EntityData createCls(String projectName, String clsName, String superClsName, boolean createMetaClses,
-            String user, String operationDescription);
+//    public EntityData createCls(ProjectId projectId, String clsName, OWLClass superCls, boolean createMetaClses,
+//            UserId userId, String operationDescription);
 
-    public EntityData createClsWithProperty(String projectName, String clsName, String superClsName,
-            String propertyName, EntityData propertyValue, String user, String operationDescription);
+    public EntityData createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls,
+            String propertyName, EntityData propertyValue, UserId userId, String operationDescription);
 
     public void addSuperCls(String projectName, String clsName, String superClsName, String user,
             String operationDescription);

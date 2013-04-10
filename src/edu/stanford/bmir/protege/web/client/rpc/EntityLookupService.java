@@ -3,8 +3,7 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequest;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualEntity;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.List;
 
@@ -18,5 +17,4 @@ import java.util.List;
 public interface EntityLookupService extends RemoteService {
 
     List<EntityLookupServiceResult> lookupEntities(ProjectId projectId, EntityLookupRequest entityLookupRequest);
-    
 }

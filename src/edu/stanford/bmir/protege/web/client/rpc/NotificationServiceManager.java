@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 
 import java.util.Map;
 
@@ -23,11 +24,11 @@ public class NotificationServiceManager {
         return instance;
     }
 
-    public void setNotificationDelay(String user, NotificationType notificationType, NotificationInterval notificationInterval, AsyncCallback<Void> async){
-        proxy.setNotificationDelay(user, notificationType, notificationInterval, async);
+    public void setNotificationDelay(UserId user, NotificationType notificationType, NotificationInterval notificationInterval, AsyncCallback<Void> async){
+        proxy.setNotificationDelay(user.getUserName(), notificationType, notificationInterval, async);
     }
 
-    public void getNotificationDelay(String user, AsyncCallback<Map<NotificationType, NotificationInterval>> async){
-        proxy.getNotificationDelays(user, async);
+    public void getNotificationDelay(UserId user, AsyncCallback<Map<NotificationType, NotificationInterval>> async){
+        proxy.getNotificationDelays(user.getUserName(), async);
     }
 }

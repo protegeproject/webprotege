@@ -4,6 +4,11 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
+import org.semanticweb.owlapi.util.OWLEntitySetProvider;
+import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
+import org.semanticweb.owlapi.vocab.OWL2Datatype;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -26,10 +31,22 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
 
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
+    private String currentLang;
+
     public WebProtegeBidirectionalShortFormProvider(OWLAPIProject project) {
         this.project = project;
+        this.currentLang = project.getDefaultLanguage();
         final Set<OWLOntology> importsClosure = project.getRootOntology().getImportsClosure();
-        delegate = new BidirectionalShortFormProviderAdapter(importsClosure, new WebProtegeShortFormProvider(project));
+        delegate = new BidirectionalShortFormProviderAdapter(importsClosure, new WebProtegeShortFormProvider(project)) {
+            @Override
+            public void remove(OWLEntity entity) {
+                if (!entity.isBuiltIn()) {
+                    super.remove(entity);
+                }
+            }
+        };
+
+        setupBuiltinObjectRenderings(project);
 
         OWLOntologyManager manager = project.getRootOntology().getOWLOntologyManager();
         manager.addOntologyChangeListener(new OWLOntologyChangeListener() {
@@ -37,6 +54,33 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
                 updateRenderings(changes);
             }
         });
+    }
+
+    private void setupBuiltinObjectRenderings(OWLAPIProject project) {
+        OWLDataFactory df = project.getDataFactory();
+        for(IRI iri : OWLRDFVocabulary.BUILT_IN_ANNOTATION_PROPERTY_IRIS) {
+            delegate.add(df.getOWLAnnotationProperty(iri));
+        }
+
+        delegate.add(df.getOWLThing());
+        delegate.add(df.getOWLNothing());
+
+        delegate.add(df.getOWLTopObjectProperty());
+        delegate.add(df.getOWLBottomObjectProperty());
+        delegate.add(df.getOWLBottomDataProperty());
+        delegate.add(df.getOWLBottomDataProperty());
+
+        for(OWL2Datatype datatype : OWL2Datatype.values()) {
+            delegate.add(df.getOWLDatatype(datatype.getIRI()));
+        }
+
+        for(DublinCoreVocabulary vocabulary : DublinCoreVocabulary.values()) {
+            delegate.add(df.getOWLAnnotationProperty(vocabulary.getIRI()));
+        }
+
+        for(OWLAnnotationProperty annotationProperty : SKOSVocabulary.getAnnotationProperties(df)) {
+            delegate.add(annotationProperty);
+        }
     }
 
     public Set<OWLEntity> getEntities(String shortForm) {

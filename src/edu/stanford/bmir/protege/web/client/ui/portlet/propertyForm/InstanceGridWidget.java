@@ -66,7 +66,7 @@ import com.gwtext.client.widgets.menu.Menu;
 import com.gwtext.client.widgets.menu.MenuItem;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
@@ -304,8 +304,8 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
             type = allowedValues.iterator().next().getName();
         }
 
-        OntologyServiceManager.getInstance().createInstanceValue(getProject().getProjectName(), null, type,
-                getSubject().getName(), getProperty().getName(), GlobalSettings.getGlobalSettings().getUserName(),
+        OntologyServiceManager.getInstance().createInstanceValue(getProjectId(), null, type,
+                getSubject().getName(), getProperty().getName(), Application.get().getUserId(),
                 getAddValueOperationDescription(), new AddPropertyValueHandler());
     }
 
@@ -324,8 +324,8 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
     protected void addExistingValues(Collection<EntityData> values) {
         //TODO: later optimize this in a single remote call
         for (EntityData value : values) {
-            OntologyServiceManager.getInstance().addPropertyValue(getProject().getProjectName(), getSubject().getName(), getProperty(), value,
-                    GlobalSettings.getGlobalSettings().getUserName(), getAddExistingOperationDescription(value), new AddExistingValueHandler(getSubject()));
+            OntologyServiceManager.getInstance().addPropertyValue(getProjectId(), getSubject().getName(), getProperty(), value,
+                    Application.get().getUserId(), getAddExistingOperationDescription(value), new AddExistingValueHandler(getSubject()));
         }
     }
 
@@ -349,9 +349,9 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         Record record = store.getAt(index);
         String value = record.getAsString(INSTANCE_FIELD_NAME);
         if (value != null) {
-            propertyValueUtil.deletePropertyValue(getProject().getProjectName(), getSubject().getName(),
-                    getProperty().getName(), ValueType.Instance, value, GlobalSettings.getGlobalSettings()
-                    .getUserName(), getDeleteValueOperationDescription(index), new RemovePropertyValueHandler(
+            propertyValueUtil.deletePropertyValue(getProjectId(), getSubject().getName(),
+                    getProperty().getName(), ValueType.Instance, value, Application.get()
+                    .getUserId(), getDeleteValueOperationDescription(index), new RemovePropertyValueHandler(
                             index));
 
         }
@@ -698,11 +698,11 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         }
         String selSubject = record.getAsString(INSTANCE_FIELD_NAME);
         if (selSubject != null) {
-            propertyValueUtil.replacePropertyValue(getProject().getProjectName(), selSubject,
+            propertyValueUtil.replacePropertyValue(getProjectId(), selSubject,
                     properties.get(colIndex), ValueType.valueOf(valueType), 
                             oldValue == null ? null : oldValue.toString(), 
                             newValue == null ? null : newValue.toString(),
-                            GlobalSettings.getGlobalSettings().getUserName(),
+                            Application.get().getUserId(),
                             getReplaceValueOperationDescription(colIndex, oldValue, newValue),
                             new ReplacePropertyValueHandler(new EntityData(newValue == null ? null : newValue.toString(), newValue == null ? null : newValue.toString())));
         }
@@ -1023,7 +1023,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
     @Override
     protected void fillValues(List<String> subjects, List<String> props) {
         store.removeAll();
-        OntologyServiceManager.getInstance().getEntityPropertyValues(getProject().getProjectName(), subjects, props, properties,
+        OntologyServiceManager.getInstance().getEntityPropertyValues(getProjectId(), subjects, props, properties,
                 new GetTriplesHandler(getSubject()));
     }
 

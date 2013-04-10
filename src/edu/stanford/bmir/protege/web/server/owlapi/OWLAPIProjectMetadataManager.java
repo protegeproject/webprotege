@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
-import edu.stanford.bmir.protege.web.server.Protege3ProjectManager;
 import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
@@ -43,6 +43,8 @@ public class OWLAPIProjectMetadataManager {
     
     private static Lock WRITE_LOCK = READ_WRITE_LOCK.writeLock();
 
+    public static final String DEFAULT_LANGUAGE_PROPERTY_NAME = "defaultLanguage";
+
     private OWLAPIProjectMetadataManager() {
     }
 
@@ -61,7 +63,7 @@ public class OWLAPIProjectMetadataManager {
             Set<ProjectId> result = new HashSet<ProjectId>(projectInstances.size());
             for(ProjectInstance pi : projectInstances) {
                 String projectName = pi.getName();
-                result.add(new ProjectId(projectName));
+                result.add(ProjectId.get(projectName));
             }
             return result;
         }
@@ -85,7 +87,7 @@ public class OWLAPIProjectMetadataManager {
     }
 
     private MetaProject getMetaProject() {
-        MetaProjectManager mpm = Protege3ProjectManager.getProjectManager().getMetaProjectManager();
+        MetaProjectManager mpm = MetaProjectManager.getManager();
         return mpm.getMetaProject();
     }
 
@@ -160,10 +162,24 @@ public class OWLAPIProjectMetadataManager {
     }
 
     public List<UserId> getOwners(ProjectId projectId) {
+        final UserId userId = getOwner(projectId);
+        return Arrays.asList(userId);
+    }
+
+    private UserId getOwner(ProjectId projectId) {
         ProjectInstance pi = getProjectInstance(projectId);
         User owner = pi.getOwner();
-        return Arrays.asList(UserId.getUserId(owner.getName()));
+        return UserId.getUserId(owner.getName());
     }
+
+    public ProjectDetails getProjectDetails(ProjectId projectId) {
+        String displayName = projectId.getProjectName();
+        String description = getDescription(projectId);
+        UserId owner = getOwner(projectId);
+        boolean inTrash = isInTrash(projectId);
+        return new ProjectDetails(projectId, displayName, description, owner, inTrash);
+    }
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -319,5 +335,13 @@ public class OWLAPIProjectMetadataManager {
 //        public void setPropertyValue(String propertyValue) {
 //            this.propertyValue = propertyValue;
 //        }
+//    }
+
+//    public String getDefaultLanguage(ProjectId projectId) {
+//        return getPropertyValue(projectId, DEFAULT_LANGUAGE_PROPERTY_NAME, "en");
+//    }
+//
+//    public void setDefaultLanguage(ProjectId projectId, String defaultLanguage) {
+//        setPropertyValue(projectId, DEFAULT_LANGUAGE_PROPERTY_NAME, defaultLanguage);
 //    }
 }

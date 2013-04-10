@@ -1,10 +1,19 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.entity;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.regexp.shared.SplitResult;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.user.client.ui.TextBox;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
+import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxMode;
+import org.semanticweb.owlapi.model.EntityType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>
@@ -14,31 +23,64 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValid
  */
 public class CreateEntityForm extends WebProtegeDialogForm {
 
-    private TextBox entityBrowserTextField = new TextBox();
-    
-    public CreateEntityForm() {
-        entityBrowserTextField.setVisibleLength(60);
+    private ExpandingTextBox entityBrowserTextField;
+
+    private EntityType<?> entityType;
+
+    private static ExpandingTextBoxMode mode = ExpandingTextBoxMode.MULTI_LINE;
+
+    public CreateEntityForm(EntityType<?> type) {
+        this.entityType = type;
+        entityBrowserTextField = new ExpandingTextBox();
+        entityBrowserTextField.setWidth("450px");
+        entityBrowserTextField.setMode(mode);
+        entityBrowserTextField.setAnchorVisible(false);
+        entityBrowserTextField.setPlaceholder("Enter one " + getTypeName() + " name per line (press CTRL+ENTER to accept and close dialog)");
         addWidget("Name", entityBrowserTextField);
-        addDialogValidator(new EntityNameValidator());
-    }
-    
-    public String getEntityBrowserText() {
-        return entityBrowserTextField.getText().trim();
-    }
-    
-    
-    private class EntityNameValidator implements WebProtegeDialogValidator {
 
-        public ValidationState getValidationState() {
-            return getEntityBrowserText().isEmpty() ? ValidationState.INVALID : ValidationState.VALID;
-        }
+//        entityBrowserTextField = addTextBox("Name", "Enter " + getTypeName() + " name", "", new WebProtegeDialogInlineValidator<ValueBoxBase<String>>() {
+//            @Override
+//            public InlineValidationResult getValidation(ValueBoxBase<String> widget) {
+//                return widget.getText().trim().isEmpty() ? InlineValidationResult.getInvalid("Name must not be empty") : InlineValidationResult.getValid();
+//            }
+//        });
+//        entityBrowserTextField.setVisibleLength(60);
 
-        public String getValidationMessage() {
-            return "Please enter a name";
+    }
+
+    public List<String> getEntityBrowserText() {
+        String enteredText = entityBrowserTextField.getText().trim();
+        List<String> result = new ArrayList<String>();
+        RegExp regExp = RegExp.compile("\n");
+        SplitResult split = regExp.split(enteredText);
+        for(int i = 0; i < split.length(); i++) {
+            result.add(split.get(i));
         }
+        return result;
     }
 
     public Focusable getInitialFocusable() {
         return entityBrowserTextField;
+    }
+
+    private String getTypeName() {
+        if(entityType.equals(EntityType.CLASS)) {
+            return "class";
+        }
+        else if(entityType.equals(EntityType.OBJECT_PROPERTY)) {
+            return "object property";
+        }
+        else if(entityType.equals(EntityType.DATA_PROPERTY)) {
+            return "data property";
+        }
+        else if(entityType.equals(EntityType.ANNOTATION_PROPERTY)) {
+            return "annotation property";
+        }
+        else if(entityType.equals(EntityType.NAMED_INDIVIDUAL)) {
+            return "individual";
+        }
+        else {
+            return "a datatype";
+        }
     }
 }

@@ -7,8 +7,8 @@ import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermCrossProduct;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.NamedClass;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -41,12 +41,12 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void displayEntity(Entity entity) {
-        if(!(entity instanceof NamedClass)) {
+    protected void displayEntity(OWLEntity entity) {
+        if(!(entity.isOWLClass())) {
             editor.clearValue();
         }
         else {
-            getService().getCrossProduct(getProjectId(), (NamedClass) entity, new AsyncCallback<OBOTermCrossProduct>() {
+            getService().getCrossProduct(getProjectId(), (OWLClass) entity, new AsyncCallback<OBOTermCrossProduct>() {
                 public void onFailure(Throwable caught) {
                     MessageBox.alert(caught.getMessage());
                     GWT.log(caught.getMessage(), caught);
@@ -65,12 +65,12 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void commitChangesForEntity(Entity entity) {
-        if(!(entity instanceof NamedClass)) {
+    protected void commitChangesForEntity(OWLEntity entity) {
+        if(!(entity.isOWLClass())) {
             return;
         }
         OBOTermCrossProduct crossProduct = editor.getValue();
-        getService().setCrossProduct(getProjectId(), (NamedClass) entity, crossProduct, new AsyncCallback<Void>() {
+        getService().setCrossProduct(getProjectId(), (OWLClass) entity, crossProduct, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
                 if(caught instanceof NotSignedInException) {
                     MessageBox.alert("You are not signed in.  Changes not saved.  You must be signed in for your changes to be saved.");

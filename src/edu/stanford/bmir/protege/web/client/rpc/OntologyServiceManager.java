@@ -5,9 +5,9 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.stanford.bmir.protege.web.client.model.event.OntologyEvent;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLClass;
 
 public class OntologyServiceManager {
 
@@ -25,280 +25,280 @@ public class OntologyServiceManager {
         proxy = (OntologyServiceAsync) GWT.create(OntologyService.class);
     }
 
-    /*
-     * Project management methods
-     */
+//    /*
+//     * Project management methods
+//     */
+//
+//    public void loadProject(ProjectId projectId, AsyncCallback<Integer> cb) {
+//        proxy.loadProject(projectId.getProjectName(), cb);
+//    }
+//
 
-    public void loadProject(String projectName, AsyncCallback<Integer> cb) {
-        proxy.loadProject(projectName, cb);
-    }
-    
 
+//    public void getEvents(ProjectId projectId, long fromVersion, AsyncCallback<List<OntologyEvent>> cb) {
+//        proxy.getEvents(projectId.getProjectName(), fromVersion, cb);
+//    }
 
-    public void getEvents(String projectName, long fromVersion, AsyncCallback<List<OntologyEvent>> cb) {
-        proxy.getEvents(projectName, fromVersion, cb);
-    }
-
-    public void hasWritePermission(String projectName, String userName, AsyncCallback<Boolean> cb) {
-        proxy.hasWritePermission(projectName, userName, cb);
-    }
-
-    /*
-     * Ontology methods
-     */
-
-    public void getAnnotationProperties(String projectName, String entityName, AsyncCallback<List<AnnotationData>> cb) {
-        proxy.getAnnotationProperties(projectName, entityName, cb);
+    public void hasWritePermission(ProjectId projectId, UserId userId, AsyncCallback<Boolean> cb) {
+        proxy.hasWritePermission(projectId.getProjectName(), userId.getUserName(), cb);
     }
 
-    public void getImportedOntologies(String projectName, AsyncCallback<ImportsData> cb) {
-        proxy.getImportedOntologies(projectName, cb);
+//    /*
+//     * Ontology methods
+//     */
+//
+//    public void getAnnotationProperties(ProjectId projectId, String entityName, AsyncCallback<List<AnnotationData>> cb) {
+//        proxy.getAnnotationProperties(projectId.getProjectName(), entityName, cb);
+//    }
+
+    public void getImportedOntologies(ProjectId projectId, AsyncCallback<ImportsData> cb) {
+        proxy.getImportedOntologies(projectId.getProjectName(), cb);
     }
 
-    public void getMetrics(String projectName, AsyncCallback<List<MetricData>> cb) {
-        proxy.getMetrics(projectName, cb);
+    public void getMetrics(ProjectId projectId, AsyncCallback<List<MetricData>> cb) {
+        proxy.getMetrics(projectId.getProjectName(), cb);
     }
 
     /*
      * Entity methods
      */
 
-    public void getEntityTriples(String projectName, String entityName, AsyncCallback<List<Triple>> cb) {
-        proxy.getEntityTriples(projectName, entityName, cb);
+    public void getEntityTriples(ProjectId projectId, String entityName, AsyncCallback<List<Triple>> cb) {
+        proxy.getEntityTriples(projectId.getProjectName(), entityName, cb);
     }
 
-    public void getEntityTriples(String projectName, List<String> entities, List<String> properties,
+    public void getEntityTriples(ProjectId projectId, List<String> entities, List<String> properties,
             AsyncCallback<List<Triple>> cb) {
-        proxy.getEntityTriples(projectName, entities, properties, cb);
+        proxy.getEntityTriples(projectId.getProjectName(), entities, properties, cb);
     }
 
-    public void getEntityTriples(String projectName, List<String> entities, List<String> properties, List<String> reifiedProperties,
+    public void getEntityTriples(ProjectId projectId, List<String> entities, List<String> properties, List<String> reifiedProperties,
             AsyncCallback<List<Triple>> cb) {
-        proxy.getEntityTriples(projectName, entities, properties, reifiedProperties, cb);
+        proxy.getEntityTriples(projectId.getProjectName(), entities, properties, reifiedProperties, cb);
     }
 
-    public void getEntityPropertyValues(String projectName, List<String> entities, List<String> properties, List<String> reifiedProps,
+    public void getEntityPropertyValues(ProjectId projectId, List<String> entities, List<String> properties, List<String> reifiedProps,
             AsyncCallback<List<EntityPropertyValues>> cb) {
-        proxy.getEntityPropertyValues(projectName, entities, properties, reifiedProps, cb);
+        proxy.getEntityPropertyValues(projectId.getProjectName(), entities, properties, reifiedProps, cb);
     }
 
-    public void getRootEntity(String projectName, AsyncCallback<EntityData> cb) {
-        proxy.getRootEntity(projectName, cb);
+    public void getRootEntity(ProjectId projectId, AsyncCallback<EntityData> cb) {
+        proxy.getRootEntity(projectId.getProjectName(), cb);
     }
 
-    public void renameEntity(String projectName, String oldName, String newName, String user,
+    public void renameEntity(ProjectId projectId, String oldName, String newName, UserId userId,
             String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.renameEntity(projectName, oldName, newName, user, operationDescription, cb);
+        proxy.renameEntity(projectId.getProjectName(), oldName, newName, userId.getUserName(), operationDescription, cb);
     }
 
-    public void getEntity(String projectName, String entityName, AsyncCallback<EntityData> cb) {
-        proxy.getEntity(projectName, entityName, cb);
+    public void getEntity(ProjectId projectId, String entityName, AsyncCallback<EntityData> cb) {
+        proxy.getEntity(projectId.getProjectName(), entityName, cb);
     }
 
-    public void deleteEntity(String projectName, String entityName, String user, String operationDescription,
-            AsyncCallback<Void> cb) {
-        proxy.deleteEntity(projectName, entityName, user, operationDescription, cb);
-    }
+//    public void deleteEntity(ProjectId projectId, String entityName, UserId userId, String operationDescription,
+//            AsyncCallback<Void> cb) {
+//        proxy.deleteEntity(projectId.getProjectName(), entityName, user, operationDescription, cb);
+//    }
 
     /*
      * Class methods
      */
 
-    public void getSubclasses(String projectName, String className, AsyncCallback<List<SubclassEntityData>> cb) {
-        proxy.getSubclasses(projectName, className, cb);
+    public void getSubclasses(ProjectId projectId, String className, AsyncCallback<List<SubclassEntityData>> cb) {
+        proxy.getSubclasses(projectId.getProjectName(), className, cb);
     }
 
-    public void getIndividuals(String projectName, String className, AsyncCallback<List<EntityData>> cb) {
-        proxy.getIndividuals(projectName, className, cb);
+    public void getIndividuals(ProjectId projectId, String className, AsyncCallback<List<EntityData>> cb) {
+        proxy.getIndividuals(projectId.getProjectName(), className, cb);
     }
 
-    public void getIndividuals(String projectName, String className, int start, int limit, String sort, String dir,
+    public void getIndividuals(ProjectId projectId, String className, int start, int limit, String sort, String dir,
             AsyncCallback<PaginationData<EntityData>> cb) {
-        proxy.getIndividuals(projectName, className, start, limit, sort, dir, cb);
+        proxy.getIndividuals(projectId.getProjectName(), className, start, limit, sort, dir, cb);
     }
 
-    public void createCls(String projectName, String clsName, String superClsName, String user,
-            String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createCls(projectName, clsName, superClsName, user, operationDescription, cb);
+//    public void createCls(ProjectId projectId, String clsName, OWLClass superCls, UserId userId,
+//            String operationDescription, AsyncCallback<EntityData> cb) {
+//        proxy.createCls(projectId, clsName, superCls, userId, operationDescription, cb);
+//    }
+
+//    public void createCls(ProjectId projectId, String clsName, OWLClass superCls, boolean createMetaClses, UserId userId,
+//            String operationDescription, AsyncCallback<EntityData> cb) {
+//        proxy.createCls(projectId, clsName, superCls,createMetaClses, userId, operationDescription, cb);
+//    }
+
+    public void createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls, String propertyName,
+            EntityData propertyValue, UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
+        proxy.createClsWithProperty(projectId, clsName, superCls, propertyName, propertyValue, userId, operationDescription, cb);
     }
 
-    public void createCls(String projectName, String clsName, String superClsName, boolean createMetaClses, String user,
-            String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createCls(projectName, clsName, superClsName,createMetaClses, user, operationDescription, cb);
-    }
-
-    public void createClsWithProperty(String projectName, String clsName, String superClsName, String propertyName,
-            EntityData propertyValue, String user, String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createClsWithProperty(projectName, clsName, superClsName, propertyName, propertyValue, user, operationDescription, cb);
-    }
-
-    public void addSuperCls(String projectName, String clsName, String superClsName, String user,
+    public void addSuperCls(ProjectId projectId, String clsName, String superClsName, UserId userId,
             String operationDescription, AsyncCallback<Void> cb) {
-        proxy.addSuperCls(projectName, clsName, superClsName, user, operationDescription, cb);
+        proxy.addSuperCls(projectId.getProjectName(), clsName, superClsName, userId.getUserName(), operationDescription, cb);
     }
 
-    public void removeSuperCls(String projectName, String clsName, String superClsName, String user,
+    public void removeSuperCls(ProjectId projectId, String clsName, String superClsName, UserId userId,
             String operationDescription, AsyncCallback<Void> cb) {
-        proxy.removeSuperCls(projectName, clsName, superClsName, user, operationDescription, cb);
+        proxy.removeSuperCls(projectId.getProjectName(), clsName, superClsName, userId.getUserName(), operationDescription, cb);
     }
 
-    public void moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
-            String user, String operationDescription, AsyncCallback<List<EntityData>> cb) {
-        proxy.moveCls(projectName, clsName, oldParentName, newParentName, checkForCycles, user, operationDescription, cb);
+    public void moveCls(ProjectId projectId, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
+            UserId userId, String operationDescription, AsyncCallback<List<EntityData>> cb) {
+        proxy.moveCls(projectId.getProjectName(), clsName, oldParentName, newParentName, checkForCycles, userId.getUserName(), operationDescription, cb);
     }
 
-    public void getRestrictionHtml(String projectName, String className, AsyncCallback<String> cb) {
-        proxy.getRestrictionHtml(projectName, className, cb);
+    public void getRestrictionHtml(ProjectId projectId, String className, AsyncCallback<String> cb) {
+        proxy.getRestrictionHtml(projectId.getProjectName(), className, cb);
     }
 
-    public void getClassConditions(String projectName, String className, AsyncCallback<List<ConditionItem>> cb) {
-        proxy.getClassConditions(projectName, className, cb);
+    public void getClassConditions(ProjectId projectId, String className, AsyncCallback<List<ConditionItem>> cb) {
+        proxy.getClassConditions(projectId.getProjectName(), className, cb);
     }
 
-    public void deleteCondition(String projectName, String className, ConditionItem conditionItem, int row, String operationDescription,
+    public void deleteCondition(ProjectId projectId, String className, ConditionItem conditionItem, int row, String operationDescription,
             AsyncCallback<List<ConditionItem>> cb) {
-        proxy.deleteCondition(projectName, className, conditionItem, row, operationDescription, cb);
+        proxy.deleteCondition(projectId.getProjectName(), className, conditionItem, row, operationDescription, cb);
     }
 
-    public  void replaceCondition(String projectName, String className, ConditionItem conditionItem, int row,
+    public  void replaceCondition(ProjectId projectId, String className, ConditionItem conditionItem, int row,
             String newCondition, String operationDescription, AsyncCallback<List<ConditionItem>> callback) {
-        proxy.replaceCondition(projectName, className, conditionItem, row, newCondition, operationDescription, callback);
+        proxy.replaceCondition(projectId.getProjectName(), className, conditionItem, row, newCondition, operationDescription, callback);
     }
 
-    public void addCondition(String projectName, String className, int row, String newCondition, boolean isNS,
+    public void addCondition(ProjectId projectId, String className, int row, String newCondition, boolean isNS,
             String operationDescription, AsyncCallback<List<ConditionItem>> callback) {
-        proxy.addCondition(projectName, className, row, newCondition, isNS, operationDescription, callback);
+        proxy.addCondition(projectId.getProjectName(), className, row, newCondition, isNS, operationDescription, callback);
     }
 
-    public void getConditionAutocompleteSuggestions(String projectName, String condition, int cursorPosition,
+    public void getConditionAutocompleteSuggestions(ProjectId projectId, String condition, int cursorPosition,
             AsyncCallback<ConditionSuggestion> callback) {
-        proxy.getConditionAutocompleteSuggestions(projectName, condition, cursorPosition, callback);
+        proxy.getConditionAutocompleteSuggestions(projectId.getProjectName(), condition, cursorPosition, callback);
     }
 
-    public void getParents(String projectName, String className, boolean direct, AsyncCallback<List<EntityData>> cb) {
-        proxy.getParents(projectName, className, direct, cb);
+    public void getParents(ProjectId projectId, String className, boolean direct, AsyncCallback<List<EntityData>> cb) {
+        proxy.getParents(projectId.getProjectName(), className, direct, cb);
     }
 
-    public void getParentsHtml(String projectName, String className, boolean direct, AsyncCallback<String> cb) {
-        proxy.getParentsHtml(projectName, className, direct, cb);
+    public void getParentsHtml(ProjectId projectId, String className, boolean direct, AsyncCallback<String> cb) {
+        proxy.getParentsHtml(projectId.getProjectName(), className, direct, cb);
     }
 
-    public void getRelatedProperties(String projectName, String className, AsyncCallback<List<Triple>> callback) {
-        proxy.getRelatedProperties(projectName, className, callback);
+    public void getRelatedProperties(ProjectId projectId, String className, AsyncCallback<List<Triple>> callback) {
+        proxy.getRelatedProperties(projectId.getProjectName(), className, callback);
     }
 
     /*
      * Properties methods
      */
 
-    public void createObjectProperty(String projectName, String propertyName, String superPropName, String user,
+    public void createObjectProperty(ProjectId projectId, String propertyName, String superPropName, UserId userId,
             String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createObjectProperty(projectName, propertyName, superPropName, user, operationDescription, cb);
+        proxy.createObjectProperty(projectId.getProjectName(), propertyName, superPropName, userId.getUserName(), operationDescription, cb);
     }
 
-    public void createDatatypeProperty(String projectName, String propertyName, String superPropName, String user,
+    public void createDatatypeProperty(ProjectId projectId, String propertyName, String superPropName, UserId userId,
             String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createDatatypeProperty(projectName, propertyName, superPropName, user, operationDescription, cb);
+        proxy.createDatatypeProperty(projectId.getProjectName(), propertyName, superPropName, userId.getUserName(), operationDescription, cb);
     }
 
-    public void createAnnotationProperty(String projectName, String propertyName, String superPropName, String user,
+    public void createAnnotationProperty(ProjectId projectId, String propertyName, String superPropName, UserId userId,
             String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createAnnotationProperty(projectName, propertyName, superPropName, user, operationDescription, cb);
+        proxy.createAnnotationProperty(projectId.getProjectName(), propertyName, superPropName, userId.getUserName(), operationDescription, cb);
     }
 
-    public void getSubproperties(String projectName, String propertyName, AsyncCallback<List<EntityData>> cb) {
-        proxy.getSubproperties(projectName, propertyName, cb);
+    public void getSubproperties(ProjectId projectId, String propertyName, AsyncCallback<List<EntityData>> cb) {
+        proxy.getSubproperties(projectId.getProjectName(), propertyName, cb);
     }
 
-    public void addPropertyValue(String projectName, String entityName, PropertyEntityData propertyEntity,
-            EntityData value, String user, String operationDescription, AsyncCallback<Void> cb) {
-        proxy.addPropertyValue(projectName, entityName, propertyEntity, value, user, operationDescription, cb);
+    public void addPropertyValue(ProjectId projectId, String entityName, PropertyEntityData propertyEntity,
+            EntityData value, UserId userId, String operationDescription, AsyncCallback<Void> cb) {
+        proxy.addPropertyValue(projectId.getProjectName(), entityName, propertyEntity, value, userId.getUserName(), operationDescription, cb);
     }
 
-    public void removePropertyValue(String projectName, String entityName, PropertyEntityData propertyEntity,
-            EntityData value, String user, String operationDescription, AsyncCallback<Void> cb) {
-        proxy.removePropertyValue(projectName, entityName, propertyEntity, value, user, operationDescription, cb);
+    public void removePropertyValue(ProjectId projectId, String entityName, PropertyEntityData propertyEntity,
+            EntityData value, UserId userId, String operationDescription, AsyncCallback<Void> cb) {
+        proxy.removePropertyValue(projectId.getProjectName(), entityName, propertyEntity, value, userId.getUserName(), operationDescription, cb);
     }
 
-    public void replacePropertyValue(String projectName, String entityName, PropertyEntityData propertyEntity,
-            EntityData oldValue, EntityData newValue, String user, String operationDescription, AsyncCallback<Void> cb) {
-        proxy.replacePropertyValue(projectName, entityName, propertyEntity, oldValue, newValue, user,
+    public void replacePropertyValue(ProjectId projectId, String entityName, PropertyEntityData propertyEntity,
+            EntityData oldValue, EntityData newValue, UserId userId, String operationDescription, AsyncCallback<Void> cb) {
+        proxy.replacePropertyValue(projectId.getProjectName(), entityName, propertyEntity, oldValue, newValue, userId.getUserName(),
                 operationDescription, cb);
     }
 
-    public void setPropertyValues(String projectName, String entityName,  PropertyEntityData propertyEntity,
-            List<EntityData> values, String user, String operationDescription, AsyncCallback<Void> cb) {
-        proxy.setPropertyValues(projectName, entityName, propertyEntity, values, user, operationDescription, cb);
+    public void setPropertyValues(ProjectId projectId, String entityName,  PropertyEntityData propertyEntity,
+            List<EntityData> values, UserId userId, String operationDescription, AsyncCallback<Void> cb) {
+        proxy.setPropertyValues(projectId.getProjectName(), entityName, propertyEntity, values, userId.getUserName(), operationDescription, cb);
     }
 
     /*
      * Instance methods
      */
 
-    public void createInstance(String projectName, String instName, String typeName, String user,
+    public void createInstance(ProjectId projectId, String instName, String typeName, UserId userId,
             String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createInstance(projectName, instName, typeName, user, operationDescription, cb);
+        proxy.createInstance(projectId.getProjectName(), instName, typeName, userId.getUserName(), operationDescription, cb);
     }
 
-    public void createInstanceValue(String projectName, String instName, String typeName, String subjectEntity,
-            String propertyEntity, String user, String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createInstanceValue(projectName, instName, typeName, subjectEntity, propertyEntity, user,
+    public void createInstanceValue(ProjectId projectId, String instName, String typeName, String subjectEntity,
+            String propertyEntity, UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
+        proxy.createInstanceValue(projectId.getProjectName(), instName, typeName, subjectEntity, propertyEntity, userId.getUserName(),
                 operationDescription, cb);
     }
 
-    public void createInstanceValueWithPropertyValue(String projectName, String instName, String typeName,
+    public void createInstanceValueWithPropertyValue(ProjectId projectId, String instName, String typeName,
             String subjectEntity, String propertyEntity, PropertyEntityData instancePropertyEntity,
-            EntityData valueEntityData, String user, String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createInstanceValueWithPropertyValue(projectName, instName, typeName, subjectEntity, propertyEntity,
-                instancePropertyEntity, valueEntityData, user, operationDescription, cb);
+            EntityData valueEntityData, UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
+        proxy.createInstanceValueWithPropertyValue(projectId.getProjectName(), instName, typeName, subjectEntity, propertyEntity,
+                instancePropertyEntity, valueEntityData, userId.getUserName(), operationDescription, cb);
     }
 
     /*
      * Search
      */
 
-    public void search(String projectName, String searchString, AsyncCallback<List<EntityData>> cb) {
-        proxy.search(projectName, searchString, cb);
+    public void search(ProjectId projectId, String searchString, AsyncCallback<List<EntityData>> cb) {
+        proxy.search(projectId.getProjectName(), searchString, cb);
     }
 
-    public void search(String projectName, String searchString, ValueType valueType, AsyncCallback<List<EntityData>> cb) {
-        proxy.search(projectName, searchString, valueType, cb);
+    public void search(ProjectId projectId, String searchString, ValueType valueType, AsyncCallback<List<EntityData>> cb) {
+        proxy.search(projectId.getProjectName(), searchString, valueType, cb);
     }
 
-    public void search(String projectName, String searchString, ValueType valueType, int start, int limit, String sort, String dir, AsyncCallback<PaginationData<EntityData>> cb) {
-        proxy.search(projectName, searchString, valueType, start, limit, sort, dir, cb);
+    public void search(ProjectId projectId, String searchString, ValueType valueType, int start, int limit, String sort, String dir, AsyncCallback<PaginationData<EntityData>> cb) {
+        proxy.search(projectId.getProjectName(), searchString, valueType, start, limit, sort, dir, cb);
     }
 
-    public void getPathToRoot(String projectName, String entityName, AsyncCallback<List<EntityData>> cb) {
-        proxy.getPathToRoot(projectName, entityName, cb);
+    public void getPathToRoot(ProjectId projectId, String entityName, AsyncCallback<List<EntityData>> cb) {
+        proxy.getPathToRoot(projectId.getProjectName(), entityName, cb);
     }
 
-    public void getDirectTypes(String projectName, String instanceName, AsyncCallback<List<EntityData>> cb){
-        proxy.getDirectTypes(projectName, instanceName, cb);
+    public void getDirectTypes(ProjectId projectId, String instanceName, AsyncCallback<List<EntityData>> cb){
+        proxy.getDirectTypes(projectId.getProjectName(), instanceName, cb);
     }
 
     /*
      * Util methods
      */
 
-    public void getBioPortalSearchContent(String projectName, String entityName, BioPortalSearchData bpSearchData,
+    public void getBioPortalSearchContent(ProjectId projectId, String entityName, BioPortalSearchData bpSearchData,
             AsyncCallback<String> cb) {
-        proxy.getBioPortalSearchContent(projectName, entityName, bpSearchData, cb);
+        proxy.getBioPortalSearchContent(projectId.getProjectName(), entityName, bpSearchData, cb);
     }
 
-    public void getBioPortalSearchContentDetails(String projectName, BioPortalSearchData bpSearchData,
+    public void getBioPortalSearchContentDetails(ProjectId projectId, BioPortalSearchData bpSearchData,
             BioPortalReferenceData bpRefData, AsyncCallback<String> cb) {
-        proxy.getBioPortalSearchContentDetails(projectName, bpSearchData, bpRefData, cb);
+        proxy.getBioPortalSearchContentDetails(projectId.getProjectName(), bpSearchData, bpRefData, cb);
     }
 
-    public void createExternalReference(String projectName, String entityName, BioPortalReferenceData bpRefData,
-            String user, String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createExternalReference(projectName, entityName, bpRefData, user, operationDescription, cb);
+    public void createExternalReference(ProjectId projectId, String entityName, BioPortalReferenceData bpRefData,
+            UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
+        proxy.createExternalReference(projectId.getProjectName(), entityName, bpRefData, userId.getUserName(), operationDescription, cb);
     }
 
-    public void replaceExternalReference(String projectName, String entityName, BioPortalReferenceData bpRefData, EntityData oldValueEntityData,
-            String user, String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.replaceExternalReference(projectName, entityName, bpRefData, oldValueEntityData, user, operationDescription, cb);
+    public void replaceExternalReference(ProjectId projectId, String entityName, BioPortalReferenceData bpRefData, EntityData oldValueEntityData,
+            UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
+        proxy.replaceExternalReference(projectId.getProjectName(), entityName, bpRefData, oldValueEntityData, userId.getUserName(), operationDescription, cb);
     }
 
 

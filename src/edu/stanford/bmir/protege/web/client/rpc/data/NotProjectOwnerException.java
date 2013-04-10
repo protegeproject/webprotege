@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

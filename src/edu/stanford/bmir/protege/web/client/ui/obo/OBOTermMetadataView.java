@@ -5,10 +5,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.NamedClass;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,7 +64,7 @@ public class OBOTermMetadataView extends FlowPanel {
         add(view);
     }
     
-    public void reload(ProjectId projectId, Entity subject) {
+    public void reload(ProjectId projectId, OWLEntity subject) {
         if (subject != null) {
             service.getTermId(projectId, subject, new AsyncCallback<OBOTermId>() {
                 public void onFailure(Throwable caught) {
@@ -86,7 +86,7 @@ public class OBOTermMetadataView extends FlowPanel {
                 }
             });
 
-            service.getRelationships(projectId, (NamedClass) subject, new AsyncCallback<OBOTermRelationships>() {
+            service.getRelationships(projectId, (OWLClass) subject, new AsyncCallback<OBOTermRelationships>() {
                 public void onFailure(Throwable caught) {
                 }
 
@@ -96,7 +96,7 @@ public class OBOTermMetadataView extends FlowPanel {
                 }
             });
 
-            service.getCrossProduct(projectId, (NamedClass) subject, new AsyncCallback<OBOTermCrossProduct>() {
+            service.getCrossProduct(projectId, (OWLClass) subject, new AsyncCallback<OBOTermCrossProduct>() {
                 public void onFailure(Throwable caught) {
                 }
 
@@ -124,7 +124,7 @@ public class OBOTermMetadataView extends FlowPanel {
         return idEditor.isDirty() || definitionEditor.isDirty() || relationshipEditor.isDirty() || crossProductEditor.isDirty() || synonymListEditor.isDirty();
     }
 
-    public void commit(ProjectId projectId, Entity subject) {
+    public void commit(ProjectId projectId, OWLEntity subject) {
         if(idEditor.isDirty()) {
             service.setTermId(projectId, subject, idEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
@@ -132,10 +132,10 @@ public class OBOTermMetadataView extends FlowPanel {
             service.setDefinition(projectId, subject, definitionEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
         if(relationshipEditor.isDirty()) {
-            service.setRelationships(projectId, (NamedClass) subject, relationshipEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
+            service.setRelationships(projectId, (OWLClass) subject, relationshipEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
         if(crossProductEditor.isDirty()) {
-            service.setCrossProduct(projectId, (NamedClass) subject, crossProductEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
+            service.setCrossProduct(projectId, (OWLClass) subject, crossProductEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
         if(synonymListEditor.isDirty()) {
             service.setSynonyms(projectId, subject, synonymListEditor.getValues(), new OBOTermEditorApplyChangesAsyncCallback());

@@ -60,7 +60,7 @@ public class WebProtegeDialog<D> extends DialogBox {
 
         initialiseHandlerList();
 
-//        attachAcceleratorKeyHandlers(contentWidget);
+        attachAcceleratorKeyHandlers(contentWidget);
 
         center();
 
@@ -88,14 +88,27 @@ public class WebProtegeDialog<D> extends DialogBox {
     }
 
     private void attachAcceleratorKeyHandlers(Widget widget) {
-        if (widget instanceof TextArea) {
-            ((TextArea) widget).addKeyDownHandler(new CtrlEnterKeyDownHandler());
+        if(widget instanceof HasAcceptKeyHandler) {
+            ((HasAcceptKeyHandler) widget).setAcceptKeyHandler(new AcceptKeyHandler() {
+                @Override
+                public void handleAcceptKey() {
+                    hideWithDefaultButton();
+                }
+            });
+        }
+        else {
+            if (widget instanceof TextArea) {
+                ((TextArea) widget).addKeyDownHandler(new CtrlEnterKeyDownHandler());
+            }
+            else if (widget instanceof TextBox) {
+                ((HasKeyDownHandlers) widget).addKeyDownHandler(new EnterKeyDownHandler());
+            }
+        }
+        if(widget instanceof HasKeyDownHandlers) {
             ((HasKeyDownHandlers) widget).addKeyDownHandler(new EscapeKeyDownHandler());
         }
-        else if (widget instanceof HasKeyDownHandlers) {
-            ((HasKeyDownHandlers) widget).addKeyDownHandler(new EnterKeyDownHandler());
-            ((HasKeyDownHandlers) widget).addKeyDownHandler(new EscapeKeyDownHandler());
-        }
+
+
 
         if (widget instanceof HasWidgets) {
             HasWidgets hasWidgets = (HasWidgets) widget;

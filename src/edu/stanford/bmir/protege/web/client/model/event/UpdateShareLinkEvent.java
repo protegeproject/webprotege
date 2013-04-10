@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.client.model.event;
 
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
 public class UpdateShareLinkEvent implements SystemEvent {
     private boolean showShareLink;
 
-    private String currentSelectedProject;
+    private final ProjectId currentSelectedProject;
 
-    public UpdateShareLinkEvent(boolean showShareLink, String currentSelectedProject) {
+    public UpdateShareLinkEvent(boolean showShareLink, ProjectId currentSelectedProject) {
         this.showShareLink = showShareLink;
         this.currentSelectedProject = currentSelectedProject;
     }
@@ -20,7 +22,7 @@ public class UpdateShareLinkEvent implements SystemEvent {
     /**
      * @return the currentSelectedProject
      */
-    public String getCurrentSelectedProject() {
+    public ProjectId getCurrentSelectedProject() {
         return currentSelectedProject;
     }
 }

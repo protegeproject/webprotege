@@ -28,7 +28,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.gwtext.client.widgets.MessageBox;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
@@ -36,6 +36,7 @@ import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.client.ui.login.HashAlgorithm;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
@@ -112,11 +113,7 @@ public class OpenIdUtil {
             }
         } else {
             listTable
-                    .setWidget(
-                            rowIndex,
-                            0,
-                            new HTML(
-                                    "There is no open id associated to your account. You can associate one by clicking on the \"<b>Add new OpenId</b>\" link"));
+                    .setWidget(rowIndex, 0, new HTML("There is no open id associated to your account. You can associate one by clicking on the \"<b>Add new OpenId</b>\" link"));
         }
 
         HorizontalPanel addNewOpenIdPanel = getWidgetAddNewOpenId(editProfileTable, win, windowBaseHt);
@@ -193,7 +190,7 @@ public class OpenIdUtil {
             public void onClick(ClickEvent event) {
                 Image remImage = (Image) event.getSource();
                 String openIdStr = remImage.getElement().getId();
-                String name = GlobalSettings.getGlobalSettings().getUserName();
+                String name = Application.get().getUserId().getUserName();
 
                 OpenIdServiceManager.getInstance().removeAssocToOpenId(name, openIdStr,
                         new AsyncCallback<OpenIdData>() {
@@ -346,7 +343,7 @@ public class OpenIdUtil {
 
                         public void onSuccess(UserData userData) {
                             if (userData != null) {
-                                GlobalSettings.getGlobalSettings().setUser(userData);
+                                Application.get().setCurrentUser(userData.getUserId());
                                 MessageBox.alert("New user created successfully and associated with your Open Id.");
                                 timer.cancel();
                             }
@@ -394,7 +391,7 @@ public class OpenIdUtil {
 
                                 public void onSuccess(UserData userData) {
                                     if (userData != null) {
-                                        GlobalSettings.getGlobalSettings().setUser(userData);
+                                        Application.get().setCurrentUser(userData.getUserId());
                                         timer.cancel();
                                         MessageBox.alert("Your user account was successfully associated with your OpenId. <br /><br/>" +
                                         		"For future sessions, you can simply sign in with your OpenId account.");
@@ -438,7 +435,7 @@ public class OpenIdUtil {
 
     public void signInToAssocOpenIdWithEncryption(String userName, TextBox passwordField,
             com.gwtext.client.widgets.Window win) {
-        AdminServiceManager.getInstance().getUserSaltAndChallenge(userName,
+        AdminServiceManager.getInstance().getUserSaltAndChallenge(UserId.getUserId(userName),
                 new SignIntoAssocOpenIdWithEncryptHandler(userName, passwordField, win));
 
     }
@@ -480,7 +477,7 @@ public class OpenIdUtil {
                             public void onSuccess(UserData userData) {
                                 win.getEl().unmask();
                                 if (userData != null) {
-                                    GlobalSettings.getGlobalSettings().setUser(userData);
+                                    Application.get().setCurrentUser(userData.getUserId());
                                     win.close();
                                     MessageBox.alert("Your user account was successfully associated with your OpenId.<br />" +
                                     		"For future sessions, you can simply sign in with your OpenId.");
@@ -511,7 +508,7 @@ public class OpenIdUtil {
 
     public void signInToAssocOpenIdWithHttps(String userName, TextBox passField, com.gwtext.client.widgets.Window win) {
 
-        AuthenticateServiceManager.getInstance().validateUserToAssociateOpenId(userName, passField.getText(),
+        AuthenticateServiceManager.getInstance().validateUserToAssociateOpenId(UserId.getUserId(userName), passField.getText(),
                 new SignIntoAssocOpenIdWithHttpsHandler(win, passField));
     }
 
@@ -589,7 +586,7 @@ public class OpenIdUtil {
                                             MessageBox.alert("User '" + userName + "' already exists.");
                                         } else if (result != null && result.equals(OpenIdConstants.REGISTER_USER_SUCCESS)) {
                                             win.close();
-                                            GlobalSettings.getGlobalSettings().setUser(userData);
+                                            Application.get().setCurrentUser(userData.getUserId());
                                             MessageBox.alert("New user created successfully and associated with your Open Id.");
                                         }
                                     }
@@ -622,7 +619,7 @@ public class OpenIdUtil {
 
         if (newUserPassword.contentEquals(newUserPassword2)) {
             win.getEl().mask("Creating new user...", true);
-            AuthenticateServiceManager.getInstance().registerUserToAssociateOpenId(userName, newUserPassword, emailId,
+            AuthenticateServiceManager.getInstance().registerUserToAssociateOpenId(UserId.getUserId(userName), newUserPassword, emailId,
                     new createNewUserToAssocOpenIdHandler(userName, win));
         } else {
             MessageBox.alert("Passwords dont match. Please try again.");

@@ -6,9 +6,12 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -29,20 +32,32 @@ public class GetIndividualsStrategy extends OntologyServiceStrategy<List<EntityD
     public List<EntityData> execute() {
         List<EntityData> result = new ArrayList<EntityData>();
 
+
         OWLAPIProject project = getProject();
         RenderingManager rm = project.getRenderingManager();
         OWLClass cls = rm.getEntity(className, EntityType.CLASS);
         OWLOntology rootOntology = getProject().getRootOntology();
-        for(OWLIndividual individual : cls.getIndividuals(rootOntology.getImportsClosure())) {
-            EntityData entityData = null;
-            if(individual.isAnonymous()) {
-                entityData = rm.getEntityData(individual.asOWLAnonymousIndividual());
+
+        if(className.equals(OWLRDFVocabulary.OWL_THING.getIRI().toString())) {
+            for (OWLOntology ont : rootOntology.getImportsClosure()) {
+                for(OWLNamedIndividual namedIndividual : ont.getIndividualsInSignature()) {
+                    result.add(rm.getEntityData(namedIndividual));
+                }
             }
-            else {
-                entityData = rm.getEntityData(individual.asOWLNamedIndividual());
-            }
-            result.add(entityData);
         }
+        else {
+            for(OWLIndividual individual : cls.getIndividuals(rootOntology.getImportsClosure())) {
+                EntityData entityData = null;
+                if(individual.isAnonymous()) {
+                    entityData = rm.getEntityData(individual.asOWLAnonymousIndividual());
+                }
+                else {
+                    entityData = rm.getEntityData(individual.asOWLNamedIndividual());
+                }
+                result.add(entityData);
+            }
+        }
+
         return result;
     }
 }

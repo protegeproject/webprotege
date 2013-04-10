@@ -4,6 +4,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationInfo;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.List;
 import java.util.Set;
@@ -25,7 +27,7 @@ public interface ProjectManagerServiceAsync {
      * @throws edu.stanford.bmir.protege.web.client.rpc.data.ProjectAlreadyExistsException
      *          if the project already exists on the server.
      */
-    void createNewProject(NewProjectSettings newProjectSettings, AsyncCallback<Void> async);
+    void createNewProject(NewProjectSettings newProjectSettings, AsyncCallback<ProjectDetails> async);
 
     /**
      * Gets a list of all project names.

@@ -6,10 +6,10 @@ import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateService;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
@@ -31,30 +31,32 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
     }
 
     public UserData validateUserAndAddInSession(String name, String password) {
+        UserId userId = UserId.getUserId(name);
+
         HttpServletRequest request = this.getThreadLocalRequest();
         HttpSession session = request.getSession();
         session.setAttribute(AuthenticationConstants.LOGIN_METHOD, AuthenticationConstants.LOGIN_METHOD_WEBPROTEGE_ACCOUNT);
 
-        if (!Protege3ProjectManager.getProjectManager().getMetaProjectManager().hasValidCredentials(name, password)) {
-            session.setAttribute(AuthenticationConstants.USERDATA_OBJECT, null);
+        if (!MetaProjectManager.getManager().hasValidCredentials(name, password)) {
+            SessionConstants.removeAttribute(SessionConstants.USER_ID, session);
             return null;
         }
 
-        UserData userData = AuthenticationUtil.createUserData(name);
-        session.setAttribute(AuthenticationConstants.USERDATA_OBJECT, userData);
+        UserData userData = AuthenticationUtil.createUserData(userId);
+        SessionConstants.setAttribute(SessionConstants.USER_ID, userId, session);
         return userData;
     }
 
     public UserData validateUser(String name, String password) {
-        if (!Protege3ProjectManager.getProjectManager().getMetaProjectManager().hasValidCredentials(name, password)) {
+        if (!MetaProjectManager.getManager().hasValidCredentials(name, password)) {
             return null;
         }
         Log.getLogger().info("User " + name + " logged in at: " + new Date());
-        return AuthenticationUtil.createUserData(name);
+        return AuthenticationUtil.createUserData(UserId.getUserId(name));
     }
 
     public void changePassword(String userName, String password) {
-        Protege3ProjectManager.getProjectManager().getMetaProjectManager().changePassword(userName, password);
+        MetaProjectManager.getManager().changePassword(userName, password);
     }
 
     public UserData registerUserToAssociateOpenId(String userName, String password, String emailId) {
@@ -73,15 +75,15 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
             return null;
         }
 
-        User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(userName);
+        User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
         if (user != null) {
-            UserData userData = AuthenticationUtil.createUserData(userName);
+            UserData userData = AuthenticationUtil.createUserData(UserId.getUserId(userName));
             userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.USER_ALREADY_EXISTS);
             return userData;
         }
 
-        UserData userData = Protege3ProjectManager.getProjectManager().getMetaProjectManager().registerUser(userName, password);
-        user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(userName);
+        UserData userData = MetaProjectManager.getManager().registerUser(userName, password);
+        user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
         user.setEmail(emailId);
 
         String openIdPropBase = OpenIdConstants.OPENID_PROPERTY_PREFIX;
@@ -104,7 +106,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
         userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.REGISTER_USER_SUCCESS);
 
-        session.setAttribute(AuthenticationConstants.USERDATA_OBJECT, userData);
+        SessionConstants.setAttribute(SessionConstants.USER_ID, UserId.getUserId(userName), session);
 
         return userData;
     }
@@ -118,7 +120,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         UserData userData = null;
 
         try {
-            if (!Protege3ProjectManager.getProjectManager().getMetaProjectManager().hasValidCredentials(userName, password)) {
+            if (!MetaProjectManager.getManager().hasValidCredentials(userName, password)) {
                 return null;
             }
             HttpServletRequest request = this.getThreadLocalRequest();
@@ -131,7 +133,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
                 return null;
             }
 
-            User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(userName);
+            User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
 
             String openIdPropBase = OpenIdConstants.OPENID_PROPERTY_PREFIX;
 
@@ -147,7 +149,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
 
             Log.getLogger().info("User " + userName + " logged in at: " + new Date() + " with OpenId: " + userOpenId);
 
-            userData = AuthenticationUtil.createUserData(userName);
+            userData = AuthenticationUtil.createUserData(UserId.getUserId(userName));
 
             session.setAttribute(OpenIdConstants.AUTHENTICATED_USER_TO_ASSOC_OPEN_ID, userData);
             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_URL, null);
@@ -162,7 +164,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
     }
 
     public void sendPasswordReminder(String userName) {
-        String email = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getUserEmail(userName);
+        String email = MetaProjectManager.getManager().getUserEmail(userName);
         if (email == null) {
             throw new IllegalArgumentException("User " + userName + " does not have an email configured.");
         }
@@ -172,7 +174,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
     }
 
     public UserData registerUser(String userName, String password) {
-        return Protege3ProjectManager.getProjectManager().getMetaProjectManager().registerUser(userName, password);
+        return MetaProjectManager.getManager().registerUser(userName, password);
     }
 
 }

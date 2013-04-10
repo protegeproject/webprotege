@@ -1,29 +1,22 @@
 package edu.stanford.bmir.protege.web.server;
 
-import com.google.gwt.user.client.rpc.RpcToken;
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.gwt.user.server.rpc.RPCRequest;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
-import edu.stanford.bmir.protege.web.server.logging.WPLogParam;
+import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.smi.protege.server.metaproject.Group;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
 import edu.stanford.smi.protege.server.metaproject.User;
-import edu.stanford.smi.protege.util.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.annotation.Annotation;
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
-import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
 
 /**
  * Author: Matthew Horridge<br>
@@ -37,8 +30,10 @@ import java.lang.reflect.TypeVariable;
  */
 public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServlet {
 
+    public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(RemoteServiceServlet.class);
+
     protected MetaProjectManager getMetaProjectManager() {
-        return Protege3ProjectManager.getProjectManager().getMetaProjectManager();
+        return MetaProjectManager.getManager();
     }
 
     /**
@@ -49,17 +44,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     public UserId getUserInSession() {
         HttpServletRequest request = getThreadLocalRequest();
         final HttpSession session = request.getSession();
-        final UserData userData = (UserData) session.getAttribute(SessionConstants.USER_DATA_PARAMETER);
-        if (userData == null) {
-            return UserId.getNull();
-        }
-        else {
-            final String name = userData.getName();
-            if(name == null) {
-                throw new IllegalStateException("UserData.getName() returned null");
-            }
-            return UserId.getUserId(name);
-        }
+        return SessionConstants.getUserId(session);
     }
 
     /**
@@ -70,7 +55,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
      */
     public UserId getUserInSessionAndEnsureSignedIn() throws NotSignedInException {
         UserId userId = getUserInSession();
-        if(userId.isNull()) {
+        if(userId.isGuest()) {
             throw new NotSignedInException();
         }
         else {
@@ -96,7 +81,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
      */
     protected boolean isSignedInUserProjectOwner(ProjectId projectId) {
         UserId userId = getUserInSession();
-        if(userId.isNull()) {
+        if(userId.isGuest()) {
             return false;
         }
         MetaProjectManager mpm = getMetaProjectManager();
@@ -116,7 +101,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
      */
     protected boolean isSignedInUserAdmin() {
         UserId userId = getUserInSession();
-        if(userId.isNull()) {
+        if(userId.isGuest()) {
             return false;
         }
         MetaProjectManager mpm = getMetaProjectManager();
@@ -126,7 +111,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
             return false;
         }
         for(Group group : user.getGroups()) {
-            if("AdminGroup".equals(group.getName())) {
+            if(OntologyShareAccessConstants.ADMIN_GROUP.equals(group.getName())) {
                 return true;
             }
         }
@@ -148,29 +133,6 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
 
 
     @Override
-    protected void onAfterRequestDeserialized(RPCRequest rpcRequest) {
-//        // TODO: Logging Code
-//        Method method = rpcRequest.getMethod();
-//        Object [] parameters = rpcRequest.getParameters();
-//        UserId userId = getUserInSession();
-//        System.out.println(userId.getUserName() + " invoked " + method.getName());
-//        Annotation[] [] annotations = method.getParameterAnnotations();
-//        TypeVariable[] vars = method.getTypeParameters();
-//        String paramName = "";
-//        for(int i = 0; i < parameters.length; i++) {
-//            Object value = parameters[i];
-//            for(Annotation annotation : annotations [i]) {
-//                if(annotation instanceof WPLogParam) {
-//                    WPLogParam param = (WPLogParam) annotation;
-//                    paramName = param.name();
-//
-//                }
-//            }
-//            System.out.println("\tParam " + i + " " + paramName + "=" + value );
-//        }
-    }
-
-    @Override
     public String processCall(String payload) throws SerializationException {
         // TODO: Log timing in here
         return super.processCall(payload);
@@ -178,12 +140,16 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
 
     @Override
     protected void doUnexpectedFailure(Throwable e) {
+        HttpServletRequest request = getThreadLocalRequest();
+        LOGGER.severe(e, getUserInSession(), request);
         super.doUnexpectedFailure(e);
-        // TODO: Log Exception Properly!
-        Log.getLogger().severe("UNEXPECTED FAILURE");
-        Log.getLogger().severe(e.getMessage());
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        Log.getLogger().severe(sw.toString());
     }
+
+
+    @Override
+    protected void onAfterResponseSerialized(String serializedResponse) {
+        super.onAfterResponseSerialized(serializedResponse);
+    }
+
+
 }

@@ -34,6 +34,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NoteInputPanel;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalSearchComponent;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class ReferenceFieldWidget extends InstanceGridWidget {
 
@@ -309,7 +310,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
             }
 
             public void onSuccess(NotesData note) {
-                addUserComment(project, note);
+                addUserComment(getProjectId(), note);
                 window.close();
             }
         });
@@ -319,11 +320,11 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         nip.getMainComponentForFocus().focus();
     }
 
-    public static void addUserComment(final Project project, NotesData note) {
+    public static void addUserComment(final ProjectId projectId, NotesData note) {
         if (note != null
                 && ((note.getSubject() != null && note.getSubject().length() > 0) || (note.getBody() != null && note
                         .getBody().length() > 0))) {
-            ChAOServiceManager.getInstance().createNote(project.getProjectName(), note, false,
+            ChAOServiceManager.getInstance().createNote(projectId, note, false,
                     new AbstractAsyncHandler<NotesData>() {
                 @Override
                 public void handleFailure(Throwable caught) {

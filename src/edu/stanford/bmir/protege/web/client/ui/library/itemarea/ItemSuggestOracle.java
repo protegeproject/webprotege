@@ -64,7 +64,6 @@ public class ItemSuggestOracle<T> extends SuggestOracle {
             prefix.append("\n");
         }
 
-        System.out.println("There are " + suggestions.size() + " suggestions");
             callback.onSuggestionsReady(request, new Response(suggestions));
 
     }

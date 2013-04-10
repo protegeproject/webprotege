@@ -5,10 +5,9 @@ import java.util.Collection;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserNameAlreadyExistsException;
+import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 
 /**
  * A service for accessing administrative and configuration data stored in
@@ -39,9 +38,9 @@ public interface AdminService extends RemoteService {
 
     Collection<ProjectData> getProjects(String user);
 
-    Collection<String> getAllowedOperations(String project, String user);
+    PermissionsSet getAllowedOperations(String project, String user);
 
-    Collection<String> getAllowedServerOperations(String userName);
+    PermissionsSet getAllowedServerOperations(String userName);
 
     /**
      * For now, it will refresh the users list. Later: it should refresh also
@@ -51,7 +50,7 @@ public interface AdminService extends RemoteService {
 
     LoginChallengeData getUserSaltAndChallenge(String userName);
 
-    UserData authenticateToLogin(String userName, String response);
+    UserId authenticateToLogin(String userName, String response);
 
     /**
      * Checks whether user logged in and returns the login method(openid or
@@ -74,7 +73,7 @@ public interface AdminService extends RemoteService {
      */
     boolean changePasswordEncrypted(String userName, String encryptedPassword, String salt);
 
-    UserData getCurrentUserInSession();
+    UserId getCurrentUserInSession();
 
     void logout();
 

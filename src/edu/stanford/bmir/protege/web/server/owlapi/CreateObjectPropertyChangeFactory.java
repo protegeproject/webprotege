@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.List;
@@ -25,19 +26,15 @@ public class CreateObjectPropertyChangeFactory extends OWLOntologyChangeFactory 
 
     @Override
     public void createChanges(List<OWLOntologyChange> changeListToFill) {
-        OWLAPIEntityEditorKit kit = getProject().getOWLEntityEditorKit();
-        OWLEntityCreatorFactory fac = kit.getEntityCreatorFactory();
-        OWLEntityCreator<OWLObjectProperty> prop = fac.getEntityCreator(getProject(), getUserId(), name, EntityType.OBJECT_PROPERTY);
-        changeListToFill.addAll(prop.getChanges());
-        
-        OWLObjectProperty superProperty;
+        final OWLObjectProperty superProperty;
         if(superPropertyName == null) {
             superProperty = getDataFactory().getOWLTopObjectProperty();
         }
         else {
             superProperty = getRenderingManager().getEntity(superPropertyName, EntityType.OBJECT_PROPERTY);
         }
-        OWLSubObjectPropertyOfAxiom ax = getDataFactory().getOWLSubObjectPropertyOfAxiom(prop.getEntity(), superProperty);
+        OWLObjectProperty prop = DataFactory.getFreshOWLEntity(EntityType.OBJECT_PROPERTY, name);
+        OWLSubObjectPropertyOfAxiom ax = getDataFactory().getOWLSubObjectPropertyOfAxiom(prop, superProperty);
         changeListToFill.add(new AddAxiom(getRootOntology(), ax));
         
     }

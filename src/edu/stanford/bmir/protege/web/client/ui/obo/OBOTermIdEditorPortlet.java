@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermId;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -51,7 +51,7 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void displayEntity(Entity entity) {
+    protected void displayEntity(OWLEntity entity) {
         OBOTextEditorServiceAsync service = getService();
         service.getTermId(getProjectId(), entity, new AsyncCallback<OBOTermId>() {
             public void onFailure(Throwable caught) {
@@ -71,7 +71,7 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void commitChangesForEntity(Entity entity) {
+    protected void commitChangesForEntity(OWLEntity entity) {
         OBOTermId editedTermId = editor.getValue();
         getService().setTermId(getProjectId(), entity, editedTermId, new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term Id have not been applied."));
 

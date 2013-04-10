@@ -9,34 +9,35 @@ import java.util.Map;
  * @author Jennifer Vendetti <vendetti@stanford.edu>
  */
 public class UserData implements Serializable {
-	private static final long serialVersionUID = -2102841071892674245L;
 
-    private String name;
+    private static final long serialVersionUID = -2102841071892674245L;
+
+    private UserId userId;
+
     private String email;
-	private Collection<String> groups;
-	private Map<String, String> properties = new HashMap<String, String>();
 
-	public UserData() {	}
+//	private Collection<String> groups;
 
-	public UserData(String name) {
-	    this.name = name;
+    private Map<String, String> properties = new HashMap<String, String>();
+
+	private UserData() {	}
+
+	public UserData(UserId name) {
+	    this.userId = userId;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-    public Collection<String> getGroups() {
-        return groups;
+    public UserId getUserId() {
+        return userId;
     }
 
-    public void setGroups(Collection<String> groups) {
-        this.groups = groups;
-    }
+
+//    public Collection<String> getGroups() {
+//        return groups;
+//    }
+//
+//    public void setGroups(Collection<String> groups) {
+//        this.groups = groups;
+//    }
 
     public String getEmail() {
         return email;
@@ -46,10 +47,21 @@ public class UserData implements Serializable {
         this.email = email;
     }
 
+
+    // USED BY OPTRA STUFF
+
+    /**
+     * @deprecated Do not use.  This will be removed.
+     */
+    @Deprecated
     public String getProperty(String prop) {
         return properties.get(prop);
     }
 
+    /**
+     * @deprecated Do not used.  This will be removed.
+     */
+    @Deprecated
     public void setProperty(String prop, String value) {
         properties.put(prop, value);
     }

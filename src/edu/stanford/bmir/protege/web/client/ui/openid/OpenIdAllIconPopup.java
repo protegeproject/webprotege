@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package edu.stanford.bmir.protege.web.client.ui.openid;
 
@@ -12,19 +12,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Window;
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
+import edu.stanford.bmir.protege.web.shared.openid.UserOpenIdAccountSummary;
 
 /**
  * Created Popup with providers icon, to associate new OpenId with User Account
- * 
  * @author z.khan
- * 
  */
 class OpenIdAllIconPopup extends PopupPanel {
 
@@ -62,15 +62,13 @@ class OpenIdAllIconPopup extends PopupPanel {
 
     /**
      * Creates Open Id icon popup
-     * 
      * @param editProfileTable
      * @param win
      * @param windowBaseHt
      * @param openIdUtil
      * @return
      */
-    protected FlexTable getWidgetOpenIdIconPopup(final FlexTable editProfileTable, final Window win,
-            final int windowBaseHt, final OpenIdUtil openIdUtil) {
+    protected FlexTable getWidgetOpenIdIconPopup(final FlexTable editProfileTable, final Window win, final int windowBaseHt, final OpenIdUtil openIdUtil) {
         Image googleImage = new Image(imageBaseUrl + "/images/openid/google.ico");
         googleImage.setTitle("Login with your Google account");
         googleImage.setStyleName("menuBar");
@@ -201,8 +199,7 @@ class OpenIdAllIconPopup extends PopupPanel {
         this.hide();
     }
 
-    protected void isOpenIdInSessForAddNewOpenId(final FlexTable editProfileTable, final Window win,
-            final int windowBaseHt) {
+    protected void isOpenIdInSessForAddNewOpenId(final FlexTable editProfileTable, final Window win, final int windowBaseHt) {
         final long initTime = System.currentTimeMillis();
         final Timer addOpenIdTimer = new Timer() {// checks if the user has logged
             // in using open id
@@ -212,41 +209,37 @@ class OpenIdAllIconPopup extends PopupPanel {
                 if (curTime - initTime > 900000) {//15min
                     timer.cancel();
                 }
-                OpenIdServiceManager.getInstance().isOpenIdInSessForAddNewOpenId(
-                        new AsyncCallback<UserData>() {
+                OpenIdServiceManager.getInstance().isOpenIdInSessForAddNewOpenId(new AsyncCallback<UserData>() {
 
-                            public void onSuccess(UserData userData) {
-                                if (userData != null) {//open id URL attribute is present HttpSession 
-                                    if (userData.getName() != null) { //open id URL is already associated
-                                        MessageBox.alert("Open Id already associated with WebProtege user '"
-                                                + userData.getName() + "'.");
-                                        timer.cancel();
-                                    } else { // associate open id to current user
-                                        String name = GlobalSettings.getGlobalSettings().getUserName();
+                    public void onSuccess(UserData userData) {
+                        if (!userData.getUserId().isGuest()) { //open id URL is already associated
+                            UserId userId = userData.getUserId();
+                            MessageBox.alert("Open Id already associated with WebProtege user '" + userId.getUserName() + "'.");
+                            timer.cancel();
+                        }
+                        else { // associate open id to current user
+                            UserId name = Application.get().getUserId();
 
-                                        OpenIdServiceManager.getInstance().assocNewOpenIdToUser(name,
-                                                new AsyncCallback<OpenIdData>() {
+                            OpenIdServiceManager.getInstance().assocNewOpenIdToUser(name.getUserName(), new AsyncCallback<OpenIdData>() {
 
-                                                    public void onSuccess(OpenIdData result) {
-                                                        OpenIdUtil opIdUtil = new OpenIdUtil();
-                                                        opIdUtil.displayUsersOpenIdList(result, editProfileTable, win,
-                                                                true, windowBaseHt);
-                                                    }
-
-                                                    public void onFailure(Throwable caught) {
-
-                                                    }
-                                                });
-                                        timer.cancel();
-                                    }
+                                public void onSuccess(OpenIdData result) {
+                                    OpenIdUtil opIdUtil = new OpenIdUtil();
+                                    opIdUtil.displayUsersOpenIdList(result, editProfileTable, win, true, windowBaseHt);
                                 }
 
-                            }
+                                public void onFailure(Throwable caught) {
 
-                            public void onFailure(Throwable caught) {
-                                timer.cancel();
-                            }
-                        });
+                                }
+                            });
+                            timer.cancel();
+                        }
+
+                    }
+
+                    public void onFailure(Throwable caught) {
+                        timer.cancel();
+                    }
+                });
             }
         };
         addOpenIdTimer.scheduleRepeating(2000);
@@ -260,12 +253,11 @@ class OpenIdAllIconPopup extends PopupPanel {
      * @param openIdAllIconPopupImage
      * @param providerId
      */
-    protected void addOpenIdAllIconImageClickHandler(final FlexTable editProfileTable, final Window win,
-            final int windowBaseHt, final OpenIdUtil openIdUtil, Image openIdAllIconPopupImage, final int providerId) {
+    protected void addOpenIdAllIconImageClickHandler(final FlexTable editProfileTable, final Window win, final int windowBaseHt, final OpenIdUtil openIdUtil, Image openIdAllIconPopupImage, final int providerId) {
         openIdAllIconPopupImage.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 hidePopup();
-                AdminServiceManager.getInstance().clearPreviousLoginAuthenticationData(new clearLoginAuthDataHandler(providerId,  false));
+                AdminServiceManager.getInstance().clearPreviousLoginAuthenticationData(new clearLoginAuthDataHandler(providerId, false));
                 isOpenIdInSessForAddNewOpenId(editProfileTable, win, windowBaseHt);
             }
         });
@@ -279,8 +271,7 @@ class OpenIdAllIconPopup extends PopupPanel {
      * @param openIdAllIconPopupLabel
      * @param providerId
      */
-    protected void addOpenIdAllIconLabClickHandler(final FlexTable editProfileTable, final Window win,
-            final int windowBaseHt, final OpenIdUtil openIdUtil, Label openIdAllIconPopupLabel, final int providerId) {
+    protected void addOpenIdAllIconLabClickHandler(final FlexTable editProfileTable, final Window win, final int windowBaseHt, final OpenIdUtil openIdUtil, Label openIdAllIconPopupLabel, final int providerId) {
         openIdAllIconPopupLabel.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 hidePopup();
@@ -289,12 +280,14 @@ class OpenIdAllIconPopup extends PopupPanel {
             }
         });
     }
-    
+
     class clearLoginAuthDataHandler extends AbstractAsyncHandler<Void> {
+
         private int providerId;
+
         private boolean isLoginWithHttps;
 
-        public clearLoginAuthDataHandler( int providerId,  boolean isLoginWithHttps) {
+        public clearLoginAuthDataHandler(int providerId, boolean isLoginWithHttps) {
             this.providerId = providerId;
             this.isLoginWithHttps = isLoginWithHttps;
         }
@@ -308,7 +301,7 @@ class OpenIdAllIconPopup extends PopupPanel {
         @Override
         public void handleSuccess(Void result) {
             OpenIdUtil openIdUtil = new OpenIdUtil();
-        openIdUtil.openProviderForOpenIdAuth(new Integer(providerId),isLoginWithHttps);
+            openIdUtil.openProviderForOpenIdAuth(new Integer(providerId), isLoginWithHttps);
 
         }
 

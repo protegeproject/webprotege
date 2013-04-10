@@ -21,6 +21,11 @@ public class AllPropertiesPortlet extends AbstractEntityPortlet {
     }
 
     @Override
+    public void setEntity(EntityData newEntity) {
+        super.setEntity(newEntity);
+    }
+
+    @Override
     public void reload() {
         if (_currentEntity != null) {
             setTitle("Properties for " + _currentEntity.getBrowserText());
@@ -32,7 +37,7 @@ public class AllPropertiesPortlet extends AbstractEntityPortlet {
     @Override
     public void initialize() {
         setTitle("Properties");
-        this.propGrid = new AllPropertiesGrid(project);
+        this.propGrid = new AllPropertiesGrid(getProject());
         add(propGrid);
     }
 
@@ -46,7 +51,7 @@ public class AllPropertiesPortlet extends AbstractEntityPortlet {
     }
 
     @Override
-    public void onPermissionsChanged(Collection<String> permissions) {
+    public void onPermissionsChanged() {
         propGrid.updateButtonStates();
     }
 

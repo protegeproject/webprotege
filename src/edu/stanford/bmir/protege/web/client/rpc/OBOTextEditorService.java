@@ -3,10 +3,10 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.NamedClass;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,9 +30,9 @@ public interface OBOTextEditorService extends RemoteService {
     Set<OBONamespace> getNamespaces(ProjectId projectId);
     
 
-    OBOTermId getTermId(ProjectId projectId, Entity entity);
+    OBOTermId getTermId(ProjectId projectId, OWLEntity entity);
 
-    void setTermId(ProjectId projectId, Entity lastEntity, OBOTermId termId) throws NotSignedInException;
+    void setTermId(ProjectId projectId, OWLEntity lastEntity, OBOTermId termId) throws NotSignedInException;
 
     
 
@@ -43,36 +43,29 @@ public interface OBOTextEditorService extends RemoteService {
     void removeSubset(OBOTermSubset subset);
     
     
-    List<OBOXRef> getXRefs(ProjectId projectId, Entity term);
+    List<OBOXRef> getXRefs(ProjectId projectId, OWLEntity term);
     
-    void setXRefs(ProjectId projectId, Entity term, List<OBOXRef> xrefs) throws NotSignedInException;
-    
-//    Set<OBOTermSynonymScope> getSynonymScopes();
-//
-//    void addSynonymScope(OBOTermSynonymScope synonymScope);
-//
-//    void removeSynonymScope(OBOTermSynonymScope synonymScope);
+    void setXRefs(ProjectId projectId, OWLEntity term, List<OBOXRef> xrefs) throws NotSignedInException;
+
+
+    OBOTermDefinition getDefinition(ProjectId projectId, OWLEntity term);
+
+    void setDefinition(ProjectId projectId, OWLEntity term, OBOTermDefinition definition) throws NotSignedInException;
+
+    Collection<OBOTermSynonym> getSynonyms(ProjectId projectId, OWLEntity term);
+
+    void setSynonyms(ProjectId projectId, OWLEntity term, Collection<OBOTermSynonym> synonyms) throws NotSignedInException;
 
 
 
-    OBOTermDefinition getDefinition(ProjectId projectId, Entity term);
+    OBOTermRelationships getRelationships(ProjectId projectId, OWLClass term);
 
-    void setDefinition(ProjectId projectId, Entity term, OBOTermDefinition definition) throws NotSignedInException;
-
-    Collection<OBOTermSynonym> getSynonyms(ProjectId projectId, Entity term);
-
-    void setSynonyms(ProjectId projectId, Entity term, Collection<OBOTermSynonym> synonyms) throws NotSignedInException;
-
-
-
-    OBOTermRelationships getRelationships(ProjectId projectId, NamedClass term);
-
-    void setRelationships(ProjectId projectId, NamedClass lastEntity, OBOTermRelationships relationships) throws NotSignedInException;
+    void setRelationships(ProjectId projectId, OWLClass lastEntity, OBOTermRelationships relationships) throws NotSignedInException;
 
 
     
-    OBOTermCrossProduct getCrossProduct(ProjectId projectId, NamedClass term);
+    OBOTermCrossProduct getCrossProduct(ProjectId projectId, OWLClass term);
 
-    void setCrossProduct(ProjectId projectId, NamedClass term, OBOTermCrossProduct crossProduct) throws NotSignedInException;
+    void setCrossProduct(ProjectId projectId, OWLClass term, OBOTermCrossProduct crossProduct) throws NotSignedInException;
 
 }

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.library.suggest;
 
 import com.google.gwt.user.client.ui.SuggestOracle;
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualEntity;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 
 /**
@@ -12,7 +13,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualEntity;
  */
 public class EntitySuggestion implements SuggestOracle.Suggestion {
 
-    private VisualEntity<?> entity;
+    private OWLEntityData entity;
     
     private String displayText;
 
@@ -22,12 +23,12 @@ public class EntitySuggestion implements SuggestOracle.Suggestion {
      * @param displayText The text (can be HTML) that appears in the suggestion popup.  This is not necessarily the
      * same as browser text.
      */
-    public EntitySuggestion(VisualEntity<?> entity, String displayText) {
+    public EntitySuggestion(OWLEntityData entity, String displayText) {
         this.entity = entity;
         this.displayText = displayText;
     }
 
-    public VisualEntity<?> getEntity() {
+    public OWLEntityData getEntity() {
         return entity;
     }
 

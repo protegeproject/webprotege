@@ -1,16 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermSynonym;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +34,7 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void displayEntity(Entity entity) {
+    protected void displayEntity(OWLEntity entity) {
         getService().getSynonyms(getProjectId(), entity, new AsyncCallback<Collection<OBOTermSynonym>>() {
             public void onFailure(Throwable caught) {
             }
@@ -58,7 +52,7 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void commitChangesForEntity(Entity entity) {
+    protected void commitChangesForEntity(OWLEntity entity) {
         List<OBOTermSynonym> synonyms = editor.getValues();
         getService().setSynonyms(getProjectId(), entity, synonyms, new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term synonyms have not been applied."));
     }

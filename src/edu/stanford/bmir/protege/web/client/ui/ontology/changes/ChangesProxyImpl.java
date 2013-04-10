@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PaginationData;
 import edu.stanford.bmir.protege.web.client.ui.util.GWTProxy;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class ChangesProxyImpl extends GWTProxy {
 
@@ -97,10 +98,10 @@ public class ChangesProxyImpl extends GWTProxy {
         }
 
         if (entityName != null) {
-            ChAOServiceManager.getInstance().getChanges(projectName, entityName, start, limit, sort, dir,
+            ChAOServiceManager.getInstance().getChanges(ProjectId.get(projectName), entityName, start, limit, sort, dir,
                     new ChangesHandler());
         } else { //no entity, get changes for the entire project
-            ChAOServiceManager.getInstance().getChanges(projectName, startDate, endDate, start, limit, sort, dir,
+            ChAOServiceManager.getInstance().getChanges(ProjectId.get(projectName), startDate, endDate, start, limit, sort, dir,
                     new ChangesHandler());
         }
     }

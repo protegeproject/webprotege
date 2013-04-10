@@ -5,7 +5,10 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLEntity;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,17 +17,16 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/06/2012
  */
-public class CreateEntityDialogController extends WebProtegeOKCancelDialogController<EntityData> {
+public class CreateEntityDialogController extends WebProtegeOKCancelDialogController<CreateEntityInfo> {
 
-    private final CreateEntityForm form = new CreateEntityForm();
+    private final CreateEntityForm form;
 
-    public CreateEntityDialogController() {
-        super("Create entity");
-    }
-
-    @Override
-    public List<WebProtegeDialogValidator> getDialogValidators() {
-        return form.getDialogValidators();
+    public CreateEntityDialogController(EntityType<?> type) {
+        super("Create " + type.getName());
+        form = new CreateEntityForm(type);
+        for(WebProtegeDialogValidator validator : form.getDialogValidators()) {
+            addDialogValidator(validator);
+        }
     }
 
     @Override
@@ -38,7 +40,7 @@ public class CreateEntityDialogController extends WebProtegeOKCancelDialogContro
     }
 
     @Override
-    public EntityData getData() {
-        return new EntityData("TODO", form.getEntityBrowserText());
+    public CreateEntityInfo getData() {
+        return new CreateEntityInfo(form.getEntityBrowserText());
     }
 }

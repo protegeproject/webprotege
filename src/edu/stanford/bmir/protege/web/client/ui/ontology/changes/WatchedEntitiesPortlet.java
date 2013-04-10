@@ -4,9 +4,10 @@ import java.util.Collection;
 
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 
 /**
@@ -26,12 +27,15 @@ public class WatchedEntitiesPortlet extends AbstractEntityPortlet {
         setLayout(new FitLayout());
         setBorder(true);
         setHeight(300);
-        setTitle("Watched Entities " + (GlobalSettings.getGlobalSettings().isLoggedIn() ?
-                " for " + GlobalSettings.getGlobalSettings().getUserName() : " - Sign in to see the watched entities!"));
+        setTitle(generateTitle());
 
-        grid = new WatchedEntitiesGrid(project);
+        grid = new WatchedEntitiesGrid(getProject());
         add(grid);
         onRefresh();
+    }
+
+    private String generateTitle() {
+        return "Watched Entities " + (Application.get().isGuestUser() ? " - Sign in to see the watched entities" : " for " + Application.get().getUserDisplayName());
     }
 
     @Override
@@ -39,19 +43,18 @@ public class WatchedEntitiesPortlet extends AbstractEntityPortlet {
     }
 
     @Override
-    public void onLogin(String userName) {
+    public void onLogin(UserId userId) {
         onRefresh();
     }
 
     @Override
-    public void onLogout(String userName) {
+    public void onLogout(UserId userId) {
         onRefresh();
     }
 
     @Override
     protected void onRefresh() {
-        setTitle("Watched Entities " + (GlobalSettings.getGlobalSettings().isLoggedIn() ?
-                " for " + GlobalSettings.getGlobalSettings().getUserName() : " - Sign in to see the watched entities!"));
+        setTitle(generateTitle());
 
         grid.reload();
     }

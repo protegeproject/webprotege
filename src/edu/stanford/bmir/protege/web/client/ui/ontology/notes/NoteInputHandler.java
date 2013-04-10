@@ -6,7 +6,7 @@ import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -135,11 +135,11 @@ public class NoteInputHandler {
         String subject = note.getSubject();
         subject = (subject == null || subject.length() == 0 ? "(no subject)" : subject);
         note.setSubject(subject);
-        ChAOServiceManager.getInstance().editNote(project.getProjectName(), note, this.record.getNoteId().getName(), cb);
+        ChAOServiceManager.getInstance().editNote(getProject().getProjectId(), note, this.record.getNoteId().getName(), cb);
     }
     
     private void onReplyButton(NotesData note){
-        if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+        if (Application.get().isGuestUser()) {
             MessageBox.alert("To post a message you need to be logged in.");
             return;
         }
@@ -147,11 +147,11 @@ public class NoteInputHandler {
         subject = (subject == null || subject.length() == 0 ? "(no subject)" : subject);
         note.setSubject(subject);
         
-        ChAOServiceManager.getInstance().createNote(project.getProjectName(), note, false, cb);
+        ChAOServiceManager.getInstance().createNote(project.getProjectId(), note, false, cb);
     }
     
     private void onPostButton(NotesData note){
-        if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+        if (Application.get().isGuestUser()) {
             MessageBox.alert("To post a message you need to be logged in.");
             return;
         }
@@ -160,7 +160,7 @@ public class NoteInputHandler {
             subject = "(no subject)";
         }
         note.setSubject(subject);
-        ChAOServiceManager.getInstance().createNote(project.getProjectName(), note, topLevel, cb);
+        ChAOServiceManager.getInstance().createNote(project.getProjectId(), note, topLevel, cb);
     }
     
     private EntityData getAnnotatedEntity(boolean isReply) {

@@ -135,7 +135,7 @@ public class ConditionEditor extends Panel {
     protected void getSuggestions(String text, int cursorPosition) {
         suggestionsBox.clear();
         hintArea.setText("Checking expression...");
-        OntologyServiceManager.getInstance().getConditionAutocompleteSuggestions(project.getProjectName(),
+        OntologyServiceManager.getInstance().getConditionAutocompleteSuggestions(project.getProjectId(),
                 text, cursorPosition, new GetSuggestionsHandler(text));
     }
 

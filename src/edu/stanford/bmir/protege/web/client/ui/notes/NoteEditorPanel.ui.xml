@@ -1,0 +1,53 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:n='urn:import:edu.stanford.bmir.protege.web.client.ui.notes'
+             >
+    <ui:style>
+        .main {
+            padding: 5px;
+
+        }
+        .author {
+            background-image: url("images/user.png");
+            background-repeat: no-repeat;
+            padding-left: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            padding-bottom: 2px;
+        }
+        .date {
+            font-size: 10px;
+            color: #808080;
+            padding-left: 2px;
+        }
+        .body {
+            font-size: 12px;
+            color: #676767;
+            padding-left: 2px;
+            border: none;
+        }
+        .linksbar {
+            position: absolute;
+            right: 0px;
+        }
+        .links {
+            font-weight: bold;
+            font-size: 12px;
+            color: #464646;
+        }
+        .links : hover {
+            color: #648dbe !important;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Label addStyleNames="{style.author}" ui:field="author"/>
+        <g:Label addStyleNames="{style.date}" ui:field="date"/>
+        <g:Label addStyleNames="{style.body}" ui:field="body"/>
+        <div style="width: 100%; height: 16px; margin-right: 4px;">
+            <span style="position: absolute; right: 0px;"><g:Anchor text="Reply" addStyleNames="{style.links}" ui:field="replyAnchor"/></span>
+        </div>
+        <n:ReplyEditorPanel ui:field="replyEditor" visible="false"/>
+        <!--<t:ExpandingTextBox mode="MULTI_LINE" anchorVisible="false" ui:field="body"/>-->
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.edge;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,104 +57,104 @@ import java.util.Collections;
  */
 public class PropertyEdge {
 
-    private Collection<Annotation> annotations;
-
-    private Property property;
-
-    private PropertyEdgeSubject subject;
-
-    private PropertyEdgeValue value;
-
-
-    private PropertyEdge(ObjectProperty property, ObjectPropertyEdgeSubject subject, ObjectPropertyEdgeValue objectPropertyEdgeValue) {
-        this.property = property;
-        this.subject = subject;
-        this.value = objectPropertyEdgeValue;
-    }
-
-    private PropertyEdge(DataProperty property, DataPropertyEdgeSubject subject, DataPropertyEdgeValue value) {
-        this.property = property;
-        this.subject = subject;
-        this.value = value;
-    }
-
-    private PropertyEdge(AnnotationProperty property, AnnotationPropertyEdgeSubject subject, AnnotationPropertyEdgeValue value) {
-        this.property = property;
-        this.subject = subject;
-        this.value = value;
-    }
-
-
-    public Property getProperty() {
-        return property;
-    }
-
-    public PropertyEdgeSubject getSubject() {
-        return subject;
-    }
-
-    public PropertyEdgeValue getValue() {
-        return value;
-    }
-
-    public Collection<Annotation> getAnnotations() {
-        if(annotations == null) {
-            return Collections.emptySet();
-        }
-        else {
-            return new ArrayList<Annotation>(annotations);
-        }
-    }
-
-    public static PropertyEdge createObjectPropertyEdge(ObjectProperty property, NamedClass subject, NamedClass value) {
-        return new PropertyEdge(property, subject, value);
-    }
-
-    public static PropertyEdge createObjectPropertyEdge(ObjectProperty property, NamedClass subject, NamedIndividual value) {
-        return new PropertyEdge(property, subject, value);
-    }
-    
-    public static PropertyEdge createObjectPropertyEdge(ObjectProperty property, NamedIndividual subject, NamedIndividual value) {
-        return new PropertyEdge(property, subject, value);
-    }
-    
-    public static PropertyEdge createObjectPropertyEdge(ObjectProperty property, NamedIndividual subject, NamedClass value) {
-        return new PropertyEdge(property, subject, value);
-    }
-
-
-
-    public static PropertyEdge createDataPropertyEdge(DataProperty property, NamedClass subject, Datatype value) {
-        return new PropertyEdge(property, subject, value);
-    }
-
-    public static PropertyEdge createDataPropertyEdge(DataProperty property, NamedClass subject, Literal value) {
-        return new PropertyEdge(property, subject, value);
-    }
-
-    public static PropertyEdge createDataPropertyEdge(DataProperty property, NamedIndividual subject, Datatype value) {
-        return new PropertyEdge(property, subject, value);
-    }
-
-    public static PropertyEdge createDataPropertyEdge(DataProperty property, NamedIndividual subject, Literal value) {
-        return new PropertyEdge(property, subject, value);
-    }
-
-
-    public static PropertyEdge createAnnotationPropertyEdge(AnnotationProperty property, IRI subject, IRI value) {
-        return new PropertyEdge(property, subject, value);
-    }
-
-    public static PropertyEdge createAnnotationPropertyEdge(AnnotationProperty property, IRI subject, Literal value) {
-        return new PropertyEdge(property, subject, value);
-    }
-
-    public static PropertyEdge createAnnotationPropertyEdge(AnnotationProperty property, IRI subject, AnonymousIndividual value) {
-        return new PropertyEdge(property, subject, value);
-    }
-
-    public static PropertyEdge createAnnotationPropertyEdge(AnnotationProperty property, AnonymousIndividual subject, AnonymousIndividual value) {
-        return new PropertyEdge(property, subject, value);
-    }
+//    private Collection<OWLAnnotation> annotations;
+//
+//    private OWLProperty property;
+//
+//    private PropertyEdgeSubject subject;
+//
+//    private PropertyEdgeValue value;
+//
+//
+//    private PropertyEdge(OWLObjectProperty property, OWLClass subject, OWLClass objectPropertyEdgeValue) {
+//        this.property = property;
+//        this.subject = subject;
+//        this.value = objectPropertyEdgeValue;
+//    }
+//
+//    private PropertyEdge(OWLDataProperty property, DataPropertyEdgeSubject subject, DataPropertyEdgeValue value) {
+//        this.property = property;
+//        this.subject = subject;
+//        this.value = value;
+//    }
+//
+//    private PropertyEdge(OWLAnnotationProperty property, AnnotationPropertyEdgeSubject subject, AnnotationPropertyEdgeValue value) {
+//        this.property = property;
+//        this.subject = subject;
+//        this.value = value;
+//    }
+//
+//
+//    public OWLProperty getProperty() {
+//        return property;
+//    }
+//
+//    public PropertyEdgeSubject getSubject() {
+//        return subject;
+//    }
+//
+//    public PropertyEdgeValue getValue() {
+//        return value;
+//    }
+//
+//    public Collection<OWLAnnotation> getAnnotations() {
+//        if(annotations == null) {
+//            return Collections.emptySet();
+//        }
+//        else {
+//            return new ArrayList<OWLAnnotation>(annotations);
+//        }
+//    }
+//
+//    public static PropertyEdge createObjectPropertyEdge(OWLObjectProperty property, OWLClass subject, OWLClass value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//    public static PropertyEdge createObjectPropertyEdge(OWLObjectProperty property, OWLClass subject, OWLNamedIndividual value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//    public static PropertyEdge createObjectPropertyEdge(OWLObjectProperty property, OWLNamedIndividual subject, OWLNamedIndividual value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//    public static PropertyEdge createObjectPropertyEdge(OWLObjectProperty property, OWLNamedIndividual subject, OWLClass value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//
+//
+//    public static PropertyEdge createDataPropertyEdge(OWLDataProperty property, OWLClass subject, OWLDatatype value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//    public static PropertyEdge createDataPropertyEdge(OWLDataProperty property, OWLClass subject, OWLLiteral value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//    public static PropertyEdge createDataPropertyEdge(OWLDataProperty property, OWLNamedIndividual subject, OWLDatatype value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//    public static PropertyEdge createDataPropertyEdge(OWLDataProperty property, OWLNamedIndividual subject, OWLLiteral value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//
+//    public static PropertyEdge createAnnotationPropertyEdge(OWLAnnotationProperty property, IRI subject, IRI value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//    public static PropertyEdge createAnnotationPropertyEdge(OWLAnnotationProperty property, IRI subject, OWLLiteral value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//    public static PropertyEdge createAnnotationPropertyEdge(OWLAnnotationProperty property, IRI subject, AnonymousIndividual value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
+//
+//    public static PropertyEdge createAnnotationPropertyEdge(OWLAnnotationProperty property, AnonymousIndividual subject, AnonymousIndividual value) {
+//        return new PropertyEdge(property, subject, value);
+//    }
 
 }

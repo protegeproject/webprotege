@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 
 import java.io.IOException;
 
@@ -20,12 +22,12 @@ import java.io.IOException;
  */
 public class PublishToBioPortalDialog extends WebProtegeDialog<PublishToBioPortalInfo> {
 
-    public PublishToBioPortalDialog(final ProjectData projectData, final UserData userData) {
-        super(new PublishToBioPortalDialogController(projectData, userData));
+    public PublishToBioPortalDialog(final ProjectData projectData, final UserDetails userDetails) {
+        super(new PublishToBioPortalDialogController(projectData, userDetails));
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<PublishToBioPortalInfo>() {
             public void handleHide(PublishToBioPortalInfo data, WebProtegeDialogCloser closer) {
                 try {
-                    handleUpload(projectData, userData, data, closer);
+                    handleUpload(projectData, userDetails, data, closer);
                     UIUtil.showLoadProgessBar("Publishing ontology to BioPortal", "Publishing");
                 }
                 catch (IOException e) {
@@ -39,10 +41,10 @@ public class PublishToBioPortalDialog extends WebProtegeDialog<PublishToBioPorta
         });
     }
 
-    private void handleUpload(ProjectData projectData, UserData userData, PublishToBioPortalInfo publishInfo, final WebProtegeDialogCloser closer) throws IOException {
+    private void handleUpload(ProjectData projectData, UserDetails userDetails, PublishToBioPortalInfo publishInfo, final WebProtegeDialogCloser closer) throws IOException {
         BioPortalAPIServiceAsync service = GWT.create(BioPortalAPIService.class);
         RevisionNumber revisionNumber = RevisionNumber.getHeadRevisionNumber();
-        service.uploadProjectToBioPortal(new ProjectId(projectData.getName()), revisionNumber, publishInfo, new AsyncCallback<Void>() {
+        service.uploadProjectToBioPortal(ProjectId.get(projectData.getName()), revisionNumber, publishInfo, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
                 UIUtil.hideLoadProgessBar();
                 MessageBox.alert("There was a problem publishing the ontology to BioPortal.  Error message: " + caught.getMessage());

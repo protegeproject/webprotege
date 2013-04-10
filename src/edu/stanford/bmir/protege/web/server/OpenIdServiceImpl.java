@@ -10,11 +10,13 @@ import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdService;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
@@ -40,7 +42,7 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
             List<String> openIdList = new ArrayList<String>();
             List<String> openIdAccId = new ArrayList<String>();
             List<String> openIdProvider = new ArrayList<String>();
-            User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(name);
+            User user = MetaProjectManager.getManager().getMetaProject().getUser(name);
             Collection<PropertyValue> propColl = user.getPropertyValues();
             for (Iterator<PropertyValue> iterator = propColl.iterator(); iterator.hasNext();) {
                 PropertyValue propertyValue = iterator.next();
@@ -72,7 +74,7 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
     public OpenIdData removeAssocToOpenId(String name, String opnId) {
         OpenIdData openIdData = new OpenIdData();
         try {
-            User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(name);
+            User user = MetaProjectManager.getManager().getMetaProject().getUser(name);
             Collection<PropertyValue> propColl = user.getPropertyValues();
             for (Iterator<PropertyValue> iterator = propColl.iterator(); iterator.hasNext();) {
                 PropertyValue propertyValue = iterator.next();
@@ -114,7 +116,7 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
                 return null;
             }
 
-            User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(name);
+            User user = MetaProjectManager.getManager().getMetaProject().getUser(name);
             String openIdPropBase = OpenIdConstants.OPENID_PROPERTY_PREFIX;
 
             for (int index = 1;; index++) {
@@ -154,9 +156,9 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
             String openIdUrl = (String) session.getAttribute(OpenIdConstants.HTTPSESSION_OPENID_URL);
 
             if (openIdUrl != null) {
-                userData = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getUserAssociatedWithOpenId(openIdUrl);
-
-                if (userData != null && userData.getName() != null) {
+                Optional<UserId> userId = MetaProjectManager.getManager().getUserAssociatedWithOpenId(openIdUrl);
+                if (userId.isPresent()) {
+                    userData = new UserData(userId.get());
                     session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_URL, null);
                     session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_ID, null);
                     session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
@@ -181,13 +183,13 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
                 if (session != null) {
                     String openIdUrl = (String) session.getAttribute(OpenIdConstants.HTTPSESSION_OPENID_URL);
                     if (openIdUrl != null) {
-                        userData = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getUserAssociatedWithOpenId(openIdUrl);
-
-                        if (userData != null && userData.getName() != null) { //user is associated with openid
+                        Optional<UserId> userId = MetaProjectManager.getManager().getUserAssociatedWithOpenId(openIdUrl);
+                        if (userId.isPresent()) { //user is associated with openid
+                            userData = new UserData(userId.get());
                             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_URL, null);
                             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_ID, null);
                             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
-                            session.setAttribute(SessionConstants.USER_DATA_PARAMETER, userData);
+                            SessionConstants.setAttribute(SessionConstants.USER_ID, userId.get(), session);
                         }
                     }
                 }
@@ -258,21 +260,21 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
         String salt = (String) session.getAttribute(AuthenticationConstants.NEW_SALT);
 
         if (userOpenId == null && salt != null) {
-            UserData userData = AuthenticationUtil.createUserData(userName);
+            UserData userData = AuthenticationUtil.createUserData(UserId.getUserId(userName));
             userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.REGISTER_USER_ERROR);
             return userData;
         }
 
-        User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(userName);
+        User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
         if (user != null) {
-            UserData userData = AuthenticationUtil.createUserData(userName);
+            UserData userData = AuthenticationUtil.createUserData(UserId.getUserId(userName));
             userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.USER_ALREADY_EXISTS);
             return userData;
         }
 
-        UserData userData = Protege3ProjectManager.getProjectManager().getMetaProjectManager().registerUser(userName, "");
+        UserData userData = MetaProjectManager.getManager().registerUser(userName, "");
 
-        user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(userName);
+        user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
         user.setEmail(emailId);
         user.setDigestedPassword(hashedPassword, salt);
 
@@ -305,7 +307,7 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
             HttpSession session = request.getSession();
             String challenge = (String) session.getAttribute(AuthenticationConstants.LOGIN_CHALLENGE);
             session.setAttribute(AuthenticationConstants.LOGIN_CHALLENGE, null);
-            User user = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getUser(userName);
+            User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
             if (user == null) {
                 return null;
             }
@@ -346,6 +348,6 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
             Log.getLogger().log(Level.SEVERE, "Exception in validateUserToAssociateOpenId", e);
         }
 
-        return AuthenticationUtil.createUserData(userName);
+        return AuthenticationUtil.createUserData(UserId.getUserId(userName));
     }
 }

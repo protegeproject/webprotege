@@ -1,0 +1,287 @@
+package edu.stanford.bmir.protege.web.server.watches;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.gwt.http.client.URL;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.server.ApplicationProperties;
+import edu.stanford.bmir.protege.web.server.AuthenticationUtil;
+import edu.stanford.bmir.protege.web.server.EmailUtil;
+import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.watches.EntityBasedWatch;
+import edu.stanford.bmir.protege.web.shared.watches.Watch;
+import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
+import edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent;
+import edu.stanford.smi.protege.server.metaproject.User;
+import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
+
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * Author: Matthew Horridge<br>
+ * Stanford University<br>
+ * Bio-Medical Informatics Research Group<br>
+ * Date: 21/03/2013
+ */
+public class WatchManagerImpl implements WatchManager, HasDispose {
+
+    private ExecutorService emailExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+        @Override
+        public void uncaughtException(Thread t, Throwable e) {
+            WebProtegeLoggerManager.get(WatchManagerImpl.class).severe(e);
+        }
+    }).build());
+
+    private Multimap<UserId, Watch<?>> userId2Watch = HashMultimap.create();
+
+    private Multimap<Watch<?>, UserId> watch2UserId = HashMultimap.create();
+
+    private Multimap<Object, Watch<?>> watchObject2Watch = HashMultimap.create();
+
+    private OWLAPIProject project;
+
+
+    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+    private Lock readLock = readWriteLock.readLock();
+
+    private Lock writeLock = readWriteLock.writeLock();
+
+    public WatchManagerImpl(OWLAPIProject project) {
+        this.project = project;
+
+        project.getEventManager().addHandler(ClassFrameChangedEvent.TYPE, new ClassFrameChangedEventHandler() {
+            @Override
+            public void classFrameChanged(ClassFrameChangedEvent event) {
+                handleFrameChanged(event.getEntity());
+            }
+        });
+        project.getEventManager().addHandler(ObjectPropertyFrameChangedEvent.TYPE, new ObjectPropertyFrameChangedEventHandler() {
+            @Override
+            public void objectPropertyFrameChanged(ObjectPropertyFrameChangedEvent event) {
+                handleFrameChanged(event.getEntity());
+            }
+        });
+        project.getEventManager().addHandler(DataPropertyFrameChangedEvent.TYPE, new DataPropertyFrameChangedEventHandler() {
+            @Override
+            public void dataPropertyFrameChanged(DataPropertyFrameChangedEvent event) {
+                handleFrameChanged(event.getEntity());
+            }
+        });
+        project.getEventManager().addHandler(AnnotationPropertyFrameChangedEvent.TYPE, new AnnotationPropertyFrameChangedEventHandler() {
+            @Override
+            public void annotationPropertyFrameChanged(AnnotationPropertyFrameChangedEvent event) {
+                handleFrameChanged(event.getEntity());
+            }
+        });
+        project.getEventManager().addHandler(NamedIndividualFrameChangedEvent.TYPE, new NamedIndividualFrameChangedEventHandler() {
+            @Override
+            public void namedIndividualFrameChanged(NamedIndividualFrameChangedEvent event) {
+                handleFrameChanged(event.getEntity());
+            }
+        });
+    }
+
+    public Set<Watch<?>> getWatches(UserId userId) {
+        try {
+            readLock.lock();
+            return new HashSet<Watch<?>>(userId2Watch.get(checkNotNull(userId)));
+        }
+        finally {
+            readLock.unlock();
+        }
+    }
+
+    public void addWatch(Watch watch, UserId userId) {
+        insertWatch(watch, userId);
+        project.getEventManager().postEvent(new WatchAddedEvent(project.getProjectId(), watch, userId));
+    }
+
+    private void insertWatch(Watch watch, UserId userId) {
+        try {
+            writeLock.lock();
+            userId2Watch.put(checkNotNull(userId), checkNotNull(watch));
+            watch2UserId.put(watch, userId);
+            watchObject2Watch.put(watch.getWatchedObject(), watch);
+        }
+        finally {
+            writeLock.unlock();
+        }
+    }
+
+    public void removeWatch(Watch watch, UserId userId) {
+        try {
+            writeLock.lock();
+            boolean removed = userId2Watch.remove(checkNotNull(userId), checkNotNull(watch));
+            watch2UserId.remove(watch, userId);
+            watchObject2Watch.remove(watch.getWatchedObject(), watch);
+
+            if (removed) {
+                project.getEventManager().postEvent(new WatchRemovedEvent(project.getProjectId(), watch, userId));
+            }
+        }
+        finally {
+            writeLock.unlock();
+        }
+    }
+
+    public void clearWatches(UserId userId) {
+        try {
+            writeLock.lock();
+            userId2Watch.removeAll(checkNotNull(userId));
+        }
+        finally {
+            writeLock.unlock();
+        }
+    }
+
+    @Override
+    public Set<Watch<?>> getDirectWatches(Object watchedObject, UserId userId) {
+        try {
+            readLock.lock();
+            return new HashSet<Watch<?>>(watchObject2Watch.get(watchedObject));
+        }
+        finally {
+            readLock.unlock();
+        }
+    }
+
+    @Override
+    public boolean hasEntityBasedWatch(OWLEntity entity, UserId userId) {
+        try {
+            readLock.lock();
+            for (Watch watch : userId2Watch.get(userId)) {
+                if (watch instanceof EntityBasedWatch && ((EntityBasedWatch) watch).getEntity().equals(entity)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        finally {
+            readLock.unlock();
+        }
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private void handleFrameChanged(OWLEntity entity) {
+        try {
+            readLock.lock();
+            long t00 = System.currentTimeMillis();
+            List<Watch<?>> watches = new ArrayList<Watch<?>>();
+            watches.addAll(watchObject2Watch.get(entity));
+            long t0 = System.currentTimeMillis();
+            final Set<? extends OWLEntity> relatedEntities = getRelatedWatchEntities(entity);
+            long t1 = System.currentTimeMillis();
+            System.out.println("Time to get related entities: " + (t1 - t0));
+            for (OWLEntity anc : relatedEntities) {
+                watches.addAll(watchObject2Watch.get(anc));
+            }
+            for (Watch watch : watches) {
+                for (UserId userId : watch2UserId.get(watch)) {
+                    // Dispatch
+                    fireWatch(watch, userId, entity);
+                }
+            }
+            long t11 = System.currentTimeMillis();
+            System.out.println("Time to process watches: " + (t11 - t00));
+        }
+        finally {
+            readLock.unlock();
+        }
+    }
+
+
+    private Set<? extends OWLEntity> getRelatedWatchEntities(OWLEntity entity) {
+        return entity.accept(new OWLEntityVisitorExAdapter<Set<? extends OWLEntity>>() {
+            @Override
+            protected Set<? extends OWLEntity> getDefaultReturnValue(OWLEntity object) {
+                return Collections.emptySet();
+            }
+
+            @Override
+            public Set<? extends OWLEntity> visit(OWLClass desc) {
+                return project.getClassHierarchyProvider().getAncestors(desc);
+            }
+
+            @Override
+            public Set<? extends OWLEntity> visit(OWLDataProperty property) {
+                return project.getDataPropertyHierarchyProvider().getAncestors(property);
+            }
+
+            @Override
+            public Set<? extends OWLEntity> visit(OWLObjectProperty property) {
+                return project.getObjectPropertyHierarchyProvider().getAncestors(property);
+            }
+
+            @Override
+            public Set<? extends OWLEntity> visit(OWLNamedIndividual individual) {
+                Set<OWLClassExpression> types = individual.getTypes(project.getRootOntology().getImportsClosure());
+                Set<OWLClass> result = new HashSet<OWLClass>();
+                for(OWLClassExpression ce : types) {
+                    if(!ce.isAnonymous()) {
+                        result.addAll(project.getClassHierarchyProvider().getAncestors(ce.asOWLClass()));
+                    }
+                }
+                return result;
+            }
+        });
+    }
+
+    private void fireWatch(final Watch watch, final UserId userId, final OWLEntity entity) {
+
+        emailExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                final User user = MetaProjectManager.getManager().getMetaProject().getUser(userId.getUserName());
+                final String email = user.getEmail();
+                if (email == null) {
+                    return;
+                }
+
+                final String projectName = project.getProjectId().getProjectName();
+                final String emailSubject = String.format("Changes made in project %s by %s", projectName, user.getName());
+                String message = "\nChanges made to " + entity.getEntityType().getName() + " " + project.getRenderingManager().getBrowserText(entity) + " " + entity.getIRI().toQuotedString();
+                message = message + (" by " + userId.getUserName() + " on " + new Date() + "\n");
+                //        ontology=SubClassOfTest6&tab=ClassesTab&id=ht
+
+                StringBuilder directLinkBuilder = new StringBuilder();
+                directLinkBuilder.append("http://webprotege-beta.stanford.edu" + "#edit:projectId=");
+                directLinkBuilder.append(projectName.replace(" ", "+"));
+                directLinkBuilder.append(";tab=ClassesTab&id=");
+                directLinkBuilder.append(URLEncoder.encode(entity.getIRI().toString()));
+
+                message += "\n" + directLinkBuilder.toString();
+                EmailUtil.sendEmail(email, emailSubject, message, "webprotege2012@gmail.com");
+
+            }
+        });
+
+
+//        EmailUtil.sendEmail();
+    }
+
+    @Override
+    public void dispose() {
+    }
+}

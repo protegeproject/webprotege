@@ -16,7 +16,7 @@ import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
@@ -175,18 +175,18 @@ public class ClassInstanceReferenceFieldWidget extends ReferenceFieldWidget {
                         if (isReplace()){
                            EntityData oldValueEntityData = new EntityData(store.getAt(0).getAsString(INSTANCE_FIELD_NAME));
                             OntologyServiceManager.getInstance().replaceExternalReference(
-                                getProject().getProjectName(),
+                                getProjectId(),
                                 getSubject().getName(),
                                 bpRefData,
                                     oldValueEntityData,
-                                GlobalSettings.getGlobalSettings().getUserName(),
+                                Application.get().getUserId(),
                                     getTransactionString(bpRefData), new ImportInternalReferenceHandler(selectWindow));
                         } else {
                             OntologyServiceManager.getInstance().createExternalReference(
-                                getProject().getProjectName(),
+                                getProjectId(),
                                 getSubject().getName(),
                                 bpRefData,
-                                GlobalSettings.getGlobalSettings().getUserName(),
+                                Application.get().getUserId(),
                                     getTransactionString(bpRefData), new ImportInternalReferenceHandler(selectWindow));
                         }
                     }

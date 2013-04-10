@@ -4,7 +4,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.List;
 
@@ -24,12 +26,12 @@ public class ProjectConfigurationServiceManager {
 		proxy = (ProjectConfigurationServiceAsync) GWT.create(ProjectConfigurationService.class);
 	}
 
-	public void getProjectConfiguration(String projectName, String userName, AsyncCallback<ProjectLayoutConfiguration> cb) {
-		proxy.getProjectLayoutConfiguration(projectName, userName, cb);
+	public void getProjectConfiguration(ProjectId projectId, UserId userId, AsyncCallback<ProjectLayoutConfiguration> cb) {
+		proxy.getProjectLayoutConfiguration(projectId.getProjectName(), userId.getUserName(), cb);
 	}
 
-	public void saveProjectConfiguration(String projectName, String userName, ProjectLayoutConfiguration config, AsyncCallback<Void> cb) {
-		proxy.saveProjectLayoutConfiguration(projectName, userName, config, cb);
+	public void saveProjectConfiguration(ProjectId projectId, UserId userId,  ProjectLayoutConfiguration config, AsyncCallback<Void> cb) {
+		proxy.saveProjectLayoutConfiguration(projectId.getProjectName(), userId.getUserName(), config, cb);
 	}
 
 }

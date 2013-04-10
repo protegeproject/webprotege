@@ -4,7 +4,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
-import edu.stanford.bmir.protege.web.client.rpc.data.EmailAddress;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
@@ -19,7 +19,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.recaptcha.RecaptchaWidget
  */
 public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements WebProtegeDialogValidator {
 
-    public static final int PASSWORD_MIN_LENGTH = 5;
+    public static final int PASSWORD_MIN_LENGTH = 1;
 
     private final TextBox emailField;
 

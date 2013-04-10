@@ -2,12 +2,13 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import org.semanticweb.owlapi.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLParseException;
+import org.semanticweb.owlapi.binaryowl.BinaryOWLVersion;
+import org.semanticweb.owlapi.binaryowl.stream.BinaryOWLInputStream;
+import org.semanticweb.owlapi.binaryowl.stream.BinaryOWLOutputStream;
 import org.semanticweb.owlapi.model.OWLObject;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -35,9 +36,11 @@ public final class OWLAPIProjectAttributes {
     public OWLAPIProjectAttributes() {
     }
 
-    public OWLAPIProjectAttributes(DataInput dataInput) throws IOException {
+    public OWLAPIProjectAttributes(InputStream inputStream) throws IOException {
         try {
-            this.metadata = new BinaryOWLMetadata(dataInput, new OWLDataFactoryImpl());
+            BinaryOWLVersion version = BinaryOWLVersion.getVersion(1);
+            BinaryOWLInputStream bos = new BinaryOWLInputStream(inputStream, new OWLDataFactoryImpl(), version);
+            this.metadata = new BinaryOWLMetadata(bos);
         }
         catch (BinaryOWLParseException e) {
             throw new IOException(e);
@@ -496,10 +499,10 @@ public final class OWLAPIProjectAttributes {
     }
 
 
-    public void write(DataOutput output) throws IOException {
+    public void write(OutputStream output) throws IOException {
         try {
             writeLock.lock();
-            metadata.write(output);
+            metadata.write(new BinaryOWLOutputStream(output, BinaryOWLVersion.getVersion(1)));
         }
         finally {
             writeLock.unlock();

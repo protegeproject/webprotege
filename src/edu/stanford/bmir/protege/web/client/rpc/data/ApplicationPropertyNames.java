@@ -24,6 +24,8 @@ public class ApplicationPropertyNames {
     public static final String EMAIL_SMTP_HOST_NAME_PROP = "email.smtp.host.name";
     public static final String EMAIL_RETRY_DELAY_PROP = "email.notification.retry.delay";
 
+    public static final String LOGGING_EMAIL_PROP = "logging.email";
+
     public static final String SERVER_POLLING_TIMEOUT_MINUTES_PROP = "server.polling.timeout.min";
     public static final String APPLICATION_PORT_HTTPS_PROP = "application.https.port";
     public static final String LOGIN_WITH_HTTPS_PROP = "login.with.https";
@@ -39,7 +41,5 @@ public class ApplicationPropertyNames {
     public static final String ENABLE_ALL_NOTIFICATION = "enable.all.notification";
     public static final String ENABLE_IMMEDIATE_NOTIFICATION = "enable.immediate.notification";
 
-    //ICD specific
-    public static final String ICD_EXPORT_DIR_PROP = "icd.export.dir";
 
 }

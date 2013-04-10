@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.List;
@@ -25,19 +26,15 @@ public class CreateInstanceChangeFactory extends OWLOntologyChangeFactory {
 
     @Override
     public void createChanges(List<OWLOntologyChange> changeListToFill) {
-        OWLAPIEntityEditorKit kit = getProject().getOWLEntityEditorKit();
-        OWLEntityCreatorFactory fac = kit.getEntityCreatorFactory();
-        OWLEntityCreator<OWLNamedIndividual> ind = fac.getEntityCreator(getProject(), getUserId(), individualName, EntityType.NAMED_INDIVIDUAL);
-        changeListToFill.addAll(ind.getChanges());
-
-        OWLClass typeCls = null;
+        final OWLClass typeCls;
         if(typeName == null) {
             typeCls = getDataFactory().getOWLThing();
         }
         else {
             typeCls = getRenderingManager().getEntity(typeName, EntityType.CLASS);
         }
-        OWLClassAssertionAxiom ax = getDataFactory().getOWLClassAssertionAxiom(typeCls, ind.getEntity());
+        OWLNamedIndividual ind = DataFactory.getFreshOWLEntity(EntityType.NAMED_INDIVIDUAL, individualName);
+        OWLClassAssertionAxiom ax = getDataFactory().getOWLClassAssertionAxiom(typeCls, ind);
         changeListToFill.add(new AddAxiom(getRootOntology(), ax));
     }
 

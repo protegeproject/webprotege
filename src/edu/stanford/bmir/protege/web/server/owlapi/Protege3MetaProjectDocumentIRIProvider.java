@@ -1,8 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
-import edu.stanford.bmir.protege.web.server.Protege3ProjectManager;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
 import org.semanticweb.owlapi.model.IRI;
@@ -18,8 +17,7 @@ import java.io.File;
 public class Protege3MetaProjectDocumentIRIProvider implements DocumentIRIProvider {
 
     public IRI getDocumentIRI(ProjectId projectId) {
-        Protege3ProjectManager pm = Protege3ProjectManager.getProjectManager();
-        MetaProjectManager mpm = pm.getMetaProjectManager();
+        MetaProjectManager mpm = MetaProjectManager.getManager();
         MetaProject metaProject = mpm.getMetaProject();
         ProjectInstance pi = metaProject.getProject(projectId.getProjectName());
         String location = pi.getLocation();

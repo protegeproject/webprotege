@@ -36,13 +36,14 @@ import com.gwtext.client.widgets.event.WindowListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdIconPanel;
@@ -145,7 +146,8 @@ public class LoginUtil {
             openIdIconPanel.setLoginWithHttps(isLoginWithHttps);
             loginTable.setWidget(6, 0, openIdIconPanel);
             loginTable.getFlexCellFormatter().setColSpan(6, 0, 3);
-        } else {
+        }
+        else {
             win.setHeight(230);
         }
 
@@ -176,7 +178,7 @@ public class LoginUtil {
             }
         });
 
-          win.add(panel);
+        win.add(panel);
         win.setWidth(390);
         win.show();
 
@@ -185,7 +187,7 @@ public class LoginUtil {
         }
 
         //NB: this is done like this because no other method I can find works. See http://cnxforum.com/showthread.php?t=226 for more details.
-        Timer timer = new Timer(){
+        Timer timer = new Timer() {
             @Override
             public void run() {
                 userNameField.setFocus(true);
@@ -194,10 +196,26 @@ public class LoginUtil {
         timer.schedule(100);
     }
 
+//    public void logout() {
+//        MessageBox.confirm("Log out", "Are you sure you want to log out?", new MessageBox.ConfirmCallback() {
+//            public void execute(String btnID) {
+//                if (btnID.equalsIgnoreCase("yes")) {
+//                    Application.get().setCurrentUser(null);
+//                    AdminServiceManager.getInstance().logout(new AsyncCallback<Void>() {
+//                        public void onFailure(Throwable caught) {
+//                            MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
+//                        }
+//
+//                        public void onSuccess(Void result) {
+//                        }
+//                    });
+//                }
+//            }
+//        });
+//    }
+
     private String getHintHtml() {
-        return UIUtil.getHelpImageHtml(
-                "http://protegewiki.stanford.edu/wiki/WebProtegeOpenId",
-                "Click here to learn how to log in with Open ID");
+        return UIUtil.getHelpImageHtml("http://protegewiki.stanford.edu/wiki/WebProtegeOpenId", "Click here to learn how to log in with Open ID");
     }
 
     /**
@@ -206,26 +224,21 @@ public class LoginUtil {
      * @param isLoginWithHttps
      * @return
      */
-    protected ClickHandler forgotPasswordClickListener(final Window win, final TextBox userNameField,
-                                                       final boolean isLoginWithHttps) {
+    private ClickHandler forgotPasswordClickListener(final Window win, final TextBox userNameField, final boolean isLoginWithHttps) {
         ClickHandler forgotPassClickListener = new ClickHandler() {
             public void onClick(ClickEvent event) {
                 String user = userNameField.getText();
                 if (user == null || user.length() == 0) {
                     MessageBox.setMaxWidth(350);
-                    MessageBox
-                            .alert(
-                                    "Warning",
-                                    "If you forgot your username, please send an email to the administrator.<br /><br />"
-                                            + "If you forgot your password, please enter a user name in the user name field first and we will reset the password.");
-                } else {
+                    MessageBox.alert("Warning", "If you forgot your username, please send an email to the administrator.<br /><br />" + "If you forgot your password, please enter a user name in the user name field first and we will reset the password.");
+                }
+                else {
                     UIUtil.mask(win.getEl(), "Please wait until we reset your password and send you an email", true, 1);
                     if (isLoginWithHttps) {
-                        AuthenticateServiceManager.getInstance().sendPasswordReminder(userNameField.getText(),
-                                new ForgotPassHandler(win));
-                    } else {
-                        AdminServiceManager.getInstance().sendPasswordReminder(userNameField.getText(),
-                                new ForgotPassHandler(win));
+                        AuthenticateServiceManager.getInstance().sendPasswordReminder(UserId.getUserId(userNameField.getText().trim()), new ForgotPassHandler(win));
+                    }
+                    else {
+                        AdminServiceManager.getInstance().sendPasswordReminder(UserId.getUserId(userNameField.getText()), new ForgotPassHandler(win));
                     }
                 }
             }
@@ -233,26 +246,28 @@ public class LoginUtil {
         return forgotPassClickListener;
     }
 
-    protected void performSignIn(final boolean isLoginWithHttps, final Window win, final TextBox userNameField,
-                                 final TextBox passwordField) {
+    private void performSignIn(final boolean isLoginWithHttps, final Window win, final TextBox userNameField, final TextBox passwordField) {
         if (userNameField.getText().trim().equals("")) {
             MessageBox.alert("Please enter a user name.");
-        } else if (isLoginWithHttps) {
+        }
+        else if (isLoginWithHttps) {
             performSignInUsingHttps(userNameField.getText(), passwordField, win);
-        } else {
-            performSignInUsingEncryption(userNameField.getText(), passwordField, win);
+        }
+        else {
+            performSignInUsingEncryption(UserId.getUserId(userNameField.getText()), passwordField, win);
         }
     }
 
-    public void checkIfOpenIdInSessionForLogin() {
+    private void checkIfOpenIdInSessionForLogin() {
 
         OpenIdServiceManager.getInstance().checkIfOpenIdInSessionForLogin(new AsyncCallback<UserData>() {
 
-            public void onSuccess(UserData userData) {
-                if (userData == null || userData.getName() == null) {
+            public void onSuccess(UserData userId) {
+                if (userId == null) {
                     enquireOpenIdAssociation();
-                } else {
-                    GlobalSettings.getGlobalSettings().setUser(userData);
+                }
+                else {
+                    Application.get().setCurrentUser(UserId.getUserId(userId.getUserId().getUserName()));
                 }
             }
 
@@ -262,30 +277,13 @@ public class LoginUtil {
         });
     }
 
-    public void logout() {
-        MessageBox.confirm("Log out", "Are you sure you want to log out?", new MessageBox.ConfirmCallback() {
-            public void execute(String btnID) {
-                if (btnID.equalsIgnoreCase("yes")) {
-                    GlobalSettings.getGlobalSettings().setUser(null);
-                    AdminServiceManager.getInstance().logout(new AsyncCallback<Void>() {
-                        public void onFailure(Throwable caught) {
-                            MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
-                        }
-
-                        public void onSuccess(Void result) {
-                        }
-                    });
-                }
-            }
-        });
-    }
 
     public void getTimeoutAndCheckUserLoggedInMethod(final LoginUtil loginUtil, final String randomNumber) {
         final Integer timeout = ClientApplicationPropertiesCache.getServerPollingTimeoutMinutes();
         loginUtil.checkUserLoggedInMethod("" + randomNumber, timeout);
     }
 
-    public void checkUserLoggedInMethod(final String randomNumber, final Integer timeout) {
+    private void checkUserLoggedInMethod(final String randomNumber, final Integer timeout) {
         final long initTime = System.currentTimeMillis();
         final Timer checkSessionTimer = new Timer() {
             @Override
@@ -303,7 +301,8 @@ public class LoginUtil {
                             timer.cancel();
                             if (loggedInMethod.equals(AuthenticationConstants.LOGIN_METHOD_WEBPROTEGE_ACCOUNT)) {
                                 checkUserNameInSession();
-                            } else if (loggedInMethod.equals(AuthenticationConstants.LOGIN_METHOD_OPEN_ID_ACCOUNT)) {
+                            }
+                            else if (loggedInMethod.equals(AuthenticationConstants.LOGIN_METHOD_OPEN_ID_ACCOUNT)) {
                                 checkIfOpenIdInSessionForLogin();
                             }
 
@@ -314,8 +313,7 @@ public class LoginUtil {
                         timer.cancel();
                     }
                 });
-                String loginSynId = Cookies.getCookie(AuthenticationConstants.HTTPS_WINDOW_CLOSED_COOKIE + "."
-                        + randomNumber);
+                String loginSynId = Cookies.getCookie(AuthenticationConstants.HTTPS_WINDOW_CLOSED_COOKIE + "." + randomNumber);
                 if (randomNumber != null && loginSynId != null) {
                     timer.cancel();
                     Cookies.removeCookie(AuthenticationConstants.HTTPS_WINDOW_CLOSED_COOKIE + "." + randomNumber);
@@ -329,7 +327,11 @@ public class LoginUtil {
     /**
      * Method to create change password window.
      */
-    public void changePassword(final String userName, boolean isLoginWithHttps) {
+    public void changePassword(final UserId userName, boolean isLoginWithHttps) {
+        if (userName.isGuest()) {
+            throw new IllegalArgumentException("Cannot change the password of the guest user");
+        }
+
         final Window win = new Window();
 
         FormPanel passwordFormPanel = new FormPanel();
@@ -371,11 +373,10 @@ public class LoginUtil {
         Button changePasswordButton = new Button("Change Password");
 
         if (isLoginWithHttps) {
-            changePasswordButton.addListener(new ChangePasswordWithHttpsListener(win, newConfirmPassword, userName,
-                    oldPasswordField, newPasswordField));
-        } else {
-            changePasswordButton.addListener(new ChangePasswordWithEncryptionListener(win, newConfirmPassword,
-                    userName, oldPasswordField, newPasswordField));
+            changePasswordButton.addListener(new ChangePasswordWithHttpsListener(win, newConfirmPassword, userName, oldPasswordField, newPasswordField));
+        }
+        else {
+            changePasswordButton.addListener(new ChangePasswordWithEncryptionListener(win, newConfirmPassword, userName, oldPasswordField, newPasswordField));
         }
 
         changePassTable.setWidget(5, 1, changePasswordButton);
@@ -448,15 +449,15 @@ public class LoginUtil {
         confirmPassword.addKeyDownHandler(new KeyDownHandler() {
             public void onKeyDown(KeyDownEvent event) {
                 if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-                    if (newUserEmailID.getText().trim().equals("") || newUserPassword.getText().trim().equals("")
-                            || confirmPassword.getText().trim().equals("")) {
+                    if (newUserEmailID.getText().trim().equals("") || newUserPassword.getText().trim().equals("") || confirmPassword.getText().trim().equals("")) {
                         MessageBox.alert("User ID and Password cannot be empty.");
-                    } else {
+                    }
+                    else {
                         if (isLoginWithHttps) {
                             createNewUserViaHttps(newUserID.getText(), newUserPassword, confirmPassword, win);
-                        } else {
-                            createNewUserViaEncryption(newUserID.getText(), newUserPassword, confirmPassword,
-                                    newUserEmailID.getText(), win);
+                        }
+                        else {
+                            createNewUserViaEncryption(newUserID.getText(), newUserPassword, confirmPassword, newUserEmailID.getText(), win);
                         }
                     }
                 }
@@ -466,15 +467,15 @@ public class LoginUtil {
         Button register = new Button("Register", new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
-                if (newUserEmailID.getText().trim().equals("") || newUserPassword.getText().trim().equals("")
-                        || confirmPassword.getText().trim().equals("")) {
+                if (newUserEmailID.getText().trim().equals("") || newUserPassword.getText().trim().equals("") || confirmPassword.getText().trim().equals("")) {
                     MessageBox.alert("Please fill in both the user name and the password.");
-                } else {
+                }
+                else {
                     if (isLoginWithHttps) {
                         createNewUserViaHttps(newUserID.getText(), newUserPassword, confirmPassword, win);
-                    } else {
-                        createNewUserViaEncryption(newUserID.getText(), newUserPassword, confirmPassword,
-                                newUserEmailID.getText(), win);
+                    }
+                    else {
+                        createNewUserViaEncryption(newUserID.getText(), newUserPassword, confirmPassword, newUserEmailID.getText(), win);
                     }
                 }
             }
@@ -508,7 +509,6 @@ public class LoginUtil {
 
     /**
      * Creates Edit profile Popup
-     *
      * @param isLoginWithHttps
      */
 
@@ -516,8 +516,7 @@ public class LoginUtil {
         final Window win = new Window();
         FormPanel newUserformToAssocOpenIdPanel = new FormPanel();
 
-        Label label = new Label(
-                "Please enter your name, password and email to create a new user account that will be associated with OpenId.");
+        Label label = new Label("Please enter your name, password and email to create a new user account that will be associated with OpenId.");
         label.setStyleName("login-welcome-msg");
 
         FlexTable newUserTable = new FlexTable();
@@ -563,15 +562,14 @@ public class LoginUtil {
             public void onKeyDown(KeyDownEvent event) {
                 if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
                     OpenIdUtil openIdUtil = new OpenIdUtil();
-                    if (newUserID.getText().trim().equals("") || newUserPassword.getText().trim().equals("")
-                            || confirmPassword.getText().trim().equals("")) {
+                    if (newUserID.getText().trim().equals("") || newUserPassword.getText().trim().equals("") || confirmPassword.getText().trim().equals("")) {
                         MessageBox.alert("Please enter both a user name and a password.");
-                    } else if (isLoginWithHttps) {
-                        openIdUtil.createNewUserToAssociateOpenIdWithHttps(newUserID.getText().trim(), newUserPassword,
-                                confirmPassword, newUserEmailID.getText().trim(), win);
-                    } else {
-                        openIdUtil.createNewUserToAssocOpenIdWithEncryption(newUserID.getText().trim(),
-                                newUserPassword, confirmPassword, newUserEmailID.getText().trim(), win);
+                    }
+                    else if (isLoginWithHttps) {
+                        openIdUtil.createNewUserToAssociateOpenIdWithHttps(newUserID.getText().trim(), newUserPassword, confirmPassword, newUserEmailID.getText().trim(), win);
+                    }
+                    else {
+                        openIdUtil.createNewUserToAssocOpenIdWithEncryption(newUserID.getText().trim(), newUserPassword, confirmPassword, newUserEmailID.getText().trim(), win);
                     }
                 }
             }
@@ -581,15 +579,14 @@ public class LoginUtil {
             @Override
             public void onClick(Button button, EventObject e) {
                 OpenIdUtil openIdUtil = new OpenIdUtil();
-                if (newUserID.getText().trim().equals("") || newUserPassword.getText().trim().equals("")
-                        || confirmPassword.getText().trim().equals("")) {
+                if (newUserID.getText().trim().equals("") || newUserPassword.getText().trim().equals("") || confirmPassword.getText().trim().equals("")) {
                     MessageBox.alert("Please enter both a user name and a password.");
-                } else if (isLoginWithHttps) {
-                    openIdUtil.createNewUserToAssociateOpenIdWithHttps(newUserID.getText().trim(), newUserPassword,
-                            confirmPassword, newUserEmailID.getText().trim(), win);
-                } else {
-                    openIdUtil.createNewUserToAssocOpenIdWithEncryption(newUserID.getText().trim(), newUserPassword,
-                            confirmPassword, newUserEmailID.getText().trim(), win);
+                }
+                else if (isLoginWithHttps) {
+                    openIdUtil.createNewUserToAssociateOpenIdWithHttps(newUserID.getText().trim(), newUserPassword, confirmPassword, newUserEmailID.getText().trim(), win);
+                }
+                else {
+                    openIdUtil.createNewUserToAssocOpenIdWithEncryption(newUserID.getText().trim(), newUserPassword, confirmPassword, newUserEmailID.getText().trim(), win);
                 }
             }
         });
@@ -626,29 +623,28 @@ public class LoginUtil {
         win.show();
     }
 
-    public void performSignInUsingEncryption(final String userName, final TextBox passField, final Window win) {
-        AdminServiceManager.getInstance().getUserSaltAndChallenge(userName,
-                new GetSaltAndChallengeForLoginHandler(userName, passField, win));
+    private void performSignInUsingEncryption(final UserId userName, final TextBox passField, final Window win) {
+        AdminServiceManager.getInstance().getUserSaltAndChallenge(userName, new GetSaltAndChallengeForLoginHandler(userName, passField, win));
     }
 
-    public void performSignInUsingHttps(final String userName, final TextBox passField, final Window win) {
-        AuthenticateServiceManager.getInstance().validateUserAndAddInSession(userName, passField.getText(),
-                new AsyncCallback<UserData>() {
+    private void performSignInUsingHttps(final String userName, final TextBox passField, final Window win) {
+        AuthenticateServiceManager.getInstance().validateUserAndAddInSession(userName, passField.getText(), new AsyncCallback<UserData>() {
 
-                    public void onSuccess(UserData userData) {
-                        if (userData != null && userData.getName() != null) {
-                            closeWindow();
-                        } else {
-                            passField.setText("");
-                            MessageBox.alert("Invalid user name or password. Please try again.");
-                        }
-                    }
+            public void onSuccess(UserData userData) {
+                if (!userData.getUserId().isGuest()) {
+                    closeWindow();
+                }
+                else {
+                    passField.setText("");
+                    MessageBox.alert("Invalid user name or password. Please try again.");
+                }
+            }
 
-                    public void onFailure(Throwable caught) {
-                        passField.setText("");
-                        MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
-                    }
-                });
+            public void onFailure(Throwable caught) {
+                passField.setText("");
+                MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
+            }
+        });
     }
 
     /**
@@ -660,7 +656,8 @@ public class LoginUtil {
         if (queryString.trim().equals("")) {
             queryString = "?";
 
-        } else {
+        }
+        else {
             queryString = queryString + "&";
         }
         queryString = queryString + AuthenticationConstants.AUTHEN_TYPE + "=" + authType;
@@ -672,7 +669,8 @@ public class LoginUtil {
         if (httpsPort != null && httpsPort.trim().equals("")) {
 
             host = com.google.gwt.user.client.Window.Location.getHostName();
-        } else if (httpsPort != null && !httpsPort.trim().equals("")) {
+        }
+        else if (httpsPort != null && !httpsPort.trim().equals("")) {
             host = com.google.gwt.user.client.Window.Location.getHostName() + ":" + httpsPort;
         }
         loginWindowUrl = loginWindowUrl.replace(com.google.gwt.user.client.Window.Location.getHost(), host);
@@ -680,13 +678,14 @@ public class LoginUtil {
         return loginWindowUrl;
     }
 
-    public static void checkUserNameInSession() {
-        AdminServiceManager.getInstance().getCurrentUserInSession(new AsyncCallback<UserData>() {
+    private static void checkUserNameInSession() {
+        AdminServiceManager.getInstance().getCurrentUserInSession(new AsyncCallback<UserId>() {
 
-            public void onSuccess(UserData userData) {
-                if (userData != null) {
-                    GlobalSettings.getGlobalSettings().setUser(userData);
-                } else {
+            public void onSuccess(UserId userId) {
+                if (!userId.isGuest()) {
+                    Application.get().setCurrentUser(userId);
+                }
+                else {
                     MessageBox.alert("Invalid user name or password. Please try again.");
                 }
             }
@@ -697,16 +696,15 @@ public class LoginUtil {
         });
     }
 
-    private void createNewUserViaHttps(String userName, PasswordTextBox newUserPasswordField,
-                                       PasswordTextBox newUserPassword2Field, Window win) {
+    private void createNewUserViaHttps(String userName, PasswordTextBox newUserPasswordField, PasswordTextBox newUserPassword2Field, Window win) {
         String newUserPassword = newUserPasswordField.getText();
         String newUserPassword2 = newUserPassword2Field.getText();
 
         if (newUserPassword.contentEquals(newUserPassword2)) {
             win.getEl().mask("Creating new user...", true);
-            AuthenticateServiceManager.getInstance().registerUser(userName, newUserPassword,
-                    new CreateNewUserHandlerViaHttps(win));
-        } else {
+            AuthenticateServiceManager.getInstance().registerUser(UserId.getUserId(userName), newUserPassword, new CreateNewUserHandlerViaHttps(win));
+        }
+        else {
             MessageBox.alert("Passwords do not match. Please try again.");
             newUserPasswordField.setValue("");
             newUserPassword2Field.setValue("");
@@ -714,8 +712,7 @@ public class LoginUtil {
 
     }
 
-    public void createNewUserViaEncryption(final String userName, PasswordTextBox newUserPasswordField,
-                                           PasswordTextBox newUserPassword2Field, final String emailId, final com.gwtext.client.widgets.Window win) {
+    public void createNewUserViaEncryption(final String userName, PasswordTextBox newUserPasswordField, PasswordTextBox newUserPassword2Field, final String emailId, final com.gwtext.client.widgets.Window win) {
         final String newUserPassword = newUserPasswordField.getText();
         String newUserPassword2 = newUserPassword2Field.getText();
 
@@ -726,15 +723,15 @@ public class LoginUtil {
                 public void onSuccess(String salt) {
                     HashAlgorithm hAlgorithm = new HashAlgorithm();
                     String saltedHashedPass = hAlgorithm.md5(salt + newUserPassword);
-                    AdminServiceManager.getInstance().registerUserViaEncrption(userName, saltedHashedPass, emailId,
-                            new CreateNewUserViaEncryptHandler(win));
+                    AdminServiceManager.getInstance().registerUserViaEncrption(userName, saltedHashedPass, emailId, new CreateNewUserViaEncryptHandler(win));
                 }
 
                 public void onFailure(Throwable caught) {
                     MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
                 }
             });
-        } else {
+        }
+        else {
             MessageBox.alert("Passwords do not match. Please try again.");
             newUserPasswordField.setValue("");
             newUserPassword2Field.setValue("");
@@ -747,6 +744,7 @@ public class LoginUtil {
      */
 
     private final class CreateNewUserViaEncryptHandler implements AsyncCallback<UserData> {
+
         private final Window win;
 
         private CreateNewUserViaEncryptHandler(Window win) {
@@ -758,7 +756,8 @@ public class LoginUtil {
             if (userData != null) {
                 win.close();
                 MessageBox.alert("New user created successfully.");
-            } else {
+            }
+            else {
                 MessageBox.alert("New user registration could not be completed. Please try again.");
             }
         }
@@ -770,15 +769,19 @@ public class LoginUtil {
         }
     }
 
-    protected class ChangePasswordWithHttpsListener extends ButtonListenerAdapter {
+    private class ChangePasswordWithHttpsListener extends ButtonListenerAdapter {
+
         private final Window win;
+
         private final PasswordTextBox newConfirmPassword;
-        private final String userName;
+
+        private final UserId userName;
+
         private final PasswordTextBox oldPasswordField;
+
         private final PasswordTextBox newPasswordField;
 
-        protected ChangePasswordWithHttpsListener(Window win, PasswordTextBox newConfirmPassword, String userName,
-                                                  PasswordTextBox oldPasswordField, PasswordTextBox newPasswordField) {
+        protected ChangePasswordWithHttpsListener(Window win, PasswordTextBox newConfirmPassword, UserId userName, PasswordTextBox oldPasswordField, PasswordTextBox newPasswordField) {
             this.win = win;
             this.newConfirmPassword = newConfirmPassword;
             this.userName = userName;
@@ -788,10 +791,10 @@ public class LoginUtil {
 
         @Override
         public void onClick(Button button, EventObject e) {
-            if (oldPasswordField.getText().trim().equals("") || newPasswordField.getText().trim().equals("")
-                    || newConfirmPassword.getText().trim().equals("")) {
+            if (oldPasswordField.getText().trim().equals("") || newPasswordField.getText().trim().equals("") || newConfirmPassword.getText().trim().equals("")) {
                 MessageBox.alert("Please enter both the old password and new password.");
-            } else {
+            }
+            else {
                 changePassword();
             }
         }
@@ -802,52 +805,55 @@ public class LoginUtil {
         protected void changePassword() {
             if (newPasswordField.getText().equals(newConfirmPassword.getText())) {
                 win.getEl().mask("Changing password...");
-                AuthenticateServiceManager.getInstance().validateUser(userName, oldPasswordField.getText(),
-                        new AbstractAsyncHandler<UserData>() {
-                            @Override
-                            public void handleFailure(Throwable caught) {
-                                GWT.log("Error at login", caught);
-                                win.getEl().unmask();
-                                MessageBox.alert("Changing the password failed. Please try again");
-                                clearChangePasswordFields(oldPasswordField, newPasswordField, newConfirmPassword);
-                            }
+                AuthenticateServiceManager.getInstance().validateUser(userName, oldPasswordField.getText(), new AbstractAsyncHandler<UserData>() {
+                    @Override
+                    public void handleFailure(Throwable caught) {
+                        GWT.log("Error at login", caught);
+                        win.getEl().unmask();
+                        MessageBox.alert("Changing the password failed. Please try again");
+                        clearChangePasswordFields(oldPasswordField, newPasswordField, newConfirmPassword);
+                    }
 
-                            @Override
-                            public void handleSuccess(UserData userData) {
-                                win.getEl().unmask();
-                                if (userData != null) {
-                                    AuthenticateServiceManager.getInstance().changePassword(userName,
-                                            newPasswordField.getText(), new ChangePasswordHandler(win));
-                                } else {
-                                    MessageBox.alert("Invalid password. Please try again.");
-                                    clearChangePasswordFields(oldPasswordField, newPasswordField, newConfirmPassword);
-                                }
+                    @Override
+                    public void handleSuccess(UserData userData) {
+                        win.getEl().unmask();
+                        if (userData != null) {
+                            AuthenticateServiceManager.getInstance().changePassword(userName, newPasswordField.getText(), new ChangePasswordHandler(win));
+                        }
+                        else {
+                            MessageBox.alert("Invalid password. Please try again.");
+                            clearChangePasswordFields(oldPasswordField, newPasswordField, newConfirmPassword);
+                        }
 
-                            }
+                    }
 
-                            private void clearChangePasswordFields(final PasswordTextBox oldPasswordField,
-                                                                   final PasswordTextBox newPasswordField, final PasswordTextBox newConfirmPassword) {
-                                oldPasswordField.setValue("");
-                                newConfirmPassword.setValue("");
-                                newPasswordField.setValue("");
-                            }
+                    private void clearChangePasswordFields(final PasswordTextBox oldPasswordField, final PasswordTextBox newPasswordField, final PasswordTextBox newConfirmPassword) {
+                        oldPasswordField.setValue("");
+                        newConfirmPassword.setValue("");
+                        newPasswordField.setValue("");
+                    }
 
-                        });
-            } else {
+                });
+            }
+            else {
                 MessageBox.alert("Passwords do not match. Please enter them again.");
             }
         }
     }
 
-    protected class ChangePasswordWithEncryptionListener extends ButtonListenerAdapter {
+    private class ChangePasswordWithEncryptionListener extends ButtonListenerAdapter {
+
         private final Window win;
+
         private final PasswordTextBox newConfirmPassword;
-        private final String userName;
+
+        private final UserId userName;
+
         private final PasswordTextBox oldPasswordField;
+
         private final PasswordTextBox newPasswordField;
 
-        protected ChangePasswordWithEncryptionListener(Window win, PasswordTextBox newConfirmPassword, String userName,
-                                                       PasswordTextBox oldPasswordField, PasswordTextBox newPasswordField) {
+        protected ChangePasswordWithEncryptionListener(Window win, PasswordTextBox newConfirmPassword, UserId userName, PasswordTextBox oldPasswordField, PasswordTextBox newPasswordField) {
             this.win = win;
             this.newConfirmPassword = newConfirmPassword;
             this.userName = userName;
@@ -857,10 +863,10 @@ public class LoginUtil {
 
         @Override
         public void onClick(Button button, EventObject e) {
-            if (oldPasswordField.getText().trim().equals("") || newPasswordField.getText().trim().equals("")
-                    || newConfirmPassword.getText().trim().equals("")) {
+            if (oldPasswordField.getText().trim().equals("") || newPasswordField.getText().trim().equals("") || newConfirmPassword.getText().trim().equals("")) {
                 MessageBox.alert("Please enter both the old password and the new password.");
-            } else {
+            }
+            else {
                 changePassword();
             }
         }
@@ -871,34 +877,35 @@ public class LoginUtil {
         protected void changePassword() {
             if (newPasswordField.getText().trim().equals(newConfirmPassword.getText().trim())) {
                 win.getEl().mask("Changing password...");
-                AdminServiceManager.getInstance().getUserSaltAndChallenge(userName,
-                        new AsyncCallback<LoginChallengeData>() {
+                AdminServiceManager.getInstance().getUserSaltAndChallenge(userName, new AsyncCallback<LoginChallengeData>() {
 
-                            public void onSuccess(LoginChallengeData result) {
-                                if (result != null) {
-                                    validateEncryptPassAndChangePass(result, win, newConfirmPassword, userName,
-                                            oldPasswordField, newPasswordField);
-                                } else {
-                                    MessageBox.alert("Invalid password. Please try again.");
-                                    oldPasswordField.setValue("");
-                                    newPasswordField.setValue("");
-                                    newConfirmPassword.setValue("");
-                                }
+                    public void onSuccess(LoginChallengeData result) {
+                        if (result != null) {
+                            validateEncryptPassAndChangePass(result, win, newConfirmPassword, userName, oldPasswordField, newPasswordField);
+                        }
+                        else {
+                            MessageBox.alert("Invalid password. Please try again.");
+                            oldPasswordField.setValue("");
+                            newPasswordField.setValue("");
+                            newConfirmPassword.setValue("");
+                        }
 
-                            }
+                    }
 
-                            public void onFailure(Throwable caught) {
-                                MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
-                            }
-                        });
-            } else {
+                    public void onFailure(Throwable caught) {
+                        MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
+                    }
+                });
+            }
+            else {
 
                 MessageBox.alert("Passwords do not match. Please enter them again.");
             }
         }
     }
 
-    class ForgotPassHandler extends AbstractAsyncHandler<Void> {
+    private class ForgotPassHandler extends AbstractAsyncHandler<Void> {
+
         private Window win;
 
         public ForgotPassHandler(Window win) {
@@ -909,24 +916,21 @@ public class LoginUtil {
         public void handleFailure(Throwable caught) {
             win.getEl().unmask();
             GWT.log("Error at forgot password callback : ", caught);
-            MessageBox.alert("Error", "There was an error at sending the password reminder.<br />"
-                    + "Most likely your user account does not have an email account configured,<br />"
-                    + "or the email is invalid.");
+            MessageBox.alert("Error", "There was an error at sending the password reminder.<br />" + "Most likely your user account does not have an email account configured,<br />" + "or the email is invalid.");
         }
 
         @Override
         public void handleSuccess(Void nothing) {
             win.getEl().unmask();
-            MessageBox.alert("Sent password",
-                    "Your password has been reset. You should receive an email with the new password.<br /> "
-                            + "Please change password the next time you log into the system.");
+            MessageBox.alert("Sent password", "Your password has been reset. You should receive an email with the new password.<br /> " + "Please change password the next time you log into the system.");
         }
     }
 
     /**
      * CallBack for change password process.
      */
-    class ChangePasswordHandler extends AbstractAsyncHandler<Void> {
+    private class ChangePasswordHandler extends AbstractAsyncHandler<Void> {
+
         private Window win;
 
         public ChangePasswordHandler(Window win) {
@@ -948,13 +952,13 @@ public class LoginUtil {
             long nowLong = expireDate.getTime();
             nowLong = nowLong + (1000 * 60 * 30);//30 minutes
             expireDate.setTime(nowLong);
-            Cookies.setCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT,
-                    AuthenticationConstants.CHANGE_PASSWORD_SUCCESS, expireDate);
+            Cookies.setCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT, AuthenticationConstants.CHANGE_PASSWORD_SUCCESS, expireDate);
             closeWindow();
         }
     }
 
-    class CreateNewUserHandlerViaHttps extends AbstractAsyncHandler<UserData> {
+    private class CreateNewUserHandlerViaHttps extends AbstractAsyncHandler<UserData> {
+
         private Window win;
 
         public CreateNewUserHandlerViaHttps(Window win) {
@@ -981,7 +985,8 @@ public class LoginUtil {
                     }
                 });
 
-            } else {
+            }
+            else {
                 MessageBox.alert("New user registration could not be completed. Please try again.");
             }
         }
@@ -993,53 +998,53 @@ public class LoginUtil {
 
     public void enquireOpenIdAssociation() {
 
-        MessageBox.confirm(
-                "Associate OpenId with an existing user account",
-                "Welcome! " +
+        MessageBox.confirm("Associate OpenId with an existing user account", "Welcome! " +
                 "The first time you sign in with your OpenId, we need to <b>associate it with an existing user account</b>. <br /><br />" +
-                "Do you have an existing user account?",
-                new ConfirmCallback() {
+                "Do you have an existing user account?", new ConfirmCallback() {
 
-                    public void execute(final String btnID) {
+            public void execute(final String btnID) {
 
-                        final Boolean isLoginWithHttps = ClientApplicationPropertiesCache.getLoginWithHttps();
-                        if (btnID.equalsIgnoreCase("yes")) {
-                            if (isLoginWithHttps) {
-                                associateCurrentWebProtegeAccount();
-                            } else {
-                                loginToAssociateOpenId(isLoginWithHttps);
-                            }
-                        } else if (btnID.equalsIgnoreCase("no")) {
-
-                            AdminServiceManager.getInstance().allowsCreateUsers(new AsyncCallback<Boolean>() {
-                                public void onFailure(Throwable caught) {
-                                    GWT.log("Error at allowsCreateUsers callback : ", caught);
-                                    MessageBox.alert("Error", "There was an error finding out if the server allows user creation.");
-                                }
-
-                                public void onSuccess(Boolean result) {
-                                    if (result) {
-                                        if (isLoginWithHttps) {
-                                            createAndAssociateWebProtegeAccount();
-                                        } else {
-                                            createNewUserToAssociateOpenId(isLoginWithHttps);
-                                        }
-                                    } else {
-                                        MessageBox.alert("The creation of new user accounts and linking the user accounts to OpenId is disabled." +
-                                                "<br/><br/>" +
-                                        "Please contact to the administrator to create a user account for you.");
-                                    }
-                                }
-                            });
-                        }
+                final Boolean isLoginWithHttps = ClientApplicationPropertiesCache.getLoginWithHttps();
+                if (btnID.equalsIgnoreCase("yes")) {
+                    if (isLoginWithHttps) {
+                        associateCurrentWebProtegeAccount();
                     }
-                });
+                    else {
+                        loginToAssociateOpenId(isLoginWithHttps);
+                    }
+                }
+                else if (btnID.equalsIgnoreCase("no")) {
+
+                    AdminServiceManager.getInstance().allowsCreateUsers(new AsyncCallback<Boolean>() {
+                        public void onFailure(Throwable caught) {
+                            GWT.log("Error at allowsCreateUsers callback : ", caught);
+                            MessageBox.alert("Error", "There was an error finding out if the server allows user creation.");
+                        }
+
+                        public void onSuccess(Boolean result) {
+                            if (result) {
+                                if (isLoginWithHttps) {
+                                    createAndAssociateWebProtegeAccount();
+                                }
+                                else {
+                                    createNewUserToAssociateOpenId(isLoginWithHttps);
+                                }
+                            }
+                            else {
+                                MessageBox.alert("The creation of new user accounts and linking the user accounts to OpenId is disabled." +
+                                        "<br/><br/>" +
+                                        "Please contact to the administrator to create a user account for you.");
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     /**
      * If User already has a protege account then after login the account is
      * associated with protege account.
-     *
      * @param isLoginWithHttps If true then the login popup is opened in a new browser popup
      */
     public void loginToAssociateOpenId(final Boolean isLoginWithHttps) {
@@ -1127,20 +1132,23 @@ public class LoginUtil {
 
     public native void openNewWindow(String url, String w, String h, String scrollbar)/*-{
         var sw = screen.width, sh = screen.height;
-        var ulx = ((sw-w)/2), uly = ((sh-h)/2);
-        var paramz = 'status=0,toolbar=0,menubar=0,location=0,resizable=0,scrollbars='+scrollbar+',width='+w+',height='+h+'';
-        var oSubWin = $wnd.open( "", "_blank", paramz );
-        oSubWin.moveTo( ulx,uly );
+        var ulx = ((sw - w) / 2), uly = ((sh - h) / 2);
+        var paramz = 'status=0,toolbar=0,menubar=0,location=0,resizable=0,scrollbars=' + scrollbar + ',width=' + w + ',height=' + h + '';
+        var oSubWin = $wnd.open("", "_blank", paramz);
+        oSubWin.moveTo(ulx, uly);
         oSubWin.location.replace(url);
     }-*/;
 
 
-    class GetSaltAndChallengeForLoginHandler extends AbstractAsyncHandler<LoginChallengeData> {
-        private String userName;
+    private class GetSaltAndChallengeForLoginHandler extends AbstractAsyncHandler<LoginChallengeData> {
+
+        private UserId userName;
+
         private TextBox passField;
+
         private Window win;
 
-        public GetSaltAndChallengeForLoginHandler(final String userName, final TextBox passField, final Window win) {
+        public GetSaltAndChallengeForLoginHandler(final UserId userName, final TextBox passField, final Window win) {
             this.userName = userName;
             this.passField = passField;
             this.win = win;
@@ -1153,26 +1161,27 @@ public class LoginUtil {
                 HashAlgorithm hAlgorithm = new HashAlgorithm();
                 String saltedHashedPass = hAlgorithm.md5(result.getSalt() + passField.getText());
                 String response = hAlgorithm.md5(result.getChallenge() + saltedHashedPass);
-                AdminServiceManager.getInstance().authenticateToLogin(userName, response,
-                        new AsyncCallback<UserData>() {
+                AdminServiceManager.getInstance().authenticateToLogin(userName, response, new AsyncCallback<UserId>() {
 
-                            public void onSuccess(UserData userData) {
-                                win.getEl().unmask();
-                                if (userData != null) {
-                                    GlobalSettings.getGlobalSettings().setUser(userData);
-                                    win.close();
-                                } else {
-                                    MessageBox.alert("Invalid user name or password. Please try again.");
-                                    passField.setValue("");
-                                }
+                    public void onSuccess(UserId userId) {
+                        win.getEl().unmask();
+                        if (!userId.isGuest()) {
+                            Application.get().setCurrentUser(userId);
+                            win.close();
+                        }
+                        else {
+                            MessageBox.alert("Invalid user name or password. Please try again.");
+                            passField.setValue("");
+                        }
 
-                            }
+                    }
 
-                            public void onFailure(Throwable caught) {
-                                MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
-                            }
-                        });
-            } else {
+                    public void onFailure(Throwable caught) {
+                        MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
+                    }
+                });
+            }
+            else {
                 MessageBox.alert("Invalid user name or password. Please try again.");
                 passField.setValue("");
             }
@@ -1194,39 +1203,37 @@ public class LoginUtil {
     /**
      * @param result
      */
-    protected void validateEncryptPassAndChangePass(LoginChallengeData result, final Window win,
-                                                    final PasswordTextBox newConfirmPassword, final String userName, final PasswordTextBox oldPasswordField,
-                                                    final PasswordTextBox newPasswordField) {
+    protected void validateEncryptPassAndChangePass(LoginChallengeData result, final Window win, final PasswordTextBox newConfirmPassword, final UserId userName, final PasswordTextBox oldPasswordField, final PasswordTextBox newPasswordField) {
         final HashAlgorithm hAlgorithm = new HashAlgorithm();
         String saltedHashedPass = hAlgorithm.md5(result.getSalt() + oldPasswordField.getText());
         String response = hAlgorithm.md5(result.getChallenge() + saltedHashedPass);
-        AdminServiceManager.getInstance().authenticateToLogin(userName, response, new AsyncCallback<UserData>() {
+        AdminServiceManager.getInstance().authenticateToLogin(userName, response, new AsyncCallback<UserId>() {
 
-            public void onSuccess(UserData userData) {
-                if (userData != null) {
+            public void onSuccess(UserId userData) {
+                if (!userData.isGuest()) {
                     AdminServiceManager.getInstance().getNewSalt(new AsyncCallback<String>() {
 
                         public void onSuccess(String salt) {
                             String saltedHashedNewPass = hAlgorithm.md5(salt + newPasswordField.getText());
-                            AdminServiceManager.getInstance().changePasswordEncrypted(userName, saltedHashedNewPass,
-                                    salt, new AsyncCallback<Boolean>() {
+                            AdminServiceManager.getInstance().changePasswordEncrypted(userName, saltedHashedNewPass, salt, new AsyncCallback<Boolean>() {
 
-                                        public void onSuccess(Boolean result) {
-                                            win.getEl().unmask();
-                                            if (result) {
-                                                MessageBox.alert("Password changed successfully");
-                                            } else {
-                                                MessageBox.alert("Changing the password failed. Please try again");
-                                            }
-                                            win.close();
-                                        }
+                                public void onSuccess(Boolean result) {
+                                    win.getEl().unmask();
+                                    if (result) {
+                                        MessageBox.alert("Password changed successfully");
+                                    }
+                                    else {
+                                        MessageBox.alert("Changing the password failed. Please try again");
+                                    }
+                                    win.close();
+                                }
 
-                                        public void onFailure(Throwable caught) {
-                                            win.getEl().unmask();
-                                            MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
+                                public void onFailure(Throwable caught) {
+                                    win.getEl().unmask();
+                                    MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
 
-                                        }
-                                    });
+                                }
+                            });
                         }
 
                         public void onFailure(Throwable caught) {
@@ -1235,7 +1242,8 @@ public class LoginUtil {
 
                         }
                     });
-                } else {
+                }
+                else {
                     win.getEl().unmask();
                     MessageBox.alert("Invalid password. Please try again.");
                     oldPasswordField.setValue("");
@@ -1255,7 +1263,7 @@ public class LoginUtil {
     /**
      *
      */
-    protected void associateCurrentWebProtegeAccount() {
+    private void associateCurrentWebProtegeAccount() {
         final String httsPort = ClientApplicationPropertiesCache.getApplicationHttpsPort();
         OpenIdServiceManager.getInstance().clearAuthUserToAssocOpenIdSessData(new AsyncCallback<Void>() {
 
@@ -1263,8 +1271,7 @@ public class LoginUtil {
                 OpenIdUtil openIdUtil = new OpenIdUtil();
                 openIdUtil.getTimeoutAndCheckIfAuthenToAssocId();
                 LoginUtil loginUtil = new LoginUtil();
-                String authUrl = loginUtil.getAuthenticateWindowUrl(
-                        AuthenticationConstants.AUTHEN_TYPE_LOGIN_TO_ASSOC_OPEN_ID, httsPort);
+                String authUrl = loginUtil.getAuthenticateWindowUrl(AuthenticationConstants.AUTHEN_TYPE_LOGIN_TO_ASSOC_OPEN_ID, httsPort);
 
                 loginUtil.openNewWindow(authUrl, "375", "220", "0");
 
@@ -1280,7 +1287,7 @@ public class LoginUtil {
     /**
      *
      */
-    protected void createAndAssociateWebProtegeAccount() {
+    private void createAndAssociateWebProtegeAccount() {
         final String httsPort = ClientApplicationPropertiesCache.getApplicationHttpsPort();
         OpenIdServiceManager.getInstance().clearCreateUserToAssocOpenIdSessData(new AsyncCallback<Void>() {
 
@@ -1288,8 +1295,7 @@ public class LoginUtil {
                 OpenIdUtil openIdUtil = new OpenIdUtil();
                 openIdUtil.getTimeoutAndCheckIfUserCreatedToAssocId();
                 LoginUtil loginUtil = new LoginUtil();
-                String authUrl = loginUtil.getAuthenticateWindowUrl(
-                        AuthenticationConstants.AUTHEN_TYPE_CREATE_USER_TO_ASSOC_OPEN_ID, httsPort);
+                String authUrl = loginUtil.getAuthenticateWindowUrl(AuthenticationConstants.AUTHEN_TYPE_CREATE_USER_TO_ASSOC_OPEN_ID, httsPort);
 
                 loginUtil.openNewWindow(authUrl, "440", "260", "0");
 
@@ -1308,16 +1314,17 @@ public class LoginUtil {
      * @param userNameField
      * @param passwordField
      */
-    protected void callSignAndAssocOpenId(final Boolean isLoginWithHttps, final Window win,
-                                          final TextBox userNameField, final TextBox passwordField) {
+    private void callSignAndAssocOpenId(final Boolean isLoginWithHttps, final Window win, final TextBox userNameField, final TextBox passwordField) {
         win.getEl().mask("Signing in...");
         OpenIdUtil openIdUtil = new OpenIdUtil();
         if (userNameField.getText().trim().equals("")) {
             win.getEl().unmask();
             MessageBox.alert("Please enter a user name.");
-        } else if (isLoginWithHttps) {
+        }
+        else if (isLoginWithHttps) {
             openIdUtil.signInToAssocOpenIdWithHttps(userNameField.getText().trim(), passwordField, win);
-        } else {
+        }
+        else {
             openIdUtil.signInToAssocOpenIdWithEncryption(userNameField.getText().trim(), passwordField, win);
         }
     }

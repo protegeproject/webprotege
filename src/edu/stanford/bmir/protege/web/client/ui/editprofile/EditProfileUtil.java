@@ -25,7 +25,7 @@ import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.NotificationInterval;
@@ -33,10 +33,12 @@ import edu.stanford.bmir.protege.web.client.rpc.NotificationServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.NotificationType;
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
+import edu.stanford.bmir.protege.web.shared.openid.UserOpenIdAccountSummary;
 
 import java.util.Map;
 
@@ -69,7 +71,7 @@ public class EditProfileUtil {
 
         editProfileFormPanel.add(editProfileTable);
 
-        final String name = GlobalSettings.getGlobalSettings().getUserName();
+        final UserId userId = Application.get().getUserId();
         final TextBox userNameTextBox = new TextBox();
         userNameTextBox.setWidth("250px");
         userNameTextBox.setEnabled(false);
@@ -79,8 +81,8 @@ public class EditProfileUtil {
         editProfileTable.setWidget(2, 0, userNameLabel);
         editProfileTable.setWidget(2, 1, userNameTextBox);
 
-        if (name != null) {
-            userNameTextBox.setText(name);
+        if (!userId.isGuest()) {
+            userNameTextBox.setText(userId.getUserName());
         }
 
         final HTML changePasswordHTML = new HTML(
@@ -162,13 +164,13 @@ public class EditProfileUtil {
         win.setPaddings(7);
         win.setCloseAction(Window.HIDE);
         win.add(panel);
-        if (name != null) {
+        if (!userId.isGuest()) {
             win.show();
 
             win.getEl().mask("Retrieving user email...");
-            AdminServiceManager.getInstance().getUserEmail(name, new RetrieveUserEmailHandler(win, userEmailTextBox));
+            AdminServiceManager.getInstance().getUserEmail(userId, new RetrieveUserEmailHandler(win, userEmailTextBox));
 
-            NotificationServiceManager.getInstance().getNotificationDelay(name, new AsyncCallback<Map<NotificationType, NotificationInterval>>() {
+            NotificationServiceManager.getInstance().getNotificationDelay(userId, new AsyncCallback<Map<NotificationType, NotificationInterval>>() {
 
                 public void onSuccess(Map<NotificationType, NotificationInterval> notificationPreferences) {
                     win.getEl().unmask();
@@ -204,8 +206,8 @@ public class EditProfileUtil {
                 }
             });
 
-            final FlexTable editProfTable = editProfileTable;
-            OpenIdServiceManager.getInstance().getUsersOpenId(name, new GetUsersOpenIdHandler(win, editProfTable));
+//            final FlexTable editProfTable = editProfileTable;
+            OpenIdServiceManager.getInstance().getUsersOpenId(userId.getUserName(), new GetUsersOpenIdHandler(win, editProfileTable));
         } else {
             MessageBox.alert("Error at Getting User Name, Please try again");
         }
@@ -335,11 +337,13 @@ public class EditProfileUtil {
             if (userEmailTextBox.getText().trim().equals("") || isEmailValid) {
                 win.getEl().mask("Saving email ...");
                 final EditProfileHandler callback = new EditProfileHandler(win);
-                AdminServiceManager.getInstance().setUserEmail(userNameTextBox.getText().trim(),
+                final String userName = userNameTextBox.getText().trim();
+                final UserId userId = UserId.getUserId(userName);
+                AdminServiceManager.getInstance().setUserEmail(userId,
                         userEmailTextBox.getText().trim(), callback);
-                NotificationServiceManager.getInstance().setNotificationDelay(userNameTextBox.getText().trim(),
+                NotificationServiceManager.getInstance().setNotificationDelay(userId,
                             NotificationType.COMMENT, NotificationInterval.fromString(commentsNotification.getItemText(commentsNotification.getSelectedIndex())), callback);
-                    NotificationServiceManager.getInstance().setNotificationDelay(userNameTextBox.getText().trim(),
+                    NotificationServiceManager.getInstance().setNotificationDelay(userId,
                             NotificationType.ONTOLOGY, NotificationInterval.fromString(ontologyNotification.getItemText(ontologyNotification.getSelectedIndex())), callback);
             } else {
                 MessageBox.alert("Email is invalid. Please enter correct email");
@@ -357,7 +361,7 @@ public class EditProfileUtil {
             String authUrl = loginUtil.getAuthenticateWindowUrl(
                     AuthenticationConstants.AUTHEN_TYPE_CHANGE_PASSWORD, httpsPort);
             authUrl = authUrl + "&" + AuthenticationConstants.USERNAME + "="
-                    + GlobalSettings.getGlobalSettings().getUserName();
+                    + Application.get().getUserId().getUserName();
             loginUtil.openNewWindow(authUrl, "440", "260", "0");
         }
     };
@@ -367,7 +371,7 @@ public class EditProfileUtil {
 
             public void onClick(ClickEvent event) {
                 LoginUtil loginUtil = new LoginUtil();
-                loginUtil.changePassword(GlobalSettings.getGlobalSettings().getUserName(), isLoginWithHttps);
+                loginUtil.changePassword(Application.get().getUserId(), isLoginWithHttps);
 
             }
         });

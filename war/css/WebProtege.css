@@ -725,3 +725,13 @@ GWT popup list
 .webprotege-revision-summary-userid-style {
     font-weight: normal;
 }
+
+
+
+
+/*Scrollbar for vertical menues*/
+ul.x-menu-list {
+    height: expression( this.scrollHeight > 350 ? "350px" : "auto" ); /* sets max-height for IE */
+    max-height: 350px;
+    overflow-y: auto;
+}

@@ -14,7 +14,7 @@ import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
 import com.gwtext.client.widgets.grid.GroupingView;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.ui.util.PaginationUtil;
 
@@ -109,11 +109,9 @@ public class WatchedEntitiesGrid extends GridPanel {
             return;
         }
 
-        String userName = GlobalSettings.getGlobalSettings().getUserName();
-
         proxy.resetParams();
-        proxy.setProjectName(projectName);
-        proxy.setUserName(userName);
+        proxy.setProjectName(project.getProjectId());
+        proxy.setUserName(Application.get().getUserId());
 
         store.removeAll();
         store.load(0, ((PagingToolbar) this.getBottomToolbar()).getPageSize());

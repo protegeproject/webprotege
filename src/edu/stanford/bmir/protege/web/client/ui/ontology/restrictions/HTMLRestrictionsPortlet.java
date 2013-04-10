@@ -46,7 +46,7 @@ public class HTMLRestrictionsPortlet extends AbstractEntityPortlet {
 	public void reload() {
 		if (_currentEntity != null) {
 			setTitle("Axioms for " + _currentEntity.getBrowserText());
-			OntologyServiceManager.getInstance().getRestrictionHtml(project.getProjectName(),
+			OntologyServiceManager.getInstance().getRestrictionHtml(getProjectId(),
 	                _currentEntity.getName(), new GetRestrictionsHtmlHandler());
 		} else {
 		    setTitle("Axioms (nothing selected)");

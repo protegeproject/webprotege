@@ -14,13 +14,13 @@ public class BioPortalOntologyInfo implements Serializable {
 
     private BioPortalOntologyId ontologyId;
     
-    private String displayLabel;
+    private String displayLabel = "";
     
-    private String abbreviation;
+    private String abbreviation = "";
     
-    private String versionNumber;
+    private String versionNumber = "";
     
-    private String description;
+    private String description = "";
 
     private List<BioPortalUserId> owners = new ArrayList<BioPortalUserId>();
     
@@ -45,6 +45,9 @@ public class BioPortalOntologyInfo implements Serializable {
     }
 
     public String getDisplayLabel() {
+        if(displayLabel == null) {
+            return "";
+        }
         return displayLabel;
     }
 

@@ -43,7 +43,6 @@ public class FitLayoutPanelAdapter extends Panel implements ProvidesResize, Requ
     public void onResize() {
         Size size = getSize();
 
-        System.out.println("I'm resizing: " + size);
 //        widget.setSize(size.getWidth() + "px", size.getHeight() + "px");
 //        RequiresResize requiresResize = (RequiresResize) widget;
 //        requiresResize.onResize();

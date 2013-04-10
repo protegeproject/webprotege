@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsService;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/06/2012
  */
-public class SharingSettingsManager implements SharingSettingsService {
+public class SharingSettingsManager {
 
 
     private static final SharingSettingsManager instance = new SharingSettingsManager();
@@ -46,10 +46,10 @@ public class SharingSettingsManager implements SharingSettingsService {
         }
     }
 
-    public void updateSharingSettings(ProjectSharingSettings projectSharingSettings) {
+    public void updateSharingSettings(HttpServletRequest request, ProjectSharingSettings projectSharingSettings) {
         try {
             writeLock.lock();
-            delegate.updateSharingSettings(projectSharingSettings);
+            delegate.updateSharingSettings(request, projectSharingSettings);
         }
         finally {
             writeLock.unlock();

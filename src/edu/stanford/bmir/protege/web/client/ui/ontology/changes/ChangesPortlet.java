@@ -21,15 +21,23 @@ import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.PaginationUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
-public class ChangesPortlet extends AbstractEntityPortlet {
+public class ChangesPortlet extends AbstractOWLEntityPortlet {
 	protected GridPanel changesGrid;
 	protected RecordDef recordDef;
 	protected Store store;
 	protected ChangesProxyImpl proxy;
+
+
+    private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
 	public ChangesPortlet(Project project) {
 		super(project);
@@ -40,14 +48,33 @@ public class ChangesPortlet extends AbstractEntityPortlet {
 		createGrid();
 		setHeight(200);
 		add(changesGrid);
+        addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
+            @Override
+            public void handleProjectChanged(ProjectChangedEvent event) {
+                ChangesPortlet.this.handleProjectChanged(event);
+            }
+        });
 	}
 
-	@Override
+    private void handleProjectChanged(ProjectChangedEvent event) {
+        if(lastRevisionNumber.equals(event.getRevisionNumber())) {
+            return;
+        }
+        lastRevisionNumber = event.getRevisionNumber();
+        for(OWLEntityData entityData : event.getSubjects()) {
+            if(isSelected(entityData.getEntity())) {
+                reload();
+                return;
+            }
+        }
+    }
+
+
+    @Override
 	public void reload() {
 		store.removeAll();
 
 		String entityName = "";
-		String projectName = "";
 
 		EntityData entity = getEntity();
 
@@ -58,14 +85,10 @@ public class ChangesPortlet extends AbstractEntityPortlet {
 			setTitle("Change history (nothing selected)");
 		}
 
-		if (project != null) {
-			projectName = project.getProjectName();
-		} else {
-		    return;
-		}
 
+        ProjectId projectId = getProjectId();
 		proxy.resetParams();
-		proxy.setProjectName(projectName);
+		proxy.setProjectName(projectId.getProjectName());
 		proxy.setEntityName(entityName);
 
 		PagingToolbar pToolbar = (PagingToolbar) changesGrid.getBottomToolbar();
@@ -142,7 +165,7 @@ public class ChangesPortlet extends AbstractEntityPortlet {
 		@Override
 		public void handleFailure(Throwable caught) {
 			GWT.log("RPC error getting changes for the "
-					+ project.getProjectName() + "ontology", caught);
+					+ getProject().getProjectName() + "ontology", caught);
 		}
 
 		@Override

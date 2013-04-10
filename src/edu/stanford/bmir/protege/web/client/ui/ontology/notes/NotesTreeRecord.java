@@ -25,7 +25,7 @@ import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.layout.FitLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -155,11 +155,11 @@ public class NotesTreeRecord {
     }
 
     private void archiveNote(final boolean archive){
-        if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+        if (Application.get().getUserId().isGuest()) {
             MessageBox.alert("To post a message you need to be logged in.");
             return;
         }
-        ChAOServiceManager.getInstance().archiveNote(this.project.getProjectName(), this.record.getNoteId().getName(), archive, new AsyncCallback<Boolean> (){
+        ChAOServiceManager.getInstance().archiveNote(this.project.getProjectId(), this.record.getNoteId().getName(), archive, new AsyncCallback<Boolean> (){
             public void onFailure(Throwable caught) {
                 GWT.log("Error archiving note ", caught);
                 MessageBox.alert("Error", "There was a problem archiving note. Please try again later");
@@ -221,7 +221,7 @@ public class NotesTreeRecord {
     private Anchor getDeleteAnchor(){
         ClickHandler deletelinkClickHandler = new ClickHandler() {
             public void onClick(ClickEvent event) {
-                if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+                if (Application.get().getUserId().isGuest()) {
                     MessageBox.alert("To delete a message you need to be logged in.");
                     return;
                 }
@@ -388,7 +388,7 @@ public class NotesTreeRecord {
                 new MessageBox.ConfirmCallback() {
                     public void execute(String btnID) {
                         if (btnID.equalsIgnoreCase("yes")) {
-                            ChAOServiceManager.getInstance().deleteNote(project.getProjectName(), id, new AsyncCallback<Void>(){
+                            ChAOServiceManager.getInstance().deleteNote(project.getProjectId(), id, new AsyncCallback<Void>(){
                                 public void onFailure(Throwable caught) {
                                     // TODO Auto-generated method stub
                                     GWT.log("Error at removing note with id: " + id, caught);
@@ -507,7 +507,7 @@ public class NotesTreeRecord {
     }
     
     private void doGetReplies(){
-        ChAOServiceManager.getInstance().getReplies(project.getProjectName(), this.record.getNoteId().getName() , true,
+        ChAOServiceManager.getInstance().getReplies(project.getProjectId(), this.record.getNoteId().getName() , true,
                 new AsyncCallback<List<NotesData>>(){
                     public void onFailure(Throwable caught) {
                         GWT.log("Error getting notes for " + currentEntity, caught);
@@ -728,7 +728,7 @@ public class NotesTreeRecord {
 
     private void reply() {
 
-        if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+        if (Application.get().getUserId().isGuest()) {
             MessageBox.alert("To post a message you need to be logged in.");
             return;
         }
@@ -762,7 +762,7 @@ public class NotesTreeRecord {
     }
 
     private void edit(){
-        if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+        if (Application.get().getUserId().isGuest()) {
             MessageBox.alert("To edit a message you need to be logged in.");
             return;
         }
@@ -839,7 +839,7 @@ public class NotesTreeRecord {
     }
 
     private boolean isModifiable(NotesData nd){
-        String loggedInUser = (GlobalSettings.getGlobalSettings().getUserName() == null) ? "" : GlobalSettings.getGlobalSettings().getUserName();
+        String loggedInUser = (Application.get().getUserId().isGuest()) ? "" : Application.get().getUserId().getUserName();
         if(loggedInUser.length()>0 && loggedInUser.equals(nd.getAuthor())){
             if(nd.getReplies() != null && nd.getReplies().size() > 0){
                 return false;

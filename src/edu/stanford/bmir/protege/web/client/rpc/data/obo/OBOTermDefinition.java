@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.obo;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualEntity;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,7 +13,7 @@ import java.util.List;
  */
 public class OBOTermDefinition extends OBOTermMetaData implements Serializable {
 
-//    private VisualEntity entity;
+    public static final OBOTermDefinition EMPTY = new OBOTermDefinition(Collections.<OBOXRef>emptyList(), "");
 
     private String definition;
 
@@ -22,15 +21,14 @@ public class OBOTermDefinition extends OBOTermMetaData implements Serializable {
         super();
     }
 
-    public OBOTermDefinition(List<OBOXRef> xrefs, String definition) {
-        super(xrefs);
-//        this.entity = entity;
-        this.definition = definition;
+    public static OBOTermDefinition empty() {
+        return EMPTY;
     }
 
-//    public VisualEntity getEntity() {
-//        return entity;
-//    }
+    public OBOTermDefinition(List<OBOXRef> xrefs, String definition) {
+        super(xrefs);
+        this.definition = definition;
+    }
 
     public String getDefinition() {
         return definition;

@@ -1,10 +1,18 @@
 <module rename-to="authenticate">
 
+    <source path="client"/>
+    <source path="shared"/>
+
 	<!-- Inherit the core Google Web Toolkit stuff -->
 	<inherits name="com.google.gwt.user.User"/>
-	
+
+	<inherits name="com.google.gwt.place.Place"/>
 	<!-- Inherit the GWT-Ext Toolkit stff -->
 	<inherits name='com.gwtext.GwtExt' />
+    <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
+    <inherits name="com.google.common.cache.Cache"/>
+
+    <inherits name="com.google.common.collect.Collect"/>
 	<entry-point class="edu.stanford.bmir.protege.web.client.Authenticate"/> 
 
     <inherits name="com.google.gwt.json.JSON"/>

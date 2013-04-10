@@ -9,7 +9,12 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
-                            <height>600</height>
+                            <height>530</height>
+                            <width>200</width>
+                        </portlet>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
+                            <height>160</height>
                             <width>200</width>
                         </portlet>
                     </portlets>
@@ -19,17 +24,12 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
-                            <height>250</height>
-                            <width>800</width>
-                        </portlet>
-                        <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.restrictions.RestrictionsPortlet</name>
-                            <height>110</height>
+                            <height>140</height>
                             <width>0</width>
                         </portlet>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.AllPropertiesPortlet</name>
-                            <height>220</height>
+                            <name>edu.stanford.bmir.protege.web.client.ui.frame.ClassFramePortlet</name>
+                            <height>550</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
@@ -74,39 +74,51 @@
             <label>Individuals</label>
             <columns>
                 <column>
-                    <width>0.33</width>
+                    <width>0.25</width>
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
-                            <height>600</height>
+                            <height>700</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
                 </column>
                 <column>
-                    <width>0.33</width>
+                    <width>0.20</width>
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet</name>
-                            <height>600</height>
+                            <height>700</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
                 </column>
                 <column>
-                    <width>0.33</width>
+                    <width>0.55</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
-                            <height>340</height>
-                            <width>200</width>
+                            <name>edu.stanford.bmir.protege.web.client.ui.frame.NamedIndividualFramePortlet</name>
+                            <height>550</height>
+                            <width>0</width>
                         </portlet>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.AllPropertiesPortlet</name>
-                            <height>250</height>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
+                            <height>150</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
+                    <!--<portlets>-->
+                        <!--<portlet>-->
+                            <!--<name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>-->
+                            <!--<height>340</height>-->
+                            <!--<width>200</width>-->
+                        <!--</portlet>-->
+                        <!--<portlet>-->
+                            <!--<name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.AllPropertiesPortlet</name>-->
+                            <!--<height>250</height>-->
+                            <!--<width>0</width>-->
+                        <!--</portlet>-->
+                    <!--</portlets>-->
                 </column>
             </columns>
         </tab>
@@ -136,6 +148,66 @@
                 </column>
             </columns>
             <controllingPortlet reference="../columns/column/portlets/portlet"/>
+        </tab>
+        <tab>
+            <name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>
+            <label>Changes By Entity</label>
+            <columns>
+                <column>
+                    <width>0.3</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
+                            <height>600</height>
+                            <width>0</width>
+
+                        </portlet>
+                    </portlets>
+                </column>
+                <column>
+                    <width>0.7</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet</name>
+                            <height>600</height>
+                            <width>450</width>
+                        </portlet>
+                    </portlets>
+                </column>
+            </columns>
+            <controllingPortlet reference="../columns/column/portlets/portlet"/>
+        </tab>
+        <!--<tab>-->
+            <!--<name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>-->
+            <!--<label>Change Summary</label>-->
+            <!--<columns>-->
+                <!--<column>-->
+                    <!--<width>1.0</width>-->
+                    <!--<portlets>-->
+                        <!--<portlet>-->
+                            <!--<name>edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet</name>-->
+                            <!--<height>600</height>-->
+                            <!--<width>450</width>-->
+                        <!--</portlet>-->
+                    <!--</portlets>-->
+                <!--</column>-->
+            <!--</columns>-->
+        <!--</tab>-->
+        <tab>
+            <name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>
+            <label>Watched Entities Summary</label>
+            <columns>
+                <column>
+                    <width>1.0</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet</name>
+                            <height>600</height>
+                            <width>450</width>
+                        </portlet>
+                    </portlets>
+                </column>
+            </columns>
         </tab>
     </tabs>
 </project>

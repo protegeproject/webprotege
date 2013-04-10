@@ -4,7 +4,14 @@ import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxEditorParser;
 import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.expression.ShortFormEntityChecker;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
+import org.semanticweb.owlapi.util.ShortFormProvider;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -34,8 +41,11 @@ public class ConditionItemParser {
         BidirectionalShortFormProvider shortFormProvider = rm.getShortFormProvider();
         String trimmedText = conditionItemText.trim();
         ManchesterOWLSyntaxEditorParser parser = new ManchesterOWLSyntaxEditorParser(project.getDataFactory(), trimmedText);
-        ShortFormEntityChecker entityChecker = new ShortFormEntityChecker(shortFormProvider);
+        ShortFormEntityChecker entityChecker = new ShortFormEntityChecker(new EscapingShortFormProvider(shortFormProvider));
         parser.setOWLEntityChecker(entityChecker);
         return parser.parseClassExpression();
     }
+
+
+
 }

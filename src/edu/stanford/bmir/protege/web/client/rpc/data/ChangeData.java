@@ -15,7 +15,7 @@ public class ChangeData implements Serializable {
 	private Date timestamp;
 	private EntityData entityData;
 	
-	public ChangeData() {
+	private ChangeData() {
 	}
 	
 	public ChangeData(String author, String description, Date timestamp) {

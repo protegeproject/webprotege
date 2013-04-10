@@ -29,9 +29,9 @@ public class MetricsPortlet extends AbstractEntityPortlet {
     }
 
     public void initialize() {
-		setTitle("Ontology Metrics for " + project.getProjectName());
+		setTitle("Ontology Metrics for " + getProject().getProjectName());
 		
-		metricsGrid = new MetricsGrid(project);
+		metricsGrid = new MetricsGrid(getProject());
 		add(metricsGrid);
 		
 		metricsGrid.reload();

@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.stanford.bmir.protege.web.client.model.event.OntologyEvent;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLClass;
 
 
 /**
@@ -21,7 +21,7 @@ public interface OntologyServiceAsync {
 
     void loadProject(String projectName, AsyncCallback<Integer> cb);
 
-    void getEvents(String projectName, long fromVersion, AsyncCallback<List<OntologyEvent>> cb);
+//    void getEvents(String projectName, long fromVersion, AsyncCallback<List<OntologyEvent>> cb);
 
     void hasWritePermission(String projectName, String userName, AsyncCallback<Boolean> cb);
 
@@ -29,9 +29,9 @@ public interface OntologyServiceAsync {
      * Ontology methods
      */
 
-    void getOntologyURI(String projectName, AsyncCallback<String> cb);
+//    void getOntologyURI(String projectName, AsyncCallback<String> cb);
 
-    void getAnnotationProperties(String projectName, String entityName, AsyncCallback<List<AnnotationData>> cb);
+//    void getAnnotationProperties(String projectName, String entityName, AsyncCallback<List<AnnotationData>> cb);
 
     void getImportedOntologies(String projectName, AsyncCallback<ImportsData> cb);
 
@@ -55,7 +55,7 @@ public interface OntologyServiceAsync {
 
     void getEntity(String projectName, String entityName, AsyncCallback<EntityData> cb);
 
-    void deleteEntity(String projectName, String entityName, String user, String operationDescription, AsyncCallback<Void> cb);
+//    void deleteEntity(String projectName, String entityName, String user, String operationDescription, AsyncCallback<Void> cb);
 
     /*
      * Class methods
@@ -68,13 +68,13 @@ public interface OntologyServiceAsync {
     void getIndividuals(String projectName, String className, int start, int limit, String sort, String dir,
             AsyncCallback<PaginationData<EntityData>> cb);
 
-    void createCls(String projectName, String clsName, String superClsName, String user, String operationDescription,
-            AsyncCallback<EntityData> cb);
+//    void createCls(ProjectId projectId, String className, OWLClass superCls, UserId userId, String operationDescription,
+//            AsyncCallback<EntityData> cb);
 
-    void createCls(String projectName, String clsName, String superClsName, boolean createMetaClses, String user, String operationDescription,
-            AsyncCallback<EntityData> cb);
+//    void createCls(ProjectId projectId, String clsName, OWLClass superCls, boolean createMetaClses, UserId userId, String operationDescription,
+//            AsyncCallback<EntityData> cb);
 
-    void createClsWithProperty(String projectName, String clsName, String superClsName, String propertyName, EntityData propertyValue, String user, String operationDescription,
+    void createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls, String propertyName, EntityData propertyValue, UserId userId, String operationDescription,
             AsyncCallback<EntityData> cb);
 
     void addSuperCls(String projectName, String clsName, String superClsName, String user, String operationDescription,

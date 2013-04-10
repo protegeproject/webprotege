@@ -27,7 +27,7 @@
    <property name = "war"              location = "${build}/war"/>
    <property name = "classes"          location = "${build}/classes"/>
    <property name = "test-classes"     location = "${build}/test-classes"/>
-   <property name = "owl.path"         value    = "edu.stanford.smi.protegex.owl"/>
+   <!--<property name = "owl.path"         value    = "edu.stanford.smi.protegex.owl"/>-->
    <property name = "test-results"     location = "${build}/test-results"/>
    <property name = "gwt-temp"         location = "${build}/gwt-temp"/>
    <property name = "dev-mode-reports" location = "${build}/reports/htmlunit.dev"/>
@@ -53,16 +53,9 @@
    <target name="useProtegeHome" depends="checkProtegeHome" if="protege.home.set">
        <echo message="Using Protege Home = ${protege.home} to find protege jars"/>
        <property name="protege.lib"     location="${protege.home}/protege.jar"/>
-       <property name="protege.owl.lib" location="${protege.home}/plugins/${owl.path}/protege-owl.jar"/>
-       <property name="changes.lib"     location="${protege.home}/plugins/edu.stanford.smi.protegex.changes/change-management.jar"/>
-       <property name="chat.lib"        location="${protege.home}/plugins/edu.stanford.smi.protegex.chatPlugin/chat.jar"/>
-       <property name="collab.lib"      location="${protege.home}/plugins/edu.stanford.smi.protege.collab/protege-collab.jar"/>
-       <property name="rdf.lib"         location="${protege.home}/plugins/edu.stanford.smi.protegex.rdf_backend/rdf-backend.jar"/>
-       <property name="standard.lib"    location="${protege.home}/plugins/edu.stanford.smi.protegex.standard_extensions/standard-extensions.jar"/>
-       <property name="bioportal1.lib"  location="${protege.home}/plugins/edu.stanford.bmir.protegex.bp.ref/bioportalReference.jar"/>
-       <property name="bioportal2.lib"  location="${protege.home}/plugins/edu.stanford.bmir.protegex.bp.ref/bioportal-services-lib.jar"/> 
-       <property name="lucene1.lib"     location="${protege.home}/plugins/edu.stanford.smi.protegex.query.lucene/luceneQueryPlugin.jar"/>
-       <property name="lucene2.lib"     location="${protege.home}/plugins/edu.stanford.smi.protegex.query.lucene/lucene-core.jar"/>        
+       <property name="bioportal2.lib"  location="${protege.home}/plugins/edu.stanford.bmir.protegex.bp.ref/bioportal-services-lib.jar"/>
+       <!--<property name="lucene1.lib"     location="${protege.home}/plugins/edu.stanford.smi.protegex.query.lucene/luceneQueryPlugin.jar"/>-->
+       <!--<property name="lucene2.lib"     location="${protege.home}/plugins/edu.stanford.smi.protegex.query.lucene/lucene-core.jar"/>        -->
    </target>
     
 
@@ -70,34 +63,21 @@
       <condition property="libs.found">
         <and>
           <available file="${protege.lib}"                 type = "file"/>
-          <available file="${protege.owl.lib}"             type = "file"/>
-          <available file="${changes.lib}"                 type = "file"/>
-          <available file="${chat.lib}"                    type = "file"/>
-          <available file="${collab.lib}"                  type = "file"/>
-          <available file="${rdf.lib}"                     type = "file"/>
-          <available file="${standard.lib}"                type = "file"/>
           <available file="${gwt.dir}/gwt-user.jar"        type = "file"/>
           <available file="${gwt.dir}/gwt-dev.jar" type = "file"/>
-          <available file="${bioportal1.lib}"              type = "file"/>
+          <!--<available file="${bioportal1.lib}"              type = "file"/>-->
           <available file="${bioportal2.lib}"              type = "file"/>
-          <available file="${lucene1.lib}"                 type = "file"/>
-          <available file="${lucene2.lib}"                 type = "file"/>
+          <!--<available file="${lucene1.lib}"                 type = "file"/>-->
+          <!--<available file="${lucene2.lib}"                 type = "file"/>-->
         </and>
       </condition>
       <path id = "project.classpath">    
         <pathelement location = "${protege.lib}"/>
-        <pathelement location = "${protege.owl.lib}"/>
-        <pathelement location="${changes.lib}"/>
-        <pathelement location="${chat.lib}"/>
-        <pathelement location="${collab.lib}"/>
-        <pathelement location="${rdf.lib}"/>
-        <pathelement location="${standard.lib}"/>
         <pathelement location="${gwt.dir}/gwt-user.jar"/>
         <pathelement location="${gwt.dir}/gwt-dev.jar"/>
-        <pathelement location="${bioportal1.lib}"/>
         <pathelement location="${bioportal2.lib}"/>
-        <pathelement location="${lucene1.lib}"/>
-        <pathelement location="${lucene2.lib}"/>
+        <!--<pathelement location="${lucene1.lib}"/>-->
+        <!--<pathelement location="${lucene2.lib}"/>-->
         <fileset dir="${lib}"/>
       </path>       
     </target>
@@ -175,14 +155,6 @@
      <copy todir = "${war}/WEB-INF/lib">
        <!-- protege-core -->
        <fileset dir = "${protege.home}" includes = "looks-2.1.3.jar, unicode_panel.jar"/>
-       
-       <!-- protege-owl -->
-       <fileset dir = "${protege.home}/plugins/${owl.path}" 
-                includes = "**/*.jar" 
-                excludes = "ekitspell.jar, json.jar, junit.jar, kazuki.jar, lucene-core-2.3.1.jar, swrl-jess-bridge.jar"/>
-       <fileset dir = "${protege.home}/plugins/edu.stanford.smi.protegex.rdf_backend" 
-                includes = "**/*.jar"
-                excludes = "xerces.jar"/>
        <fileset dir = "${protege.home}/plugins/edu.stanford.bmir.protegex.bp.ref"
                 includes = "**/*.jar"
                 excludes="**/xpp*.jar,**/xstream*.jar"/>
@@ -192,10 +164,6 @@
      </copy>
 
      <copy todir = "${war}/WEB-INF/lib" file="${protege.lib}"/>
-     <copy todir = "${war}/WEB-INF/lib" file="${changes.lib}"/>
-     <copy todir = "${war}/WEB-INF/lib" file="${chat.lib}"/>
-     <copy todir = "${war}/WEB-INF/lib" file="${collab.lib}"/>
-     <copy todir = "${war}/WEB-INF/lib" file="${standard.lib}"/>
      <antcall target="replace.projects"/>
      <antcall target="copy.alt.war.template"/>
      
@@ -266,6 +234,7 @@ http://groups.google.com/group/Google-Web-Toolkit/browse_thread/thread/086d288e0
            <arg line = "${war}"/>
 
            <arg line = "-style"/>
+           <!--<arg line = "DETAILED"/>-->
            <arg line = "OBF"/>
 
            <arg line = "-logLevel"/>
@@ -303,6 +272,7 @@ http://groups.google.com/group/Google-Web-Toolkit/browse_thread/thread/086d288e0
    </target>
         
    <target name = "deploy" depends="tomcat">
+       <echo message="${catalina.home}"/>
        <delete dir = "${catalina.home}/webapps/${war.name}"/>
        <copy tofile="${catalina.home}/webapps/${war.name}.war"
              file="${build}/${war.name}.war"/>

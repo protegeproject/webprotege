@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.primitive;
 
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+
 import java.io.Serializable;
 
 /**
@@ -8,12 +10,12 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/05/2012
  */
-public class VisualNamedIndividual extends VisualEntity<NamedIndividual> implements Serializable {
+public class VisualNamedIndividual extends VisualEntity<OWLNamedIndividual> implements Serializable {
 
     public VisualNamedIndividual() {
     }
 
-    public VisualNamedIndividual(NamedIndividual entity, String browserText) {
+    public VisualNamedIndividual(OWLNamedIndividual entity, String browserText) {
         super(entity, browserText);
     }
 

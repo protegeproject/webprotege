@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
+import org.semanticweb.owlapi.model.OWLClass;
+
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -8,6 +10,8 @@ public class SubclassEntityData extends EntityData implements Serializable {
     private static final long serialVersionUID = 9136753213032322411L;
 
     private int subclassCount;
+
+    private boolean deprecated = false;
 
     /**
      * Ser
@@ -27,6 +31,14 @@ public class SubclassEntityData extends EntityData implements Serializable {
 
     public int getSubclassCount() {
         return subclassCount;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public void setDeprecated(boolean deprecated) {
+        this.deprecated = deprecated;
     }
 
     @Override

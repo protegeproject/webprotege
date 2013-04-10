@@ -94,7 +94,7 @@
 										<string>classselect</string>
 									</entry>
 									<entry>
-										<string>index</string>
+										<string>ordinal</string>
 										<string>0</string>
 									</entry>
 								</map>
@@ -115,7 +115,7 @@
 										<string>classselect</string>
 									</entry>
 									<entry>
-										<string>index</string>
+										<string>ordinal</string>
 										<string>1</string>
 									</entry>
 								</map>
@@ -136,7 +136,7 @@
 										<string>multitextfield</string>
 									</entry>
 									<entry>
-										<string>index</string>
+										<string>ordinal</string>
 										<string>2</string>
 									</entry>
 								</map>
@@ -157,7 +157,7 @@
 										<string>textarea</string>
 									</entry>
 									<entry>
-										<string>index</string>
+										<string>ordinal</string>
 										<string>3</string>
 									</entry>
 								</map>
@@ -343,7 +343,7 @@
 													<string>htmleditor</string>
 												</entry>
 												<entry>
-													<string>index</string>
+													<string>ordinal</string>
 													<string>1</string>
 												</entry>
 											</map>
@@ -364,7 +364,7 @@
 													<string>textfield</string>
 												</entry>
 												<entry>
-													<string>index</string>
+													<string>ordinal</string>
 													<string>0</string>
 												</entry>
 											</map>
@@ -385,7 +385,7 @@
 													<string>combobox</string>
 												</entry>
 												<entry>
-													<string>index</string>
+													<string>ordinal</string>
 													<string>4</string>
 												</entry>
 											</map>
@@ -410,7 +410,7 @@
 													<string>grid</string>
 												</entry>
 												<entry>
-													<string>index</string>
+													<string>ordinal</string>
 													<string>2</string>
 												</entry>
 												<entry>
@@ -429,7 +429,7 @@
 															<string>string</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>0</string>
 														</entry>
 													</map>
@@ -450,7 +450,7 @@
 															<string>language</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>1</string>
 														</entry>
 													</map>
@@ -477,7 +477,7 @@
 													<string>grid</string>
 												</entry>
 												<entry>
-													<string>index</string>
+													<string>ordinal</string>
 													<string>3</string>
 												</entry>
 												<entry>
@@ -496,7 +496,7 @@
 															<string>Preferred term</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>0</string>
 														</entry>
 													</map>
@@ -517,7 +517,7 @@
 															<string>code</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>1</string>
 														</entry>
 													</map>
@@ -538,7 +538,7 @@
 															<string>Cd System</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>2</string>
 														</entry>
 													</map>
@@ -571,7 +571,7 @@
 													<string>grid</string>
 												</entry>
 												<entry>
-													<string>index</string>
+													<string>ordinal</string>
 													<string>0</string>
 												</entry>
 												<entry>
@@ -594,7 +594,7 @@
 															<string>Diagnostic Criteria Text</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>0</string>
 														</entry>
 													</map>
@@ -615,7 +615,7 @@
 															<string>Diagnostic Criterion Rule</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>1</string>
 														</entry>
 													</map>
@@ -645,7 +645,7 @@
 													<string>multitextfield</string>
 												</entry>
 												<entry>
-													<string>index</string>
+													<string>ordinal</string>
 													<string>0</string>
 												</entry>
 											</map>
@@ -710,7 +710,7 @@
 						</map>
 												</entry>
 												<entry>
-													<string>index</string>
+													<string>ordinal</string>
 													<string>0</string>
 												</entry>
 												<entry>
@@ -733,7 +733,7 @@
 															<string>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#conceptId</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>0</string>
 														</entry>
 													</map>
@@ -754,7 +754,7 @@
 															<string>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#url</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>1</string>
 														</entry>
 													</map>
@@ -775,7 +775,7 @@
 															<string>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#ontologyName</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>2</string>
 														</entry>
 													</map>
@@ -796,7 +796,7 @@
 															<string>http://www.co-ode.org/ontologies/pizza/2005/10/18/pizza.owl#preferredTerm</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>3</string>
 														</entry>
 													</map>
@@ -821,7 +821,7 @@
 															<string>link</string>
 														</entry>
 														<entry>
-															<string>index</string>
+															<string>ordinal</string>
 															<string>4</string>
 														</entry>
 													</map>

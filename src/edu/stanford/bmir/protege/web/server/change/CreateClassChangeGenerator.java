@@ -1,0 +1,46 @@
+package edu.stanford.bmir.protege.web.server.change;
+
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import org.semanticweb.owlapi.model.*;
+
+
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
+/**
+ * Author: Matthew Horridge<br>
+ * Stanford University<br>
+ * Bio-Medical Informatics Research Group<br>
+ * Date: 22/02/2013
+ */
+public class CreateClassChangeGenerator implements ChangeListGenerator<OWLClass> {
+
+
+    private String browserText;
+
+    private OWLClass superClass;
+
+    public CreateClassChangeGenerator(String browserText, OWLClass superClass) {
+        this.browserText = checkNotNull(browserText);
+        this.superClass = checkNotNull(superClass);
+    }
+
+    @Override
+    public GeneratedOntologyChanges<OWLClass> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+        OWLClass freshClass = DataFactory.getFreshOWLEntity(EntityType.CLASS, browserText);
+
+        GeneratedOntologyChanges.Builder<OWLClass> builder = new GeneratedOntologyChanges.Builder<OWLClass>();
+
+        builder.add(new AddAxiom(project.getRootOntology(), DataFactory.get().getOWLDeclarationAxiom(freshClass)));
+        builder.add(new AddAxiom(project.getRootOntology(), DataFactory.get().getOWLSubClassOfAxiom(freshClass, superClass)));
+
+        return builder.build(freshClass);
+    }
+
+    @Override
+    public OWLClass getRenamedResult(OWLClass result, RenameMap renameMap) {
+        return renameMap.getRenamedEntity(result);
+    }
+}

@@ -6,9 +6,9 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermDefinition;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,7 +43,7 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void commitChangesForEntity(Entity entity) {
+    protected void commitChangesForEntity(OWLEntity entity) {
         getService().setDefinition(getProjectId(), entity, editor.getValue(), new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
                 if(caught instanceof NotSignedInException) {
@@ -63,8 +63,8 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void displayEntity(Entity entity) {
-        getService().getDefinition(new ProjectId(getProject().getProjectName()), entity, new AsyncCallback<OBOTermDefinition>() {
+    protected void displayEntity(OWLEntity entity) {
+        getService().getDefinition(ProjectId.get(getProject().getProjectName()), entity, new AsyncCallback<OBOTermDefinition>() {
             public void onFailure(Throwable caught) {
                 MessageBox.alert(caught.getMessage());
             }

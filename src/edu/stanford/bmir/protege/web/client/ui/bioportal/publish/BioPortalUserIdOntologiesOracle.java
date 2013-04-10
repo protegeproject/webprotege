@@ -18,6 +18,8 @@ public class BioPortalUserIdOntologiesOracle extends SuggestOracle {
 
     private BioPortalUserId bioPortalUserId;
 
+    private boolean enabled = true;
+
     public BioPortalUserIdOntologiesOracle() {
     }
 
@@ -33,6 +35,15 @@ public class BioPortalUserIdOntologiesOracle extends SuggestOracle {
         return bioPortalUserId;
     }
 
+    /**
+     * Specifies whether the oracle is enabled or not.  If the oracle is not enabled then it will not generate
+     * any suggestion.
+     * @param b <code>true</code> to enable, and <code>false</code> to disable.
+     */
+    public void setEnabled(boolean b) {
+        enabled = b;
+    }
+
     @Override
     public boolean isDisplayStringHTML() {
         return true;
@@ -40,6 +51,9 @@ public class BioPortalUserIdOntologiesOracle extends SuggestOracle {
 
     @Override
     public void requestSuggestions(final Request request, final Callback callback) {
+        if(!enabled) {
+            return;
+        }
         if(bioPortalUserId == null) {
             return;
         }
@@ -96,7 +110,8 @@ public class BioPortalUserIdOntologiesOracle extends SuggestOracle {
     }
 
     private int getMatchIndexForOntologyInfoAndDisplayLabelQuery(BioPortalOntologyInfo info, String query) {
-        String normalisedDisplayLabel = info.getDisplayLabel().toLowerCase();
+        String displayLabel = info.getDisplayLabel();
+        String normalisedDisplayLabel = displayLabel.toLowerCase();
         return normalisedDisplayLabel.indexOf(query.toLowerCase());
     }
 }

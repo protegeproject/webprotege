@@ -26,13 +26,13 @@
 }
 
 .protege-object-property-icon {
-    background-image: url(../images/tree/OWLObjectProperty.gif) !important;
+    background-image: url(../images/tree/property.png) !important;
 }
 
 .protege-datatype-property-icon {
-    background-image: url(../images/tree/OWLDatatypeProperty.gif) !important;
+    background-image: url(../images/tree/property.png) !important;
 }
 
 .protege-annotation-property-icon {
-    background-image: url(../images/tree/RDFProperty.gif) !important;
+    background-image: url(../images/tree/annotation-property.png) !important;
 }

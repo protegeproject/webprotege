@@ -19,7 +19,7 @@ public class ConditionItem extends EntityData {
     // This relies on a specific backend implementation! :(
     private int index;
 
-    public ConditionItem() {
+    private ConditionItem() {
     }
 
     public ConditionItem(String name) {

@@ -36,7 +36,7 @@ public class OWLOntologyChangesRecordSerializer {
 //        DataOutputStream recordOutputStream = new DataOutputStream(bos);
 //        recordOutputStream.writeLong(record.getTimestamp());
 //        recordOutputStream.writeUTF(record.getUserId().getUserName());
-//        recordOutputStream.writeUTF(record.getMessage());
+//        recordOutputStream.writeUTF(record.getPermissionDeniedMessage());
 //        List<OWLOntologyChange> changeList = record.getChangeList();
 //        recordOutputStream.writeInt(changeList.size());
 //

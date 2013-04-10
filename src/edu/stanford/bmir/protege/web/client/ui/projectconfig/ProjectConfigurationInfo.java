@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.projectconfig;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 
 import java.io.Serializable;
@@ -19,14 +19,17 @@ public class ProjectConfigurationInfo implements Serializable {
     
     private String projectDescription;
 
+    private String defaultLanguage;
+
     // For serialization
     private ProjectConfigurationInfo() {
 
     }
 
-    public ProjectConfigurationInfo(ProjectId projectId, ProjectType projectType, String projectDescription) {
+    public ProjectConfigurationInfo(ProjectId projectId, ProjectType projectType, String defaultLanguage, String projectDescription) {
         this.projectId = projectId;
         this.projectType = projectType;
+        this.defaultLanguage = defaultLanguage;
         this.projectDescription = projectDescription;
     }
 
@@ -42,10 +45,14 @@ public class ProjectConfigurationInfo implements Serializable {
     public ProjectType getProjectType() {
         return projectType;
     }
-    
+
+    public String getDefaultLanguage() {
+        return defaultLanguage;
+    }
+
     @Override
     public int hashCode() {
-        return projectType.hashCode() + projectDescription.hashCode();
+        return projectType.hashCode() + projectDescription.hashCode() + projectId.hashCode() + defaultLanguage.hashCode();
     }
 
     @Override
@@ -57,11 +64,11 @@ public class ProjectConfigurationInfo implements Serializable {
             return false;
         }
         ProjectConfigurationInfo other = (ProjectConfigurationInfo) obj;
-        return this.projectType.equals(other.projectType) && this.projectDescription.equals(other.projectDescription);
+        return this.projectType.equals(other.projectType) && this.projectDescription.equals(other.projectDescription) && this.projectId.equals(other.projectId) && this.defaultLanguage.equals(other.defaultLanguage);
     }
 
     @Override
     public String toString() {
-        return "ProjectConfigurationInfo(" + projectId + " Type(" + projectType + ") Description(" + projectDescription + ")";
+        return "ProjectConfigurationInfo(" + projectId + " Type(" + projectType + ") Description(" + projectDescription + ")" + " DefaultLanguage(" + defaultLanguage + ")";
     }
 }

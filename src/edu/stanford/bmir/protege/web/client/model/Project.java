@@ -1,10 +1,19 @@
 package edu.stanford.bmir.protege.web.client.model;
 
-import edu.stanford.bmir.protege.web.client.model.listener.OntologyListener;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
+import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
+import edu.stanford.bmir.protege.web.client.permissions.ProjectPermissionManager;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.LayoutManager;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A project on the client side. A project has information about:
@@ -13,56 +22,54 @@ import edu.stanford.bmir.protege.web.client.ui.LayoutManager;
  * <li>ontology event manager</li>
  * <li>project configuration (layout, portlets configuration, etc.)</li>
  * </ul>
- *
  * @author Tania Tudorache <tudorache@stanford.edu>
- *
  */
-public class Project {
+public class Project implements HasProjectId, HasDispose {
 
-    private ProjectData projectData;
-    private final OntologyEventManager eventManager;
+    private final ProjectDetails projectDetails;
+
     private final ProjectPermissionManager permissionManager;
+
     private ProjectLayoutConfiguration projectLayoutConfiguration;
+
     private LayoutManager layoutManager;
 
-    public Project(String projectName) {
-        this(new ProjectData(null, null, projectName, null, false));
-    }
+    private EventPollingManager eventPollingManager;
 
-    public Project(ProjectData projectData) {
-        this.projectData = projectData;
-        this.eventManager = new OntologyEventManager(this);
-        this.permissionManager = new ProjectPermissionManager(this);
+
+    /**
+     * Creates a project from the specified details.
+     * @param projectDetails The details.  Not {@code null}.
+     * @param permissionsForCurrentUser The permissions for the current logged in user.  Not {@code null}.
+     * @throws NullPointerException if any parameters are {@code null}.
+     */
+    public Project(ProjectDetails projectDetails, PermissionsSet permissionsForCurrentUser) {
+        this.projectDetails = checkNotNull(projectDetails);
+        this.permissionManager = new ProjectPermissionManager(getProjectId());
+        this.permissionManager.setUserPermissions(Application.get().getUserId(), checkNotNull(permissionsForCurrentUser));
         this.layoutManager = new LayoutManager(this);
+
+
+        this.eventPollingManager = EventPollingManager.get(10 * 1000, projectDetails.getProjectId());
+        eventPollingManager.start();
     }
 
-    public ProjectData getProjectData() {
-        return projectData;
-    }
-
-    public void setProjectData(ProjectData projectData) {
-        this.projectData = projectData;
-    }
-
-    public void setServerVersion(int serverVersion) {
-        eventManager.setServerVersion(serverVersion);
+    public ProjectId getProjectId() {
+        return ProjectId.get(getProjectName());
     }
 
     public String getProjectName() {
-        return projectData == null ? null : projectData.getName();
+        return projectDetails.getDisplayName();
     }
 
-    public void addOntologyListener(OntologyListener ontologyListener) {
-        eventManager.addOntologyListener(ontologyListener);
-    }
-
-    public void removeOntologyListener(OntologyListener ontologyListener) {
-        eventManager.removeOntologyListener(ontologyListener);
+    public ProjectDetails getProjectDetails() {
+        return projectDetails;
     }
 
     public void forceGetEvents() {
-        eventManager.getEventsFromServer();
+//        eventPollingManager.pollForProjectEvents();
     }
+
 
     public void setProjectLayoutConfiguration(ProjectLayoutConfiguration projectLayoutConfiguration) {
         this.projectLayoutConfiguration = projectLayoutConfiguration;
@@ -80,21 +87,21 @@ public class Project {
         return layoutManager;
     }
 
-    public ProjectPermissionManager getProjectPermissionManager() {
-        return permissionManager;
-    }
+//    public ProjectPermissionManager getProjectPermissionManager() {
+//        return permissionManager;
+//    }
 
-    public boolean hasWritePermission(String user) {
-        return getProjectPermissionManager().hasPermission(user, PermissionConstants.WRITE);
+    public boolean hasWritePermission(UserId userId) {
+        return permissionManager.hasPermission(userId, Permission.getWritePermission());
     }
 
     public boolean hasWritePermission() {
-        return getProjectPermissionManager().hasPermission(GlobalSettings.getGlobalSettings().getUserName(), PermissionConstants.WRITE);
+        return hasWritePermission(Application.get().getUserId());
     }
 
     public void dispose() {
         // TODO: we might notify the session that project has been closed
-        eventManager.dispose();
         permissionManager.dispose();
+        eventPollingManager.stop();
     }
 }

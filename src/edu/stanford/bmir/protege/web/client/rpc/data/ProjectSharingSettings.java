@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,7 @@ public class ProjectSharingSettings implements Serializable {
         this.defaultSharingSetting = defaultSharingSetting;
         this.sharingSettings = new ArrayList<UserSharingSetting>();
         for(UserSharingSetting userSharingSetting : sharingSettings) {
-            if(!userSharingSetting.getUserId().isNull()) {
+            if(!userSharingSetting.getUserId().isGuest()) {
                 this.sharingSettings.add(userSharingSetting);
             }
         }

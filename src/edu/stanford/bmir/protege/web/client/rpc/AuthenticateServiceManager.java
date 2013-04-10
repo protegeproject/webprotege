@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 
 /**
  * @author z.khan
@@ -30,31 +31,31 @@ public class AuthenticateServiceManager {
     }
 
     //change password
-    public void validateUser(String name, String password, AsyncCallback<UserData> cb) {
-        proxy.validateUser(name, password, cb);
+    public void validateUser(UserId userId, String password, AsyncCallback<UserData> cb) {
+        proxy.validateUser(userId.getUserName(), password, cb);
     }
 
     //change password with https
-    public void changePassword(String name, String password, AsyncCallback<Void> cb) {
-        proxy.changePassword(name, password, cb);
+    public void changePassword(UserId userId, String password, AsyncCallback<Void> cb) {
+        proxy.changePassword(userId.getUserName(), password, cb);
     }
 
     //create new user to associate open id with https
-    public void registerUserToAssociateOpenId(String userName, String userPassword, String emailId, AsyncCallback<UserData> cb) {
-        proxy.registerUserToAssociateOpenId(userName, userPassword, emailId, cb);
+    public void registerUserToAssociateOpenId(UserId userId, String userPassword, String emailId, AsyncCallback<UserData> cb) {
+        proxy.registerUserToAssociateOpenId(userId.getUserName(), userPassword, emailId, cb);
     }
 
     //sign in to assocaited open id with https
-    public void validateUserToAssociateOpenId(String name, String password, AsyncCallback<UserData> cb) {
-        proxy.validateUserToAssociateOpenId(name, password, cb);
+    public void validateUserToAssociateOpenId(UserId userId, String password, AsyncCallback<UserData> cb) {
+        proxy.validateUserToAssociateOpenId(userId.getUserName(), password, cb);
     }
 
-    public void sendPasswordReminder(String userName, AsyncCallback<Void> cb) {
-        proxy.sendPasswordReminder(userName, cb);
+    public void sendPasswordReminder(UserId userId, AsyncCallback<Void> cb) {
+        proxy.sendPasswordReminder(userId.getUserName(), cb);
     }
 
     //create new user via https
-    public void registerUser(String name, String password, AsyncCallback<UserData> cb) {
-        proxy.registerUser(name, password, cb);
+    public void registerUser(UserId userId, String password, AsyncCallback<UserData> cb) {
+        proxy.registerUser(userId.getUserName(), password, cb);
     }
 }

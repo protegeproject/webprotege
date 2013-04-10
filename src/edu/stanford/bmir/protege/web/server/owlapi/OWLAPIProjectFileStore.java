@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 
 import java.io.File;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -25,6 +27,9 @@ public class OWLAPIProjectFileStore {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * The name of the base directory where all data is stored.
+     */
     private static final String BASE_DIRECTORY_NAME = "owlapi-data-store";
     
     private static final String ALL_PROJECTS_DIRECTORY_NAME = "owlapi-projects";
@@ -89,10 +94,15 @@ public class OWLAPIProjectFileStore {
     
     
     private File downloadCacheDirectory;
-    
-    
+
+    /**
+     * Constructs a {@link OWLAPIProjectFileStore} which resides at a given location in the file system.
+     * @param webProtegeDataDirectory The root directory where data will be stored.
+     * @param projectId The id of the project
+     */
     private OWLAPIProjectFileStore(File webProtegeDataDirectory, ProjectId projectId) {
-        this.projectId = projectId;
+        checkNotNull(webProtegeDataDirectory);
+        this.projectId = checkNotNull(projectId);
         File baseDirectory = new File(webProtegeDataDirectory, BASE_DIRECTORY_NAME);
         File allProjectsDirectory = new File(baseDirectory, ALL_PROJECTS_DIRECTORY_NAME);
         this.projectDirectory = new File(allProjectsDirectory, getEscapedProjectName());

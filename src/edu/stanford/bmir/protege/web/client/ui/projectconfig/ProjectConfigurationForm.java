@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.projectconfig;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasFormData;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.NullWebProtegeDialogTextFieldValidator;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDown;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDownModel;
@@ -32,6 +30,8 @@ public class ProjectConfigurationForm extends FlowPanel implements HasFormData<P
 
     private final TextArea projectDescriptionTextBox;
 
+//    private final TextBox defaultLanguageBox;
+
 //    private final TextBox bioPortalRestBaseTextBox;
 
     public ProjectConfigurationForm(ProjectId id) {
@@ -41,7 +41,10 @@ public class ProjectConfigurationForm extends FlowPanel implements HasFormData<P
         WebProtegeDialogForm form = new WebProtegeDialogForm();
         form.addWidget(PROJECT_TYPE_DROPDOWN_FIELD_NAME, projectTypeDropDown);
         form.addVerticalSpacer();
-        
+
+//        defaultLanguageBox = form.addTextBox("Default language", "Enter a default language e.g. en", "en", new NullWebProtegeDialogTextFieldValidator());
+//        form.addVerticalSpacer();
+
         projectDescriptionTextBox = new TextArea();
         projectDescriptionTextBox.setVisibleLines(3);
         projectDescriptionTextBox.setCharacterWidth(60);
@@ -53,14 +56,14 @@ public class ProjectConfigurationForm extends FlowPanel implements HasFormData<P
 //        bioPortalRestBaseTextBox = form.addTextBox("BioPortal Rest API Base", "The URL of the BioPortal Rest API Service", manager.getRestBase());
 
 
-        form.addVerticalSpacer();
-
-        form.addWidget("", new Button("Entity Id Generator Settings ...", new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                EntityIdGeneratorSettingsDialog dlg = new EntityIdGeneratorSettingsDialog(projectId);
-                dlg.show();
-            }
-        }));
+//        form.addVerticalSpacer();
+//
+//        form.addWidget("", new Button("Entity Id Generator Settings ...", new ClickHandler() {
+//            public void onClick(ClickEvent event) {
+//                EntityIdGeneratorSettingsDialog dlg = new EntityIdGeneratorSettingsDialog(projectId);
+//                dlg.show();
+//            }
+//        }));
 
         add(form);
 
@@ -74,14 +77,20 @@ public class ProjectConfigurationForm extends FlowPanel implements HasFormData<P
     public void setData(ProjectConfigurationInfo info) {
         projectTypeDropDown.setSelectedItem(info.getProjectType());
         projectDescriptionTextBox.setText(info.getProjectDescription());
+//        defaultLanguageBox.setText(info.getDefaultLanguage());
     }
 
 
 
     public ProjectConfigurationInfo getData() {
-        return new ProjectConfigurationInfo(projectId, getProjectType(), getProjectDescription());
+        // TODO: DEF LANG
+        return new ProjectConfigurationInfo(projectId, getProjectType(), "en", getProjectDescription());
     }
-    
+
+//    private String getDefaultLanguage() {
+//        return defaultLanguageBox.getText().trim();
+//    }
+
     public ProjectType getProjectType() {
         return projectTypeDropDown.getSelectedItem();
     }

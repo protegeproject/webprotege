@@ -37,7 +37,7 @@ import com.gwtext.client.widgets.grid.event.GridRowListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.layout.HorizontalLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
@@ -137,7 +137,7 @@ public class NotesGrid extends GridPanel {
     protected void addHeaderLinks() {
         ClickHandler hyperlinkClickHanlder = new ClickHandler() {
             public void onClick(ClickEvent event) {
-                if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+                if (Application.get().isGuestUser()) {
                     MessageBox.alert("To post a message you need to be logged in.");
                     return;
                 }
@@ -152,7 +152,7 @@ public class NotesGrid extends GridPanel {
 
         ClickHandler replyLinkClickHandler = new ClickHandler() {
             public void onClick(ClickEvent event) {
-                if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+                if (Application.get().isGuestUser()) {
                     MessageBox.alert("To post a message you need to be logged in.");
                     return;
                 }
@@ -167,7 +167,7 @@ public class NotesGrid extends GridPanel {
 
         ClickHandler deletelinkClickHandler = new ClickHandler() {
             public void onClick(ClickEvent event) {
-                if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+                if (Application.get().isGuestUser()) {
                     MessageBox.alert("To delete a message you need to be logged in.");
                     return;
                 }
@@ -405,7 +405,7 @@ public class NotesGrid extends GridPanel {
         Integer repliesCount = record.getAsInteger("repliesCount");
         setDeleteEnabled( rowSelected != -1 &&
                 authorName != null &&
-                authorName.equals(GlobalSettings.getGlobalSettings().getUserName()) &&
+                authorName.equals(Application.get().getUserId().getUserName()) &&
                 repliesCount != null &&
                 repliesCount == 0);
     }
@@ -551,7 +551,7 @@ public class NotesGrid extends GridPanel {
                 new MessageBox.ConfirmCallback() {
                     public void execute(String btnID) {
                         if (btnID.equalsIgnoreCase("yes")) {
-                            ChAOServiceManager.getInstance().deleteNote(project.getProjectName(), id, new DeleteNoteHandler(id));
+                            ChAOServiceManager.getInstance().deleteNote(project.getProjectId(), id, new DeleteNoteHandler(id));
                         }
                     }
                 }
@@ -579,7 +579,7 @@ public class NotesGrid extends GridPanel {
 
     // TODO: change me
     protected void onReplyButton(NotesData note) {
-        if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+        if (Application.get().isGuestUser()) {
             MessageBox.alert("To post a message you need to be logged in.");
             return;
         }
@@ -589,7 +589,7 @@ public class NotesGrid extends GridPanel {
         final EntityData noteId = note.getNoteId();
         final String entityName = (noteId == null ? "" : noteId.getName());
         Record plant = recordDef.createRecord(new Object[] { "newAnnId",
-                "<FONT COLOR=\"#cc6600\">" + subject + "</FONT>", GlobalSettings.getGlobalSettings().getUserName(),
+                "<FONT COLOR=\"#cc6600\">" + subject + "</FONT>", Application.get().getUserId().getUserName(),
                 note.getCreationDate(), note.getBody(), note.getType(), entityName, getRepliesCount(note) });
         store.insert(rowSelected + 1 + pageNo * PAGE_SIZE, plant);
         if (rowSelected + 1 == PAGE_SIZE) {
@@ -601,7 +601,7 @@ public class NotesGrid extends GridPanel {
         }
         getView().refresh();
 
-        ChAOServiceManager.getInstance().createNote(project.getProjectName(), note, false, new CreateNote());
+        ChAOServiceManager.getInstance().createNote(project.getProjectId(), note, false, new CreateNote());
     }
 
     private int getRepliesCount(NotesData note) {
@@ -615,7 +615,7 @@ public class NotesGrid extends GridPanel {
 
     // TODO: change this
     protected void onPostButton(NotesData note) {
-        if (GlobalSettings.getGlobalSettings().getUserName() == null) {
+        if (Application.get().isGuestUser()) {
             MessageBox.alert("To post a message you need to be logged in.");
             return;
         }
@@ -628,7 +628,7 @@ public class NotesGrid extends GridPanel {
         // MH: Too many checks for null!  Needs tidying.
         final String entityName = (noteId == null ? "" : noteId.getName());
         Record plant = recordDef.createRecord(new Object[] { "newAnnId", subject,
-                GlobalSettings.getGlobalSettings().getUserName(), note.getCreationDate(),
+                Application.get().getUserId(), note.getCreationDate(),
                 note.getBody(), note.getType(), entityName, getRepliesCount(note) });
         store.insert(store.getCount(), plant);
         pageNo = store.getCount() / PAGE_SIZE;
@@ -642,7 +642,7 @@ public class NotesGrid extends GridPanel {
         getView().refresh();
 
         // make the remote call
-        ChAOServiceManager.getInstance().createNote(project.getProjectName(), note, topLevel, new CreateNote());
+        ChAOServiceManager.getInstance().createNote(project.getProjectId(), note, topLevel, new CreateNote());
     }
 
     private EntityData getAnnotatedEntity(boolean isReply) {
@@ -802,7 +802,7 @@ public class NotesGrid extends GridPanel {
     }
 
     public void reload() {
-        ChAOServiceManager.getInstance().getNotes(project.getProjectName(), _currentEntity == null ? null :_currentEntity.getName(), topLevel,
+        ChAOServiceManager.getInstance().getNotes(project.getProjectId(), _currentEntity == null ? null :_currentEntity.getName(), topLevel,
                 new GetNotes());
     }
 

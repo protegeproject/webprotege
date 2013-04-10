@@ -6,7 +6,7 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOXRef;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -34,12 +34,12 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void commitChangesForEntity(Entity entity) {
+    protected void commitChangesForEntity(OWLEntity entity) {
         getService().setXRefs(getProjectId(), entity, editor.getValues(), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term XRefs have not been applied"));
     }
 
     @Override
-    protected void displayEntity(Entity entity) {
+    protected void displayEntity(OWLEntity entity) {
         getService().getXRefs(getProjectId(), entity, new AsyncCallback<List<OBOXRef>>() {
             public void onFailure(Throwable caught) {
                 MessageBox.alert(caught.getMessage());

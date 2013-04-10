@@ -4,7 +4,7 @@
 	<information>
 		<title>Collaborative Protege</title>
 		<vendor>Stanford Center for Biomedical Informatics Research (BMIR)</vendor>
-		<homepage href="http://protegewiki.stanford.edu/index.php/Collaborative_Protege"/>
+		<homepage href="http://protegewiki.stanford.edu/ordinal.php/Collaborative_Protege"/>
 		<icon href="Protege64x64.jpg"/>
 		<offline-allowed/> 
 	</information>

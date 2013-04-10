@@ -103,7 +103,7 @@ public class PropertiesViewPortlet extends AbstractEntityPortlet {
 
         store.removeAll();
         if (_currentEntity != null) {
-            OntologyServiceManager.getInstance().getRelatedProperties(project.getProjectName(), _currentEntity.getName(),
+            OntologyServiceManager.getInstance().getRelatedProperties(getProject().getProjectId(), _currentEntity.getName(),
                 new GetTriplesHandler());
         }
     }

@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.Operation;
@@ -15,7 +17,7 @@ import edu.stanford.smi.protege.server.metaproject.PropertyValue;
 import edu.stanford.smi.protege.server.metaproject.ServerInstance;
 import edu.stanford.smi.protege.server.metaproject.User;
 
-public abstract class AbstractMetaProjectManager implements MetaProjectManager {
+public abstract class AbstractMetaProjectManager extends MetaProjectManager {
 
     public boolean hasValidCredentials(String userName, String password) {
         if (getMetaProject() == null) {
@@ -107,42 +109,23 @@ public abstract class AbstractMetaProjectManager implements MetaProjectManager {
         return allowedOps;
     }
 
-    public UserData getUserAssociatedWithOpenId(String userOpenId) {
-        UserData userData = null;
-
+    public Optional<UserId> getUserAssociatedWithOpenId(String userOpenId) {
         if (userOpenId == null) {
-            return null;
+            return Optional.absent();
         }
-
-        Set<User> users = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject()
-                .getUsers();
-
-        boolean gotUser = false;
-        for (Iterator<User> iterator = users.iterator(); iterator.hasNext();) {
-            if (gotUser) {
-                break;
-            }
-
-            User user = iterator.next();
-
-            Collection<PropertyValue> propColl = user.getPropertyValues();
-
-            for (Iterator<PropertyValue> iterator2 = propColl.iterator(); iterator2.hasNext();) {
-                PropertyValue propertyValue = iterator2.next();
-                if (propertyValue.getPropertyName().startsWith(OpenIdConstants.OPENID_PROPERTY_PREFIX)
-                        && propertyValue.getPropertyName().endsWith(OpenIdConstants.OPENID_PROPERTY_URL_SUFFIX)) {
-
+        Set<User> users = MetaProjectManager.getManager().getMetaProject().getUsers();
+        for (User u : users) {
+            Collection<PropertyValue> propertyValues = u.getPropertyValues();
+            for (PropertyValue propertyValue : propertyValues) {
+                if (propertyValue.getPropertyName().startsWith(OpenIdConstants.OPENID_PROPERTY_PREFIX) && propertyValue.getPropertyName().endsWith(OpenIdConstants.OPENID_PROPERTY_URL_SUFFIX)) {
                     if (propertyValue.getPropertyValue().trim().equalsIgnoreCase(userOpenId)) {
-                        userData = AuthenticationUtil.createUserData(user.getName());
-                        gotUser = true;
-                        break;
+                        return Optional.of(UserId.getUserId(u.getName()));
                     }
 
                 }
             }
         }
-
-        return userData;
+        return Optional.absent();
     }
 
 }

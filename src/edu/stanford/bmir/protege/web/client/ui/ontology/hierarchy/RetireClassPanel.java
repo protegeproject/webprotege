@@ -18,7 +18,7 @@ import com.gwtext.client.widgets.form.TextArea;
 import com.gwtext.client.widgets.form.event.CheckboxListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.HierarchyServiceManager;
@@ -178,9 +178,9 @@ public class RetireClassPanel extends FormPanel implements Selectable {
 
     private void performRetire() {
         String newParent = newParentField.getClsValue() == null ? null : newParentField.getClsValue().getName();
-        HierarchyServiceManager.getInstance().retireClasses(project.getProjectName(), UIUtil.getStringCollection(retiredClassesField.getClsValues()),
+        HierarchyServiceManager.getInstance().retireClasses(project.getProjectId(), UIUtil.getStringCollection(retiredClassesField.getClsValues()),
                 retireChildrenCheckbox.getValue(), newParent, reasonField.getValueAsString(), getOperationDescription(),
-                GlobalSettings.getGlobalSettings().getUserName(), new RetireHandler());
+                Application.get().getUserId(), new RetireHandler());
     }
 
     private String getOperationDescription() {

@@ -52,6 +52,7 @@ public class OntologyShareAccessConstants {
     public static final String USER_EVERYBODY_NAME = "&lt;everybody&gt;";
 
 
+    public static final String ADMIN_GROUP = "AdminGroup";
 
 }
 

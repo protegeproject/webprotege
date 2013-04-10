@@ -1,0 +1,14 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:HTMLPanel>
+        <table>
+            <colgroup>
+                <col width="100px"/>
+            </colgroup>
+            <tr>
+                <td><g:Label addStyleNames="web-protege-dialog-label">Short name</g:Label></td>
+                <td><g:TextBox addStyleNames="web-protege-form-layout-editor" ui:field="browserTextField" visibleLength="30"/></td>
+            </tr>
+        </table>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,14 +1,15 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.QNameShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
+import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
+import org.semanticweb.owlapi.vocab.Namespaces;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -20,28 +21,84 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
 
     private OWLAPIProject project;
     
-    private List<IRI> annotationPropertyIRIs;
+    private final List<IRI> annotationPropertyIRIs;
+
+    private final Map<String, String> builtinPrefixes = new HashMap<String, String>();
+
+//    private final List<String> languages;
 
     public WebProtegeShortFormProvider(OWLAPIProject project) {
         this.project = project;
+        builtinPrefixes.put("owl", Namespaces.OWL.toString());
+        builtinPrefixes.put("rdfs", Namespaces.RDFS.toString());
+        builtinPrefixes.put("rdf", Namespaces.RDF.toString());
+        builtinPrefixes.put("xsd", Namespaces.XSD.toString());
+        builtinPrefixes.put("skos", Namespaces.SKOS.toString());
+        builtinPrefixes.put("dc", DublinCoreVocabulary.NAME_SPACE);
+
+//        languages = new ArrayList<String>();
+//        // TODO: Configurable.
+//        languages.add("en");
+//        languages.add("de");
+//        languages.add("es");
+//        languages.add("fr");
+
         List<IRI> annotationPropertyIRIs = new ArrayList<IRI>();
         annotationPropertyIRIs.add(SKOSVocabulary.PREFLABEL.getIRI());
-        annotationPropertyIRIs.add(SKOSVocabulary.ALTLABEL.getIRI());
         annotationPropertyIRIs.add(OWLRDFVocabulary.RDFS_LABEL.getIRI());
         this.annotationPropertyIRIs = Collections.unmodifiableList(annotationPropertyIRIs);
     }
 
+    private boolean startsWithBuiltInPrefix(OWLEntity entity) {
+        IRI iri = entity.getIRI();
+        for(String s : builtinPrefixes.values()) {
+            if(iri.toString().startsWith(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public synchronized String getShortForm(OWLEntity owlEntity) {
+        if(owlEntity.isBuiltIn() || startsWithBuiltInPrefix(owlEntity)) {
+            QNameShortFormProvider qNameShortFormProvider = new QNameShortFormProvider(builtinPrefixes);
+            return qNameShortFormProvider.getShortForm(owlEntity);
+        }
         int matchedIndex = Integer.MAX_VALUE;
+//        int matchedLangIndex = Integer.MAX_VALUE;
+        boolean matchedDefaultLang = false;
         OWLAnnotationValue renderingValue = null;
+        // Just ask for the language once (bad coding!)
+        final String defaultLanguage = project.getDefaultLanguage();
         for(OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
             for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(owlEntity.getIRI())) {
                 // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
                 // object to find the index.
                 int index = annotationPropertyIRIs.indexOf(ax.getProperty().getIRI());
-                if(index < matchedIndex && index != -1) {
-                   matchedIndex = index;
-                   renderingValue = ax.getValue();
+                if(index <= matchedIndex && index > -1) {
+                    if (index < matchedIndex) {
+                        matchedIndex = index;
+                        renderingValue = ax.getValue();
+                    }
+                    if(index == matchedIndex || index == Integer.MAX_VALUE) {
+                        final OWLAnnotationValue value = ax.getValue();
+                        if (value instanceof OWLLiteral) {
+                            OWLLiteral litValue = (OWLLiteral) value;
+                            String lang = litValue.getLang();
+                            if(lang != null) {
+                                if(lang.equals(defaultLanguage)) {
+                                    matchedDefaultLang = true;
+                                    renderingValue = litValue;
+                                }
+                                else if(!matchedDefaultLang) {
+                                    renderingValue = litValue;
+                                }
+                            }
+
+                        }
+                    }
+
+
                 }
             }
         }
@@ -55,18 +112,18 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
             result = simpleShortFormProvider.getShortForm(owlEntity);
         }
         if(result.contains(" ")) {
-            StringBuilder sb = getQuoted(result);
-            result = sb.toString();
+            result = getQuoted(result);
         }
         return result;
     }
 
-    private static StringBuilder getQuoted(String result) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("'");
-        sb.append(result);
-        sb.append("'");
-        return sb;
+    private static String getQuoted(String result) {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("'");
+//        sb.append(result);
+//        sb.append("'");
+//        return sb;
+        return result;
     }
 
     public void dispose() {

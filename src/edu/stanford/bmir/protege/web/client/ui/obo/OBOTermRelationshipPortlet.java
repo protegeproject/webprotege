@@ -5,8 +5,8 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermRelationships;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.NamedClass;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,22 +32,22 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void commitChangesForEntity(Entity entity) {
-        if(!(entity instanceof NamedClass)) {
+    protected void commitChangesForEntity(OWLEntity entity) {
+        if(!(entity instanceof OWLClass)) {
             return;
         }
         OBOTermRelationships relationships = editor.getValue();
-        getService().setRelationships(getProjectId(), (NamedClass) entity, relationships, new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term relationships have not been applied"));
+        getService().setRelationships(getProjectId(), (OWLClass) entity, relationships, new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term relationships have not been applied"));
     }
 
     @Override
-    protected void displayEntity(Entity entity) {
-        Entity current = getCurrentEntity();
-        if(!(current instanceof NamedClass)) {
+    protected void displayEntity(OWLEntity entity) {
+        OWLEntity current = getCurrentEntity();
+        if(!(current instanceof OWLClass)) {
             editor.clearValue();
             return;
         }
-        getService().getRelationships(getProjectId(),  (NamedClass) current, new AsyncCallback<OBOTermRelationships>() {
+        getService().getRelationships(getProjectId(),  (OWLClass) current, new AsyncCallback<OBOTermRelationships>() {
             public void onFailure(Throwable caught) {
                 MessageBox.alert(caught.getMessage());
             }

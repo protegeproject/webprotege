@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import org.semanticweb.owlapi.model.OWLClass;
 
 /**
  * A class tree portlet that creates a class, setting a property to a value set by a user.
@@ -31,16 +31,12 @@ public class LabelingClassTreePortlet extends ClassTreePortlet {
     }
 
     protected void createCls(final String className) {
-        String superClsName = null;
-        final EntityData currentSelection = getSingleSelection();
-        if (currentSelection != null) {
-            superClsName = currentSelection.getName();
-        }
+        OWLClass superCls = getSelectedClass();
         String propertyName = getPropertyName();
         EntityData propertyValue = new EntityData(className);
-        OntologyServiceManager.getInstance().createClsWithProperty(project.getProjectName(), null, superClsName, propertyName, propertyValue,
-                GlobalSettings.getGlobalSettings().getUserName(), getCreateClsDescription() + " " + className,
-                getCreateClassAsyncHandler(superClsName, className));
+        OntologyServiceManager service = OntologyServiceManager.getInstance();
+        String desc = getCreateClsDescription() + " " + className;
+//        service.createClsWithProperty(projectId, null, superCls, propertyName, propertyValue, userId, desc, getCreateClassAsyncHandler(superCls, className));
     }
 
     private String getPropertyName(){

@@ -27,12 +27,13 @@ import com.gwtext.client.widgets.layout.AnchorLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.VerticalLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 public class NoteInputPanel extends Panel {
@@ -81,7 +82,7 @@ public class NoteInputPanel extends Panel {
                         if (note != null &&
                                 ((note.getSubject() != null && note.getSubject().length() > 0) ||
                                         (note.getBody() != null && note.getBody().length() > 0))) {
-                            ChAOServiceManager.getInstance().createNote(project.getProjectName(), note, false, new AbstractAsyncHandler<NotesData>() {
+                            ChAOServiceManager.getInstance().createNote(project.getProjectId(), note, false, new AbstractAsyncHandler<NotesData>() {
                                 @Override
                                 public void handleFailure(Throwable caught) {
                                     MessageBox.alert("Creating note failed: " + caught.getMessage());
@@ -288,7 +289,7 @@ public class NoteInputPanel extends Panel {
         this.cb = cb;
     }
 
-    public NotesData getNotesData(String userName) {
+    public NotesData getNotesData(UserId userName) {
         try {
             if (htmlEditor != null){
                 synchEditor(htmlEditor.getJsObj());
@@ -298,7 +299,7 @@ public class NoteInputPanel extends Panel {
         }
         String text = htmlEditor.getValueAsString();
         String subject = subjectField.getValueAsString();
-        NotesData note = new NotesData(userName,
+        NotesData note = new NotesData(userName.getUserName(),
                 text, getTimeString(), typeComboBox.getValueAsString(), subject,
                 null, annotatedEntity, null);
         return note;
@@ -309,12 +310,11 @@ public class NoteInputPanel extends Panel {
     }
 
     public void doSendNote() {
-        String userName = GlobalSettings.getGlobalSettings().getUserName();
-        if (userName == null) {
+        if (Application.get().isGuestUser()) {
             cb.onFailure(new Exception("To post a message you need to be logged in."));
             return;
         }
-        NotesData note = getNotesData(userName);
+        NotesData note = getNotesData(Application.get().getUserId());
         cb.onSuccess(note);
     }
 

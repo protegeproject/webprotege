@@ -5,6 +5,8 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationInfo;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.List;
 import java.util.Set;
@@ -73,7 +75,7 @@ public interface ProjectManagerService extends RemoteService {
      * @throws ProjectAlreadyRegisteredException If the project is already registered and the caller is not the owner.
      * @throws ProjectDocumentExistsException If the project is not registered but the project document already exists.
      */
-    void createNewProject(NewProjectSettings newProjectSettings) throws NotSignedInException, ProjectAlreadyRegisteredException, ProjectDocumentExistsException;
+    ProjectDetails createNewProject(NewProjectSettings newProjectSettings) throws NotSignedInException, ProjectAlreadyRegisteredException, ProjectDocumentExistsException;
 
 //    /**
 //     * Replaces the project document for an EXISTING registered project.

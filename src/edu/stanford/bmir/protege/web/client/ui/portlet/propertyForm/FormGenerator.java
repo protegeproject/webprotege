@@ -17,12 +17,8 @@ import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
-import edu.stanford.bmir.protege.web.client.ui.icd.ICDInclusionWidget;
-import edu.stanford.bmir.protege.web.client.ui.icd.ICDIndexWidget;
-import edu.stanford.bmir.protege.web.client.ui.icd.ICDLinearizationWidget;
-import edu.stanford.bmir.protege.web.client.ui.icd.ICDTitleWidget;
-import edu.stanford.bmir.protege.web.client.ui.icd.InheritedTagsGrid;
 import edu.stanford.bmir.protege.web.client.ui.portlet.PropertyWidget;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 
 /**
  * This class generates a form with fields based on the portlet configuration
@@ -35,7 +31,7 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.PropertyWidget;
  * @author Tania Tudorache <tudorache@stanford.edu>
  *
  */
-public class FormGenerator {
+public class FormGenerator implements HasDispose {
 
     private Project project;
     private Map<String, Object> formConf;
@@ -190,18 +186,7 @@ public class FormGenerator {
                         widget = createInstanceRadioButton((Map) value, prop);
                     } else if (component_type.equals(FormConstants.INSTANCE_COMBOBOX)) {
                         widget = createInstanceComboBox((Map) value, prop);
-                    } else if (component_type.equals(FormConstants.ICDTITLE_TEXTFIELD)) { //ICD specific
-                        widget = createICDTitleTextField((Map) value, prop);
-                    } else if (component_type.equals(FormConstants.ICDLINEARIZATION_GRID)) { //ICD specific
-                        widget = createICDLinearizationGrid((Map) value, prop);
-                    } else if (component_type.equals(FormConstants.ICDINHERITEDTAG_GRID)) { //ICD specific
-                        widget = createICDInheritedTagGrid((Map) value, prop);
-                    } else if (component_type.equals(FormConstants.ICDINDEX_GRID)) { //ICD specific
-                        widget = createICDIndexGrid((Map) value, prop);
-                    } else if (component_type.equals(FormConstants.ICDINCLUSION_GRID)) { //ICD specific
-                        widget = createICDInclusionGrid((Map) value, prop);
                     }
-
                     if (widget != null && widget.getComponent() != null) {
                         widgets.add(widget);
                         panel.add(widget.getComponent());
@@ -346,42 +331,6 @@ public class FormGenerator {
         InstanceComboBox widget = new InstanceComboBox(project);
         widget.setup(conf, new PropertyEntityData(prop));
         return widget;
-    }
-
-    //ICD specific
-    protected PropertyWidget createICDTitleTextField(Map<String, Object> conf, String property) {
-        ICDTitleWidget icdTitleWidget = new ICDTitleWidget(project);
-        final PropertyEntityData propertyEntityData = new PropertyEntityData(property);
-        propertyEntityData.setValueType(ValueType.Instance);
-        icdTitleWidget.setup(conf, propertyEntityData);
-        return icdTitleWidget;
-    }
-
-    //ICD specific
-    protected PropertyWidget createICDLinearizationGrid(Map<String, Object> conf, String property) {
-        ICDLinearizationWidget icdLinearizationWidget = new ICDLinearizationWidget(project);
-        icdLinearizationWidget.setup(conf, new PropertyEntityData(property));
-        return icdLinearizationWidget;
-    }
-    
-    protected PropertyWidget createICDIndexGrid(Map<String, Object> conf, String property) {
-        ICDIndexWidget icdIndexWidget = new ICDIndexWidget(project);
-        icdIndexWidget.setup(conf, new PropertyEntityData(property));
-        return icdIndexWidget;
-    }
-    
-    protected PropertyWidget createICDInclusionGrid(Map<String, Object> conf, String property) {
-        ICDInclusionWidget icdInclusionWidget = new ICDInclusionWidget(project);
-        icdInclusionWidget.setup(conf, new PropertyEntityData(property));
-        return icdInclusionWidget;
-    }
-
-
-    //ICD specific
-    private PropertyWidget createICDInheritedTagGrid(Map<String, Object> conf, String property) {
-        InheritedTagsGrid inheritedTagWidget = new InheritedTagsGrid(project);
-        inheritedTagWidget.setup(conf, new PropertyEntityData(property));
-        return inheritedTagWidget;
     }
 
 

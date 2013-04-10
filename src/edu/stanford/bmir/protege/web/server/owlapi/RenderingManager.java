@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.*;
+import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
@@ -22,13 +26,13 @@ import java.util.*;
  * This class is here to deal with the confusion/mess surrounding "names" in web-protege.  It translates between OWLObjects
  * and EntityData and names.
  */
-public class RenderingManager {
+public class RenderingManager implements BrowserTextProvider  {
 
     public static final String NULL_BROWSER_TEXT = "\"\"";
 
     private OWLAPIProject project;
 
-    private BidirectionalShortFormProvider shortFormProvider;
+    private WebProtegeBidirectionalShortFormProvider shortFormProvider;
 
     // An immutable map of IRI to OWLEntity for built in entities.
     private Map<IRI, OWLEntity> builtInEntities;
@@ -40,8 +44,8 @@ public class RenderingManager {
         setupBuiltInEntities();
 
         shortFormProvider = new WebProtegeBidirectionalShortFormProvider(project);
-
     }
+
 
     /**
      * Called from the constructor
@@ -59,6 +63,10 @@ public class RenderingManager {
         for (IRI iri : OWLRDFVocabulary.BUILT_IN_ANNOTATION_PROPERTY_IRIS) {
             putEntity(df.getOWLAnnotationProperty(iri), builtInEntities);
         }
+        for(DublinCoreVocabulary vocabulary : DublinCoreVocabulary.values()) {
+            OWLAnnotationProperty prop = df.getOWLAnnotationProperty(vocabulary.getIRI());
+            putEntity(prop, builtInEntities);
+        }
         for (OWLAnnotationProperty prop : SKOSVocabulary.getAnnotationProperties(df)) {
             putEntity(prop, builtInEntities);
         }
@@ -68,6 +76,7 @@ public class RenderingManager {
         }
         // Called from the constructor - thread safe to set it here
         this.builtInEntities = Collections.unmodifiableMap(builtInEntities);
+
     }
 
 
@@ -157,6 +166,17 @@ public class RenderingManager {
         }
         catch (URISyntaxException e) {
             throw new RuntimeException("Error when generating an IRI from the supplied entity name: " + entityName, e);
+        }
+    }
+
+    @Override
+    public Optional<String> getOWLEntityBrowserText(OWLEntity entity) {
+        String shortForm = shortFormProvider.getShortForm(entity);
+        if(shortForm == null) {
+            return Optional.absent();
+        }
+        else {
+            return Optional.of(shortForm);
         }
     }
 
@@ -697,7 +717,12 @@ public class RenderingManager {
      */
     public String getBrowserText(OWLObject object) {
         OWLObjectRenderer owlObjectRenderer = new ManchesterOWLSyntaxOWLObjectRendererImpl();
-        owlObjectRenderer.setShortFormProvider(shortFormProvider);
+        if (object instanceof OWLEntity || object instanceof IRI) {
+            owlObjectRenderer.setShortFormProvider(shortFormProvider);
+        }
+        else {
+            owlObjectRenderer.setShortFormProvider(new EscapingShortFormProvider(shortFormProvider));
+        }
         String browserText = owlObjectRenderer.render(object);
         if(browserText == null) {
             return NULL_BROWSER_TEXT;
@@ -736,6 +761,69 @@ public class RenderingManager {
         }
     }
 
+    public OWLClassData getRendering(OWLClass cls) {
+        return new OWLClassData(cls, getShortForm(cls));
+    }
+
+    public OWLObjectPropertyData getRendering(OWLObjectProperty property) {
+        return new OWLObjectPropertyData(property, getShortForm(property));
+    }
+
+    public OWLDataPropertyData getRendering(OWLDataProperty property) {
+        return new OWLDataPropertyData(property, getShortForm(property));
+    }
+
+    public OWLAnnotationPropertyData getRendering(OWLAnnotationProperty property) {
+        return new OWLAnnotationPropertyData(property, getShortForm(property));
+    }
+
+    public OWLNamedIndividualData getRendering(OWLNamedIndividual individual) {
+        return new OWLNamedIndividualData(individual, getShortForm(individual));
+    }
+
+    public OWLDatatypeData getRendering(OWLDatatype datatype) {
+        return new OWLDatatypeData(datatype, getShortForm(datatype));
+    }
+    
+    
+    
+    public Map<OWLEntity, OWLEntityData> getRendering(Set<OWLEntity> entities) {
+        final Map<OWLEntity, OWLEntityData> result = new HashMap<OWLEntity, OWLEntityData>();
+        for(OWLEntity entity : entities) {
+            entity.accept(new OWLEntityVisitor() {
+                @Override
+                public void visit(OWLClass owlClass) {
+                    result.put(owlClass, getRendering(owlClass));
+                }
+
+                @Override
+                public void visit(OWLObjectProperty property) {
+                    result.put(property, getRendering(property));
+                }
+
+                @Override
+                public void visit(OWLDataProperty property) {
+                    result.put(property, getRendering(property));
+                }
+
+                @Override
+                public void visit(OWLNamedIndividual individual) {
+                    result.put(individual, getRendering(individual));
+                }
+
+                @Override
+                public void visit(OWLDatatype owlDatatype) {
+                    result.put(owlDatatype, getRendering(owlDatatype));
+                }
+
+                @Override
+                public void visit(OWLAnnotationProperty property) {
+                    result.put(property, getRendering(property));
+                }
+            });
+        }
+        return result;
+    }
 
     public void dispose() {
     }

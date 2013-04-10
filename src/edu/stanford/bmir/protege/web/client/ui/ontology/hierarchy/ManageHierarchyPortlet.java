@@ -11,7 +11,6 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.ui.icd.ICDClassTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
@@ -164,7 +163,7 @@ public class ManageHierarchyPortlet extends AbstractEntityPortlet {
 
     protected void onCreateCls() {
         wrappingPanel.clear();
-        CreateClassPanel createClassPanel = new CreateClassPanel(project, getCreateICDSpecificEntities());
+        CreateClassPanel createClassPanel = new CreateClassPanel(getProject(), false);
         createClassPanel.setTopClass(topClass);
         createClassPanel.setParentsClses(UIUtil.createCollection(getEntity()));
         wrappingPanel.add(createClassPanel);
@@ -174,7 +173,7 @@ public class ManageHierarchyPortlet extends AbstractEntityPortlet {
 
     protected void onRetireCls() {
         wrappingPanel.clear();
-        RetireClassPanel retireClassPanel = new RetireClassPanel(project);
+        RetireClassPanel retireClassPanel = new RetireClassPanel(getProject());
         retireClassPanel.setTopClass(topClass);
         retireClassPanel.setParentsClses(UIUtil.createCollection(getEntity()));
         wrappingPanel.add(retireClassPanel);
@@ -185,7 +184,7 @@ public class ManageHierarchyPortlet extends AbstractEntityPortlet {
 
     protected void onChangeParents() {
         wrappingPanel.clear();
-        ChangeParentPanel changeParentPanel = new ChangeParentPanel(project);
+        ChangeParentPanel changeParentPanel = new ChangeParentPanel(getProject());
         changeParentPanel.setTopClass(topClass);
         changeParentPanel.setParentsClses(UIUtil.createCollection(getEntity()));
         wrappingPanel.add(changeParentPanel);
@@ -210,9 +209,9 @@ public class ManageHierarchyPortlet extends AbstractEntityPortlet {
        return (selectable != null) ? selectable.getSelection() : null;
     }
 
-    private boolean getCreateICDSpecificEntities() {
-        return UIUtil.getBooleanConfigurationProperty(getPortletConfiguration(), ICDClassTreePortlet.CREATE_ICD_SPECIFIC_ENTITES_PROP, ICDClassTreePortlet.CREATE_ICD_SPECIFIC_ENTITES_DEFAULT);
-    }
+//    private boolean getCreateICDSpecificEntities() {
+//        return UIUtil.getBooleanConfigurationProperty(getPortletConfiguration(), ICDClassTreePortlet.CREATE_ICD_SPECIFIC_ENTITES_PROP, ICDClassTreePortlet.CREATE_ICD_SPECIFIC_ENTITES_DEFAULT);
+//    }
     
     protected boolean isClassCreateEnabled() {
         return UIUtil.getBooleanConfigurationProperty(getPortletConfiguration(), CREATE_CLASS_ENABLED_PROP, CREATE_CLASS_ENABLED_DEFAULT);

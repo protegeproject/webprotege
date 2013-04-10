@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import org.openid4java.consumer.ConsumerManager;
 import org.openid4java.consumer.VerificationResult;
 import org.openid4java.discovery.DiscoveryInformation;
@@ -37,7 +37,7 @@ import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 public class OpenIdAuthenticationResponseServlet extends HttpServlet {
 
     private static final long serialVersionUID = 8089333325493540320L;
-    private static final Log log = LogFactory.getLog(OpenIdAuthenticationResponseServlet.class);
+    private static final WebProtegeLogger log = WebProtegeLoggerManager.get(OpenIdAuthenticationResponseServlet.class);
 
     @Override
     public void service(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException,
@@ -51,7 +51,7 @@ public class OpenIdAuthenticationResponseServlet extends HttpServlet {
             if (list != null){
                 for (Object param : list) {
                     if (param != null && ((Parameter)param).getKey() != null && ((Parameter)param).getValue() != null){
-                        log.debug(((Parameter)param).getKey() +"=" +((Parameter)param).getValue());
+                        log.info(((Parameter) param).getKey() + "=" + ((Parameter) param).getValue());
                     }
                 }
             }
@@ -66,7 +66,7 @@ public class OpenIdAuthenticationResponseServlet extends HttpServlet {
             }
             // verify the response
             VerificationResult verification = null;
-            log.debug("Receiving URL = " + receivingURL.toString());
+            log.info("Receiving URL = " + receivingURL.toString());
             verification = manager.verify(receivingURL.toString(), openidResp, discovered);
             // examine the verification result and extract the verified identifier
             Identifier verified = verification.getVerifiedId();
@@ -108,7 +108,7 @@ public class OpenIdAuthenticationResponseServlet extends HttpServlet {
             out.close();
 
         } catch (Exception e) {
-            log.error("Exception OpenIdAuthenticationResponseServlet: " , e);
+            log.severe(e);
         }
     }
 }

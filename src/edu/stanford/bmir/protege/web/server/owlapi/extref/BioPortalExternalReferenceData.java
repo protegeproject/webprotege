@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.owlapi.extref;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalReferenceData;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protegex.bp.ref.OntologyEntityConstants;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
@@ -15,22 +14,19 @@ import java.util.*;
  */
 public class BioPortalExternalReferenceData extends ExternalReferenceData {
 
-    // NOTE: The class some of the constants defined in OntologyEntityConstants are ABSOLUTE IRIs and some are RELATIVE
-    // IRIs. Check the OntologyEntityConstants before changing anything to do with these constants!
 
-    public static final IRI DEFAULT_CONCEPT_SHORT_ID_PROPERTY_IRI = IRI.create(OntologyEntityConstants.PROPERTY_CONCEPT_ID_SHORT);
+    private static final String BIOPORTAL_NAMESPACE = "http://bioportal.bioontology.org#";
 
-    public static final IRI DEFAULT_BIO_PORTAL_TERM_URL_PROPERTY_IRI = IRI.create(OntologyEntityConstants.PROPERTY_URL);
+    public static final IRI DEFAULT_CONCEPT_SHORT_ID_PROPERTY_IRI = IRI.create(BIOPORTAL_NAMESPACE + "shortTermId");
 
-    /**
-     * The
-     */
-    public static final IRI DEFAULT_ONTOLOGY_ID_PROPERTY_IRI = IRI.create(OntologyEntityConstants.PROPERTY_ONTOLOGY_ID);
+    public static final IRI DEFAULT_BIO_PORTAL_TERM_URL_PROPERTY_IRI = IRI.create(BIOPORTAL_NAMESPACE + "url");
+
+    public static final IRI DEFAULT_ONTOLOGY_ID_PROPERTY_IRI = IRI.create(BIOPORTAL_NAMESPACE + "ontologyId");
 
     /**
      * The property that points to the ontology "name".
      */
-    public static final IRI DEFAULT_ONTOLOGY_NAME_PROPERTY_IRI = IRI.create(OntologyEntityConstants.PROPERTY_ONTOLOGY_NAME);
+    public static final IRI DEFAULT_ONTOLOGY_NAME_PROPERTY_IRI = IRI.create(BIOPORTAL_NAMESPACE + "ontologyLabel");
 
 
     private enum AnnotationValueType {
@@ -147,9 +143,6 @@ public class BioPortalExternalReferenceData extends ExternalReferenceData {
     private OWLAnnotationProperty getReferenceAnnotationProperty(String propertyIRI, IRI defaultPropertyIRI) {
         if (defaultPropertyIRI == null) {
             throw new NullPointerException("defaultPropertyIRI must not be null");
-        }
-        if(!defaultPropertyIRI.isAbsolute()) {
-            defaultPropertyIRI = IRI.create(OntologyEntityConstants.BP_NAMESPACE + defaultPropertyIRI.toString());
         }
         OWLDataFactory df = project.getDataFactory();
         if(propertyIRI == null) {

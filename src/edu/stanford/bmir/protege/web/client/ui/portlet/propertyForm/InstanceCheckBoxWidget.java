@@ -19,7 +19,7 @@ import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.form.Label;
 import com.gwtext.client.widgets.layout.ColumnLayout;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
@@ -193,15 +193,15 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
 
     protected void addPropertyValue(String entityName, String propName, ValueType propValueType,
             EntityData newEntityData, String operationDescription) {
-        propertyValueUtil.addPropertyValue(getProject().getProjectName(), entityName, propName, propValueType,
-                newEntityData.getName(), GlobalSettings.getGlobalSettings().getUserName(),
+        propertyValueUtil.addPropertyValue(getProjectId(), entityName, propName, propValueType,
+                newEntityData.getName(), Application.get().getUserId(),
                 operationDescription, new AddPropertyValueHandler(newEntityData));
     }
 
     protected void removePropertyValue(String entityName, String propName, ValueType propValueType,
             EntityData newEntityData, String operationDescription) {
-        propertyValueUtil.deletePropertyValue(getProject().getProjectName(), entityName, propName, propValueType,
-                newEntityData.getName(), GlobalSettings.getGlobalSettings().getUserName(),
+        propertyValueUtil.deletePropertyValue(getProjectId(), entityName, propName, propValueType,
+                newEntityData.getName(), Application.get().getUserId(),
                         operationDescription, new RemovePropertyValueHandler(newEntityData));
     }
 

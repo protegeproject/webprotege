@@ -5,10 +5,10 @@ import java.util.Collection;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserNameAlreadyExistsException;
+import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
@@ -30,61 +30,61 @@ public class AdminServiceManager {
         return instance;
     }
 
-    public void getUserEmail(String userName, AsyncCallback<String> callback) {
-        proxy.getUserEmail(userName, callback);
+    public void getUserEmail(UserId userId, AsyncCallback<String> callback) {
+        proxy.getUserEmail(userId.getUserName(), callback);
     }
 
-    public void setUserEmail(String userName, String email, AsyncCallback<Void> callback) {
-        proxy.setUserEmail(userName, email, callback);
+    public void setUserEmail(UserId userId, String email, AsyncCallback<Void> callback) {
+        proxy.setUserEmail(userId.getUserName(), email, callback);
     }
 
-    public void getProjects(String user, AsyncCallback<Collection<ProjectData>> cb) {
-        proxy.getProjects(user, cb);
+    public void getProjects(UserId userId, AsyncCallback<Collection<ProjectData>> cb) {
+        proxy.getProjects(userId.getUserName(), cb);
     }
 
-    public void getAllowedOperations(String project, String user, AsyncCallback<Collection<String>> cb) {
-        proxy.getAllowedOperations(project, user, cb);
+    public void getAllowedOperations(ProjectId projectId, UserId userId, AsyncCallback<PermissionsSet> cb) {
+        proxy.getAllowedOperations(projectId.getProjectName(), userId.getUserName(), cb);
     }
 
-    public void getAllowedServerOperations(String userName, AsyncCallback<Collection<String>> cb) {
-        proxy.getAllowedServerOperations(userName, cb);
+    public void getAllowedServerOperations(UserId userId, AsyncCallback<PermissionsSet> cb) {
+        proxy.getAllowedServerOperations(userId.getUserName(), cb);
     }
 
-    public void changePassword(String name, String password, AsyncCallback<Void> cb) {
-        proxy.changePassword(name, password, cb);
+    public void changePassword(UserId userId, String password, AsyncCallback<Void> cb) {
+        proxy.changePassword(userId.getUserName(), password, cb);
     }
 
     public void refreshMetaproject(AsyncCallback<Void> cb) {
         proxy.refreshMetaproject(cb);
     }
 
-    public void sendPasswordReminder(String userName, AsyncCallback<Void> cb) {
-        proxy.sendPasswordReminder(userName, cb);
+    public void sendPasswordReminder(UserId userId, AsyncCallback<Void> cb) {
+        proxy.sendPasswordReminder(userId.getUserName(), cb);
     }
 
-    public void getUserSaltAndChallenge(String userName, AsyncCallback<LoginChallengeData> cb) {
-        proxy.getUserSaltAndChallenge(userName, cb);
+    public void getUserSaltAndChallenge(UserId userId, AsyncCallback<LoginChallengeData> cb) {
+        proxy.getUserSaltAndChallenge(userId.getUserName(), cb);
     }
 
-    public void authenticateToLogin(String userName, String response, AsyncCallback<UserData> cb) {
-        proxy.authenticateToLogin(userName, response, cb);
+    public void authenticateToLogin(UserId userId, String response, AsyncCallback<UserId> cb) {
+        proxy.authenticateToLogin(userId.getUserName(), response, cb);
     }
 
     public void checkUserLoggedInMethod(AsyncCallback<String> cb) {
         proxy.checkUserLoggedInMethod(cb);
     }
 
- /*   public void getUserName(AsyncCallback<String> cb) {
-        proxy.getUserName(cb);
+ /*   public void getuserId.getUserName()(AsyncCallback<String> cb) {
+        proxy.getuserId.getUserName()(cb);
     }
 */
     public void clearPreviousLoginAuthenticationData(AsyncCallback<Void> cb) {
         proxy.clearPreviousLoginAuthenticationData(cb);
     }
 
-    public void changePasswordEncrypted(String userName, String encryptedPassword, String salt,
+    public void changePasswordEncrypted(UserId userId, String encryptedPassword, String salt,
             AsyncCallback<Boolean> cb) {
-        proxy.changePasswordEncrypted(userName, encryptedPassword, salt, cb);
+        proxy.changePasswordEncrypted(userId.getUserName(), encryptedPassword, salt, cb);
     }
 
     public void getNewSalt(AsyncCallback<String> cb) {
@@ -94,7 +94,7 @@ public class AdminServiceManager {
     public void registerUserViaEncrption(String name, String hashedPassword, String emailId, AsyncCallback<UserData> cb) throws UserNameAlreadyExistsException {
         proxy.registerUserViaEncrption(name, hashedPassword, emailId, cb);
     }
-    public void getCurrentUserInSession(AsyncCallback<UserData> cb) {
+    public void getCurrentUserInSession(AsyncCallback<UserId> cb) {
         proxy.getCurrentUserInSession(cb);
     }
 

@@ -1,17 +1,16 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
-import org.apache.http.annotation.ThreadSafe;
 import org.coode.owlapi.obo.parser.OBOVocabulary;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -24,19 +23,18 @@ public class OBOEntityCreatorFactory extends OWLEntityCreatorFactory {
 
     public static final String DEFAULT_BASE = "http://purl.obolibrary.org/obo/";
 
-    private int currentId = 0;
 
     private final int idLength;
 
     private String termPrefix;
     
-    private String defaultNamespace = "";
+
+    private final AtomicInteger idGenerator = new AtomicInteger();
 
 
     public OBOEntityCreatorFactory(OWLAPIProject project, int idLength) {
         this.idLength = idLength;
         this.termPrefix = getTermPrefix(project);
-        defaultNamespace = getOBOOntologyNamespace(project);
     }
 
 
@@ -79,6 +77,26 @@ public class OBOEntityCreatorFactory extends OWLEntityCreatorFactory {
         return "";
     }
 
+    @Override
+    public <E extends OWLEntity> OWLEntityCreator<E> setBrowserText(OWLAPIProject project, UserId userId, E entity, String browserText) {
+        List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        final OWLDataFactory df = project.getDataFactory();
+        OWLLiteral browserTextLiteral = df.getOWLLiteral(browserText, df.getRDFPlainLiteral());
+        OWLAxiom freshAx = df.getOWLAnnotationAssertionAxiom(df.getRDFSLabel(), entity.getIRI(), browserTextLiteral);
+        for(OWLOntology ont : project.getRootOntology().getImportsClosure()) {
+            for(OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(entity.getIRI())) {
+                if(ax.getProperty().isLabel()) {
+                    changes.add(new RemoveAxiom(ont, ax));
+                    changes.add(new AddAxiom(ont, freshAx));
+                }
+            }
+        }
+        if(changes.isEmpty()) {
+            changes.add(new AddAxiom(project.getRootOntology(), freshAx));
+        }
+        return new OWLEntityCreator<E>(entity, changes);
+
+    }
 
     @Override
     public <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(OWLAPIProject project, UserId userId, String shortName, EntityType<E> entityType) {
@@ -143,12 +161,12 @@ public class OBOEntityCreatorFactory extends OWLEntityCreatorFactory {
         // I think this is the only bit of synchronization that we need.  Synchronize on the project object
         synchronized (project) {
             while (true) {
-                String shortName = numberFormat.format(currentId);
+                String shortName = numberFormat.format(idGenerator.getAndIncrement());
                 IRI iri = IRI.create(DEFAULT_BASE + shortName);
                 if (!rootOntology.containsEntityInSignature(iri, true)) {
                     return shortName;
                 }
-                currentId++;
+//                currentId++;
             }
         }
     }

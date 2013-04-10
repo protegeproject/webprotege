@@ -14,13 +14,13 @@ import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
 import edu.stanford.bmir.protege.web.client.rpc.AccessPolicyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.AccessPolicyUserData;
 import edu.stanford.bmir.protege.web.client.ui.login.HashAlgorithm;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.domain.Invitation;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class InviteUserUtil {
     private HTML inviteMoreHTML;
     private Button sendInvitationButton;
 
-    private String currentSelectedProject;
+    private ProjectId currentSelectedProject;
 
     /**
      * Initializes the variables
@@ -79,7 +79,7 @@ public class InviteUserUtil {
     private void createTemporaryAccountsOnServer(List<Invitation> invitationList) {
         String invitationBaseURL = getInvitationBaseURL();
         invitationWindow.getEl().mask("Sending invitation...");
-        AccessPolicyServiceManager.getInstance().createTemporaryAccountForInvitation(currentSelectedProject,invitationBaseURL, invitationList,
+        AccessPolicyServiceManager.getInstance().createTemporaryAccountForInvitation(currentSelectedProject, invitationBaseURL, invitationList,
                 new AsyncCallback<Void>() {
 
                     public void onSuccess(Void result) {
@@ -101,7 +101,7 @@ public class InviteUserUtil {
      * Creates and display window to invite
      * @param currentSelectedProject
      */
-    public void displayInvitationWindow(String currentSelectedProject) {
+    public void displayInvitationWindow(ProjectId currentSelectedProject) {
         this.currentSelectedProject = currentSelectedProject;
         init();
         addListeners();
@@ -361,7 +361,7 @@ public class InviteUserUtil {
             if (userData != null) {
                 win.close();
 
-//                GlobalSettings.getGlobalSettings().getGlobalSession().setUserName(
+//                GlobalSettings.get().getGlobalSession().setUserName(
 //                        userData.getName());
                 MessageBox.alert("New user created successfully");
                 throw new RuntimeException("TODO: Uncomment setUserName.");

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.Entity;
 
 /**
  * Author: Matthew Horridge<br>

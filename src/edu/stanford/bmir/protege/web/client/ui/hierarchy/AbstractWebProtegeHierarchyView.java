@@ -5,7 +5,6 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
-import org.apache.commons.collections.FastTreeMap;
 
 
 /**
@@ -18,7 +17,6 @@ public class AbstractWebProtegeHierarchyView extends FlowPanel {
 
     private Tree tree;
     
-    private TreeHierarchyServiceProvider hierarchyService;
 
     private PopupPanel dragPopupPanel = new PopupPanel(true);
 
@@ -29,8 +27,8 @@ public class AbstractWebProtegeHierarchyView extends FlowPanel {
         }
     };
 
-    public AbstractWebProtegeHierarchyView(TreeHierarchyServiceProvider hierarchyService) {
-        this.hierarchyService = hierarchyService;
+    public AbstractWebProtegeHierarchyView() {
+//        this.hierarchyService = hierarchyService;
         tree = new Tree();
         add(tree);
         tree.setAnimationEnabled(true);
@@ -79,7 +77,6 @@ public class AbstractWebProtegeHierarchyView extends FlowPanel {
             widget.getElement().setDraggable(Element.DRAGGABLE_TRUE);
             widget.addDragStartHandler(new DragStartHandler() {
                 public void onDragStart(DragStartEvent event) {
-                    System.out.println("Drag start");
                     event.setData("text", "My dragged thing");
                     event.getDataTransfer().setDragImage(widget.getElement(), mouseX, mouseY);
                     dragPopupPanel.show();
@@ -119,7 +116,6 @@ public class AbstractWebProtegeHierarchyView extends FlowPanel {
 
             widget.addDropHandler(new DropHandler() {
                 public void onDrop(DropEvent event) {
-                    System.out.println("Drop");
                     widget.removeStyleName("web-protege-error-background");
                     event.preventDefault();
                     dragPopupPanel.hide();

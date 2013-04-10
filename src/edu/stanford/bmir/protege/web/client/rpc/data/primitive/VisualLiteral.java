@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.primitive;
 
+import org.semanticweb.owlapi.model.OWLLiteral;
+
 import java.io.Serializable;
 
 /**
@@ -8,9 +10,9 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/05/2012
  */
-public class VisualLiteral extends VisualPrimitive<Literal> implements Serializable {
+public class VisualLiteral extends VisualPrimitive<OWLLiteral> implements Serializable {
 
-    public VisualLiteral(Literal literal, String browserText) {
+    public VisualLiteral(OWLLiteral literal, String browserText) {
         super(literal, browserText);
     }
 

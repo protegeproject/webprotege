@@ -54,7 +54,7 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm {
 
     private static final String PROJECT_TYPE_LABEL = "Project type";
 
-    private final DropDown<ProjectType> projectTypeDropDown;
+//    private final DropDown<ProjectType> projectTypeDropDown;
 
     public NewProjectInfoWidget() {
         fillProjectNamesCache();
@@ -76,8 +76,8 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm {
         projectDescriptionTextArea.setWidth(FIELD_WIDTH);
         addWidget(PROJECT_DESCRIPTION_LABEL, projectDescriptionTextArea);
 
-        projectTypeDropDown = new DropDown<ProjectType>(new ProjectTypeDropDownModel());
-        addWidget(PROJECT_TYPE_LABEL, projectTypeDropDown);
+//        projectTypeDropDown = new DropDown<ProjectType>(new ProjectTypeDropDownModel());
+//        addWidget(PROJECT_TYPE_LABEL, projectTypeDropDown);
         
         addDialogValidator(new EmptyProjectNameValidator());
         addDialogValidator(new ExistingProjectNameValidator());
@@ -147,7 +147,9 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm {
     }
 
     public ProjectType getProjectType() {
-        return projectTypeDropDown.getSelectedItem();
+        // TODO: FIX!!!
+        return new ProjectType("OWL Project");
+//        return projectTypeDropDown.getSelectedItem();
     }
 
     public Focusable getDefaultWidget() {
@@ -204,9 +206,9 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm {
                 public void onSuccess(List<ProjectType> result) {
                     projectTypeList.clear();
                     projectTypeList.addAll(result);
-                    if(projectTypeDropDown != null) {
-                        projectTypeDropDown.setSelectedItem(projectTypeList.get(0));
-                    }
+//                    if(projectTypeDropDown != null) {
+//                        projectTypeDropDown.setSelectedItem(projectTypeList.get(0));
+//                    }
                 }
             });
         }

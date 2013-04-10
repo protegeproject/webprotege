@@ -1,0 +1,184 @@
+@def selectionBorderWidth 2px;
+@def bordercolour rgba(230, 230, 230, 1.0);
+@def selectionBackground rgba(215, 230, 250, 1.0)
+@def defpadding 7px;
+
+
+.dataGridWidget {
+
+}
+
+.dataGridFirstColumn {
+
+}
+
+.dataGridLastColumn {
+
+}
+
+.dataGridFooter {
+    border-top: 2px solid #6f7277;
+    padding: 3px 15px;
+    text-align: left;
+    color: #4b4a4a;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.dataGridHeader {
+    border-bottom: 2px solid silver;
+    text-align: left;
+    color: #808080;
+    font-size: 12px;
+    text-shadow: none;
+    font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+
+}
+
+.dataGridCell {
+    padding-bottom: 7px;
+    /*padding: 2px 15px;*/
+    overflow: hidden;
+}
+
+.dataGridFirstColumnFooter {
+
+}
+
+.dataGridFirstColumnHeader {
+
+}
+
+.dataGridLastColumnFooter {
+
+}
+
+.dataGridLastColumnHeader {
+
+}
+
+.dataGridSortableHeader {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.dataGridSortableHeader:hover {
+    color: #6c6b6b;
+}
+
+.dataGridSortedHeaderAscending {
+
+}
+
+
+.dataGridSortedHeaderDescending {
+
+}
+
+.dataGridEvenRow {
+    background: #ffffff;
+    border: none;;
+    border-bottom: bordercolour 1px solid;
+    color: #000000;
+    padding-top: 2px;
+    padding-bottom: 4px;
+}
+
+.dataGridOddRow {
+    background: #ffffff;
+    border: none;
+    border-bottom: bordercolour 1px solid;
+    color: #000000;
+    padding-top: 2px;
+    padding-bottom: 4px;
+}
+
+.dataGridHoveredRow {
+    background: #eee;
+    background: #eaeaea;
+    border: none;;
+    border-bottom: bordercolour 1px solid;
+}
+
+.dataGridKeyboardSelectedRow {
+    background: selectionBackground;
+    color: #ffffff;
+    border: none;
+}
+
+.dataGridSelectedRow {
+    background: selectionBackground;
+    color: white;
+    height: auto;
+    overflow: auto;
+    color: #ffffff;
+    border: none;
+}
+
+
+
+
+.dataGridEvenRowCell {
+    /*border: selectionBorderWidth solid #ffffff;*/
+    border: none;
+    border-bottom: bordercolour 1px solid;
+    padding-top: defpadding;
+    padding-bottom: defpadding;
+    /*background: #ffffff;*/
+}
+
+.dataGridOddRowCell {
+    /*border: selectionBorderWidth solid #f3f7fb;*/
+    /*background: #ffffff;*/
+    border: none;
+    border-bottom: bordercolour 1px solid;
+    padding-top: defpadding;
+    padding-bottom: defpadding;
+}
+
+
+.dataGridHoveredRowCell {
+    /*border: selectionBorderWidth solid #eee;*/
+    border: none;;
+    border-bottom: bordercolour 1px solid;
+    padding-top: defpadding;
+    padding-bottom: defpadding;
+}
+
+
+
+.dataGridKeyboardSelectedRowCell {
+    /*border: selectionBorderWidth solid #628cd5;*/
+    border: none;;
+    border-bottom: bordercolour 1px solid;
+    background: selectionBackground;
+    color: #000000;
+    padding-top: defpadding;
+    padding-bottom: defpadding;
+}
+
+
+.dataGridSelectedRowCell {
+    /*border: selectionBorderWidth solid #628cd5;*/
+    border: none;
+    background: selectionBackground;
+    color: #000000;
+    border-bottom: bordercolour 1px solid;
+    padding-top: defpadding;
+    padding-bottom: defpadding;
+}
+
+    /**
+    * The keyboard selected cell is visible over selection.
+    */
+.dataGridKeyboardSelectedCell {
+    /*border: selectionBorderWidth solid #d7dde8;*/
+    border: none;
+    background: selectionBackground;
+    color: #000000;
+    border-bottom: bordercolour 1px solid;
+    padding-top: defpadding;
+    padding-bottom: defpadding;
+}

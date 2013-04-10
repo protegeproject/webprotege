@@ -82,14 +82,6 @@ public class FormConstants {
 	public static final String FIELD_EDITOR_MULTILINE = "multiline";
 	public static final String FIELD_EDITOR_HTML = "html";
 	
-	/*
-	 * ICD specific
-	 */
-	public static final String ICDTITLE_TEXTFIELD = "icdtitle_textfield";
-    public static final String ICDLINEARIZATION_GRID = "icdlinearization_grid";
-    public static final String ICDINHERITEDTAG_GRID = "icdinheritedtag_grid";
-    public static final String ICDINDEX_GRID = "icdindex_grid";
-    public static final String ICDINCLUSION_GRID = "icdinclusion_grid";
 
 
 }

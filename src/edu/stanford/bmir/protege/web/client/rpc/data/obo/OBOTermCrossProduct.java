@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.obo;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualNamedClass;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -13,7 +16,7 @@ import java.util.Collections;
  */
 public class OBOTermCrossProduct implements Serializable {
 
-    private VisualNamedClass genus;
+    private OWLClassData genus;
 
     private OBOTermRelationships relationships;
 
@@ -25,16 +28,16 @@ public class OBOTermCrossProduct implements Serializable {
         return new OBOTermCrossProduct(null, new OBOTermRelationships(Collections.<OBORelationship>emptySet()));
     }
 
-    public OBOTermCrossProduct(VisualNamedClass genus, OBOTermRelationships relationships) {
+    public OBOTermCrossProduct(OWLClassData genus, OBOTermRelationships relationships) {
         this.genus = genus;
         this.relationships = relationships;
     }
 
-    public OBOTermCrossProduct(VisualNamedClass genus) {
+    public OBOTermCrossProduct(OWLClassData genus) {
         this(genus, new OBOTermRelationships(Collections.<OBORelationship>emptySet()));
     }
 
-    public VisualNamedClass getGenus() {
+    public OWLClassData getGenus() {
         return genus;
     }
 

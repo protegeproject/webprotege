@@ -68,13 +68,10 @@ public class ApplicationProperties {
      * Open id Authentication setting
      */
     private static final boolean WEBPROTEGE_AUTHENTICATE_WITH_OPENID_DEFAULT = true;
+
     private static final String APPLICATION_PATH_DEFAULT = "";
     private static final boolean LOGIN_WITH_HTTPS_DEFAULT = false;
 
-    /*
-     * ICD export path
-     */
-    private static final String ICD_EXPORT_PATH_DEFAULT = "." + File.separator;
 
     /*
      * Automatic save for local projects
@@ -84,6 +81,13 @@ public class ApplicationProperties {
     
     
     private static final Properties blacklistedProperties = new Properties();
+
+    private static final String DEFAULT_SMTP_HOST = "smtp.gmail.com";
+
+    private static final String DEFAULT_SMTP_PORT = "465";
+
+    private static final String DEFAULT_EMAIL_ACCOUNT = "webprotege2012@gmail.com";
+
 
     static  {
         try {
@@ -138,11 +142,11 @@ public class ApplicationProperties {
     }
 
     public static String getSmtpHostName() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_SMTP_HOST_NAME_PROP, "");
+        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_SMTP_HOST_NAME_PROP, DEFAULT_SMTP_HOST);
     }
 
     public static String getSmtpPort() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_SMTP_PORT_PROP, "");
+        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_SMTP_PORT_PROP, DEFAULT_SMTP_PORT);
     }
 
     public static String getSslFactory() {
@@ -150,11 +154,15 @@ public class ApplicationProperties {
     }
 
     public static String getEmailAccount() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_ACCOUNT_PROP, "");
+        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_ACCOUNT_PROP, DEFAULT_EMAIL_ACCOUNT);
     }
 
     public static String getEmailPassword() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_PASSWORD_PROP, "");
+        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_PASSWORD_PROP, "protege123");
+    }
+
+    public static String getLoggingEmail() {
+        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.LOGGING_EMAIL_PROP, DEFAULT_EMAIL_ACCOUNT);
     }
 
     public static String getApplicationName() {
@@ -175,12 +183,6 @@ public class ApplicationProperties {
     public static String getApplicationHttpsPort() {
         return edu.stanford.smi.protege.util.ApplicationProperties.getString(
                 ApplicationPropertyNames.APPLICATION_PORT_HTTPS_PROP, ApplicationPropertyDefaults.APPLICATION_PORT_HTTPS_DEFAULT);
-    }
-
-    public static String getICDExportDirectory() {
-        String exportPath =  edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.ICD_EXPORT_DIR_PROP, ICD_EXPORT_PATH_DEFAULT);
-        exportPath = exportPath.endsWith(File.separator) ? exportPath : exportPath + File.separator;
-        return exportPath;
     }
 
     public static int getServerPollingTimeoutMinutes() {

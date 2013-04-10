@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
-import com.google.gwt.core.client.GWT;
+import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class EntityData implements Serializable {
 
@@ -17,13 +15,15 @@ public class EntityData implements Serializable {
     private int childrenAnnotationsCount;
     private Collection<EntityData> types;
     private ValueType valueType;
-    private Watch watch;
+//    private WatchType watchType;
     private Map<String, String> properties;
+
+    private Set<Watch<?>> watches;
 
     /**
      * TODO: Should be for serialization purposes only.
      */
-    public EntityData() {
+    protected EntityData() {
     }
 
     public EntityData(String name) {
@@ -34,6 +34,20 @@ public class EntityData implements Serializable {
         this(name, browserText, null);
     }
 
+
+//    public EntityData(OWLEntity entity) {
+//        this(entity, entity.getIRI().toString());
+//    }
+
+//    public EntityData(OWLEntity entity, String browserText) {
+//        this(entity, browserText, null);
+//    }
+
+//    public EntityData(OWLEntity entity, String browserText, Collection<EntityData> types) {
+//        this.name = name;
+//        this.browserText = browserText;
+//        this.types = types;
+//    }
     public EntityData(String name, String browserText, Collection<EntityData> types) {
         this.name = name;
         this.browserText = browserText;
@@ -46,7 +60,7 @@ public class EntityData implements Serializable {
         setLocalAnnotationsCount(sourceEntityData.getLocalAnnotationsCount());
         setChildrenAnnotationsCount(sourceEntityData.getChildrenAnnotationsCount());
         setValueType(sourceEntityData.getValueType());
-        setWatch(sourceEntityData.getWatch());
+//        setWatchType(sourceEntityData.getWatchType());
         Collection<EntityData> sourceTypes = sourceEntityData.getTypes();
         if (sourceTypes != null) {
             setTypes(new ArrayList<EntityData>(sourceTypes));
@@ -122,12 +136,40 @@ public class EntityData implements Serializable {
         this.childrenAnnotationsCount = childrenAnnotationsCount;
     }
 
-    public Watch getWatch() {
-        return watch;
+//    public WatchType getWatchType() {
+//        return watchType;
+//    }
+//
+//    public void setWatchType(WatchType watchType) {
+//        this.watchType = watchType;
+//    }
+
+
+    public Set<Watch<?>> getWatches() {
+        if(watches == null) {
+            return Collections.emptySet();
+        }
+        else {
+            return new HashSet<Watch<?>>(watches);
+        }
     }
 
-    public void setWatch(Watch watch) {
-        this.watch = watch;
+    public void clearWatches() {
+        watches = null;
+    }
+
+    public void addWatch(Watch<?> watch) {
+        if(watches == null) {
+            setWatches(Collections.<Watch<?>>singleton(watch));
+        }
+        else {
+            watches.add(watch);
+        }
+    }
+
+
+    public void setWatches(Set<Watch<?>> watches) {
+        this.watches = new HashSet<Watch<?>>(watches);
     }
 
     public Map<String, String> getProperties() {

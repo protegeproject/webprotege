@@ -7,12 +7,13 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequestEntityMatchType;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermCrossProduct;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualNamedClass;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestOracle;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,16 +32,16 @@ public class OBOTermCrossProductEditor implements OBOTermEditor {
 
     private boolean dirty;
 
-    private Map<String, VisualNamedClass> browserTextToClassMap = new HashMap<String, VisualNamedClass>();
+    private Map<String, OWLClassData> browserTextToClassMap = new HashMap<String, OWLClassData>();
     
     public OBOTermCrossProductEditor(ProjectId projectId) {
-        genusSuggestBox = new SuggestBox(new EntitySuggestOracle(projectId, 20, EntityLookupRequestEntityMatchType.MATCH_CLASSES));
+        genusSuggestBox = new SuggestBox(new EntitySuggestOracle(projectId, 20, EntityType.CLASS));
         relationshipEditor = new OBOTermRelationshipEditor(projectId);
         genusSuggestBox.getElement().setAttribute("placeholder", "Type in genus name (class name)");
         genusSuggestBox.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
             public void onSelection(SelectionEvent<SuggestOracle.Suggestion> suggestionSelectionEvent) {
                 EntitySuggestion suggestion = (EntitySuggestion) suggestionSelectionEvent.getSelectedItem();
-                browserTextToClassMap.put(suggestion.getReplacementString(), (VisualNamedClass) suggestion.getEntity());
+                browserTextToClassMap.put(suggestion.getReplacementString(), (OWLClassData) suggestion.getEntity());
             }
         });
         genusSuggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
@@ -55,7 +56,7 @@ public class OBOTermCrossProductEditor implements OBOTermEditor {
     }
 
     public void setValue(OBOTermCrossProduct crossProduct) {
-        VisualNamedClass genus = crossProduct.getGenus();
+        OWLEntityData genus = crossProduct.getGenus();
         if (genus != null) {
             genusSuggestBox.setValue(genus.getBrowserText());
         }
@@ -68,7 +69,7 @@ public class OBOTermCrossProductEditor implements OBOTermEditor {
 
     public OBOTermCrossProduct getValue() {
         String genusValue = genusSuggestBox.getValue().trim();
-        VisualNamedClass genus = null;
+        OWLClassData genus = null;
         if(!genusValue.isEmpty()) {
             genus = browserTextToClassMap.get(genusValue);
         }

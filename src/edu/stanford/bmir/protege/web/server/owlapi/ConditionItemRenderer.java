@@ -153,7 +153,8 @@ public class ConditionItemRenderer {
         OWLClassExpression clsExpression = axiom.getSuperClass();
         ConditionItem ci = getConditionItem(clsExpression, ConditionItemType.NECESSARY);
         if (!axiom.getSubClass().equals(rootClass)) {
-            String classExpressionRendering = project.getRenderingManager().getBrowserText(axiom.getSuperClass());
+            final RenderingManager rm = project.getRenderingManager();
+            String classExpressionRendering = rm.getBrowserText(axiom.getSuperClass());
             String cleanedClassExpressionRendering = classExpressionRendering.replaceAll("\\s+", " ");  
             ci.setInheritedFromName(cleanedClassExpressionRendering);
             ci.setInheritedFromBrowserText(cleanedClassExpressionRendering);
@@ -179,7 +180,8 @@ public class ConditionItemRenderer {
             Set<OWLClassExpression> otherClassExpressions = axiom.getClassExpressionsMinus(ce);
             if (!otherClassExpressions.isEmpty()) {
                 OWLClassExpression otherCE = otherClassExpressions.iterator().next();
-                String otherCERendering = project.getRenderingManager().getBrowserText(otherCE);
+                final RenderingManager rm = project.getRenderingManager();
+                String otherCERendering = rm.getBrowserText(otherCE);
                 ci.setInheritedFromName(otherCERendering);
                 ci.setInheritedFromBrowserText(otherCERendering);
             }
@@ -195,6 +197,7 @@ public class ConditionItemRenderer {
      */
     public ConditionItem getConditionItem(OWLClassExpression clsExpression, ConditionItemType type) {
         RenderingManager rm = project.getRenderingManager();
+        EscapingShortFormProvider escapingShortFormProvider = new EscapingShortFormProvider(rm.getShortFormProvider());
         String shortForm = rm.getBrowserText(clsExpression);
         String cleanedShortForm = shortForm.replaceAll("\\s+", " ");
         ConditionItem conditionItem = new ConditionItem(cleanedShortForm);

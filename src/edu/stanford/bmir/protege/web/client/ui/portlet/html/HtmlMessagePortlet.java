@@ -31,7 +31,7 @@ public class HtmlMessagePortlet extends AbstractEntityPortlet {
         setPaddings(3);
 
         initConfiguration();
-        htmlTextComponent = new HtmlTextComponent(project);
+        htmlTextComponent = new HtmlTextComponent(getProject());
         add(htmlTextComponent);
         doLayout();
     }
@@ -60,16 +60,6 @@ public class HtmlMessagePortlet extends AbstractEntityPortlet {
         refreshContent();
     }
 
-    @Override
-    public void onLogin(String userName) {
-        //onRefresh();
-    }
-
-    @Override
-    public void onLogout(String userName) {
-        //onRefresh();
-    }
-
     public Collection<EntityData> getSelection() {
         return null;
     }
@@ -88,7 +78,7 @@ public class HtmlMessagePortlet extends AbstractEntityPortlet {
     }
 
     private void refreshContent() {
-        setTitle(title == null ? "Welcome to " + project.getProjectName() : title);
+        setTitle(title == null ? "Welcome to " + getProject().getProjectName() : title);
 
         htmlTextComponent.refreshContent();
     }

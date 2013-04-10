@@ -4,9 +4,7 @@ import java.util.*;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
@@ -16,7 +14,6 @@ import com.gwtext.client.dd.DragData;
 import com.gwtext.client.dd.DragDrop;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.Component;
-import com.gwtext.client.widgets.Container;
 import com.gwtext.client.widgets.CycleButton;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.MessageBoxConfig;
@@ -25,13 +22,9 @@ import com.gwtext.client.widgets.Tool;
 import com.gwtext.client.widgets.Toolbar;
 import com.gwtext.client.widgets.ToolbarButton;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
-import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.event.WindowListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
-import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextField;
-import com.gwtext.client.widgets.form.ValidationException;
-import com.gwtext.client.widgets.form.Validator;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.menu.BaseItem;
@@ -53,26 +46,36 @@ import com.gwtext.client.widgets.tree.event.MultiSelectionModelListener;
 import com.gwtext.client.widgets.tree.event.TreeNodeListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.UIDescription;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
+import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.rpc.*;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
+import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
+import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.event.*;
-import edu.stanford.bmir.protege.web.client.model.listener.OntologyListenerAdapter;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
-import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.SubclassEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
-import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
-import edu.stanford.bmir.protege.web.client.rpc.data.Watch;
+import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NoteInputPanel;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.util.GlobalSelectionManager;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.ObjectPath;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.watches.*;
+import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Portlet for displaying class trees. It can be configured to show only a
@@ -81,7 +84,7 @@ import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
  * Also supports creating and editing classes.
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
-public class ClassTreePortlet extends AbstractEntityPortlet {
+public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     private static final String SUFFIX_ID_LOCAL_ANNOTATION_COUNT = "_locAnnCnt";
 
@@ -115,7 +118,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
 
     private boolean showTools = true;
 
-    private boolean allowsMultiSelection = false;
+    private boolean allowsMultiSelection = true;
 
     private String hierarchyProperty = null;
 
@@ -125,6 +128,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
 
     private TreeNodeListenerAdapter nodeListener;
 
+    private boolean registeredEventHandlers = false;
 
     /*
     * Configuration constants and defaults
@@ -132,7 +136,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
     private static Set<EntityData> nodesWithNotesOpen = new HashSet<EntityData>();
 
     public ClassTreePortlet(final Project project) {
-        this(project, true, true, true, false, null);
+        this(project, true, true, true, true, null);
     }
 
     public ClassTreePortlet(final Project project, final boolean showToolbar, final boolean showTitle, final boolean showTools, final boolean allowsMultiSelection, final String topClass) {
@@ -142,8 +146,126 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         this.showTools = showTools;
         this.allowsMultiSelection = allowsMultiSelection;
         this.topClass = topClass;
+        registerEventHandlers();
 
         initialize();
+    }
+
+    private void registerEventHandlers() {
+        if(registeredEventHandlers) {
+            return;
+        }
+        GWT.log("Registering event handlers for ClassTreePortlet " + this);
+        registeredEventHandlers = true;
+        ///////////////////////////////////////////////////////////////////////////
+        //
+        // Registration of event handlers that we are interested in
+        //
+        ///////////////////////////////////////////////////////////////////////////
+
+        addProjectEventHandler(BrowserTextChangedEvent.TYPE, new BrowserTextChangedHandler() {
+            @Override
+            public void browserTextChanged(BrowserTextChangedEvent event) {
+//                if (isEventForThisProject(event)) {
+                    onEntityBrowserTextChanged(event);
+//                }
+            }
+        });
+
+        addProjectEventHandler(EntityNotesChangedEvent.TYPE, new EntityNotesChangedHandler() {
+            @Override
+            public void entityNotesChanged(EntityNotesChangedEvent event) {
+                if (isEventForThisProject(event)) {
+                    onNotesChanged(event);
+                }
+            }
+        });
+
+        addProjectEventHandler(WatchAddedEvent.TYPE, new WatchAddedHandler() {
+            @Override
+            public void handleWatchAdded(WatchAddedEvent event) {
+                if (isEventForThisProject(event)) {
+                    onWatchAdded(event);
+                }
+            }
+        });
+
+        addProjectEventHandler(WatchRemovedEvent.TYPE, new WatchRemovedHandler() {
+            @Override
+            public void handleWatchRemoved(WatchRemovedEvent event) {
+                if (isEventForThisProject(event)) {
+                    onWatchRemoved(event);
+                }
+            }
+        });
+
+        addProjectEventHandler(EntityDeprecatedChangedEvent.TYPE, new EntityDeprecatedChangedHandler() {
+            @Override
+            public void handleEntityDeprecatedChangedEvent(EntityDeprecatedChangedEvent evt) {
+                if (isEventForThisProject(evt)) {
+                    onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated());
+                }
+            }
+        });
+
+        addProjectEventHandler(ClassHierarchyParentAddedEvent.TYPE, new ClassHierarchyParentAddedHandler() {
+            @Override
+            public void handleClassHierarchyParentAdded(final ClassHierarchyParentAddedEvent event) {
+                if (isEventForThisProject(event)) {
+                    handleParentAddedEvent(event);
+                }
+            }
+        });
+
+
+        addProjectEventHandler(ClassHierarchyParentRemovedEvent.TYPE, new ClassHierarchyParentRemovedHandler() {
+            @Override
+            public void handleClassHierarchyParentRemoved(ClassHierarchyParentRemovedEvent event) {
+                if (isEventForThisProject(event)) {
+                    handleParentRemovedEvent(event);
+                }
+            }
+        });
+
+    }
+
+    private void handleParentAddedEvent(final ClassHierarchyParentAddedEvent event) {
+        final TreeNode tn = findTreeNode(event.getParent());
+        if(tn != null) {
+            RenderingServiceManager.getManager().execute(new GetRendering(getProjectId(), event), new AsyncCallback<GetRenderingResponse>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    GWT.log("Problem getting classes", caught);
+                }
+
+                @Override
+                public void onSuccess(GetRenderingResponse result) {
+                    SubclassEntityData subClassData = new SubclassEntityData(event.getChild().toStringID(), result.getRendering(event.getChild().getIRI()).get().getBrowserText(), Collections.<EntityData>emptyList(), 0);
+                    subClassData.setValueType(ValueType.Cls);
+                    onSubclassAdded((EntityData) tn.getUserObject(), Arrays.<EntityData>asList(subClassData), false);
+                }
+            });
+
+        }
+    }
+
+    private void handleParentRemovedEvent(ClassHierarchyParentRemovedEvent event) {
+        TreeNode parentTn = findTreeNode(event.getParent());
+        if (parentTn != null) {
+            // We should check
+            TreeNode childTn = findTreeNode(event.getChild());
+            if(childTn != null) {
+                for(Node existingChild : parentTn.getChildNodes()) {
+//                    String parentId = parentTn.getId();
+                    String childId = childTn.getId();
+                    String existingChildId = existingChild.getId();
+                    if(childId != null && existingChildId != null && childId.equals(existingChildId)) {
+                        childTn.remove();
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     protected String getCreateClsDescription() {
@@ -270,7 +392,88 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
                 }
             };
         }
+
+
+
     }
+
+
+    private String getWatchIconName(Watch w) {
+        if(w instanceof EntityFrameWatch) {
+            return "eye.png";
+        }
+        else {
+            return "eye-down.png";
+        }
+    }
+
+    private void onNotesChanged(EntityNotesChangedEvent event) {
+        String name = event.getEntity().getIRI().toString();
+        TreeNode node = findTreeNode(name);
+        if(node != null) {
+            final Object userObject = node.getUserObject();
+            if (userObject instanceof EntityData) {
+                EntityData subclassEntityData = (EntityData) userObject;
+                int presentCount = subclassEntityData.getLocalAnnotationsCount();
+                int delta = event.getTotalNotesCount() - presentCount;
+                subclassEntityData.setLocalAnnotationsCount(event.getTotalNotesCount());
+                String nodeText = createNodeRenderText(node);
+                node.setText(nodeText);
+                TreeNode childNode = node;
+            }
+            // TODO: Think about this
+//            updateAncestorNoteCounts(delta, childNode);
+        }
+    }
+
+    private void onWatchAdded(WatchAddedEvent event) {
+        if(!event.getUserId().equals(getUserId())) {
+            return;
+        }
+        Watch watch = event.getWatch();
+        if(watch instanceof EntityBasedWatch) {
+            TreeNode tn = findTreeNode(((EntityBasedWatch) watch).getEntity().getIRI().toString());
+            if(tn != null) {
+                SubclassEntityData data = (SubclassEntityData) tn.getUserObject();
+                data.addWatch(watch);
+                updateTreeNodeRendering(tn);
+            }
+        }
+    }
+
+    private void updateTreeNodeRendering(TreeNode tn) {
+        tn.setText(createNodeRenderText(tn));
+        updateTreeNodeIcon(tn);
+    }
+
+    private void onWatchRemoved(WatchRemovedEvent event) {
+        if(!event.getUserId().equals(getUserId())) {
+            return;
+        }
+        Watch watch = event.getWatch();
+        if(watch instanceof EntityBasedWatch) {
+            OWLEntity entity = ((EntityBasedWatch) watch).getEntity();
+            TreeNode tn = findTreeNode(entity.getIRI().toString());
+            if(tn != null) {
+                SubclassEntityData data = (SubclassEntityData) tn.getUserObject();
+                data.clearWatches();
+                updateTreeNodeRendering(tn);
+            }
+        }
+    }
+
+//    private void updateAncestorNoteCounts(int nodeDelta, TreeNode forNode) {
+//        TreeNode parentNode = (TreeNode) forNode.getParentNode();
+//        while(parentNode != null && parentNode.getUserObject() instanceof SubclassEntityData) {
+//            SubclassEntityData parentData = (SubclassEntityData) parentNode.getUserObject();
+//            SubclassEntityData childData = (SubclassEntityData) forNode.getUserObject();
+//            parentData.setChildrenAnnotationsCount(parentData.getChildrenAnnotationsCount() + nodeDelta);
+//            String parentText = createNodeRenderText(parentNode);
+//            parentNode.setText(parentText);
+//            forNode = parentNode;
+//            parentNode = (TreeNode) parentNode.getParentNode();
+//        }
+//    }
 
     private void showInternalID(EntityData entity) {
         String classDisplayName = entity.getBrowserText();
@@ -350,7 +553,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         });
 
         addDragAndDropSupport();
-        addProjectListeners();
+//        addProjectListeners();
 
         return treePanel;
     }
@@ -377,66 +580,38 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         }
     }
 
-    protected void addProjectListeners() {
-        if (hierarchyProperty != null) { // hierarchy of property
-            project.addOntologyListener(new OntologyListenerAdapter() {
-                @Override
-                public void entityRenamed(final EntityRenameEvent renameEvent) {
-                    onClassRename(renameEvent.getEntity(), renameEvent.getOldName());
-                }
-
-                @Override
-                public void propertyValueAdded(final PropertyValueEvent propertyValueEvent) {
-                    GWT.log("Property value added event: " + propertyValueEvent.getEntity() + " " + propertyValueEvent.getProperty() + " " + propertyValueEvent.getAddedValues(), null);
-                    if (propertyValueEvent.getProperty().getName().equals(hierarchyProperty)) {
-                        onSubclassAdded(propertyValueEvent.getEntity(), propertyValueEvent.getAddedValues(), false);
-                    }
-                }
-
-                @Override
-                public void propertyValueRemoved(final PropertyValueEvent propertyValueEvent) {
-                    GWT.log("Property value removed event: " + propertyValueEvent.getEntity() + " " + propertyValueEvent.getProperty() + " " + propertyValueEvent.getRemovedValues(), null);
-                    if (propertyValueEvent.getProperty().getName().equals(hierarchyProperty)) {
-                        onSubclassRemoved(propertyValueEvent.getEntity(), propertyValueEvent.getRemovedValues());
-                    }
-                }
-
-                @Override
-                public void propertyValueChanged(final PropertyValueEvent propertyValueEvent) {
-                    GWT.log("Property value changed event: " + propertyValueEvent.getEntity() + " " + propertyValueEvent.getProperty() + " " + propertyValueEvent.getAddedValues() + "  " + propertyValueEvent.getRemovedValues(), null);
-                }
-
-                @Override
-                public void entityBrowserTextChanged(EntityBrowserTextChangedEvent event) {
-                    onEntityBrowserTextChanged(event);
-                }
-            });
-        }
-        else { // subclass of
-            project.addOntologyListener(new OntologyListenerAdapter() {
-                @Override
-                public void entityCreated(final EntityCreateEvent ontologyEvent) {
-                    if (ontologyEvent.getType() == EventType.SUBCLASS_ADDED) {
-                        onSubclassAdded(ontologyEvent.getEntity(), ontologyEvent.getSuperEntities(), false);
-                    }
-                    else if (ontologyEvent.getType() == EventType.SUBCLASS_REMOVED) {
-                        onSubclassRemoved(ontologyEvent.getEntity(), ontologyEvent.getSuperEntities());
-                    }
-                }
-
-                @Override
-                public void entityRenamed(final EntityRenameEvent renameEvent) {
-                    onClassRename(renameEvent.getEntity(), renameEvent.getOldName());
-                }
-
-                @Override
-                public void entityBrowserTextChanged(EntityBrowserTextChangedEvent event) {
-                    onEntityBrowserTextChanged(event);
-                }
-            });
-        }
-    }
-
+//    protected void addProjectListeners() {
+//        if (hierarchyProperty != null) { // hierarchy of property
+//            // TODO: CLEAR UP
+//            getProject().addOntologyListener(new OntologyListenerAdapter() {
+//
+//                @Override
+//                public void propertyValueAdded(final PropertyValueEvent propertyValueEvent) {
+//                    GWT.log("Property value added event: " + propertyValueEvent.getEntity() + " " + propertyValueEvent.getProperty() + " " + propertyValueEvent.getAddedValues(), null);
+//                    if (propertyValueEvent.getProperty().getName().equals(hierarchyProperty)) {
+//                        onSubclassAdded(propertyValueEvent.getEntity(), propertyValueEvent.getAddedValues(), false);
+//                    }
+//                }
+//
+//                @Override
+//                public void propertyValueRemoved(final PropertyValueEvent propertyValueEvent) {
+//                    GWT.log("Property value removed event: " + propertyValueEvent.getEntity() + " " + propertyValueEvent.getProperty() + " " + propertyValueEvent.getRemovedValues(), null);
+//                    if (propertyValueEvent.getProperty().getName().equals(hierarchyProperty)) {
+////                        onSubclassRemoved(propertyValueEvent.getEntity(), propertyValueEvent.getRemovedValues());
+//                    }
+//                }
+//
+//                @Override
+//                public void propertyValueChanged(final PropertyValueEvent propertyValueEvent) {
+//                    GWT.log("Property value changed event: " + propertyValueEvent.getEntity() + " " + propertyValueEvent.getProperty() + " " + propertyValueEvent.getAddedValues() + "  " + propertyValueEvent.getRemovedValues(), null);
+//                }
+//
+//            });
+//        }
+//        else { // subclass of
+//        }
+//    }
+//
 
 
     @Override
@@ -481,7 +656,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
                 onCreateCls();
             }
         });
-        createButton.setDisabled(!project.hasWritePermission(GlobalSettings.getGlobalSettings().getUserName()));
+        createButton.setDisabled(!hasWritePermission());
         return createButton;
     }
 
@@ -494,7 +669,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
                 onDeleteCls();
             }
         });
-        deleteButton.setDisabled(!project.hasWritePermission(GlobalSettings.getGlobalSettings().getUserName()));
+        deleteButton.setDisabled(!getProject().hasWritePermission(Application.get().getUserId()));
         deleteButton.setDisabled(!getDeleteEnabled());
         return deleteButton;
     }
@@ -507,13 +682,13 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         final CheckItem watchItem = new CheckItem();
         watchItem.setText(getWatchClsLabel());
         watchItem.setCls("toolbar-button");
-        watchItem.setIcon("images/tag_blue.png");
+//        watchItem.setIcon("images/eye.png");
         watchButton.addItem(watchItem);
 
         watchBranchItem = new CheckItem();
         watchBranchItem.setText(getWatchBranchClsLabel());
         watchBranchItem.setCls("toolbar-button");
-        watchBranchItem.setIcon("images/tag_blue_add.png");
+//        watchBranchItem.setIcon("images/eye-down.png");
         watchBranchItem.setChecked(true);
         watchButton.addItem(watchBranchItem);
 
@@ -593,11 +768,11 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
             return;
         }
         EntityData entityData = entities.iterator().next();
-        Watch watch = entityData.getWatch();
-        if (watch == Watch.BOTH || watch == Watch.ENTITY_WATCH || watch == Watch.BRANCH_WATCH) {
+        Set<Watch<?>> watches = entityData.getWatches();
+        if (!watches.isEmpty()) {
             watchButton.setActiveItem(unwatchBranchItem);
         }
-        else if (watch == null) {
+        else {
             watchButton.setActiveItem(lastSelectedWatchType == null ? watchBranchItem : lastSelectedWatchType);
         }
     }
@@ -611,7 +786,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
             @Override
             public void onSpecialKey(final Field field, final EventObject e) {
                 if (e.getKey() == EventObject.ENTER) {
-                    SearchUtil searchUtil = new SearchUtil(project, ClassTreePortlet.this, getSearchAsyncCallback());
+                    SearchUtil searchUtil = new SearchUtil(getProject(), ClassTreePortlet.this, getSearchAsyncCallback());
                     searchUtil.setBusyComponent(searchField);
                     searchUtil.setSearchedValueType(ValueType.Cls);
                     searchUtil.search(searchField.getText());
@@ -639,7 +814,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         treePanel.addListener(new TreePanelListenerAdapter() {
             @Override
             public boolean doBeforeNodeDrop(final TreePanel treePanel, final TreeNode target, final DragData dragData, final String point, final DragDrop source, final TreeNode dropNode, final DropNodeCallback dropNodeCallback) {
-                if (project.hasWritePermission()) {
+                if (hasWritePermission()) {
                     final boolean success = Window.confirm("Are you sure you want to move " + getNodeBrowserText(dropNode) + " from parent " + getNodeBrowserText(dropNode.getParentNode()) + " to parent " + getNodeBrowserText(target) + " ?");
                     if (success) {
                         moveClass((EntityData) dropNode.getUserObject(), (EntityData) dropNode.getParentNode().getUserObject(), (EntityData) target.getUserObject());
@@ -689,7 +864,14 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
 
     }
 
+    protected TreeNode findTreeNode(OWLClass cls) {
+        return findTreeNode(cls.getIRI().toString());
+    }
+
     protected TreeNode findTreeNode(final String id) {
+        if(treePanel == null) {
+            return null;
+        }
         final TreeNode root = treePanel.getRootNode();
         final TreeNode node = findTreeNode(root, id, new ArrayList<TreeNode>());
         return node;
@@ -712,76 +894,64 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         }
     }
 
-    protected void onSubclassRemoved(final EntityData entity, final Collection<EntityData> subclasses) {
-        if (subclasses == null || subclasses.size() == 0) {
-            return;
-        }
-
-        final EntityData subclass = ((List<EntityData>) subclasses).get(0);
-        final TreeNode parentNode = findTreeNode(entity.getName());
-
-        if (parentNode == null) {
-            return;
-        }
-
-        // final TreeNode subclassNode = findTreeNode(parentNode, subclass.getName(), new ArrayList<TreeNode>());
-        final TreeNode subclassNode = getDirectChild(parentNode, subclass.getName());
-        if (subclassNode == null) {
-            return;
-        }
-
-        //if (subclassNode.getParentNode().equals(parentNode)) {
-        parentNode.removeChild(subclassNode);
-        if (parentNode.getChildNodes().length < 1) {
-            parentNode.setExpandable(false);
-        }
-        //}
-    }
+//    protected void onSubclassRemoved(final EntityData entity, final Collection<EntityData> subclasses) {
+//        if (subclasses == null || subclasses.size() == 0) {
+//            return;
+//        }
+//
+//        final EntityData subclass = ((List<EntityData>) subclasses).get(0);
+//        final TreeNode parentNode = findTreeNode(entity.getName());
+//
+//        if (parentNode == null) {
+//            return;
+//        }
+//
+//        // final TreeNode subclassNode = findTreeNode(parentNode, subclass.getName(), new ArrayList<TreeNode>());
+//        final TreeNode subclassNode = getDirectChild(parentNode, subclass.getName());
+//        if (subclassNode == null) {
+//            return;
+//        }
+//
+//        //if (subclassNode.getParentNode().equals(parentNode)) {
+//        parentNode.removeChild(subclassNode);
+//        if (parentNode.getChildNodes().length < 1) {
+//            parentNode.setExpandable(false);
+//        }
+//        //}
+//    }
 
     /**
      * Called to update the browser text in the tree
      * @param event The event that describes the browser text change that happened.
      */
-    protected void onEntityBrowserTextChanged(EntityBrowserTextChangedEvent event) {
-        EntityData entity = event.getEntity();
-        updateBrowserTextForEntity(entity);
-    }
-
-    /**
-     * Updates the browser text of nodes that display the specified entity in the tree.
-     * @param entity The entity.
-     */
-    private void updateBrowserTextForEntity(EntityData entity) {
-        TreeNode node = findTreeNode(entity.getName());
-        if(node != null) {
-            node.setText(entity.getBrowserText());
-        }
-    }
-
-
-    protected void onClassCreated(final EntityData entity, final List<EntityData> superEntities) {
-        if (superEntities == null) {
-            GWT.log("Entity created: " + entity.getName() + " but unknown superEntities", null);
+    protected void onEntityBrowserTextChanged(BrowserTextChangedEvent event) {
+        OWLEntity entity = event.getEntity();
+        TreeNode tn = findTreeNode(entity.getIRI().toString());
+        if(tn == null) {
             return;
         }
-//        for (final EntityData entityData : superEntities) {
-//            final EntityData superEntity = entityData;
-//            final TreeNode parentNode = findTreeNode(superEntity.getName());
-//            if (parentNode != null && !isSubclassesLoaded(parentNode)) {
-//                insertNodeInTree(parentNode, entity);
-//            }
-//        }
+        EntityData ed = (EntityData) tn.getUserObject();
+        ed.setBrowserText(event.getNewBrowserText());
+        updateTreeNodeRendering(tn);
     }
 
-    protected void onClassRename(final EntityData entity, final String oldName) {
-        final TreeNode oldNode = findTreeNode(entity.getName());
-        if (oldNode == null) {
+
+    protected void onEntityDeprecatedChanged(OWLEntity entity, boolean deprecated) {
+        TreeNode tn = findTreeNode(entity.getIRI().toString());
+        if(tn == null) {
             return;
         }
-        final TreeNode newNode = createTreeNode(entity);
-        oldNode.getParentNode().replaceChild(newNode, oldNode);
+        if (tn.getUserObject() instanceof SubclassEntityData) {
+            SubclassEntityData entityData = (SubclassEntityData) tn.getUserObject();
+            entityData.setDeprecated(deprecated);
+            updateTreeNodeRendering(tn);
+        }
+    }
+
+    protected void onClassCreated(final OWLClass freshClass, final List<OWLClass> superClasses) {
 
     }
+
 
 
     protected void insertNodeInTree(final TreeNode parentNode, final EntityData child) {
@@ -791,97 +961,81 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
     }
 
     protected void onCreateCls() {
-        final com.gwtext.client.widgets.Window window = new com.gwtext.client.widgets.Window();
-        window.setTitle("Create new class");
-        window.setWidth(510);
-        window.setHeight(115);
-        window.setPaddings(5);
-        window.setLayout(new FitLayout());
-        window.setButtonAlign(Position.CENTER);
-        window.setModal(true);
-
-        FormPanel panel = new FormPanel();
-        panel.setPaddings(5);
-        final TextField textField = new TextField("New class name", "className", 350);
-
-        final Button okButton = new Button("OK", new ButtonListenerAdapter() {
+        CreateEntityDialog dlg = new CreateEntityDialog(EntityType.CLASS);
+        dlg.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CreateEntityInfo>() {
             @Override
-            public void onClick(Button button, EventObject e) {
-                String text = textField.getText();
-                createCls(text);
-                window.hide();
-                window.destroy();
+            public void handleHide(CreateEntityInfo data, WebProtegeDialogCloser closer) {
+                final OWLClass superCls = getSelectedClass();
+                final Set<String> browserTexts = new HashSet<String>(data.getBrowserTexts());
+                if (browserTexts.size() > 1) {
+                    DispatchServiceManager.get().execute(new CreateClassesAction(getProjectId(), superCls, browserTexts), getCreateClassesActionAsyncHandler());
+                }
+                else {
+                    DispatchServiceManager.get().execute(new CreateClassAction(getProjectId(), browserTexts.iterator().next(), superCls), getCreateClassAsyncHandler());
+                }
+                closer.hide();
             }
         });
+        dlg.setVisible(true);
+    }
 
-        Button cancelButton = new Button("Cancel", new ButtonListenerAdapter() {
+    private AsyncCallback<CreateClassesResult> getCreateClassesActionAsyncHandler() {
+        return new AsyncCallback<CreateClassesResult>() {
             @Override
-            public void onClick(Button button, EventObject e) {
-                window.hide();
-                window.destroy();
+            public void onFailure(Throwable caught) {
+                GWT.log("There was a problem creating the classes.  Please try again.");
             }
-        });
 
-        window.addListener(new PanelListenerAdapter() {
             @Override
-            public void onAfterLayout(Container self) {
-                //TT: I really did not want to use a timer, but could not find another way of making the focus work
-                Timer timer = new Timer() {
-                    @Override
-                    public void run() {
-                        textField.focus();
+            public void onSuccess(CreateClassesResult result) {
+                Set<OWLClass> createdClasses = result.getCreatedClasses();
+                for(TreeNode node : getSelectedTreeNodes()) {
+                    Set<OWLClass> existingClasses = new HashSet<OWLClass>();
+                    for(Node childNode : node.getChildNodes()) {
+                        OWLClass childCls = DataFactory.getOWLClass(getNodeClsName(childNode));
+                        existingClasses.add(childCls);
                     }
-                };
-                timer.schedule(100);
-            }
-        });
-
-        textField.setValidator(new Validator() {
-            public boolean validate(String value) throws ValidationException {
-                boolean valid = isValidClassName(value);
-                okButton.setDisabled(!valid);
-                okButton.setTooltip(valid ? "" : "Class name is invalid");
-                return valid;
-            }
-        });
-
-        textField.addListener(new TextFieldListenerAdapter() {
-            @Override
-            public void onSpecialKey(Field field, EventObject e) {
-                if (e.getKey() == KeyCodes.KEY_ENTER) {
-                    if (textField.isValid()) {
-                        createCls(textField.getText());
-                        window.hide();
-                        window.destroy();
+                    for(OWLClass createdCls : createdClasses) {
+                        if(!existingClasses.contains(createdCls)) {
+                            final SubclassEntityData entityData = new SubclassEntityData(createdCls.getIRI().toString(), result.getBrowserText(createdCls).or(""), Collections.<EntityData>emptySet(), 0);
+                            entityData.setValueType(ValueType.Cls);
+                            Node n = createTreeNode(entityData);
+                            node.appendChild(n);
+                        }
                     }
                 }
+
             }
-        });
-
-        panel.add(textField);
-        panel.addButton(okButton);
-        panel.addButton(cancelButton);
-        window.add(panel);
-
-        window.show();
+        };
     }
 
     protected boolean isValidClassName(String value) {
         return value != null && value.length() > 0 && UIUtil.getIdentifierStart(value, value.length()) == 0;
     }
 
-    protected void createCls(final String className) {
-        String superClsName = null;
+    /**
+     * Gets the selected class.
+     * @return The selected class, or {@code null} if there is not selection.
+     */
+    protected OWLClass getSelectedClass() {
         final EntityData currentSelection = getSingleSelection();
-        if (currentSelection != null) {
-            superClsName = currentSelection.getName();
+        if(currentSelection == null) {
+            return null;
         }
-
-        OntologyServiceManager.getInstance().createCls(project.getProjectName(), className, superClsName, getInheritMetaClasses(), GlobalSettings.getGlobalSettings().getUserName(), getCreateClsDescription() + " " + className, getCreateClassAsyncHandler(superClsName, className));
+        return DataFactory.getOWLClass(currentSelection.getName());
     }
 
-    protected AbstractAsyncHandler<EntityData> getCreateClassAsyncHandler(final String superClsName, final String className) {
-        return new CreateClassHandler(superClsName, className);
+    protected void createCls(final String className) {
+        OWLClass superCls = getSelectedClass();
+        if(superCls == null) {
+            superCls = DataFactory.getOWLThing();
+        }
+        DispatchServiceManager.get().execute(new CreateClassAction(getProjectId(), className, superCls), getCreateClassAsyncHandler());
+//        OntologyServiceManager.getInstance().createCls(projectId, className, superCls, getInheritMetaClasses(), userId, getCreateClsDescription() + " " + className, getCreateClassAsyncHandler(superCls, className));
+    }
+
+    protected AbstractAsyncHandler<CreateClassResult> getCreateClassAsyncHandler() {
+        return new CreateClassHandler();
     }
 
     protected void onDeleteCls() {
@@ -909,42 +1063,73 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
             return;
         }
 
-        OntologyServiceManager.getInstance().deleteEntity(project.getProjectName(), className, GlobalSettings.getGlobalSettings().getUserName(), getDeleteClsDescription() + " " + className, new DeleteClassHandler());
+        OWLClass entity = DataFactory.getOWLClass(className);
+        DispatchServiceManager.get().execute(new DeleteEntityAction(entity, getProjectId()), new DeleteClassHandler());
 
         refreshFromServer(500);
     }
 
     protected void onWatchCls() {
-        final EntityData currentSelection = getSingleSelection();
-
-        Watch watch = currentSelection.getWatch();
-        if (currentSelection == null || watch == Watch.ENTITY_WATCH) {
+        final OWLClass sel = getSelectedClass();
+        if(sel == null) {
             return;
         }
+        EntityFrameWatch entityWatch = new EntityFrameWatch(sel);
+        DispatchServiceManager.get().execute(new AddWatchAction(entityWatch, getProjectId(), getUserId()), new AsyncCallback<AddWatchResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                GWT.log("Problem adding watch");
+            }
 
-        ChAOServiceManager.getInstance().addWatchedEntity(project.getProjectName(), GlobalSettings.getGlobalSettings().getUserName(), currentSelection.getName(), new AddWatchedCls(getSingleSelectedTreeNode()));
+            @Override
+            public void onSuccess(AddWatchResult result) {
+
+            }
+        });
+
+//        ChAOServiceManager.getInstance().addWatchedEntity(project.getProjectName(), GlobalSettings.get().getUserName(), currentSelection.getName(), new AddWatchedCls(getSingleSelectedTreeNode()));
     }
 
     protected void onWatchBranchCls() {
-        final EntityData currentSelection = getSingleSelection();
-
-        Watch watch = currentSelection.getWatch();
-        if (currentSelection == null || watch == Watch.BRANCH_WATCH) {
+        final OWLClass sel = getSelectedClass();
+        if(sel == null) {
             return;
         }
+        Watch watch = new HierarchyBranchWatch(sel);
+        DispatchServiceManager.get().execute(new AddWatchAction(watch, getProjectId(), getUserId()), new AsyncCallback<AddWatchResult>() {
+            @Override
+            public void onFailure(Throwable caught) {
+            }
 
-        ChAOServiceManager.getInstance().addWatchedBranchEntity(project.getProjectName(), GlobalSettings.getGlobalSettings().getUserName(), currentSelection.getName(), new AddWatchedCls(getSingleSelectedTreeNode()));
+            @Override
+            public void onSuccess(AddWatchResult result) {
+
+            }
+        });
+
+//        ChAOServiceManager.getInstance().addWatchedBranchEntity(project.getProjectName(), GlobalSettings.get().getUserName(), currentSelection.getName(), new AddWatchedCls(getSingleSelectedTreeNode()));
     }
 
-    protected void onUnwatchCls() {
-        final EntityData currentSelection = getSingleSelection();
 
-        Watch watch = currentSelection.getWatch();
-        if (currentSelection == null || watch == null) {
-            return;
+
+
+    protected void onUnwatchCls() {
+        for(TreeNode selTreeNode : getSelectedTreeNodes()) {
+            Object userObject = selTreeNode.getUserObject();
+            if(userObject instanceof EntityData) {
+                Set<Watch<?>> watches = ((EntityData) userObject).getWatches();
+                DispatchServiceManager.get().execute(new RemoveWatchesAction(watches, getProjectId(), getUserId()), new AsyncCallback<RemoveWatchesResult>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                    }
+
+                    @Override
+                    public void onSuccess(RemoveWatchesResult result) {
+                    }
+                });
+            }
         }
 
-        ChAOServiceManager.getInstance().removeWatchedEntity(project.getProjectName(), GlobalSettings.getGlobalSettings().getUserName(), currentSelection.getName(), new RemoveWatchedCls(getSingleSelectedTreeNode()));
     }
 
     protected void renameClass(final String oldName, final String newName) {
@@ -953,7 +1138,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
             return;
         }
 
-        OntologyServiceManager.getInstance().renameEntity(project.getProjectName(), oldName, newName, GlobalSettings.getGlobalSettings().getUserName(), getRenameClsDescription() + " " + "Old name: " + oldName + ", New name: " + newName, new RenameClassHandler());
+        OntologyServiceManager.getInstance().renameEntity(getProjectId(), oldName, newName, Application.get().getUserId(), getRenameClsDescription() + " " + "Old name: " + oldName + ", New name: " + newName, new RenameClassHandler());
     }
 
     public TreePanel getTreePanel() {
@@ -965,8 +1150,18 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         getRootCls();
     }
 
+    private void updateTreeNodeIcon(TreeNode treeNode) {
+        setTreeNodeIcon(treeNode, (EntityData) treeNode.getUserObject());
+    }
+
     public void setTreeNodeIcon(final TreeNode node, EntityData entityData) {
-        node.setIconCls("protege-class-icon");
+        if(entityData instanceof SubclassEntityData && ((SubclassEntityData) entityData).isDeprecated()) {
+            node.setIconCls("protege-deprecated-class-icon");
+        }
+        else {
+            node.setIconCls("protege-class-icon");
+        }
+
     }
 
     public void setTreeNodeTooltip(final TreeNode node, EntityData entityData) {
@@ -985,12 +1180,12 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
             subjects.add(parentClsName);
             final List<String> props = new ArrayList<String>();
             props.add(hierarchyProperty);
-            OntologyServiceManager.getInstance().getEntityTriples(project.getProjectName(), subjects, props, new GetPropertyHierarchySubclassesOfClassHandler(parentClsName, parentNode));
+            OntologyServiceManager.getInstance().getEntityTriples(getProjectId(), subjects, props, new GetPropertyHierarchySubclassesOfClassHandler(parentClsName, parentNode));
         }
     }
 
     protected void invokeGetSubclassesRemoteCall(final String parentClsName, AsyncCallback<List<SubclassEntityData>> callback) {
-        OntologyServiceManager.getInstance().getSubclasses(project.getProjectName(), parentClsName, callback);
+        OntologyServiceManager.getInstance().getSubclasses(getProjectId(), parentClsName, callback);
     }
 
     protected AsyncCallback<List<SubclassEntityData>> getSubclassesCallback(final String parentClsName, final TreeNode parentNode) {
@@ -1013,10 +1208,10 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
     public void getRootCls() {
         final String rootClsName = getRootClsName();
         if (rootClsName != null) {
-            OntologyServiceManager.getInstance().getEntity(project.getProjectName(), rootClsName, new GetRootClassHandler());
+            OntologyServiceManager.getInstance().getEntity(getProjectId(), rootClsName, new GetRootClassHandler());
         }
         else {
-            OntologyServiceManager.getInstance().getRootEntity(project.getProjectName(), new GetRootClassHandler());
+            OntologyServiceManager.getInstance().getRootEntity(getProjectId(), new GetRootClassHandler());
         }
     }
 
@@ -1053,7 +1248,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         if (oldParent.equals(newParent)) {
             return;
         }
-        OntologyServiceManager.getInstance().moveCls(project.getProjectName(), cls.getName(), oldParent.getName(), newParent.getName(), false, GlobalSettings.getGlobalSettings().getUserName(), UIUtil.getAppliedToTransactionString(getMoveClsOperationDescription(cls, oldParent, newParent), cls.getName()), new MoveClassHandler(cls.getName(), oldParent.getName(), newParent.getName()));
+        OntologyServiceManager.getInstance().moveCls(getProjectId(), cls.getName(), oldParent.getName(), newParent.getName(), false, Application.get().getUserId(), getMoveClsOperationDescription(cls, oldParent, newParent), new MoveClassHandler(cls.getName(), oldParent.getName(), newParent.getName()));
     }
 
     protected String getMoveClsOperationDescription(final EntityData cls, final EntityData oldParent, final EntityData newParent) {
@@ -1061,7 +1256,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
     }
 
     public void getPathToRoot(final EntityData entity) {
-        OntologyServiceManager.getInstance().getPathToRoot(project.getProjectName(), entity.getName(), new GetPathToRootHandler());
+        OntologyServiceManager.getInstance().getPathToRoot(getProjectId(), entity.getName(), new GetPathToRootHandler());
     }
 
     public List<EntityData> getSelection() {
@@ -1152,6 +1347,14 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         selectPathInTree(path, treePanel.getRootNode(), 0);
     }
 
+    private void selectPathInTree(ObjectPath<OWLClass> path) {
+        List<EntityData> entityDataPath = new ArrayList<EntityData>();
+        for(OWLClass cls : path) {
+            entityDataPath.add(new EntityData(cls.getIRI().toString()));
+        }
+        selectPathInTree(entityDataPath);
+    }
+
     private void selectPathInTree(final List<EntityData> path, TreeNode parentNode, final int index) {
         for (int i = index; i < path.size(); i++) {
             final String clsName = path.get(i).getName();
@@ -1191,7 +1394,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         setTreeNodeIcon(node, entityData);
         setTreeNodeTooltip(node, entityData);
 
-        node.setText(createNodeRenderText(node));
+        updateTreeNodeRendering(node);
 
         node.addListener(nodeListener);
 
@@ -1200,12 +1403,20 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
 
     protected String createNodeRenderText(TreeNode node) {
         EntityData entityData = (EntityData) node.getUserObject();
-        String text = createNodeText(entityData) + createNodeNoteCount(entityData, node) + createNodeWatchLabel(entityData);
-        return text;
+        return createNodeText(entityData) + createNodeNoteCount(entityData, node) + createNodeWatchLabel(entityData);
     }
 
     protected String createNodeText(EntityData entityData) {
-        return entityData.getBrowserText();
+        boolean deprecated = false;
+        if(entityData instanceof SubclassEntityData) {
+            deprecated = ((SubclassEntityData) entityData).isDeprecated();
+        }
+        if(deprecated) {
+            return "<span style=\"opacity: 0.5;\"><del>" + entityData.getBrowserText() + "</del></span>";
+        }
+        else {
+            return entityData.getBrowserText();
+        }
     }
 
     protected String createNodeNoteCount(EntityData entityData, TreeNode node) {
@@ -1217,32 +1428,42 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
             final String idLocalAnnotationCnt = node.getId() + SUFFIX_ID_LOCAL_ANNOTATION_COUNT;
 
             // TODO: add a css for this
-            text = text + "<img id=\"" + idLocalAnnotationImg + "\" src=\"images/comment.gif\" title=\"" + UIUtil.getNiceNoteCountText(localAnnotationsCount) + " on this category. \nClick on the icon to see and edit the notes\" />" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"font-size:95%;color:#15428B;font-weight:bold;\">" + localAnnotationsCount + "</span>";
+            text = text + "<span style=\"padding-left: 2px;\"><img id=\"" + idLocalAnnotationImg + "\" src=\"images/comment-small-filled.png\" title=\"" + UIUtil.getNiceNoteCountText(localAnnotationsCount) + " on this category. \nClick on the icon to see and edit the notes\" /></span>" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"font-size:95%;color:#15428B;font-weight:bold;\">" + localAnnotationsCount + "</span>";
         }
 
         final int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
         if (childrenAnnotationsCount > 0) {
-            text = text + " <img src=\"images/comment_small.gif\" title=\"" + UIUtil.getNiceNoteCountText(childrenAnnotationsCount) + " on the children of this category\" />" + "<span style=\"font-size:90%;color:#999999;\">" + childrenAnnotationsCount + "</span>";
+            text = text + " <span style=\"padding-left: 2px;\"><img src=\"images/comment-small.png\" title=\"" + UIUtil.getNiceNoteCountText(childrenAnnotationsCount) + " on the children of this category\" /></span>" + "<span style=\"font-size:90%;color:#999999;\">" + childrenAnnotationsCount + "</span>";
         }
 
         return text;
     }
 
     protected String createNodeWatchLabel(EntityData cls) {
-        Watch watch = cls.getWatch();
-        if (watch == null) {
+        Set<Watch<?>> w = cls.getWatches();
+        if (w.isEmpty()) {
             return "";
         }
-        switch (watch) {
-            case ENTITY_WATCH:
-                return "<img src=\"images/tag_blue.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
-            case BRANCH_WATCH:
-                return "<img src=\"images/tag_blue_add.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
-            case BOTH:
-                return "<img src=\"images/tag_blue.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>" + "<img src=\"images/tag_blue_add.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
-            default:
-                return "";
+//        switch (watchType) {
+        if(w.iterator().next() instanceof EntityFrameWatch) {
+//            return "<img src=\"images/eye.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
+            return "<img src=\"images/tag_blue.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
         }
+        else {
+//            return "<img src=\"images/eye-down.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
+            return "<img src=\"images/tag_blue_add.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
+        }
+//            case ENTITY_WATCH:
+//
+////                return "<img src=\"images/tag_blue.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
+//            case BRANCH_WATCH:
+//
+////                return "<img src=\"images/tag_blue_add.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
+//            case BOTH:
+//                return "<img src=\"images/tag_blue.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>" + "<img src=\"images/tag_blue_add.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
+//            default:
+//                return "";
+//        }
     }
 
     private void showClassNotes(final Node node) {
@@ -1370,7 +1591,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
     }
 
     public void updateButtonStates() {
-        if (project.hasWritePermission(GlobalSettings.getGlobalSettings().getUserName())) {
+        if (hasWritePermission()) {
             if (createButton != null) {
                 createButton.enable();
             }
@@ -1388,7 +1609,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         }
 
         if (watchButton != null) {
-            watchButton.setDisabled(!GlobalSettings.getGlobalSettings().isLoggedIn());
+            watchButton.setDisabled(Application.get().isGuestUser());
         }
     }
 
@@ -1403,9 +1624,14 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
     }
 
     @Override
-    public void onPermissionsChanged(final Collection<String> permissions) {
+    public void onPermissionsChanged() {
         updateButtonStates();
         onRefresh();
+    }
+
+
+    private EntityData toEntityData(OWLClassData clsData) {
+        return new EntityData(clsData.getEntity().getIRI().toString(), clsData.getBrowserText());
     }
 
     /*
@@ -1457,22 +1683,22 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
 
         @Override
         public void handleSuccess(final List<SubclassEntityData> children) {
-            //getEl().unmask();
+//            boolean isFresh = !isSubclassesLoaded(parentNode);
+            Set<OWLClass> existingSubclasses = new HashSet<OWLClass>();
+            for(Node childNode : parentNode.getChildNodes()) {
+                existingSubclasses.add(DataFactory.getOWLClass(getNodeClsName(childNode)));
+            }
 
-            // TODO:  MH - This is very very slow
-            int i = 0;
-            boolean isFresh = !isSubclassesLoaded(parentNode);
             for (final SubclassEntityData subclassEntityData : children) {
-                final SubclassEntityData childData = subclassEntityData;
-                if (isFresh || !hasChild(parentNode, childData.getName())) {
-                    final TreeNode childNode = createTreeNode(childData);
-                    if (childData.getSubclassCount() > 0) {
+                OWLClass currentCls = DataFactory.getOWLClass(subclassEntityData.getName());
+                if(!existingSubclasses.contains(currentCls)) {
+                    final TreeNode childNode = createTreeNode(subclassEntityData);
+                    if (subclassEntityData.getSubclassCount() > 0) {
                         childNode.setExpandable(true);
                     }
                     parentNode.appendChild(childNode);
+//                    updateAncestorNoteCounts(subclassEntityData.getLocalAnnotationsCount(), childNode);
                 }
-//                System.out.println("Done: " + i);
-//                i++;
             }
 
             setSubclassesLoaded(parentNode, true);
@@ -1519,15 +1745,10 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         }
     }
 
-    class CreateClassHandler extends AbstractAsyncHandler<EntityData> {
+    class CreateClassHandler extends AbstractAsyncHandler<CreateClassResult> {
 
-        private final String superClsName;
 
-        private final String className;
-
-        public CreateClassHandler(final String superClsName, final String className) {
-            this.superClsName = superClsName;
-            this.className = className;
+        public CreateClassHandler() {
         }
 
         @Override
@@ -1537,55 +1758,15 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         }
 
         @Override
-        public void handleSuccess(final EntityData entityData) {
-            if (entityData != null) {
-                GWT.log("Created successfully class " + entityData.getName(), null);
-
-                OntologyServiceManager.getInstance().getPathToRoot(project.getProjectName(), entityData.getName(), new AsyncCallback<List<EntityData>>() {
-                    public void onFailure(Throwable caught) {
-                    }
-
-                    public void onSuccess(List<EntityData> result) {
-//                        System.out.println("The path to root is");
-//                        StringBuilder sb = new StringBuilder();
-//                        for (EntityData ed : result) {
-//                            System.out.println("\t" + ed.getName());
-//                            sb.append(ed.getName());
-//                        }
-                        EntityData parentData = result.get(result.size() - 2);
-                        onClassCreated(entityData, Arrays.asList(parentData));
-                        selectPathInTree(result);
-                    }
-                });
-
-                project.forceGetEvents();
-
-                final Timer timer = new Timer() {
-                    @Override
-                    public void run() {
-                        final TreeNode parentNode = findTreeNode(superClsName);
-                        if (parentNode != null) {
-                            parentNode.expand();
-                        }
-
-                        final TreeNode newNode = getDirectChild(parentNode, className);
-                        if (newNode != null) {
-                            newNode.select();
-                        }
-                    }
-                };
-                timer.schedule(1000);
-
-
-            }
-            else {
-                GWT.log("Problem at creating class", null);
-                MessageBox.alert("Class creation failed.");
-            }
+        public void handleSuccess(final CreateClassResult result) {
+            onClassCreated(result.getObject(), result.getSuperClasses());
+            SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(), result.getBrowserText(result.getObject()).or(""), Collections.<EntityData>emptyList(), 0);
+            onSubclassAdded(new EntityData(result.getPathToRoot().getSecondToLastElement().getIRI().toString()), Arrays.<EntityData>asList(subClassData), false);
+            selectPathInTree(result.getPathToRoot());
         }
     }
 
-    class DeleteClassHandler extends AbstractAsyncHandler<Void> {
+    class DeleteClassHandler extends AbstractAsyncHandler<DeleteEntityResult> {
 
         @Override
         public void handleFailure(final Throwable caught) {
@@ -1594,7 +1775,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         }
 
         @Override
-        public void handleSuccess(final Void result) {
+        public void handleSuccess(final DeleteEntityResult result) {
             GWT.log("Delete successfully class ", null);
 
         }
@@ -1743,51 +1924,7 @@ public class ClassTreePortlet extends AbstractEntityPortlet {
         }
     }
 
-    class AddWatchedCls extends AbstractAsyncHandler<EntityData> {
 
-        private final TreeNode node;
 
-        public AddWatchedCls(final TreeNode node) {
-            this.node = node;
-        }
-
-        @Override
-        public void handleFailure(final Throwable caught) {
-            GWT.log("Error at add watched entity", caught);
-            MessageBox.alert("Error", "There was an error at adding the new watched entity. Please try again later.");
-        }
-
-        @Override
-        public void handleSuccess(final EntityData entityData) {
-            node.setUserObject(entityData);
-            node.setText(createNodeRenderText(node));
-            updateWatchedMenuState(UIUtil.createCollection(entityData));
-        }
-    }
-
-    class RemoveWatchedCls extends AbstractAsyncHandler<Void> {
-
-        private final TreeNode node;
-
-        public RemoveWatchedCls(final TreeNode node) {
-            this.node = node;
-        }
-
-        @Override
-        public void handleSuccess(final Void result) {
-            //FIXME: this should return an entity data and have the same implementation as AddWatch, until then, a workaround..
-            EntityData entityData = (EntityData) node.getUserObject();
-            entityData.setWatch(null);
-            node.setText(createNodeRenderText(node));
-            updateWatchedMenuState(UIUtil.createCollection(entityData));
-        }
-
-        @Override
-        public void handleFailure(final Throwable caught) {
-            GWT.log("Error at remove watched entity", caught);
-            MessageBox.alert("Error", "There was an error at adding the new watched entity. Pleas try again later.");
-        }
-
-    }
 
 }

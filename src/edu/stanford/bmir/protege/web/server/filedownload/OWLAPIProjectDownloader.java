@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
@@ -65,7 +65,14 @@ public class OWLAPIProjectDownloader {
     }
 
     private void setFileName(HttpServletResponse response) {
-        String fileName = projectId.getProjectName().replaceAll("\\s+", "-") + "-REVISION-" + revision.getValue() + "-ontologies.zip";
+        String revisionNumber;
+        if(revision.isHead()) {
+            revisionNumber = "";
+        }
+        else {
+            revisionNumber = "-REVISION-" + Long.toString(revision.getValue());
+        }
+        String fileName = projectId.getProjectName().replaceAll("\\s+", "-") + revisionNumber + "-ontologies.zip";
         fileName = fileName.toLowerCase();
         response.setHeader(CONTENT_DISPOSITION_HEADER_FIELD, "attachment; filename=\"" + fileName + "\"");
     }

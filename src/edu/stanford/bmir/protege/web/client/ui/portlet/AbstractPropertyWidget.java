@@ -5,11 +5,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.MessageBox;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
@@ -18,6 +19,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public abstract class AbstractPropertyWidget implements PropertyWidget {
 
@@ -41,6 +44,10 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
         setWidgetConfiguration(widgetConfiguration);
 
         createComponent();
+    }
+
+    public ProjectId getProjectId() {
+        return project.getProjectId();
     }
 
 
@@ -101,7 +108,7 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
     }
 
     protected void fillValues(List<String> subjects, List<String> props) {
-        OntologyServiceManager.getInstance().getEntityTriples(getProject().getProjectName(), subjects, props,
+        OntologyServiceManager.getInstance().getEntityTriples(getProjectId(), subjects, props,
                 new GetValuesHandler(getSubject()));
     }
 
@@ -131,13 +138,13 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
     }
 
     public boolean userPartOfWriteAccessGroup() {
-        if (!GlobalSettings.getGlobalSettings().isLoggedIn()) {
+        if (Application.get().isGuestUser()) {
             return false;
         }
         //checked if this is cached
-        String isPartOfUsers = GlobalSettings.getGlobalSettings().getSessionProperty(getSessionWriteAccessProperty());
-        if (isPartOfUsers != null) {
-            return Boolean.valueOf(isPartOfUsers);
+        Optional<String> isPartOfUsers = Application.get().getCurrentUserProperty(getSessionWriteAccessProperty());
+        if (isPartOfUsers.isPresent()) {
+            return Boolean.valueOf(isPartOfUsers.get());
         }
 
         List<String> writeAccessGroups = UIUtil.getListConfigurationProperty(widgetConfiguration, FormConstants.WRITE_ACCESS_GROUPS);
@@ -145,13 +152,10 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
             setPartOfWriteAccessGroup(true);
             return true;
         }
-        Collection<String> userGroups = GlobalSettings.getGlobalSettings().getUser().getGroups();
-        if (userGroups == null) {
-            setPartOfWriteAccessGroup(false);
-            return false;
-        }
+        Collection<GroupId> userGroups = Application.get().getUserGroups();
+
         for (String writeGroup : writeAccessGroups) {
-            if (userGroups.contains(writeGroup)) {
+            if (userGroups.contains(GroupId.get(writeGroup))) {
                 setPartOfWriteAccessGroup(true);
                 return true;
             }
@@ -161,7 +165,7 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
     }
 
     private void setPartOfWriteAccessGroup(Boolean isPartOfWriteAccessGroup) {
-        GlobalSettings.getGlobalSettings().setSessionProperty(getSessionWriteAccessProperty(), isPartOfWriteAccessGroup.toString());
+        Application.get().setCurrentUserProperty(getSessionWriteAccessProperty(), isPartOfWriteAccessGroup.toString());
     }
 
     private String getSessionWriteAccessProperty() {

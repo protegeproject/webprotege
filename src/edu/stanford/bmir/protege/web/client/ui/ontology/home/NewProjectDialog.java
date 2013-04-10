@@ -3,12 +3,15 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.library.common.Refreshable;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEvent;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 
 /**
  * Author: Matthew Horridge<br>
@@ -32,19 +35,19 @@ public class NewProjectDialog extends WebProtegeDialog<NewProjectInfo> {
     }
 
     private void handleCreateNewProject(NewProjectInfo data) {
-        String userName = GlobalSettings.getGlobalSettings().getUserName();
-        if(userName == null) {
-            throw new RuntimeException("User name is null");
+        UserId userId = Application.get().getUserId();
+        if(userId.isGuest()) {
+            throw new RuntimeException("User is guest.  Guest users are not allowed to create projects.");
         }
-        NewProjectSettings newProjectSettings = new NewProjectSettings(UserId.getUserId(userName), data.getProjectName(), data.getProjectDescription(), data.getProjectType());
+        NewProjectSettings newProjectSettings = new NewProjectSettings(userId, data.getProjectName(), data.getProjectDescription(), data.getProjectType());
         ProjectManagerServiceAsync projectManagerService = GWT.create(ProjectManagerService.class);
-        projectManagerService.createNewProject(newProjectSettings, new AsyncCallback<Void>() {
+        projectManagerService.createNewProject(newProjectSettings, new AsyncCallback<ProjectDetails>() {
             public void onFailure(Throwable caught) {
                 handleCreateProjectFailure(caught);
             }
 
-            public void onSuccess(Void result) {
-                handleCreateProjectSuccess();
+            public void onSuccess(ProjectDetails result) {
+                handleCreateProjectSuccess(result);
             }
         });
     }
@@ -68,14 +71,8 @@ public class NewProjectDialog extends WebProtegeDialog<NewProjectInfo> {
         }
     }
 
-    private void handleCreateProjectSuccess() {
-        // TODO: There must be a nicer way of doing this
-        broadcastRefresh(refreshables);
+    private void handleCreateProjectSuccess(ProjectDetails projectDetails) {
+        EventBusManager.getManager().postEvent(new ProjectCreatedEvent(projectDetails));
     }
 
-    private void broadcastRefresh(Refreshable[] refreshables) {
-        for(Refreshable refreshable : refreshables) {
-            refreshable.refresh();
-        }
-    }
 }

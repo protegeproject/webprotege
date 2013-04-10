@@ -50,12 +50,10 @@ public class ImportsTreePortlet extends AbstractEntityPortlet {
 			}
 		});
 		
-		String projectName = project.getProjectName();
-
-		TreeNode root = new TreeNode(projectName);
-		root.setText(projectName);
-		root.setId(projectName);
-		root.setUserObject(new EntityData(projectName, projectName));
+		TreeNode root = new TreeNode();
+		root.setText(getProjectId().getProjectName());
+		root.setId(getProjectId().getProjectName());
+		root.setUserObject(new EntityData(getProjectId().getProjectName(), getProjectId().getProjectName()));
 
 		importsTree.setRootNode(root);
 		importsTree.setRootVisible(true);
@@ -64,7 +62,7 @@ public class ImportsTreePortlet extends AbstractEntityPortlet {
 	}
 
 	protected void afterRender() {
-		getImportedOntologies(project.getProjectName());
+		getImportedOntologies(getProject().getProjectName());
 		super.afterRender();
 	}
 
@@ -73,7 +71,7 @@ public class ImportsTreePortlet extends AbstractEntityPortlet {
 	}
 
 	public void getImportedOntologies(String projectName) {
-		OntologyServiceManager.getInstance().getImportedOntologies(projectName,
+		OntologyServiceManager.getInstance().getImportedOntologies(getProjectId(),
 				new GetImportedOntologies());
 	}
 	

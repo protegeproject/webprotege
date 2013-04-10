@@ -81,7 +81,7 @@ public class NotesTreePanel{
 
     public void refresh(){
         if (_currentEntity == null) { return; } //TODO: update view
-        ChAOServiceManager.getInstance().getNotes(project.getProjectName(), _currentEntity.getName(), ontologyLevel, true,
+        ChAOServiceManager.getInstance().getNotes(project.getProjectId(), _currentEntity.getName(), ontologyLevel, true,
                 new AsyncCallback<List<NotesData>>(){
                     public void onFailure(Throwable caught) {
                         GWT.log("Error getting notes for " + _currentEntity, caught);

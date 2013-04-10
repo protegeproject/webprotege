@@ -65,11 +65,6 @@ public interface ChAOService extends RemoteService {
 
     public Collection<ChangeData> getWatchedEntities(String projectName, String userName);
 
-    public EntityData addWatchedEntity(String projectName, String userName, String watchedEntityName);
-
-    public void removeAllWatches(String projectName, String userName, String watchedEntityName);
-
-    public EntityData addWatchedBranch(String projectName, String userName, String watchedEntityName);
 
     /*
      * Reviews

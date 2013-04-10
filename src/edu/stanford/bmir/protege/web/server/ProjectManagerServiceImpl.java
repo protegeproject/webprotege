@@ -3,18 +3,16 @@ package edu.stanford.bmir.protege.web.server;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationInfo;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
-import edu.stanford.smi.protege.model.Instance;
-import edu.stanford.smi.protege.model.KnowledgeBase;
-import edu.stanford.smi.protege.model.Slot;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
 import edu.stanford.smi.protege.server.metaproject.User;
-import edu.stanford.smi.protege.util.Log;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * Author: Matthew Horridge<br>
@@ -25,7 +23,7 @@ import java.util.logging.Logger;
 public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet implements ProjectManagerService {
 
 
-
+    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(ProjectManagerServiceImpl.class);
 
     public ProjectManagerServiceImpl() {
     }
@@ -34,7 +32,7 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         List<ProjectData> rawList = getMetaProjectManager().getProjectsData(null);
         List<ProjectData> filteredProjects = filterOutNonExistantProjects(rawList);
         for(ProjectData projectData : filteredProjects) {
-            augmentProjectData(new ProjectId(projectData.getName()), projectData);
+            augmentProjectData(ProjectId.get(projectData.getName()), projectData);
         }
         return filteredProjects;
     }
@@ -47,7 +45,7 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         final ArrayList<ProjectData> rawList = new ArrayList<ProjectData>(projectsData);
         List<ProjectData> filteredProjects = filterOutNonExistantProjects(rawList);
         for(ProjectData projectData : filteredProjects) {
-            augmentProjectData(new ProjectId(projectData.getName()), projectData);
+            augmentProjectData(ProjectId.get(projectData.getName()), projectData);
         }
         return filteredProjects;
     }
@@ -73,14 +71,13 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         List<ProjectData> result = new ArrayList<ProjectData>(rawList.size() + 1);
         for (ProjectData projectData : rawList) {
             String projectName = projectData.getName();
-            ProjectId projectId = new ProjectId(projectName);
+            ProjectId projectId = ProjectId.get(projectName);
             OWLAPIProjectDocumentStore docMan = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
             if (docMan.exists()) {
                 result.add(projectData);
             }
             else {
-                Logger logger = Logger.getLogger("ProjectManagerService");
-                logger.warning("Filtering out non-existant project: " + projectId.getProjectName());
+                LOGGER.info("Filtering out non-existent project: %s", projectId.getProjectName());
             }
         }
         return result;
@@ -99,7 +96,7 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
 
     public synchronized List<String> getOwnedProjectNames() {
         UserId userId = getUserInSession();
-        if(userId.isNull()) {
+        if(userId.isGuest()) {
             return Collections.emptyList();
         }
         List<String> result = new ArrayList<String>();
@@ -119,17 +116,17 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         if (projectId == null) {
             throw new NullPointerException("projectId must not be null");
         }
-        ProjectInstance pi = Protege3ProjectManager.getProjectManager().getMetaProjectManager().getMetaProject().getProject(projectId.getProjectName());
+        ProjectInstance pi = MetaProjectManager.getManager().getMetaProject().getProject(projectId.getProjectName());
         return pi != null;
     }
 
-    public synchronized void createNewProject(NewProjectSettings newProjectSettings) throws NotSignedInException, ProjectAlreadyRegisteredException, ProjectDocumentExistsException {
+    public synchronized ProjectDetails createNewProject(NewProjectSettings newProjectSettings) throws NotSignedInException, ProjectAlreadyRegisteredException, ProjectDocumentExistsException {
         if (newProjectSettings == null) {
             throw new NullPointerException("newProjectSettings must not be null");
         }
         ensureSignedIn();
 
-        ProjectId projectId = new ProjectId(newProjectSettings.getProjectName());
+        ProjectId projectId = ProjectId.get(newProjectSettings.getProjectName());
         
         if(isRegisteredProject(projectId)) {
             // Not allowed to overwrite
@@ -153,7 +150,9 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         if (!isRegisteredProject(projectId)) {
             getMetaProjectManager().createProject(newProjectSettings);
             applyDefaultSharingSettings(projectId);
+            LOGGER.info("Created new project: %s", newProjectSettings.toString());
         }
+        return getMetaProjectManager().getProjectDetails(projectId);
     }
 
     private boolean isProjectExistsOnDisk(ProjectId projectId) {
@@ -180,10 +179,10 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
     private void applyDefaultSharingSettings(ProjectId projectId) {
         List<UserSharingSetting> userSharingSettings = new ArrayList<UserSharingSetting>();
         UserId userInSession = getUserInSession();
-        if (!userInSession.isNull()) {
+        if (!userInSession.isGuest()) {
             userSharingSettings.add(new UserSharingSetting(userInSession, SharingSetting.EDIT));
         }
-        SharingSettingsManager.getManager().updateSharingSettings(new ProjectSharingSettings(projectId, SharingSetting.NONE, userSharingSettings));
+        SharingSettingsManager.getManager().updateSharingSettings(getThreadLocalRequest(), new ProjectSharingSettings(projectId, SharingSetting.NONE, userSharingSettings));
     }
 
     public synchronized void moveProjectsToTrash(Set<ProjectId> projectIds) throws NotSignedInException, NotProjectOwnerException {
@@ -233,7 +232,8 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
     public ProjectConfigurationInfo getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException {
         ProjectType projectType = getProjectType(projectId);
         String description = getProjectData(projectId).getDescription();
-        return new ProjectConfigurationInfo(projectId, projectType, description);
+//        String defaultLanguage = OWLAPIProjectMetadataManager.getManager().getDefaultLanguage(projectId);
+        return new ProjectConfigurationInfo(projectId, projectType, "en", description);
     }
 
     public void setProjectConfiguration(ProjectConfigurationInfo configuration) throws ProjectNotRegisteredException, NotProjectOwnerException {
@@ -245,6 +245,10 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         OWLAPIProjectType projectType = OWLAPIProjectType.getProjectType(configuration.getProjectType().getName());
         mdm.setProjectType(projectId, projectType);
         mdm.setDescription(projectId, configuration.getProjectDescription());
+//        if(!mdm.getDefaultLanguage(projectId).equals(configuration.getDefaultLanguage())) {
+//            mdm.setDefaultLanguage(projectId, configuration.getDefaultLanguage());
+//        }
+
     }
 
 

@@ -8,7 +8,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.RadioButton;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -52,9 +52,9 @@ public class InstanceRadioButtonWidget extends InstanceCheckBoxWidget {
 
     protected void setPropertyValues(String entityName, String propName, ValueType propValueType,
             EntityData newEntityData, String operationDescription) {
-        propertyValueUtil.setPropertyValues(getProject().getProjectName(), entityName, propName, propValueType,
-                Collections.singleton(newEntityData.getName()), GlobalSettings
-                        .getGlobalSettings().getUserName(), operationDescription,
+        propertyValueUtil.setPropertyValues(getProjectId(), entityName, propName, propValueType,
+                Collections.singleton(newEntityData.getName()), Application
+                        .get().getUserId(), operationDescription,
                         new SetPropertyValuesHandler(newEntityData));
     }
 

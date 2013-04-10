@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.UserIdSuggestOracle;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestBox;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.*;
 
@@ -56,7 +57,17 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
         addPeopleTextArea.setCharacterWidth(50);
         addPeopleTextArea.getElement().setAttribute("placeholder", PLACE_HOLDER_TEXT);
 
-        final ItemListSuggestBox<UserId> suggestBox = new ItemListSuggestBox<UserId>(new UserIdSuggestOracle(getUsersInSharingSettingsList()), addPeopleTextArea);
+        final UserIdSuggestOracle userIdSuggestOracle = new UserIdSuggestOracle(getUsersInSharingSettingsList()) {
+            @Override
+            public List<UserId> getItemsMatchingExactly(String itemString) {
+                List<UserId> userIds = super.getItemsMatchingExactly(itemString);
+                if(userIds.isEmpty() && itemString.contains("@")) {
+                    userIds.add(UserId.getUserId(itemString.trim()));
+                }
+                return userIds;
+            }
+        };
+        final ItemListSuggestBox<UserId> suggestBox = new ItemListSuggestBox<UserId>(userIdSuggestOracle, addPeopleTextArea);
 
 
         FlowPanel addPeoplePanel = new FlowPanel();
@@ -73,15 +84,8 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
         
         addPeoplePanel.add(suggestBox);
         Button add = new Button("Add", new ClickHandler() {
-            public void onClick(ClickEvent event) { 
-                Set<UserId> items = suggestBox.getItems();
-                items.removeAll(getUsersInSharingSettingsList());
-                List<UserSharingSetting> listDataItems = new ArrayList<UserSharingSetting>(sharingSettingsList.getListData());
-                for(UserId item : items) {
-                    listDataItems.add(new UserSharingSetting(item, lb.getSelectedItem()));
-                }
-                addPeopleTextArea.setText("");
-                sharingSettingsList.setListData(listDataItems);
+            public void onClick(ClickEvent event) {
+                handleAdd(suggestBox, lb, addPeopleTextArea);
             }   
         });
         add.addStyleName("web-protege-dialog-button");
@@ -90,7 +94,18 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
 
         add(addPeoplePanel);
     }
-    
+
+    private void handleAdd(ItemListSuggestBox<UserId> suggestBox, SharingSettingsDropDown lb, TextArea addPeopleTextArea) {
+        Set<UserId> items = suggestBox.getItems();
+        items.removeAll(getUsersInSharingSettingsList());
+        List<UserSharingSetting> listDataItems = new ArrayList<UserSharingSetting>(sharingSettingsList.getListData());
+        for(UserId item : items) {
+            listDataItems.add(new UserSharingSetting(item, lb.getSelectedItem()));
+        }
+        addPeopleTextArea.setText("");
+        sharingSettingsList.setListData(listDataItems);
+    }
+
     private List<UserId> getUsersInSharingSettingsList() {
         List<UserId> result = new ArrayList<UserId>();
         for(UserSharingSetting item : sharingSettingsList.getListData()) {

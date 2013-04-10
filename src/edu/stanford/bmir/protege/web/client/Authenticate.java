@@ -9,6 +9,7 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.ApplicationPropertiesServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
@@ -55,7 +56,7 @@ public class Authenticate implements EntryPoint {
             Window.addWindowClosingHandler(new WindowCloseHandler(AuthenticationConstants.CHANGE_PASSWORD_RESULT,
                     AuthenticationConstants.CHANGE_PASSWORD_WINDOW_CLOSED));
             LoginUtil loginUtil = new LoginUtil();
-            loginUtil.changePassword(userName, true);
+            loginUtil.changePassword(UserId.getUserId(userName), true);
         } else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_CREATE_USER_TO_ASSOC_OPEN_ID)) {
             Window.addWindowClosingHandler(new WindowCloseHandler(AuthenticationConstants.CREATE_USER_TO_ASSOC_OPENID_RESULT,
                     AuthenticationConstants.CREATE_USER_WINDOW_CLOSED));

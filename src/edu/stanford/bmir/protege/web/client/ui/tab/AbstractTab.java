@@ -132,34 +132,8 @@ public abstract class AbstractTab extends Portal {
         return panelListener;
     }
 
-    /**
-     * Called on logout of a user. The default implementation calls the onLogout
-     * method on each portlet. It can be overridden in subclasses.
-     *
-     * @param userName - name of the user who logged out
-     */
-    public void onLogout(final String userName) {
-        for (final EntityPortlet portlet : getPortlets()) {
-            portlet.onLogout(userName);
-        }
-    }
+    private void onPermissionsChanged(final Collection<String> permissions) {
 
-    /**
-     * Called on log in of a user. The default implementation calls the onLogin
-     * method on each portlet. It can be overridden in subclasses.
-     *
-     * @param userName - named of the user who logged in
-     */
-    public void onLogin(final String userName) {
-        for (final EntityPortlet portlet : getPortlets()) {
-            portlet.onLogin(userName);
-        }
-    }
-
-    public void onPermissionsChanged(final Collection<String> permissions) {
-        for (final EntityPortlet portlet : getPortlets()) {
-            portlet.onPermissionsChanged(permissions);
-        }
     }
 
     protected SelectionListener getSelectionControllingListener() {

@@ -17,7 +17,7 @@ import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.MessageBoxConfig;
 import com.gwtext.client.widgets.WaitConfig;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -33,11 +33,16 @@ public class UIUtil {
     protected static final String HELP_ICON_STYLE_STRING = "style=\"position:relative; top:2px;\"";
 
     public static final String TRANSACTION_APPLY_TO_TRAILER_STRING = " -- Apply to: ";
+
     public static final String LOCAL = "#local_";
+
     public static final String ADD_PREFIX = "add_parent";
+
     public static final String REMOVE_PREFIX = "remove_parent_";
+
     public static final String GOTO_PREFIX = "goto_parent_";
-    private static String[] noteTypes = new String[] {"Comment"};   //default value
+
+    private static String[] noteTypes = new String[]{"Comment"};   //default value
 
     public static void showLoadProgessBar(final String message, final String barMessage) {
         MessageBox.show(new MessageBoxConfig() {
@@ -89,26 +94,25 @@ public class UIUtil {
                 browserText = ((EntityData) object).getName();
             }
             return browserText == null ? "" : browserText;
-        } else {
+        }
+        else {
             return object.toString();
         }
     }
 
     public static String getNiceNoteCountText(final int noteCount) {
-    	return noteCount == 1 ? "There is 1 note" : "There are " + noteCount + " notes";
+        return noteCount == 1 ? "There is 1 note" : "There are " + noteCount + " notes";
     }
 
     public static String getHelpImageHtml(String helpURL, String hoverText) {
-        return  "&nbsp;<a href=\"" + helpURL + "\" target=\"_blank\" " + HELP_ICON_STYLE_STRING + ">" +
-        "<img src=\"images/help.gif\" width=\"14\" title=\"" + hoverText + "\" /></a> ";
+        return "&nbsp;<a href=\"" + helpURL + "\" target=\"_blank\" " + HELP_ICON_STYLE_STRING + ">" +
+                "<img src=\"images/help.gif\" width=\"14\" title=\"" + hoverText + "\" /></a> ";
     }
 
     /**
      * This method returns the short name of an entity in the ontology. It only
      * returns the string after the "#" char.
-     *
-     * @param fullUri
-     *            - the fully qualified name of the entity
+     * @param fullUri - the fully qualified name of the entity
      * @return - the short name (string after #)
      */
     public static String getShortName(String fullUri) {
@@ -121,65 +125,65 @@ public class UIUtil {
     }
 
     public static int getIntegerConfigurationProperty(GenericConfiguration config, String prop, int defaultValue) {
-    	return (config == null ? defaultValue : config.getIntegerProperty(prop, defaultValue));
+        return (config == null ? defaultValue : config.getIntegerProperty(prop, defaultValue));
     }
 
     public static boolean getBooleanConfigurationProperty(GenericConfiguration config, String prop, boolean defaultValue) {
-    	return (config == null ? defaultValue : config.getBooleanProperty(prop, defaultValue));
+        return (config == null ? defaultValue : config.getBooleanProperty(prop, defaultValue));
     }
 
     public static String getStringConfigurationProperty(Map<String, Object> config, String prop, String defaultValue) {
-    	if (config == null) {
-    		return defaultValue;
-    	}
+        if (config == null) {
+            return defaultValue;
+        }
 
-		try {
-    		String strValue = (String) config.get(prop);
-    		return (strValue == null ? defaultValue : strValue);
-		}
-		catch (Exception e) {
-			return defaultValue;
-		}
+        try {
+            String strValue = (String) config.get(prop);
+            return (strValue == null ? defaultValue : strValue);
+        }
+        catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     public static int getIntegerConfigurationProperty(Map<String, Object> config, String prop, int defaultValue) {
-    	if (config == null) {
-    		return defaultValue;
-    	}
+        if (config == null) {
+            return defaultValue;
+        }
 
-    	try {
-    		Integer intValue = (Integer) config.get(prop);
-    		return (intValue == null ? defaultValue : intValue.intValue());
-    	}
-    	catch (Exception e) {
-    		try {
-        		String strValue = (String) config.get(prop);
-        		return (strValue == null ? defaultValue : Integer.parseInt(strValue));
-    		}
-    		catch (Exception se) {
-    			return defaultValue;
-    		}
-    	}
+        try {
+            Integer intValue = (Integer) config.get(prop);
+            return (intValue == null ? defaultValue : intValue.intValue());
+        }
+        catch (Exception e) {
+            try {
+                String strValue = (String) config.get(prop);
+                return (strValue == null ? defaultValue : Integer.parseInt(strValue));
+            }
+            catch (Exception se) {
+                return defaultValue;
+            }
+        }
     }
 
     public static boolean getBooleanConfigurationProperty(Map<String, Object> config, String prop, boolean defaultValue) {
-    	if (config == null) {
-    		return defaultValue;
-    	}
+        if (config == null) {
+            return defaultValue;
+        }
 
-    	try {
-    		Boolean boolValue = (Boolean) config.get(prop);
-    		return (boolValue == null ? defaultValue : boolValue.booleanValue());
-    	}
-    	catch (Exception e) {
-    		try {
-        		String strValue = (String) config.get(prop);
-        		return (strValue == null ? defaultValue : Boolean.parseBoolean(strValue));
-    		}
-    		catch (Exception se) {
-    			return defaultValue;
-    		}
-    	}
+        try {
+            Boolean boolValue = (Boolean) config.get(prop);
+            return (boolValue == null ? defaultValue : boolValue.booleanValue());
+        }
+        catch (Exception e) {
+            try {
+                String strValue = (String) config.get(prop);
+                return (strValue == null ? defaultValue : Boolean.parseBoolean(strValue));
+            }
+            catch (Exception se) {
+                return defaultValue;
+            }
+        }
     }
 
     public static List getListConfigurationProperty(Map<String, Object> config, String prop) {
@@ -197,14 +201,13 @@ public class UIUtil {
 
     /**
      * Returns a {@link Map} of allowed values from a widget configuration,
-     * where the keys in the map represent the different possible values, 
+     * where the keys in the map represent the different possible values,
      * and for each key the associated values in the map are the display
      * label corresponding for that value.
      * <p>
-     * If the allowed values in the configuration file is represented by a 
-     * simple list of String values, this method will build a map from it, 
-     * where to each key the exact same value will correspond. 
-     * 
+     * If the allowed values in the configuration file is represented by a
+     * simple list of String values, this method will build a map from it,
+     * where to each key the exact same value will correspond.
      * @param config a widget configuration represented by a String-to-Object map
      * @return the "allowed values" map
      */
@@ -213,12 +216,12 @@ public class UIUtil {
             return null;
         }
         try {
-            Map<String, String> allowedValues = null; 
+            Map<String, String> allowedValues = null;
             Object allowedValuesObject = config.get(FormConstants.ALLOWED_VALUES);
             if (allowedValuesObject instanceof Map) {
-                allowedValues = (Map<String, String>)allowedValuesObject;
+                allowedValues = (Map<String, String>) allowedValuesObject;
             }
-            else if(allowedValuesObject instanceof List) {
+            else if (allowedValuesObject instanceof List) {
                 List<String> allowedValuesList = (List<String>) allowedValuesObject;
                 allowedValues = new LinkedHashMap<String, String>();
                 for (String allowedValue : allowedValuesList) {
@@ -231,32 +234,33 @@ public class UIUtil {
             return null;
         }
     }
-    
-    public static String getStringConfigurationProperty(
-            Map<String, Object> config, ProjectLayoutConfiguration projectLayoutConfiguration, String prop, String defaultValue) {
+
+    public static String getStringConfigurationProperty(Map<String, Object> config, ProjectLayoutConfiguration projectLayoutConfiguration, String prop, String defaultValue) {
         String projectDefaultValue = getStringConfigurationProperty(projectLayoutConfiguration, prop, defaultValue);
         return getStringConfigurationProperty(config, prop, projectDefaultValue);
     }
 
-    public static int getIntegerConfigurationProperty(
-            Map<String, Object> config, ProjectLayoutConfiguration projectLayoutConfiguration, String prop, int defaultValue) {
+    public static int getIntegerConfigurationProperty(Map<String, Object> config, ProjectLayoutConfiguration projectLayoutConfiguration, String prop, int defaultValue) {
         int projectDefaultValue = getIntegerConfigurationProperty(projectLayoutConfiguration, prop, defaultValue);
         return getIntegerConfigurationProperty(config, prop, projectDefaultValue);
     }
 
-    public static boolean getBooleanConfigurationProperty(
-            Map<String, Object> config, ProjectLayoutConfiguration projectLayoutConfiguration, String prop, boolean defaultValue) {
+    public static boolean getBooleanConfigurationProperty(Map<String, Object> config, ProjectLayoutConfiguration projectLayoutConfiguration, String prop, boolean defaultValue) {
         boolean projectDefaultValue = getBooleanConfigurationProperty(projectLayoutConfiguration, prop, defaultValue);
         return UIUtil.getBooleanConfigurationProperty(config, prop, projectDefaultValue);
     }
 
     public static void setConfigurationValue(Map<String, Object> config, String prop, Object value) {
-        if (config == null) {  return;  }
+        if (config == null) {
+            return;
+        }
         config.put(prop, value);
     }
 
     public static void setConfigurationPropertyValue(PortletConfiguration config, String prop, Object value) {
-        if (config == null) {  return;  }
+        if (config == null) {
+            return;
+        }
         Map<String, Object> props = config.getProperties();
         if (props == null) {
             props = new HashMap<String, Object>();
@@ -285,9 +289,11 @@ public class UIUtil {
         X o;
         if (c == null || c.isEmpty()) {
             o = null;
-        } else if (c instanceof List) {
+        }
+        else if (c instanceof List) {
             o = ((List<X>) c).get(0);
-        } else {
+        }
+        else {
             o = c.iterator().next();
         }
         return o;
@@ -301,7 +307,8 @@ public class UIUtil {
         List<X> c;
         if (o == null) {
             c = Collections.emptyList();
-        } else {
+        }
+        else {
             c = new ArrayList<X>(1);
             c.add(o);
         }
@@ -314,7 +321,9 @@ public class UIUtil {
 
     public static <X> String prettyPrintList(Collection<X> c, String separator) {
         StringBuffer text = new StringBuffer();
-        if (c == null) { return "(empty)"; }
+        if (c == null) {
+            return "(empty)";
+        }
         Iterator<X> i = c.iterator();
         while (i.hasNext()) {
             Object o = i.next();
@@ -327,33 +336,38 @@ public class UIUtil {
     }
 
     public static boolean confirmIsLoggedIn() {
-        if (GlobalSettings.getGlobalSettings().isLoggedIn()) {
-            return true;
-        } else {
+        if (Application.get().isGuestUser()) {
             MessageBox.alert("Sign in", "Please sign in first.");
             return false;
         }
+        else {
+
+            return true;
+        }
     }
-    
+
     public static boolean confirmOperationAllowed(Project project) {
         return checkOperationAllowed(project, true);
     }
-    
+
     public static boolean checkOperationAllowed(Project project, boolean showUserAlerts) {
-        if (GlobalSettings.getGlobalSettings().isLoggedIn()) {
-            if (project.hasWritePermission(GlobalSettings.getGlobalSettings().getUserName())) {
+        if (Application.get().isGuestUser()) {
+            if (showUserAlerts) {
+                MessageBox.alert("Sign in", "Please sign in first.");
+            }
+            return false;
+        }
+        else {
+            if (project.hasWritePermission(Application.get().getUserId())) {
                 return true;
-            } else {
+            }
+            else {
                 if (showUserAlerts) {
                     MessageBox.alert("No permission", "You do not have write permission.");
                 }
                 return false;
             }
-        } else {
-            if (showUserAlerts) {
-                MessageBox.alert("Sign in", "Please sign in first.");
-            }
-            return false;
+
         }
     }
 
@@ -373,8 +387,12 @@ public class UIUtil {
     }
 
     public static boolean equals(EntityData e1, EntityData e2) { //probably not the best class for it..
-        if (e1 == null & e2 == null) { return true; }
-        if (e1 != null && e2 != null) { return e1.equals(e2); }
+        if (e1 == null & e2 == null) {
+            return true;
+        }
+        if (e1 != null && e2 != null) {
+            return e1.equals(e2);
+        }
         return false;
     }
 
@@ -392,7 +410,7 @@ public class UIUtil {
         }
 
         int res = currPos;
-        while (res > 0 && isIdentifierPart(text.charAt(res-1))) {
+        while (res > 0 && isIdentifierPart(text.charAt(res - 1))) {
             res--;
         }
         return res;
@@ -412,6 +430,7 @@ public class UIUtil {
         }
         return res;
     }
+
     private static boolean isIdentifierPart(char ch) {
         boolean res = false;
         res = res || Character.isLetter(ch);
@@ -424,9 +443,13 @@ public class UIUtil {
     }
 
     static final String OWL_CLASS_ID = "http://www.w3.org/2002/07/owl#Class";
+
     static final String RDFS_CLASS_ID = "http://www.w3.org/2000/01/rdf-schema#Class";
+
     static final String RDF_PROPERTY_ID = "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property";
+
     static final String OWL_DATA_PROPERTY_ID = "http://www.w3.org/2002/07/owl#DataProperty";
+
     static final String OWL_OBJ_PROPERTY_ID = "http://www.w3.org/2002/07/owl#ObjectProperty";
 
     public static ValueType guessValueType(EntityData entityData) {
@@ -439,7 +462,7 @@ public class UIUtil {
             return ValueType.Cls;
         }
 
-        if(entityData instanceof PropertyEntityData) {
+        if (entityData instanceof PropertyEntityData) {
             return ValueType.Property;
         }
 
@@ -452,7 +475,8 @@ public class UIUtil {
             String typeName = type.getName();
             if (typeName.equals(OWL_CLASS_ID) || typeName.equals(RDFS_CLASS_ID)) {
                 return ValueType.Cls;
-            } else if (typeName.equals(RDF_PROPERTY_ID) || typeName.equals(OWL_DATA_PROPERTY_ID) || typeName.equals(OWL_OBJ_PROPERTY_ID)) {
+            }
+            else if (typeName.equals(RDF_PROPERTY_ID) || typeName.equals(OWL_DATA_PROPERTY_ID) || typeName.equals(OWL_OBJ_PROPERTY_ID)) {
                 return ValueType.Property;
             }
         }

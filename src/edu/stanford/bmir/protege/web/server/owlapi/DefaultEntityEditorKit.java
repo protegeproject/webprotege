@@ -1,12 +1,11 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import org.semanticweb.owlapi.change.*;
-import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import java.util.*;
 
@@ -42,7 +41,7 @@ public class DefaultEntityEditorKit extends OWLAPIEntityEditorKit {
 
     @Override
     public OWLEntityBrowserTextChangeSet setEntityBrowserText(OWLEntity entity, String browserText) {
-        return null;
+        return new OWLEntityBrowserTextChangeSet(entity, getEntityBrowserText(entity), browserText);
     }
 
     @Override
@@ -52,11 +51,18 @@ public class DefaultEntityEditorKit extends OWLAPIEntityEditorKit {
 
     @Override
     public List<OWLEntityBrowserTextChangeSet> getChangedEntities(List<OWLOntologyChangeRecord> ontologyChanges) {
+        List<OWLEntityBrowserTextChangeSet> result = new ArrayList<OWLEntityBrowserTextChangeSet>();
         for(OWLOntologyChangeRecord record : ontologyChanges) {
-            OWLOntologyChangeRecordInfo info = record.getInfo();
-            
+            OWLOntologyChangeData info = record.getData();
+            BrowserTextChangeDetector detector = new BrowserTextChangeDetector();
+            info.accept(detector);
+            for(BrowserTextChange change : detector.getBrowserTextChanges()) {
+                for(OWLEntity entity : getProject().getRootOntology().getEntitiesInSignature(change.getSubject())) {
+                    result.add(new OWLEntityBrowserTextChangeSet(entity, change.getFrom(), change.getTo()));
+                }
+            }
         }
-        return Collections.emptyList();
+        return result;
     }
 
     @Override
@@ -67,58 +73,118 @@ public class DefaultEntityEditorKit extends OWLAPIEntityEditorKit {
     @Override
     public void dispose() {
     }
-    
-    
-    private class BrowserTextChangeDetector extends OWLAxiomVisitorAdapter implements OWLOntologyChangeRecordInfoVisitor<Object, RuntimeException> {
+
+
+    private class BrowserTextChange {
+
+        private IRI subject;
+
+        private String from;
+
+        private String to;
+
+        private BrowserTextChange(IRI subject, String from, String to) {
+            this.subject = subject;
+            this.from = from;
+            this.to = to;
+        }
+
+        public IRI getSubject() {
+            return subject;
+        }
+
+        public String getFrom() {
+            return from;
+        }
+
+        public String getTo() {
+            return to;
+        }
+    }
+
+
+    private class BrowserTextChangeDetector extends OWLAxiomVisitorAdapter implements OWLOntologyChangeDataVisitor<Object, RuntimeException> {
+
+        // Order is important!
+
+        private Map<IRI, String> fromMap = new LinkedHashMap<IRI, String>(4);
+
+        private Map<IRI, String> toMap = new LinkedHashMap<IRI, String>(4);
 
         private ChangeType changeType;
-        
-        private Map<OWLEntity, String> fromMap = new HashMap<OWLEntity, String>();
-        
-        private Map<OWLEntity, String> toMap = new HashMap<OWLEntity, String>();
-        
-        public Object visit(AddAxiomChangeRecordInfo data) throws RuntimeException {
+
+        public List<BrowserTextChange> getBrowserTextChanges() {
+            List<BrowserTextChange> changes = new ArrayList<BrowserTextChange>();
+            for(IRI fromIRI : fromMap.keySet()) {
+                String fromBrowserText = fromMap.get(fromIRI);
+                String toBrowserText = toMap.get(fromIRI);
+                changes.add(new BrowserTextChange(fromIRI, fromBrowserText == null ? "" : fromBrowserText, toBrowserText == null ? "" : toBrowserText));
+            }
+            for(IRI toIRI : toMap.keySet()) {
+                if(!fromMap.containsKey(toIRI)) {
+                    String fromBrowserText = "";
+                    String toBrowserText = toMap.get(toIRI);
+                    changes.add(new BrowserTextChange(toIRI, fromBrowserText, toBrowserText == null ? "" : toBrowserText));
+                }
+            }
+            return changes;
+        }
+
+        public Object visit(AddAxiomData data) throws RuntimeException {
+            OWLAxiom axiom = data.getAxiom();
             changeType = ChangeType.ADD;
-            data.getAxiom().accept(this);
+            axiom.accept(this);
             return null;
         }
 
-        public Object visit(RemoveAxiomChangeRecordInfo data) throws RuntimeException {
+        public Object visit(RemoveAxiomData data) throws RuntimeException {
+            OWLAxiom axiom = data.getAxiom();
             changeType = ChangeType.REMOVE;
+            axiom.accept(this);
             return null;
         }
 
-        public Object visit(AddOntologyAnnotationChangeRecordInfo data) throws RuntimeException {
+        public Object visit(AddOntologyAnnotationData data) throws RuntimeException {
             return null;
         }
 
-        public Object visit(RemoveOntologyAnnotationChangeRecordInfo data) throws RuntimeException {
+        public Object visit(RemoveOntologyAnnotationData data) throws RuntimeException {
             return null;
         }
 
-        public Object visit(SetOntologyIDChangeRecordInfo data) throws RuntimeException {
+        public Object visit(SetOntologyIDData data) throws RuntimeException {
             return null;
         }
 
-        public Object visit(AddImportChangeRecordInfo data) throws RuntimeException {
+        public Object visit(AddImportData data) throws RuntimeException {
             return null;
         }
 
-        public Object visit(RemoveImportChangeRecordInfo data) throws RuntimeException {
+        public Object visit(RemoveImportData data) throws RuntimeException {
             return null;
         }
 
         @Override
-        public void visit(OWLDeclarationAxiom axiom) {
-            if(changeType == ChangeType.ADD) {
-                fromMap.put(axiom.getEntity(), getShortFormProvider().getShortForm(axiom.getEntity()));
+        public void visit(OWLAnnotationAssertionAxiom axiom) {
+            OWLAnnotationSubject subject = axiom.getSubject();
+            if(!(subject instanceof IRI)) {
+                return;
             }
-            else {
-                fromMap.put(axiom.getEntity(), getShortFormProvider().getShortForm(axiom.getEntity()));
+            OWLAnnotationValue value = axiom.getValue();
+            if(!(value instanceof OWLLiteral)) {
+                return;
+            }
+            IRI iri = (IRI) subject;
+            OWLLiteral literal = (OWLLiteral) value;
+            if(axiom.getProperty().getIRI().equals(OWLRDFVocabulary.RDFS_LABEL.getIRI())) {
+                if(changeType == ChangeType.ADD) {
+                    toMap.put(iri, literal.getLiteral());
+                }
+                else {
+                    fromMap.put(iri, literal.getLiteral());
+                }
             }
         }
-
-        
     }
 
     private enum ChangeType {

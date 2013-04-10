@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.domain.Invitation;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.server.metaproject.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -13,7 +15,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 27/02/2012
  */
-public class SharingSettingsServiceImplP3Delegate implements SharingSettingsService {
+public class SharingSettingsServiceImplP3Delegate {
 
     public static final String WORLD_GROUP_NAME = "World";
 
@@ -54,7 +56,7 @@ public class SharingSettingsServiceImplP3Delegate implements SharingSettingsServ
     public static final String NONE_GROUP_NAME_SUFFIX = "_None";
 
     public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
-        MetaProjectManager mpm = Protege3ProjectManager.getProjectManager().getMetaProjectManager();
+        MetaProjectManager mpm = MetaProjectManager.getManager();
         MetaProject metaProject = mpm.getMetaProject();
         ProjectInstance projectInstance = metaProject.getProject(projectId.getProjectName());
         Set<GroupOperation> groupOperations = projectInstance.getAllowedGroupOperations();
@@ -129,17 +131,16 @@ public class SharingSettingsServiceImplP3Delegate implements SharingSettingsServ
         return false;
     }
 
-    public void updateSharingSettings(ProjectSharingSettings projectSharingSettings) {
-        System.out.println("Updating sharing settings on server...");
+    public void updateSharingSettings(HttpServletRequest request, ProjectSharingSettings projectSharingSettings) {
 
-        MetaProjectManager mpm = Protege3ProjectManager.getProjectManager().getMetaProjectManager();
+        MetaProjectManager mpm = MetaProjectManager.getManager();
         MetaProject metaProject = mpm.getMetaProject();
         ProjectId projectId = projectSharingSettings.getProjectId();
         ProjectInstance projectInstance = metaProject.getProject(projectId.getProjectName());
 
         // TODO: Check we are allowed to manage projects permissions
 
-        Map<SharingSetting, Set<User>> usersBySharingSetting = createUsersBySharingSettingMap(projectSharingSettings, metaProject);
+        Map<SharingSetting, Set<User>> usersBySharingSetting = createUsersBySharingSettingMap(request, projectSharingSettings, metaProject);
 
         Set<GroupOperation> allowedGroupOperations = createAllowedGroupOperationsFromSharingSettings(metaProject, projectId, usersBySharingSetting);
 
@@ -166,19 +167,40 @@ public class SharingSettingsServiceImplP3Delegate implements SharingSettingsServ
         return allowedGroupOperations;
     }
 
-    private Map<SharingSetting, Set<User>> createUsersBySharingSettingMap(ProjectSharingSettings projectSharingSettings, MetaProject metaProject) {
+    private Map<SharingSetting, Set<User>> createUsersBySharingSettingMap(HttpServletRequest request, ProjectSharingSettings projectSharingSettings, MetaProject metaProject) {
         Map<SharingSetting, Set<User>> usersBySharingSetting = createSharingSettingMap();
 
         for (UserSharingSetting userSharingSetting : projectSharingSettings.getSharingSettings()) {
             UserId userId = userSharingSetting.getUserId();
-            if (!userId.isNull()) {
+            if (!userId.isGuest()) {
                 User user = getUserFromUserId(metaProject, userId);
                 if (user != null) {
                     usersBySharingSetting.get(userSharingSetting.getSharingSetting()).add(user);
                 }
+                else {
+                    if(userId.getUserName().contains("@")) {
+                        // Assume it's an email invitation
+                        sendEmailInvitation(request, projectSharingSettings, userSharingSetting);
+                        User freshUser = getUserFromUserId(metaProject, userId);
+                        usersBySharingSetting.get(userSharingSetting.getSharingSetting()).add(freshUser);
+                    }
+                }
             }
         }
         return usersBySharingSetting;
+    }
+
+    private void sendEmailInvitation(HttpServletRequest request, ProjectSharingSettings projectSharingSettings, UserSharingSetting userSharingSetting) {
+        UserId userId = userSharingSetting.getUserId();
+        // Email invitation
+        List<Invitation> invitations = new ArrayList<Invitation>();
+        final Invitation invitation = new Invitation();
+        invitation.setEmailId(userId.getUserName());
+        invitation.setWriter(userSharingSetting.getSharingSetting() == SharingSetting.EDIT);
+        invitations.add(invitation);
+        final String projectName = projectSharingSettings.getProjectId().getProjectName();
+        String baseURL = request.getHeader("referer");
+        AccessPolicyManager.get().createTemporaryAccountForInvitation(ProjectId.get(projectName), baseURL, invitations);
     }
 
     private void getWorldAllowedOperations(ProjectSharingSettings projectSharingSettings, MetaProject metaProject, Set<GroupOperation> allowedGroupOperations) {
@@ -283,6 +305,8 @@ public class SharingSettingsServiceImplP3Delegate implements SharingSettingsServ
     private Operation getReadOperation(MetaProject metaProject) {
         return metaProject.getOperation(OperationName.READ.getName());
     }
+
+
 
 
 

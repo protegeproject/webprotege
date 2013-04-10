@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
+import org.semanticweb.owlapi.model.OWLEntity;
+
 import java.util.Collection;
 import java.util.List;
 

@@ -4,9 +4,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import edu.stanford.bmir.protege.web.server.db.mongodb.MongoDBManager;
+import edu.stanford.smi.protege.server.metaproject.MetaProject;
+import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
 import edu.stanford.smi.protege.util.Log;
 
-import java.io.File;
+import java.util.UUID;
 
 public class LifeCycleListener implements ServletContextListener {
 
@@ -19,14 +22,28 @@ public class LifeCycleListener implements ServletContextListener {
 
         initPaths(webappRoot);
 
+//        initDB();
+
         initProjectManagers();
+
+
     }
 
 
 
     public void initProjectManagers() {
-        ProjectManagerFactory.registerProjectManager(Protege3ProjectManager.getProjectManager());
+        MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
+        for(ProjectInstance pi : metaProject.getProjects()) {
+            System.out.println("Project: " + pi.getName() + " ---> " + pi.getProtegeInstance().getFrameID());
+            System.out.println(UUID.randomUUID());
+        }
+        System.err.println("WARNING: Ignoring initProjectManagers");
+//        ProjectManagerFactory.registerProjectManager(Protege3ProjectManager.getProjectManager());
         //other project managers can be added here
+    }
+
+    private void initDB() {
+        MongoDBManager.get();
     }
 
     public void initPaths(String webappRoot) {
@@ -49,7 +66,8 @@ public class LifeCycleListener implements ServletContextListener {
 
     public void contextDestroyed(ServletContextEvent sce) {
         // TODO saveAllProjects for LocalMetaProjectManagers?
-        ProjectManagerFactory.dispose();
+//        ProjectManagerFactory.dispose();
+//        MongoDBManager.get().dispose();
         Log.getLogger(LifeCycleListener.class).info("WebProtege cleanly disposed");
     }
 }

@@ -23,7 +23,7 @@ import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.ColumnLayout;
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
 
-import edu.stanford.bmir.protege.web.client.model.GlobalSettings;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
@@ -387,23 +387,23 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
 
     protected void deletePropertyValue(EntityData subject, String propName, ValueType propValueType,
             EntityData oldEntityData, Object oldDisplayedValue, String operationDescription) {
-        propertyValueUtil.deletePropertyValue(getProject().getProjectName(), subject.getName(), propName, propValueType,
-                oldEntityData.getName(), GlobalSettings.getGlobalSettings().getUserName(), operationDescription,
+        propertyValueUtil.deletePropertyValue(getProjectId(), subject.getName(), propName, propValueType,
+                oldEntityData.getName(), Application.get().getUserId(), operationDescription,
                 new RemovePropertyValueHandler(subject, oldEntityData, values));
     }
 
     protected void replacePropertyValue(EntityData subject, String propName, ValueType propValueType,
             EntityData oldEntityData, EntityData newEntityData, Object oldDisplayedValue, String operationDescription) {
-        propertyValueUtil.replacePropertyValue(getProject().getProjectName(), subject.getName(), propName, propValueType,
-                oldEntityData.getName(), newEntityData.getName(), GlobalSettings.getGlobalSettings().getUserName(),
+        propertyValueUtil.replacePropertyValue(getProjectId(), subject.getName(), propName, propValueType,
+                oldEntityData.getName(), newEntityData.getName(), Application.get().getUserId(),
                 operationDescription, new ReplacePropertyValueHandler(subject, oldEntityData, newEntityData, values));
     }
 
     //TODO: assume value value type is the same as the property value type, fix later
     protected void addPropertyValue(EntityData subject, String propName, ValueType propValueType,
             EntityData newEntityData, Object oldDisplayedValue, String operationDescription) {
-        propertyValueUtil.addPropertyValue(getProject().getProjectName(), subject.getName(), propName, propValueType,
-                newEntityData.getName(), GlobalSettings.getGlobalSettings().getUserName(), operationDescription,
+        propertyValueUtil.addPropertyValue(getProjectId(), subject.getName(), propName, propValueType,
+                newEntityData.getName(), Application.get().getUserId(), operationDescription,
                 new AddPropertyValueHandler(subject, newEntityData, values));
     }
 

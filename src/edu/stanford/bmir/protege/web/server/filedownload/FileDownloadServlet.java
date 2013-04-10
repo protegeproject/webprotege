@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 
 import javax.servlet.ServletException;

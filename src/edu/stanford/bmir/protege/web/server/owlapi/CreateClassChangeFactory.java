@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
@@ -15,35 +16,32 @@ public class CreateClassChangeFactory extends OWLOntologyChangeFactory {
 
     private String clsName;
     
-    private String superClsName;
-    
-    public CreateClassChangeFactory(OWLAPIProject project, UserId userId, String changeDescription, String clsName, String superClsName) {
+    private OWLClass superCls;
+
+    public CreateClassChangeFactory(OWLAPIProject project, UserId userId, String changeDescription, String clsName) {
+        this(project, userId, changeDescription, clsName, null);
+    }
+
+
+    public CreateClassChangeFactory(OWLAPIProject project, UserId userId, String changeDescription, String clsName, OWLClass superCls) {
         super(project, userId, changeDescription);
         this.clsName = clsName;
-        this.superClsName = superClsName;
+        this.superCls = superCls;
     }
 
-    public String getClsName() {
-        return clsName;
-    }
-
-    public String getSuperClsName() {
-        return superClsName;
-    }
 
     @Override
     public void createChanges(List<OWLOntologyChange> changeListToFill) {
         OWLDataFactory df = getDataFactory();
-        OWLAPIEntityEditorKit kit = getProject().getOWLEntityEditorKit();
-        OWLEntityCreatorFactory fac = kit.getEntityCreatorFactory();
-        OWLEntityCreator<OWLClass> creator = fac.getEntityCreator(getProject(), getUserId(), clsName, EntityType.CLASS);
-        changeListToFill.addAll(creator.getChanges());
-        if (superClsName != null) {
-            OWLClass subCls = creator.getEntity();
-            OWLClass superCls = getRenderingManager().getEntity(superClsName, EntityType.CLASS);
+        OWLClass cls = DataFactory.getFreshOWLEntity(EntityType.CLASS, clsName);
+        if (superCls != null) {
+            OWLClass subCls = cls;
             OWLSubClassOfAxiom ax = df.getOWLSubClassOfAxiom(subCls, superCls);
             AddAxiom addAxiomChange = new AddAxiom(getRootOntology(), ax);
             changeListToFill.add(addAxiomChange);
+        }
+        else {
+            changeListToFill.add(new AddAxiom(getRootOntology(), df.getOWLDeclarationAxiom(cls)));
         }
     }
 

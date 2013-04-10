@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PaginationData;
 import edu.stanford.bmir.protege.web.client.ui.util.GWTProxy;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class PagedIndividualsProxyImpl  extends GWTProxy {
 
@@ -35,7 +36,7 @@ public class PagedIndividualsProxyImpl  extends GWTProxy {
     @Override
     public void load(int start, int limit, String sort, String dir, final JavaScriptObject o, UrlParam[] baseParams) {
 
-        OntologyServiceManager.getInstance().getIndividuals(projectName, className, start, limit, sort, dir,
+        OntologyServiceManager.getInstance().getIndividuals(ProjectId.get(projectName), className, start, limit, sort, dir,
                 new AsyncCallback<PaginationData<EntityData>>() {
 
                     public void onFailure(Throwable caught) {
