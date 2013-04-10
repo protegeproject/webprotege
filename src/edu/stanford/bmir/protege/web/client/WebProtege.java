@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
 import edu.stanford.bmir.protege.web.client.ui.TopPanel;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InvitationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InviteUserUtil;
+import edu.stanford.bmir.protege.web.server.WebProtegeConfigurationException;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

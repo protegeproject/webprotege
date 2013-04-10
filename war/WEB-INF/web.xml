@@ -17,7 +17,21 @@
         <listener-class>edu.stanford.bmir.protege.web.server.LifeCycleListener</listener-class>
     </listener>
 
+    <filter-mapping>
+        <filter-name>WebProtegeWebAppFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
 
+
+    <filter>
+        <filter-name>WebProtegeWebAppFilter</filter-name>
+        <filter-class>edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter</filter-class>
+    </filter>
+
+    <error-page>
+        <exception-type>edu.stanford.bmir.protege.web.server.WebProtegeConfigurationException</exception-type>
+        <location>/configuration-error.jsp</location>
+    </error-page>
 
 	<!-- WebProtege servlets -->
 

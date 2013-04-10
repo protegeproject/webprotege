@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.filter;
 
+import edu.stanford.bmir.protege.web.server.WebProtegeConfigurationException;
+
 import javax.servlet.*;
 import java.io.IOException;
 
@@ -9,7 +11,13 @@ import java.io.IOException;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/01/2013
  */
-public class WebProtegeDocumentFilter implements Filter {
+public class WebProtegeWebAppFilter implements Filter {
+
+    private static WebProtegeConfigurationException configError;
+
+    public static void setConfigError(WebProtegeConfigurationException configError) {
+        WebProtegeWebAppFilter.configError = configError;
+    }
 
     /**
      * Called by the web container to indicate to a filter that it is being placed into
@@ -46,7 +54,11 @@ public class WebProtegeDocumentFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         System.out.println("Filter: " + request);
-
+        if(configError != null) {
+            System.err.println("CONFIG ERROR: " + configError.getMessage());
+            throw configError;
+        }
+        chain.doFilter(request, response);
     }
 
     /**

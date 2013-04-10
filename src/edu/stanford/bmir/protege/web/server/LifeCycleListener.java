@@ -22,7 +22,7 @@ public class LifeCycleListener implements ServletContextListener {
 
         initPaths(webappRoot);
 
-//        initDB();
+        initDB();
 
         initProjectManagers();
 
@@ -33,13 +33,6 @@ public class LifeCycleListener implements ServletContextListener {
 
     public void initProjectManagers() {
         MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
-        for(ProjectInstance pi : metaProject.getProjects()) {
-            System.out.println("Project: " + pi.getName() + " ---> " + pi.getProtegeInstance().getFrameID());
-            System.out.println(UUID.randomUUID());
-        }
-        System.err.println("WARNING: Ignoring initProjectManagers");
-//        ProjectManagerFactory.registerProjectManager(Protege3ProjectManager.getProjectManager());
-        //other project managers can be added here
     }
 
     private void initDB() {
