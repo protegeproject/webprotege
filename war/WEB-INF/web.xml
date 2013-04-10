@@ -19,6 +19,7 @@
 
 
 	<!-- Listener for initializing and disposing WebProtege -->
+	
 	<listener>
 		<listener-class>edu.stanford.bmir.protege.web.server.LifeCycleListener</listener-class>
 	</listener>
@@ -340,20 +341,24 @@
 		<url-pattern>/webprotege/sharingsettings</url-pattern>
 	</servlet-mapping>
 
-	<!-- Error pages -->
 
+	<!-- Default page to serve -->
+	
+	<welcome-file-list>
+		<welcome-file>WebProtege.html</welcome-file>
+	</welcome-file-list>
+
+
+	<!-- Error pages -->
+	
 	<error-page>
 		<exception-type>edu.stanford.bmir.protege.web.server.WebProtegeConfigurationException</exception-type>
 		<location>/configuration-error.jsp</location>
 	</error-page>
 
 
-	<!-- Default page to serve -->
-	<welcome-file-list>
-		<welcome-file>WebProtege.html</welcome-file>
-	</welcome-file-list>
-
-	<!-- Secutiry constraints -->
+	<!-- Security constraints -->
+	
 	<security-constraint>
 		<display-name>excluded</display-name>
 		<web-resource-collection>
