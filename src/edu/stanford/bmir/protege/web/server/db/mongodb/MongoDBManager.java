@@ -1,23 +1,14 @@
 package edu.stanford.bmir.protege.web.server.db.mongodb;
 
 import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
-import edu.stanford.bmir.protege.web.server.WebProtegeConfigurationException;
-import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
+import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.smi.protege.util.ApplicationProperties;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
-import java.util.logging.Logger;
 
 /**
  * Author: Matthew Horridge<br>
@@ -95,14 +86,14 @@ public class MongoDBManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public MongoDBManager() {
+    private MongoDBManager() {
         try {
             client = new MongoClient(address);
             testConnection();
         }
         catch (Exception e) {
             // The call failed for some reason.  We cannot proceed without a properly initialized connection
-            WebProtegeWebAppFilter.setConfigError(new WebProtegeConfigurationException(getMongoDBNotFoundMessage(), e));
+            throw new WebProtegeConfigurationException(getMongoDBNotFoundMessage(), e);
         }
     }
 
@@ -114,8 +105,12 @@ public class MongoDBManager {
     }
 
 
-
-    public static synchronized MongoDBManager get() {
+    /**
+     * Gets the MongoDBManager.
+     * @return The one and only instance of MongoDBManager.  Not {@code null}.
+     * @throws WebProtegeConfigurationException if a connection to mongodb could not be established.
+     */
+    public static synchronized MongoDBManager get() throws WebProtegeConfigurationException {
         if (instance == null) {
             instance = new MongoDBManager();
         }

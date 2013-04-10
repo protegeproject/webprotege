@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server;
+package edu.stanford.bmir.protege.web.server.init;
 
 import java.io.Serializable;
 

@@ -3,21 +3,17 @@ package edu.stanford.bmir.protege.web.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
 import com.gwtext.client.widgets.layout.*;
 
-import edu.stanford.bmir.protege.web.client.place.ProjectListPlace;
-import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceHistoryMapper;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
 import edu.stanford.bmir.protege.web.client.ui.TopPanel;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InvitationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InviteUserUtil;
-import edu.stanford.bmir.protege.web.server.WebProtegeConfigurationException;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

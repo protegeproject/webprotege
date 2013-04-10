@@ -352,7 +352,7 @@
 	<!-- Error pages -->
 	
 	<error-page>
-		<exception-type>edu.stanford.bmir.protege.web.server.WebProtegeConfigurationException</exception-type>
+		<exception-type>edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException</exception-type>
 		<location>/configuration-error.jsp</location>
 	</error-page>
 
