@@ -50,34 +50,16 @@
        </condition>
    </target>
 
-   <target name="useProtegeHome" depends="checkProtegeHome" if="protege.home.set">
-       <echo message="Using Protege Home = ${protege.home} to find protege jars"/>
-       <property name="protege.lib"     location="${protege.home}/protege.jar"/>
-       <property name="bioportal2.lib"  location="${protege.home}/plugins/edu.stanford.bmir.protegex.bp.ref/bioportal-services-lib.jar"/>
-       <!--<property name="lucene1.lib"     location="${protege.home}/plugins/edu.stanford.smi.protegex.query.lucene/luceneQueryPlugin.jar"/>-->
-       <!--<property name="lucene2.lib"     location="${protege.home}/plugins/edu.stanford.smi.protegex.query.lucene/lucene-core.jar"/>        -->
-   </target>
-    
-
-    <target name = "checkProtegeLibs" depends="useProtegeHome">
+    <target name = "checkProtegeLibs">
       <condition property="libs.found">
         <and>
-          <available file="${protege.lib}"                 type = "file"/>
           <available file="${gwt.dir}/gwt-user.jar"        type = "file"/>
           <available file="${gwt.dir}/gwt-dev.jar" type = "file"/>
-          <!--<available file="${bioportal1.lib}"              type = "file"/>-->
-          <available file="${bioportal2.lib}"              type = "file"/>
-          <!--<available file="${lucene1.lib}"                 type = "file"/>-->
-          <!--<available file="${lucene2.lib}"                 type = "file"/>-->
         </and>
       </condition>
       <path id = "project.classpath">    
-        <pathelement location = "${protege.lib}"/>
         <pathelement location="${gwt.dir}/gwt-user.jar"/>
         <pathelement location="${gwt.dir}/gwt-dev.jar"/>
-        <pathelement location="${bioportal2.lib}"/>
-        <!--<pathelement location="${lucene1.lib}"/>-->
-        <!--<pathelement location="${lucene2.lib}"/>-->
         <fileset dir="${lib}"/>
       </path>       
     </target>
@@ -163,7 +145,7 @@
                  excludes="**/phonetix*.jar,**/xstream*.jar"/>
      </copy>
 
-     <copy todir = "${war}/WEB-INF/lib" file="${protege.lib}"/>
+     <!--<copy todir = "${war}/WEB-INF/lib" file="${protege.lib}"/>-->
      <antcall target="replace.projects"/>
      <antcall target="copy.alt.war.template"/>
      
@@ -222,7 +204,7 @@ http://groups.google.com/group/Google-Web-Toolkit/browse_thread/thread/086d288e0
           -->
        <java classname = "com.google.gwt.dev.Compiler" 
              fork = "true" 
-             maxmemory = "500M">
+             maxmemory = "1000M">
            <classpath>
                <path refid="project.classpath"/>
                <pathelement path="${classes}"/>
