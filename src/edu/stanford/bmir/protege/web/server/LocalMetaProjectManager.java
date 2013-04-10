@@ -31,16 +31,16 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
     //cache for performance reasons
 //    private ArrayList<ProjectData> projectData;
 
-    private int _saveIntervalMsec = edu.stanford.bmir.protege.web.server.ApplicationProperties.NO_SAVE;
+    private int _saveIntervalMsec = edu.stanford.bmir.protege.web.server.WebProtegeProperties.NO_SAVE;
 
     //thread that save periodically the projects for local mode
     private Thread _updateThread;
 
     public LocalMetaProjectManager() {
-        metaproject = new MetaProjectImpl(ApplicationProperties.getLocalMetaprojectURI());
+        metaproject = new MetaProjectImpl(WebProtegeProperties.getLocalMetaprojectURI());
         //automatic save logic
-        int saveInt = ApplicationProperties.getLocalProjectSaveInterval();
-        if (saveInt != ApplicationProperties.NO_SAVE) {
+        int saveInt = WebProtegeProperties.getLocalProjectSaveInterval();
+        if (saveInt != WebProtegeProperties.NO_SAVE) {
             _saveIntervalMsec = saveInt * 1000;
         }
         startProjectUpdateThread();
@@ -319,7 +319,7 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
             String name = projectInstance.getName();
             if (name.equals(projectName)) {
                 String path = projectInstance.getLocation();
-                URL url = URIUtilities.toURL(path, ApplicationProperties.getWeprotegeDirectory());
+                URL url = URIUtilities.toURL(path, WebProtegeProperties.getWeprotegeDirectory());
                 URI uri = null;
                 try {
                     uri = url.toURI();
@@ -344,7 +344,7 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         if (metaproject != null) {
             ((MetaProjectImpl) metaproject).getKnowledgeBase().getProject().dispose();
         }
-        metaproject = new MetaProjectImpl(ApplicationProperties.getLocalMetaprojectURI());
+        metaproject = new MetaProjectImpl(WebProtegeProperties.getLocalMetaprojectURI());
     }
 
 
@@ -352,7 +352,7 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
      * Saving automatically the projects - to be removed when integrated with server	 *
      */
     private void startProjectUpdateThread() {
-        if (_saveIntervalMsec != edu.stanford.bmir.protege.web.server.ApplicationProperties.NO_SAVE) {
+        if (_saveIntervalMsec != edu.stanford.bmir.protege.web.server.WebProtegeProperties.NO_SAVE) {
             _updateThread = new Thread("Save Projects") {
                 @Override
                 public void run() {

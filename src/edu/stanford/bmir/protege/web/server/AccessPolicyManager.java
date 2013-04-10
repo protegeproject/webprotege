@@ -113,7 +113,7 @@ public class AccessPolicyManager {
 
         }
 
-        User serverUser = metaProject.getUser(ApplicationProperties.getProtegeServerUser());
+        User serverUser = metaProject.getUser(WebProtegeProperties.getProtegeServerUser());
         //Checking if the server user mentioned in webprotege.user in protege.properties is present in users readers group. If not then adds it.
         //The server user is required while loading the project and should have read access.
         if (serverUser != null && !group.getMembers().contains(serverUser)) {
@@ -287,7 +287,7 @@ public class AccessPolicyManager {
             Group group = metaProject.getGroup(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);// add
 
             List<String> groupUserList = getUserListForGroupOperation(projectInstance, group, readOnlyOperation);
-            User serverUser = metaProject.getUser(ApplicationProperties.getProtegeServerUser());
+            User serverUser = metaProject.getUser(WebProtegeProperties.getProtegeServerUser());
             for (User user : allPoliciesUsers) {
                 if (user.getName() != null && policy.isOperationAuthorized(user, readOnlyOperation, projectInstance)) {
                     if (includeTemporaryAccount || user.getPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT) == null || !user.getPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT).trim().equals("true")) { // Proceed if account is not temporary.
@@ -693,7 +693,7 @@ public class AccessPolicyManager {
                     }
 
                     String invitationEmailBody = getInvitationEmailBody(invitation.isWriter(), projectId, getOwner(projectId), getInvitationURL(invitationBaseURL, invitation.getEmailId(), tempUser.getPropertyValue(InvitationConstants.USER_PROPERTY_TEMPORARY_ACCOUNT_RANDOM_NO)));
-                    EmailUtil.sendEmail(invitation.getEmailId(), EmailConstants.INVITATION_SUBJECT, invitationEmailBody, ApplicationProperties.getEmailAccount());
+                    EmailUtil.sendEmail(invitation.getEmailId(), EmailConstants.INVITATION_SUBJECT, invitationEmailBody, WebProtegeProperties.getEmailAccount());
 
                 }
                 catch (Exception e) {
@@ -845,7 +845,7 @@ public class AccessPolicyManager {
      */
     public boolean isInvitationValid(String invitationId) {
         boolean result = false;
-        int expirationPeriodInDays = ApplicationProperties.getAccountInvitationExpirationPeriodInDays();
+        int expirationPeriodInDays = WebProtegeProperties.getAccountInvitationExpirationPeriodInDays();
 
         MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
         User tempUser = metaProjectManager.getMetaProject().getUser(invitationId);

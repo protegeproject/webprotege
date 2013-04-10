@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.logging;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
-import edu.stanford.bmir.protege.web.server.ApplicationProperties;
+import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.EmailUtil;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.HierarchyProviderKey;
@@ -140,11 +140,11 @@ public class DefaultLogger implements WebProtegeLogger {
 
     private void emailMessage(String message) {
         try {
-            String emailAccount = ApplicationProperties.getEmailAccount();
+            String emailAccount = WebProtegeProperties.getEmailAccount();
             if(emailAccount == null || emailAccount.isEmpty()) {
                 emailAccount = DEFAULT_FROM_EMAIL_ADDRESS;
             }
-            EmailUtil.sendEmail(ApplicationProperties.getLoggingEmail(), SUBJECT, message, emailAccount);
+            EmailUtil.sendEmail(WebProtegeProperties.getLoggingEmail(), SUBJECT, message, emailAccount);
         }
         catch (Throwable e) {
             info("Problem emailing message %s", e.getMessage());

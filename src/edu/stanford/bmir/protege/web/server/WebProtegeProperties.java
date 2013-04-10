@@ -21,7 +21,7 @@ import edu.stanford.smi.protege.util.URIUtilities;
  * @author Tania Tudorache <tudorache@stanford.edu>
  *
  */
-public class ApplicationProperties {
+public class WebProtegeProperties {
 
     /*
      * Paths
@@ -237,7 +237,7 @@ public class ApplicationProperties {
             applicationProperties.put(propertyName, applicationProperties1.getProperty(propertyName));
         }
 
-        for (String blacklistedProperty : ApplicationProperties.blacklistedProperties.stringPropertyNames()) {
+        for (String blacklistedProperty : WebProtegeProperties.blacklistedProperties.stringPropertyNames()) {
             applicationProperties.remove(blacklistedProperty);
         }
 

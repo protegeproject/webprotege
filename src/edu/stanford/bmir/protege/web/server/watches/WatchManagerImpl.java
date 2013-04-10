@@ -6,7 +6,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
-import edu.stanford.bmir.protege.web.server.ApplicationProperties;
+import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.AuthenticationUtil;
 import edu.stanford.bmir.protege.web.server.EmailUtil;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;

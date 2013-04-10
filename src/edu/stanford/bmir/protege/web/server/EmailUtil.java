@@ -16,7 +16,7 @@ import edu.stanford.smi.protege.util.Log;
 public class EmailUtil {
 
     public static void sendEmail(String recipient, String subject, String message, String from) {
-        String smtpHostName = ApplicationProperties.getSmtpHostName();
+        String smtpHostName = WebProtegeProperties.getSmtpHostName();
         if (smtpHostName == null || smtpHostName.length() == 0) {
             Log.getLogger().warning("Failed to send email message to " + recipient + ". Email not configured on the server.");
             return;
@@ -30,19 +30,19 @@ public class EmailUtil {
         Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
         Properties props = new Properties();
-        props.put("mail.smtp.host", ApplicationProperties.getSmtpHostName());
+        props.put("mail.smtp.host", WebProtegeProperties.getSmtpHostName());
         props.put("mail.smtp.auth", "true");
         props.put("mail.debug", "false");
-        props.put("mail.smtp.port", ApplicationProperties.getSmtpPort());
-        props.put("mail.smtp.socketFactory.port", ApplicationProperties.getSmtpPort());
-        props.put("mail.smtp.socketFactory.class", ApplicationProperties.getSslFactory());
+        props.put("mail.smtp.port", WebProtegeProperties.getSmtpPort());
+        props.put("mail.smtp.socketFactory.port", WebProtegeProperties.getSmtpPort());
+        props.put("mail.smtp.socketFactory.class", WebProtegeProperties.getSslFactory());
         props.put("mail.smtp.socketFactory.fallback", "false");
 
         Session session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(ApplicationProperties.getEmailAccount(), ApplicationProperties.getEmailPassword());
+                return new PasswordAuthentication(WebProtegeProperties.getEmailAccount(), WebProtegeProperties.getEmailPassword());
             }
         });
 

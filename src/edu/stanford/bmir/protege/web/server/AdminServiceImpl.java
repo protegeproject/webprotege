@@ -107,7 +107,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         }
         changePassword(userName, EmailConstants.RESET_PASSWORD);
         EmailUtil.sendEmail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY,
-                ApplicationProperties.getEmailAccount());
+                WebProtegeProperties.getEmailAccount());
     }
 
     public LoginChallengeData getUserSaltAndChallenge(String userName) {

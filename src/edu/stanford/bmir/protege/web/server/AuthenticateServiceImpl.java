@@ -27,7 +27,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
     private static final long serialVersionUID = 5326582825556868383L;
 
     private boolean isAuthenticateWithOpenId() {
-        return ApplicationProperties.getWebProtegeAuthenticateWithOpenId();
+        return WebProtegeProperties.getWebProtegeAuthenticateWithOpenId();
     }
 
     public UserData validateUserAndAddInSession(String name, String password) {
@@ -170,7 +170,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         }
         changePassword(userName, EmailConstants.RESET_PASSWORD);
         EmailUtil.sendEmail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY,
-                ApplicationProperties.getEmailAccount());
+                WebProtegeProperties.getEmailAccount());
     }
 
     public UserData registerUser(String userName, String password) {
