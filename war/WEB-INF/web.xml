@@ -5,7 +5,6 @@
 
 <web-app>
 
-
     <context-param>
         <param-name>web-protege-data-directory</param-name>
         <param-value>/apps/bmir.apps/web-protege-data</param-value>
@@ -94,7 +93,7 @@
     <servlet-mapping>
         <servlet-name>SharingSettingsService</servlet-name>
         <url-pattern>/webprotege/sharingsettings</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>web-app
 
 
      <servlet>
@@ -176,6 +175,18 @@
         <servlet-name>RenderingService</servlet-name>
         <servlet-class>edu.stanford.bmir.protege.web.server.RenderingServiceImpl</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>UserProfileManagerService</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.UserProfileManagerServiceImpl</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ProjectUploadServlet</servlet-name>
+        <servlet-class>edu.stanford.bmir.protege.web.server.filesubmission.FileUploadServlet</servlet-class>
+    </servlet>
+    
+    <!-- Servlet mappings -->
     
     <servlet-mapping>
         <servlet-name>DispatchService</servlet-name>
@@ -279,11 +290,6 @@
         <url-pattern>/accesspolicy</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>ProjectUploadServlet</servlet-name>
-        <servlet-class>edu.stanford.bmir.protege.web.server.filesubmission.FileUploadServlet</servlet-class>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>ProjectUploadServlet</servlet-name>
         <url-pattern>/webprotege/submitfile</url-pattern>
@@ -295,17 +301,10 @@
         <url-pattern>/webprotege/projectmanager</url-pattern>
     </servlet-mapping>
 
-
-    <servlet>
-        <servlet-name>UserProfileManagerService</servlet-name>
-        <servlet-class>edu.stanford.bmir.protege.web.server.UserProfileManagerServiceImpl</servlet-class>
-    </servlet>
-
     <servlet-mapping>
         <servlet-name>UserProfileManagerService</servlet-name>
         <url-pattern>/webprotege/userprofilemanager</url-pattern>
     </servlet-mapping>
-
 
     <servlet-mapping>
         <servlet-name>OBOTextEditorService</servlet-name>
@@ -342,7 +341,6 @@
         <!--<url-pattern>/webprotege/entityframeservice</url-pattern>-->
     <!--</servlet-mapping>-->
 
-
     <servlet-mapping>
         <servlet-name>RenderingService</servlet-name>
         <url-pattern>/webprotege/renderingservice</url-pattern>
@@ -364,8 +362,5 @@
             <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-
-
-
 
 </web-app>
