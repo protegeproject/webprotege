@@ -98,8 +98,7 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>edu.stanford.bmir.protege.web.iCat
-			ApplicationPropertiesService</servlet-name>
+		<servlet-name>ApplicationPropertiesServiceImpl</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.ApplicationPropertiesServiceImpl</servlet-class>
 	</servlet>
 
@@ -228,14 +227,12 @@
 	<!-- there are two mappings for the application properties service, one 
 		for normal operation, and the other for https mode -->
 	<servlet-mapping>
-		<servlet-name>edu.stanford.bmir.protege.web.iCat
-			ApplicationPropertiesService</servlet-name>
+		<servlet-name>ApplicationPropertiesServiceImpl</servlet-name>
 		<url-pattern>/webprotege/applicationProperties</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>edu.stanford.bmir.protege.web.iCat
-			ApplicationPropertiesService</servlet-name>
+		<servlet-name>ApplicationPropertiesServiceImpl</servlet-name>
 		<url-pattern>/authenticate/applicationProperties</url-pattern>
 	</servlet-mapping>
 
