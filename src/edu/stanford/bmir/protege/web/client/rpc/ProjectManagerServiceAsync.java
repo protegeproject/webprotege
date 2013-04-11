@@ -14,7 +14,7 @@ import java.util.Set;
 
 public interface ProjectManagerServiceAsync {
 
-    void getProjects(AsyncCallback<List<String>> async);
+    void getProjects(AsyncCallback<List<ProjectData>> async);
 
     void getProjects(UserId projectOwner, AsyncCallback<List<ProjectData>> async);
 
