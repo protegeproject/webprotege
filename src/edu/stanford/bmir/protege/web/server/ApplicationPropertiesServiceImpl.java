@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.stanford.bmir.protege.web.client.rpc.ApplicationPropertiesService;
@@ -17,6 +19,6 @@ public class ApplicationPropertiesServiceImpl extends WebProtegeRemoteServiceSer
     private static final long serialVersionUID = -2917459604045537935L;
 
     public Map<String, String> initialize() {
-        return WebProtegeProperties.getPropertiesForClient();
+        return WebProtegeProperties.getClientMap();
     }
 }

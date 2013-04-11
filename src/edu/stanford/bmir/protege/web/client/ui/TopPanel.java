@@ -36,7 +36,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.ui.editprofile.EditProfileUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
-import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.AccessPolicyUtil;
 import edu.stanford.bmir.protege.web.client.ui.ontology.sharing.SharingSettingsDialog;
 import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationDialog;
 import edu.stanford.bmir.protege.web.client.ui.signup.WebProtegeSignupDialog;
@@ -79,7 +78,7 @@ public class TopPanel extends Panel {
 
 //    private ProjectId currentSelectedProject = null; // Set only if user is owner of the project
 
-    private AccessPolicyUtil accessPolicyUtil = null;
+//    private AccessPolicyUtil accessPolicyUtil = null;
 
     public interface Images extends ImageBundle {
 

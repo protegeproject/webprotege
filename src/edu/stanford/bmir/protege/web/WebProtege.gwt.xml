@@ -50,16 +50,16 @@
 
 	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/> 
 			
-	<servlet path="/admin" class="edu.stanford.bmir.protege.web.server.AdminServiceImpl"/>
-	<servlet path="/notification" class="edu.stanford.bmir.protege.web.server.NotificationServiceImpl"/>
+	<!--<servlet path="/admin" class="edu.stanford.bmir.protege.web.server.AdminServiceImpl"/>-->
+	<!--<servlet path="/notification" class="edu.stanford.bmir.protege.web.server.NotificationServiceImpl"/>-->
 	<!--<servlet path="/ontology" class="edu.stanford.bmir.protege.web.server.OntologyServiceImpl"/>-->
-	<servlet path="/projectconfig" class="edu.stanford.bmir.protege.web.server.ProjectConfigurationServiceImpl"/>
+	<!--<servlet path="/projectconfig" class="edu.stanford.bmir.protege.web.server.ProjectConfigurationServiceImpl"/>-->
 	<!--<servlet path="/chao" class="edu.stanford.bmir.protege.web.server.ChAOServiceImpl"/>-->
 	<!--<servlet path="/chaostats" class="edu.stanford.bmir.protege.web.server.ChAOStatsServiceImpl"/>-->
     <!--<servlet path="/hierarchy" class="edu.stanford.bmir.protege.web.server.HierarchyServiceImpl"/>-->
-    <servlet path="/openid" class="edu.stanford.bmir.protege.web.server.OpenIdServiceImpl"/>
-    <servlet path="/bpProposals" class="edu.stanford.bmir.protege.web.server.bioportal.BioPortalProposalsImpl"/>
-    <servlet path="/accesspolicy" class="edu.stanford.bmir.protege.web.server.AccessPolicyServiceImpl"/>
-    <servlet path="/authen" class="edu.stanford.bmir.protege.web.server.AuthenticateServiceImpl"/>
+    <!--<servlet path="/openid" class="edu.stanford.bmir.protege.web.server.OpenIdServiceImpl"/>-->
+    <!--<servlet path="/bpProposals" class="edu.stanford.bmir.protege.web.server.bioportal.BioPortalProposalsImpl"/>-->
+    <!--<servlet path="/accesspolicy" class="edu.stanford.bmir.protege.web.server.AccessPolicyServiceImpl"/>-->
+    <!--<servlet path="/authen" class="edu.stanford.bmir.protege.web.server.AuthenticateServiceImpl"/>-->
 
 </module>

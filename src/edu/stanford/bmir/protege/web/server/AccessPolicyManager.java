@@ -20,13 +20,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class AccessPolicyManager {
-
+//
     public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(AccessPolicyManager.class);
 
 
     private static final AccessPolicyManager instance = new AccessPolicyManager();
 
-
+//
     public static AccessPolicyManager get() {
         return instance;
     }
@@ -113,14 +113,14 @@ public class AccessPolicyManager {
 
         }
 
-        User serverUser = metaProject.getUser(WebProtegeProperties.getProtegeServerUser());
-        //Checking if the server user mentioned in webprotege.user in protege.properties is present in users readers group. If not then adds it.
-        //The server user is required while loading the project and should have read access.
-        if (serverUser != null && !group.getMembers().contains(serverUser)) {
-            Set<User> members = group.getMembers();
-            members.add(serverUser);
-            group.setMembers(members);
-        }
+//        User serverUser = metaProject.getUser(WebProtegeProperties.getProtegeServerUser());
+//        //Checking if the server user mentioned in webprotege.user in protege.properties is present in users readers group. If not then adds it.
+//        //The server user is required while loading the project and should have read access.
+//        if (serverUser != null && !group.getMembers().contains(serverUser)) {
+//            Set<User> members = group.getMembers();
+//            members.add(serverUser);
+//            group.setMembers(members);
+//        }
 
         if (doesProjectContainsGroupAndOperation(projectInstance, group, readOnlyOperation)) {
             addPermission(metaProject, userNameList, projectInstance, group, readOnlyOperation, true);
@@ -287,26 +287,26 @@ public class AccessPolicyManager {
             Group group = metaProject.getGroup(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);// add
 
             List<String> groupUserList = getUserListForGroupOperation(projectInstance, group, readOnlyOperation);
-            User serverUser = metaProject.getUser(WebProtegeProperties.getProtegeServerUser());
-            for (User user : allPoliciesUsers) {
-                if (user.getName() != null && policy.isOperationAuthorized(user, readOnlyOperation, projectInstance)) {
-                    if (includeTemporaryAccount || user.getPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT) == null || !user.getPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT).trim().equals("true")) { // Proceed if account is not temporary.
-                        AccessPolicyUserData userData = new AccessPolicyUserData();
-                        userData.setName(user.getName());
-
-                        if (groupUserList.contains(user.getName()) && !user.equals(serverUser)) {
-                            userData.setPartofReaders(true);
-                        }
-                        try {
-                            if (!user.equals(serverUser)) {
-                                userList.add(userData);
-                            }
-                        }
-                        catch (Exception e) {
-                        }
-                    }
-                }
-            }
+//            User serverUser = metaProject.getUser(WebProtegeProperties.getProtegeServerUser());
+//            for (User user : allPoliciesUsers) {
+//                if (user.getName() != null && policy.isOperationAuthorized(user, readOnlyOperation, projectInstance)) {
+//                    if (includeTemporaryAccount || user.getPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT) == null || !user.getPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT).trim().equals("true")) { // Proceed if account is not temporary.
+//                        AccessPolicyUserData userData = new AccessPolicyUserData();
+//                        userData.setName(user.getName());
+//
+//                        if (groupUserList.contains(user.getName()) && !user.equals(serverUser)) {
+//                            userData.setPartofReaders(true);
+//                        }
+//                        try {
+//                            if (!user.equals(serverUser)) {
+//                                userList.add(userData);
+//                            }
+//                        }
+//                        catch (Exception e) {
+//                        }
+//                    }
+//                }
+//            }
 
             return userList;
         }
@@ -693,7 +693,7 @@ public class AccessPolicyManager {
                     }
 
                     String invitationEmailBody = getInvitationEmailBody(invitation.isWriter(), projectId, getOwner(projectId), getInvitationURL(invitationBaseURL, invitation.getEmailId(), tempUser.getPropertyValue(InvitationConstants.USER_PROPERTY_TEMPORARY_ACCOUNT_RANDOM_NO)));
-                    EmailUtil.sendEmail(invitation.getEmailId(), EmailConstants.INVITATION_SUBJECT, invitationEmailBody, WebProtegeProperties.getEmailAccount());
+                    EmailUtil.sendEmail(invitation.getEmailId(), EmailConstants.INVITATION_SUBJECT, invitationEmailBody);
 
                 }
                 catch (Exception e) {

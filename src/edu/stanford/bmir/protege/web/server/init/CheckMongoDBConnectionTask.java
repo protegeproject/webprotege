@@ -8,10 +8,10 @@ import edu.stanford.bmir.protege.web.server.db.mongodb.MongoDBManager;
  * Bio-Medical Informatics Research Group<br>
  * Date: 10/04/2013
  */
-public class MongoDBInitializedCheck implements ConfigurationCheck {
+public class CheckMongoDBConnectionTask implements ConfigurationTask {
 
     @Override
-    public void runCheck() throws WebProtegeConfigurationException {
+    public void run() throws WebProtegeConfigurationException {
             MongoDBManager.get();
     }
 }

@@ -313,7 +313,9 @@ public class OWLAPIProjectDocumentStore {
         return new File(projectFileStore.getChangesDataDirectory(), CHANGE_DATA_FILE_NAME);
     }
 
-
+    public File getConfigurationsDirectory() {
+        return projectFileStore.getConfigurationsDirectory();
+    }
 
     public boolean exists() {
         return getBinaryOntologyDocumentFile().exists();

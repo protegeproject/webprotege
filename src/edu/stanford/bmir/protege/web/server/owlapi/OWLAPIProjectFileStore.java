@@ -58,8 +58,6 @@ public class OWLAPIProjectFileStore {
 
     private static final String CHANGE_DATA_DIRECTORY_NAME = "change-data";
 
-//    private static final String CHANGE_HISTORY_FILE_NAME = "change-data.binary";
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////
@@ -69,6 +67,18 @@ public class OWLAPIProjectFileStore {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static final String NOTES_DATA_DIRECTORY_NAME = "notes-data";
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////
+    //////  Project Configurations Data Storage
+    //////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private static final String CONFIGURATIONS_DIRECTORY_NAME = "configurations";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +101,8 @@ public class OWLAPIProjectFileStore {
     private File notesDataDirectory;
     
     private File changesDataDirectory;
-    
+
+    private File configurationsDirectory;
     
     private File downloadCacheDirectory;
 
@@ -108,6 +119,7 @@ public class OWLAPIProjectFileStore {
         this.projectDirectory = new File(allProjectsDirectory, getEscapedProjectName());
 
         this.changesDataDirectory = new File(projectDirectory, CHANGE_DATA_DIRECTORY_NAME);
+        this.configurationsDirectory = new File(projectDirectory, CONFIGURATIONS_DIRECTORY_NAME);
         this.notesDataDirectory = new File(projectDirectory, NOTES_DATA_DIRECTORY_NAME);
         this.ontologyDataDirectory = new File(projectDirectory, ONTOLOGY_DATA_DIRECTORY_NAME);
         this.downloadCacheDirectory = new File(projectDirectory, DOWNLOAD_CACHE_DIRECTORY);
@@ -119,6 +131,7 @@ public class OWLAPIProjectFileStore {
         notesDataDirectory.mkdirs();
         ontologyDataDirectory.mkdirs();
         downloadCacheDirectory.mkdirs();
+        configurationsDirectory.mkdirs();
     }
 
     public static OWLAPIProjectFileStore getProjectFileStore(ProjectId projectId) {
@@ -150,5 +163,9 @@ public class OWLAPIProjectFileStore {
 
     public File getDownloadCacheDirectory() {
         return downloadCacheDirectory;
+    }
+
+    public File getConfigurationsDirectory() {
+        return configurationsDirectory;
     }
 }

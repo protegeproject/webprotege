@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
+import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
 
 import java.io.File;
 
@@ -10,11 +10,11 @@ import java.io.File;
  * Bio-Medical Informatics Research Group<br>
  * Date: 10/04/2013
  */
-public class DataDirectoryExistsCheck implements ConfigurationCheck {
+public class CheckWebProtegeDataDirectoryExists implements ConfigurationTask {
 
     @Override
-    public void runCheck() throws WebProtegeConfigurationException {
-       File dataDirectory = WebProtegeFileStore.getInstance().getDataDirectory();
+    public void run() throws WebProtegeConfigurationException {
+       File dataDirectory = WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE;
        if(!dataDirectory.exists()) {
            throw new WebProtegeConfigurationException(getDataDirectoryDoesNotExistsMessage(dataDirectory));
        }

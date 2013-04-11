@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.smi.protege.server.metaproject.PropertyValue;
 import edu.stanford.smi.protege.server.metaproject.User;
 import edu.stanford.smi.protege.util.Log;
@@ -171,7 +172,7 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
     }
 
     private boolean isAuthenticateWithOpenId() {
-        return WebProtegeProperties.getWebProtegeAuthenticateWithOpenId();
+        return WebProtegeProperties.isOpenIdAuthenticationEnabled();
     }
 
     public UserData checkIfOpenIdInSessionForLogin() {
@@ -344,6 +345,8 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_URL, null);
             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_ID, null);
             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
+
+            OWLAPIMetaProjectStore.getStore().saveMetaProject(MetaProjectManager.getManager());
         } catch (Exception e) {
             Log.getLogger().log(Level.SEVERE, "Exception in validateUserToAssociateOpenId", e);
         }

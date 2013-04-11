@@ -13,28 +13,25 @@ import java.util.Map;
  * @author Jack Elliott <jacke@stanford.edu>
  */
 public class ClientApplicationPropertiesCache {
+
     private static Map<String, String> cache = new HashMap<String, String>();
 
     public static Integer getServerPollingTimeoutMinutes() {
-        String o = cache.get(ApplicationPropertyNames.SERVER_POLLING_TIMEOUT_MINUTES_PROP);
-        if (o == null){
-            o = Integer.toString(ApplicationPropertyDefaults.SERVER_POLLING_TIMEOUT_MINUTES_DEFAULT);
-        }
-        return Integer.parseInt(o);
+        return ApplicationPropertyDefaults.SERVER_POLLING_TIMEOUT_MINUTES_DEFAULT;
     }
 
     public static String getApplicationHttpsPort() {
-        final String o = cache.get(ApplicationPropertyNames.APPLICATION_PORT_HTTPS_PROP);
+        final String o = cache.get(ApplicationPropertyNames.HTTPS_PORT);
         return o;
     }
 
     public static Boolean getWebProtegeAuthenticateWithOpenId() {
-        final String o = cache.get(ApplicationPropertyNames.WEBPROTEGE_AUTHENTICATE_WITH_OPENID_PROP);
+        final String o = cache.get(ApplicationPropertyNames.OPEN_ID_ENABLED);
         return o == null ? Boolean.FALSE : Boolean.parseBoolean(o);
     }
 
     public static Boolean getLoginWithHttps() {
-        final String o = cache.get(ApplicationPropertyNames.LOGIN_WITH_HTTPS_PROP);
+        final String o = cache.get(ApplicationPropertyNames.HTTPS_ENABLED);
         return o == null ? Boolean.FALSE : Boolean.parseBoolean(o);
     }
 

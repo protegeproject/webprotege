@@ -22,22 +22,13 @@ public class UserData implements Serializable {
 
 	private UserData() {	}
 
-	public UserData(UserId name) {
+	public UserData(UserId userId) {
 	    this.userId = userId;
 	}
 
     public UserId getUserId() {
         return userId;
     }
-
-
-//    public Collection<String> getGroups() {
-//        return groups;
-//    }
-//
-//    public void setGroups(Collection<String> groups) {
-//        this.groups = groups;
-//    }
 
     public String getEmail() {
         return email;

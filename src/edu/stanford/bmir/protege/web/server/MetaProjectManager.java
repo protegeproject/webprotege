@@ -47,7 +47,7 @@ public abstract class MetaProjectManager {
 
     public abstract Collection<Operation> getAllowedServerOperations(String userName);
 
-    public abstract Project openProject(String name);
+//    public abstract Project openProject(String name);
 
     /**
      * Creates a new project description inside the meta project (with the default access policy etc.)

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateService;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
@@ -27,7 +28,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
     private static final long serialVersionUID = 5326582825556868383L;
 
     private boolean isAuthenticateWithOpenId() {
-        return WebProtegeProperties.getWebProtegeAuthenticateWithOpenId();
+        return WebProtegeProperties.isOpenIdAuthenticationEnabled();
     }
 
     public UserData validateUserAndAddInSession(String name, String password) {
@@ -169,8 +170,8 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
             throw new IllegalArgumentException("User " + userName + " does not have an email configured.");
         }
         changePassword(userName, EmailConstants.RESET_PASSWORD);
-        EmailUtil.sendEmail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY,
-                WebProtegeProperties.getEmailAccount());
+        EmailUtil.sendEmail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY);
+
     }
 
     public UserData registerUser(String userName, String password) {

@@ -43,20 +43,25 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
     public static final String DEFAULT_OWL_CONFIGURATION_FILE_NAME = "default-owl-configuration";
 
 
-    private static String getProjectConfigurationsDirectory() {
-        return FileUtil.getRealPath() + PROJECT_CONFIG_DIR;
-    }    
+    private static File getDefaultConfigurationsDirectory() {
+        return new File(PROJECT_CONFIG_DIR);
+    }
+
+    private static File getProjectConfigurationsDirectory(ProjectId projectId) {
+        OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
+        return documentStore.getConfigurationsDirectory();
+    }
     
     private static File getUserProjectConfigurationFile(ProjectId projectId, UserId userId) {
-        return new File(getProjectConfigurationsDirectory(), PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getProjectName() + "_" + userId.getUserName() + PROJECT_CONFIGURATION_FILE_EXTENSION);
+        return new File(getProjectConfigurationsDirectory(projectId), PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getProjectName() + "_" + userId.getUserName() + PROJECT_CONFIGURATION_FILE_EXTENSION);
     }
     
     private static File getCustomProjectConfigurationFile(ProjectId projectId) {
-        return new File(getProjectConfigurationsDirectory(), PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getProjectName() + PROJECT_CONFIGURATION_FILE_EXTENSION);
+        return new File(getProjectConfigurationsDirectory(projectId), PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getProjectName() + PROJECT_CONFIGURATION_FILE_EXTENSION);
     }
     
     private static File getDefaultProjectConfigurationFile(ProjectId projectId) {
-        return new File(getProjectConfigurationsDirectory(), getDefaultProjectConfigurationName(projectId) + PROJECT_CONFIGURATION_FILE_EXTENSION);
+        return new File(getDefaultConfigurationsDirectory(), getDefaultProjectConfigurationName(projectId) + PROJECT_CONFIGURATION_FILE_EXTENSION);
     }
     
 
@@ -87,8 +92,6 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
     }
 
     private static String getDefaultProjectConfigurationName(ProjectId projectId) {
-        OWLAPIProject project = OWLAPIProjectManager.getProjectManager().getProject(projectId);
-//        OWLAPIProjectConfiguration configuration = project.getProjectConfiguration();
         OWLAPIProjectMetadataManager metadataManager = OWLAPIProjectMetadataManager.getManager();
         OWLAPIProjectType projectType = metadataManager.getType(projectId);
         return getDefaultProjectConfigurationFileName(projectType);
@@ -140,6 +143,7 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
     public void saveProjectLayoutConfiguration(String projectName, String userName, ProjectLayoutConfiguration config) {
         String xml = convertConfigDetailsToXML(config);
         File f = getUserProjectConfigurationFile(ProjectId.get(projectName), UserId.getUserId(userName));
+        f.getParentFile().mkdirs();
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(f));
             bw.write(xml);

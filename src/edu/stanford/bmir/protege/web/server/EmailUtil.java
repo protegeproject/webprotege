@@ -11,44 +11,49 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.smi.protege.util.Log;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class EmailUtil {
 
-    public static void sendEmail(String recipient, String subject, String message, String from) {
-        String smtpHostName = WebProtegeProperties.getSmtpHostName();
-        if (smtpHostName == null || smtpHostName.length() == 0) {
-            Log.getLogger().warning("Failed to send email message to " + recipient + ". Email not configured on the server.");
-            return;
-        }
 
-        if (recipient == null) {
-            Log.getLogger().warning("Cannot send email with subject: " + subject + " Email address is null");
-            return;
+    public static void sendEmail(String recipient, String subject, String message) {
+        checkNotNull(recipient);
+        checkNotNull(subject);
+        checkNotNull(message);
+
+        Optional<String> host = WebProtegeProperties.getEmailHostName();
+        Optional<String> account = WebProtegeProperties.getEmailAccount();
+        Optional<String> port = WebProtegeProperties.getEmailPort();
+        if (!host.isPresent() || !account.isPresent() || !port.isPresent()) {
+            throw new WebProtegeConfigurationException("Cannot send email.  Email has not been configured via webprotege.properties.");
         }
 
         Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 
         Properties props = new Properties();
-        props.put("mail.smtp.host", WebProtegeProperties.getSmtpHostName());
+        props.put("mail.smtp.host", host.get());
         props.put("mail.smtp.auth", "true");
         props.put("mail.debug", "false");
-        props.put("mail.smtp.port", WebProtegeProperties.getSmtpPort());
-        props.put("mail.smtp.socketFactory.port", WebProtegeProperties.getSmtpPort());
+        props.put("mail.smtp.port", port.get());
+        props.put("mail.smtp.socketFactory.port", port.get());
         props.put("mail.smtp.socketFactory.class", WebProtegeProperties.getSslFactory());
         props.put("mail.smtp.socketFactory.fallback", "false");
 
-        Session session = Session.getDefaultInstance(props,
-                new javax.mail.Authenticator() {
+
+        Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(WebProtegeProperties.getEmailAccount(), WebProtegeProperties.getEmailPassword());
+                return new PasswordAuthentication(WebProtegeProperties.getEmailAccount().get(), WebProtegeProperties.getEmailPassword().get());
             }
         });
 
         try {
             MimeMessage msg = new MimeMessage(session);
-            InternetAddress addressFrom = new InternetAddress(from);
+            InternetAddress addressFrom = new InternetAddress(account.get());
             msg.setFrom(addressFrom);
 
             InternetAddress[] addressTo = new InternetAddress[1];
@@ -58,13 +63,14 @@ public class EmailUtil {
 
             msg.setSubject(subject);
             msg.setText(message, "utf-8");
-            msg.setHeader("Content-Type","text/plain; charset=\"utf-8\"");
+            msg.setHeader("Content-Type", "text/plain; charset=\"utf-8\"");
             msg.setHeader("Content-Transfer-Encoding", "quoted-printable");
             //msg.setContent(message, "text/plain");
 
             Transport.send(msg);
-        } catch (MessagingException e) {
-            throw new RuntimeException("There was an error sending email to " + " " + recipient + ". Message: " + e.getMessage() , e);
+        }
+        catch (MessagingException e) {
+            throw new RuntimeException("There was an error sending email to " + " " + recipient + ". Message: " + e.getMessage(), e);
         }
     }
 

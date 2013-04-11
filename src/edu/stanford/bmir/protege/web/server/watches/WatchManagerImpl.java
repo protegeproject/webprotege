@@ -272,7 +272,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
                 directLinkBuilder.append(URLEncoder.encode(entity.getIRI().toString()));
 
                 message += "\n" + directLinkBuilder.toString();
-                EmailUtil.sendEmail(email, emailSubject, message, "webprotege2012@gmail.com");
+                EmailUtil.sendEmail(email, emailSubject, message);
 
             }
         });

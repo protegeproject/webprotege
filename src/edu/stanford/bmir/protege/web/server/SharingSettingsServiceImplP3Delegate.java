@@ -200,6 +200,7 @@ public class SharingSettingsServiceImplP3Delegate {
         invitations.add(invitation);
         final String projectName = projectSharingSettings.getProjectId().getProjectName();
         String baseURL = request.getHeader("referer");
+
         AccessPolicyManager.get().createTemporaryAccountForInvitation(ProjectId.get(projectName), baseURL, invitations);
     }
 

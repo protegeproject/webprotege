@@ -22,65 +22,65 @@ public class AccessPolicyServiceImpl extends WebProtegeRemoteServiceServlet impl
 
     private final AccessPolicyManager accessPolicyManager = AccessPolicyManager.get();
 
-    public String getOwner(String projectName) {
+//    public String getOwner(String projectName) {
+//
+//        return accessPolicyManager.getOwner(ProjectId.get(projectName));
+//    }
+//
+//    public boolean canManageProject(String projectName, String userName) {
+//        return accessPolicyManager.canManageProject(ProjectId.get(projectName), UserId.getUserId(userName));
+//    }
+//
+//    public List<String> getUsers() {
+//        return accessPolicyManager.getUsers();
+//    }
 
-        return accessPolicyManager.getOwner(ProjectId.get(projectName));
-    }
+//    public void addReadPermission(String projectName, List<String> userNameList) {
+//
+//        //Checking if the server user mentioned in webprotege.user in protege.properties is present in users readers group. If not then adds it.
+//        //The server user is required while loading the project and should have read access.
+//
+//        accessPolicyManager.addReadPermission(ProjectId.get(projectName), userNameList);
+//    }
+//
+//    private synchronized boolean doesProjectContainsGroupAndOperation(ProjectInstance projectInstance, Group group, Operation operation) {
+//
+//        return accessPolicyManager.doesProjectContainsGroupAndOperation(projectInstance, group, operation);
+//    }
 
-    public boolean canManageProject(String projectName, String userName) {
-        return accessPolicyManager.canManageProject(ProjectId.get(projectName), UserId.getUserId(userName));
-    }
+//    private synchronized void addPermission(MetaProject metaProject, List<String> userNameList, ProjectInstance projectInstance, Group group, Operation operation, boolean doesProjectContainsGroup) {
+//
+//        accessPolicyManager.addPermission(metaProject, userNameList, projectInstance, group, operation, doesProjectContainsGroup);
+//    }
 
-    public List<String> getUsers() {
-        return accessPolicyManager.getUsers();
-    }
+//    public void removeReadPermission(String projectName, List<String> userNameList) {
+//
+//        accessPolicyManager.removeReadPermission(ProjectId.get(projectName), userNameList);
+//    }
 
-    public void addReadPermission(String projectName, List<String> userNameList) {
+//    private synchronized void removePermission(MetaProject metaProject, List<String> userNameList, ProjectInstance projectInstance, Group group, Operation operation) {
+//        accessPolicyManager.removePermission(metaProject, userNameList, projectInstance, group, operation);
+//    }
 
-        //Checking if the server user mentioned in webprotege.user in protege.properties is present in users readers group. If not then adds it.
-        //The server user is required while loading the project and should have read access.
+//    public void addWritePermission(String projectName, List<String> userNameList) {
+//
+//        accessPolicyManager.addWritePermission(ProjectId.get(projectName), userNameList);
+//    }
+//
+//    public void removeWritePermission(String projectName, List<String> userNameList) {
+//
+//        accessPolicyManager.removeWritePermission(ProjectId.get(projectName), userNameList);
+//    }
+//
+//    public Collection<AccessPolicyUserData> getUsersWithReadOnlyAccess(String projectName) {
+//        return accessPolicyManager.getUsersWithReadOnlyAccess(ProjectId.get(projectName));
+//    }
+//
+//    public Collection<AccessPolicyUserData> getUsersWithReadOnlyAccess(String projectName, boolean includeTemporaryAccount) {
+//        return accessPolicyManager.getUsersWithReadOnlyAccess(ProjectId.get(projectName), includeTemporaryAccount);
+//    }
 
-        accessPolicyManager.addReadPermission(ProjectId.get(projectName), userNameList);
-    }
-
-    private synchronized boolean doesProjectContainsGroupAndOperation(ProjectInstance projectInstance, Group group, Operation operation) {
-
-        return accessPolicyManager.doesProjectContainsGroupAndOperation(projectInstance, group, operation);
-    }
-
-    private synchronized void addPermission(MetaProject metaProject, List<String> userNameList, ProjectInstance projectInstance, Group group, Operation operation, boolean doesProjectContainsGroup) {
-
-        accessPolicyManager.addPermission(metaProject, userNameList, projectInstance, group, operation, doesProjectContainsGroup);
-    }
-
-    public void removeReadPermission(String projectName, List<String> userNameList) {
-
-        accessPolicyManager.removeReadPermission(ProjectId.get(projectName), userNameList);
-    }
-
-    private synchronized void removePermission(MetaProject metaProject, List<String> userNameList, ProjectInstance projectInstance, Group group, Operation operation) {
-        accessPolicyManager.removePermission(metaProject, userNameList, projectInstance, group, operation);
-    }
-
-    public void addWritePermission(String projectName, List<String> userNameList) {
-
-        accessPolicyManager.addWritePermission(ProjectId.get(projectName), userNameList);
-    }
-
-    public void removeWritePermission(String projectName, List<String> userNameList) {
-
-        accessPolicyManager.removeWritePermission(ProjectId.get(projectName), userNameList);
-    }
-
-    public Collection<AccessPolicyUserData> getUsersWithReadOnlyAccess(String projectName) {
-        return accessPolicyManager.getUsersWithReadOnlyAccess(ProjectId.get(projectName));
-    }
-
-    public Collection<AccessPolicyUserData> getUsersWithReadOnlyAccess(String projectName, boolean includeTemporaryAccount) {
-        return accessPolicyManager.getUsersWithReadOnlyAccess(ProjectId.get(projectName), includeTemporaryAccount);
-    }
-
-    public Collection<AccessPolicyUserData> getUsersWithAccess(String projectName) {
+//    public Collection<AccessPolicyUserData> getUsersWithAccess(String projectName) {
 //        MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
 //
 //        Collection<AccessPolicyUserData> userList = new TreeSet<AccessPolicyUserData>(new AccessPolicyUserData());
@@ -152,65 +152,65 @@ public class AccessPolicyServiceImpl extends WebProtegeRemoteServiceServlet impl
 //        }
 //
 //        return userList;
-        return accessPolicyManager.getUsersWithAccess(ProjectId.get(projectName));
-    }
+//        return accessPolicyManager.getUsersWithAccess(ProjectId.get(projectName));
+//    }
 
-    public Collection<AccessPolicyUserData> getUsersWithWriteAccess(String projectName) {
-        return accessPolicyManager.getUsersWithWriteAccess(ProjectId.get(projectName));
-    }
+//    public Collection<AccessPolicyUserData> getUsersWithWriteAccess(String projectName) {
+//        return accessPolicyManager.getUsersWithWriteAccess(ProjectId.get(projectName));
+//    }
+//
+//    /**
+//     * Retrieves uses having write access for the particular project
+//     * @param projectName
+//     * @param includeTemporaryAccount
+//     * @return
+//     */
+//    public Collection<AccessPolicyUserData> getUsersWithWriteAccess(String projectName, boolean includeTemporaryAccount) {
+//
+//        return accessPolicyManager.getUsersWithWriteAccess(ProjectId.get(projectName), includeTemporaryAccount);
+//    }
+//
+//    /**
+//     * Retrieves users list from group operations as list of string.
+//     * @param projectInstance
+//     * @param group
+//     * @param operation
+//     * @return
+//     */
+//    private synchronized List<String> getUserListForGroupOperation(ProjectInstance projectInstance, Group group, Operation operation) {
+//
+//        return accessPolicyManager.getUserListForGroupOperation(projectInstance, group, operation);
+//    }
+//
+//    /**
+//     * Checks if the users is from default policy
+//     * @param groupOperations
+//     * @param operation
+//     * @return
+//     */
+//    private synchronized boolean isUsersFromDefaultPolicy(Set<GroupOperation> groupOperations, Operation operation) {
+//
+//        return accessPolicyManager.isUsersFromDefaultPolicy(groupOperations, operation);
+//    }
+//
+//    private synchronized void removeDefaultPolicyIfExists(ProjectInstance projectInstance, Operation operation) {
+//        accessPolicyManager.removeDefaultPolicyIfExists(projectInstance, operation);
+//    }
+//
+//    private synchronized void updateProjectOwnerPolicy(ProjectInstance projectInstance) {
+//
+//        accessPolicyManager.updateProjectOwnerPolicy(projectInstance);
+//    }
 
-    /**
-     * Retrieves uses having write access for the particular project
-     * @param projectName
-     * @param includeTemporaryAccount
-     * @return
-     */
-    public Collection<AccessPolicyUserData> getUsersWithWriteAccess(String projectName, boolean includeTemporaryAccount) {
-
-        return accessPolicyManager.getUsersWithWriteAccess(ProjectId.get(projectName), includeTemporaryAccount);
-    }
-
-    /**
-     * Retrieves users list from group operations as list of string.
-     * @param projectInstance
-     * @param group
-     * @param operation
-     * @return
-     */
-    private synchronized List<String> getUserListForGroupOperation(ProjectInstance projectInstance, Group group, Operation operation) {
-
-        return accessPolicyManager.getUserListForGroupOperation(projectInstance, group, operation);
-    }
-
-    /**
-     * Checks if the users is from default policy
-     * @param groupOperations
-     * @param operation
-     * @return
-     */
-    private synchronized boolean isUsersFromDefaultPolicy(Set<GroupOperation> groupOperations, Operation operation) {
-
-        return accessPolicyManager.isUsersFromDefaultPolicy(groupOperations, operation);
-    }
-
-    private synchronized void removeDefaultPolicyIfExists(ProjectInstance projectInstance, Operation operation) {
-        accessPolicyManager.removeDefaultPolicyIfExists(projectInstance, operation);
-    }
-
-    private synchronized void updateProjectOwnerPolicy(ProjectInstance projectInstance) {
-
-        accessPolicyManager.updateProjectOwnerPolicy(projectInstance);
-    }
-
-    private synchronized void updateProjectOwnerPolicyIfExists(ProjectInstance projectInstance, Group group, MetaProject metaProject) {
-
-        accessPolicyManager.updateProjectOwnerPolicyIfExists(projectInstance, group, metaProject);
-    }
-
-    public synchronized boolean checkIfAdditionalPolicyPresent(String projectName) {
-
-        return accessPolicyManager.checkIfAdditionalPolicyPresent(ProjectId.get(projectName));
-    }
+//    private synchronized void updateProjectOwnerPolicyIfExists(ProjectInstance projectInstance, Group group, MetaProject metaProject) {
+//
+//        accessPolicyManager.updateProjectOwnerPolicyIfExists(projectInstance, group, metaProject);
+//    }
+//
+//    public synchronized boolean checkIfAdditionalPolicyPresent(String projectName) {
+//
+//        return accessPolicyManager.checkIfAdditionalPolicyPresent(ProjectId.get(projectName));
+//    }
 
     /**
      * Creates temporary account for the invitees.
@@ -223,16 +223,15 @@ public class AccessPolicyServiceImpl extends WebProtegeRemoteServiceServlet impl
         accessPolicyManager.createTemporaryAccountForInvitation(ProjectId.get(projectName), invitationBaseURL, invitationList);
     }
 
-    /**
-     * Extracts the name from collection of UserData and returns Arraylist of
-     * names.
-     * @param collection
-     * @return
-     */
-    private ArrayList<String> getNameListFromUserDataCollection(Collection<AccessPolicyUserData> collection) {
-
-        return accessPolicyManager.getNameListFromUserDataCollection(collection);
-    }
+//    /**
+//     * Extracts the name from collection of UserData and returns Arraylist of
+//     * names.
+//     * @param collection
+//     * @return
+//     */
+//    private ArrayList<String> getNameListFromUserDataCollection(Collection<AccessPolicyUserData> collection) {
+//        return accessPolicyManager.getNameListFromUserDataCollection(collection);
+//    }
 
     /**
      * Creates the email invitation body according to parameters provided.
@@ -300,7 +299,6 @@ public class AccessPolicyServiceImpl extends WebProtegeRemoteServiceServlet impl
      * @return
      */
     public boolean isInvitationValid(String invitationId) {
-
         return accessPolicyManager.isInvitationValid(invitationId);
     }
 }

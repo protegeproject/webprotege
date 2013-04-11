@@ -14,25 +14,25 @@ import java.util.List;
  */
 public interface AccessPolicyServiceAsync {
 
-    void getOwner(String projectName, AsyncCallback<String> callback);
+//    void getOwner(String projectName, AsyncCallback<String> callback);
 
-    void canManageProject(String projectName, String userName, AsyncCallback<Boolean> callback);
-
-    void getUsers(AsyncCallback<List<String>> callback);
-
-    void addReadPermission(String projectName, List<String> userName, AsyncCallback<Void> callback);
-
-    void removeReadPermission(String projectName, List<String> userName, AsyncCallback<Void> callback);
-
-    void addWritePermission(String projectName, List<String> userName, AsyncCallback<Void> callback);
-
-    void removeWritePermission(String projectName, List<String> userName, AsyncCallback<Void> callback);
-
-    void getUsersWithReadOnlyAccess(String projectName, AsyncCallback<Collection<AccessPolicyUserData>> callback);
-
-    void getUsersWithWriteAccess(String projectName, AsyncCallback<Collection<AccessPolicyUserData>> callback);
-
-    void checkIfAdditionalPolicyPresent(String projectName, AsyncCallback<Boolean> callback);
+//    void canManageProject(String projectName, String userName, AsyncCallback<Boolean> callback);
+//
+//    void getUsers(AsyncCallback<List<String>> callback);
+//
+//    void addReadPermission(String projectName, List<String> userName, AsyncCallback<Void> callback);
+//
+//    void removeReadPermission(String projectName, List<String> userName, AsyncCallback<Void> callback);
+//
+//    void addWritePermission(String projectName, List<String> userName, AsyncCallback<Void> callback);
+//
+//    void removeWritePermission(String projectName, List<String> userName, AsyncCallback<Void> callback);
+//
+//    void getUsersWithReadOnlyAccess(String projectName, AsyncCallback<Collection<AccessPolicyUserData>> callback);
+//
+//    void getUsersWithWriteAccess(String projectName, AsyncCallback<Collection<AccessPolicyUserData>> callback);
+//
+//    void checkIfAdditionalPolicyPresent(String projectName, AsyncCallback<Boolean> callback);
 
     void createTemporaryAccountForInvitation(String projectName,String invitationBaseURL, List<Invitation> invitation, AsyncCallback<Void> callback);
 
@@ -45,6 +45,6 @@ public interface AccessPolicyServiceAsync {
 
     void isInvitationValid(String invitationId, AsyncCallback<Boolean> callback);
 
-    void getUsersWithAccess(String projectName, AsyncCallback<Collection<AccessPolicyUserData>> async);
+//    void getUsersWithAccess(String projectName, AsyncCallback<Collection<AccessPolicyUserData>> async);
 }
 

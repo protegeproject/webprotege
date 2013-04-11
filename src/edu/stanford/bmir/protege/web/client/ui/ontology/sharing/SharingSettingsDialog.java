@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceManager;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -28,14 +30,14 @@ public class SharingSettingsDialog extends WebProtegeDialog<ProjectSharingSettin
         });
     }
 
-    private void updateSharingSettingsOnServer(ProjectSharingSettings sharingSettings) {
+    private void updateSharingSettingsOnServer(final ProjectSharingSettings sharingSettings) {
         SharingSettingsServiceAsync service = SharingSettingsServiceManager.getService();
         service.updateSharingSettings(sharingSettings, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
             }
 
             public void onSuccess(Void result) {
-                // TODO FIRE PERMISSIONS CHANGED!
+                EventBusManager.getManager().postEvent(new PermissionsChangedEvent(sharingSettings.getProjectId()));
             }
         });
     }

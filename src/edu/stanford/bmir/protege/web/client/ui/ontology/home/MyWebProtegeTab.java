@@ -22,28 +22,4 @@ public class MyWebProtegeTab extends Panel {
 	public String getLabel() {
 		return "My WebProt\u00E9g\u00E9";
 	}
-
-
-
-
-
-//    @Override
-//    public void setLoadProjectRequestHandler(LoadProjectRequestHandler handler) {
-//        projectManagerView.setLoadProjectRequestHandler(handler);
-//    }
-//
-//    @Override
-//    public HandlerRegistration addSelectionHandler(SelectionHandler<ProjectId> handler) {
-//        return projectManagerView.addSelectionHandler(handler);
-//    }
-//
-//    @Override
-//    public void setDownloadProjectRequestHandler(DownloadProjectRequestHandler handler) {
-//        projectManagerView.setDownloadProjectRequestHandler(handler);
-//    }
-//
-//    @Override
-//    public void setTrashManagerRequestHandler(TrashManagerRequestHandler handler) {
-//        projectManagerView.setTrashManagerRequestHandler(handler);
-//    }
 }

@@ -6,11 +6,11 @@ package edu.stanford.bmir.protege.web.server.init;
  * Bio-Medical Informatics Research Group<br>
  * Date: 10/04/2013
  */
-public interface ConfigurationCheck {
+public interface ConfigurationTask {
 
     /**
      * Runs this configuration check.  If there is an error and the check fails it throws a {@link WebProtegeConfigurationException}.
      * @throws WebProtegeConfigurationException if the check failed.
      */
-    void runCheck() throws WebProtegeConfigurationException;
+    void run() throws WebProtegeConfigurationException;
 }

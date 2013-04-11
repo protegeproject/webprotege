@@ -26,17 +26,11 @@ import java.util.logging.Logger;
  */
 public class DefaultLogger implements WebProtegeLogger {
 
-    private static final String DEFAULT_FROM_EMAIL_ADDRESS = "webprotege2012@gmail.com";
-
     private static final String SUBJECT = "Unexpected Exception in webprotege";
-
-
-    private final String logPrefix;
 
     private Logger logger;
 
     public DefaultLogger(Class<?> cls) {
-        this.logPrefix = cls.getSimpleName();
         this.logger = Logger.getLogger(cls.getName());
     }
 
@@ -140,11 +134,10 @@ public class DefaultLogger implements WebProtegeLogger {
 
     private void emailMessage(String message) {
         try {
-            String emailAccount = WebProtegeProperties.getEmailAccount();
-            if(emailAccount == null || emailAccount.isEmpty()) {
-                emailAccount = DEFAULT_FROM_EMAIL_ADDRESS;
+            Optional<String> adminEmail = WebProtegeProperties.getAdministratorEmail();
+            if (adminEmail.isPresent()) {
+                EmailUtil.sendEmail(adminEmail.get(), SUBJECT, message);
             }
-            EmailUtil.sendEmail(WebProtegeProperties.getLoggingEmail(), SUBJECT, message, emailAccount);
         }
         catch (Throwable e) {
             info("Problem emailing message %s", e.getMessage());

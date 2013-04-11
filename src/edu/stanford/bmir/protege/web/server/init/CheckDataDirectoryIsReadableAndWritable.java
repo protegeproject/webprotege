@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
+import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
 
 import java.io.*;
 import java.util.UUID;
@@ -11,11 +11,11 @@ import java.util.UUID;
  * Bio-Medical Informatics Research Group<br>
  * Date: 10/04/2013
  */
-public class DataDirectoryReadableAndWritableCheck implements ConfigurationCheck {
+public class CheckDataDirectoryIsReadableAndWritable implements ConfigurationTask {
 
     @Override
-    public void runCheck() throws WebProtegeConfigurationException {
-        File dataDirectory = WebProtegeFileStore.getInstance().getDataDirectory();
+    public void run() throws WebProtegeConfigurationException {
+        File dataDirectory = WebProtegeProperties.getDataDirectory();
         File testFile = new File(dataDirectory, "write.test." + UUID.randomUUID() + ".txt");
         try {
             try {
@@ -50,7 +50,7 @@ public class DataDirectoryReadableAndWritableCheck implements ConfigurationCheck
     }
 
     public static void main(String[] args) {
-        DataDirectoryReadableAndWritableCheck check = new DataDirectoryReadableAndWritableCheck();
-        check.runCheck();
+        CheckDataDirectoryIsReadableAndWritable check = new CheckDataDirectoryIsReadableAndWritable();
+        check.run();
     }
 }

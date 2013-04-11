@@ -1,253 +1,289 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URI;
+import java.io.*;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ApplicationPropertyDefaults;
-import edu.stanford.bmir.protege.web.client.rpc.data.ApplicationPropertyNames;
-import edu.stanford.smi.protege.util.Log;
-import edu.stanford.smi.protege.util.URIUtilities;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableMap;
+import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.WebProtegeProperties.PropertyName.*;
 
 /**
- * Provides static methods for accessing WebProtege configuration setting. For
- * example, accessing the properties stored in protege.properties.
- *
+ * Accessor methods for the webprotege.properties property values.  The set of properties is read-only.
  * @author Tania Tudorache <tudorache@stanford.edu>
- *
+ * @author Matthew Horridge
  */
-public class WebProtegeProperties {
+public class WebProtegeProperties implements Serializable {
 
-    /*
-     * Paths
+
+    public static enum Optionality {
+
+        HAS_DEFAULT_VALUE,
+
+        VALUE_MUST_BE_SPECIFIED_IN_PROTEGE_PROPERTIES
+    }
+
+    public static enum ClientVisibility {
+
+        VISIBLE,
+
+        HIDDEN
+    }
+
+    private static class PropertyValue {
+
+        private String value;
+
+        private PropertyValue(String value) {
+            this.value = value;
+        }
+
+        public static PropertyValue ofString(String value) {
+            return new PropertyValue(value);
+        }
+
+        public static PropertyValue ofInteger(int value) {
+            return new PropertyValue(Integer.toString(value));
+        }
+
+        public static PropertyValue ofBoolean(boolean b) {
+            return new PropertyValue(Boolean.toString(b));
+        }
+
+        public static PropertyValue absentByDefault() {
+            return new PropertyValue(null);
+        }
+
+        public Optional<String> toOptional() {
+            return Optional.fromNullable(value);
+        }
+    }
+
+
+    /**
+     * A list of property names and property values that are understood by WebProtege.  Each property may be optional
+     * or required.  Required properties must have a value specified in the webprotege.properties file.  Optional
+     * properties
+     * do not need a value specified in the webprotege.properties file.  If optional then a default value must be
+     * specified
+     * here for the property.
+     *
+     * In general the property names listed here should correspond to the property names specified in the
+     * webprotege.properties file with the dots replaced by underscores and the name coverted to upper case.  For
+     * example, data.directory becomes DATA_DIRECTORY
      */
-    private final static String PROJECTS_DIR = "projects"; //not important - just for the default location of the metaproject
-    private final static String METAPROJECT_FILE = "metaproject" + File.separator + "metaproject.pprj";
-    private static final String LOCAL_METAPROJECT_PATH_DEFAULT = PROJECTS_DIR + File.separator + METAPROJECT_FILE;
+    public static enum PropertyName {
 
-    /*
-     * Application settings
-     */
+        @WebProtegePropertiesDocumentation(description = "The name of the webprotege application that appears in the browser title bar", example = "WebProtege")
+        APPLICATION_NAME("application.name", PropertyValue.ofString("WebProt\u00E9g\u00E9"), ClientVisibility.VISIBLE),
 
-    private static final String APPLICATION_NAME_DEFAULT = "WebProtege";
-    private static final String APPLICATION_URL_DEFAULT = "localhost";
+        @WebProtegePropertiesDocumentation(description = "The host name that webprotege runs on", example = "webprotege.stanford.edu")
+        APPLICATION_HOST("application.host", ClientVisibility.VISIBLE),
 
-    /*
-     * Protege server settings
-     */
-    private static final String PROTEGE_SERVER_HOSTNAME_DEFAULT = "localhost";
+        @WebProtegePropertiesDocumentation(description = "The directory where webprotege data is stored", example = "/src/webprotege")
+        DATA_DIRECTORY("data.directory", ClientVisibility.HIDDEN),
 
-    private final static String PROTEGE_SERVER_USER_DEFAULT = "webprotege";
-    private final static String PROTEGE_SERVER_PASSWORD_DEFAULT = "webprotege";
+        @WebProtegePropertiesDocumentation(description = "The host name of the mongodb server", example = "localhost")
+        MONGO_DB_HOST("mongodb.host", PropertyValue.ofString("localhost"), ClientVisibility.HIDDEN),
 
-    private static final boolean LOAD_ONTOLOGIES_FROM_PROTEGE_SERVER_DEFAULT = false;
+        @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
+        MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27107), ClientVisibility.HIDDEN),
 
-    /*
-     * Notifications
-     */
-    private static final Boolean ENABLE_IMMEDIATE_NOTIFICATION_DEFAULT = Boolean.FALSE;
-    private static final Boolean ENABLE_ALL_NOTIFICATION_DEFAULT = Boolean.TRUE;
-    private static final int IMMEDIATE_NOTIFICATION_THREAD_INTERVAL_DEFAULT = 2 * 1000 * 60;
-    private static final int IMMEDIATE_NOTIFICATION_THREAD_STARTUP_DELAY_DEFAULT = 0 * 1000 * 60; //TODO: DO NOT COMMIT
-    private static final int HOURLY_NOTIFICATION_THREAD_STARTUP_DELAY_DEFAULT = 15 * 1000 * 60;
-    private static final int DAILY_NOTIFICATION_THREAD_STARTUP_DELAY_DEFAULT = 30 * 1000 * 60;
-    private static final int EMAIL_RETRY_DELAY_DEFAULT = 2 * 1000 * 60;
+        @WebProtegePropertiesDocumentation(description = "The host name of the email smtp server", example = "smtp.gmail.com")
+        EMAIL_HOST("email.host", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
 
-    /*
-    * Account invitation expiration setting
-    */
-    private static final String ACCOUNT_INVITATION_EXPIRATION_PERIOD_IN_DAYS_PROP = "account.invitation.expiration.period.in.days";
-    private static final int ACCOUNT_INVITATION_EXPIRATION_PERIOD_IN_DAYS_DEFAULT = 30;
+        @WebProtegePropertiesDocumentation(description = "The host name of the email smtp server", example = "smtp.gmail.com")
+        EMAIL_PORT("email.port", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
 
-    /*
-     * Open id Authentication setting
-     */
-    private static final boolean WEBPROTEGE_AUTHENTICATE_WITH_OPENID_DEFAULT = true;
+        @WebProtegePropertiesDocumentation(description = "The email account that webprotege should use to send email notifications", example = "john.doe@stanford.edu")
+        EMAIL_ACCOUNT("email.account", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
 
-    private static final String APPLICATION_PATH_DEFAULT = "";
-    private static final boolean LOGIN_WITH_HTTPS_DEFAULT = false;
+        @WebProtegePropertiesDocumentation(description = "The password for the email account that webprotege should use to send email notifications")
+        EMAIL_PASSWORD("email.password", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
+
+        @WebProtegePropertiesDocumentation(description = "Specifies whether webprotege uses https rather than http as a protocol", example = "false")
+        HTTPS_ENABLED("https.enabled", PropertyValue.ofBoolean(false), ClientVisibility.VISIBLE),
+
+        @WebProtegePropertiesDocumentation(description = "Specifies the port used for https communication", example = "443")
+        HTTPS_PORT("https.port", PropertyValue.ofInteger(443), ClientVisibility.VISIBLE),
+
+        @WebProtegePropertiesDocumentation(description = "The email address of the webprotege administrator", example = "john.doe@stanford.edu")
+        ADMIN_EMAIL("admin.email", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
+
+        @WebProtegePropertiesDocumentation(description = "Specifies whether or not WebProtege should support authentication with Open Id", example = "false")
+        OPEN_ID_ENABLED("openid.enabled", PropertyValue.ofBoolean(true), ClientVisibility.VISIBLE);
 
 
-    /*
-     * Automatic save for local projects
-     */
-    private static final int SAVE_INTERVAL_DEFAULT = 120;
-    public static final int NO_SAVE = -1;
-    
-    
-    private static final Properties blacklistedProperties = new Properties();
+        private String propertyName;
 
-    private static final String DEFAULT_SMTP_HOST = "smtp.gmail.com";
+        private Optionality optionality;
 
-    private static final String DEFAULT_SMTP_PORT = "465";
+        private Optional<String> defaultValue;
 
-    private static final String DEFAULT_EMAIL_ACCOUNT = "webprotege2012@gmail.com";
+        private ClientVisibility clientVisibility;
 
 
-    static  {
-        try {
-            File propertyFile = new File(FileUtil.getRealPath(), "blacklist.properties");
-            InputStream is = new FileInputStream(propertyFile);
-            blacklistedProperties.load(is);
-        } catch (Exception e){
-            Log.getLogger().warning("Could not retrieve blacklist.properties from " + FileUtil.getRealPath() + ". " + e.getMessage());
-            if (Log.getLogger().isLoggable(Level.FINE)) {
-                Log.getLogger().log(Level.FINE, "Could not retrieve blacklist.properties.", e);
+        private PropertyName(String propertyName, ClientVisibility clientVisibility) {
+            this.propertyName = checkNotNull(propertyName);
+            defaultValue = Optional.absent();
+            this.optionality = Optionality.VALUE_MUST_BE_SPECIFIED_IN_PROTEGE_PROPERTIES;
+            this.clientVisibility = clientVisibility;
+
+        }
+
+        private PropertyName(String propertyName, PropertyValue defaultValue, ClientVisibility clientVisibility) {
+            this.propertyName = checkNotNull(propertyName);
+            this.defaultValue = defaultValue.toOptional();
+            optionality = Optionality.HAS_DEFAULT_VALUE;
+            this.clientVisibility = clientVisibility;
+
+        }
+
+        public String getPropertyName() {
+            return propertyName;
+        }
+
+        public Optional<String> getDefaultValue() {
+            return defaultValue;
+        }
+
+        public boolean hasDefaultValue() {
+            return optionality == Optionality.HAS_DEFAULT_VALUE;
+        }
+
+        public boolean isClientProperty() {
+            return clientVisibility == ClientVisibility.VISIBLE;
+        }
+    }
+
+    private static ImmutableMap<PropertyName, Optional<String>> propertyValueMap;
+
+
+    public static final File WEB_PROTEGE_PROPERTIES_FILE = new File("webprotege.properties");
+
+    public static void initFromProperties(Properties properties) throws WebProtegeConfigurationException {
+        if (propertyValueMap != null) {
+            throw new IllegalStateException("WebProtegeProperties has already been initialized");
+        }
+        ImmutableMap.Builder<PropertyName, Optional<String>> builder = ImmutableMap.builder();
+        for (PropertyName propertyName : values()) {
+            String value = properties.getProperty(propertyName.getPropertyName(), null);
+            if (value != null) {
+                builder.put(propertyName, Optional.<String>of(value));
+            }
+            else {
+                if (propertyName.hasDefaultValue()) {
+                    builder.put(propertyName, propertyName.getDefaultValue());
+                }
+                else {
+                    throw new WebProtegeConfigurationException("Property " + propertyName.getPropertyName() + " does not have a default value and no value has been specified in the " + WEB_PROTEGE_PROPERTIES_FILE.getName() + " file.  Please specify a value for this property in the " + WEB_PROTEGE_PROPERTIES_FILE.getName() + " file.");
+                }
             }
         }
+        propertyValueMap = builder.build();
     }
 
-    public static URI getWeprotegeDirectory() {
-        String uri = FileUtil.getRealPath();
-        return URIUtilities.createURI(uri);
+
+    /**
+     * Gets a property value as a string.
+     * @param propertyName The name of the property whose value should be retrieved.  Not {@code null}.
+     * @return Either the value of the specified property or the default value.  May be {@code null} if the property
+     *         does not have a value and {@code defaultValue} is specified as {@code null}.
+     * @throws NullPointerException if {@code propertyName} is {@code null}.
+     */
+    private static Optional<String> getOptionalString(PropertyName propertyName) {
+        return propertyValueMap.get(checkNotNull(propertyName));
     }
 
-    public static URI getLocalMetaprojectURI() {
-        String path = edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.LOCAL_METAPROJECT_PATH_PROP);
-        if (path == null) {
-            path = FileUtil.getRealPath() + LOCAL_METAPROJECT_PATH_DEFAULT;
+
+    private static String getRequiredString(PropertyName propertyName) {
+        Optional<String> value = propertyValueMap.get(propertyName);
+        if (!value.isPresent()) {
+            throw new RuntimeException("value is not present for required property value");
         }
-        Log.getLogger().info("Path to local metaproject: " + path);
-        return URIUtilities.createURI(path);
+        return value.get();
     }
 
-    public static String getProtegeServerHostName() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.PROTEGE_SERVER_HOSTNAME_PROP,
-                PROTEGE_SERVER_HOSTNAME_DEFAULT);
-    }
 
-    static String getProtegeServerUser() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.PROTEGE_SERVER_USER_PROP,
-                PROTEGE_SERVER_USER_DEFAULT);
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////
+    //// Public interface
+    ////
 
-    static String getProtegeServerPassword() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.PROTEGE_SERVER_PASSWORD_PROP,
-                PROTEGE_SERVER_PASSWORD_DEFAULT);
-    }
-
-    public static boolean getLoadOntologiesFromServer() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getBooleanProperty(
-                ApplicationPropertyNames.LOAD_ONTOLOGIES_FROM_PROTEGE_SERVER_PROP, LOAD_ONTOLOGIES_FROM_PROTEGE_SERVER_DEFAULT);
-    }
-
-    public static int getLocalProjectSaveInterval() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getIntegerProperty(ApplicationPropertyNames.SAVE_INTERVAL_PROP,
-                SAVE_INTERVAL_DEFAULT);
-    }
-
-    public static String getSmtpHostName() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_SMTP_HOST_NAME_PROP, DEFAULT_SMTP_HOST);
-    }
-
-    public static String getSmtpPort() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_SMTP_PORT_PROP, DEFAULT_SMTP_PORT);
-    }
-
-    public static String getSslFactory() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_SSL_FACTORY_PROP, "javax.net.ssl.SSLSocketFactory");
-    }
-
-    public static String getEmailAccount() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_ACCOUNT_PROP, DEFAULT_EMAIL_ACCOUNT);
-    }
-
-    public static String getEmailPassword() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_PASSWORD_PROP, "protege123");
-    }
-
-    public static String getLoggingEmail() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.LOGGING_EMAIL_PROP, DEFAULT_EMAIL_ACCOUNT);
-    }
 
     public static String getApplicationName() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.APPLICATION_NAME_PROP,
-                APPLICATION_NAME_DEFAULT);
+        return getRequiredString(APPLICATION_NAME);
     }
 
-    public static boolean getWebProtegeAuthenticateWithOpenId() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getBooleanProperty(
-                ApplicationPropertyNames.WEBPROTEGE_AUTHENTICATE_WITH_OPENID_PROP, WEBPROTEGE_AUTHENTICATE_WITH_OPENID_DEFAULT);
+    public static File getDataDirectory() {
+        String dataDirectory = getRequiredString(DATA_DIRECTORY);
+        return new File(dataDirectory);
     }
 
-    public static boolean getLoginWithHttps() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getBooleanProperty(
-                ApplicationPropertyNames.LOGIN_WITH_HTTPS_PROP, LOGIN_WITH_HTTPS_DEFAULT);
+    public static Optional<String> getEmailHostName() {
+        return getOptionalString(EMAIL_HOST);
     }
 
-    public static String getApplicationHttpsPort() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(
-                ApplicationPropertyNames.APPLICATION_PORT_HTTPS_PROP, ApplicationPropertyDefaults.APPLICATION_PORT_HTTPS_DEFAULT);
+    public static Optional<String> getEmailPort() {
+        return getOptionalString(EMAIL_PORT);
     }
 
-    public static int getServerPollingTimeoutMinutes() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getIntegerProperty(ApplicationPropertyNames.SERVER_POLLING_TIMEOUT_MINUTES_PROP,
-                ApplicationPropertyDefaults.SERVER_POLLING_TIMEOUT_MINUTES_DEFAULT);
+    public static Optional<String> getEmailAccount() {
+        return getOptionalString(EMAIL_ACCOUNT);
     }
 
-    public static String getApplicationUrl() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.APPLICATION_URL_PROP, APPLICATION_URL_DEFAULT);
+    public static Optional<String> getEmailPassword() {
+        return getOptionalString(EMAIL_PASSWORD);
     }
 
-    public static Boolean getImmediateThreadsEnabled() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getBooleanProperty(ApplicationPropertyNames.ENABLE_IMMEDIATE_NOTIFICATION,
-                ENABLE_IMMEDIATE_NOTIFICATION_DEFAULT);
+    public static boolean isLoginWithHttps() {
+        Optional<String> value = getOptionalString(HTTPS_ENABLED);
+        return value.isPresent() && Boolean.getBoolean(value.get());
     }
 
-    public static Boolean getAllNotificationEnabled() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getBooleanProperty(ApplicationPropertyNames.ENABLE_ALL_NOTIFICATION,
-                ENABLE_ALL_NOTIFICATION_DEFAULT);
+    public static int getHttpsPort() {
+        String value = getRequiredString(HTTPS_PORT);
+        return Integer.parseInt(value);
     }
 
-    public static Integer getEmailRetryDelay() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getIntegerProperty(ApplicationPropertyNames.EMAIL_RETRY_DELAY_PROP,
-                EMAIL_RETRY_DELAY_DEFAULT);
+    public static boolean isOpenIdAuthenticationEnabled() {
+        return "true".equals(getRequiredString(OPEN_ID_ENABLED));
     }
 
-    public static Integer getImmediateThreadStartupDelay() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getIntegerProperty(ApplicationPropertyNames.IMMEDIATE_NOTIFICATION_THREAD_STARTUP_DELAY_PROP
-                , IMMEDIATE_NOTIFICATION_THREAD_STARTUP_DELAY_DEFAULT);
+    public static Optional<String> getAdministratorEmail() {
+        return getOptionalString(ADMIN_EMAIL);
     }
 
-    public static Integer getHourlyThreadStartupDelay() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getIntegerProperty(ApplicationPropertyNames.HOURLY_NOTIFICATION_THREAD_STARTUP_DELAY_PROP,
-                HOURLY_NOTIFICATION_THREAD_STARTUP_DELAY_DEFAULT);
+
+    public static String getSslFactory() {
+        return "javax.net.ssl.SSLSocketFactory";
+//        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_SSL_FACTORY_PROP, "javax.net.ssl.SSLSocketFactory");
     }
 
-    public static Integer getDailyThreadStartupDelay() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getIntegerProperty(ApplicationPropertyNames.DAILY_NOTIFICATION_THREAD_STARTUP_DELAY_PROP,
-                DAILY_NOTIFICATION_THREAD_STARTUP_DELAY_DEFAULT);
-    }
-
-    public static Integer getImmediateThreadInterval() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getIntegerProperty(ApplicationPropertyNames.IMMEDIATE_NOTIFICATION_THREAD_INTERVAL_PROP,
-                IMMEDIATE_NOTIFICATION_THREAD_INTERVAL_DEFAULT);
-    }
-
-    public static HashMap<String, String> getPropertiesForClient(){
-        final Properties applicationProperties1 = edu.stanford.smi.protege.util.ApplicationProperties.getApplicationProperties();
-        final Set<String> stringSet = applicationProperties1.stringPropertyNames();
-        final HashMap<String, String> applicationProperties = new HashMap<String, String>();
-        for (String propertyName : stringSet) {
-            applicationProperties.put(propertyName, applicationProperties1.getProperty(propertyName));
-        }
-
-        for (String blacklistedProperty : WebProtegeProperties.blacklistedProperties.stringPropertyNames()) {
-            applicationProperties.remove(blacklistedProperty);
-        }
-
-        return applicationProperties;
-    }
 
     public static int getAccountInvitationExpirationPeriodInDays() {
-        return edu.stanford.smi.protege.util.ApplicationProperties.getIntegerProperty(ACCOUNT_INVITATION_EXPIRATION_PERIOD_IN_DAYS_PROP,
-                ACCOUNT_INVITATION_EXPIRATION_PERIOD_IN_DAYS_DEFAULT);
+        return Integer.MAX_VALUE;
     }
-    
+
+
+    public static Map<String, String> getClientMap() {
+        Map<String, String> result = new HashMap<String, String>();
+        for (PropertyName propertyName : propertyValueMap.keySet()) {
+            if (propertyName.isClientProperty()) {
+                Optional<String> value = propertyValueMap.get(propertyName);
+                if (value.isPresent()) {
+                    result.put(propertyName.getPropertyName(), value.get());
+                }
+            }
+        }
+        return result;
+
+    }
 
 }
