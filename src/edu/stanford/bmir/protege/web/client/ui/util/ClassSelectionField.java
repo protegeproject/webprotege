@@ -1,9 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-
 import com.google.common.base.Optional;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
@@ -13,7 +9,6 @@ import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.form.TriggerField;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -21,8 +16,12 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
-import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
 
 public class ClassSelectionField extends TriggerField implements Selectable {

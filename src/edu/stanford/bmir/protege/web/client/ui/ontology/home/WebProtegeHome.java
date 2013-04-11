@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.form.Label;
 
 /**
  * Author: Matthew Horridge<br>

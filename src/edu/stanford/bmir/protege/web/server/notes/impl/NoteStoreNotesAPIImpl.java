@@ -1,17 +1,17 @@
 package edu.stanford.bmir.protege.web.server.notes.impl;
 
+import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
-import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 import org.protege.notesapi.NotesException;
 import org.protege.notesapi.NotesManager;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentFormat;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentSerializer;
 import org.semanticweb.owlapi.binaryowl.change.OntologyChangeDataList;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
+import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.File;

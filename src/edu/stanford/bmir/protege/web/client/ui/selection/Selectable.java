@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.selection;
 
-import java.util.Collection;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+
+import java.util.Collection;
 
 /**
  * A generic interface for things that are selectable. Often (always?) in this

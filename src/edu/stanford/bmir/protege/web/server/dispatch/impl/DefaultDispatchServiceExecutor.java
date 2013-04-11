@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
-import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-
-import javax.servlet.http.HttpSession;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
 /**
  * Author: Matthew Horridge<br>

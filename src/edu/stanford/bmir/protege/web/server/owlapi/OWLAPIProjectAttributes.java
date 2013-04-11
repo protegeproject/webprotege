@@ -8,7 +8,9 @@ import org.semanticweb.owlapi.binaryowl.stream.BinaryOWLOutputStream;
 import org.semanticweb.owlapi.model.OWLObject;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;

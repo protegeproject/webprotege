@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.entity;
 
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 
 /**

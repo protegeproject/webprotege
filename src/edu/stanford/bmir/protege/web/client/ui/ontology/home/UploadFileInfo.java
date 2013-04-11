@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
 import com.google.gwt.user.client.ui.FormPanel;
-import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 
 /**
  * Author: Matthew Horridge<br>

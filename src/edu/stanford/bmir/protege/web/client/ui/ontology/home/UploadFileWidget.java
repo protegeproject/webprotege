@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.FormPanel;
 import edu.stanford.bmir.protege.web.client.ui.library.common.Refreshable;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;

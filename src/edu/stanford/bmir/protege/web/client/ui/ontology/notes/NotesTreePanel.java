@@ -1,18 +1,16 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.notes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
-
-import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class NotesTreePanel{

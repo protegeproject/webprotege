@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 
 /**
  * Author: Matthew Horridge<br>

@@ -6,9 +6,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import edu.stanford.bmir.protege.web.client.rpc.RevisionManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.RevisionManagerServiceAsync;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionSummary;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.List;
 

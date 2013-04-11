@@ -1,9 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -19,9 +15,12 @@ import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.BorderLayout;
 import com.gwtext.client.widgets.layout.BorderLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.rpc.ChAOStatsServiceManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Sean Falconer <sean.falconer@stanford.edu>

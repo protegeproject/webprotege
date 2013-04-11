@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
-import java.util.Collection;
-import java.util.List;
-
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PaginationData;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A service for statistics related to ontology changes.

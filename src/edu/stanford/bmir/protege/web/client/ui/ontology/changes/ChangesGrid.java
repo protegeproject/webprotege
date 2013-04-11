@@ -1,21 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
-import java.util.Date;
-
-import com.gwtext.client.data.ArrayReader;
-import com.gwtext.client.data.DateFieldDef;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.Store;
-import com.gwtext.client.data.StringFieldDef;
+import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.PagingToolbar;
 import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
-
-import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.ui.util.PaginationUtil;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

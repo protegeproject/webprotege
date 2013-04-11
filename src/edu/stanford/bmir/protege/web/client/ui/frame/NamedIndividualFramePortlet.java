@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.model.Project;
@@ -9,10 +8,7 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.EditorContex
 import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.NamedIndividualFrameEditorFactory;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
-import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 /**

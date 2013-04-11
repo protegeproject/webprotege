@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
 import org.semanticweb.owlapi.model.IRI;

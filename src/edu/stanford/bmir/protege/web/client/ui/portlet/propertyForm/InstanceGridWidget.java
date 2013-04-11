@@ -1,71 +1,33 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.core.EventObject;
-import com.gwtext.client.core.Ext;
-import com.gwtext.client.core.Function;
-import com.gwtext.client.core.SortDir;
-import com.gwtext.client.core.TextAlign;
-import com.gwtext.client.data.ArrayReader;
-import com.gwtext.client.data.BooleanFieldDef;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.IntegerFieldDef;
-import com.gwtext.client.data.MemoryProxy;
-import com.gwtext.client.data.Record;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.SimpleStore;
-import com.gwtext.client.data.Store;
-import com.gwtext.client.data.StringFieldDef;
+import com.gwtext.client.core.*;
+import com.gwtext.client.data.*;
 import com.gwtext.client.util.Format;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.form.Checkbox;
-import com.gwtext.client.widgets.form.ComboBox;
+import com.gwtext.client.widgets.form.*;
 import com.gwtext.client.widgets.form.Label;
-import com.gwtext.client.widgets.form.Radio;
 import com.gwtext.client.widgets.form.TextArea;
-import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.CheckboxListenerAdapter;
 import com.gwtext.client.widgets.form.event.ComboBoxCallback;
 import com.gwtext.client.widgets.form.event.ComboBoxListenerAdapter;
-import com.gwtext.client.widgets.grid.CellMetadata;
-import com.gwtext.client.widgets.grid.ColumnConfig;
-import com.gwtext.client.widgets.grid.ColumnModel;
-import com.gwtext.client.widgets.grid.EditorGridPanel;
-import com.gwtext.client.widgets.grid.GridEditor;
-import com.gwtext.client.widgets.grid.GridPanel;
-import com.gwtext.client.widgets.grid.Renderer;
-import com.gwtext.client.widgets.grid.event.EditorGridListener;
-import com.gwtext.client.widgets.grid.event.EditorGridListenerAdapter;
-import com.gwtext.client.widgets.grid.event.GridCellListenerAdapter;
-import com.gwtext.client.widgets.grid.event.GridListenerAdapter;
-import com.gwtext.client.widgets.grid.event.GridRowListener;
+import com.gwtext.client.widgets.grid.*;
+import com.gwtext.client.widgets.grid.event.*;
 import com.gwtext.client.widgets.layout.ColumnLayout;
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import com.gwtext.client.widgets.menu.BaseItem;
 import com.gwtext.client.widgets.menu.Menu;
 import com.gwtext.client.widgets.menu.MenuItem;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
@@ -79,6 +41,8 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidgetWit
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil.SelectionCallback;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+
+import java.util.*;
 
 public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
 

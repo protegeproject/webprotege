@@ -1,18 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Level;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import com.google.common.base.Optional;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdService;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
@@ -24,6 +13,11 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.smi.protege.server.metaproject.PropertyValue;
 import edu.stanford.smi.protege.server.metaproject.User;
 import edu.stanford.smi.protege.util.Log;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Administrative services for maintaining openid url, id and provider name with

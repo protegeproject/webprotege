@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.*;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
@@ -10,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.coode.owlapi.obo.parser.IDSpaceManager;
 import org.coode.owlapi.obo.parser.OBOIdType;
 import org.coode.owlapi.obo.parser.OBOPrefix;

@@ -10,16 +10,12 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.layout.FitLayout;
-
-import edu.stanford.bmir.protege.web.client.events.*;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.events.*;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
@@ -28,17 +24,17 @@ import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionName;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.ui.editprofile.EditProfileUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.sharing.SharingSettingsDialog;
 import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationDialog;
 import edu.stanford.bmir.protege.web.client.ui.signup.WebProtegeSignupDialog;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionName;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * The panel shown at the top of the display. It contains the documentation

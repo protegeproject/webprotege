@@ -1,23 +1,21 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.math.BigInteger;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 import edu.stanford.bmir.protege.web.client.rpc.AdminService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
-import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.smi.protege.server.metaproject.Operation;
 import edu.stanford.smi.protege.server.metaproject.User;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.math.BigInteger;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Administrative services for user management

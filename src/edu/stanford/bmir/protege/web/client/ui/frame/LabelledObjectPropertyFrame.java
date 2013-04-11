@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import java.io.Serializable;
 

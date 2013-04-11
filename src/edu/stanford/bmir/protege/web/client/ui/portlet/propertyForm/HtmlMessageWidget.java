@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
 import com.gwtext.client.widgets.Component;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidget;
 import edu.stanford.bmir.protege.web.client.ui.portlet.html.HtmlTextComponent;

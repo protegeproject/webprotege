@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.server.notes;
 
-import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadResult;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 import org.protege.notesapi.notes.NoteType;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.List;

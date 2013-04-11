@@ -1,19 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.reviews;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
-import com.gwtext.client.data.ArrayReader;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.MemoryProxy;
-import com.gwtext.client.data.Record;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.Store;
-import com.gwtext.client.data.StringFieldDef;
+import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.MessageBoxConfig;
@@ -25,13 +15,16 @@ import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

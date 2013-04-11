@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
-import java.util.Collection;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.Collection;
+import java.util.List;
 
 public class HierarchyServiceManager {
 

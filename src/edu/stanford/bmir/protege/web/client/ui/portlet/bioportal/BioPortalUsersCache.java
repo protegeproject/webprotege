@@ -1,19 +1,13 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.Record;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.Store;
-import com.gwtext.client.data.StringFieldDef;
-import com.gwtext.client.data.XmlReader;
-
+import com.gwtext.client.data.*;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsManager;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class BioPortalUsersCache {

@@ -1,22 +1,22 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.io.File;
-import java.net.URI;
-import java.util.*;
-import java.util.logging.Level;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;
-import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.smi.protege.model.*;
+import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
+import edu.stanford.smi.protege.model.Instance;
+import edu.stanford.smi.protege.model.KnowledgeBase;
+import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protege.server.ServerProperties;
 import edu.stanford.smi.protege.server.metaproject.*;
 import edu.stanford.smi.protege.server.metaproject.impl.MetaProjectImpl;
 import edu.stanford.smi.protege.util.Log;
+
+import java.io.File;
+import java.util.*;
+import java.util.logging.Level;
 
 
 public class LocalMetaProjectManager extends AbstractMetaProjectManager {

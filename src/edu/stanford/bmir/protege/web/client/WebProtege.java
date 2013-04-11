@@ -5,10 +5,13 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtext.client.widgets.*;
+import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.TabPanel;
+import com.gwtext.client.widgets.Viewport;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
-import com.gwtext.client.widgets.layout.*;
-
+import com.gwtext.client.widgets.layout.AnchorLayout;
+import com.gwtext.client.widgets.layout.AnchorLayoutData;
+import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
 import edu.stanford.bmir.protege.web.client.ui.TopPanel;

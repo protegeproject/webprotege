@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

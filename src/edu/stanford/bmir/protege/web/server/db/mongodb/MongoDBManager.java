@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.db.mongodb;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
-import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.smi.protege.util.ApplicationProperties;
 

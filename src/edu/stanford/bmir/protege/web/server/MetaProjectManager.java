@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.Operation;
 

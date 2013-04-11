@@ -1,18 +1,17 @@
 package edu.stanford.bmir.protege.web.client.ui.search;
 
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.UrlParam;
-
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PaginationData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.util.GWTProxy;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.List;
 
 public class SearchResultsProxyImpl extends GWTProxy {
 

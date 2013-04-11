@@ -1,19 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
 import com.gwtext.client.core.SortDir;
-import com.gwtext.client.data.ArrayReader;
-import com.gwtext.client.data.DateFieldDef;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.GroupingStore;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.SortState;
-import com.gwtext.client.data.StringFieldDef;
+import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.PagingToolbar;
 import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
 import com.gwtext.client.widgets.grid.GroupingView;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.ui.util.PaginationUtil;

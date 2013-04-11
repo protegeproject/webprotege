@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -10,18 +7,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
-import com.gwtext.client.widgets.Button;
-import com.gwtext.client.widgets.HTMLPanel;
-import com.gwtext.client.widgets.MessageBox;
-import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.Window;
+import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.grid.GridEditor;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
@@ -29,12 +21,14 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NoteInputPanel;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalSearchComponent;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReferenceFieldWidget extends InstanceGridWidget {
 

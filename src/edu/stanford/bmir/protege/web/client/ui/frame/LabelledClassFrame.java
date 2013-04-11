@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
-import org.semanticweb.owlapi.model.OWLClass;
-
-import java.io.Serializable;
 
 /**
  * Author: Matthew Horridge<br>

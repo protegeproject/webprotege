@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
-import edu.stanford.bmir.protege.web.server.owlapi.AssertedClassHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;

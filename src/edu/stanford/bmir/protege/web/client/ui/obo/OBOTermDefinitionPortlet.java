@@ -6,7 +6,6 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermDefinition;
 import org.semanticweb.owlapi.model.OWLEntity;
 

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>

@@ -11,7 +11,10 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermId;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

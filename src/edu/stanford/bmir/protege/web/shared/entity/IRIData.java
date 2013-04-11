@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 
 /**

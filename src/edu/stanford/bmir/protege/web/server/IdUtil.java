@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import java.util.Random;
 import java.util.UUID;
 
 /**

@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
-import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.*;
+import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.EditorContext;
 
 import java.io.Serializable;
 

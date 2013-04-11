@@ -4,11 +4,11 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
 import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingService;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Map;

@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal;
 
-import java.util.Date;
-
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.data.Record;
@@ -14,13 +12,14 @@ import com.gwtext.client.widgets.form.HtmlEditor;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+
+import java.util.Date;
 
 
 public class NewNotePanel extends FormPanel {

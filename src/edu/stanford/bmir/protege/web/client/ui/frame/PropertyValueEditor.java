@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 

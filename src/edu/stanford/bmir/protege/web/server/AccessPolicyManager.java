@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.AccessPolicyUserData;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InvitationConstants;
@@ -9,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.domain.Invi
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.server.metaproject.*;
 import edu.stanford.smi.protege.server.metaproject.impl.GroupOperationImpl;

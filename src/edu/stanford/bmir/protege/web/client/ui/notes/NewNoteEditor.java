@@ -19,10 +19,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteField;
-import edu.stanford.bmir.protege.web.shared.notes.NoteHeader;
 import edu.stanford.bmir.protege.web.shared.notes.NoteType;
-
-import java.util.Date;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.dlg;
 
 import com.google.gwt.user.client.ui.ValueBoxBase;
-import edu.stanford.smi.protege.widget.Widget;
 
 /**
  * Author: Matthew Horridge<br>

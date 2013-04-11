@@ -1,21 +1,13 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
-import edu.stanford.smi.protege.server.metaproject.MetaProject;
-import edu.stanford.smi.protege.server.metaproject.Operation;
-import edu.stanford.smi.protege.server.metaproject.Policy;
-import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
-import edu.stanford.smi.protege.server.metaproject.PropertyValue;
-import edu.stanford.smi.protege.server.metaproject.ServerInstance;
-import edu.stanford.smi.protege.server.metaproject.User;
+import edu.stanford.smi.protege.server.metaproject.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 
 public abstract class AbstractMetaProjectManager extends MetaProjectManager {
 

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualEntity;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import java.io.Serializable;

@@ -4,9 +4,9 @@ import com.google.gwt.user.client.rpc.CustomFieldSerializer;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * An implementation of CustomFieldSerilizer for serializing {@link GetProjectEventsAction}

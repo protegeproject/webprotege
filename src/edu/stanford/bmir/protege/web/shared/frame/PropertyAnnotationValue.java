@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObject;
 
 /**
  * Author: Matthew Horridge<br>

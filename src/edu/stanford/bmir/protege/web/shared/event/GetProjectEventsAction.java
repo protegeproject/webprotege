@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>

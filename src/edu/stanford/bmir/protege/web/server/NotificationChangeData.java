@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.util.Date;
-
 import edu.stanford.bmir.protege.web.client.rpc.NotificationType;
+
+import java.util.Date;
 
 public class NotificationChangeData {
     private final String author;

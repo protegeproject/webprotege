@@ -1,19 +1,13 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.security.Security;
-import java.util.Properties;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
-import edu.stanford.smi.protege.util.Log;
+
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.security.Security;
+import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

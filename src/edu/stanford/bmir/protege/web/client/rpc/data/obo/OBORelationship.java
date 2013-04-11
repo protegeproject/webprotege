@@ -1,11 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.obo;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualNamedClass;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualObjectProperty;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import java.io.Serializable;
 

@@ -8,7 +8,10 @@ import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,9 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Timer;
@@ -13,29 +9,20 @@ import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.ExtElement;
 import com.gwtext.client.core.Function;
 import com.gwtext.client.core.Position;
-import com.gwtext.client.widgets.Button;
-import com.gwtext.client.widgets.Component;
-import com.gwtext.client.widgets.MessageBox;
-import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.Resizable;
-import com.gwtext.client.widgets.ResizableConfig;
-import com.gwtext.client.widgets.TabPanel;
-import com.gwtext.client.widgets.Tool;
-import com.gwtext.client.widgets.Window;
+import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.ResizableListenerAdapter;
 import com.gwtext.client.widgets.form.Checkbox;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.portal.Portlet;
-
-import edu.stanford.bmir.protege.web.client.events.*;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
@@ -45,6 +32,13 @@ import edu.stanford.bmir.protege.web.client.ui.util.AbstractValidatableTab;
 import edu.stanford.bmir.protege.web.client.ui.util.ValidatableTab;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
+import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

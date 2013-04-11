@@ -5,7 +5,6 @@ import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.Size;
 import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.event.PanelListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 

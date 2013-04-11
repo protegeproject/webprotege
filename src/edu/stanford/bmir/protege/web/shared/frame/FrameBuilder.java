@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.*;
 
 /**

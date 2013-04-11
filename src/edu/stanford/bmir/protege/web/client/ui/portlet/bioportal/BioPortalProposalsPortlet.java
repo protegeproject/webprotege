@@ -1,37 +1,21 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal;
 
-import java.util.Collection;
-import java.util.Date;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtext.client.data.BooleanFieldDef;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.ObjectFieldDef;
-import com.gwtext.client.data.Record;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.Store;
-import com.gwtext.client.data.StringFieldDef;
-import com.gwtext.client.data.XmlReader;
+import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextField;
-import com.gwtext.client.widgets.grid.CellMetadata;
-import com.gwtext.client.widgets.grid.ColumnConfig;
-import com.gwtext.client.widgets.grid.ColumnModel;
-import com.gwtext.client.widgets.grid.GridPanel;
-import com.gwtext.client.widgets.grid.Renderer;
-import com.gwtext.client.widgets.grid.RowSelectionModel;
+import com.gwtext.client.widgets.grid.*;
 import com.gwtext.client.widgets.grid.event.RowSelectionListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.RowLayout;
 import com.gwtext.client.widgets.layout.RowLayoutData;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsManager;
@@ -41,6 +25,9 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstant
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.AbstractValidatableTab;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+
+import java.util.Collection;
+import java.util.Date;
 
 public class BioPortalProposalsPortlet extends AbstractEntityPortlet {
 

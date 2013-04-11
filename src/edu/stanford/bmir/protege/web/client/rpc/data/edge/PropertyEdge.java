@@ -1,12 +1,5 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.edge;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
-import org.semanticweb.owlapi.model.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

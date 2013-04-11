@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.projectfeed;
 
 import com.google.gwt.user.client.ui.Composite;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>

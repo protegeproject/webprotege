@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.search;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
@@ -12,12 +9,13 @@ import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-
-import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class SearchUtil {
 

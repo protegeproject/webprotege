@@ -1,21 +1,21 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassResult;
 import edu.stanford.bmir.protege.web.server.change.*;
-import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
+import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLClass;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 

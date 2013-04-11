@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
-import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceStrategy;
 import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceSubClassStrategy;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetric;
@@ -18,7 +17,9 @@ import org.ncbo.stanford.util.BioPortalServerConstants;
 import org.ncbo.stanford.util.BioPortalUtil;
 import org.ncbo.stanford.util.BioportalConcept;
 import org.ncbo.stanford.util.HTMLUtil;
-import org.protege.editor.owl.model.hierarchy.*;
+import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;
+import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
+import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 

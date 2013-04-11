@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.notes;
 
-import java.util.Iterator;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -10,40 +7,26 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
-import com.gwtext.client.data.ArrayReader;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.IntegerFieldDef;
-import com.gwtext.client.data.MemoryProxy;
-import com.gwtext.client.data.Record;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.SimpleStore;
-import com.gwtext.client.data.Store;
-import com.gwtext.client.data.StringFieldDef;
+import com.gwtext.client.data.*;
 import com.gwtext.client.util.Format;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.form.ComboBox;
 import com.gwtext.client.widgets.form.Label;
-import com.gwtext.client.widgets.grid.CellMetadata;
-import com.gwtext.client.widgets.grid.ColumnConfig;
-import com.gwtext.client.widgets.grid.ColumnModel;
-import com.gwtext.client.widgets.grid.GridPanel;
-import com.gwtext.client.widgets.grid.GridView;
-import com.gwtext.client.widgets.grid.Renderer;
-import com.gwtext.client.widgets.grid.RowParams;
-import com.gwtext.client.widgets.grid.RowSelectionModel;
+import com.gwtext.client.widgets.grid.*;
 import com.gwtext.client.widgets.grid.event.GridRowListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.layout.HorizontalLayout;
-
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

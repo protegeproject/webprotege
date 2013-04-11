@@ -1,18 +1,13 @@
 package edu.stanford.bmir.protege.web.client.ui.projectconfig;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsService;
-import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityIdGeneratorSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityIdUserRange;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

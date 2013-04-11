@@ -1,24 +1,19 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.gwtext.client.core.Ext;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.form.FieldSet;
 import com.gwtext.client.widgets.layout.FormLayout;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.portlet.PropertyWidget;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+
+import java.util.*;
 
 /**
  * This class generates a form with fields based on the portlet configuration

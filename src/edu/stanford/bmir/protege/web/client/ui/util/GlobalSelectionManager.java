@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.util;
 
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class GlobalSelectionManager {
 

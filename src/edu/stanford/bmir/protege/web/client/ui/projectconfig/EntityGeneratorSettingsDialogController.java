@@ -7,8 +7,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.rpc.EntityIdGeneratorSettingsService;
 import edu.stanford.bmir.protege.web.client.rpc.EntityIdGeneratorSettingsServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityIdGeneratorSettings;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>

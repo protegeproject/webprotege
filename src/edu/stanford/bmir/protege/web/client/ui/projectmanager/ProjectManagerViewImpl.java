@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.sidebar.SideBar;
 import edu.stanford.bmir.protege.web.client.ui.library.sidebar.SideBarItem;
-import edu.stanford.bmir.protege.web.client.ui.projectlist.*;
+import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListView;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

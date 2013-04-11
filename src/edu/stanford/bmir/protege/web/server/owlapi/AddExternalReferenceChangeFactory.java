@@ -5,8 +5,10 @@ import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.server.owlapi.extref.BioPortalExternalReferenceData;
 import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceStrategy;
 import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceSubClassStrategy;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.vocab.SKOSVocabulary;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.util.List;
 

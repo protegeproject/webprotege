@@ -1,11 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -18,7 +12,6 @@ import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.form.Label;
 import com.gwtext.client.widgets.layout.ColumnLayout;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
@@ -28,6 +21,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidget;
 import edu.stanford.bmir.protege.web.client.ui.util.UIConstants;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+
+import java.util.*;
 
 public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
 

@@ -3,16 +3,8 @@
  */
 package edu.stanford.bmir.protege.web.server.openid;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
+import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import org.openid4java.consumer.ConsumerManager;
@@ -27,8 +19,14 @@ import org.openid4java.message.ax.FetchResponse;
 import org.openid4java.message.sreg.SRegMessage;
 import org.openid4java.message.sreg.SRegResponse;
 
-import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
-import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * @author z.Khan

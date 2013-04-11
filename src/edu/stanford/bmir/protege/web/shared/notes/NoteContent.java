@@ -1,13 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.notes;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableMap;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>

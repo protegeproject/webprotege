@@ -1,10 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi.metrics;
 
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetric;
-import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricIntValue;
-import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricState;
-import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricValue;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;

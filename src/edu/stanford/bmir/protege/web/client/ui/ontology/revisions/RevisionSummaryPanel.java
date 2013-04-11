@@ -2,9 +2,11 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
 import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.client.ui.bioportal.publish.PublishToBioPortalDialog;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Label;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Date;

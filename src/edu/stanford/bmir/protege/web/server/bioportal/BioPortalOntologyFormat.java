@@ -1,10 +1,5 @@
 package edu.stanford.bmir.protege.web.server.bioportal;
 
-import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
-import org.semanticweb.owlapi.model.OWLOntologyFormat;
-
-import java.lang.reflect.Constructor;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

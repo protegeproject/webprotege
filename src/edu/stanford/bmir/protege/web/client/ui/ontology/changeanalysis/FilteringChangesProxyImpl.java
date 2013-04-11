@@ -1,16 +1,15 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.UrlParam;
-
 import edu.stanford.bmir.protege.web.client.rpc.ChAOStatsServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PaginationData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesProxyImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Sean Falconer <sean.falconer@stanford.edu>

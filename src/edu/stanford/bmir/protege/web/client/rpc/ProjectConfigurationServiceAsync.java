@@ -1,11 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
-
-import java.util.List;
 
 public interface ProjectConfigurationServiceAsync {
 

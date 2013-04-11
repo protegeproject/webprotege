@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.util.List;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.PaginationData;
+
+import java.util.List;
 
 public class PaginationServerUtil {
 

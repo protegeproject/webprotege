@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.rpc.bioportal;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 public interface BioPortalUploadAsync {
 

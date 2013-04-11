@@ -20,7 +20,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
-import edu.stanford.bmir.protege.web.shared.openid.UserOpenIdAccountSummary;
 
 /**
  * Created Popup with providers icon, to associate new OpenId with User Account

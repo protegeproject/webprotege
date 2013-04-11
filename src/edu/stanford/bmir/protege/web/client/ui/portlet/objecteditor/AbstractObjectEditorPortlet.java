@@ -8,14 +8,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.UIDescription;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.shared.dispatch.*;
+import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import java.io.Serializable;

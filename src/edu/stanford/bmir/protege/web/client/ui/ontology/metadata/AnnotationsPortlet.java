@@ -1,12 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author Jennifer Vendetti

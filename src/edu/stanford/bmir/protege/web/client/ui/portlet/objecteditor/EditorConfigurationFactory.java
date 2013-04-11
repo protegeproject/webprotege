@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.io.Serializable;
 

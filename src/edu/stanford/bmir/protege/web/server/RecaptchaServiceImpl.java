@@ -2,16 +2,8 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.RecaptchaService;
-import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 
 /**
  * Author: Matthew Horridge<br>

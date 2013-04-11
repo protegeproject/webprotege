@@ -1,8 +1,13 @@
 package edu.stanford.bmir.protege.web.server.translator;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualNamedClass;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualNamedIndividual;
+import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualObjectProperty;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
-import java.util.Collection;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+
+import java.util.Collection;
 
 /**
  * A portlet that displays the {@link AllPropertiesGrid} (see for more

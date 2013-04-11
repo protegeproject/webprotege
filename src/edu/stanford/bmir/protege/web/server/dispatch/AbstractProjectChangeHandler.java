@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -11,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
-import edu.stanford.bmir.protege.web.shared.msg.ProjectChangeMessages;
 
 /**
  * Author: Matthew Horridge<br>

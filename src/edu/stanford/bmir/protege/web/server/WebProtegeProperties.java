@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
+
+import java.io.File;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.server.WebProtegeProperties.PropertyName.*;

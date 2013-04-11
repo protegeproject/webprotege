@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.util;
 
-import java.util.Collection;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
@@ -9,13 +7,14 @@ import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.layout.ColumnLayout;
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import com.gwtext.client.widgets.layout.VerticalLayout;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
+
+import java.util.Collection;
 
 public class IndividualsWithClassSelectionPanel extends Panel {
     private Project project;

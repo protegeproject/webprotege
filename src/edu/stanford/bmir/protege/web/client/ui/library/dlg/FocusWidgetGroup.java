@@ -2,9 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.library.dlg;
 
 import com.google.gwt.user.client.ui.FocusWidget;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

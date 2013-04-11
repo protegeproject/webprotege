@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet;
 
-import java.util.Collection;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 

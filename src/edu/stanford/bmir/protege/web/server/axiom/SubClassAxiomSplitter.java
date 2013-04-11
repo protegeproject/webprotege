@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.server.axiom;
 
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import java.util.Collections;
 import java.util.HashSet;

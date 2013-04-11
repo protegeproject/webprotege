@@ -1,12 +1,8 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.common.base.Optional;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 import edu.stanford.bmir.protege.web.client.rpc.ApplicationPropertiesService;
+
+import java.util.Map;
 
 /**
  * Administrative services for user management

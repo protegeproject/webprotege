@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.events;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.ArrayList;
 import java.util.Collection;

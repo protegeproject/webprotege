@@ -3,9 +3,15 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.*;
+import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
+import org.semanticweb.owlapi.util.OWLClassExpressionVisitorExAdapter;
+import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
+import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

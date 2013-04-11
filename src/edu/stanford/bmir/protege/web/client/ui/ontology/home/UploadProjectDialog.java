@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.*;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.gwtext.client.widgets.MessageBox;
@@ -10,7 +13,10 @@ import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.library.common.Refreshable;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEvent;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;

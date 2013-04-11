@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+
 import java.util.Collection;
 import java.util.List;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 
 public interface HierarchyServiceAsync {
 

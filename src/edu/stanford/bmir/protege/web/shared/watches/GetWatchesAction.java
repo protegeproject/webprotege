@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

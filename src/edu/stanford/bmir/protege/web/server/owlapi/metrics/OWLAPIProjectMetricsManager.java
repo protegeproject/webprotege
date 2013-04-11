@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi.metrics;
 
-import edu.stanford.bmir.protege.web.server.owlapi.*;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLException;
 import org.semanticweb.owlapi.model.OWLOntologyChange;

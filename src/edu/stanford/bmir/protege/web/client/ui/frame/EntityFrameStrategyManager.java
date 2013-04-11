@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>

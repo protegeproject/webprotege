@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
-import java.util.Collection;
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -15,7 +12,6 @@ import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
@@ -28,6 +24,9 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Exposes an 'internal' reference to another class so that classes can refer to each other as property values.

@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsService;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>

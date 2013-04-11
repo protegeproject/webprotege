@@ -1,34 +1,17 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.notes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.SimpleStore;
-import com.gwtext.client.data.Store;
-import com.gwtext.client.data.StringFieldDef;
-import com.gwtext.client.widgets.Button;
-import com.gwtext.client.widgets.Component;
-import com.gwtext.client.widgets.MessageBox;
-import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.Window;
+import com.gwtext.client.data.*;
+import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
-import com.gwtext.client.widgets.form.ComboBox;
-import com.gwtext.client.widgets.form.FormPanel;
-import com.gwtext.client.widgets.form.HtmlEditor;
-import com.gwtext.client.widgets.form.Label;
-import com.gwtext.client.widgets.form.TextField;
+import com.gwtext.client.widgets.form.*;
 import com.gwtext.client.widgets.layout.AnchorLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.VerticalLayout;
-
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -36,6 +19,9 @@ import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NoteInputPanel extends Panel {
 

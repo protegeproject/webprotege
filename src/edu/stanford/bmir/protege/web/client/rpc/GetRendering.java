@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.HashSet;

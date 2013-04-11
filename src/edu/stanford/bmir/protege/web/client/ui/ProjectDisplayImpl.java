@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
 
-import java.util.*;
-
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
@@ -10,15 +8,8 @@ import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
-import com.gwtext.client.widgets.Button;
-import com.gwtext.client.widgets.MessageBox;
+import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.MessageBox.ConfirmCallback;
-import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.TabPanel;
-import com.gwtext.client.widgets.Toolbar;
-import com.gwtext.client.widgets.ToolbarButton;
-import com.gwtext.client.widgets.ToolbarMenuButton;
-import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
@@ -32,7 +23,6 @@ import com.gwtext.client.widgets.menu.Menu;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import com.gwtext.client.widgets.menu.event.CheckItemListenerAdapter;
 import com.gwtext.client.widgets.portal.Portlet;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.ProjectManager;
@@ -47,10 +37,11 @@ import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
-import edu.stanford.bmir.protege.web.client.ui.util.GlobalSelectionManager;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -154,8 +145,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private void getProjectConfiguration() {
         UIUtil.showLoadProgessBar("Loading UI configuration", "Loading");
-        ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(projectId,
-                Application.get().getUserId(), new GetProjectConfigurationHandler());
+        ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(projectId, Application.get().getUserId(), new GetProjectConfigurationHandler());
 
         //FIXME delete this hack once we figure it out how to make it the ComboBox fill-in mechanism work properly
         //      in NoteInputPanel at display time

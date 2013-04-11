@@ -1,58 +1,39 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.SortDir;
-import com.gwtext.client.data.ArrayReader;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.GroupingStore;
-import com.gwtext.client.data.MemoryProxy;
-import com.gwtext.client.data.ObjectFieldDef;
-import com.gwtext.client.data.Record;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.SortState;
-import com.gwtext.client.data.Store;
-import com.gwtext.client.data.StringFieldDef;
+import com.gwtext.client.data.*;
 import com.gwtext.client.util.Format;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.ToolbarButton;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.form.TextField;
-import com.gwtext.client.widgets.grid.CellMetadata;
-import com.gwtext.client.widgets.grid.ColumnConfig;
-import com.gwtext.client.widgets.grid.ColumnModel;
-import com.gwtext.client.widgets.grid.EditorGridPanel;
-import com.gwtext.client.widgets.grid.GridEditor;
-import com.gwtext.client.widgets.grid.GridPanel;
-import com.gwtext.client.widgets.grid.GridView;
-import com.gwtext.client.widgets.grid.Renderer;
-import com.gwtext.client.widgets.grid.event.EditorGridListener;
-import com.gwtext.client.widgets.grid.event.EditorGridListenerAdapter;
-import com.gwtext.client.widgets.grid.event.GridCellListener;
-import com.gwtext.client.widgets.grid.event.GridCellListenerAdapter;
-import com.gwtext.client.widgets.grid.event.GridRowListener;
-import com.gwtext.client.widgets.grid.event.GridRowListenerAdapter;
+import com.gwtext.client.widgets.grid.*;
+import com.gwtext.client.widgets.grid.event.*;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
+import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil.SelectionCallback;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A grid that shows all the properties of an entity. Can be used with classes,

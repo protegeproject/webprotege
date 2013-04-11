@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import edu.stanford.bmir.protege.web.client.model.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.AbstractObjectEditorPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.EditorContext;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;

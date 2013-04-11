@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.shared;
 
-import com.google.common.base.Optional;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

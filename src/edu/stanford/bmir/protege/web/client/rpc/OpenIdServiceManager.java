@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 

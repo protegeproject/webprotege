@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.layout;
 
+import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
 
 public class TabConfiguration extends GenericConfiguration implements Serializable{
 	private static final long serialVersionUID = 9187571983105881720L;

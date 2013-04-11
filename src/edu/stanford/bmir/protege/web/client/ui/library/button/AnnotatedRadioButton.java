@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.library.button;
 
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.RadioButton;
 
 /**

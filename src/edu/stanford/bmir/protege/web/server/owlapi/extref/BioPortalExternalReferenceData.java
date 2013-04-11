@@ -4,7 +4,9 @@ import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalReferenceData;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateDataPropertiesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateDataPropertiesResult;
 import edu.stanford.bmir.protege.web.server.change.*;

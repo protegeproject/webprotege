@@ -1,19 +1,5 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import org.coode.owlapi.owlxml.renderer.OWLXMLObjectRenderer;
-import org.coode.owlapi.owlxml.renderer.OWLXMLWriter;
-import org.coode.owlapi.owlxmlparser.OWLXMLParser;
-import org.semanticweb.owlapi.binaryowl.OWLObjectBinaryType;
-import org.semanticweb.owlapi.binaryowl.lookup.LookupTable;
-import org.semanticweb.owlapi.model.*;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

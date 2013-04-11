@@ -1,28 +1,13 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import org.protege.editor.owl.model.hierarchy.AbstractOWLObjectHierarchyProvider;
 import org.protege.owlapi.inference.cls.ChildClassExtractor;
 import org.protege.owlapi.inference.cls.ParentClassExtractor;
 import org.protege.owlapi.inference.orphan.Relation;
 import org.protege.owlapi.inference.orphan.TerminalElementFinder;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLAxiomChange;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.RemoveAxiom;
+import org.semanticweb.owlapi.model.*;
+
+import java.util.*;
 
 
 /**

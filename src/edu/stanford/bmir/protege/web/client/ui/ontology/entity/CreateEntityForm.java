@@ -1,13 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.entity;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Focusable;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxMode;
 import org.semanticweb.owlapi.model.EntityType;

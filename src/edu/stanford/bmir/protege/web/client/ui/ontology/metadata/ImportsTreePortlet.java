@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
-import java.util.ArrayList;
-
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
@@ -16,7 +13,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ImportsData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.ArrayList;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

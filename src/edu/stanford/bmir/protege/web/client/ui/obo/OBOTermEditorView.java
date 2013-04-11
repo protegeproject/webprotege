@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.common.WebProtegeFormLabel;
 import org.semanticweb.owlapi.model.OWLEntity;
 

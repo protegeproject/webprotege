@@ -1,22 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.core.SortDir;
-import com.gwtext.client.data.ArrayReader;
-import com.gwtext.client.data.DateFieldDef;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.Record;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.Store;
-import com.gwtext.client.data.StringFieldDef;
+import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.PagingToolbar;
 import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
@@ -26,9 +16,12 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.PaginationUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class ChangesPortlet extends AbstractOWLEntityPortlet {
 	protected GridPanel changesGrid;

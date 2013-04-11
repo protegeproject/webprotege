@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLProperty;
 
 import java.io.Serializable;
 import java.util.HashSet;

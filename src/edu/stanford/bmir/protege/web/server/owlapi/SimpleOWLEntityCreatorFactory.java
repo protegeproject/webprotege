@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.server.IdUtil;
 import org.semanticweb.owlapi.model.*;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 

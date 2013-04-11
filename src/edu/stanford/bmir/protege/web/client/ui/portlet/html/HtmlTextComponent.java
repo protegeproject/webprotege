@@ -1,19 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.html;
 
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.ui.HTML;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.layout.AnchorLayout;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
+
+import java.util.Map;
 
 /**
  * @author Csongor Nyulas

@@ -2,15 +2,13 @@ package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.client.rpc.AccessPolicyService;
 import edu.stanford.bmir.protege.web.client.rpc.data.AccessPolicyUserData;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.domain.Invitation;
-import edu.stanford.smi.protege.server.metaproject.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.List;
 
 /**
  * Service for Access Privilege's Management

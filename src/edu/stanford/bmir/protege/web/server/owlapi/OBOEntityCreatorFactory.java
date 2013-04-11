@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.coode.owlapi.obo.parser.OBOVocabulary;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;

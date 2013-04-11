@@ -6,8 +6,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContai
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
-import java.io.Serializable;
-
 public interface DispatchServiceAsync {
 
     void executeAction(Action<?> action, AsyncCallback<DispatchServiceResultContainer<Result>> async) throws ActionExecutionException, PermissionDeniedException;

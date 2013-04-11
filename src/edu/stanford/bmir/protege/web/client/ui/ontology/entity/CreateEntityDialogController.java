@@ -2,14 +2,9 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.entity;
 
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLEntity;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,13 +1,5 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.util.Date;
-import java.util.logging.Level;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateService;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
@@ -16,6 +8,11 @@ import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.smi.protege.server.metaproject.User;
 import edu.stanford.smi.protege.util.Log;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+import java.util.logging.Level;
 
 /**
  * Service for Authenticate module for authenticating user.

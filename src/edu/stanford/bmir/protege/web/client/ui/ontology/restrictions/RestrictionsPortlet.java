@@ -1,9 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.restrictions;
 
-import java.util.Collection;
-import java.util.List;
-
-import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
@@ -23,17 +19,19 @@ import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.layout.AnchorLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.ConditionItem;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
-import edu.stanford.bmir.protege.web.shared.event.*;
-import org.semanticweb.owlapi.model.OWLEntity;
+import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEventHandler;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+
+import java.util.Collection;
+import java.util.List;
 
 public class RestrictionsPortlet extends AbstractOWLEntityPortlet{
 

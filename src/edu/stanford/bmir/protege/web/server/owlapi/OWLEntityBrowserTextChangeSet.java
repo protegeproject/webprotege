@@ -1,10 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

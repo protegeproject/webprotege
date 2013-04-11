@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.notes;
 
-import java.util.ArrayList;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+
+import java.util.ArrayList;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

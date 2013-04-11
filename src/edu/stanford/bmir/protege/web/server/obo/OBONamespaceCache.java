@@ -3,7 +3,10 @@ package edu.stanford.bmir.protege.web.server.obo;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import org.coode.owlapi.obo.parser.OBOVocabulary;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 import java.util.HashSet;
 import java.util.Set;

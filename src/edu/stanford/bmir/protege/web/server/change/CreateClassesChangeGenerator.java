@@ -2,13 +2,11 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 /**

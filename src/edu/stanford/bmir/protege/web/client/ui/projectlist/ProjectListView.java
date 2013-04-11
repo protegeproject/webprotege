@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.projectlist;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.HasDownloadProjectRequestHandler;

@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import java.util.Map;
 
 /**
  * Retrieves the properties from the server.

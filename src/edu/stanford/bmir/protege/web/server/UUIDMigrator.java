@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;

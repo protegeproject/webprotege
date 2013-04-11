@@ -1,21 +1,16 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 import edu.stanford.bmir.protege.web.client.rpc.NotificationInterval;
 import edu.stanford.bmir.protege.web.client.rpc.NotificationService;
 import edu.stanford.bmir.protege.web.client.rpc.NotificationTimestamp;
 import edu.stanford.bmir.protege.web.client.rpc.NotificationType;
-import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.server.metaproject.PropertyValue;
 import edu.stanford.smi.protege.server.metaproject.User;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Server-side services for notification management.

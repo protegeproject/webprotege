@@ -8,8 +8,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
@@ -18,7 +16,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.server.metaproject.Operation;
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

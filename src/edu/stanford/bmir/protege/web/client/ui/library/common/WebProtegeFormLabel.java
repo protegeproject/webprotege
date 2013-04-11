@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.common;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.i18n.client.HasDirection;
 import com.google.gwt.i18n.shared.DirectionEstimator;
 import com.google.gwt.user.client.ui.InlineLabel;
 

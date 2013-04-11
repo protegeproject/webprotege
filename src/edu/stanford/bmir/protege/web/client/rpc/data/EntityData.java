@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
 import java.io.Serializable;

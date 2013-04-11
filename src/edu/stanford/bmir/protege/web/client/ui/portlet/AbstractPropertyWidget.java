@@ -1,15 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.MessageBox;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
@@ -21,6 +15,11 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstant
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractPropertyWidget implements PropertyWidget {
 

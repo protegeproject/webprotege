@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
-import java.util.Collection;
-
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+
+import java.util.Collection;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

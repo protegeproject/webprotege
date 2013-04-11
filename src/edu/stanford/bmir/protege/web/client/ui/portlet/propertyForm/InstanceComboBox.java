@@ -1,21 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
-import com.gwtext.client.data.ArrayReader;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.Record;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.Store;
-import com.gwtext.client.data.StringFieldDef;
+import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.form.ComboBox;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.event.ComboBoxCallback;
 import com.gwtext.client.widgets.form.event.ComboBoxListenerAdapter;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
@@ -26,7 +16,10 @@ import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEventHandler;
-import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class InstanceComboBox extends AbstractFieldWidget {
 

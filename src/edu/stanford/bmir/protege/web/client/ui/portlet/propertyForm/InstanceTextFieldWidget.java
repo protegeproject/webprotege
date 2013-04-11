@@ -1,18 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
@@ -22,6 +13,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+
+import java.util.*;
 
 public class InstanceTextFieldWidget extends TextFieldWidget {
 	private String property;

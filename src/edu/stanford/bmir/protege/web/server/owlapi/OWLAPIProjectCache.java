@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectDocumentNotFoundException;
 import edu.stanford.smi.protege.util.Log;
 import org.semanticweb.owlapi.io.OWLParserException;
 

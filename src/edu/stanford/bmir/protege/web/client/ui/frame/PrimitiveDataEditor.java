@@ -1,13 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
-import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasTextRendering;
 import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
@@ -16,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import org.semanticweb.owlapi.model.EntityType;
 
-import java.util.Set;
 import java.util.SortedSet;
 
 /**

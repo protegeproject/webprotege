@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.notes;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Lists;
 
 import javax.annotation.concurrent.Immutable;
 import java.io.Serializable;

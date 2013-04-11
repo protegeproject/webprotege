@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.reviews;
 
-import java.util.Collection;
-
 import com.gwtext.client.widgets.layout.AnchorLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+
+import java.util.Collection;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

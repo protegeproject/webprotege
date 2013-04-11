@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.util.Date;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
+
+import java.util.Date;
 
 public class NotesDataComparator implements java.util.Comparator<NotesData> {
 

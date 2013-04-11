@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.notes.NoteTarget;
 import edu.stanford.bmir.protege.web.shared.notes.NoteDetails;
+import edu.stanford.bmir.protege.web.shared.notes.NoteTarget;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>

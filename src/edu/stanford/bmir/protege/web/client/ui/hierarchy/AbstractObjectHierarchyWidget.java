@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.hierarchy;
 
-import com.google.gwt.cell.client.Cell;
-import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.view.client.*;
+import com.google.gwt.view.client.SelectionModel;
+import com.google.gwt.view.client.SingleSelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 /**

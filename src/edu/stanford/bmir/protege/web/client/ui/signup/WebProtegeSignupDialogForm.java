@@ -4,12 +4,12 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
-import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
 import edu.stanford.bmir.protege.web.client.ui.library.recaptcha.RecaptchaWidget;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 /**
  * Author: Matthew Horridge<br>

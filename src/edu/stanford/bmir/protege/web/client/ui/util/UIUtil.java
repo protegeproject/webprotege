@@ -1,15 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
@@ -17,7 +7,6 @@ import com.gwtext.client.core.ExtElement;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.MessageBoxConfig;
 import com.gwtext.client.widgets.WaitConfig;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.ProjectManager;
@@ -30,6 +19,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.*;
 
 public class UIUtil {
 

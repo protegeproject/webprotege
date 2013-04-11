@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasLexicalForm;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEntityVisitorEx;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLObject;
 
 /**
  * Author: Matthew Horridge<br>

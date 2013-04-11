@@ -1,44 +1,25 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.individuals;
 
-import java.util.*;
-
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
-import com.gwtext.client.data.ArrayReader;
-import com.gwtext.client.data.BooleanFieldDef;
-import com.gwtext.client.data.FieldDef;
-import com.gwtext.client.data.MemoryProxy;
-import com.gwtext.client.data.ObjectFieldDef;
-import com.gwtext.client.data.Record;
-import com.gwtext.client.data.RecordDef;
-import com.gwtext.client.data.Store;
+import com.gwtext.client.data.*;
 import com.gwtext.client.data.event.StoreListener;
-import com.gwtext.client.widgets.Button;
-import com.gwtext.client.widgets.Component;
-import com.gwtext.client.widgets.MessageBox;
-import com.gwtext.client.widgets.Toolbar;
-import com.gwtext.client.widgets.ToolbarButton;
+import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
-import com.gwtext.client.widgets.grid.CellMetadata;
-import com.gwtext.client.widgets.grid.ColumnConfig;
-import com.gwtext.client.widgets.grid.ColumnModel;
-import com.gwtext.client.widgets.grid.GridPanel;
-import com.gwtext.client.widgets.grid.Renderer;
+import com.gwtext.client.widgets.grid.*;
 import com.gwtext.client.widgets.grid.event.GridRowListener;
 import com.gwtext.client.widgets.grid.event.GridRowListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
-
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.UIDescription;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityResult;
-import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
@@ -60,6 +41,8 @@ import edu.stanford.bmir.protege.web.shared.watches.AddWatchResult;
 import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.*;
 
 /**
  * Portlet for showing a list of individuals. The list is filled with the

@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal;
 
+import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 
 
 

@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 
 import java.util.Collection;

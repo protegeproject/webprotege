@@ -1,11 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.gwtext.client.core.EventObject;
@@ -16,9 +11,7 @@ import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
-
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.HierarchyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -29,6 +22,10 @@ import edu.stanford.bmir.protege.web.client.ui.util.ClassSelectionField;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.field.TextAreaField;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 public class ChangeParentPanel extends FormPanel implements Selectable {
 

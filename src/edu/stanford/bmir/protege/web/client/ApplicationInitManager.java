@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

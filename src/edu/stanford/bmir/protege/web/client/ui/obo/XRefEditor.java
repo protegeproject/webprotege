@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOXRef;
 

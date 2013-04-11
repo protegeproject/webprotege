@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.notes;
 
 import com.google.common.base.Optional;
-import com.google.web.bindery.event.shared.Event;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

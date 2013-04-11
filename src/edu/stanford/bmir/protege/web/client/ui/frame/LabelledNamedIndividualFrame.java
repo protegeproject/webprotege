@@ -1,12 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
-import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,15 +1,5 @@
 package edu.stanford.bmir.protege.web.client.place;
 
-import com.google.common.base.Optional;
-import com.google.gwt.place.shared.PlaceTokenizer;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-
-import java.util.HashSet;
-import java.util.Set;
-
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

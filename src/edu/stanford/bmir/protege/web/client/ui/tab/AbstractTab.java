@@ -1,12 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
@@ -17,7 +10,6 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.portal.Portal;
 import com.gwtext.client.widgets.portal.PortalColumn;
 import com.gwtext.client.widgets.portal.Portlet;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
@@ -30,6 +22,8 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.util.GlobalSelectionManager;
+
+import java.util.*;
 
 /**
  * Abstract class that should be extended by all tabs that can be added to the

@@ -1,19 +1,17 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import com.gwtext.client.widgets.portal.Portlet;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LayoutManager {
 	private Project project;

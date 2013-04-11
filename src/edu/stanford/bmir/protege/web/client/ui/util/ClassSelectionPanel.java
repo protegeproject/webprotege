@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.util;
 
-import java.util.Collection;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
+
+import java.util.Collection;
 
 public class ClassSelectionPanel {
 

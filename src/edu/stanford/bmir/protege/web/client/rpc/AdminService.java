@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
-import java.util.Collection;
-
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
+
+import java.util.Collection;
 
 /**
  * A service for accessing administrative and configuration data stored in

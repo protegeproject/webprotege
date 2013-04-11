@@ -3,11 +3,9 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

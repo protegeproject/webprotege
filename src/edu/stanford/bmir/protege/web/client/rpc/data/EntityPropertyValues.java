@@ -1,11 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A class that holds a compressed form of the triples for a subject

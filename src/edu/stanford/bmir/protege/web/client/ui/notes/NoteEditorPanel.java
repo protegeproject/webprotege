@@ -2,17 +2,15 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EditingCancelledEvent;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EditingFinishedEvent;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.shared.HasActive;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 

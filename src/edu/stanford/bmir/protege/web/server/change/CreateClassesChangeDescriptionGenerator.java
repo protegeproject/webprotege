@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.Iterator;

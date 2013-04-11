@@ -5,8 +5,6 @@ import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEventHandler;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.List;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

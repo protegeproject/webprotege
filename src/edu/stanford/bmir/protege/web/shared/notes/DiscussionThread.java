@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.notes;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMultimap;
 
-import javax.annotation.concurrent.Immutable;
 import java.io.Serializable;
 import java.util.*;
 

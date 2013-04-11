@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDown;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDownModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

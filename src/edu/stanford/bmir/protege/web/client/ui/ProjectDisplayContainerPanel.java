@@ -1,15 +1,15 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
-import java.util.LinkedHashMap;
-
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
-import com.gwtext.client.widgets.*;
+import com.gwtext.client.widgets.Component;
+import com.gwtext.client.widgets.MessageBox;
+import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.events.ActiveProjectChangedEvent;
 import edu.stanford.bmir.protege.web.client.events.ActiveProjectChangedHandler;
@@ -21,11 +21,13 @@ import edu.stanford.bmir.protege.web.client.place.PlaceManager;
 import edu.stanford.bmir.protege.web.client.place.ProjectListPlace;
 import edu.stanford.bmir.protege.web.client.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+import edu.stanford.bmir.protege.web.client.ui.ontology.home.MyWebProtegeTab;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
+import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.client.ui.ontology.home.MyWebProtegeTab;
-import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+
+import java.util.LinkedHashMap;
 
 /**
  * Class that holds all the tabs corresponding to ontologies. It also contains

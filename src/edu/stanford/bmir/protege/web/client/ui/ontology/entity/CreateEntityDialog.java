@@ -1,15 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.entity;
 
-import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.rpc.OntologyService;
-import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>

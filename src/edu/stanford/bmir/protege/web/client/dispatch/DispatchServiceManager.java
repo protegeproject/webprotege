@@ -11,7 +11,6 @@ import com.google.web.bindery.event.shared.UmbrellaException;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;

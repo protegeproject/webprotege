@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.io.Serializable;
 

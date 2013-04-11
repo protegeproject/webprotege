@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
+import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
 import edu.stanford.bmir.protege.web.server.filesubmission.FileUploadConstants;
@@ -22,7 +24,10 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AutoIRIMapper;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.zip.ZipEntry;

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.locks.Lock;

@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermSynonym;
 
 import java.util.ArrayList;

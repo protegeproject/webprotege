@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
 import com.gwtext.client.widgets.Panel;
-
-import edu.stanford.bmir.protege.web.client.ui.projectmanager.*;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerView;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

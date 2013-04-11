@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
-import edu.stanford.bmir.protege.web.shared.HasOperationFailedMessage;
-
 import java.io.Serializable;
 
 /**

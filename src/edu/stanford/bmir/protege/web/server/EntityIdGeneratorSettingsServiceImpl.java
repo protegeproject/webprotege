@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.EntityIdGeneratorSettingsService;
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityIdGeneratorSettings;
 import edu.stanford.bmir.protege.web.server.owlapi.EntityIdGeneratorSettingsManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

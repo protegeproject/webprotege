@@ -15,7 +15,8 @@ import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
 import edu.stanford.bmir.protege.web.shared.watches.AddWatchAction;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesAction;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

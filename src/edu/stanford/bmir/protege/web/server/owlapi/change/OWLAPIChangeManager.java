@@ -1,21 +1,23 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
-import edu.stanford.bmir.protege.web.client.model.event.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import edu.stanford.bmir.protege.web.server.owlapi.*;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
+import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
+import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
 import edu.stanford.bmir.protege.web.shared.watches.HierarchyBranchWatch;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
-import org.semanticweb.owlapi.binaryowl.*;
+import org.semanticweb.owlapi.binaryowl.BinaryOWLChangeLogHandler;
+import org.semanticweb.owlapi.binaryowl.BinaryOWLMetadata;
+import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyChangeLog;
+import org.semanticweb.owlapi.binaryowl.BinaryOWLParseException;
 import org.semanticweb.owlapi.binaryowl.change.OntologyChangeRecordList;
 import org.semanticweb.owlapi.binaryowl.chunk.SkipSetting;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;
-import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
 
 import java.io.*;
 import java.util.*;

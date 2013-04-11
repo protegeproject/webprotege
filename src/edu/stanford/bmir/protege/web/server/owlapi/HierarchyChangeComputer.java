@@ -2,15 +2,21 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyChangedEvent;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyRootAddedEvent;
+import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyRootRemovedEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.protege.editor.owl.model.hierarchy.OWLObjectHierarchyProvider;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

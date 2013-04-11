@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.reviews;
 
-import java.util.Date;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
@@ -14,9 +12,10 @@ import com.gwtext.client.widgets.form.HtmlEditor;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
+
+import java.util.Date;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

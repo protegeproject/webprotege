@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.suggest;
 
 import com.google.gwt.user.client.ui.SuggestOracle;
-import edu.stanford.bmir.protege.web.client.rpc.data.primitive.VisualEntity;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 

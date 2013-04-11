@@ -5,7 +5,6 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamReader;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import org.semanticweb.owlapi.model.OWLClass;
 
 /**
  * An implementation of CustomFieldSerilizer for serializing {@link OWLClassData}

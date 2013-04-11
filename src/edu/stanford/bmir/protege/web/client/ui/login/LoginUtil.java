@@ -1,41 +1,23 @@
 package edu.stanford.bmir.protege.web.client.ui.login;
 
-import java.util.Date;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
-import com.gwtext.client.widgets.Container;
-import com.gwtext.client.widgets.MessageBox;
+import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.MessageBox.AlertCallback;
 import com.gwtext.client.widgets.MessageBox.ConfirmCallback;
 import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.event.WindowListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
@@ -49,6 +31,8 @@ import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationCon
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdIconPanel;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+
+import java.util.Date;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

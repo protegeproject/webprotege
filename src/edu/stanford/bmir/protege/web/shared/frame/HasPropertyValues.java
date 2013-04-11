@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import java.util.List;
 import java.util.Set;
 
 /**

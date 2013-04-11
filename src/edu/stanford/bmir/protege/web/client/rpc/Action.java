@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
-import edu.stanford.bmir.protege.web.shared.HasOperationFailedMessage;
-
 import java.io.Serializable;
 
 /**

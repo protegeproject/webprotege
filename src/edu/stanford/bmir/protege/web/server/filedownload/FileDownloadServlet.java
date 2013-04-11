@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

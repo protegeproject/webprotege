@@ -3,17 +3,13 @@
  */
 package edu.stanford.bmir.protege.web.server;
 
+import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.smi.protege.server.metaproject.User;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
-import edu.stanford.smi.protege.server.metaproject.Group;
-import edu.stanford.smi.protege.server.metaproject.User;
 
 /**
  * Class contains methods to authenticate user securely with Hashing using MD5

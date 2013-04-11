@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
-import java.util.List;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
+
+import java.util.List;
 
 public class OntologyServiceManager {
 

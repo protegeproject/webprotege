@@ -3,7 +3,10 @@ package edu.stanford.bmir.protege.web.server.notes.api;
 import edu.stanford.bmir.protege.web.shared.notes.NoteField;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Author: Matthew Horridge<br>

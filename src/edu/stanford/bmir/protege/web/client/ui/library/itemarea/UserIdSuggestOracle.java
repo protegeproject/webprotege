@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.library.itemarea;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.UserProfileManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.UserProfileManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.UserProfileManagerServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

@@ -2,15 +2,13 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.shared.notes.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Author: Matthew Horridge<br>

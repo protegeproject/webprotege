@@ -1,17 +1,16 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.UrlParam;
-
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PaginationData;
 import edu.stanford.bmir.protege.web.client.ui.util.GWTProxy;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class ChangesProxyImpl extends GWTProxy {
 

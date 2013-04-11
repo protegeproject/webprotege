@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.List;

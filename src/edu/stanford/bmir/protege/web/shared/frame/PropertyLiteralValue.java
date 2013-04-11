@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLObject;
 
 /**
  * Author: Matthew Horridge<br>

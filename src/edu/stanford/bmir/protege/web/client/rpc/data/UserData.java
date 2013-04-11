@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

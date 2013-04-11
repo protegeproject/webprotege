@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
-import java.util.Collection;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import java.util.Collection;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

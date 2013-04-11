@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
 import org.semanticweb.owlapi.io.OWLOntologyDocumentTarget;
 import org.semanticweb.owlapi.model.*;
-import uk.ac.manchester.cs.owl.owlapi.ParsableOWLOntologyFactory;
 
 import java.io.File;
 import java.io.InputStream;

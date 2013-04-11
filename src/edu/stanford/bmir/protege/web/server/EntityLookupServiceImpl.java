@@ -4,11 +4,11 @@ import edu.stanford.bmir.protege.web.client.rpc.EntityLookupService;
 import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceResult;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequest;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequestType;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 

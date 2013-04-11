@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet;
 
-import java.util.Collection;
-
 import com.gwtext.client.widgets.Component;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
+
+import java.util.Collection;
 
 /**
  * The interface for widgets used to display the value of a property at a

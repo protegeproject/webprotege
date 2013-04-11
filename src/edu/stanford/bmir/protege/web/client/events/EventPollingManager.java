@@ -3,16 +3,15 @@ package edu.stanford.bmir.protege.web.client.events;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.UIDescription;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
-import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.events.EventTag;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

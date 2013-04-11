@@ -1,8 +1,12 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
+
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesResult;
-import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
+import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
+import edu.stanford.bmir.protege.web.server.change.CreateClassesChangeGenerator;
+import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;

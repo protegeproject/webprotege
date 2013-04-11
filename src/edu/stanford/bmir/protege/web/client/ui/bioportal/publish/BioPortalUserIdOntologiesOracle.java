@@ -2,7 +2,10 @@ package edu.stanford.bmir.protege.web.client.ui.bioportal.publish;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestOracle;
-import edu.stanford.bmir.protege.web.client.rpc.bioportal.*;
+import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalAPIServiceAsync;
+import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalAPIServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalOntologyInfo;
+import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalUserId;
 
 import java.util.Collection;
 import java.util.HashSet;

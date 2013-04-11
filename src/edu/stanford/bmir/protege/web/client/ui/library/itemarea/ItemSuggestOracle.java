@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.library.itemarea;
 
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.regexp.shared.SplitResult;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.TextBoxBase;
 

@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 /**
  * Author: Matthew Horridge<br>

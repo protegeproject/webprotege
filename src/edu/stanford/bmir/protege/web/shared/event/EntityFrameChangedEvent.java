@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 import com.google.gwt.event.shared.EventHandler;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.io.Serializable;

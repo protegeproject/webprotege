@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.projectconfig;
 
-import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.TextArea;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasFormData;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.NullWebProtegeDialogTextFieldValidator;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDown;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDownModel;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.ArrayList;
 import java.util.List;

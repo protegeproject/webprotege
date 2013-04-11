@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.properties;
 
-import java.util.*;
-
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -14,11 +12,9 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
-
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.UIDescription;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -31,14 +27,16 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialo
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyRootRemovedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyRootRemovedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedHandler;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import org.semanticweb.owlapi.model.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 // TODO: add action descriptions and labels in the config similar to the ClassTreePortlet
 public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {

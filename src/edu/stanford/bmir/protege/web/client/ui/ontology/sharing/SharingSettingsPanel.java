@@ -6,14 +6,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
+import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;
-import edu.stanford.bmir.protege.web.client.ui.library.itemarea.UserIdSuggestOracle;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestBox;
+import edu.stanford.bmir.protege.web.client.ui.library.itemarea.UserIdSuggestOracle;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

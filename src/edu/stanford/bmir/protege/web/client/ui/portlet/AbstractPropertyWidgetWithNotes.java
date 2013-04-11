@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.layout.FitLayout;
-
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NoteInputPanel;

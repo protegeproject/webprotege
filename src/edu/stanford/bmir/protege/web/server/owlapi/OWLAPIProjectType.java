@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import java.io.Serializable;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
