@@ -31,7 +31,7 @@ public class LoadWebProtegeProperties implements ConfigurationTask {
             WebProtegeProperties.initFromProperties(properties);
         }
         catch (IOException e) {
-            throw new WebProtegeConfigurationException("Could not read " + file.getAbsolutePath());
+            throw new WebProtegeConfigurationException("Could not read " + file.getAbsolutePath() + ". Message: " + e.getMessage());
         }
     }
 }
