@@ -51,11 +51,11 @@ gwt.html.target=WebProtege.html
 
 #
 # OSX users must use the second version of the 
-# extra.hosted.jvm.arg below.  For other developers,
+# extra.devmode.jvm.arg below.  For other developers,
 # the default is a harmless and even recommended setting.
 # Only needed if running hosted mode from build.xml.
 
-hosted.memory=1000M
-extra.hosted.jvm.arg=-Xms${hosted.memory}
-# extra.hosted.jvm.arg=-XstartOnFirstThread
+devmode.memory=1000M
+extra.devmode.jvm.arg=-Xms${devmode.memory}
+# extra.devmode.jvm.arg=-XstartOnFirstThread
 
