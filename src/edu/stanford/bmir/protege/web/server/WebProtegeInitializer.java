@@ -13,35 +13,25 @@ import java.util.List;
 
 public class WebProtegeInitializer implements ServletContextListener {
 
-    private List<ConfigurationTask> configurationTasks = Arrays.asList(
-            new LoadWebProtegeProperties(),
-            new CheckWebProtegeDataDirectoryExists(),
-            new CheckDataDirectoryIsReadableAndWritable(),
-            new CheckMetaProjectExists(),
-            new CheckMongoDBConnectionTask());
+
 
 
     public void contextInitialized(ServletContextEvent sce) {
-        performConfiguration(sce.getServletContext());
-    }
-
-
-    private boolean performConfiguration(ServletContext servletContext) {
-        for(ConfigurationTask task : configurationTasks) {
-            try {
-                task.run(servletContext);
-            }
-            catch (WebProtegeConfigurationException e) {
-                WebProtegeWebAppFilter.setConfigError(e);
-                return false;
-            }
-            catch (Exception e) {
-                WebProtegeWebAppFilter.setError(e);
-                return false;
-            }
+        try {
+            WebProtegeConfigurationChecker checker = new WebProtegeConfigurationChecker();
+            checker.performConfiguration(sce.getServletContext());
         }
-        return true;
+        catch (WebProtegeConfigurationException e) {
+            WebProtegeWebAppFilter.setConfigError(e);
+        }
+        catch (Throwable t) {
+            WebProtegeWebAppFilter.setError(t);
+        }
+
+
     }
+
+
 
 
     public void contextDestroyed(ServletContextEvent sce) {

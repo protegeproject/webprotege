@@ -23,6 +23,7 @@ public class WebProtegeWebAppFilter implements Filter {
         configError = new RuntimeException(t);
     }
 
+
     /**
      * Called by the web container to indicate to a filter that it is being placed into
      * service. The servlet container calls the init method exactly once after instantiating the
@@ -58,7 +59,6 @@ public class WebProtegeWebAppFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if(configError != null) {
-            System.err.println("CONFIG ERROR: " + configError.getMessage());
             throw configError;
         }
         chain.doFilter(request, response);
@@ -77,4 +77,7 @@ public class WebProtegeWebAppFilter implements Filter {
     @Override
     public void destroy() {
     }
+
+
+
 }
