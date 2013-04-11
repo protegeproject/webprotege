@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
-
-import javax.servlet.ServletContext;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
+
+import javax.servlet.ServletContext;
+
+import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
 
 /**
  * Author: Matthew Horridge<br>
@@ -25,7 +26,7 @@ public class LoadWebProtegeProperties implements ConfigurationTask {
         }
         try {
             Properties properties = new Properties();
-            final FileInputStream inStream = new FileInputStream(WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE_NAME);
+        	FileReader inStream = new FileReader(file);                    	
             properties.load(inStream);
             inStream.close();
             WebProtegeProperties.initFromProperties(properties);
@@ -34,4 +35,5 @@ public class LoadWebProtegeProperties implements ConfigurationTask {
             throw new WebProtegeConfigurationException("Could not read " + file.getAbsolutePath() + ". Message: " + e.getMessage());
         }
     }
+    
 }
