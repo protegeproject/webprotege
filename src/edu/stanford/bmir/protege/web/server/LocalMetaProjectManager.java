@@ -22,7 +22,9 @@ import java.util.logging.Level;
 public class LocalMetaProjectManager extends AbstractMetaProjectManager {
 
 
-    private static final String METAPROJECT_DIRECTORY = "metaproject";
+    private static final String ADMIN_GROUP = "AdminGroup";
+
+	private static final String METAPROJECT_DIRECTORY = "metaproject";
 
     private static final String METAPROJECT_PPRJ_FILE_NAME = "metaproject.pprj";
 
@@ -70,37 +72,10 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         User user = mp.getUser(newProjectSettings.getProjectOwner().getUserName());
         pi.setOwner(user);
         OWLAPIMetaProjectStore.getStore().saveMetaProject(this);
-        rebuildCaches();
-    }
-
-//
-//    public void moveProjectToTrash(String userName, String name) {
-//        MetaProject mp = getMetaProject();
-//        ProjectInstance projectInstance = mp.getProject(name);
-//        String projectOwnerName = projectInstance.getOwner().getName();
-//        if (!userName.equals(projectOwnerName)) {
-//            throw new RuntimeException("A project can only be moved to the trash by its owner");
-//        }
-//        Instance instance = projectInstance.getProtegeInstance();
-//        Slot inTrashSlot = instance.getKnowledgeBase().getSlot("inTrash");
-//        instance.setOwnSlotValue(inTrashSlot, Boolean.TRUE);
-//        OWLAPIMetaProjectStore.getStore().saveMetaProject(this);
-//        rebuildCaches();
-//    }
-
-//    public void removeProjectFromTrash(String name) {
-//    }
-
-    private void rebuildCaches() {
-//        projectData = null;
     }
 
 
     public UserData registerUser(String userName, String password) throws UserRegistrationException {
-//        if (!ServerProperties.getAllowsCreateUsers()) {
-//            throw new RuntimeException(
-//            "The server does not allow the creation of new users. Please contact the administartor to create a new user account.");
-//        }
         User existingUser = metaproject.getUser(userName);
         if (existingUser != null) {
             throw new UserNameAlreadyExistsException(userName);
@@ -169,18 +144,10 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
 
 
     public List<ProjectData> getProjectsData(String userName) {
-//        if (projectData != null) {
-//            return projectData;
-//        }
-
-        if (userName == null) {
-            userName = "Guest";
-        }
-        //TODO: check with Tim if it needs synchronization
         List<ProjectData> projectData = new ArrayList<ProjectData>();
 
         Policy policy = metaproject.getPolicy();
-        User user = policy.getUserByName(userName);
+        User user = userName == null ? null : policy.getUserByName(userName);
 
         for (ProjectInstance projectInstance : metaproject.getProjects()) {
             if (!isAuthorisedToReadAndList(policy, user, projectInstance)) {
@@ -216,8 +183,15 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
 
     private boolean isAuthorisedToReadAndList(Policy policy, User user, ProjectInstance projectInstance) {
         User owner = projectInstance.getOwner();
-        return (user != null && owner != null && owner.equals(user)) || isAuthorisedToDisplayInList(policy, user, projectInstance) && isAuthorisedToRead(policy, user, projectInstance);
+        if(isUserOwner(user, owner)) {
+        	return true;
+        }
+        return isAuthorisedToDisplayInList(policy, user, projectInstance) && isAuthorisedToRead(policy, user, projectInstance);
     }
+
+	private boolean isUserOwner(User user, User owner) {
+		return user != null && owner != null && owner.equals(user);
+	}
 
     private boolean isAuthorisedToRead(Policy policy, User user, ProjectInstance projectInstance) {
         if (user == null) {
@@ -236,7 +210,7 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
             return false;
         }
         for (Group group : user.getGroups()) {
-            if ("AdminGroup".equals(group.getName())) {
+            if (ADMIN_GROUP.equals(group.getName())) {
                 return true;
             }
         }
@@ -274,19 +248,6 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         runsInClientServerMode = loadOntologiesFromServer;
     }
 
-//    public URI getMetaProjectURI() {
-//        return LocalMetaProjectManager.getMetaProjectFile().toURI();
-//    }
-
-//    /* (non-Javadoc)
-//     * @see edu.stanford.bmir.protege.web.server.MetaProjectManager#reloadMetaProject()
-//     */
-//    public void reloadMetaProject() {
-//        if (metaproject != null) {
-//            ((MetaProjectImpl) metaproject).getKnowledgeBase().getProject().dispose();
-//        }
-//        metaproject = new MetaProjectImpl(getMetaProjectURI());
-//    }
 
     public void dispose() {
         metaproject.dispose();
