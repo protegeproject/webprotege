@@ -1,32 +1,41 @@
 Dependencies
 -------------
 
-1). Google Web Toolkit (GWT)
+1)  Google Web Toolkit (GWT)
     URL: http://code.google.com/webtoolkit/
-    Version: 2.2.0
+    
+2)  mongoDB
+    URL: http://www.mongodb.org/
+
+You also need Java (1.6 or later), Ant, and a servlet container, such as tomcat.
+
+
+Building
+-------------
+Copy local.properties.template to local.properties, and edit local.properties to match your file paths.
+All properties are well documented. Make sure that you set the property gwt.dir to point to your local installation 
+of GWT. Usually, there is no need to touch any of the other properties.
+
+To build the webprotege WAR file, run
+
+         ant war
+         
+This command will create the webprotege.war file in build/webprotege.war. You can either copy this file manually to
+your servlet container (e.g. tomcat/webapps), or use "ant deploy" (see below). 
 
 
 Running
 -------------
 
-Set the CATALINA_HOME and PROTEGE_HOME environment variables and
-update the local.properties to point to the location of GWT and
-GWT-Ext.  It is also possible to set the cataline.home and
-protege.home in the local.properties file.  Hosted mode can then be
-started with 
+DevMode can be started with: 
 
-          ant run.server
-          ant hosted.
+          ant devmode
 
-Note that os x users must modify the extra.hosted.jvm.arg setting in
-the local.properties file in order to run the hosted mode.
+Note that OSX users must modify the extra.hosted.jvm.arg setting in the local.properties file in order to run the devmode.
 
-Web Protege can also be installed into tomcat by running 
+Web Protege can also be deployed into into tomcat by running 
 
           ant deploy
 
-and then starting tomcat.  Note that protege and the various plugins
-(protege-owl, standard-extensions, chat, rdf, collaborative protege
-and change-management must be up to date in ${PROTEGE_HOME}.  When
-running from sources this can be arranged very quickly with an ant
-update command in each of the source trees.
+and then starting tomcat. You need to set the CATALINA_HOME environment variable in local.properties.
+
