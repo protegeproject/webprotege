@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ImportsData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
@@ -51,9 +52,9 @@ public class ImportsTreePortlet extends AbstractEntityPortlet {
 		});
 		
 		TreeNode root = new TreeNode();
-		root.setText(getProjectId().getProjectName());
-		root.setId(getProjectId().getProjectName());
-		root.setUserObject(new EntityData(getProjectId().getProjectName(), getProjectId().getProjectName()));
+		root.setText(getProject().getDisplayName());
+		root.setId(getProjectId().getId());
+		root.setUserObject(new EntityData(getProjectId().getId(), getProject().getDisplayName()));
 
 		importsTree.setRootNode(root);
 		importsTree.setRootVisible(true);
@@ -62,7 +63,7 @@ public class ImportsTreePortlet extends AbstractEntityPortlet {
 	}
 
 	protected void afterRender() {
-		getImportedOntologies(getProject().getProjectName());
+		getImportedOntologies();
 		super.afterRender();
 	}
 
@@ -70,7 +71,7 @@ public class ImportsTreePortlet extends AbstractEntityPortlet {
 		return currentSelection;
 	}
 
-	public void getImportedOntologies(String projectName) {
+	public void getImportedOntologies() {
 		OntologyServiceManager.getInstance().getImportedOntologies(getProjectId(),
 				new GetImportedOntologies());
 	}

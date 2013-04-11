@@ -8,7 +8,8 @@ import java.util.logging.Level;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
-import edu.stanford.bmir.protege.web.server.owlapi.UnknownProjectException;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;
+import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.model.*;
@@ -25,28 +26,30 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
 
     private static final String METAPROJECT_PPRJ_FILE_NAME = "metaproject.pprj";
 
+
     private MetaProject metaproject;
 
     boolean runsInClientServerMode;
 
     public LocalMetaProjectManager() {
-        URI metaprojectURI = getMetaProjectURI();
-        metaproject = new MetaProjectImpl(metaprojectURI);
+        File metaProjectFile = getMetaProjectFile();
+        metaproject = new MetaProjectImpl(metaProjectFile.toURI());
+
+        UUIDMigrator migrator = new UUIDMigrator(this);
+        migrator.runMigrator();
     }
 
-    private URI getMetaProjectURI() {
+    public static File getMetaProjectFile() {
         File metaProjectDirectory = new File(WebProtegeFileStore.getInstance().getDataDirectory(), METAPROJECT_DIRECTORY);
-        File metaProjectPPRJFile = new File(metaProjectDirectory, METAPROJECT_PPRJ_FILE_NAME);
-        return metaProjectPPRJFile.toURI();
+        return new File(metaProjectDirectory, METAPROJECT_PPRJ_FILE_NAME);
     }
 
     public MetaProject getMetaProject() {
         return metaproject;
     }
 
-    public void createProject(NewProjectSettings newProjectSettings) {
-        addProjectToMetaProject(newProjectSettings);
-        rebuildCaches();
+    public void registerProject(ProjectId projectId, NewProjectSettings newProjectSettings) {
+        addProjectToMetaProject(projectId, newProjectSettings);
     }
 
 
@@ -56,33 +59,37 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
      * anymore).
      * @param newProjectSettings The info about the new project
      */
-    private void addProjectToMetaProject(NewProjectSettings newProjectSettings) {
+    private void addProjectToMetaProject(ProjectId projectId, NewProjectSettings newProjectSettings) {
         MetaProject mp = getMetaProject();
-        ProjectInstance pi = mp.createProject(newProjectSettings.getProjectName());
+        ProjectInstance pi = mp.createProject(projectId.getId());
         pi.setDescription(newProjectSettings.getProjectDescription());
+        final Instance protegeInstance = pi.getProtegeInstance();
+        final KnowledgeBase kb = protegeInstance.getKnowledgeBase();
+        final Slot displayNameSlot = kb.getSlot("displayName");
+        protegeInstance.setOwnSlotValue(displayNameSlot, newProjectSettings.getDisplayName());
         User user = mp.getUser(newProjectSettings.getProjectOwner().getUserName());
         pi.setOwner(user);
         OWLAPIMetaProjectStore.getStore().saveMetaProject(this);
         rebuildCaches();
     }
 
+//
+//    public void moveProjectToTrash(String userName, String name) {
+//        MetaProject mp = getMetaProject();
+//        ProjectInstance projectInstance = mp.getProject(name);
+//        String projectOwnerName = projectInstance.getOwner().getName();
+//        if (!userName.equals(projectOwnerName)) {
+//            throw new RuntimeException("A project can only be moved to the trash by its owner");
+//        }
+//        Instance instance = projectInstance.getProtegeInstance();
+//        Slot inTrashSlot = instance.getKnowledgeBase().getSlot("inTrash");
+//        instance.setOwnSlotValue(inTrashSlot, Boolean.TRUE);
+//        OWLAPIMetaProjectStore.getStore().saveMetaProject(this);
+//        rebuildCaches();
+//    }
 
-    public void moveProjectToTrash(String userName, String name) {
-        MetaProject mp = getMetaProject();
-        ProjectInstance projectInstance = mp.getProject(name);
-        String projectOwnerName = projectInstance.getOwner().getName();
-        if (!userName.equals(projectOwnerName)) {
-            throw new RuntimeException("A project can only be moved to the trash by its owner");
-        }
-        Instance instance = projectInstance.getProtegeInstance();
-        Slot inTrashSlot = instance.getKnowledgeBase().getSlot("inTrash");
-        instance.setOwnSlotValue(inTrashSlot, Boolean.TRUE);
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(this);
-        rebuildCaches();
-    }
-
-    public void removeProjectFromTrash(String name) {
-    }
+//    public void removeProjectFromTrash(String name) {
+//    }
 
     private void rebuildCaches() {
 //        projectData = null;
@@ -122,11 +129,11 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         Policy policy = metaproject.getPolicy();
         User user = policy.getUserByName(userId.getUserName());
         List<ProjectDetails> result = new ArrayList<ProjectDetails>();
-        for(ProjectInstance projectInstance : metaproject.getProjects()) {
+        for (ProjectInstance projectInstance : metaproject.getProjects()) {
             final String name = projectInstance.getName();
-            if (name != null) {
+            if (name != null && ProjectId.isWelFormedProjectId(name)) {
                 final ProjectId projectId = ProjectId.get(name);
-                if(isAuthorisedToReadAndList(policy, user, projectInstance)) {
+                if (isAuthorisedToReadAndList(policy, user, projectInstance)) {
                     OWLAPIProjectDocumentStore ds = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
                     if (ds.exists()) {
                         final ProjectDetails projectDetails = createProjectDetailsFromProjectInstance(projectInstance);
@@ -142,8 +149,8 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
 
     @Override
     public ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException {
-        ProjectInstance pi = metaproject.getProject(projectId.getProjectName());
-        if(pi == null) {
+        ProjectInstance pi = metaproject.getProject(projectId.getId());
+        if (pi == null) {
             throw new UnknownProjectException(projectId);
         }
         return createProjectDetailsFromProjectInstance(pi);
@@ -155,7 +162,9 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         final User projectOwner = projectInstance.getOwner();
         final UserId ownerId = projectOwner != null ? UserId.getUserId(projectOwner.getName()) : UserId.getNull();
         final boolean inTrash = isInTrash(projectInstance);
-        return new ProjectDetails(projectId, projectId.getProjectName(), description, ownerId, inTrash);
+        final Slot displayNameSlot = projectInstance.getProtegeInstance().getKnowledgeBase().getSlot("displayName");
+        final String displayName = (String) projectInstance.getProtegeInstance().getOwnSlotValue(displayNameSlot);
+        return new ProjectDetails(projectId, displayName, description, ownerId, inTrash);
     }
 
 
@@ -184,11 +193,11 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
                 String name = projectInstance.getName();
                 User projectUser = projectInstance.getOwner();
                 String owner = "";
-                if(projectUser != null) {
+                if (projectUser != null) {
                     owner = projectUser.getName();
                 }
                 boolean inTrash = isInTrash(projectInstance);
-                
+
                 ProjectData pd = new ProjectData(description, location, name, owner, inTrash);
 
                 Log.getLogger().info("Found project def in metaproject: " + pd.getName() + " at: " + pd.getLocation());
@@ -211,33 +220,33 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
     }
 
     private boolean isAuthorisedToRead(Policy policy, User user, ProjectInstance projectInstance) {
-        if(user == null) {
+        if (user == null) {
             return isWorldAllowedOperation(projectInstance, MetaProjectConstants.OPERATION_READ);
         }
-        else if(isAdminUser(user)) {
+        else if (isAdminUser(user)) {
             return true;
         }
         else
             return policy.isOperationAuthorized(user, MetaProjectConstants.OPERATION_READ, projectInstance);
 
     }
-    
+
     private boolean isAdminUser(User user) {
-        if(user == null) {
+        if (user == null) {
             return false;
         }
-        for(Group group : user.getGroups()) {
-            if("AdminGroup".equals(group.getName())) {
+        for (Group group : user.getGroups()) {
+            if ("AdminGroup".equals(group.getName())) {
                 return true;
             }
         }
         return false;
     }
-    
+
 
     private boolean isAuthorisedToDisplayInList(Policy policy, User user, ProjectInstance projectInstance) {
         Operation operation = MetaProjectConstants.OPERATION_DISPLAY_IN_PROJECT_LIST;
-        if(user == null) {
+        if (user == null) {
             return isWorldAllowedOperation(projectInstance, operation);
         }
         else {
@@ -247,12 +256,12 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
     }
 
     private boolean isWorldAllowedOperation(ProjectInstance projectInstance, Operation operation) {
-        for(GroupOperation groupOperation : projectInstance.getAllowedGroupOperations()) {
+        for (GroupOperation groupOperation : projectInstance.getAllowedGroupOperations()) {
             Group group = groupOperation.getAllowedGroup();
             String groupName = group.getName();
-            if(MetaProjectConstants.USER_WORLD.equals(groupName)) {
+            if (MetaProjectConstants.USER_WORLD.equals(groupName)) {
                 Set<Operation> operations = groupOperation.getAllowedOperations();
-                if(operations.contains(operation)) {
+                if (operations.contains(operation)) {
                     return true;
                 }
             }
@@ -265,15 +274,19 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         runsInClientServerMode = loadOntologiesFromServer;
     }
 
-    /* (non-Javadoc)
-     * @see edu.stanford.bmir.protege.web.server.MetaProjectManager#reloadMetaProject()
-     */
-    public void reloadMetaProject() {
-        if (metaproject != null) {
-            ((MetaProjectImpl) metaproject).getKnowledgeBase().getProject().dispose();
-        }
-        metaproject = new MetaProjectImpl(getMetaProjectURI());
-    }
+//    public URI getMetaProjectURI() {
+//        return LocalMetaProjectManager.getMetaProjectFile().toURI();
+//    }
+
+//    /* (non-Javadoc)
+//     * @see edu.stanford.bmir.protege.web.server.MetaProjectManager#reloadMetaProject()
+//     */
+//    public void reloadMetaProject() {
+//        if (metaproject != null) {
+//            ((MetaProjectImpl) metaproject).getKnowledgeBase().getProject().dispose();
+//        }
+//        metaproject = new MetaProjectImpl(getMetaProjectURI());
+//    }
 
     public void dispose() {
         metaproject.dispose();

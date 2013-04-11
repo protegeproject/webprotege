@@ -86,7 +86,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
         }
         MetaProjectManager mpm = getMetaProjectManager();
         MetaProject metaProject = mpm.getMetaProject();
-        ProjectInstance project = metaProject.getProject(projectId.getProjectName());
+        ProjectInstance project = metaProject.getProject(projectId.getId());
         if(project == null) {
             return false;
         }

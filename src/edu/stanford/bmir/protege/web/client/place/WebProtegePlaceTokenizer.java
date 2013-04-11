@@ -28,7 +28,7 @@ public class WebProtegePlaceTokenizer  {
 //        if(id.isPresent()) {
 //            sb.append(PROJECT_ID_VAR_NAME);
 //            sb.append("=");
-//            sb.append(id.get().getProjectName());
+//            sb.append(id.get().getDisplayName());
 //            sb.append(";");
 //            for(PlaceCoordinate coordinate : place.getCoordinates()) {
 //                sb.append(coordinate.getName());

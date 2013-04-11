@@ -28,10 +28,12 @@ import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.util.ClassSelectionField;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.field.TextAreaField;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class ChangeParentPanel extends FormPanel implements Selectable {
 
-    private Project project;
+    private ProjectId projectId;
+
     private ClassSelectionField classField;
     private ParentsPanel parentsPanel;
     private SelectionListener selectionListener;
@@ -40,8 +42,8 @@ public class ChangeParentPanel extends FormPanel implements Selectable {
     private String topClass;
 
 
-    public ChangeParentPanel(Project project) {
-        this.project = project;
+    public ChangeParentPanel(ProjectId projectId) {
+        this.projectId = projectId;
         buildUI();
     }
 
@@ -58,7 +60,7 @@ public class ChangeParentPanel extends FormPanel implements Selectable {
         explanationHtml.setStylePrimaryName("explanation");
         add(explanationHtml);
 
-        classField = new ClassSelectionField(project, "Class to move in hierarchy", false, topClass);
+        classField = new ClassSelectionField(projectId, "Class to move in hierarchy", false, topClass);
         add(classField, new AnchorLayoutData("100% - 53"));
         classField.addSelectionListener(selectionListener = new SelectionListener() {
             public void selectionChanged(SelectionEvent event) {
@@ -67,7 +69,7 @@ public class ChangeParentPanel extends FormPanel implements Selectable {
         });
 
 
-        parentsPanel = new ParentsPanel(project);
+        parentsPanel = new ParentsPanel(projectId);
         add(parentsPanel,  new AnchorLayoutData("100% - 53"));
 
         reasonField = new TextAreaField();
@@ -79,7 +81,7 @@ public class ChangeParentPanel extends FormPanel implements Selectable {
         createButton.addListener(new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
-                if (UIUtil.confirmOperationAllowed(project)) {
+                if (UIUtil.confirmOperationAllowed(projectId)) {
                     onMove();
                 }
             }
@@ -180,7 +182,7 @@ public class ChangeParentPanel extends FormPanel implements Selectable {
     }
 
     protected void performMove(String clsName, Collection<String> parentsToAdd, Collection<String> parentsToRemove, String reasonForChange) {
-        HierarchyServiceManager.getInstance().changeParent(project.getProjectId(), clsName, parentsToAdd, parentsToRemove,
+        HierarchyServiceManager.getInstance().changeParent(projectId, clsName, parentsToAdd, parentsToRemove,
                 Application.get().getUserId(), UIUtil.getAppliedToTransactionString(getOperationDescription(), clsName),
                 reasonForChange, new MoveHandler());
     }
@@ -207,13 +209,7 @@ public class ChangeParentPanel extends FormPanel implements Selectable {
     }
 
     protected void refreshFromServer() {
-        Timer timer = new Timer() {
-            @Override
-            public void run() {
-                project.forceGetEvents();
-            }
-        };
-        timer.schedule(500);
+        throw new RuntimeException("BROKEN");
     }
 
     @Override

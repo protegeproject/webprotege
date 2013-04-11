@@ -32,10 +32,11 @@ import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.util.ClassSelectionField;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.field.TextAreaField;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class CreateClassPanel extends FormPanel implements Selectable {
 
-    private final Project project;
+    private final ProjectId projectId;
     private ClassSelectionField parentsField;
     private TextField titleField;
     private TextField sortingLabelField;
@@ -46,13 +47,13 @@ public class CreateClassPanel extends FormPanel implements Selectable {
     private SearchGridPanel searchGridPanel;
     private Selectable searchDblClickSelectable;
 
-    public CreateClassPanel(Project project, boolean createICDSpecificEntities) {
-        this(project, createICDSpecificEntities, null, null, null);
+    public CreateClassPanel(ProjectId projectId, boolean createICDSpecificEntities) {
+        this(projectId, createICDSpecificEntities, null, null, null);
     }
 
-    public CreateClassPanel(final Project project, final boolean createICDSpecificEntities, final AsyncCallback<EntityData> asyncCallback, final String topClass,
+    public CreateClassPanel(final ProjectId projectId, final boolean createICDSpecificEntities, final AsyncCallback<EntityData> asyncCallback, final String topClass,
             final Selectable searchDblClickSelectable) {
-        this.project = project;
+        this.projectId = projectId;
         this.asyncCallback = asyncCallback;
         this.topClass = topClass;
         this.createICDSpecificEntities = createICDSpecificEntities;
@@ -92,7 +93,7 @@ public class CreateClassPanel extends FormPanel implements Selectable {
 
         //FIXME: ICD specific!!!!
         
-        parentsField = new ClassSelectionField(project, "Parent(s)", true, topClass);
+        parentsField = new ClassSelectionField(projectId, "Parent(s)", true, topClass);
 //        {
 //            @Override
 //            protected edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet createSelectable() {
@@ -120,7 +121,7 @@ public class CreateClassPanel extends FormPanel implements Selectable {
 
         add(new HTML("<b>Possible duplicate categories:</b>"));
 
-        searchGridPanel = new SearchUtil(project, searchDblClickSelectable).getSearchGridPanel();
+        searchGridPanel = new SearchUtil(projectId, searchDblClickSelectable).getSearchGridPanel();
         searchGridPanel.setHeight(160);
         add(searchGridPanel, new AnchorLayoutData("98%"));
 
@@ -128,7 +129,7 @@ public class CreateClassPanel extends FormPanel implements Selectable {
         createButton.addListener(new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
-                if (UIUtil.confirmOperationAllowed(project)) {
+                if (UIUtil.confirmOperationAllowed(projectId)) {
                     onCreate();
                 }
             }
@@ -192,7 +193,7 @@ public class CreateClassPanel extends FormPanel implements Selectable {
 
     protected void performCreate() {
         throw new RuntimeException("BROKEN");
-//        ICDServiceManager.getInstance().createICDCls(project.getProjectName(), null,
+//        ICDServiceManager.getInstance().createICDCls(project.getDisplayName(), null,
 //                UIUtil.getStringCollection(parentsField.getClsValues()), titleField.getValueAsString(), sortingLabelField.getValueAsString(),
 //                createICDSpecificEntities, GlobalSettings.get().getUserName(), getOperationDescription(),
 //                "reason for change", new CreateClassHandler()); //TODO: remove the unneeded args
@@ -204,7 +205,7 @@ public class CreateClassPanel extends FormPanel implements Selectable {
         noteData.setSubject("[Reason for change]: " + opDesc);
         noteData.setBody(reasonForChange);
         noteData.setAnnotatedEntity(newClass);
-        ChAOServiceManager.getInstance().createNote(project.getProjectId(), noteData, false, new AbstractAsyncHandler<NotesData>() {
+        ChAOServiceManager.getInstance().createNote(projectId, noteData, false, new AbstractAsyncHandler<NotesData>() {
             @Override
             public void handleFailure(Throwable caught) {
                 GWT.log("Could not create note for " + newClass);
@@ -239,13 +240,14 @@ public class CreateClassPanel extends FormPanel implements Selectable {
     }
 
     protected void refreshFromServer() {
-        Timer timer = new Timer() {
-            @Override
-            public void run() {
-                project.forceGetEvents();
-            }
-        };
-        timer.schedule(500);
+        throw   new RuntimeException("BROKEN");
+//        Timer timer = new Timer() {
+//            @Override
+//            public void run() {
+//                project.forceGetEvents();
+//            }
+//        };
+//        timer.schedule(500);
     }
 
     public void addSelectionListener(SelectionListener listener) {

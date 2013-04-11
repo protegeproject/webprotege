@@ -45,7 +45,7 @@ public class OBOEntityCreatorFactory extends OWLEntityCreatorFactory {
         }
         else {
             ProjectId projectId = project.getProjectId();
-            String projectName = projectId.getProjectName().trim();
+            String projectName = projectId.getId().trim();
             String uppercaseProjectName = projectName.toUpperCase();
             String escapedUppercaseProjectName = uppercaseProjectName.replaceAll("\\s+", "_");
             // Trim off any digits (version digits) e.g.  VAO2 will become VAO

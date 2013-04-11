@@ -88,7 +88,7 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
 
         ProjectId projectId = getProjectId();
 		proxy.resetParams();
-		proxy.setProjectName(projectId.getProjectName());
+		proxy.setProjectId(projectId);
 		proxy.setEntityName(entityName);
 
 		PagingToolbar pToolbar = (PagingToolbar) changesGrid.getBottomToolbar();
@@ -165,7 +165,7 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
 		@Override
 		public void handleFailure(Throwable caught) {
 			GWT.log("RPC error getting changes for the "
-					+ getProject().getProjectName() + "ontology", caught);
+					+ getProjectId() + "ontology", caught);
 		}
 
 		@Override

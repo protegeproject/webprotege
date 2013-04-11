@@ -64,7 +64,7 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        getService().getDefinition(ProjectId.get(getProject().getProjectName()), entity, new AsyncCallback<OBOTermDefinition>() {
+        getService().getDefinition(getProjectId(), entity, new AsyncCallback<OBOTermDefinition>() {
             public void onFailure(Throwable caught) {
                 MessageBox.alert(caught.getMessage());
             }

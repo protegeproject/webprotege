@@ -53,7 +53,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
         final OWLAPIProjectMetadataManager manager = OWLAPIProjectMetadataManager.getManager();
         ProjectDetails projectDetails = manager.getProjectDetails(projectId);
 
-        Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(projectId.getProjectName(), executionContext.getUserId().getUserName());
+        Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(projectId.getId(), executionContext.getUserId().getUserName());
         PermissionsSet.Builder builder = PermissionsSet.builder();
         for(Operation op : ops) {
             builder.addPermission(Permission.getPermission(op.getName()));

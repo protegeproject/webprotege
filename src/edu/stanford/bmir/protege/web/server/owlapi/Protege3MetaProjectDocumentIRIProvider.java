@@ -19,7 +19,7 @@ public class Protege3MetaProjectDocumentIRIProvider implements DocumentIRIProvid
     public IRI getDocumentIRI(ProjectId projectId) {
         MetaProjectManager mpm = MetaProjectManager.getManager();
         MetaProject metaProject = mpm.getMetaProject();
-        ProjectInstance pi = metaProject.getProject(projectId.getProjectName());
+        ProjectInstance pi = metaProject.getProject(projectId.getId());
         String location = pi.getLocation();
         File fileSystemLocation = new File(location.substring(0, location.length() - ".pprj".length()));
         return IRI.create(fileSystemLocation);

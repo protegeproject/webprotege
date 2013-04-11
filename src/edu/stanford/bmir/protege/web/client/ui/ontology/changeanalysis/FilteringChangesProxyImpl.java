@@ -53,7 +53,7 @@ public class FilteringChangesProxyImpl extends ChangesProxyImpl {
         }
 
         if (getEntityName() != null) {
-    		ChAOStatsServiceManager.getInstance().getCompositeChanges(getProjectName(), getEntityName(), authors, start, limit, sort, dir,
+    		ChAOStatsServiceManager.getInstance().getCompositeChanges(getProjectId(), getEntityName(), authors, start, limit, sort, dir,
                     new ChangesHandler());
         } 
     }

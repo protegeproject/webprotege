@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.HasProjectId;
 
 import java.io.Serializable;
 
@@ -11,8 +12,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 01/04/2013
+ * <p>
+ *     Instances of this class record the main details about a project.
+ * </p>
  */
-public class ProjectDetails implements Serializable, Comparable<ProjectDetails> {
+public class ProjectDetails implements Serializable, Comparable<ProjectDetails>, HasProjectId {
 
     private ProjectId projectId;
 
@@ -104,6 +108,6 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails> 
         if(descriptionDiff != 0) {
             return descriptionDiff;
         }
-        return projectId.getProjectName().compareTo(o.getProjectId().getProjectName());
+        return projectId.getId().compareTo(o.getProjectId().getId());
     }
 }

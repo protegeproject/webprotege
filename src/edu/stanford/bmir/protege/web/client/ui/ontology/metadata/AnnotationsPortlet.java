@@ -21,7 +21,7 @@ public class AnnotationsPortlet extends AbstractEntityPortlet {
 
 	public void initialize() {
 		setTitle("Ontology Annotations");
-		this.annotationsGrid = new AnnotationsGrid(getProject().getProjectName());
+		this.annotationsGrid = new AnnotationsGrid(getProjectId());
 		add(annotationsGrid);
 	}
 

@@ -14,7 +14,9 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEvent;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyRegisteredException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
 
 
 /**
@@ -104,12 +106,12 @@ public class UploadProjectDialog extends WebProtegeDialog<UploadFileInfo> {
             }
             else if(caught instanceof ProjectAlreadyRegisteredException) {
                 ProjectAlreadyRegisteredException ex = (ProjectAlreadyRegisteredException) caught;
-                String projectName = ex.getProjectId().getProjectName();
+                String projectName = ex.getProjectId().getId();
                 MessageBox.alert("The project name " + projectName + " is already taken.  Please try a different name.");
             }
             else if(caught instanceof ProjectDocumentExistsException) {
                 ProjectDocumentExistsException ex = (ProjectDocumentExistsException) caught;
-                String projectName = ex.getProjectId().getProjectName();
+                String projectName = ex.getProjectId().getId();
                 MessageBox.alert("There is already a non-empty project on the server which is named " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
             }
             else {

@@ -53,11 +53,11 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
     }
     
     private static File getUserProjectConfigurationFile(ProjectId projectId, UserId userId) {
-        return new File(getProjectConfigurationsDirectory(projectId), PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getProjectName() + "_" + userId.getUserName() + PROJECT_CONFIGURATION_FILE_EXTENSION);
+        return new File(getProjectConfigurationsDirectory(projectId), PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getId() + "_" + userId.getUserName() + PROJECT_CONFIGURATION_FILE_EXTENSION);
     }
     
     private static File getCustomProjectConfigurationFile(ProjectId projectId) {
-        return new File(getProjectConfigurationsDirectory(projectId), PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getProjectName() + PROJECT_CONFIGURATION_FILE_EXTENSION);
+        return new File(getProjectConfigurationsDirectory(projectId), PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getId() + PROJECT_CONFIGURATION_FILE_EXTENSION);
     }
     
     private static File getDefaultProjectConfigurationFile(ProjectId projectId) {

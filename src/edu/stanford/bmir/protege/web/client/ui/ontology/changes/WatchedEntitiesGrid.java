@@ -101,16 +101,8 @@ public class WatchedEntitiesGrid extends GridPanel {
     }
 
     public void reload() {
-        String projectName = null;
-
-        if (project != null) {
-            projectName = project.getProjectName();
-        } else {
-            return;
-        }
-
         proxy.resetParams();
-        proxy.setProjectName(project.getProjectId());
+        proxy.setProjectId(project.getProjectId());
         proxy.setUserName(Application.get().getUserId());
 
         store.removeAll();

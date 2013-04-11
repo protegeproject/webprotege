@@ -38,7 +38,7 @@ public class ChangeSummaryPortlet extends AbstractEntityPortlet {
 		setBorder(true);
 		setPaddings(15);
 
-		setTitle("Change Summary for " + getProject().getProjectName());
+		setTitle("Change Summary for " + getProject().getDisplayName());
 
 		Panel main = new Panel();
 		main.setLayout(new AnchorLayout());
@@ -62,7 +62,7 @@ public class ChangeSummaryPortlet extends AbstractEntityPortlet {
 		main.add(new HTML("<br /><br />"));
 
 		// Change history grid
-		grid = new ChangesGrid(getProject());
+		grid = new ChangesGrid(getProjectId());
 
 		/*
 		 * Didn't have time to investigate this much, but it was hard to get the
@@ -148,7 +148,7 @@ public class ChangeSummaryPortlet extends AbstractEntityPortlet {
 		@Override
 		public void handleFailure(Throwable caught) {
 			GWT.log("RPC error getting number of changes for the "
-					+ getProject().getProjectName() + "ontology", caught);
+					+ getProject().getProjectId() + "ontology", caught);
 		}
 
 		@Override

@@ -41,7 +41,7 @@ public class ChangeTreePortlet extends ClassTreePortlet {
 		setTitle("Change tree");
 		init();
 
-		changeTreeFilterWindow = new ChangeTreeFilterWindow(project.getProjectName());
+		changeTreeFilterWindow = new ChangeTreeFilterWindow(getProjectId());
 		changeTreeFilterWindow.addFilterListener(new ButtonListenerAdapter() {
 			@Override
 			public void onClick(Button button, EventObject e) {
@@ -81,7 +81,7 @@ public class ChangeTreePortlet extends ClassTreePortlet {
 	}
 
 	private void refreshViewsWithAllAuthors() {
-		ChAOStatsServiceManager.getInstance().getChangeAuthors(getProject().getProjectName(), new AsyncCallback<Collection<String>>() {
+		ChAOStatsServiceManager.getInstance().getChangeAuthors(getProjectId(), new AsyncCallback<Collection<String>>() {
 			public void onSuccess(Collection<String> authors) {
 				List<String> authorList = new ArrayList<String>();
 				for(String author : authors) {
@@ -98,7 +98,7 @@ public class ChangeTreePortlet extends ClassTreePortlet {
 	}
 
 	private void refreshViews(final List<String> authors) {
-		ChAOStatsServiceManager.getInstance().applyChangeFilter(getProject().getProjectName(), authors, new AsyncCallback<Void>() {
+		ChAOStatsServiceManager.getInstance().applyChangeFilter(getProjectId(), authors, new AsyncCallback<Void>() {
 			public void onFailure(Throwable arg0) {
 				// TODO Auto-generated method stub
 
@@ -132,7 +132,7 @@ public class ChangeTreePortlet extends ClassTreePortlet {
 		EntityData entityData = (EntityData)node.getUserObject();
 		node.setText(UIUtil.getDisplayText(entityData));
 
-		ChAOStatsServiceManager.getInstance().getNumChanges(getProject().getProjectName(), entityData.getName(), new AsyncCallback<Integer>() {
+		ChAOStatsServiceManager.getInstance().getNumChanges(getProjectId(), entityData.getName(), new AsyncCallback<Integer>() {
 			public void onSuccess(Integer result) {
 				if(result > 0) {
 					node.setText(node.getText() + "<span style=\"font-weight:bold;\">(" + result + ")</span>");
@@ -143,7 +143,7 @@ public class ChangeTreePortlet extends ClassTreePortlet {
 			}
 		});
 
-		ChAOStatsServiceManager.getInstance().getNumChildrenChanges(getProject().getProjectName(), entityData.getName(), new AsyncCallback<Integer>() {
+		ChAOStatsServiceManager.getInstance().getNumChildrenChanges(getProjectId(), entityData.getName(), new AsyncCallback<Integer>() {
 			public void onSuccess(Integer result) {
 				if(result > 0) {
 					node.setText(node.getText() + "<span style=\"color:#999;\">(" + result + ")</span>");
@@ -170,7 +170,7 @@ public class ChangeTreePortlet extends ClassTreePortlet {
         node.setAllowDrop(true);
         setTreeNodeIcon(node, entityData);
 
-        ChAOStatsServiceManager.getInstance().getNumChanges(getProject().getProjectId().getProjectName(), entityData.getName(), new AsyncCallback<Integer>() {
+        ChAOStatsServiceManager.getInstance().getNumChanges(getProjectId(), entityData.getName(), new AsyncCallback<Integer>() {
 			public void onSuccess(Integer result) {
 				if(result > 0) {
 					node.setText(node.getText() + "<span style=\"font-weight:bold;\">(" + result + ")</span>");
@@ -181,7 +181,7 @@ public class ChangeTreePortlet extends ClassTreePortlet {
 			}
 		});
 
-		ChAOStatsServiceManager.getInstance().getNumChildrenChanges(getProject().getProjectName(), entityData.getName(), new AsyncCallback<Integer>() {
+		ChAOStatsServiceManager.getInstance().getNumChildrenChanges(getProjectId(), entityData.getName(), new AsyncCallback<Integer>() {
 			public void onSuccess(Integer result) {
 				if(result > 0) {
 					node.setText(node.getText() + "<span style=\"color:#999;\">(" + result + ")</span>");

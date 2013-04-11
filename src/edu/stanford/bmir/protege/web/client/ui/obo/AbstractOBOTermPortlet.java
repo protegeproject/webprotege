@@ -32,10 +32,6 @@ public abstract class AbstractOBOTermPortlet extends AbstractEntityPortlet {
     public OBOTextEditorServiceAsync getService() {
         return SERVICE;
     }
-    
-    public ProjectId getProjectId() {
-        return ProjectId.get(getProject().getProjectName());
-    }
 
     @Override
     final public void setEntity(EntityData newEntityData) {

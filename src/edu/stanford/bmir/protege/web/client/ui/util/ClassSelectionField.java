@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.google.common.base.Optional;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.widgets.Button;
@@ -14,16 +15,19 @@ import com.gwtext.client.widgets.form.TriggerField;
 import com.gwtext.client.widgets.layout.FitLayout;
 
 import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.model.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
+import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 
 public class ClassSelectionField extends TriggerField implements Selectable {
 
-    private Project project;
+    private ProjectId projectId;
     private Collection<EntityData> values = new HashSet<EntityData>();
     private Window selectWindow;
     private boolean allowMultipleSelection;
@@ -33,13 +37,13 @@ public class ClassSelectionField extends TriggerField implements Selectable {
     private Collection<SelectionListener> listeners = new ArrayList<SelectionListener>();
 
 
-    public ClassSelectionField(Project project, String label) {
-        this(project, label, true, null);
+    public ClassSelectionField(ProjectId projectId, String label) {
+        this(projectId, label, true, null);
     }
 
-    public ClassSelectionField(Project project, String label, boolean allowMultipleSelection, String topClass) {
+    public ClassSelectionField(ProjectId projectId, String label, boolean allowMultipleSelection, String topClass) {
         super();
-        this.project = project;
+        this.projectId = projectId;
         this.allowMultipleSelection = allowMultipleSelection;
         this.topClass = topClass;
 
@@ -72,7 +76,11 @@ public class ClassSelectionField extends TriggerField implements Selectable {
     }
 
     protected ClassTreePortlet createSelectable() {
-        ClassTreePortlet treePortlet = new ClassTreePortlet(project, false, false, false, allowMultipleSelection, topClass);
+        Optional<Project> prj = ProjectManager.get().getProject(projectId);
+        if(!prj.isPresent()) {
+            throw new UnknownProjectException(projectId);
+        }
+        ClassTreePortlet treePortlet = new ClassTreePortlet(prj.get(), false, false, false, allowMultipleSelection, topClass);
         treePortlet.setDraggable(false);
         treePortlet.setClosable(false);
         treePortlet.setCollapsible(false);

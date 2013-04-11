@@ -2,11 +2,14 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.IdUtil;
+import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
 import edu.stanford.bmir.protege.web.server.filesubmission.FileUploadConstants;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.obo.OBOOntologyChecker;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentFormat;
@@ -107,7 +110,7 @@ public class OWLAPIProjectDocumentStore {
     }
 
     private OWLAPIProjectDocumentStore(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, IOException {
-        this.projectId = ProjectId.get(newProjectSettings.getProjectName());
+        this.projectId = ProjectIdFactory.getFreshProjectId();
         this.projectFileStore = OWLAPIProjectFileStore.getProjectFileStore(projectId);
         if (projectFileStore.getProjectDirectory().exists()) {
             throw new ProjectDocumentExistsException(projectId);
@@ -405,9 +408,9 @@ public class OWLAPIProjectDocumentStore {
 
 
     private void saveImportsClosureToStream(OWLOntology rootOntology, OWLOntologyFormat format, OutputStream outputStream, RevisionNumber revisionNumber) throws IOException, OWLOntologyStorageException {
-        String projectName = projectId.getProjectName();
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
-        String baseFolder = projectName.replace(" ", "-") + "-ontologies";
+        String projectDisplayName = OWLAPIProjectMetadataManager.getManager().getDisplayName(projectId);
+        String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies";
         baseFolder = baseFolder.toLowerCase();
         baseFolder = baseFolder + "-REVISION-" + revisionNumber.getValue();
         ZipEntry rootOntologyEntry = new ZipEntry(baseFolder + "/root-ontology.owl");

@@ -77,7 +77,7 @@ public class ProjectListPlace extends Place {
             PlacePropertyValueList.Builder builder = PlacePropertyValueList.builder();
             builder.set(COLLECTION_PROPERTY, place.getCollection());
             if(place.getSelectedProject().isPresent()) {
-                builder.set(SEL_PROJECT_ID_PROPERTY, place.getSelectedProject().get().getProjectName());
+                builder.set(SEL_PROJECT_ID_PROPERTY, place.getSelectedProject().get().getId());
             }
             return builder.build().render();
 //            return COLLECTION_PROPERTY + place.getCollection() + (place.getSelectedProject().isPresent() ? ";" + "projectId=" + place.getSelectedProject() : "");

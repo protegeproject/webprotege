@@ -35,36 +35,36 @@ public class ChAOServiceManager {
      */
 
     public void getNotes(ProjectId projectId, String entityName, boolean topLevel, AsyncCallback<List<NotesData>> cb) {
-        proxy.getNotes(projectId.getProjectName(), entityName, topLevel, cb);
+        proxy.getNotes(projectId.getId(), entityName, topLevel, cb);
     }
 
     public void getNotes(ProjectId projectId, String entityName, boolean ontologyLevelNotes, boolean topLevelNotesOnly, AsyncCallback<List<NotesData>> cb){
-        proxy.getNotes(projectId.getProjectName(), entityName, ontologyLevelNotes, topLevelNotesOnly, cb);
+        proxy.getNotes(projectId.getId(), entityName, ontologyLevelNotes, topLevelNotesOnly, cb);
     }
 
     public void getAvailableNoteTypes(ProjectId projectId, AsyncCallback<Collection<EntityData>> cb) {
-        proxy.getAvailableNoteTypes(projectId.getProjectName(), cb);
+        proxy.getAvailableNoteTypes(projectId.getId(), cb);
     }
 
     public void createNote(ProjectId projectId, NotesData newNote, boolean topLevel, AsyncCallback<NotesData> cb) {
-        proxy.createNote(projectId.getProjectName(), newNote, topLevel, cb);
+        proxy.createNote(projectId.getId(), newNote, topLevel, cb);
     }
 
     public void deleteNote(ProjectId projectId, String noteId, AsyncCallback<Void> callback) {
-        proxy.deleteNote(projectId.getProjectName(), noteId, callback);
+        proxy.deleteNote(projectId.getId(), noteId, callback);
     }
 
     public void archiveNote(ProjectId projectId, String nodeId, Boolean archive, AsyncCallback<Boolean> cb) {
-        proxy.archiveNote(projectId.getProjectName(),nodeId, archive, cb);
+        proxy.archiveNote(projectId.getId(),nodeId, archive, cb);
     }
 
     public void editNote(ProjectId projectId, NotesData note, String noteId, AsyncCallback<NotesData> cb) {
-        proxy.editNote(projectId.getProjectName(), note, noteId, cb);
+        proxy.editNote(projectId.getId(), note, noteId, cb);
 
     }
 
     public void getReplies(ProjectId projectId, String noteId, boolean topLevelOnly, AsyncCallback<List<NotesData>> cb){
-        proxy.getReplies(projectId.getProjectName(), noteId, topLevelOnly, cb);
+        proxy.getReplies(projectId.getId(), noteId, topLevelOnly, cb);
     }
 
     /*
@@ -72,21 +72,21 @@ public class ChAOServiceManager {
      */
 
     public void createChange(ProjectId projectId, String userName, String entityName, String action, String context, AsyncCallback<ChangeData> cb) {
-        proxy.createChange(projectId.getProjectName(), userName, entityName, action, context, cb);
+        proxy.createChange(projectId.getId(), userName, entityName, action, context, cb);
     }
 
     public void getChanges(ProjectId projectId, Date startDate, Date endDate, int start, int limit, String sort,
             String dir, AsyncCallback<PaginationData<ChangeData>> cb) {
-        proxy.getChanges(projectId.getProjectName(), startDate, endDate, start, limit, sort, dir, cb);
+        proxy.getChanges(projectId.getId(), startDate, endDate, start, limit, sort, dir, cb);
     }
 
     public void getChanges(ProjectId projectId, String entityName, int start, int limit, String sort, String dir,
             AsyncCallback<PaginationData<ChangeData>> cb) {
-        proxy.getChanges(projectId.getProjectName(), entityName, start, limit, sort, dir, cb);
+        proxy.getChanges(projectId.getId(), entityName, start, limit, sort, dir, cb);
     }
 
     public void getNumChanges(ProjectId projectId, Date start, Date end, AsyncCallback<Integer> cb) {
-        proxy.getNumChanges(projectId.getProjectName(), start, end, cb);
+        proxy.getNumChanges(projectId.getId(), start, end, cb);
     }
 
     /*
@@ -96,45 +96,45 @@ public class ChAOServiceManager {
     public void getWatchedEntities(ProjectId projectId, UserId userId, int start, int limit, String sort, String dir,
             AsyncCallback<PaginationData<ChangeData>> cb) {
 
-        proxy.getWatchedEntities(projectId.getProjectName(), userId.getUserName(), start, limit, sort, dir, cb);
+        proxy.getWatchedEntities(projectId.getId(), userId.getUserName(), start, limit, sort, dir, cb);
     }
 
     public void getWatchedEntities(ProjectId projectId, String userName, AsyncCallback<Collection<ChangeData>> cb) {
-        proxy.getWatchedEntities(projectId.getProjectName(), userName, cb);
+        proxy.getWatchedEntities(projectId.getId(), userName, cb);
     }
 
 //    public void addWatchedEntity(ProjectId projectId, String userName, String watchedEntityName,
 //            AsyncCallback<EntityData> cb) {
-//        proxy.addWatchedEntity(projectId.getProjectName(), userName, watchedEntityName, cb);
+//        proxy.addWatchedEntity(projectId.getDisplayName(), userName, watchedEntityName, cb);
 //    }
 
 //    public void addWatchedBranchEntity(ProjectId projectId, String userName, String watchedEntityName,
 //            AsyncCallback<EntityData> cb) {
-//        proxy.addWatchedBranch(projectId.getProjectName(), userName, watchedEntityName, cb);
+//        proxy.addWatchedBranch(projectId.getDisplayName(), userName, watchedEntityName, cb);
 //    }
 
 //    public void removeWatchedEntity(ProjectId projectId, String userName, String watchedEntityName,
 //            AsyncCallback<Void> cb) {
-//        proxy.removeAllWatches(projectId.getProjectName(), userName, watchedEntityName, cb);
+//        proxy.removeAllWatches(projectId.getDisplayName(), userName, watchedEntityName, cb);
 //    }
 
     /*
      * Reviews
      */
     public void getReviewers(ProjectId projectId, AsyncCallback<List<String>> cb) {
-        proxy.getReviewers(projectId.getProjectName(), cb);
+        proxy.getReviewers(projectId.getId(), cb);
     }
 
     public void getReviews(ProjectId projectId, String entityName, AsyncCallback<Collection<ReviewData>> cb) {
-        proxy.getReviews(projectId.getProjectName(), entityName, cb);
+        proxy.getReviews(projectId.getId(), entityName, cb);
     }
 
     public void requestReview(ProjectId projectId, String entityName, List<String> reviewerNames, AsyncCallback<Void> cb) {
-        proxy.requestReview(projectId.getProjectName(), entityName, reviewerNames, cb);
+        proxy.requestReview(projectId.getId(), entityName, reviewerNames, cb);
     }
 
     public void addReview(ProjectId projectId, UserId userId, NotesData data, AsyncCallback<Void> cb) {
-        proxy.addReview(projectId.getProjectName(), userId.getUserName(), data, cb);
+        proxy.addReview(projectId.getId(), userId.getUserName(), data, cb);
     }
 
 

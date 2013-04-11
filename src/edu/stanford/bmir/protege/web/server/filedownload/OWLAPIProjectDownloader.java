@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
@@ -26,9 +27,6 @@ public class OWLAPIProjectDownloader {
 
     private RevisionNumber revision;
 
-    public OWLAPIProjectDownloader(ProjectId projectId) {
-        this(projectId, RevisionNumber.getHeadRevisionNumber());
-    }
 
     /**
      * Creates a project downloader that downloads the specified revision of the specified project.
@@ -72,7 +70,8 @@ public class OWLAPIProjectDownloader {
         else {
             revisionNumber = "-REVISION-" + Long.toString(revision.getValue());
         }
-        String fileName = projectId.getProjectName().replaceAll("\\s+", "-") + revisionNumber + "-ontologies.zip";
+        String displayName = OWLAPIProjectMetadataManager.getManager().getDisplayName(projectId);
+        String fileName = displayName.replaceAll("\\s+", "-") + revisionNumber + "-ontologies.zip";
         fileName = fileName.toLowerCase();
         response.setHeader(CONTENT_DISPOSITION_HEADER_FIELD, "attachment; filename=\"" + fileName + "\"");
     }

@@ -27,11 +27,11 @@ public class ProjectConfigurationServiceManager {
 	}
 
 	public void getProjectConfiguration(ProjectId projectId, UserId userId, AsyncCallback<ProjectLayoutConfiguration> cb) {
-		proxy.getProjectLayoutConfiguration(projectId.getProjectName(), userId.getUserName(), cb);
+		proxy.getProjectLayoutConfiguration(projectId.getId(), userId.getUserName(), cb);
 	}
 
 	public void saveProjectConfiguration(ProjectId projectId, UserId userId,  ProjectLayoutConfiguration config, AsyncCallback<Void> cb) {
-		proxy.saveProjectLayoutConfiguration(projectId.getProjectName(), userId.getUserName(), config, cb);
+		proxy.saveProjectLayoutConfiguration(projectId.getId(), userId.getUserName(), config, cb);
 	}
 
 }

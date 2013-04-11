@@ -42,10 +42,10 @@ public class RequestReviewWindow extends Window {
     private RecordDef recordDef;
     private Store store;
     private EntityData entity;
-    private String projectName;
+    private ProjectId projectId;
 
-    public RequestReviewWindow(String projectName, EntityData entity) {
-        this.projectName = projectName;
+    public RequestReviewWindow(ProjectId projectId, EntityData entity) {
+        this.projectId = projectId;
         this.entity = entity;
         initialize();
     }
@@ -69,7 +69,7 @@ public class RequestReviewWindow extends Window {
 
         add(formPanel);
 
-        ChAOServiceManager.getInstance().getReviewers(ProjectId.get(projectName), new GetReviewersHandler());
+        ChAOServiceManager.getInstance().getReviewers(projectId, new GetReviewersHandler());
     }
 
     private void createGrid() {
@@ -125,7 +125,7 @@ public class RequestReviewWindow extends Window {
         }
 
         reviewersGrid.getEl().mask("Requesting review...");
-        ChAOServiceManager.getInstance().requestReview(ProjectId.get(projectName), entity.getName(), reviewerNames,
+        ChAOServiceManager.getInstance().requestReview(projectId, entity.getName(), reviewerNames,
                 new RequestReviewHandler());
     }
 
@@ -170,7 +170,7 @@ public class RequestReviewWindow extends Window {
 
         @Override
         public void handleFailure(Throwable caught) {
-            GWT.log("RPC error getting reviewers for " + projectName, caught);
+            GWT.log("RPC error getting reviewers for " + projectId, caught);
         }
 
         @Override

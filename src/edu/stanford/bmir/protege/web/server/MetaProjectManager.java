@@ -2,14 +2,12 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.server.owlapi.UnknownProjectException;
+import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.smi.protege.model.Project;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.Operation;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,13 +17,16 @@ import java.util.List;
  */
 public abstract class MetaProjectManager {
 
-    private static MetaProjectManager instance = new LocalMetaProjectManager();
+    private static MetaProjectManager instance;
 
     protected MetaProjectManager() {
 
     }
 
-    public static MetaProjectManager getManager() {
+    public static synchronized MetaProjectManager getManager() {
+        if(instance == null) {
+            instance  = new LocalMetaProjectManager();
+        }
         return instance;
     }
 
@@ -53,7 +54,7 @@ public abstract class MetaProjectManager {
      * Creates a new project description inside the meta project (with the default access policy etc.)
      * @param newProjectSettings The {@link edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings} that describes the new project.  Not <code>null</code>.
      */
-    public abstract void createProject(NewProjectSettings newProjectSettings);
+    public abstract void registerProject(ProjectId projectId, NewProjectSettings newProjectSettings);
 
     public abstract MetaProject getMetaProject();
 
@@ -62,7 +63,7 @@ public abstract class MetaProjectManager {
      * besides the user/password info, also the projects info. Clients should be
      * notified of the change.
      */
-    public abstract void reloadMetaProject();
+//    public abstract void reloadMetaProject();
 
     public abstract void dispose();
     

@@ -44,9 +44,8 @@ public abstract class AbstractObjectEditorPortlet<T extends Serializable> extend
 
     public AbstractObjectEditorPortlet(Project project, EditorConfigurationFactory<T> factory) {
         super(project);
-        ProjectId projectId = ProjectId.get(project.getProjectName());
-        this.editor = factory.getEditor(projectId);
-        this.updateStrategy = factory.getUpdateStrategy(projectId);
+        this.editor = factory.getEditor(getProjectId());
+        this.updateStrategy = factory.getUpdateStrategy(getProjectId());
         add(new ScrollPanel(editor.getWidget()));
         editor.addValueChangeHandler(new ValueChangeHandler<Optional<T>>() {
             @Override

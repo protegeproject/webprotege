@@ -129,7 +129,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     }
 
     public ProjectId getProjectId() {
-        return ProjectId.get(project.getProjectName());
+        return project.getProjectId();
     }
 
     public UserId getUserId() {
@@ -172,6 +172,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     public Project getProject() {
         return project;
     }
+
 
 //    public int getRevision() {
 //        return revision;

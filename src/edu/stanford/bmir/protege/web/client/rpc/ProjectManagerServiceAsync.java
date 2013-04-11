@@ -24,7 +24,7 @@ public interface ProjectManagerServiceAsync {
      * @param newProjectSettings A {@link edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings} object that
      * specifies the intended owner of the project,
      * the project name, a description for the project, sources etc. etc.
-     * @throws edu.stanford.bmir.protege.web.client.rpc.data.ProjectAlreadyExistsException
+     * @throws edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException
      *          if the project already exists on the server.
      */
     void createNewProject(NewProjectSettings newProjectSettings, AsyncCallback<ProjectDetails> async);

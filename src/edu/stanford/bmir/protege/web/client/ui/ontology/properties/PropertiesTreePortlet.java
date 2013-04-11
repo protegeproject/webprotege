@@ -453,7 +453,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
 
 //    private void doCreateAnnotationProperty(OWLAnnotationProperty property, CreateEntityInfo createEntityInfo) {
-//        String projectName = getProject().getProjectName();
+//        String projectName = getProject().getDisplayName();
 //        final String superPropName;
 //        if (property != null) {
 //            superPropName = property.getIRI().toString();
@@ -480,7 +480,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 //    }
 
 //    private void doCreateDataProperty(OWLDataProperty property, CreateEntityInfo createEntityInfo) {
-//        String projectName = getProject().getProjectName();
+//        String projectName = getProject().getDisplayName();
 //        for (String browserText : createEntityInfo.getBrowserTexts()) {
 //            OntologyServiceManager.getInstance().createDatatypeProperty(projectName, browserText, property.getIRI().toString(), GlobalSettings.get().getUserName(), "Created object property", new AsyncCallback<EntityData>() {
 //                @Override
@@ -500,7 +500,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 //    }
 
 //    private void doCreateObjectProperty(OWLObjectProperty property, CreateEntityInfo createEntityInfo) {
-//        String projectName = getProject().getProjectName();
+//        String projectName = getProject().getDisplayName();
 //        for (String browserText : createEntityInfo.getBrowserTexts()) {
 //            OntologyServiceManager.getInstance().createObjectProperty(projectName, browserText, property.getIRI().toString(), GlobalSettings.get().getUserName(), "Created object property", new AsyncCallback<EntityData>() {
 //                @Override

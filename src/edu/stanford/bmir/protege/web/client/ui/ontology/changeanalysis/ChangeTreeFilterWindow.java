@@ -21,6 +21,7 @@ import com.gwtext.client.widgets.layout.BorderLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 
 import edu.stanford.bmir.protege.web.client.rpc.ChAOStatsServiceManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * @author Sean Falconer <sean.falconer@stanford.edu>
@@ -34,10 +35,10 @@ public class ChangeTreeFilterWindow extends Window {
 	
 	private Button applyButton;
 	
-	private String projectName;
+	private ProjectId projectId;
 	
-	public ChangeTreeFilterWindow(String projectName) {
-		this.projectName = projectName;
+	public ChangeTreeFilterWindow(ProjectId projectId) {
+		this.projectId = projectId;
 		
 		init();
 	}
@@ -59,7 +60,7 @@ public class ChangeTreeFilterWindow extends Window {
 	public void show() {
 		super.show();
 		
-		ChAOStatsServiceManager.getInstance().getChangeAuthors(projectName, new AsyncCallback<Collection<String>>() {
+		ChAOStatsServiceManager.getInstance().getChangeAuthors(projectId, new AsyncCallback<Collection<String>>() {
 			public void onSuccess(Collection<String> authors) {
 				displayedAuthorList.clear();
 				for(String author : authors) {
@@ -117,7 +118,7 @@ public class ChangeTreeFilterWindow extends Window {
 		displayedAuthorList = new ListBox(true);
 		filteredAuthorList = new ListBox(true);
 		
-		ChAOStatsServiceManager.getInstance().getChangeAuthors(projectName, new AsyncCallback<Collection<String>>() {
+		ChAOStatsServiceManager.getInstance().getChangeAuthors(projectId, new AsyncCallback<Collection<String>>() {
 			public void onSuccess(Collection<String> authors) {
 				for(String author : authors) {
 					displayedAuthorList.addItem(author);

@@ -58,7 +58,7 @@ public class SharingSettingsServiceImplP3Delegate {
     public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
         MetaProjectManager mpm = MetaProjectManager.getManager();
         MetaProject metaProject = mpm.getMetaProject();
-        ProjectInstance projectInstance = metaProject.getProject(projectId.getProjectName());
+        ProjectInstance projectInstance = metaProject.getProject(projectId.getId());
         Set<GroupOperation> groupOperations = projectInstance.getAllowedGroupOperations();
         List<UserSharingSetting> result = new ArrayList<UserSharingSetting>();
         Set<User> usersWithPermissionsOnProject = new HashSet<User>();
@@ -72,7 +72,7 @@ public class SharingSettingsServiceImplP3Delegate {
             }
         }
         for (User user : usersWithPermissionsOnProject) {
-            Collection<Operation> operations = mpm.getAllowedOperations(projectId.getProjectName(), user.getName());
+            Collection<Operation> operations = mpm.getAllowedOperations(projectId.getId(), user.getName());
             SharingSetting sharingSetting = getSharingSettingFromOperations(operations);
             UserSharingSetting userSharingSetting = new UserSharingSetting(UserId.getUserId(user.getName()), sharingSetting);
             result.add(userSharingSetting);
@@ -136,7 +136,7 @@ public class SharingSettingsServiceImplP3Delegate {
         MetaProjectManager mpm = MetaProjectManager.getManager();
         MetaProject metaProject = mpm.getMetaProject();
         ProjectId projectId = projectSharingSettings.getProjectId();
-        ProjectInstance projectInstance = metaProject.getProject(projectId.getProjectName());
+        ProjectInstance projectInstance = metaProject.getProject(projectId.getId());
 
         // TODO: Check we are allowed to manage projects permissions
 
@@ -198,10 +198,9 @@ public class SharingSettingsServiceImplP3Delegate {
         invitation.setEmailId(userId.getUserName());
         invitation.setWriter(userSharingSetting.getSharingSetting() == SharingSetting.EDIT);
         invitations.add(invitation);
-        final String projectName = projectSharingSettings.getProjectId().getProjectName();
         String baseURL = request.getHeader("referer");
 
-        AccessPolicyManager.get().createTemporaryAccountForInvitation(ProjectId.get(projectName), baseURL, invitations);
+        AccessPolicyManager.get().createTemporaryAccountForInvitation(projectSharingSettings.getProjectId(), baseURL, invitations);
     }
 
     private void getWorldAllowedOperations(ProjectSharingSettings projectSharingSettings, MetaProject metaProject, Set<GroupOperation> allowedGroupOperations) {
@@ -239,7 +238,7 @@ public class SharingSettingsServiceImplP3Delegate {
     }
     
     private String getGroupName(ProjectId projectId, SharingSetting sharingSetting) {
-        return projectId.getProjectName() + getGroupNameSuffix(sharingSetting);
+        return projectId.getId() + getGroupNameSuffix(sharingSetting);
     }
 
     /**

@@ -94,7 +94,7 @@ public class GetProjectEventsResult_CustomFieldSerializer extends CustomFieldSer
             streamWriter.writeByte((byte) 1);
             streamWriter.writeObject(new ArrayList<WebProtegeEvent<?>>(instance.getEvents().getEvents()));
         }
-        streamWriter.writeString(instance.getEvents().getProjectId().getProjectName());
+        streamWriter.writeString(instance.getEvents().getProjectId().getId());
         int startTagOrdinal = instance.getEvents().getStartTag().getOrdinal();
         streamWriter.writeInt(startTagOrdinal);
         int endTagOrdinal = instance.getEvents().getEndTag().getOrdinal();

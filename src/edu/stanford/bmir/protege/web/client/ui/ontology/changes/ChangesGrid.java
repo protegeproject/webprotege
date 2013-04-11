@@ -15,6 +15,9 @@ import com.gwtext.client.widgets.grid.GridPanel;
 
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.ui.util.PaginationUtil;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
@@ -22,13 +25,14 @@ import edu.stanford.bmir.protege.web.client.ui.util.PaginationUtil;
  */
 public class ChangesGrid extends GridPanel {
 
-    private Project project;
+    private ProjectId projectId;
+
     private RecordDef recordDef;
     private Store store;
     private ChangesProxyImpl proxy;
 
-    public ChangesGrid(Project project) {
-        this.project = project;
+    public ChangesGrid(ProjectId projectId) {
+        this.projectId = checkNotNull(projectId);
         createGrid();
     }
 
@@ -90,11 +94,6 @@ public class ChangesGrid extends GridPanel {
     public void reload() {
         store.removeAll();
 
-        String projectName = null;
-
-        if (project != null) {
-            projectName = project.getProjectName();
-        }
         /*
          * Tried using the non-deprecated methods here (i.e., from Calendar),
          * but this results in GWT error: "No source code is available for type
@@ -105,9 +104,7 @@ public class ChangesGrid extends GridPanel {
          */
         Date weekBegin = new Date();
         weekBegin.setDate(weekBegin.getDate() - 7);
-
-        proxy.resetParams();
-        proxy.setProjectName(projectName);
+        proxy.setProjectId(projectId);
         proxy.setStartDate(weekBegin);
         proxy.setEndDate(new Date());
         store.load(0, ((PagingToolbar) this.getBottomToolbar()).getPageSize());

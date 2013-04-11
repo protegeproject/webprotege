@@ -42,7 +42,7 @@ public class ChangeTablePortlet extends ChangesPortlet {
 
 
 		proxy.resetParams();
-		proxy.setProjectName(getProjectId().getProjectName());
+		proxy.setProjectId(getProjectId());
 		proxy.setEntityName(entityName);
 		
 		PagingToolbar pToolbar = (PagingToolbar) changesGrid.getBottomToolbar();

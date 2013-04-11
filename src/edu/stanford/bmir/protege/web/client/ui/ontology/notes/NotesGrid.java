@@ -43,6 +43,7 @@ import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
@@ -53,51 +54,67 @@ public class NotesGrid extends GridPanel {
     private static final int PAGE_SIZE = 5;
 
     protected RecordDef recordDef;
+
     protected Store store;
+
     protected Store tempstore;
+
     protected boolean showPreview = false;
+
     protected EntityData _currentEntity;
+
     protected Panel headerPanel;
+
     private Hyperlink replyLink;
+
     private Hyperlink deleteLink;
+
     private Hyperlink expandlink;
+
     private Hyperlink nextlink;
+
     private Hyperlink prevlink;
-    protected Project project;
+
+    protected ProjectId projectId;
+
     private int rowSelected = -1;
+
     private int endofpage;
+
     private int startofpage;
+
     private int pageNo;
+
     private Label label;
+
     private boolean replyEnable = false;
+
     private boolean deleteEnable = false;
+
     protected boolean topLevel;
+
     protected String[][] commentTypes;
 
     private Renderer subjectRenderer = new Renderer() {
-        public String render(Object value, CellMetadata cellMetadata, Record record, int rowIndex, int colNum,
-                Store store) {
-            return Format.format("<b>{0}</b>", new String[] { record.getAsString("subject") });
+        public String render(Object value, CellMetadata cellMetadata, Record record, int rowIndex, int colNum, Store store) {
+            return Format.format("<b>{0}</b>", new String[]{record.getAsString("subject")});
         }
     };
 
     Renderer bodyRenderer = new Renderer() {
-        public String render(Object value, CellMetadata cellMetadata, Record record, int rowIndex, int colNum,
-                Store store) {
+        public String render(Object value, CellMetadata cellMetadata, Record record, int rowIndex, int colNum, Store store) {
             String stringVal = record.getAsString("value");
-            return Format.format(
-               "<style type=\"text/css\">.x-grid3-cell-inner, .x-grid3-hd-inner { white-space:normal !important; }</style> {0}",
-                      new String[] { stringVal == null ? "(empty)" : stringVal });
+            return Format.format("<style type=\"text/css\">.x-grid3-cell-inner, .x-grid3-hd-inner { white-space:normal !important; }</style> {0}", new String[]{stringVal == null ? "(empty)" : stringVal});
         }
     };
 
 
-    public NotesGrid(Project project) {
+    public NotesGrid(ProjectId project) {
         this(project, false);
     }
 
-    public NotesGrid(Project project, boolean topLevel) {
-        this.project = project;
+    public NotesGrid(ProjectId projectId, boolean topLevel) {
+        this.projectId = projectId;
         this.topLevel = topLevel;
         headerPanel = new Panel();
         headerPanel.setLayout(new HorizontalLayout(10));
@@ -185,7 +202,8 @@ public class NotesGrid extends GridPanel {
                 if (expandlink.getText().equalsIgnoreCase("Expand")) {
                     expandlink.setText("Collapse");
                     toggleDetails(true);
-                } else {
+                }
+                else {
                     expandlink.setText("Expand");
                     toggleDetails(false);
                 }
@@ -200,13 +218,11 @@ public class NotesGrid extends GridPanel {
     }
 
     protected void loadStore() {
-        recordDef = new RecordDef(new FieldDef[] { new StringFieldDef("entity"), new StringFieldDef("subject"),
-                new StringFieldDef("author"), new StringFieldDef("date"), new StringFieldDef("body"),
-                new StringFieldDef("type"), new StringFieldDef("id"), new IntegerFieldDef("repliesCount") });
+        recordDef = new RecordDef(new FieldDef[]{new StringFieldDef("entity"), new StringFieldDef("subject"), new StringFieldDef("author"), new StringFieldDef("date"), new StringFieldDef("body"), new StringFieldDef("type"), new StringFieldDef("id"), new IntegerFieldDef("repliesCount")});
 
         ArrayReader reader = new ArrayReader(recordDef);
-        MemoryProxy dataProxy = new MemoryProxy(new Object[][] {});
-        MemoryProxy dummyProxy = new MemoryProxy(new Object[][] {});
+        MemoryProxy dataProxy = new MemoryProxy(new Object[][]{});
+        MemoryProxy dummyProxy = new MemoryProxy(new Object[][]{});
         store = new Store(dataProxy, reader);
         tempstore = new Store(dummyProxy, reader);
         store.load();
@@ -228,11 +244,10 @@ public class NotesGrid extends GridPanel {
             public String getRowClass(Record record, int index, RowParams rowParams, Store store) {
                 if (showPreview) {
                     String stringValue = record.getAsString("body");
-                    rowParams.setBody(Format.format("<STYLE TYPE=\"text/css\">"
-                            + "<!--.indented{padding-left: 20pt;}--></STYLE><p>"
-                            + "<DIV CLASS=\"indented\">{0}</DIV><br></p></Blockquote>", stringValue == null ? "(empty)" : stringValue));
+                    rowParams.setBody(Format.format("<STYLE TYPE=\"text/css\">" + "<!--.indented{padding-left: 20pt;}--></STYLE><p>" + "<DIV CLASS=\"indented\">{0}</DIV><br></p></Blockquote>", stringValue == null ? "(empty)" : stringValue));
                     return "x-grid3-row-expanded";
-                } else {
+                }
+                else {
                     return "x-grid3-row-collapsed";
                 }
             }
@@ -286,7 +301,8 @@ public class NotesGrid extends GridPanel {
     protected void displayPageNo() {
         if ((store.getCount() / PAGE_SIZE + 1) == 0) {
             label.setText("Displaying page 0 of 0 pages");
-        } else {
+        }
+        else {
             label.setText("Displaying page " + (pageNo + 1) + " of " + (store.getCount() / PAGE_SIZE + 1) + " pages");
         }
         headerPanel.add(label);
@@ -380,17 +396,17 @@ public class NotesGrid extends GridPanel {
     }
 
     protected void addCellListeners() {
-    /*
-        addGridCellListener(new GridCellListenerAdapter() {
-            @Override
-            public void onCellClick(GridPanel grid, int rowIndex, int colindex, EventObject e) {
-            }
+        /*
+          addGridCellListener(new GridCellListenerAdapter() {
+              @Override
+              public void onCellClick(GridPanel grid, int rowIndex, int colindex, EventObject e) {
+              }
 
-            @Override
-            public void onCellDblClick(GridPanel grid, int rowIndex, int colIndex, EventObject e) {
-            }
-        });
-	*/
+              @Override
+              public void onCellDblClick(GridPanel grid, int rowIndex, int colIndex, EventObject e) {
+              }
+          });
+      */
     }
 
     private void updateReplyAvailable(GridPanel grid, int currRowIndex) {
@@ -403,7 +419,7 @@ public class NotesGrid extends GridPanel {
         Record record = store.getRecordAt(rowSelected + pageNo * PAGE_SIZE);
         String authorName = record.getAsString("author");
         Integer repliesCount = record.getAsInteger("repliesCount");
-        setDeleteEnabled( rowSelected != -1 &&
+        setDeleteEnabled(rowSelected != -1 &&
                 authorName != null &&
                 authorName.equals(Application.get().getUserId().getUserName()) &&
                 repliesCount != null &&
@@ -428,7 +444,8 @@ public class NotesGrid extends GridPanel {
         if (selectionCount == 1) {
             if (selectionModel.isSelected(currRowIndex)) {
                 selRowIndex = currRowIndex;
-            } else {
+            }
+            else {
                 int i = 0;
                 while (i < selectionCount) {
                     if (selectionModel.isSelected(i)) {
@@ -490,7 +507,7 @@ public class NotesGrid extends GridPanel {
         replCntCol.setHidden(true);
         replCntCol.setWidth(60);
 
-        ColumnConfig[] columns = new ColumnConfig[] { textCol, authorCol, typeCol, dateCol, idCol, replCntCol };
+        ColumnConfig[] columns = new ColumnConfig[]{textCol, authorCol, typeCol, dateCol, idCol, replCntCol};
         ColumnModel columnModel = new ColumnModel(columns);
         setColumnModel(columnModel);
     }
@@ -499,7 +516,8 @@ public class NotesGrid extends GridPanel {
         if (rowSelected == -1) {
             MessageBox.alert("Please select one (and only one) note to reply to.");
             return;
-        } else if (!replyEnable) {
+        }
+        else if (!replyEnable) {
             MessageBox.alert("Reply is not available.");
             return;
         }
@@ -515,9 +533,9 @@ public class NotesGrid extends GridPanel {
         }
         String text = rec.getAsString("body");
         if (text != null && text.length() > 0) {
-            text = "<br><br>===== " + rec.getAsString("author") + " wrote on " + rec.getAsString("date")
-                    + ": ======<br>" + text;
-        } else {
+            text = "<br><br>===== " + rec.getAsString("author") + " wrote on " + rec.getAsString("date") + ": ======<br>" + text;
+        }
+        else {
             text = "";
         }
 
@@ -529,7 +547,8 @@ public class NotesGrid extends GridPanel {
         if (rowSelected == -1) {
             MessageBox.alert("Please select a note to delete.");
             return;
-        } else if (!deleteEnable) {
+        }
+        else if (!deleteEnable) {
             MessageBox.alert("Delete is not allowed! You may delete only notes that were created by you and which did not get any replies yet.");
             return;
         }
@@ -546,20 +565,17 @@ public class NotesGrid extends GridPanel {
         }
 
         final String subj = rec.getAsString("subject");
-        MessageBox.confirm("Confirm delete note",
-                "Are you sure you want to delete the note with subject \"" + subj + "\"?",
-                new MessageBox.ConfirmCallback() {
-                    public void execute(String btnID) {
-                        if (btnID.equalsIgnoreCase("yes")) {
-                            ChAOServiceManager.getInstance().deleteNote(project.getProjectId(), id, new DeleteNoteHandler(id));
-                        }
-                    }
+        MessageBox.confirm("Confirm delete note", "Are you sure you want to delete the note with subject \"" + subj + "\"?", new MessageBox.ConfirmCallback() {
+            public void execute(String btnID) {
+                if (btnID.equalsIgnoreCase("yes")) {
+                    ChAOServiceManager.getInstance().deleteNote(projectId, id, new DeleteNoteHandler(id));
                 }
-        );
+            }
+        });
     }
 
     protected ComboBox getTypeComboBox() {
-        Store cbstore = new SimpleStore(new String[] { "commentType" }, getCommentTypes());
+        Store cbstore = new SimpleStore(new String[]{"commentType"}, getCommentTypes());
         cbstore.load();
         ComboBox cb = new ComboBox();
         cb.setStore(cbstore);
@@ -588,20 +604,18 @@ public class NotesGrid extends GridPanel {
         note.setSubject(subject);
         final EntityData noteId = note.getNoteId();
         final String entityName = (noteId == null ? "" : noteId.getName());
-        Record plant = recordDef.createRecord(new Object[] { "newAnnId",
-                "<FONT COLOR=\"#cc6600\">" + subject + "</FONT>", Application.get().getUserId().getUserName(),
-                note.getCreationDate(), note.getBody(), note.getType(), entityName, getRepliesCount(note) });
+        Record plant = recordDef.createRecord(new Object[]{"newAnnId", "<FONT COLOR=\"#cc6600\">" + subject + "</FONT>", Application.get().getUserId().getUserName(), note.getCreationDate(), note.getBody(), note.getType(), entityName, getRepliesCount(note)});
         store.insert(rowSelected + 1 + pageNo * PAGE_SIZE, plant);
         if (rowSelected + 1 == PAGE_SIZE) {
             pageNo++;
         }
-        fillTempStore(pageNo*PAGE_SIZE, (pageNo+1)*PAGE_SIZE);
+        fillTempStore(pageNo * PAGE_SIZE, (pageNo + 1) * PAGE_SIZE);
         if (store.getCount() % PAGE_SIZE == 1) {
             nextlink.setVisible(true);
         }
         getView().refresh();
 
-        ChAOServiceManager.getInstance().createNote(project.getProjectId(), note, false, new CreateNote());
+        ChAOServiceManager.getInstance().createNote(projectId, note, false, new CreateNote());
     }
 
     private int getRepliesCount(NotesData note) {
@@ -627,22 +641,20 @@ public class NotesGrid extends GridPanel {
         final EntityData noteId = note.getNoteId();
         // MH: Too many checks for null!  Needs tidying.
         final String entityName = (noteId == null ? "" : noteId.getName());
-        Record plant = recordDef.createRecord(new Object[] { "newAnnId", subject,
-                Application.get().getUserId(), note.getCreationDate(),
-                note.getBody(), note.getType(), entityName, getRepliesCount(note) });
+        Record plant = recordDef.createRecord(new Object[]{"newAnnId", subject, Application.get().getUserId(), note.getCreationDate(), note.getBody(), note.getType(), entityName, getRepliesCount(note)});
         store.insert(store.getCount(), plant);
         pageNo = store.getCount() / PAGE_SIZE;
         if (store.getCount() % PAGE_SIZE == 0) {
             pageNo--;
         }
-        fillTempStore(pageNo*PAGE_SIZE, (pageNo+1)*PAGE_SIZE);
+        fillTempStore(pageNo * PAGE_SIZE, (pageNo + 1) * PAGE_SIZE);
         if (store.getCount() > PAGE_SIZE) {
             nextlink.setVisible(true);
         }
         getView().refresh();
 
         // make the remote call
-        ChAOServiceManager.getInstance().createNote(project.getProjectId(), note, topLevel, new CreateNote());
+        ChAOServiceManager.getInstance().createNote(projectId, note, topLevel, new CreateNote());
     }
 
     private EntityData getAnnotatedEntity(boolean isReply) {
@@ -659,7 +671,8 @@ public class NotesGrid extends GridPanel {
             if (annotatedEntity == null) {
                 annotatedEntity = new EntityData(_currentEntity != null ? _currentEntity.getName() : null);
             }
-        } else {
+        }
+        else {
             if (_currentEntity != null) {
                 annotatedEntity = new EntityData(_currentEntity.getName());
             }
@@ -727,22 +740,22 @@ public class NotesGrid extends GridPanel {
         //window.setCloseAction(Window.HIDE);
         window.setPlain(true);
 
-        NoteInputPanel nip = new NoteInputPanel(project, "Please enter your note:", false, subject, text,
-                getAnnotatedEntity(isReply), new AsyncCallback<NotesData>() {
-                    public void onFailure(Throwable caught) {
-                        // TODO Auto-generated method stub
-                        window.close();
-                    }
+        NoteInputPanel nip = new NoteInputPanel(projectId, "Please enter your note:", false, subject, text, getAnnotatedEntity(isReply), new AsyncCallback<NotesData>() {
+            public void onFailure(Throwable caught) {
+                // TODO Auto-generated method stub
+                window.close();
+            }
 
-                    public void onSuccess(NotesData result) {
-                        if (isReply) {
-                            onReplyButton(result);
-                        } else {
-                            onPostButton(result);
-                        }
-                        window.close();
-                    }
-                });
+            public void onSuccess(NotesData result) {
+                if (isReply) {
+                    onReplyButton(result);
+                }
+                else {
+                    onPostButton(result);
+                }
+                window.close();
+            }
+        });
         window.add(nip);
 
         window.show();
@@ -771,7 +784,8 @@ public class NotesGrid extends GridPanel {
 
         if (max == 0) {
             label.setText("Displaying page 0 of 0 pages");
-        } else {
+        }
+        else {
             label.setText("Displaying page " + (pageNo + 1) + " of " + max + " pages");
         }
 
@@ -802,12 +816,11 @@ public class NotesGrid extends GridPanel {
     }
 
     public void reload() {
-        ChAOServiceManager.getInstance().getNotes(project.getProjectId(), _currentEntity == null ? null :_currentEntity.getName(), topLevel,
-                new GetNotes());
+        ChAOServiceManager.getInstance().getNotes(projectId, _currentEntity == null ? null : _currentEntity.getName(), topLevel, new GetNotes());
     }
 
     private void addReplyToStore(NotesData note, int indent) {
-        if(note.getReplies() != null){
+        if (note.getReplies() != null) {
             List<NotesData> replies = note.getReplies();
             Iterator<NotesData> it = replies.iterator();
             String head = "Re: ";
@@ -824,8 +837,7 @@ public class NotesGrid extends GridPanel {
                 }
                 final EntityData noteId = n.getNoteId();
                 final String entityName = (noteId == null ? "" : noteId.getName());
-                Record record = recordDef.createRecord(new Object[] { entityName, subject, n.getAuthor(),
-                        time, n.getBody(), n.getType(), entityName, getRepliesCount(n) });
+                Record record = recordDef.createRecord(new Object[]{entityName, subject, n.getAuthor(), time, n.getBody(), n.getType(), entityName, getRepliesCount(n)});
                 store.add(record);
                 addReplyToStore(n, indent + 1);
             }
@@ -834,9 +846,7 @@ public class NotesGrid extends GridPanel {
 
     private String[][] getCommentTypes() {
         if (commentTypes == null) {
-            commentTypes = new String[][] { new String[] { "Comment" }, new String[] { "Question" },
-                    new String[] { "Example" }, new String[] { "AgreeDisagreeVoteProposal" },
-                    new String[] { "AgreeDisagreeVote" } };
+            commentTypes = new String[][]{new String[]{"Comment"}, new String[]{"Question"}, new String[]{"Example"}, new String[]{"AgreeDisagreeVoteProposal"}, new String[]{"AgreeDisagreeVote"}};
         }
         return commentTypes;
     }
@@ -872,8 +882,7 @@ public class NotesGrid extends GridPanel {
                 }
                 final EntityData noteId = note.getNoteId();
                 final String noteIdName = (noteId == null ? "" : noteId.getName());
-                Record record = recordDef.createRecord(new Object[] { noteIdName, subject,
-                        note.getAuthor(), time, note.getBody(), note.getType(), noteIdName, getRepliesCount(note) });
+                Record record = recordDef.createRecord(new Object[]{noteIdName, subject, note.getAuthor(), time, note.getBody(), note.getType(), noteIdName, getRepliesCount(note)});
                 store.add(record);
                 addReplyToStore(note, 1);
 
@@ -893,8 +902,7 @@ public class NotesGrid extends GridPanel {
 
         public void handleFailure(Throwable caught) {
             GWT.log("Error at creating note", caught);
-            com.google.gwt.user.client.Window.alert("There were problems at creating the note.\n"
-                    + "Please try again later.");
+            com.google.gwt.user.client.Window.alert("There were problems at creating the note.\n" + "Please try again later.");
         }
 
         public void handleSuccess(NotesData result) {

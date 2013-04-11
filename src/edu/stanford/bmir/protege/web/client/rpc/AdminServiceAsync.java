@@ -31,7 +31,7 @@ public interface AdminServiceAsync {
 
     void getAllowedServerOperations(String userName, AsyncCallback<PermissionsSet> callback);
 
-    void refreshMetaproject(AsyncCallback<Void> cb);
+//    void refreshMetaproject(AsyncCallback<Void> cb);
 
     void getUserSaltAndChallenge(String userName, AsyncCallback<LoginChallengeData> callback);
 

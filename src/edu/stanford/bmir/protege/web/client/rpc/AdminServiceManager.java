@@ -43,7 +43,7 @@ public class AdminServiceManager {
     }
 
     public void getAllowedOperations(ProjectId projectId, UserId userId, AsyncCallback<PermissionsSet> cb) {
-        proxy.getAllowedOperations(projectId.getProjectName(), userId.getUserName(), cb);
+        proxy.getAllowedOperations(projectId.getId(), userId.getUserName(), cb);
     }
 
     public void getAllowedServerOperations(UserId userId, AsyncCallback<PermissionsSet> cb) {
@@ -54,9 +54,9 @@ public class AdminServiceManager {
         proxy.changePassword(userId.getUserName(), password, cb);
     }
 
-    public void refreshMetaproject(AsyncCallback<Void> cb) {
-        proxy.refreshMetaproject(cb);
-    }
+//    public void refreshMetaproject(AsyncCallback<Void> cb) {
+//        proxy.refreshMetaproject(cb);
+//    }
 
     public void sendPasswordReminder(UserId userId, AsyncCallback<Void> cb) {
         proxy.sendPasswordReminder(userId.getUserName(), cb);

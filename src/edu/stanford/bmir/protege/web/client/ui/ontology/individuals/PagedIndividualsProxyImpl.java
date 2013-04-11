@@ -14,16 +14,13 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class PagedIndividualsProxyImpl  extends GWTProxy {
 
-    private String projectName;
+    private ProjectId projectId;
     private String className;
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setProjectId(ProjectId projectId) {
+        this.projectId = projectId;
     }
 
-    public String getProjectName() {
-        return projectName;
-    }
 
     public void setClassName(String className) {
         this.className = className;
@@ -36,7 +33,7 @@ public class PagedIndividualsProxyImpl  extends GWTProxy {
     @Override
     public void load(int start, int limit, String sort, String dir, final JavaScriptObject o, UrlParam[] baseParams) {
 
-        OntologyServiceManager.getInstance().getIndividuals(ProjectId.get(projectName), className, start, limit, sort, dir,
+        OntologyServiceManager.getInstance().getIndividuals(projectId, className, start, limit, sort, dir,
                 new AsyncCallback<PaginationData<EntityData>>() {
 
                     public void onFailure(Throwable caught) {

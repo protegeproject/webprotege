@@ -5,7 +5,9 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationInfo;
+import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyRegisteredException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.List;
@@ -72,8 +74,8 @@ public interface ProjectManagerService extends RemoteService {
      * @param newProjectSettings A {@link NewProjectSettings} object that specifies the intended owner of the project,
      * the project name, a description for the project, sources etc. etc.
      * @throws NotSignedInException if the caller is not signed in.
-     * @throws ProjectAlreadyRegisteredException If the project is already registered and the caller is not the owner.
-     * @throws ProjectDocumentExistsException If the project is not registered but the project document already exists.
+     * @throws edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyRegisteredException If the project is already registered and the caller is not the owner.
+     * @throws edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException If the project is not registered but the project document already exists.
      */
     ProjectDetails createNewProject(NewProjectSettings newProjectSettings) throws NotSignedInException, ProjectAlreadyRegisteredException, ProjectDocumentExistsException;
 
@@ -83,7 +85,7 @@ public interface ProjectManagerService extends RemoteService {
 //     * current project document.
 //     * @throws NotSignedInException If the caller is not signed in.
 //     * @throws ProjectNotRegisteredException If the NewProjectSettings object does not refer to a project that is already
-//     * registered.  The {@link edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings#getProjectName()} must
+//     * registered.  The {@link edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings#getDisplayName()} must
 //     * match a the name of a registered project.
 //     * @throws NotProjectOwnerException If the caller is not the owner of the existing registered project.  Note that
 //     * there is no requirement for the caller to be the owner of the final overwritten project (i.e. this method supports

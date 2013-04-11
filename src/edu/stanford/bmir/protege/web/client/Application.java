@@ -239,7 +239,7 @@ public class Application {
         this.activeProject = activeProject;
 //        placeManager.updateCurrentPlace();
 
-//        EventBusManager.getManager().postEvent(new ActiveProjectChangedEvent(activeProject));
+        EventBusManager.getManager().postEvent(new ActiveProjectChangedEvent(activeProject));
 
     }
 

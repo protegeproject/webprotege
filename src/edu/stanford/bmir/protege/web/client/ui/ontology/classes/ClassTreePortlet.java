@@ -515,7 +515,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 //                    className == null ? "" : URL.encodeQueryString(className)
 //            }, new StringBuffer(), new FieldPosition(0)).toString();
             url = linkPattern.replace("{0}", applicationURL).
-                    replace("{1}", URL.encodeQueryString(getProject().getProjectName())).
+                    replace("{1}", URL.encodeQueryString(getProjectId().getId())).
                     replace("{2}", tabName).
                     replace("{3}", className == null ? "" : URL.encodeQueryString(className));
         }
@@ -786,7 +786,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             @Override
             public void onSpecialKey(final Field field, final EventObject e) {
                 if (e.getKey() == EventObject.ENTER) {
-                    SearchUtil searchUtil = new SearchUtil(getProject(), ClassTreePortlet.this, getSearchAsyncCallback());
+                    SearchUtil searchUtil = new SearchUtil(getProjectId(), ClassTreePortlet.this, getSearchAsyncCallback());
                     searchUtil.setBusyComponent(searchField);
                     searchUtil.setSearchedValueType(ValueType.Cls);
                     searchUtil.search(searchField.getText());
@@ -1087,7 +1087,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             }
         });
 
-//        ChAOServiceManager.getInstance().addWatchedEntity(project.getProjectName(), GlobalSettings.get().getUserName(), currentSelection.getName(), new AddWatchedCls(getSingleSelectedTreeNode()));
+//        ChAOServiceManager.getInstance().addWatchedEntity(project.getDisplayName(), GlobalSettings.get().getUserName(), currentSelection.getName(), new AddWatchedCls(getSingleSelectedTreeNode()));
     }
 
     protected void onWatchBranchCls() {
@@ -1107,7 +1107,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             }
         });
 
-//        ChAOServiceManager.getInstance().addWatchedBranchEntity(project.getProjectName(), GlobalSettings.get().getUserName(), currentSelection.getName(), new AddWatchedCls(getSingleSelectedTreeNode()));
+//        ChAOServiceManager.getInstance().addWatchedBranchEntity(project.getDisplayName(), GlobalSettings.get().getUserName(), currentSelection.getName(), new AddWatchedCls(getSingleSelectedTreeNode()));
     }
 
 
@@ -1446,12 +1446,12 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
 //        switch (watchType) {
         if(w.iterator().next() instanceof EntityFrameWatch) {
-//            return "<img src=\"images/eye.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
-            return "<img src=\"images/tag_blue.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
+            return "<img src=\"images/eye.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
+//            return "<img src=\"images/tag_blue.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
         }
         else {
-//            return "<img src=\"images/eye-down.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
-            return "<img src=\"images/tag_blue_add.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
+            return "<img src=\"images/eye-down.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
+//            return "<img src=\"images/tag_blue_add.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
         }
 //            case ENTITY_WATCH:
 //
@@ -1490,7 +1490,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
         });
 
-        final NoteInputPanel nip = new NoteInputPanel(getProject(), "Please enter your note:", true, entity, window);
+        final NoteInputPanel nip = new NoteInputPanel(getProjectId(), "Please enter your note:", true, entity, window);
 
         window.add(nip);
         window.show();
@@ -1529,7 +1529,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         root.expand(); // TODO: does not seem to work always
 
         if (initialSelection == null) { //try to cover the links, not ideal
-            initialSelection = GlobalSelectionManager.getGlobalSelection(getProject().getProjectName());
+            initialSelection = GlobalSelectionManager.getGlobalSelection(getProjectId());
         }
 
         //happens only at initialization - if WebProtege is called with arguments to jump to a particular class..

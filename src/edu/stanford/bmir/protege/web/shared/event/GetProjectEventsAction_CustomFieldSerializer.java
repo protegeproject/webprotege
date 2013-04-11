@@ -71,7 +71,7 @@ public class GetProjectEventsAction_CustomFieldSerializer extends CustomFieldSer
     }
 
     public static void serialize(SerializationStreamWriter streamWriter, GetProjectEventsAction instance) throws SerializationException {
-        streamWriter.writeString(instance.getProjectId().getProjectName());
+        streamWriter.writeString(instance.getProjectId().getId());
         streamWriter.writeString(instance.getUserId().getUserName());
         streamWriter.writeInt(instance.getSinceTag().getOrdinal());
     }

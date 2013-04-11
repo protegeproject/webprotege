@@ -178,7 +178,7 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
     }
     
     public boolean isWriteOperationAllowed(boolean showUserAlerts) {
-        if (!UIUtil.checkOperationAllowed(getProject(), showUserAlerts)) {
+        if (!UIUtil.checkOperationAllowed(getProjectId(), showUserAlerts)) {
             return false;
         }
         if (isReadOnly()) {

@@ -176,7 +176,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         window.setHeight(400);
         window.setLayout(new FitLayout());
 
-        bpSearchComponent = new BioPortalSearchComponent(getProject(), !multiValue) {
+        bpSearchComponent = new BioPortalSearchComponent(getProjectId(), !multiValue) {
             @Override
             protected AbstractAsyncHandler<EntityData> getImportBioPortalConceptHandler() {
                 return new ImportBioPortalConceptHandler(this);
@@ -221,7 +221,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         final TextField txtSource = new TextField("Terminology");
         final TextField txtURL = new TextField("URL");
         HTMLPanel verticalSpacer = new HTMLPanel("<BR /><BR />");
-        final NoteInputPanel nip = new NoteInputPanel(getProject(), "Enter a comment about this reference (optional):",
+        final NoteInputPanel nip = new NoteInputPanel(getProjectId(), "Enter a comment about this reference (optional):",
                 false, "", "", null, window);
         nip.showButtons(false);
 
@@ -270,7 +270,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 
     private void createNewReference(String label, String termId, String ontologyId, String url,
             final NoteInputPanel noteInputPanel) {
-        bpSearchComponent = new BioPortalSearchComponent(getProject(), !multiValue) {
+        bpSearchComponent = new BioPortalSearchComponent(getProjectId(), !multiValue) {
             @Override
             protected AbstractAsyncHandler<EntityData> getCreateManualreferenceHandler() {
                 return new CreateManualReferenceHandler(noteInputPanel);
@@ -300,7 +300,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         //window.setCloseAction(Window.HIDE);
         window.setPlain(true);
 
-        final NoteInputPanel nip = new NoteInputPanel(project, "Enter a comment about this reference (optional):",
+        final NoteInputPanel nip = new NoteInputPanel(getProjectId(), "Enter a comment about this reference (optional):",
                 false, refInstance, window, new AsyncCallback<NotesData>() {
             public void onFailure(Throwable caught) {
                 if (caught != null) {

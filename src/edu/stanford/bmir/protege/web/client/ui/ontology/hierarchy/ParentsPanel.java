@@ -39,11 +39,12 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 
 public class ParentsPanel extends Panel {
 
-    private Project project;
+    private final ProjectId projectId;
     private Panel parentsPanel;
     private Map<EntityData, HTML> entityToParentPanelMap = new HashMap<EntityData, HTML>();
     private boolean showRemove;
@@ -60,19 +61,19 @@ public class ParentsPanel extends Panel {
     private ClickHandler parentActionHandler;
     private String topClass;
 
-    public ParentsPanel(Project project) {
-        this(project, true, true, true, true, false);
+    public ParentsPanel(ProjectId projectId) {
+        this(projectId, true, true, true, true, false);
         setHeight(70);
     }
 
-    public ParentsPanel(Project project, boolean showAdd, boolean showRemove) {
-        this(project, showAdd, showRemove, true, true, false);
+    public ParentsPanel(ProjectId projectId, boolean showAdd, boolean showRemove) {
+        this(projectId, showAdd, showRemove, true, true, false);
         setHeight(70);
     }
 
-    public ParentsPanel(Project project, boolean showAdd, boolean showRemove, boolean showLabel, boolean showBorder, boolean clickableParents) {
+    public ParentsPanel(ProjectId projectId, boolean showAdd, boolean showRemove, boolean showLabel, boolean showBorder, boolean clickableParents) {
         super();
-        this.project = project;
+        this.projectId = projectId;
         this.showAdd = showAdd;
         this.showRemove = showRemove;
         this.showLabel = showLabel;
@@ -191,7 +192,7 @@ public class ParentsPanel extends Panel {
         if (cls == null) {
             updatePanel(new ArrayList<EntityData>());
         } else {
-            OntologyServiceManager.getInstance().getParents(project.getProjectId(), cls.getName(), true, new GetParentsHandler());
+            OntologyServiceManager.getInstance().getParents(projectId, cls.getName(), true, new GetParentsHandler());
         }
     }
 

@@ -5,27 +5,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class GlobalSelectionManager {
 
-    private static Map<String, Collection<EntityData>> ont2sel = new HashMap<String, Collection<EntityData>>();
+    private static Map<ProjectId, Collection<EntityData>> ont2sel = new HashMap<ProjectId, Collection<EntityData>>();
 
-    private static Map<String, String> ont2tab = new HashMap<String, String>();
+    private static Map<ProjectId, String> ont2tab = new HashMap<ProjectId, String>();
 
-    public static Collection<EntityData> getGlobalSelection(String ont) {
-        return ont2sel.get(ont);
+    public static Collection<EntityData> getGlobalSelection(ProjectId projectId) {
+        return ont2sel.get(projectId);
     }
 
-    public static void setGlobalSelection(String ont, Collection<EntityData> sel) {
-        ont2sel.put(ont, sel);
+    public static void setGlobalSelection(ProjectId projectId, Collection<EntityData> sel) {
+        ont2sel.put(projectId, sel);
     }
 
-    public static String getTab(String ont) {
-        return ont2tab.get(ont);
+    public static String getTab(ProjectId projectId) {
+        return ont2tab.get(projectId);
     }
 
-    public static void setTab(String ont, String tab) {
-        ont2tab.put(ont, tab);
+    public static void setTab(ProjectId projectId, String tab) {
+        ont2tab.put(projectId, tab);
     }
 
 }

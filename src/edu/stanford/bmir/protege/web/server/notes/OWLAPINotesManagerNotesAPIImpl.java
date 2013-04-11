@@ -413,7 +413,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 //        for(int i = 0; i < 5; i++) {
 //            final NoteId noteId = NoteId.createNoteIdFromLexicalForm("Note" + i);
 //            String body = project.getProjectId() + " Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-//            final Optional<String> subject = Optional.of("Subject " + i + " in project " + project.getProjectId().getProjectName());
+//            final Optional<String> subject = Optional.of("Subject " + i + " in project " + project.getProjectId().getDisplayName());
 //            Note note = Note.createNote(noteId, Optional.<NoteId>absent(), System.currentTimeMillis(), UserId.getGuest(), edu.stanford.bmir.protege.web.shared.notes.NoteType.getComment(), subject, body);
 //            notes.add(note);
 //        }

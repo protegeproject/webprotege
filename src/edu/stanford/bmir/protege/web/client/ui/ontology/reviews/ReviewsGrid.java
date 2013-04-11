@@ -29,6 +29,7 @@ import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ReviewData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
@@ -36,15 +37,15 @@ import edu.stanford.bmir.protege.web.client.rpc.data.ReviewData;
 public class ReviewsGrid extends GridPanel {
 
     private EntityData currentEntity;
-    private Project project;
+    private ProjectId projectId;
     private RecordDef recordDef;
     private Store store;
     private Toolbar toolbar;
     private ToolbarButton addReviewButton;
     private ToolbarButton requestReviewButton;
 
-    public ReviewsGrid(Project project) {
-        this.project = project;
+    public ReviewsGrid(ProjectId projectId) {
+        this.projectId = projectId;
         initialize();
     }
 
@@ -118,7 +119,7 @@ public class ReviewsGrid extends GridPanel {
 
     public void reload() {
         store.removeAll();
-        ChAOServiceManager.getInstance().getReviews(project.getProjectId(), currentEntity.getName(),
+        ChAOServiceManager.getInstance().getReviews(projectId, currentEntity.getName(),
                 new GetReviewsHandler());
     }
 
@@ -149,7 +150,7 @@ public class ReviewsGrid extends GridPanel {
     }
 
     private void requestReviewButton_onClick(Button button, EventObject e) {
-        final RequestReviewWindow window = new RequestReviewWindow(project.getProjectName(), currentEntity);
+        final RequestReviewWindow window = new RequestReviewWindow(projectId, currentEntity);
         window.show(button.getId());
     }
 
@@ -182,7 +183,7 @@ public class ReviewsGrid extends GridPanel {
             result.setAnnotatedEntity(currentEntity);
             result.setType("Review");
 
-            ChAOServiceManager.getInstance().addReview(project.getProjectId(),
+            ChAOServiceManager.getInstance().addReview(projectId,
                     Application.get().getUserId(), result, new AddReviewHandler(result));
         }
     }

@@ -227,7 +227,7 @@ public class BioPortalProposalsPortlet extends AbstractEntityPortlet {
         }
 
         setTitle("BioPortal notes and proposals for " + UIUtil.getDisplayText(getEntity()) + "  (loading...)");
-        BioportalProposalsManager.getBioportalProposalsManager().getBioportalProposals(getProject().getProjectName(), bpRestBase, bpOntologyId, entity.getName(),
+        BioportalProposalsManager.getBioportalProposalsManager().getBioportalProposals(getProject().getProjectId(), bpRestBase, bpOntologyId, entity.getName(),
                 new AbstractAsyncHandler<String>() {
             @Override
             public void handleFailure(Throwable caught) {

@@ -317,7 +317,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
                 }
             });
 
-//            ChAOServiceManager.getInstance().addWatchedEntity(project.getProjectName(),
+//            ChAOServiceManager.getInstance().addWatchedEntity(project.getDisplayName(),
 //                    GlobalSettings.get().getUserName(), entityData.getName(),
 //                    new AddWatchedIndividual(selectedRec));
         }
@@ -348,7 +348,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
 
         OWLEntity entity = DataFactory.getOWLNamedIndividual(indEntity.getName());
         DispatchServiceManager.get().execute(new DeleteEntityAction(entity, getProjectId()), new DeleteIndividualHandler(selRecord));
-//        OntologyServiceManager.getInstance().deleteEntity(project.getProjectName(), indEntity.getName(),
+//        OntologyServiceManager.getInstance().deleteEntity(project.getDisplayName(), indEntity.getName(),
 //                GlobalSettings.get().getUserName(), "Deleted individual " + indEntity.getBrowserText(),
 //                );
 
@@ -384,7 +384,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
             @Override
             public void onSpecialKey(Field field, EventObject e) {
                 if (e.getKey() == EventObject.ENTER) {
-                    SearchUtil su = new SearchUtil(getProject(), IndividualsListPortlet.this);
+                    SearchUtil su = new SearchUtil(getProjectId(), IndividualsListPortlet.this);
                     //su.setBusyComponent(searchField);  //this does not seem to work
                     su.setBusyComponent(getTopToolbar());
                     su.setSearchedValueType(ValueType.Instance);

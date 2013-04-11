@@ -42,11 +42,11 @@ public interface AdminService extends RemoteService {
 
     PermissionsSet getAllowedServerOperations(String userName);
 
-    /**
-     * For now, it will refresh the users list. Later: it should refresh also
-     * the projects list. TODO: Need to notify the users about this.
-     */
-    void refreshMetaproject();
+//    /**
+//     * For now, it will refresh the users list. Later: it should refresh also
+//     * the projects list. TODO: Need to notify the users about this.
+//     */
+//    void refreshMetaproject();
 
     LoginChallengeData getUserSaltAndChallenge(String userName);
 

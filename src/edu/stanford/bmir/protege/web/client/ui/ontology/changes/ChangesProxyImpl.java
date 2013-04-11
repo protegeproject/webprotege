@@ -15,17 +15,17 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class ChangesProxyImpl extends GWTProxy {
 
-    private String projectName = null;
+    private ProjectId projectId = null;
     private String entityName = null;
     private Date startDate = null;
     private Date endDate = null;
     
-    public String getProjectName() {
-        return projectName;
+    public ProjectId getProjectId() {
+        return projectId;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setProjectId(ProjectId projectId) {
+        this.projectId = projectId;
     }
 
     public String getEntityName() {
@@ -50,13 +50,6 @@ public class ChangesProxyImpl extends GWTProxy {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public void resetParams(){
-        this.projectName = null;
-        this.entityName = null;
-        this.startDate = null;
-        this.endDate = null;
     }
     
     
@@ -98,11 +91,17 @@ public class ChangesProxyImpl extends GWTProxy {
         }
 
         if (entityName != null) {
-            ChAOServiceManager.getInstance().getChanges(ProjectId.get(projectName), entityName, start, limit, sort, dir,
+            ChAOServiceManager.getInstance().getChanges(projectId, entityName, start, limit, sort, dir,
                     new ChangesHandler());
         } else { //no entity, get changes for the entire project
-            ChAOServiceManager.getInstance().getChanges(ProjectId.get(projectName), startDate, endDate, start, limit, sort, dir,
+            ChAOServiceManager.getInstance().getChanges(projectId, startDate, endDate, start, limit, sort, dir,
                     new ChangesHandler());
         }
+    }
+
+    public void resetParams() {
+        entityName = null;
+        startDate = null;
+        endDate = null;
     }
 }

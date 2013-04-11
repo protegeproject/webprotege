@@ -54,7 +54,7 @@ public class ProjectViewPlace extends Place {
 
         @Override
         public String getToken(ProjectViewPlace place) {
-            return PROJECT_ID_VAR + place.getProjectId().getProjectName();
+            return PROJECT_ID_VAR + place.getProjectId().getId();
         }
     }
 

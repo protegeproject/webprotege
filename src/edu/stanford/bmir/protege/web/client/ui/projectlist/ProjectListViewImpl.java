@@ -127,7 +127,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
         sortHandler.setComparator(projectNameColumn, new Comparator<ProjectListEntry>() {
             @Override
             public int compare(ProjectListEntry o1, ProjectListEntry o2) {
-                return o1.getProjectId().getProjectName().compareTo(o2.getProjectId().getProjectName());
+                return o1.getProjectId().getId().compareTo(o2.getProjectId().getId());
             }
         });
 
@@ -201,7 +201,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
 
         @Override
         public void render(Cell.Context context, ProjectListEntry object, SafeHtmlBuilder sb) {
-            final String projectName = object.getProjectId().getProjectName();
+            final String projectName = object.getProjectDetails().getDisplayName();
             sb.appendHtmlConstant("<div style=\"width: 100%; height: 100%; color: #6982AB; cursor: pointer;\" title=\"Open "+ projectName +"\">" + object.getProjectDetails().getDisplayName() + "</div>");
         }
 
@@ -250,7 +250,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
 
         @Override
         public String getValue(ProjectListEntry object) {
-            return "Download " + object.getProjectId().getProjectName();
+            return "Download " + object.getProjectId();
         }
 
         @Override
@@ -280,7 +280,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
 
         @Override
         public String getValue(ProjectListEntry object) {
-            return "Trash " + object.getProjectId().getProjectName();
+            return "Trash " + object.getProjectId();
         }
 
         @Override

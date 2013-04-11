@@ -153,7 +153,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     private void getProjectConfiguration() {
-        UIUtil.showLoadProgessBar("Loading " + projectId.getProjectName() + " configuration", "Loading");
+        UIUtil.showLoadProgessBar("Loading UI configuration", "Loading");
         ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(projectId,
                 Application.get().getUserId(), new GetProjectConfigurationHandler());
 
@@ -377,12 +377,12 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
             return;
         }
         ProjectLayoutConfiguration config = getProject().getProjectLayoutConfiguration();
-        config.setOntologyName(projectId.getProjectName());
+        config.setOntologyName(projectId.getId());
         ProjectConfigurationServiceManager.getInstance().saveProjectConfiguration(projectId, Application.get().getUserId(), config, new SaveConfigHandler());
     }
 
     public String getLabel() {
-        return projectId.getProjectName();
+        return ProjectManager.get().getProject(projectId).get().getProjectDetails().getDisplayName();
     }
 
 
@@ -518,7 +518,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private void setInitialSelection() {
         final String ontologyName = com.google.gwt.user.client.Window.Location.getParameter("ontology");
-        if (ontologyName == null || ! projectId.getProjectName().equals(ontologyName)) {
+        if (ontologyName == null || ! projectId.getId().equals(ontologyName)) {
             return;
         }
 
@@ -562,10 +562,9 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
         @Override
         public void handleFailure(Throwable caught) {
-            GWT.log("There were errors at loading project configuration for " + projectId.getProjectName(), caught);
+            GWT.log("There were errors at loading project configuration for " + projectId, caught);
             UIUtil.hideLoadProgessBar();
-            com.google.gwt.user.client.Window.alert("Load project configuration for " + projectId.getProjectName()
-                    + " failed. " + " Message: " + caught.getMessage());
+            com.google.gwt.user.client.Window.alert("Could not load the project configuration for this project" + " Message: " + caught.getMessage());
         }
 
         @Override

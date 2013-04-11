@@ -17,22 +17,23 @@ import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class SearchUtil {
 
-    private Project project;
+    private ProjectId projectId;
     private Selectable selectable;
     private ValueType searchedValueType;
     private SearchGridPanel searchGrid;
     private AsyncCallback<Boolean> asyncCallback;
     private Component busyComponent;
 
-    public SearchUtil(Project project, Selectable selectable) {
-        this(project, selectable, null);
+    public SearchUtil(ProjectId projectId, Selectable selectable) {
+        this(projectId, selectable, null);
     }
 
-    public SearchUtil(Project project, Selectable selectable, AsyncCallback<Boolean> asyncCallback) {
-        this.project = project;
+    public SearchUtil(ProjectId projectId, Selectable selectable, AsyncCallback<Boolean> asyncCallback) {
+        this.projectId = projectId;
         this.selectable = selectable;
         this.asyncCallback = asyncCallback;
         init();
@@ -48,7 +49,7 @@ public class SearchUtil {
         };
         searchGrid.setAutoScroll(true);
         searchGrid.setStripeRows(true);
-        searchGrid.setProjectName(project.getProjectName());
+        searchGrid.setProjectId(projectId);
     }
 
     public void search(String text) {
@@ -99,7 +100,7 @@ public class SearchUtil {
         if (searchText == null || searchText.trim().length() == 0) {
             searchGrid.getStore().removeAll();
         } else {
-            searchGrid.reload(project.getProjectId(), searchText, searchedValueType);
+            searchGrid.reload(projectId, searchText, searchedValueType);
         }
 
         window.show();

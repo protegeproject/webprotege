@@ -12,7 +12,7 @@ public class NewProjectSettings implements Serializable {
 
     private UserId projectOwner;
 
-    private String projectName;
+    private String displayName;
 
     private String projectDescription;
 
@@ -30,14 +30,14 @@ public class NewProjectSettings implements Serializable {
     /**
      * Creates a NewProjectSettings object that describes the basic settings for a new project.
      * @param projectOwner The desired owner of the project.  Not null.
-     * @param projectName The desired project name for the new project.  Not null.
-     * @param projectDescription The desired project description for the new project.  Not null.
+     * @param displayName The desired project name for the new project.  Not {@code null}.
+     * @param projectDescription The desired project description for the new project.  Not {@code null}.
      * @param projectType The type of projectType. Not null.
-     * @throws NullPointerException if either projectOwner, projectName or projectDescription are null.
+     * @throws NullPointerException if either projectOwner, displayName or projectDescription are null.
      */
-    public NewProjectSettings(UserId projectOwner, String projectName, String projectDescription, ProjectType projectType) {
-        if (projectName == null) {
-            throw new NullPointerException("projectName must not be null.");
+    public NewProjectSettings(UserId projectOwner, String displayName, String projectDescription, ProjectType projectType) {
+        if (displayName == null) {
+            throw new NullPointerException("displayName must not be null.");
         }
         if (projectDescription == null) {
             throw new NullPointerException("projectDescription must not be null.");
@@ -46,7 +46,7 @@ public class NewProjectSettings implements Serializable {
             throw new NullPointerException("projectType must not be null");
         }
         this.projectOwner = projectOwner;
-        this.projectName = projectName;
+        this.displayName = displayName;
         this.projectDescription = projectDescription;
         this.projectType = projectType;
     }
@@ -57,16 +57,16 @@ public class NewProjectSettings implements Serializable {
      * Creates a NewProjectSettings object that describes the basic settings for a new project and also specifies a
      * set of source documents (via a set of {@link DocumentId} objects) from which to create the project.
      * @param projectOwner The desired owner of the project.  Not null.
-     * @param projectName The desired project name for the new project.  Not null.
+     * @param displayName The desired project name for the new project.  Not null.
      * @param projectDescription The desired project description for the new project.  Not null.
      * @param projectType The type of projectType. Not null.
      * @param sourceDocumentId A {@link DocumentId} object that should be used to identify the source document with
      * which to initialise a project.  May be null.
-     * @throws NullPointerException if either projectOwner, projectName, projectDescription or sourceDocumentId are
+     * @throws NullPointerException if either projectOwner, displayName, projectDescription or sourceDocumentId are
      *                              null.
      */
-    public NewProjectSettings(UserId projectOwner, String projectName, String projectDescription, ProjectType projectType, DocumentId sourceDocumentId) {
-        this(projectOwner, projectName, projectDescription, projectType);
+    public NewProjectSettings(UserId projectOwner, String displayName, String projectDescription, ProjectType projectType, DocumentId sourceDocumentId) {
+        this(projectOwner, displayName, projectDescription, projectType);
         this.sourceDocumentId = sourceDocumentId;
     }
 
@@ -82,8 +82,8 @@ public class NewProjectSettings implements Serializable {
      * Gets the desired name of the project.
      * @return A string representing the project name.  Not null.
      */
-    public String getProjectName() {
-        return projectName;
+    public String getDisplayName() {
+        return displayName;
     }
 
 
@@ -124,7 +124,7 @@ public class NewProjectSettings implements Serializable {
 
     @Override
     public int hashCode() {
-        return projectOwner.hashCode() + projectName.hashCode() * 37 + projectDescription.hashCode() + sourceDocumentId.hashCode();
+        return projectOwner.hashCode() + displayName.hashCode() * 37 + projectDescription.hashCode() + sourceDocumentId.hashCode();
     }
 
     @Override
@@ -137,7 +137,7 @@ public class NewProjectSettings implements Serializable {
         }
         NewProjectSettings other = (NewProjectSettings) obj;
         return other.projectOwner.equals(projectOwner) &&
-                other.projectName.equals(this.projectName) &&
+                other.displayName.equals(this.displayName) &&
                 other.projectDescription.equals(this.projectDescription) &&
                 other.sourceDocumentId.equals(sourceDocumentId);
     }
@@ -150,7 +150,7 @@ public class NewProjectSettings implements Serializable {
         sb.append(projectOwner);
         sb.append(" ");
         sb.append(" ProjectName(");
-        sb.append(projectName);
+        sb.append(displayName);
         sb.append(") ProjectDescription(");
         sb.append(projectDescription);
         sb.append("))");

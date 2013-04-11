@@ -25,13 +25,13 @@ public class UserHasProjectReadPermissionValidator<A extends Action<R> & HasProj
     public RequestValidationResult validateAction(A action, RequestContext requestContext) {
         ProjectId projectId = action.getProjectId();
         MetaProjectManager mpm = MetaProjectManager.getManager();
-        Collection<Operation> ops = mpm.getAllowedOperations(projectId.getProjectName(), requestContext.getUserId().getUserName());
+        Collection<Operation> ops = mpm.getAllowedOperations(projectId.getId(), requestContext.getUserId().getUserName());
         for(Operation op : ops) {
             if(op.getName().equals(OntologyShareAccessConstants.PROJECT_READ_ONLY_ACCESS_OPERATION)) {
                 return RequestValidationResult.getValid();
             }
         }
-        return RequestValidationResult.getInvalid("Required read permission of " + projectId.getProjectName());
+        return RequestValidationResult.getInvalid("Required read permission of project");
 
     }
 }

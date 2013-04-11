@@ -48,7 +48,7 @@ public abstract class AbstractPropertyWidgetWithNotes extends AbstractPropertyWi
             //window.setCloseAction(Window.HIDE);
             window.setPlain(true);
 
-            NoteInputPanel nip = new NoteInputPanel(getProject(), message, true,
+            NoteInputPanel nip = new NoteInputPanel(getProjectId(), message, true,
                     subject, text, new EntityData(value), window);
 
             window.add(nip);

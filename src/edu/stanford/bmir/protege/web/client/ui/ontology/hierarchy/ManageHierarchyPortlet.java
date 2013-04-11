@@ -110,7 +110,7 @@ public class ManageHierarchyPortlet extends AbstractEntityPortlet {
         createClassHtml.setStylePrimaryName("manage-button");
         createClassHtml.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                if (UIUtil.confirmOperationAllowed(getProject())) {
+                if (UIUtil.confirmOperationAllowed(getProjectId())) {
                     onCreateCls();
                 }
             }
@@ -123,7 +123,7 @@ public class ManageHierarchyPortlet extends AbstractEntityPortlet {
         retireClassHtml.setStylePrimaryName("manage-button");
         retireClassHtml.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                if (UIUtil.confirmOperationAllowed(getProject())) {
+                if (UIUtil.confirmOperationAllowed(getProjectId())) {
                     //TT: Retire disabled at request of WHO on 14.07.2010. Will be restored in future versions.
                     //onRetireCls();
                     //TODO: ICD specific code!
@@ -144,7 +144,7 @@ public class ManageHierarchyPortlet extends AbstractEntityPortlet {
         moveHtml.setStylePrimaryName("manage-button");
         moveHtml.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                if (UIUtil.confirmOperationAllowed(getProject())) {
+                if (UIUtil.confirmOperationAllowed(getProjectId())) {
                     onChangeParents();
                 }
             }
@@ -163,7 +163,7 @@ public class ManageHierarchyPortlet extends AbstractEntityPortlet {
 
     protected void onCreateCls() {
         wrappingPanel.clear();
-        CreateClassPanel createClassPanel = new CreateClassPanel(getProject(), false);
+        CreateClassPanel createClassPanel = new CreateClassPanel(getProjectId(), false);
         createClassPanel.setTopClass(topClass);
         createClassPanel.setParentsClses(UIUtil.createCollection(getEntity()));
         wrappingPanel.add(createClassPanel);
@@ -173,7 +173,7 @@ public class ManageHierarchyPortlet extends AbstractEntityPortlet {
 
     protected void onRetireCls() {
         wrappingPanel.clear();
-        RetireClassPanel retireClassPanel = new RetireClassPanel(getProject());
+        RetireClassPanel retireClassPanel = new RetireClassPanel(getProjectId());
         retireClassPanel.setTopClass(topClass);
         retireClassPanel.setParentsClses(UIUtil.createCollection(getEntity()));
         wrappingPanel.add(retireClassPanel);
@@ -184,7 +184,7 @@ public class ManageHierarchyPortlet extends AbstractEntityPortlet {
 
     protected void onChangeParents() {
         wrappingPanel.clear();
-        ChangeParentPanel changeParentPanel = new ChangeParentPanel(getProject());
+        ChangeParentPanel changeParentPanel = new ChangeParentPanel(getProjectId());
         changeParentPanel.setTopClass(topClass);
         changeParentPanel.setParentsClses(UIUtil.createCollection(getEntity()));
         wrappingPanel.add(changeParentPanel);

@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 
 /**
@@ -19,7 +22,7 @@ public class MetricsPortlet extends AbstractEntityPortlet {
 
 	public void reload() {
 		if (initialized) return;
-		metricsGrid.setEntity(_currentEntity);
+		metricsGrid.reload();
 	}
 
     @Override
@@ -29,9 +32,9 @@ public class MetricsPortlet extends AbstractEntityPortlet {
     }
 
     public void initialize() {
-		setTitle("Ontology Metrics for " + getProject().getProjectName());
+		setTitle("Ontology Metrics for " + getProject().getDisplayName());
 		
-		metricsGrid = new MetricsGrid(getProject());
+		metricsGrid = new MetricsGrid(getProjectId());
 		add(metricsGrid);
 		
 		metricsGrid.reload();
@@ -44,8 +47,9 @@ public class MetricsPortlet extends AbstractEntityPortlet {
 		 */
 		initialized = true;		
 	}
-	
-	public ArrayList getSelection() {
-		return null;
-	}
+
+    @Override
+    public Collection<EntityData> getSelection() {
+        return Collections.emptySet();
+    }
 }

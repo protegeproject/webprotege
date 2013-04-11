@@ -1,5 +1,6 @@
-package edu.stanford.bmir.protege.web.client.rpc.data;
+package edu.stanford.bmir.protege.web.shared.project;
 
+import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.io.Serializable;
@@ -16,7 +17,7 @@ public class ProjectDocumentExistsException extends ProjectAlreadyExistsExceptio
     }
 
     public ProjectDocumentExistsException(ProjectId projectId) {
-        super(projectId, "Project document already exists (" + projectId.getProjectName() + ")");
+        super(projectId, "Project document already exists: " + projectId.getId());
     }
 
 }

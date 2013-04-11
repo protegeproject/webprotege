@@ -11,53 +11,32 @@ import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class NoteInputHandler {
 
-    private Project project = null;
+    private ProjectId project = null;
     private EntityData currentEntity = null;
     private NotesData record = null;
     private AsyncCallback<NotesData> cb = null;
     private boolean topLevel = false;
     
-    public NoteInputHandler(Project project, EntityData currentEntity, AsyncCallback<NotesData> cb){
+    public NoteInputHandler(ProjectId project, EntityData currentEntity, AsyncCallback<NotesData> cb){
         this.project = project;
         this.currentEntity = currentEntity;
         this.cb = cb;
-    }
-    
-    public boolean getTopLevel() {
-        return topLevel;
     }
 
     public void setTopLevel(boolean topLevel) {
         this.topLevel = topLevel;
     }
 
-    public Project getProject() {
-        return project;
-    }
-    public void setProject(Project project) {
-        this.project = project;
-    }
-    public EntityData getCurrentEntity() {
-        return currentEntity;
-    }
-    public void setCurrentEntity(EntityData currentEntity) {
-        this.currentEntity = currentEntity;
-    }
-    public NotesData getRecord() {
-        return record;
-    }
+
+
     public void setRecord(NotesData record) {
         this.record = record;
     }
-    public AsyncCallback<NotesData> getCb() {
-        return cb;
-    }
-    public void setCb(AsyncCallback<NotesData> cb) {
-        this.cb = cb;
-    }
+
 
     public void showInWindow(final boolean isReply, String subject, String text) {
         final Window window = new Window();
@@ -135,7 +114,7 @@ public class NoteInputHandler {
         String subject = note.getSubject();
         subject = (subject == null || subject.length() == 0 ? "(no subject)" : subject);
         note.setSubject(subject);
-        ChAOServiceManager.getInstance().editNote(getProject().getProjectId(), note, this.record.getNoteId().getName(), cb);
+        ChAOServiceManager.getInstance().editNote(project, note, this.record.getNoteId().getName(), cb);
     }
     
     private void onReplyButton(NotesData note){
@@ -147,7 +126,7 @@ public class NoteInputHandler {
         subject = (subject == null || subject.length() == 0 ? "(no subject)" : subject);
         note.setSubject(subject);
         
-        ChAOServiceManager.getInstance().createNote(project.getProjectId(), note, false, cb);
+        ChAOServiceManager.getInstance().createNote(project, note, false, cb);
     }
     
     private void onPostButton(NotesData note){
@@ -160,7 +139,7 @@ public class NoteInputHandler {
             subject = "(no subject)";
         }
         note.setSubject(subject);
-        ChAOServiceManager.getInstance().createNote(project.getProjectId(), note, topLevel, cb);
+        ChAOServiceManager.getInstance().createNote(project, note, topLevel, cb);
     }
     
     private EntityData getAnnotatedEntity(boolean isReply) {

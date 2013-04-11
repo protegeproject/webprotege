@@ -27,7 +27,7 @@ public class ReviewsPortlet extends AbstractEntityPortlet {
         setPaddings(15);
         setTitle("Reviews");
 
-        grid = new ReviewsGrid(getProject());
+        grid = new ReviewsGrid(getProjectId());
         add(grid, new AnchorLayoutData("100% 100%"));
         doLayout();
     }

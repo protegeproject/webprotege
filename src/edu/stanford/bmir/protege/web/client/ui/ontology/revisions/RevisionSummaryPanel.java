@@ -32,8 +32,8 @@ public class RevisionSummaryPanel extends FlowPanel {
         InlineLabel revisionNumberLabel = new InlineLabel("Revision: " + revisionNumber);
         revisionNumberLabel.addStyleName("webprotege-revision-summary-revision-number-style");
         add(revisionNumberLabel);
-        String encodedProjectName = URL.encodeQueryString(projectId.getProjectName());
-        add(new Anchor(" [Download]", "download?ontology=" + encodedProjectName + "&revision=" + revisionNumber));
+        String encodedProjectName = URL.encodeQueryString(projectId.getId());
+        add(new Anchor(" [Download]", "webprotege/download?ontology=" + encodedProjectName + "&revision=" + revisionNumber));
 
         
         Date date = new Date(revisionSummary.getTimestamp());

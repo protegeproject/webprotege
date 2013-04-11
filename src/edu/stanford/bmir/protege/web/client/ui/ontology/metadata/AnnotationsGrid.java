@@ -33,13 +33,13 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 public class AnnotationsGrid extends GridPanel implements HasProjectId {
 
 	protected ColumnModel columnModel;
-	protected String projectName;
+	protected ProjectId projectId;
 	protected EntityData _currentEntity;
 	protected RecordDef recordDef;
 	protected Store store;
 
-	public AnnotationsGrid(String projectName) {
-		this.projectName = projectName;
+	public AnnotationsGrid(ProjectId projectId) {
+		this.projectId = projectId;
 		createGrid();
 	}
 	
@@ -120,7 +120,7 @@ public class AnnotationsGrid extends GridPanel implements HasProjectId {
 	}
 
     public ProjectId getProjectId() {
-        return ProjectId.get(projectName);
+        return projectId;
     }
 
     class GetAnnotationsHandler extends AbstractAsyncHandler<RenderableGetObjectResult<Set<OWLAnnotation>>> {

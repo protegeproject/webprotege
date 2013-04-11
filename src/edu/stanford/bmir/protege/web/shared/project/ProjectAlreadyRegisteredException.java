@@ -1,5 +1,6 @@
-package edu.stanford.bmir.protege.web.client.rpc.data;
+package edu.stanford.bmir.protege.web.shared.project;
 
+import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.io.Serializable;
@@ -22,6 +23,6 @@ public class ProjectAlreadyRegisteredException extends ProjectAlreadyExistsExcep
     }
 
     public ProjectAlreadyRegisteredException(ProjectId projectId) {
-        super(projectId, "Project already registered (" + projectId.getProjectName() + ")");
+        super(projectId, "Project already registered: " + projectId);
     }
 }

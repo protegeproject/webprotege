@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -17,20 +18,19 @@ public class WebProtegeInitializer implements ServletContextListener {
             new LoadWebProtegeProperties(),
             new CheckWebProtegeDataDirectoryExists(),
             new CheckDataDirectoryIsReadableAndWritable(),
+            new CheckMetaProjectExists(),
             new CheckMongoDBConnectionTask());
 
 
     public void contextInitialized(ServletContextEvent sce) {
-        if(performConfiguration()) {
-            WebProtegeFileStore.setup(WebProtegeProperties.getDataDirectory());
-        }
+        performConfiguration(sce.getServletContext());
     }
 
 
-    private boolean performConfiguration() {
+    private boolean performConfiguration(ServletContext servletContext) {
         for(ConfigurationTask task : configurationTasks) {
             try {
-                task.run();
+                task.run(servletContext);
             }
             catch (WebProtegeConfigurationException e) {
                 WebProtegeWebAppFilter.setConfigError(e);

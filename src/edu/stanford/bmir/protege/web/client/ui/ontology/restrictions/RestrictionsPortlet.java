@@ -159,7 +159,7 @@ public class RestrictionsPortlet extends AbstractOWLEntityPortlet{
                 int row = cellForEvent.getRowIndex();
                 lastActionRow = row;
 
-                if (!UIUtil.confirmOperationAllowed(getProject())) {
+                if (!UIUtil.confirmOperationAllowed(getProjectId())) {
                     return;
                 }
 

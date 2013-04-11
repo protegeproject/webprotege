@@ -13,7 +13,7 @@ public class WatchedEntitiesCacheTest {
 //    }
 //
 //    public void testWatchedEntitiesByProjectAndUserWithOneResult(){
-//        final Project project = createProject("myProjectName");
+//        final Project project = registerProject("myProjectName");
 //        final Ontology_Component ontologyComponent = createOntologyComponent("one");
 //        final User user = createUser("userName", Arrays.asList(ontologyComponent), null);
 //        final OntologyComponentFactory factory = createFactory(user);
@@ -26,7 +26,7 @@ public class WatchedEntitiesCacheTest {
 //    }
 //
 //    public void testWatchedBranchesByProjectAndUserWithOneResult(){
-//        final Project project = createProject("myProjectName");
+//        final Project project = registerProject("myProjectName");
 //        final Ontology_Component ontologyComponent = createOntologyComponent("one");
 //        final User user = createUser("userName", null, Arrays.asList(ontologyComponent));
 //        final OntologyComponentFactory factory = createFactory(user);
@@ -39,7 +39,7 @@ public class WatchedEntitiesCacheTest {
 //    }
 //
 //    public void testAdditionOfEntityWatchToBranchWatch(){
-//        final Project project = createProject("myProjectName");
+//        final Project project = registerProject("myProjectName");
 //        final Ontology_Component ontologyComponentOne = createOntologyComponent("one");
 //        final User user = createUser("userName", null, Arrays.asList(ontologyComponentOne));
 //        final OntologyComponentFactory factory = createFactory(user);
@@ -53,7 +53,7 @@ public class WatchedEntitiesCacheTest {
 //    }
 //
 //    public void testAdditionOfExtraEntityForEntityWatch(){
-//        final Project project = createProject("myProjectName");
+//        final Project project = registerProject("myProjectName");
 //        final Ontology_Component ontologyComponentOne = createOntologyComponent("one");
 //        final Ontology_Component ontologyComponentTwo = createOntologyComponent("two");
 //        final User user = createUser("userName", Arrays.asList(ontologyComponentOne), null);
@@ -72,7 +72,7 @@ public class WatchedEntitiesCacheTest {
 //    }
 //
 //    public void testEntityWatchReturnsSet(){
-//        final Project project = createProject("myProjectName");
+//        final Project project = registerProject("myProjectName");
 //        final Ontology_Component ontologyComponentOne = createOntologyComponent("one");
 //        final Ontology_Component ontologyComponentTwo = createOntologyComponent("two");
 //        final User user = createUser("userName", Arrays.asList(ontologyComponentOne), null);
@@ -86,7 +86,7 @@ public class WatchedEntitiesCacheTest {
 //    }
 //
 //    public void testAdditionOfExtraEntityForBranchWatch(){
-//        final Project project = createProject("myProjectName");
+//        final Project project = registerProject("myProjectName");
 //        final Ontology_Component ontologyComponentOne = createOntologyComponent("one");
 //        final Ontology_Component ontologyComponentTwo = createOntologyComponent("two");
 //        final User user = createUser("userName", null, Arrays.asList(ontologyComponentOne));
@@ -106,7 +106,7 @@ public class WatchedEntitiesCacheTest {
 //
 //
 //    public void testRemovalOfExtraEntityForEntityWatch(){
-//        final Project project = createProject("myProjectName");
+//        final Project project = registerProject("myProjectName");
 //        final Ontology_Component ontologyComponentOne = createOntologyComponent("one");
 //        final Ontology_Component ontologyComponentTwo = createOntologyComponent("two");
 //        final User user = createUser("userName", Arrays.asList(ontologyComponentOne), null);
@@ -128,7 +128,7 @@ public class WatchedEntitiesCacheTest {
 //    }
 //
 //    public void testRemovalOfExtraEntityForBranchWatch(){
-//        final Project project = createProject("myProjectName");
+//        final Project project = registerProject("myProjectName");
 //        final Ontology_Component ontologyComponentOne = createOntologyComponent("one");
 //        final Ontology_Component ontologyComponentTwo = createOntologyComponent("two");
 //        final User user = createUser("userName", null, Arrays.asList(ontologyComponentOne));
@@ -158,7 +158,7 @@ public class WatchedEntitiesCacheTest {
 //        return factory;
 //    }
 //
-//    private Project createProject(final String projectName) {
+//    private Project registerProject(final String projectName) {
 //        final Project project = context.mock(Project.class, projectName);
 //        context.checking(new Expectations(){{
 //                allowing(project).getName(); will(returnValue(projectName));

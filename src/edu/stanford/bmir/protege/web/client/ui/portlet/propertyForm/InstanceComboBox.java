@@ -71,7 +71,7 @@ public class InstanceComboBox extends AbstractFieldWidget {
         ArrayReader reader = new ArrayReader(recordDef);
 
         proxy = new PagedIndividualsProxyImpl();
-        proxy.setProjectName(getProject().getProjectName());
+        proxy.setProjectId(getProjectId());
         proxy.setClassName(UIUtil.getStringConfigurationProperty(getWidgetConfiguration(), FormConstants.ONT_TYPE, null));
         store = new Store(proxy, reader);
 

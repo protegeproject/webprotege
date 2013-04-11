@@ -55,10 +55,14 @@ public class Project implements HasProjectId, HasDispose {
     }
 
     public ProjectId getProjectId() {
-        return ProjectId.get(getProjectName());
+        return projectDetails.getProjectId();
     }
 
-    public String getProjectName() {
+//    public String getProjectName() {
+//        return projectDetails.getDisplayName();
+//    }
+
+    public String getDisplayName() {
         return projectDetails.getDisplayName();
     }
 

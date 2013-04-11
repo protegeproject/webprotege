@@ -35,7 +35,7 @@ public class AccessPolicyManager {
     }
 
     private ProjectInstance getProjectInstance(ProjectId projectId, MetaProject metaproject) {
-        return metaproject.getProject(projectId.getProjectName());
+        return metaproject.getProject(projectId.getId());
     }
 
     public String getOwner(ProjectId projectId) {
@@ -104,9 +104,9 @@ public class AccessPolicyManager {
 
         removeDefaultPolicyIfExists(projectInstance, readOnlyOperation);
 
-        Group group = metaProject.getGroup(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);
+        Group group = metaProject.getGroup(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);
         if (group == null) {
-            group = metaProject.createGroup(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);
+            group = metaProject.createGroup(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);
         }
         if (readOnlyOperation == null) {
             readOnlyOperation = metaProject.createOperation(OntologyShareAccessConstants.PROJECT_READ_ONLY_ACCESS_OPERATION);
@@ -181,7 +181,7 @@ public class AccessPolicyManager {
             return;
         }
         ProjectInstance projectInstance = getProjectInstance(projectId, metaProject);
-        Group group = metaProject.getGroup(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);
+        Group group = metaProject.getGroup(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);
         if (doesProjectContainsGroupAndOperation(projectInstance, group, readOnlyOperation)) {
             removePermission(metaProject, userNameList, projectInstance, group, readOnlyOperation);
         }
@@ -214,9 +214,9 @@ public class AccessPolicyManager {
 
         removeDefaultPolicyIfExists(projectInstance, writeOperation);
 
-        Group group = metaProject.getGroup(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_WRITERS_GROUP_SUFFIX);
+        Group group = metaProject.getGroup(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_WRITERS_GROUP_SUFFIX);
         if (group == null) {
-            group = metaProject.createGroup(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_WRITERS_GROUP_SUFFIX);
+            group = metaProject.createGroup(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_WRITERS_GROUP_SUFFIX);
         }
         if (writeOperation == null) {
             writeOperation = metaProject.createOperation(OntologyShareAccessConstants.PROJECT_WRITE_ACCESS_OPERATION);
@@ -241,7 +241,7 @@ public class AccessPolicyManager {
             return;
         }
         ProjectInstance projectInstance = getProjectInstance(projectId, metaProject);
-        Group group = metaProject.getGroup(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_WRITERS_GROUP_SUFFIX);
+        Group group = metaProject.getGroup(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_WRITERS_GROUP_SUFFIX);
         if (doesProjectContainsGroupAndOperation(projectInstance, group, writeOperation)) {
             removePermission(metaProject, userNameList, projectInstance, group, writeOperation);
         }
@@ -284,7 +284,7 @@ public class AccessPolicyManager {
 
                 }
             }
-            Group group = metaProject.getGroup(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);// add
+            Group group = metaProject.getGroup(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);// add
 
             List<String> groupUserList = getUserListForGroupOperation(projectInstance, group, readOnlyOperation);
 //            User serverUser = metaProject.getUser(WebProtegeProperties.getProtegeServerUser());
@@ -433,7 +433,7 @@ public class AccessPolicyManager {
 
                 }
             }
-            Group group = metaProject.getGroup(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_WRITERS_GROUP_SUFFIX);
+            Group group = metaProject.getGroup(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_WRITERS_GROUP_SUFFIX);
             List<String> groupUserList = getUserListForGroupOperation(projectInstance, group, writeOperation);
             for (User user : allPoliciesUsers) {
                 if (user.getName() != null && policy.isOperationAuthorized(user, writeOperation, projectInstance)) {
@@ -604,9 +604,9 @@ public class AccessPolicyManager {
                 if (!(group.getName().equalsIgnoreCase(MetaProjectConstants.USER_WORLD) // group is not world with read / write access
                         && (allowedOp.contains(readOnlyOperation) || allowedOp.contains(writeOperation)))) {
 
-                    if (!(group.getName().equalsIgnoreCase(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX) && allowedOp.contains(readOnlyOperation))) {// group is not projects readers group with read access
+                    if (!(group.getName().equalsIgnoreCase(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX) && allowedOp.contains(readOnlyOperation))) {// group is not projects readers group with read access
 
-                        if (!(group.getName().equalsIgnoreCase(projectId.getProjectName() + OntologyShareAccessConstants.ONTOLOGY_WRITERS_GROUP_SUFFIX) && allowedOp.contains(writeOperation))) {// group is not projects writer group with write access
+                        if (!(group.getName().equalsIgnoreCase(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_WRITERS_GROUP_SUFFIX) && allowedOp.contains(writeOperation))) {// group is not projects writer group with write access
                             if (!(group.getName().equalsIgnoreCase(OntologyShareAccessConstants.OWNER_GROUP_PREFIX + owner) && allowedOp.contains(readOnlyOperation) && allowedOp.contains(writeOperation) && allowedOp.contains(displayInProjectListOperation))) {//group is not owner group with read, write and 'display in project list' access
                                 if (!(group.getName().equalsIgnoreCase(MetaProjectConstants.USER_WORLD) // group is not world with display in project access
                                         && allowedOp.contains(displayInProjectListOperation))) {
@@ -751,7 +751,7 @@ public class AccessPolicyManager {
             template = template.replace("<AccessType>", "Reader");
         }
 
-        template = template.replace("<ProjectName>", projectId.getProjectName());
+        template = template.replace("<ProjectName>", projectId.getId());
         template = template.replace("<AuthorName>", ownerName);
         template = template.replace("<InvitationLink>", invitationLink);
 

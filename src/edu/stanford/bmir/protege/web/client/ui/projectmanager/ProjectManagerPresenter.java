@@ -40,7 +40,7 @@ public class ProjectManagerPresenter {
         includeAllFilter = new ProjectListFilter() {
             @Override
             public boolean isIncluded(ProjectDetails projectDetails) {
-                return true;
+                return !projectDetails.isInTrash();
             }
         };
 

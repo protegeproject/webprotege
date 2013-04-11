@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.init;
 
 import edu.stanford.bmir.protege.web.server.db.mongodb.MongoDBManager;
 
+import javax.servlet.ServletContext;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -11,7 +13,7 @@ import edu.stanford.bmir.protege.web.server.db.mongodb.MongoDBManager;
 public class CheckMongoDBConnectionTask implements ConfigurationTask {
 
     @Override
-    public void run() throws WebProtegeConfigurationException {
+    public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
             MongoDBManager.get();
     }
 }

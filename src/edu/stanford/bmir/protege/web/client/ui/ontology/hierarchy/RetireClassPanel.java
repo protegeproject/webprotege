@@ -20,6 +20,7 @@ import com.gwtext.client.widgets.layout.AnchorLayoutData;
 
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.model.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.HierarchyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -29,10 +30,11 @@ import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.util.ClassSelectionField;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.field.TextAreaField;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class RetireClassPanel extends FormPanel implements Selectable {
 
-    private Project project;
+    private ProjectId projectId;
     private ClassSelectionField retiredClassesField;
     private ClassSelectionField newParentField;
     private Checkbox retireChildrenCheckbox;
@@ -40,8 +42,8 @@ public class RetireClassPanel extends FormPanel implements Selectable {
     private String topClass;
 
 
-    public RetireClassPanel(Project project) {
-        this.project = project;
+    public RetireClassPanel(ProjectId projectId) {
+        this.projectId = projectId;
         buildUI();
     }
 
@@ -60,7 +62,7 @@ public class RetireClassPanel extends FormPanel implements Selectable {
         explanationHtml.setStylePrimaryName("explanation");
         add(explanationHtml);
 
-        retiredClassesField = new ClassSelectionField(project, "Class(es) to retire");
+        retiredClassesField = new ClassSelectionField(projectId, "Class(es) to retire");
         add(retiredClassesField, new AnchorLayoutData("100% - 53"));
 
         retireChildrenCheckbox = new Checkbox("Retire also all children of the selected class(es).");
@@ -72,7 +74,7 @@ public class RetireClassPanel extends FormPanel implements Selectable {
             }
         });
 
-        newParentField = new ClassSelectionField(project, "New parent class of the children", false, null);
+        newParentField = new ClassSelectionField(projectId, "New parent class of the children", false, null);
         add(newParentField, new AnchorLayoutData("100% - 53"));
 
         reasonField = new TextAreaField();
@@ -84,7 +86,7 @@ public class RetireClassPanel extends FormPanel implements Selectable {
         retireButton.addListener(new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
-                if (project.hasWritePermission()) {
+                if (ProjectManager.get().getProject(projectId).get().hasWritePermission()) {
                     onRetire();
                 } else {
                     MessageBox.alert("No permission", "You do not have enough privileges to retire classes.");
@@ -178,7 +180,7 @@ public class RetireClassPanel extends FormPanel implements Selectable {
 
     private void performRetire() {
         String newParent = newParentField.getClsValue() == null ? null : newParentField.getClsValue().getName();
-        HierarchyServiceManager.getInstance().retireClasses(project.getProjectId(), UIUtil.getStringCollection(retiredClassesField.getClsValues()),
+        HierarchyServiceManager.getInstance().retireClasses(projectId, UIUtil.getStringCollection(retiredClassesField.getClsValues()),
                 retireChildrenCheckbox.getValue(), newParent, reasonField.getValueAsString(), getOperationDescription(),
                 Application.get().getUserId(), new RetireHandler());
     }
@@ -201,13 +203,7 @@ public class RetireClassPanel extends FormPanel implements Selectable {
     }
 
     protected void refreshFromServer() {
-        Timer timer = new Timer() {
-            @Override
-            public void run() {
-                project.forceGetEvents();
-            }
-        };
-        timer.schedule(500);
+        throw new RuntimeException("BROKEN");
     }
 
     public void addSelectionListener(SelectionListener listener) {

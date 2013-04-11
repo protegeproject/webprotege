@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
 import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
@@ -93,8 +94,7 @@ public class OWLAPIProjectMetadataManager {
 
 
     public String getName(ProjectId projectId) {
-        // For now, this is just the same as the project name
-        return projectId.getProjectName();
+        return getDisplayName(projectId);
     }
 
     public OWLAPIProjectType getType(ProjectId projectId) throws UnknownProjectException {
@@ -118,7 +118,18 @@ public class OWLAPIProjectMetadataManager {
     public void setProjectType(ProjectId projectId, OWLAPIProjectType projectType) throws UnknownProjectException {
         setPropertyValue(projectId, PROJECT_TYPE_PROPERTY_NAME, projectType.getProjectTypeName());
     }
-    
+
+    public String getDisplayName(ProjectId projectId) {
+        ProjectInstance pi = getProjectInstance(projectId);
+        Slot displayNameSlot = pi.getProtegeInstance().getKnowledgeBase().getSlot("displayName");
+        if(displayNameSlot == null) {
+            return projectId.getId();
+        }
+        else {
+            return pi.getProtegeInstance().getDirectOwnSlotValue(displayNameSlot).toString();
+        }
+    }
+
 
     public String getDescription(ProjectId projectId) {
         ProjectInstance pi = getProjectInstance(projectId);
@@ -173,7 +184,7 @@ public class OWLAPIProjectMetadataManager {
     }
 
     public ProjectDetails getProjectDetails(ProjectId projectId) {
-        String displayName = projectId.getProjectName();
+        String displayName = getDisplayName(projectId);
         String description = getDescription(projectId);
         UserId owner = getOwner(projectId);
         boolean inTrash = isInTrash(projectId);
@@ -243,7 +254,7 @@ public class OWLAPIProjectMetadataManager {
         try {
             READ_LOCK.lock();
             MetaProject metaProject = getMetaProject();
-            ProjectInstance pi = metaProject.getProject(projectId.getProjectName());
+            ProjectInstance pi = metaProject.getProject(projectId.getId());
             if(pi == null) {
                 throw new UnknownProjectException(projectId);
             }

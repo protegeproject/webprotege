@@ -35,103 +35,99 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class NoteInputPanel extends Panel {
 
-    protected Project project;
+    protected ProjectId projectId;
+
     protected boolean showHistory;
+
     private Component mainComponent;
+
     private AsyncCallback<NotesData> cb;
+
     protected EntityData annotatedEntity;
 
     protected TextField subjectField;
+
     protected ComboBox typeComboBox;
+
     protected HtmlEditor htmlEditor;
+
     protected Button sendButton;
+
     protected Button cancelButton;
 
     protected NotesData note = null;
 
-    public NoteInputPanel(final Project project, String message, boolean showHistory,
-                          EntityData annotatedEntity, AsyncCallback<NotesData> cb) {
-        this(project, message, showHistory, "", "", annotatedEntity, cb);
+    public NoteInputPanel(final ProjectId projectId, String message, boolean showHistory, EntityData annotatedEntity, AsyncCallback<NotesData> cb) {
+        this(projectId, message, showHistory, "", "", annotatedEntity, cb);
     }
 
-    public NoteInputPanel(final Project project, String message, boolean showHistory,
-                          EntityData annotatedEntity, final Window window) {
-        this(project, message, showHistory, "", "", annotatedEntity, window);
+    public NoteInputPanel(final ProjectId projectId, String message, boolean showHistory, EntityData annotatedEntity, final Window window) {
+        this(projectId, message, showHistory, "", "", annotatedEntity, window);
     }
 
-    public NoteInputPanel(final Project project, String message, boolean showHistory,
-                          EntityData annotatedEntity, final Window window, AsyncCallback<NotesData> cb) {
+    public NoteInputPanel(final ProjectId project, String message, boolean showHistory, EntityData annotatedEntity, final Window window, AsyncCallback<NotesData> cb) {
         this(project, message, showHistory, "", "", annotatedEntity, window, cb);
     }
 
-    public NoteInputPanel(final Project project, String message, boolean showHistory,
-                          String subject, String text,
-                          EntityData annotatedEntity, final Window window) {
-        this(project, message, showHistory, subject, text,
-                annotatedEntity, window, new AsyncCallback<NotesData>() {
-                    public void onFailure(Throwable caught) {
-                        if (caught != null) {
-                            MessageBox.alert(caught.getMessage());
-                        }
-                    }
+    public NoteInputPanel(final ProjectId projectId, String message, boolean showHistory, String subject, String text, EntityData annotatedEntity, final Window window) {
+        this(projectId, message, showHistory, subject, text, annotatedEntity, window, new AsyncCallback<NotesData>() {
+            public void onFailure(Throwable caught) {
+                if (caught != null) {
+                    MessageBox.alert(caught.getMessage());
+                }
+            }
 
-                    public void onSuccess(NotesData note) {
-                        if (note != null &&
-                                ((note.getSubject() != null && note.getSubject().length() > 0) ||
-                                        (note.getBody() != null && note.getBody().length() > 0))) {
-                            ChAOServiceManager.getInstance().createNote(project.getProjectId(), note, false, new AbstractAsyncHandler<NotesData>() {
-                                @Override
-                                public void handleFailure(Throwable caught) {
-                                    MessageBox.alert("Creating note failed: " + caught.getMessage());
-                                }
-
-                                @Override
-                                public void handleSuccess(NotesData result) {
-                                    if (result != null) {
-                                        GWT.log("Note created successfully: " + result.toString(), null);
-                                    }
-                                    else {
-                                        GWT.log("WARNING: Creating note returned null!");
-                                    }
-                                }
-                            });
+            public void onSuccess(NotesData note) {
+                if (note != null && ((note.getSubject() != null && note.getSubject().length() > 0) || (note.getBody() != null && note.getBody().length() > 0))) {
+                    ChAOServiceManager.getInstance().createNote(projectId, note, false, new AbstractAsyncHandler<NotesData>() {
+                        @Override
+                        public void handleFailure(Throwable caught) {
+                            MessageBox.alert("Creating note failed: " + caught.getMessage());
                         }
-                    }
-                });
+
+                        @Override
+                        public void handleSuccess(NotesData result) {
+                            if (result != null) {
+                                GWT.log("Note created successfully: " + result.toString(), null);
+                            }
+                            else {
+                                GWT.log("WARNING: Creating note returned null!");
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
-    public NoteInputPanel(final Project project, String message, boolean showHistory,
-                          String subject, String text,
-                          EntityData annotatedEntity, final Window window, final AsyncCallback<NotesData> cb) {
-        this(project, message, showHistory, subject, text,
-                annotatedEntity, new AsyncCallback<NotesData>() {
-                    public void onFailure(Throwable caught) {
-                        cb.onFailure(caught);
-                        window.close();
-                    }
+    public NoteInputPanel(final ProjectId projectId, String message, boolean showHistory, String subject, String text, EntityData annotatedEntity, final Window window, final AsyncCallback<NotesData> cb) {
+        this(projectId, message, showHistory, subject, text, annotatedEntity, new AsyncCallback<NotesData>() {
+            public void onFailure(Throwable caught) {
+                cb.onFailure(caught);
+                window.close();
+            }
 
-                    public void onSuccess(NotesData result) {
-                        cb.onSuccess(result);
-                        window.close();
-                    }
-                });
+            public void onSuccess(NotesData result) {
+                cb.onSuccess(result);
+                window.close();
+            }
+        });
     }
 
-    public NoteInputPanel(Project project, String message, boolean showHistory,
-                          String subject, String text,
-                          EntityData annotatedEntity, AsyncCallback<NotesData> cb) {
-        this.project = project;
+    public NoteInputPanel(ProjectId projectId, String message, boolean showHistory, String subject, String text, EntityData annotatedEntity, AsyncCallback<NotesData> cb) {
+        this.projectId = projectId;
         this.annotatedEntity = annotatedEntity;
         this.showHistory = showHistory;
         this.cb = cb;
         intialize(message, subject, text);
     }
 
-    public NoteInputPanel(Project project, String message, boolean showHistory, NotesData note, EntityData annotatedEntity, AsyncCallback<NotesData> cb) {
-        this.project = project;
+    public NoteInputPanel(ProjectId projectId, String message, boolean showHistory, NotesData note, EntityData annotatedEntity, AsyncCallback<NotesData> cb) {
+        this.projectId = projectId;
         this.annotatedEntity = annotatedEntity;
         this.showHistory = showHistory;
         this.cb = cb;
@@ -139,9 +135,9 @@ public class NoteInputPanel extends Panel {
         intialize(message, note.getSubject(), note.getBody());
     }
 
-     native private void synchEditor(JavaScriptObject editor)/*-{
-         editor.syncValue();
-     }-*/;
+    native private void synchEditor(JavaScriptObject editor)/*-{
+        editor.syncValue();
+    }-*/;
 
     public void intialize(String message, String subject, String text) {
         // create the FormPanel and set the label position to top
@@ -189,7 +185,7 @@ public class NoteInputPanel extends Panel {
         formPanel.addButton(cancelButton);
 
 
-        NotesGrid ng = new NotesGrid(project);
+        NotesGrid ng = new NotesGrid(projectId);
         ng.setTopLevel(false);
         ng.setBorder(true);
         ng.setEntity(annotatedEntity);
@@ -291,17 +287,16 @@ public class NoteInputPanel extends Panel {
 
     public NotesData getNotesData(UserId userName) {
         try {
-            if (htmlEditor != null){
+            if (htmlEditor != null) {
                 synchEditor(htmlEditor.getJsObj());
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             GWT.log(e.getMessage());
         }
         String text = htmlEditor.getValueAsString();
         String subject = subjectField.getValueAsString();
-        NotesData note = new NotesData(userName.getUserName(),
-                text, getTimeString(), typeComboBox.getValueAsString(), subject,
-                null, annotatedEntity, null);
+        NotesData note = new NotesData(userName.getUserName(), text, getTimeString(), typeComboBox.getValueAsString(), subject, null, annotatedEntity, null);
         return note;
     }
 

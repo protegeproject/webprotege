@@ -115,7 +115,8 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             setActiveTab(0);
         }
         else {
-            setActiveTab(projectId.get().getProjectName());
+            ProjectDisplayImpl display = projectId2ProjectPanelMap.get(projectId);
+            setActiveTab(display.getLabel());
         }
     }
 
@@ -174,7 +175,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             return;
         }
         else {
-            UIUtil.showLoadProgessBar("Loading " + projectId.getProjectName(), "Loading " + projectId.getProjectName());
+            UIUtil.showLoadProgessBar("Loading project", "Loading...");
             Application.get().loadProject(projectId, new LoadProjectHandler(projectId));
         }
 
@@ -222,9 +223,9 @@ public class ProjectDisplayContainerPanel extends TabPanel {
 
         @Override
         public void handleFailure(Throwable caught) {
-            GWT.log("There were errors while loading project " + projectId.getProjectName(), caught);
+            GWT.log("There were errors while loading project " + projectId, caught);
             UIUtil.hideLoadProgessBar();
-            MessageBox.alert("Load project " + projectId.getProjectName() + " failed.<br>" + " Message: " + caught.getMessage());
+            MessageBox.alert("Load project " + projectId + " failed.<br>" + " Message: " + caught.getMessage());
         }
 
         @Override

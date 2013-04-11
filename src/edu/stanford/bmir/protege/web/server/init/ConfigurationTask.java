@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.init;
 
+import javax.servlet.ServletContext;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -11,6 +13,7 @@ public interface ConfigurationTask {
     /**
      * Runs this configuration check.  If there is an error and the check fails it throws a {@link WebProtegeConfigurationException}.
      * @throws WebProtegeConfigurationException if the check failed.
+     * @param servletContext
      */
-    void run() throws WebProtegeConfigurationException;
+    void run(ServletContext servletContext) throws WebProtegeConfigurationException;
 }

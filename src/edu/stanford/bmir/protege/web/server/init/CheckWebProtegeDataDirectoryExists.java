@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.init;
 
 import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 
 /**
@@ -13,8 +14,8 @@ import java.io.File;
 public class CheckWebProtegeDataDirectoryExists implements ConfigurationTask {
 
     @Override
-    public void run() throws WebProtegeConfigurationException {
-       File dataDirectory = WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE;
+    public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
+       File dataDirectory = WebProtegeProperties.getDataDirectory();
        if(!dataDirectory.exists()) {
            throw new WebProtegeConfigurationException(getDataDirectoryDoesNotExistsMessage(dataDirectory));
        }

@@ -163,7 +163,7 @@ public class WebProtegeProperties implements Serializable {
     private static ImmutableMap<PropertyName, Optional<String>> propertyValueMap;
 
 
-    public static final File WEB_PROTEGE_PROPERTIES_FILE = new File("webprotege.properties");
+    public static final String WEB_PROTEGE_PROPERTIES_FILE_NAME = "webprotege.properties";
 
     public static void initFromProperties(Properties properties) throws WebProtegeConfigurationException {
         if (propertyValueMap != null) {
@@ -180,7 +180,7 @@ public class WebProtegeProperties implements Serializable {
                     builder.put(propertyName, propertyName.getDefaultValue());
                 }
                 else {
-                    throw new WebProtegeConfigurationException("Property " + propertyName.getPropertyName() + " does not have a default value and no value has been specified in the " + WEB_PROTEGE_PROPERTIES_FILE.getName() + " file.  Please specify a value for this property in the " + WEB_PROTEGE_PROPERTIES_FILE.getName() + " file.");
+                    throw new WebProtegeConfigurationException("Property " + propertyName.getPropertyName() + " does not have a default value and no value has been specified in the " + WEB_PROTEGE_PROPERTIES_FILE_NAME + " file.  Please specify a value for this property in the " + WEB_PROTEGE_PROPERTIES_FILE_NAME + " file.");
                 }
             }
         }

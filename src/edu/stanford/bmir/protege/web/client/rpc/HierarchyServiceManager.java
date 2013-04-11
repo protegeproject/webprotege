@@ -30,13 +30,13 @@ public class HierarchyServiceManager {
     public void changeParent(ProjectId project, String className, Collection<String> parentsToAdd,
             Collection<String> parentsToRemove, UserId user, String operationDescription, String reasonForChange,
             AsyncCallback<List<EntityData>> callback) {
-        proxy.changeParent(project.getProjectName(), className, parentsToAdd, parentsToRemove, user.getUserName(), operationDescription, reasonForChange, callback);
+        proxy.changeParent(project.getId(), className, parentsToAdd, parentsToRemove, user.getUserName(), operationDescription, reasonForChange, callback);
     }
 
     public void retireClasses(ProjectId project, Collection<String> classesToRetireNames, boolean retireChildren,
             String newParent, String reasonForChange, String operationDescription, UserId user,
             AsyncCallback<Void> callback) {
-        proxy.retireClasses(project.getProjectName(), classesToRetireNames, retireChildren, newParent,
+        proxy.retireClasses(project.getId(), classesToRetireNames, retireChildren, newParent,
                 reasonForChange, operationDescription, user.getUserName(), callback);
     }
 }

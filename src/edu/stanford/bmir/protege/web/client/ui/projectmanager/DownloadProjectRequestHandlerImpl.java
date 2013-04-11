@@ -14,7 +14,7 @@ public class DownloadProjectRequestHandlerImpl implements DownloadProjectRequest
 
     @Override
     public void handleProjectDownloadRequest(ProjectId projectId) {
-        String encodedProjectName = URL.encode(projectId.getProjectName());
+        String encodedProjectName = URL.encode(projectId.getId());
         Window.open("download?ontology=" + encodedProjectName, "Download ontology", "");
     }
 }

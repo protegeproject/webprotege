@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.html;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import com.gwtext.client.widgets.layout.FitLayout;
@@ -61,7 +62,7 @@ public class HtmlMessagePortlet extends AbstractEntityPortlet {
     }
 
     public Collection<EntityData> getSelection() {
-        return null;
+        return Collections.emptySet();
     }
 
     private void initConfiguration() {
@@ -78,7 +79,7 @@ public class HtmlMessagePortlet extends AbstractEntityPortlet {
     }
 
     private void refreshContent() {
-        setTitle(title == null ? "Welcome to " + getProject().getProjectName() : title);
+        setTitle(title == null ? "Welcome to " + getProject().getDisplayName() : title);
 
         htmlTextComponent.refreshContent();
     }

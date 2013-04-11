@@ -78,7 +78,7 @@ public class ProjectManager {
     private Project registerProject(final UserId userId, final PermissionsSet userPermissions, final ProjectDetails projectDetails) {
         final ProjectId projectId = projectDetails.getProjectId();
         if(map.containsKey(projectId)) {
-            throw new RuntimeException("Double registration of project: " + projectId.getProjectName());
+            throw new RuntimeException("Double registration of project: " + projectId);
         }
 
         final Project project = new Project(projectDetails, userPermissions);

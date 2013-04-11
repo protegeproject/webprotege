@@ -97,9 +97,9 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         return builder.build();
     }
 
-    public void refreshMetaproject() {
-        MetaProjectManager.getManager().reloadMetaProject();
-    }
+//    public void refreshMetaproject() {
+//        MetaProjectManager.getManager().reloadMetaProject();
+//    }
 
     public void sendPasswordReminder(String userName) {
         String email = MetaProjectManager.getManager().getUserEmail(userName);

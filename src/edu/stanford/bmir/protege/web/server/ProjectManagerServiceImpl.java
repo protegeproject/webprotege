@@ -6,13 +6,17 @@ import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfiguratio
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyRegisteredException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
 import edu.stanford.smi.protege.server.metaproject.User;
 
 import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -55,7 +59,7 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         String projectDescripion = mdm.getDescription(projectId);
         List<UserId> owners = mdm.getOwners(projectId);
         String owner = owners.isEmpty() ? "" : owners.get(0).getUserName();
-        ProjectData projectData = new ProjectData(projectDescripion, "", projectId.getProjectName(), owner, false);
+        ProjectData projectData = new ProjectData(projectDescripion, "", projectId.getId(), owner, false);
         augmentProjectData(projectId, projectData);
         return projectData;
     }
@@ -77,7 +81,7 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
                 result.add(projectData);
             }
             else {
-                LOGGER.info("Filtering out non-existent project: %s", projectId.getProjectName());
+                LOGGER.info("Filtering out non-existent project: %s", projectId.getId());
             }
         }
         return result;
@@ -116,39 +120,39 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         if (projectId == null) {
             throw new NullPointerException("projectId must not be null");
         }
-        ProjectInstance pi = MetaProjectManager.getManager().getMetaProject().getProject(projectId.getProjectName());
+        ProjectInstance pi = MetaProjectManager.getManager().getMetaProject().getProject(projectId.getId());
         return pi != null;
     }
 
     public synchronized ProjectDetails createNewProject(NewProjectSettings newProjectSettings) throws NotSignedInException, ProjectAlreadyRegisteredException, ProjectDocumentExistsException {
-        if (newProjectSettings == null) {
-            throw new NullPointerException("newProjectSettings must not be null");
-        }
+        checkNotNull(newProjectSettings);
+
         ensureSignedIn();
 
-        ProjectId projectId = ProjectId.get(newProjectSettings.getProjectName());
-        
-        if(isRegisteredProject(projectId)) {
-            // Not allowed to overwrite
-            if(isProjectExistsOnDisk(projectId)) {
-                throw new ProjectAlreadyRegisteredException(projectId);
-            }
-            // For the time being, allow owners to put new sources in place
-            else if(!isSignedInUserAllowedToOverwriteProjectSources(projectId)) {
-                throw new ProjectAlreadyRegisteredException(projectId);
-            }
-        }
-        else if(isProjectExistsOnDisk(projectId)) {
-            // Too dangerous to do anything here.
-            throw new ProjectDocumentExistsException(projectId);
-        }
-       
+//        ProjectId projectId = ProjectIdFactory.getFreshProjectId();
+//
+//        if(isRegisteredProject(projectId)) {
+//            // Not allowed to overwrite
+//            if(isProjectExistsOnDisk(projectId)) {
+//                throw new ProjectAlreadyRegisteredException(projectId);
+//            }
+//            // For the time being, allow owners to put new sources in place
+//            else if(!isSignedInUserAllowedToOverwriteProjectSources(projectId)) {
+//                throw new ProjectAlreadyRegisteredException(projectId);
+//            }
+//        }
+//        else if(isProjectExistsOnDisk(projectId)) {
+//            // Too dangerous to do anything here.
+//            throw new ProjectDocumentExistsException(projectId);
+//        }
+//
 
 
         OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
-        pm.createNewProject(newProjectSettings);
+        OWLAPIProject project = pm.createNewProject(newProjectSettings);
+        ProjectId projectId = project.getProjectId();
         if (!isRegisteredProject(projectId)) {
-            getMetaProjectManager().createProject(newProjectSettings);
+            getMetaProjectManager().registerProject(projectId, newProjectSettings);
             applyDefaultSharingSettings(projectId);
             LOGGER.info("Created new project: %s", newProjectSettings.toString());
         }

@@ -116,7 +116,7 @@ public class OWLAPIProjectFileStore {
         this.projectId = checkNotNull(projectId);
         File baseDirectory = new File(webProtegeDataDirectory, BASE_DIRECTORY_NAME);
         File allProjectsDirectory = new File(baseDirectory, ALL_PROJECTS_DIRECTORY_NAME);
-        this.projectDirectory = new File(allProjectsDirectory, getEscapedProjectName());
+        this.projectDirectory = new File(allProjectsDirectory, projectId.getId());
 
         this.changesDataDirectory = new File(projectDirectory, CHANGE_DATA_DIRECTORY_NAME);
         this.configurationsDirectory = new File(projectDirectory, CONFIGURATIONS_DIRECTORY_NAME);
@@ -137,11 +137,6 @@ public class OWLAPIProjectFileStore {
     public static OWLAPIProjectFileStore getProjectFileStore(ProjectId projectId) {
         File dataDirectory = WebProtegeFileStore.getInstance().getDataDirectory();
         return new OWLAPIProjectFileStore(dataDirectory, projectId);
-    }
-
-    private String getEscapedProjectName() {
-        String projectName = projectId.getProjectName();
-        return projectName.replaceAll("\\s", "-");
     }
 
 

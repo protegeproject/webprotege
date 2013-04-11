@@ -200,8 +200,8 @@ public class SearchGridPanel extends GridPanel {
         searchField.setValue(text);
     }
 
-    public void setProjectName(String projectName) {
-        proxy.setProjectName(ProjectId.get(projectName));
+    public void setProjectId(ProjectId projectId) {
+        proxy.setProjectName(projectId);
     }
 
     public void setAsyncCallback(AsyncCallback<Boolean> asyncCallback) {

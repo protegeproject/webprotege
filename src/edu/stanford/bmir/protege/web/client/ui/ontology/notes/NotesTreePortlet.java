@@ -138,7 +138,7 @@ public class NotesTreePortlet extends AbstractEntityPortlet {
     }
 
     private void createNewPost(){
-        NoteInputHandler nih = new NoteInputHandler(getProject(), this._currentEntity, new AsyncCallback<NotesData>(){
+        NoteInputHandler nih = new NoteInputHandler(getProjectId(), this._currentEntity, new AsyncCallback<NotesData>(){
             public void onFailure(Throwable caught) {
                 GWT.log("Error at creating note", caught);
                 com.google.gwt.user.client.Window.alert("There were problems at creating the note.\n"
@@ -150,7 +150,7 @@ public class NotesTreePortlet extends AbstractEntityPortlet {
                             + "Please try again later.");
                     return;
                 }
-                NotesTreeRecord r = new NotesTreeRecord(result, getProject(), _currentEntity, null);
+                NotesTreeRecord r = new NotesTreeRecord(result, getProjectId(), _currentEntity, null);
                 notesPanel.addNewPost(r);
                 DisclosurePanel w = (DisclosurePanel) r.getUIObject();
                 FlexTable notesTable = (FlexTable)scrollPanel.getWidget();
@@ -226,7 +226,7 @@ public class NotesTreePortlet extends AbstractEntityPortlet {
         scrollPanel.setStylePrimaryName("custom-ScrollPanel");
         add(scrollPanel);
 
-        notesPanel = new NotesTreePanel(getProject(), ontologyLevel);
+        notesPanel = new NotesTreePanel(getProjectId(), ontologyLevel);
         notesPanel.setContainer(this);
         Widget w = notesPanel.getWidget();
         scrollPanel.add(w);

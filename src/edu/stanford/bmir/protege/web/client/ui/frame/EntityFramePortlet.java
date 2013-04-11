@@ -24,7 +24,7 @@ public class EntityFramePortlet  {
 //
 //    public EntityFramePortlet(Project project) {
 //        super(project);
-//        ProjectId projectId = new ProjectId(project.getProjectName());
+//        ProjectId projectId = new ProjectId(project.getDisplayName());
 //        this.editor = factory.getEditor(projectId);
 //        this.updateStrategy = factory.getUpdateStrategy(projectId);
 //        this.updateObjectRequestFactory = factory.getUpdateObjectRequestFactory(projectId);

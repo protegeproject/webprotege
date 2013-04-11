@@ -25,6 +25,7 @@ public class RevisionsPortlet extends AbstractEntityPortlet {
     }
 
 
+
     @Override
     public void reload() {
 //        revisionsList.reload();
@@ -36,10 +37,6 @@ public class RevisionsPortlet extends AbstractEntityPortlet {
         revisionsList = new RevisionsList(getProjectId());
         add(revisionsList);
         setTitle("Revisions");
-    }
-
-    private String projectName() {
-        return getProject().getProjectName();
     }
 
     public Collection<EntityData> getSelection() {

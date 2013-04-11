@@ -23,7 +23,7 @@ class WatchedEntitiesProxyImpl extends GWTProxy {
         return projectId;
     }
 
-    public void setProjectName(ProjectId projectName) {
+    public void setProjectId(ProjectId projectName) {
         this.projectId = projectName;
     }
 

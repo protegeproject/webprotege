@@ -125,7 +125,7 @@ public abstract class AbstractTab extends Portal {
             panelListener = new PanelListenerAdapter(){
                @Override
             public void onActivate(Panel panel) {
-                   setSelection(GlobalSelectionManager.getGlobalSelection(project.getProjectName()));
+                   setSelection(GlobalSelectionManager.getGlobalSelection(project.getProjectId()));
                };
             };
         }
@@ -141,7 +141,7 @@ public abstract class AbstractTab extends Portal {
             this.selectionControllingListener = new SelectionListener() {
                 public void selectionChanged(final SelectionEvent event) {
                     onSelectionChange(event.getSelectable().getSelection());
-                    GlobalSelectionManager.setGlobalSelection(project.getProjectName(), event.getSelectable().getSelection());
+                    GlobalSelectionManager.setGlobalSelection(project.getProjectId(), event.getSelectable().getSelection());
                 }
             };
         }
