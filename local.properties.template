@@ -20,6 +20,12 @@ war.name=webprotege
 
 # ============= OPTIONAL PROPERTIES =====================
 
+# Specify additional arguments for the GWT compile, e.g.
+# -style PRETTY or -logLevel DEBUG
+# Default: empty. Optional
+#gwt.args=-style PRETTY
+
+
 # If you want to override some of the files from the war directory
 # (e.g. for production use, you may customize webprotege.properties, etc.)
 # then add those files in the alt.war.template folder. Optional.
