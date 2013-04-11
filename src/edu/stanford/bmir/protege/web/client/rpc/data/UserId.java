@@ -15,9 +15,15 @@ import java.io.Serializable;
  */
 public class UserId implements Serializable, IsSerializable, Comparable<UserId> {
 
-    private static final String NULL_USER_NAME = "guest";
+    /**
+     * The distinguished name for the guest user.
+     */
+    private static final String GUEST_USER_NAME = "guest";
 
-    private static final UserId NULL_USER_ID = new UserId(NULL_USER_NAME);
+    /**
+     * The distinguished {@link UserId} for the guest user
+     */
+    private static final UserId GUEST_USER_ID = new UserId(GUEST_USER_NAME);
 
     private String userName;
 
@@ -25,16 +31,8 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
      * For serialization purposes only.
      */
     private UserId() {
-        userName = NULL_USER_NAME;
+        userName = GUEST_USER_NAME;
     }
-
-//    /**
-//     * Determines if this user id does not represent any user.
-//     * @return <code>true</code> if this user id does not represent a user, otherwise, <code>false</code>.
-//     */
-//    public boolean isNull() {
-//        return NULL_USER_NAME.equals(userName);
-//    }
 
     /**
      * Determines if this {@link UserId} represents the guest (non-logged in) user.
@@ -42,18 +40,18 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
      * does not represent the guest user.
      */
     public boolean isGuest() {
-        return NULL_USER_NAME.endsWith(userName);
+        return GUEST_USER_NAME.endsWith(userName);
     }
 
     /**
      * Gets a UserId using the userName as the identifier.
-     * @param userName The userName.  May be <code>null</code>.
-     * @return A UserId with the specified user name.  If userName is <code>null</code> then the distinguished UserId
+     * @param userName The userName.  May be {@code null}.
+     * @return A UserId with the specified user name.  If userName is {@code null} then the distinguished UserId
      * that represents the null user (anyone) will be returned.
      */
     public static UserId getUserId(String userName) {
         if(userName == null) {
-            return NULL_USER_ID;
+            return GUEST_USER_ID;
         }
         else {
             return new UserId(userName);
@@ -65,20 +63,17 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
      * @return The {@link UserId} of the guest user.  Not {@code null}.
      */
     public static UserId getGuest() {
-        return getNull();
+        return GUEST_USER_ID;
     }
 
-    public static UserId getNull() {
-        return new UserId(NULL_USER_NAME);
-    }
 
     /**
      * Constructs a UserId using the userName as the identifier.
-     * @param userName The userName.  May be <code>null</code>.
+     * @param userName The userName.  May be {@code null}.
      */
     private UserId(String userName) {
         if(userName == null) {
-            this.userName = NULL_USER_NAME;
+            this.userName = GUEST_USER_NAME;
         }
         else {
             this.userName = userName;    
@@ -89,11 +84,13 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
 
     /**
      * Gets the user name of the user that this id represents.
-     * @return A string representing the user name.
+     * @return A string representing the user name.  Not {@code null}.
      */
     public String getUserName() {
         return userName;
     }
+
+
 
     @Override
     public boolean equals(Object obj) {

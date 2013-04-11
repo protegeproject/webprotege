@@ -135,7 +135,7 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         final ProjectId projectId = ProjectId.get(projectInstance.getName());
         final String description = projectInstance.getDescription();
         final User projectOwner = projectInstance.getOwner();
-        final UserId ownerId = projectOwner != null ? UserId.getUserId(projectOwner.getName()) : UserId.getNull();
+        final UserId ownerId = projectOwner != null ? UserId.getUserId(projectOwner.getName()) : UserId.getGuest();
         final boolean inTrash = isInTrash(projectInstance);
         final Slot displayNameSlot = projectInstance.getProtegeInstance().getKnowledgeBase().getSlot("displayName");
         final String displayName = (String) projectInstance.getProtegeInstance().getOwnSlotValue(displayNameSlot);

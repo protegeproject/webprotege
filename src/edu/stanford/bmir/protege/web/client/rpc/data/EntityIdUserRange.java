@@ -31,7 +31,7 @@ public class EntityIdUserRange implements Serializable, Comparable<EntityIdUserR
     }
     
     public static EntityIdUserRange getBlank() {
-        return new EntityIdUserRange(UserId.getNull(), 0, Long.MAX_VALUE);
+        return new EntityIdUserRange(UserId.getGuest(), 0, Long.MAX_VALUE);
     }
 
     public UserId getUserId() {

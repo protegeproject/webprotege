@@ -271,7 +271,6 @@ public class EventManager<E extends SerializableEvent<?>> implements HasDispose 
 
         @Override
         public void run() {
-            System.out.println("Purging expired events");
             purgeExpiredEvents();
         }
     }

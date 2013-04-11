@@ -169,7 +169,7 @@ public class OWLAPIChangeManager {
                 }
             }
 
-            logChangesInternal(UserId.getNull(), changes, "Initial import", RevisionType.BASELINE, true);
+            logChangesInternal(UserId.getGuest(), changes, "Initial import", RevisionType.BASELINE, true);
         }
         finally {
             writeLock.unlock();
@@ -609,7 +609,7 @@ public class OWLAPIChangeManager {
         }
 
         private Revision(RevisionNumber revision) {
-            this.userId = UserId.getNull();
+            this.userId = UserId.getGuest();
             this.revision = revision;
             this.timestamp = 0;
             this.changes = Collections.emptyList();

@@ -161,7 +161,7 @@ public class OWLAPIProjectMetadataManager {
     public UserId getLastModifiedBy(ProjectId projectId) {
         String userName = getPropertyValue(projectId, LAST_MODIFIED_BY_PROPERTY_NAME, null);
         if(userName == null) {
-            return UserId.getNull();
+            return UserId.getGuest();
         }
         else {
             return UserId.getUserId(userName);
