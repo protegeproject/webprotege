@@ -37,10 +37,10 @@ war.name=webprotege
 # gwt.module=webprotege
 
 
-# ============= OPTIONAL PROPERTIES IF YOU RUN HOSTED MODE =====================
+# ============= OPTIONAL PROPERTIES IF YOU RUN DEV MODE =====================
 
 
-# The name of the html file to show. Only needed if you run hosted most from the build script.
+# The name of the html file to show. Only needed if you run dev mode most from the build script.
 gwt.html.target=WebProtege.html
 
 #
