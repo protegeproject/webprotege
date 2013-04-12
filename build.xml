@@ -205,8 +205,10 @@
 	</target>
 
 	
-	<target name="deploy" depends="war">
-		<echo message="${catalina.home}" />
+	<target name="deploy">
+		<echo message="If runnning with sudo, you may need to use the -E option to preserve the environment vars." />
+		<echo message="Example:   sudo -E ant deploy" />
+		<echo message="Deploying to: ${catalina.home}" />
 		<delete dir="${catalina.home}/webapps/${war.name}" />
 		<copy tofile="${catalina.home}/webapps/${war.name}.war" file="${build}/${war.name}.war" />
 	</target>
