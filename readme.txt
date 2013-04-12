@@ -12,9 +12,13 @@ You also need Java (1.6 or later), Ant, and a servlet container, such as tomcat.
 
 Building
 -------------
+
 Copy local.properties.template to local.properties, and edit local.properties to match your file paths.
 All properties are well documented. Make sure that you set the property gwt.dir to point to your local installation 
 of GWT. Usually, there is no need to touch any of the other properties.
+
+If you want to change the default setup properties for WebProtege, copy the etc/webprotege.properties.template
+to war/webprotege.properties, and edit the properties, which are well documented in the file.
 
 To build the webprotege WAR file, run
 
@@ -39,3 +43,11 @@ Web Protege can also be deployed into into tomcat by running
 
 and then starting tomcat. You need to set the CATALINA_HOME environment variable in local.properties.
 
+
+Documentation
+---------------
+More documentation at: 
+http://protegewiki.stanford.edu/wiki/WebProtege
+
+-------------------------
+Last updated: 2013/04/21
