@@ -185,7 +185,6 @@ public class ChAOServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet implem
      * Changes
      */
     public ChangeData createChange(String projectName, String userName, String entityName, final String action, final String context) {
-        System.out.println("Create change: " + entityName + "  .  " + action + "  .  " + context);
         return null;
     }
 

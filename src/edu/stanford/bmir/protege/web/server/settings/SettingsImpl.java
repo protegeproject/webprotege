@@ -273,7 +273,6 @@ public class SettingsImpl implements Settings {
             private int counterI = counter.getAndIncrement();
                 
             public Object call() throws IOException {
-                System.out.println("Saving " + counterI);
                 save();
                 return true;
             }

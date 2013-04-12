@@ -23,12 +23,9 @@ public class RecaptchaServiceImpl extends RemoteServiceServlet implements Recapt
 
         ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(CAPTCHA_URL, challenge, response);
         if(reCaptchaResponse.isValid()) {
-            System.out.println("VALID");
             return true;
         }
         else {
-            System.out.println("INVALID");
-            System.out.println("Error Message: " + reCaptchaResponse.getErrorMessage());
             return false;
         }
     }

@@ -136,7 +136,6 @@ public class EventManager<E extends SerializableEvent<?>> implements HasDispose 
         }
         // Prune duplicates
         LinkedHashSet<E> events = new LinkedHashSet<E>(resultList);
-        System.out.println("Pruned from " + resultList.size() + " to " + events.size());
         return new EventList<E>(fromTag, events, toTag);
     }
 
@@ -246,7 +245,6 @@ public class EventManager<E extends SerializableEvent<?>> implements HasDispose 
                 }
                 EventBucket bucket = eventQueue.peek();
                 if (bucket.isExpired()) {
-                    System.out.println("Disposing of: " + bucket);
                     eventQueue.poll();
                 }
                 else {

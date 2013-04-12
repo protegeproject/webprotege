@@ -188,7 +188,6 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
             long t0 = System.currentTimeMillis();
             final Set<? extends OWLEntity> relatedEntities = getRelatedWatchEntities(entity);
             long t1 = System.currentTimeMillis();
-            System.out.println("Time to get related entities: " + (t1 - t0));
             for (OWLEntity anc : relatedEntities) {
                 watches.addAll(watchObject2Watch.get(anc));
             }
@@ -199,7 +198,6 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
                 }
             }
             long t11 = System.currentTimeMillis();
-            System.out.println("Time to process watches: " + (t11 - t00));
         }
         finally {
             readLock.unlock();

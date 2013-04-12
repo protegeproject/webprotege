@@ -56,7 +56,6 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
             builder.addPermission(Permission.getPermission(op.getName()));
         }
         long t1 = System.currentTimeMillis();
-        System.out.println("Processed load call in " + (t1 - t0));
         return new LoadProjectResult(executionContext.getUserId(), builder.build(), projectDetails);
     }
 }

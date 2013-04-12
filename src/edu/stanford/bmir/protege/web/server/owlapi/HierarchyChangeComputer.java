@@ -91,13 +91,11 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> {
         Set<T> rootsAfter = new HashSet<T>(hierarchyProvider.getRoots());
         for(T rootAfter : rootsAfter) {
             if(!roots.contains(rootAfter)) {
-                System.out.println("ROOT ADDED! " + rootAfter);
                 result.add(new HierarchyRootAddedEvent<T>(projectId, hierarchyId, rootAfter));
             }
         }
         for(T rootBefore : roots) {
             if(!rootsAfter.contains(rootBefore)) {
-                System.out.println("ROOT REMOVED! " + rootBefore);
                 result.add(new HierarchyRootRemovedEvent<T>(projectId, hierarchyId, rootBefore));
             }
         }

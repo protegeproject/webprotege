@@ -260,15 +260,15 @@ public class OWLAPIProjectDocumentStore {
             long t0 = System.currentTimeMillis();
             OWLOntologyLoaderListener loaderListener = new OWLOntologyLoaderListener() {
                 public void startedLoadingOntology(LoadingStartedEvent event) {
-                    System.out.println("Loading started: " + event.getDocumentIRI());
+                    LOGGER.info("Loading started: " + event.getDocumentIRI());
                 }
 
                 public void finishedLoadingOntology(LoadingFinishedEvent event) {
                     if (event.isSuccessful()) {
-                        System.out.println("Loading finished: " + event.getDocumentIRI() + " (Loaded: " + event.getOntologyID() + ")");
+                        LOGGER.info("Loading finished: " + event.getDocumentIRI() + " (Loaded: " + event.getOntologyID() + ")");
                     }
                     else {
-                        System.out.println("Loading failed: " + event.getDocumentIRI() + " (Reason: " + event.getException().getMessage() + ")");
+                        LOGGER.info("Loading failed: " + event.getDocumentIRI() + " (Reason: " + event.getException().getMessage() + ")");
                     }
                 }
             };
@@ -276,8 +276,8 @@ public class OWLAPIProjectDocumentStore {
             final MissingImportListener missingImportListener = new MissingImportListener() {
                 @Override
                 public void importMissing(MissingImportEvent missingImportEvent) {
-                    System.out.println("Missing import: " + missingImportEvent.getImportedOntologyURI());
-                    System.out.println("Due to " + missingImportEvent.getCreationException().getMessage());
+                    LOGGER.info("Missing import: " + missingImportEvent.getImportedOntologyURI());
+                    LOGGER.info("Due to " + missingImportEvent.getCreationException().getMessage());
                 }
             };
             manager.addMissingImportListener(missingImportListener);
@@ -300,7 +300,7 @@ public class OWLAPIProjectDocumentStore {
             }
             finally {
                 long t1 = System.currentTimeMillis();
-                System.out.println("Loaded project (" + projectId + "): " + (t1 - t0));
+                LOGGER.info("Loaded project (" + projectId + "): " + (t1 - t0));
                 manager.removeIRIMapper(iriMapper);
                 manager.removeOntologyLoaderListener(loaderListener);
                 manager.removeMissingImportListener(missingImportListener);
@@ -348,7 +348,6 @@ public class OWLAPIProjectDocumentStore {
                     if (cachedFilesDirectory.exists()) {
                         for (File cachedFile : cachedFilesDirectory.listFiles()) {
                             if (!cachedFile.isHidden()) {
-                                System.out.println("Deleting cached file: " + cachedFile.getAbsolutePath());
                                 cachedFile.delete();
                             }
                         }

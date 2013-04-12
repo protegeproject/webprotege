@@ -198,25 +198,4 @@ public enum StarRating {
 
     
 
-    public static void main(String[] args) {
-    // Need proper tests
-
-        for(StarRating sr : StarRating.values()) {
-            System.out.println(sr);
-            System.out.println(sr.getDisplayName());
-            System.out.println(sr.getIRI());
-        }
-        System.out.println("------------------------------------------");
-        System.out.println(StarRating.parseStarRating(""));
-        System.out.println(StarRating.parseStarRating("*"));
-        System.out.println(StarRating.parseStarRating("\u2605"));
-        System.out.println(StarRating.parseStarRating("**"));
-        System.out.println(StarRating.parseStarRating("\u2605\u2605"));
-        System.out.println(StarRating.parseStarRating("***"));
-        System.out.println(StarRating.parseStarRating("\u2605\u2605\u2605"));
-        System.out.println(StarRating.parseStarRating("****"));
-        System.out.println(StarRating.parseStarRating("\u2605\u2605\u2605\u2605"));
-        System.out.println(StarRating.parseStarRating("*****"));
-        System.out.println(StarRating.parseStarRating("\u2605\u2605\u2605\u2605\u2605"));
-    }
 }

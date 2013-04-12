@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
@@ -78,7 +79,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
                 }
             });
             long t1 = System.currentTimeMillis();
-            System.out.println("Initialized notes manager in " + (t1 - t0) + "ms");
+            WebProtegeLoggerManager.get(OWLAPINotesManagerNotesAPIImpl.class).info("Initialized notes manager in " + (t1 - t0) + "ms");
         }
         catch (OWLOntologyCreationException e) {
             // Can't start - too dangerous to do anything without human intervention

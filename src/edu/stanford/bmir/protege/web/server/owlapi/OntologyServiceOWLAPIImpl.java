@@ -1009,7 +1009,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     public EntityData replaceExternalReference(String projectName, String entityName, BioPortalReferenceData bpRefData, EntityData oldValueEntityData, String user, String operationDescription) {
-        System.out.println("TODO: replaceExternalReference");
         return null;
     }
 

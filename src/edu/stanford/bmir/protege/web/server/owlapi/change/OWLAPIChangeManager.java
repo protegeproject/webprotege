@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
@@ -34,6 +35,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Date: 05/04/2012
  */
 public class OWLAPIChangeManager {
+
+    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(OWLAPIChangeManager.class);
 
     public static final String USERNAME_METADATA_ATTRIBUTE = "username";
 
@@ -96,7 +99,7 @@ public class OWLAPIChangeManager {
                 }
             }, SkipSetting.SKIP_NONE);
             long t1 = System.currentTimeMillis();
-            System.out.println("Loaded " + revisions.size() + " changes in " + (t1 - t0));
+            LOGGER.info("Loaded " + revisions.size() + " changes in " + (t1 - t0));
         }
         catch (BinaryOWLParseException e) {
             handleCorruptChangeLog(e);
