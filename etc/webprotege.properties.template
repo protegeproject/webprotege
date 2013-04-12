@@ -1,6 +1,8 @@
 ############### WebProtege Properties ###############
 
 # This file documents the required and optional properties for WebProtege.
+# WebProtege uses the webprotege.properties file from the root of the 
+# web application to configure several of its functions.
 # To change the default values used by WebProtege, copy this file
 # into the webapp folder, e.g. for tomcat, copy it in webapps/webprotege/ 
 # (for development, copy it in the war directory),
@@ -26,7 +28,7 @@ data.directory=/data/webprotege/
 ############### OPTIONAL PROPERTIES ###############
 
 # -------- application.name ----------- #
-# The name of the WebProtege application that appears in the browser title bar.
+# The name of the WebProtege application that appears in the browser title bar
 # and in other places.
 # Default: WebProt\u00E9g\u00E9"
 # Optional
