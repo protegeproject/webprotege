@@ -1,0 +1,97 @@
+############### WebProtege Properties ###############
+
+# This file documents the required and optional properties for WebProtege.
+# To change the default values used by WebProtege, copy this file
+# into the webapp folder, e.g. for tomcat, copy it in webapps/webprotege/ 
+# (for development, copy it in the war directory),
+# and rename it to webprotege.properties.
+
+
+############### REQUIRED PROPERTIES ############### 
+
+# -------- application.host ----------- #
+# The URL under where WebProtege is accessible, with no protocol.
+# Example: webprotege.stanford.edu
+# REQUIRED
+application.host=localhost:8080/webprotege/
+
+# -------- data.directory ----------- #
+# The directory where WebProtege data is stored. 
+# Must be writable by the user under which tomcat runs.
+# Example: /data/webprotege
+# REQUIRED
+data.directory=/data/webprotege/
+
+
+############### OPTIONAL PROPERTIES ###############
+
+# -------- application.name ----------- #
+# The name of the WebProtege application that appears in the browser title bar.
+# and in other places.
+# Default: WebProt\u00E9g\u00E9"
+# Optional
+#application.name=WebProtege
+
+# -------- mongodb.host ----------- #
+# The host name of the mongodb server.
+# Default: localhost
+# Optional
+#mongodb.host=localhost
+
+# -------- mongodb.port ----------- #
+# The port number of the mongodb server.
+# Default: 27017
+# Optional
+#mongodb.port=27017
+
+# -------- email.host ----------- #
+# The host name of the email smtp server. 
+# The email account is used to send notifications.
+# Example: smtp.gmail.com
+# Optional
+#email.host=your.smtp.server
+
+# -------- email.port ----------- #
+# The email smtp port number. 
+# Example: 465
+# Optional
+#email.port=465
+
+# -------- email.account ----------- #
+# The email account that WebProtege should use to send email notifications.
+# Example: john.doe@stanford.edu
+# Optional
+#email.account=your@email.org
+
+# -------- email.password ----------- #
+# The password for the email account that WebProtege should use to send email notifications.
+# Example: mypassword
+# Optional
+#email.password=your_password
+
+# -------- https.enabled ----------- #
+# Specifies whether WebProtege uses https rather than http as a protocol.
+# Default: false
+# Optional
+#https.enabled=false
+
+# -------- https.port ----------- #
+# Specifies the port used for https communication.
+# Default: 443
+# Optional
+#https.port=443
+
+# -------- admin.email ----------- #
+# The email address of the WebProtege administrator that is notified
+# if something goes wrong with WebProtege
+# Example: john.doe@stanford.edu
+# Optional
+#admin.email=john.doe@stanford.edu
+
+# -------- openid.enabled ----------- #
+# Specifies whether or not WebProtege should support authentication with Open Id.
+# Default: true
+# Optional
+#openid.enabled=true
+
+
