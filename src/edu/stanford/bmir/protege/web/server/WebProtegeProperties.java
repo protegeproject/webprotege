@@ -35,6 +35,7 @@ public class WebProtegeProperties implements Serializable {
         HIDDEN
     }
 
+
     private static class PropertyValue {
 
         private String value;
@@ -119,6 +120,7 @@ public class WebProtegeProperties implements Serializable {
         OPEN_ID_ENABLED("openid.enabled", PropertyValue.ofBoolean(true), ClientVisibility.VISIBLE);
 
 
+
         private String propertyName;
 
         private Optionality optionality;
@@ -166,13 +168,24 @@ public class WebProtegeProperties implements Serializable {
 
     public static final String WEB_PROTEGE_PROPERTIES_FILE_NAME = "webprotege.properties";
 
+    /**
+     * Initialises the {@link WebProtegeProperties} object with property values from the specified {@link Properties}
+     * object.
+     * @param properties The properties object which should be used for initialization.  Not {@code null}.  Only property
+     * values whose property names are equal to the property names specified by the {@link PropertyName} enum will be
+     * read.
+     * @throws WebProtegeConfigurationException If one of the expected property values listed in
+     * {@link edu.stanford.bmir.protege.web.server.WebProtegeProperties.PropertyName#values()} does not have a default
+     * value and does not have a value specified in {@code properties}.
+     *
+     */
     public static void initFromProperties(Properties properties) throws WebProtegeConfigurationException {
         if (propertyValueMap != null) {
             throw new IllegalStateException("WebProtegeProperties has already been initialized");
         }
         ImmutableMap.Builder<PropertyName, Optional<String>> builder = ImmutableMap.builder();
         for (PropertyName propertyName : values()) {
-            String value = properties.getProperty(propertyName.getPropertyName(), null);
+            final String value = properties.getProperty(propertyName.getPropertyName(), null);
             if (value != null) {
                 builder.put(propertyName, Optional.<String>of(value));
             }
@@ -187,7 +200,6 @@ public class WebProtegeProperties implements Serializable {
         }
         propertyValueMap = builder.build();
     }
-
 
     /**
      * Gets a property value as a string.
