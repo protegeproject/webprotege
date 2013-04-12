@@ -118,7 +118,9 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         }
         else {
             ProjectDisplayImpl display = projectId2ProjectPanelMap.get(projectId);
-            setActiveTab(display.getLabel());
+            if (display != null) {
+            	setActiveTab(display.getLabel());
+            }
         }
     }
 
