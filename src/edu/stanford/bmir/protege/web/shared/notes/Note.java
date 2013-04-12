@@ -48,7 +48,9 @@ public final class Note implements Serializable {
     }
     
     public static Note createNote(NoteId noteId, Optional<NoteId> inReplyTo, long timestamp, UserId author, NoteType noteType, Optional<String> subject, String body) {
-        return new Note(new NoteHeader(noteId, inReplyTo, author, timestamp), new NoteContent(body));
+        final NoteHeader header = new NoteHeader(noteId, inReplyTo, author, timestamp);
+        NoteContent content = NoteContent.builder().addField(NoteField.BODY, body).addField(NoteField.SUBJECT, subject.or("")).build();
+        return new Note(header, content);
     }
     
     public static Note createComment(NoteId noteId, Optional<NoteId> inReplyTo, long createdAt, UserId createdBy, Optional<String> subject, String body) {

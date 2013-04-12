@@ -15,6 +15,8 @@ import com.google.gwt.user.client.ui.*;
  */
 public class DiscussionThreadViewImpl extends Composite implements DiscussionThreadView {
 
+    private static final int REPLY_INDENT_PX = 20;
+
     interface DiscussionThreadViewImplUiBinder extends UiBinder<HTMLPanel, DiscussionThreadViewImpl> {
 
     }
@@ -28,21 +30,27 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
 
 
     @UiField
-    protected HasWidgets notesList;
+    protected FlexTable notesList;
 
 
     @Override
     public void removeAllNotes() {
-        notesList.clear();
+        notesList.removeAllRows();
     }
 
     @Override
-    public void addNote(Widget noteView, int depth) {
+    public void addNote(NoteContainerPresenter notePresenter, int depth) {
+        Widget noteView = notePresenter.getWidget();
+        if(!notePresenter.getNote().getInReplyTo().isPresent()) {
+            final NoteSubjectView noteSubjectLabel = new NoteSubjectViewImpl();
+
+            notesList.setWidget(notesList.getRowCount(), 0, noteSubjectLabel.getWidget());
+        }
         SimplePanel wrapperPanel = new SimplePanel(noteView);
         Element element = wrapperPanel.getElement();
         Style style = element.getStyle();
-        style.setMarginLeft(depth * 40, Style.Unit.PX);
-        notesList.add(wrapperPanel);
+        style.setMarginLeft(depth * REPLY_INDENT_PX, Style.Unit.PX);
+        notesList.setWidget(notesList.getRowCount(), 0, wrapperPanel);
     }
 
 //    @Override

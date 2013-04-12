@@ -15,12 +15,18 @@ public class NotePresenter  {
 
     private NoteView noteView;
 
+    private Note note;
 
     public NotePresenter(NoteView noteView) {
         this.noteView = noteView;
     }
 
+    public Note getNote() {
+        return note;
+    }
+
     public void setNote(Note note) {
+        this.note = note;
         String author = note.getAuthor().getUserName();
         noteView.setAuthor(author);
         long timestamp = note.getTimestamp();

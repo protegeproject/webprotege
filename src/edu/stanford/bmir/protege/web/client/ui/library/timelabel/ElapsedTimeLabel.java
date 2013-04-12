@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.library.timelabel;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -27,6 +29,10 @@ public class ElapsedTimeLabel extends Composite {
 
     public static final int ONE_DAY = 24 * 60 * 60 * 1000;
 
+    public static final DateTimeFormat DAY_MONTH_FORMAT = DateTimeFormat.getFormat("dd MMMM");
+
+    public static final DateTimeFormat DAY_MONTH_YEAR_FORMAT = DateTimeFormat.getFormat("dd MMMM YYYY");
+
 
 
     private static String getTimeRendering(long timestamp) {
@@ -44,7 +50,15 @@ public class ElapsedTimeLabel extends Composite {
                 return mins + " minutes ago";
             }
         }
-        if(delta < ONE_DAY) {
+        final Date timestampDate = new Date(timestamp);
+        final Date todayDate = new Date();
+
+        final int timestampDay = timestampDate.getDay();
+        final int todayDay = todayDate.getDay();
+        if(todayDay - timestampDay == 1) {
+            return "yesterday";
+        }
+        else if (delta < ONE_DAY) {
             int hours = (int) delta / ONE_HOUR;
             if(hours == 1) {
                 return "one hour ago";
@@ -54,12 +68,18 @@ public class ElapsedTimeLabel extends Composite {
             }
         }
         int days = (int) delta / ONE_DAY;
-        if(days == 1) {
-            return "1 day ago";
-        }
-        else {
-            return days + " days ago";
-        }
+//        if(days == 1) {
+//            return "yesterday";
+//        }
+//        else {
+            if(timestampDate.getYear() == todayDate.getYear()) {
+                return DAY_MONTH_FORMAT.format(timestampDate);
+            }
+            else {
+                return DAY_MONTH_YEAR_FORMAT.format(timestampDate);
+            }
+
+//        }
     }
 
     interface TimeLabelUiBinder extends UiBinder<HTMLPanel, ElapsedTimeLabel> {

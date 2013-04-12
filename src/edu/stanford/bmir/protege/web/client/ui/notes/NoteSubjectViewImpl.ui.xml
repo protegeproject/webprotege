@@ -1,8 +1,12 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
+        .note-subject-label {
+            font-weight: bold;
+            min-height: 20px;
+        }
     </ui:style>
     <g:HTMLPanel>
-        <g:InlineLabel ui:field="elapsedTimeLabel"/>
+        <g:InlineLabel ui:field="subjectLabel"/>
     </g:HTMLPanel>
 </ui:UiBinder>

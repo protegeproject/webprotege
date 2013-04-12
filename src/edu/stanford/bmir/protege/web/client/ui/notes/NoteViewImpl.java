@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
 
 import java.util.Date;
 
@@ -35,7 +36,7 @@ public class NoteViewImpl extends Composite implements NoteView {
     protected HasText authorField;
 
     @UiField
-    protected HasText dateField;
+    protected ElapsedTimeLabel dateField;
 
     @UiField
     protected HasSafeHtml bodyField;
@@ -47,7 +48,8 @@ public class NoteViewImpl extends Composite implements NoteView {
 
     @Override
     public void setTimestamp(long timestamp) {
-        dateField.setText(new Date(timestamp).toString());
+        dateField.setBaseTime(timestamp);
+//        dateField.setText(new Date(timestamp).toString());
     }
 
     @Override

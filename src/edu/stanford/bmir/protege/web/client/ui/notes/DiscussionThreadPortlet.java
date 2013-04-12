@@ -43,7 +43,9 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
     @Override
     public void initialize() {
         presenter = new DiscussionThreadPresenter(getProjectId());
-        add(new ScrollPanel(presenter.getWidget()));
+        final ScrollPanel scrollPanel = new ScrollPanel(presenter.getWidget());
+        scrollPanel.setHeight("100%");
+        add(scrollPanel);
     }
 
     @Override

@@ -13,12 +13,23 @@ public class NoteContainerPresenter {
 
     private NoteContainerView noteContainerView;
 
+    private Note note;
+
+    public Note getNote() {
+        return note;
+    }
+
     public NoteContainerPresenter(NoteContainerView noteContainerView) {
         this.noteContainerView = noteContainerView;
     }
 
     public void setNote(Note note) {
+        this.note = note;
         noteContainerView.setNote(note);
+    }
+
+    public NoteContainerView getNoteContainerView() {
+        return noteContainerView;
     }
 
     public Widget getWidget() {

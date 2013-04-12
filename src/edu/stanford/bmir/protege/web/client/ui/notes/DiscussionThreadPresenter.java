@@ -71,7 +71,7 @@ public class DiscussionThreadPresenter {
     private void appendNote(Note note, int depth, DiscussionThread discussionThread) {
         NoteContainerPresenter noteContainerPresenter = new NoteContainerPresenter(new NoteContainerViewImpl());
         noteContainerPresenter.setNote(note);
-        view.addNote(noteContainerPresenter.getWidget(), depth);
+        view.addNote(noteContainerPresenter, depth);
         for(Note childNote : discussionThread.getReplies(note.getNoteId())) {
             appendNote(childNote, depth + 1, discussionThread);
         }

@@ -2,8 +2,10 @@ package edu.stanford.bmir.protege.web.client.ui;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Random;
@@ -29,6 +31,7 @@ import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.sharing.SharingSettingsDialog;
 import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationDialog;
+import edu.stanford.bmir.protege.web.client.ui.res.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.client.ui.signup.WebProtegeSignupDialog;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
@@ -57,7 +60,6 @@ public class TopPanel extends Panel {
 
     private HTML configureHtml;
 
-    //    private final Images images = (Images) GWT.create(Images.class);
     private HorizontalPanel optionsLinks;
 
     private HorizontalPanel shareLinkPanel;
@@ -72,14 +74,7 @@ public class TopPanel extends Panel {
 
     private MenuItem addUser;
 
-//    private ProjectId currentSelectedProject = null; // Set only if user is owner of the project
-
-//    private AccessPolicyUtil accessPolicyUtil = null;
-
-    public interface Images extends ImageBundle {
-
-        public AbstractImagePrototype iCatLogo();
-    }
+    private final Image logoImage;
 
     public TopPanel() {
         setLayout(new FitLayout());
@@ -90,20 +85,24 @@ public class TopPanel extends Panel {
         // Outer panel to house logo and inner panel
         HorizontalPanel outer = new HorizontalPanel();
         outer.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
-        final Image logo = getImage();
-        if (logo != null) {
-            outer.add(logo);
-            outer.setCellHorizontalAlignment(logo, HorizontalPanel.ALIGN_LEFT);
-        }
+
+        ImageResource logo = WebProtegeClientBundle.BUNDLE.webProtegeLogo();
+        logoImage = new Image(logo);
+        final Style style = logoImage.getElement().getStyle();
+        style.setPaddingLeft(5, Style.Unit.PX);
+        outer.add(logoImage);
+        outer.setCellHorizontalAlignment(logoImage, HorizontalPanel.ALIGN_LEFT);
+
 
 
         // Inner panel to house links panel
-        VerticalPanel inner = new VerticalPanel();
+        HorizontalPanel inner = new HorizontalPanel();
         inner.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
 
-        inner.add(getSignupPanel());
-
         inner.add(getLinksPanel());
+
+
+        inner.add(getSignupPanel());
 
         outer.add(inner);
         add(outer);
@@ -163,13 +162,14 @@ public class TopPanel extends Panel {
         shareLinkPanel.setVisible(currentUserCanAdmin);
         // TODO: This is a temporary hack.  If a person can share then they can configure
         configureLinkPanel.setVisible(currentUserCanAdmin);
+
+        logoImage.setVisible(!Application.get().getActiveProject().isPresent());
+
 //        publishLinkPanel.setVisible(currentUserCanAdmin);
 //        updateShareLink(projectChangedEvent.isShowShareLink());
     }
 
-    protected Image getImage() {
-        return null;//images.iCatLogo().createImage();
-    }
+
 
     /**
      * Method for to displaying the Option link. After SignIn "Options" link
