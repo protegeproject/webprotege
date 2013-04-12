@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -43,8 +44,10 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
         Widget noteView = notePresenter.getWidget();
         if(!notePresenter.getNote().getInReplyTo().isPresent()) {
             final NoteSubjectView noteSubjectLabel = new NoteSubjectViewImpl();
-
-            notesList.setWidget(notesList.getRowCount(), 0, noteSubjectLabel.getWidget());
+            NoteSubjectViewPresenter subjectPresenter = new NoteSubjectViewPresenter(noteSubjectLabel);
+            subjectPresenter.setSubject(Optional.of(notePresenter.getNote().getSubject()));
+            subjectPresenter.setAuthor(notePresenter.getNote().getAuthor());
+            notesList.setWidget(notesList.getRowCount(), 0, subjectPresenter.getView().getWidget());
         }
         SimplePanel wrapperPanel = new SimplePanel(noteView);
         Element element = wrapperPanel.getElement();

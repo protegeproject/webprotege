@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,6 +27,9 @@ public class NoteSubjectViewImpl extends Composite implements NoteSubjectView {
     @UiField
     protected HasText subjectLabel;
 
+    @UiField
+    protected HasText startedByLabel;
+
     public NoteSubjectViewImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
@@ -34,6 +38,11 @@ public class NoteSubjectViewImpl extends Composite implements NoteSubjectView {
     @Override
     public void setSubject(Optional<String> subject) {
         subjectLabel.setText(subject.or(""));
+    }
+
+    @Override
+    public void setAuthor(UserId userId) {
+        startedByLabel.setText(userId.getUserName());
     }
 
     @Override

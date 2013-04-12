@@ -4,7 +4,7 @@
     <ui:style>
         .container-style {
             position: relative;
-            border-top: #d3d3d3 solid 1px;
+            border-top: #f1f1f1 solid 1px;
             padding-top: 5px;
             padding-left: 5px;
             padding-right: 5px;

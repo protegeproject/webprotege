@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
@@ -30,13 +31,14 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     public void reload() {
-        Optional<OWLEntity> selectedEntity = getSelectedEntity();
+        Optional<OWLEntityData> selectedEntity = getSelectedEntityData();
         if(selectedEntity.isPresent()) {
-            presenter.setTarget(selectedEntity.get());
+            presenter.setTarget(selectedEntity.get().getEntity());
+            setTitle("Discussions for " + selectedEntity.get().getBrowserText());
         }
         else {
             presenter.clearTarget();
-
+            setTitle("Nothing selected");
         }
     }
 
@@ -46,6 +48,7 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
         final ScrollPanel scrollPanel = new ScrollPanel(presenter.getWidget());
         scrollPanel.setHeight("100%");
         add(scrollPanel);
+
     }
 
     @Override
