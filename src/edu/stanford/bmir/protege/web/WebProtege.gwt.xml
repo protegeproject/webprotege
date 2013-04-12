@@ -1,65 +1,30 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0//EN"
         "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
 
-<!--<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0//EN"-->
-        <!--"http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">-->
-
 <module rename-to="webprotege">
 
     <source path="client"/>
     <source path="shared"/>
 
-	<!-- Inherit the core Google Web Toolkit stuff -->
 	<inherits name="com.google.gwt.user.User"/>
-
     <inherits name="com.google.gwt.resources.Resources" />
-
     <inherits name="com.google.gwt.place.Place"/>
     <inherits name="com.google.common.cache.Cache"/>
     <inherits name="com.google.common.collect.Collect"/>
     <inherits name="com.google.common.base.Base"/>
+    <inherits name="com.google.gwt.http.HTTP"/>
+    <inherits name="com.google.gwt.json.JSON"/>
+
+	<inherits name='com.googlecode.gwt.crypto.Crypto'/>
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
 
-    <!-- Inherit the default GWT style sheet.  You can change       -->
-    <!-- the theme of your GWT application by uncommenting          -->
-    <!-- any one of the following lines.                            -->
-    <!--<inherits name='com.google.gwt.user.theme.standard.Standard'/>-->
-     <!--<inherits name="com.google.gwt.user.theme.chrome.Chrome"/>-->
-    <!-- <inherits name="com.google.gwt.user.theme.dark.Dark"/>     -->
-
-
+	<inherits name='com.gwtext.GwtExt' />
+	
     <!--<generate-with class="edu.stanford.bmir.protege.web.server.generated.UIFactoryGenerator">-->
         <!--<when-type-assignable class="edu.stanford.bmir.protege.web.client.ui.generated.PluginFactory"/>-->
     <!--</generate-with>-->
 
-
-	<!-- Inherit the GWT-Ext Toolkit stff -->
-	<inherits name='com.gwtext.GwtExt' />
-	
-	<inherits name='com.googlecode.gwt.crypto.Crypto'/>
-
-	<inherits name="com.google.gwt.http.HTTP"/>
-
-    <inherits name="com.google.gwt.json.JSON"/>
-
-
-
-	<!-- Inhert the GWT default style -->
-	<!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/>  -->	
-
 	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/> 
-			
-	<!--<servlet path="/admin" class="edu.stanford.bmir.protege.web.server.AdminServiceImpl"/>-->
-	<!--<servlet path="/notification" class="edu.stanford.bmir.protege.web.server.NotificationServiceImpl"/>-->
-	<!--<servlet path="/ontology" class="edu.stanford.bmir.protege.web.server.OntologyServiceImpl"/>-->
-	<!--<servlet path="/projectconfig" class="edu.stanford.bmir.protege.web.server.ProjectConfigurationServiceImpl"/>-->
-	<!--<servlet path="/chao" class="edu.stanford.bmir.protege.web.server.ChAOServiceImpl"/>-->
-	<!--<servlet path="/chaostats" class="edu.stanford.bmir.protege.web.server.ChAOStatsServiceImpl"/>-->
-    <!--<servlet path="/hierarchy" class="edu.stanford.bmir.protege.web.server.HierarchyServiceImpl"/>-->
-    <!--<servlet path="/openid" class="edu.stanford.bmir.protege.web.server.OpenIdServiceImpl"/>-->
-    <!--<servlet path="/bpProposals" class="edu.stanford.bmir.protege.web.server.bioportal.BioPortalProposalsImpl"/>-->
-    <!--<servlet path="/accesspolicy" class="edu.stanford.bmir.protege.web.server.AccessPolicyServiceImpl"/>-->
-    <!--<servlet path="/authen" class="edu.stanford.bmir.protege.web.server.AuthenticateServiceImpl"/>-->
 
 </module>
