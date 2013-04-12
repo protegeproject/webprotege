@@ -239,7 +239,7 @@
 
 			<jvmarg value="-Xmx1256M"/>
 			<jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8100,server=y,suspend=n" />
-			<jvmarg value="${extra.devMode.jvm.arg}" />
+			<jvmarg value="${extra.devmode.jvm.arg}" />
 
 			<arg value="-war" />
 			<arg value="${war}" />
