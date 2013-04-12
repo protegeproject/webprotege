@@ -22,29 +22,12 @@ public class WebProtegeFileStore {
         this.dataDirectory = dataDirectory;
     }
 
-//    /**
-//     * To be called by the setup mechanism (usually {@link WebProtegeInitializer}) to init the store.
-//     * Important: For safety purposes this method should only be called ONCE (at startup).  Calling it a second time will cause an
-//     * {@link IllegalStateException} to be thrown.
-//     * @param dataDirectory  The data directory for webprotege.  Not {@code null}.
-//     * @throws NullPointerException if {@code dataDirectory} is {@code null}.
-//     * @throws IllegalStateException if this method is called more than once.
-//     */
-//    protected static synchronized void setup(File dataDirectory) {
-//        if(instance != null) {
-//            throw new IllegalStateException("WebProtegeFileStore has already been initialised");
-//        }
-//        instance = new WebProtegeFileStore(checkNotNull(dataDirectory, "dataDirectory must not be null"));
-//    }
 
     /**
      * Gets the one and only instance of {@link WebProtegeFileStore}.
      * @return An application wide instance of {@link WebProtegeFileStore}.  Not {@code null}.
      */
-    public static synchronized WebProtegeFileStore getInstance() {
-//        if(instance == null) {
-//            throw new IllegalStateException("WebProtegeFileStore has not been initialised");
-//        }
+    public static WebProtegeFileStore getInstance() {
         return instance;
     }
 
