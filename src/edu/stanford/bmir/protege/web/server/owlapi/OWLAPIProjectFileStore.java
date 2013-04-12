@@ -30,9 +30,9 @@ public class OWLAPIProjectFileStore {
     /**
      * The name of the base directory where all data is stored.
      */
-    private static final String BASE_DIRECTORY_NAME = "owlapi-data-store";
+    private static final String BASE_DIRECTORY_NAME = "data-store";
     
-    private static final String ALL_PROJECTS_DIRECTORY_NAME = "owlapi-projects";
+    private static final String ALL_PROJECTS_DIRECTORY_NAME = "project-data";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +78,7 @@ public class OWLAPIProjectFileStore {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private static final String CONFIGURATIONS_DIRECTORY_NAME = "configurations";
+    private static final String CONFIGURATIONS_DIRECTORY_NAME = "configuration-data";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
