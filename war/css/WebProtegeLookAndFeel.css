@@ -9,7 +9,7 @@
 */
 .web-protege-laf {
     font-size: 12px;
-    font-family: verdana,helvetica,arial,sans-serif;
+    font-family: tahoma,sans-serif;
 }
 
 .web-protege-100-percent-width {
@@ -22,7 +22,7 @@
     border-width: 1px;
     border-color: silver;
     font-size: 12px;
-    font-family: Verdana,Arial,sans-serif;
+    font-family: tahoma,sans-serif;
     padding: 2px;
     box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
     -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
@@ -36,6 +36,7 @@
     border-width: 1px;
     border-color: silver;
     font-size: 12px;
+    font-family: tahoma,sans-serif;
     padding: 2px;
     box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
     -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
@@ -50,6 +51,7 @@
     border-color: silver;
     font-size: 12px;
     padding: 2px;
+    font-family: tahoma,sans-serif;
     box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
     -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
     -webkit-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
@@ -75,6 +77,7 @@
     border-width: 1px;
     border-color: silver;
     font-size: 12px;
+    font-family: tahoma,sans-serif;
     padding: 2px;
     box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
     -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
@@ -123,15 +126,15 @@
     padding: 2px;
     box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
     line-height: 16px;
-    font-family: verdana,arial,sans-serif;
+    font-family: tahoma,sans-serif;
     color: #000000;
     height: 16px;
 }
 
 .gwt-SuggestBoxPopup {
     font-size: 12px;
-    font-family: Verdana,Arial,Helvetica,SANS-SERIF;
     border-style: solid;
+    font-family: tahoma,sans-serif;
     border-width: 1px;
     background: white;
     -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
@@ -146,24 +149,28 @@
 .gwt-SuggestBoxPopup .item {
     background: white;
     color: #000000;
+    font-family: tahoma,sans-serif;
 }
 
 
 .gwt-SuggestBoxPopup .item-selected {
     color: #ffffff;
     background: #4779be;
+    font-family: tahoma,sans-serif;
 }
 
 .gwt-SuggestBoxPopup .item .new-keyword {
     color: #0669eb;
     background: #ffffff;
     font-weight: bold;
+    font-family: tahoma,sans-serif;
 }
 
 .gwt-SuggestBoxPopup .item-selected .new-keyword {
     color: white;
     background: #4779be;
     font-weight: bold;
+    font-family: tahoma,sans-serif;
 }
 
 ::-webkit-input-placeholder {  color: rgba(210, 210, 210, 1.0);}
@@ -353,6 +360,7 @@
     border-right: solid 1px #ff0000;
     border-bottom: solid 1px #ff0000;
     padding: 2px;
+    font-family: tahoma,sans-serif;
 }
 
 .web-protege-warning-label {
@@ -370,6 +378,7 @@
     padding-bottom: 2px;
     padding-right: 2px;
     font-size: 10px;
+    font-family: tahoma,sans-serif;
 }
 
 * .web-protege-error-label > * a:link {
@@ -463,21 +472,23 @@
 
 
 
-.gwt-Tree {
+/*.gwt-Tree {*/
     /*overflow: scroll;*/
-}
-.gwt-Tree .gwt-TreeItem {
-    border-style: solid;
-    border-width: 1px;
-    border-color: #ff00ff;
-    background: #add8e6;
-    display: inline-block;
-}
-.gwt-Tree .gwt-TreeItem-selected {
-    border-style: solid;
-    border-width: 1px;
-    border-color: #7cfc00;
-    background: #008200;
-    display: inline-block;
-}
+/*}*/
+/*.gwt-Tree .gwt-TreeItem {*/
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    /*border-color: #ff00ff;*/
+    /*background: #add8e6;*/
+    /*display: inline-block;*/
+    /*font-family: tahoma,sans-serif;*/
+/*}*/
+/*.gwt-Tree .gwt-TreeItem-selected {*/
+    /*border-style: solid;*/
+    /*border-width: 1px;*/
+    /*border-color: #7cfc00;*/
+    /*background: #008200;*/
+    /*display: inline-block;*/
+    /*font-family: tahoma,sans-serif;*/
+/*}*/
 

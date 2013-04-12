@@ -9,7 +9,7 @@
  *	individual styles. 
  */
 body {
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-family: tahoma, sans-serif;
 }
 
 /******************************************************************
@@ -354,7 +354,7 @@ Styles for HTML restrictions table
 }
 
 .gwt-ListBox {
-    font-family: arial, tahoma, helvetica, sans-serif;
+    font-family: tahoma, sans-serif;
 }
 
 /******************************************************************
@@ -374,7 +374,7 @@ ul.disc {
     width: 100px;
     z-index: 2;
     color: #1542bb;
-    font-family: tahoma, arial, helvetica, sans-serif;
+    font-family: tahoma, sans-serif;
     font-size: 11px;
     font-size-adjust: none;
     font-style: normal;
@@ -405,7 +405,7 @@ ul.disc {
     padding: 3px 3px 6px;
     position: relative;
     /*	color: #1542bb;*/
-    font-family: tahoma, arial, helvetica, sans-serif;
+    font-family: tahoma, sans-serif;
     font-size: 11px;
     font-size-adjust: none;
     font-style: normal;
@@ -420,7 +420,7 @@ ul.disc {
 
 .form_html_panel {
     height: 150px;
-    font-family: tahoma, arial, helvetica, sans-serif;
+    font-family: tahoma, sans-serif;
     font-size: 12px;
 }
 
@@ -514,7 +514,7 @@ Styles for the hierarchy management tab
     position: relative;
     z-index: 2;
     color: #1542BB;
-    font-family: tahoma, arial, helvetica, sans-serif;
+    font-family: tahoma, sans-serif;
     font-size: 11px;
     font-size-adjust: none;
     font-style: normal;
@@ -524,7 +524,7 @@ Styles for the hierarchy management tab
 }
 
 .parent-column-right {
-    font-family: arial, tahoma, helvetica, sans-serif;
+    font-family: tahoma, sans-serif;
     background-color: #FFFFFF; !
 	important padding: 5px 5px 5px 5px;
     text-align: right;
@@ -702,7 +702,7 @@ GWT popup list
 /*}*/
 
 .html-editor {
-    font: 11px tahoma,arial,helvetica,sans-serif;
+    font: 11px tahoma, sans-serif;
 }
 
 .x-grid3-cell-inner {

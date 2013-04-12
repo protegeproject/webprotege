@@ -3,29 +3,31 @@
         >
 
     <ui:style>
-        .main {
-            padding: 5px;
 
-        }
-        .author {
+        .user-image {
             background-image: url("images/user.png");
             background-repeat: no-repeat;
             padding-left: 20px;
-            font-size: 12px;
+        }
+
+        .author {
+            /*font-size: 12px;*/
             font-weight: bold;
             padding-bottom: 2px;
         }
+
         .date {
             font-size: 10px;
             color: #808080;
             padding-left: 2px;
         }
+
         .body {
-            font-size: 12px;
+            /*font-size: 12px;*/
             color: #676767;
-            padding-left: 2px;
             border: none;
         }
+
         .linksbar {
             position: absolute;
             right: 0px;
@@ -42,12 +44,11 @@
 
 
     <g:HTMLPanel>
-        <g:Label addStyleNames="{style.author}" ui:field="authorField"/>
-        <div style="padding-left: 22px;">
-            <g:Label addStyleNames="{style.date}" ui:field="dateField"/>
+        <g:HTMLPanel addStyleNames="{style.user-image}">
+            <g:InlineLabel addStyleNames="{style.author}" ui:field="authorField"/>
+            <g:InlineLabel addStyleNames="{style.date}" ui:field="dateField"/>
             <g:HTML addStyleNames="{style.body}" ui:field="bodyField"/>
-        </div>
-
+        </g:HTMLPanel>
         <!--<div style="width: 100%; height: 16px; margin-right: 4px;">-->
             <!--<span style="position: absolute; right: 0px;"><g:Anchor text="Reply" addStyleNames="{style.links}" ui:field="replyAnchor"/></span>-->
         <!--</div>-->
