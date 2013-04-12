@@ -175,8 +175,8 @@
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
 			<arg line="${gwt.args}"/>
 			
-			<arg value="${gwt.xml.target}" />			
-			<arg value="${gwt.xml.target.authenticate}" />
+			<arg value="${gwt.module.1}" />			
+			<arg value="${gwt.module.2}" />
 		</java>
 		<touch file="${war}/BUILT" />
 		<antcall target="copy.rpc.in.war" />
@@ -243,7 +243,7 @@
 
 			<arg value="-war" />
 			<arg value="${war}" />
-			<arg value="${gwt.xml.target}" />
+			<arg value="${gwt.module.1}" />
 			<arg value="-startupUrl" />
 			<arg value="${gwt.html.target}" />
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->

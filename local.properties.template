@@ -10,10 +10,10 @@
 gwt.dir=/usr/local/gwt
 
 # The full name of the module to compile. Required (usually you would not change this)
-gwt.xml.target=edu.stanford.bmir.protege.web.WebProtege
+gwt.module.1=edu.stanford.bmir.protege.web.WebProtege
 
 # The full name of the authentication module to compile. Required (usually you would not change this)
-gwt.xml.target.authenticate=edu.stanford.bmir.protege.web.authenticate
+gwt.module.2=edu.stanford.bmir.protege.web.authenticate
 
 # The name of the war file to generate. Required.
 war.name=webprotege
