@@ -98,7 +98,7 @@ public class WebProtegeProperties implements Serializable {
         @WebProtegePropertiesDocumentation(description = "The host name of the email smtp server", example = "smtp.gmail.com")
         EMAIL_HOST("email.host", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
 
-        @WebProtegePropertiesDocumentation(description = "The host name of the email smtp server", example = "smtp.gmail.com")
+        @WebProtegePropertiesDocumentation(description = "The smtp port number", example = "465")
         EMAIL_PORT("email.port", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
 
         @WebProtegePropertiesDocumentation(description = "The email account that webprotege should use to send email notifications", example = "john.doe@stanford.edu")
