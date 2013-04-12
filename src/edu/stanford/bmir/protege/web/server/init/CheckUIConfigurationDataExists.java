@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.UIConfigurationConstants;
+import edu.stanford.bmir.protege.web.server.UIConfigurationManager;
+import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
 import org.apache.commons.io.FileUtils;
 
@@ -18,8 +19,7 @@ public class CheckUIConfigurationDataExists implements ConfigurationTask {
 
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-        File dataDirectory = WebProtegeProperties.getDataDirectory();
-        File defaultConfigurationDirectory = new File(dataDirectory, UIConfigurationConstants.DEFAULT_UI_CONFIGURATION_DATA_DIRECTORY_NAME);
+        File defaultConfigurationDirectory = WebProtegeFileStore.getInstance().getDefaultUIConfigurationDataDirectory();
         if(defaultConfigurationDirectory.exists()) {
             return;
         }

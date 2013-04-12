@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.layout;
 
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,15 +9,16 @@ import java.util.List;
 public class ProjectLayoutConfiguration extends GenericConfiguration implements Serializable {
 	private static final long serialVersionUID = -1637798442860308838L;
 
-	private List<TabConfiguration> tabs;
-	private String ontologyName;
+    private ProjectId projectId;
+
+    private List<TabConfiguration> tabs;
+
 
 	//this field has no use, only to whitelist Boolean for the RPC
 	private Boolean booleanField;
 
 	public ProjectLayoutConfiguration() {
 		tabs = new ArrayList<TabConfiguration>();
-		ontologyName = null;
 	}
 
 	public List<TabConfiguration> getTabs() {
@@ -34,12 +37,12 @@ public class ProjectLayoutConfiguration extends GenericConfiguration implements 
 		tabs.add(tab);
 	}
 
-	public String getOntologyName() {
-		return ontologyName;
+	public ProjectId getProjectId() {
+		return projectId;
 	}
 
-	public void setOntologyName(String ontologyName) {
-		this.ontologyName = ontologyName;
+	public void setProjectId(ProjectId projectId) {
+		this.projectId = projectId;
 	}
 
 }

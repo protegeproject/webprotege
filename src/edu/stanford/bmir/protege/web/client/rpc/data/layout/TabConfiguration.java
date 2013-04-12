@@ -11,10 +11,14 @@ public class TabConfiguration extends GenericConfiguration implements Serializab
 	private static final long serialVersionUID = 9187571983105881720L;
 
 	private String name;
+
 	private String label;
-	private String headerCssClass = null;
-	private List<TabColumnConfiguration> columns = new ArrayList<TabColumnConfiguration>();
-	private PortletConfiguration controllingPortlet;	
+
+    private String headerCssClass = null;
+
+    private List<TabColumnConfiguration> columns = new ArrayList<TabColumnConfiguration>();
+
+    private PortletConfiguration controllingPortlet;
 
 	public TabConfiguration() {		
 	}

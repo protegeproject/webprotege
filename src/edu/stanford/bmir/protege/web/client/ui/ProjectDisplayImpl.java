@@ -367,7 +367,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
             return;
         }
         ProjectLayoutConfiguration config = getProject().getProjectLayoutConfiguration();
-        config.setOntologyName(projectId.getId());
+        config.setProjectId(projectId);
         ProjectConfigurationServiceManager.getInstance().saveProjectConfiguration(projectId, Application.get().getUserId(), config, new SaveConfigHandler());
     }
 

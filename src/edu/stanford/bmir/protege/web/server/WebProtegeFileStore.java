@@ -8,18 +8,39 @@ import java.io.File;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/05/2012
  * <p>
- *     The main management class for the WebProtege file store.
+ *     The main management class for the WebProtege file store.  This class provides details about non-project
+ *     specific storage locations.
  * </p>
  */
 public class WebProtegeFileStore {
 
-    private static WebProtegeFileStore instance = new WebProtegeFileStore(WebProtegeProperties.getDataDirectory());
+    /**
+     * The name of the directory where default UI configuration data is saved to
+     */
+    private static final String DEFAULT_UI_CONFIGURATION_DATA_DIRECTORY_NAME = "default-ui-configuration-data";
 
-    private File dataDirectory;
+    /**
+     * The name of the directory that contains the meta project
+     */
+    private static final String META_PROJECT_DIRECTORY_NAME = "metaproject";
+
+
+
+    private static final WebProtegeFileStore instance = new WebProtegeFileStore(WebProtegeProperties.getDataDirectory());
+
+
+    private final File dataDirectory;
+
+    private final File metaprojectDirectory;
+
+    private final File defaultUIConfigurationDataDirectory;
 
 
     private WebProtegeFileStore(File dataDirectory) {
         this.dataDirectory = dataDirectory;
+        this.metaprojectDirectory = new File(dataDirectory, META_PROJECT_DIRECTORY_NAME);
+        this.defaultUIConfigurationDataDirectory = new File(dataDirectory, DEFAULT_UI_CONFIGURATION_DATA_DIRECTORY_NAME);
+
     }
 
 
@@ -37,5 +58,22 @@ public class WebProtegeFileStore {
      */
     public File getDataDirectory() {
         return dataDirectory;
+    }
+
+    /**
+     * Gets the metaproject directory that holds the metaproject pprj, pont and pins files.  This value will never
+     * change once webprotege has started.
+     * @return A {@link File} representing the metaproject directory.  Not {@code null}.
+     */
+    public File getMetaProjectDirectory() {
+        return metaprojectDirectory;
+    }
+
+    /**
+     * Gets the default UI configuration data directory where the default layouts for projects are stored.
+     * @return A {@link File} representing the directory where default UI configuration data is stored.  Not {@code null}.
+     */
+    public File getDefaultUIConfigurationDataDirectory() {
+        return defaultUIConfigurationDataDirectory;
     }
 }

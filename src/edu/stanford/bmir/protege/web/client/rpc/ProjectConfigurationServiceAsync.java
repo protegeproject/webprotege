@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public interface ProjectConfigurationServiceAsync {
 
-	void getProjectLayoutConfiguration(String projectName, String userName, AsyncCallback<ProjectLayoutConfiguration> cb);
+	void getProjectLayoutConfiguration(ProjectId projectId, UserId userId, AsyncCallback<ProjectLayoutConfiguration> cb);
 
-	void saveProjectLayoutConfiguration(String projectName, String userName, ProjectLayoutConfiguration config, AsyncCallback<Void> cb);
+	void saveProjectLayoutConfiguration(ProjectId projectId, UserId userId, ProjectLayoutConfiguration config, AsyncCallback<Void> cb);
 
 }
