@@ -71,6 +71,8 @@ data.directory=/data/webprotege/
 
 # -------- https.enabled ----------- #
 # Specifies whether WebProtege uses https rather than http as a protocol.
+# See how to configure tomcat to use https here:
+# http://protegewiki.stanford.edu/wiki/WebProtegeHttpsLogin
 # Default: false
 # Optional
 #https.enabled=false
