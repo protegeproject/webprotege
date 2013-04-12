@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 
 /**
@@ -45,9 +46,9 @@ public class NoteContainerViewImpl extends Composite implements NoteContainerVie
 
 
     @Override
-    public void setNote(Note note) {
+    public void setNote(Note note, DiscussionThread context) {
         notePresenter.setNote(note);
-        noteActionPresenter.setNoteId(note.getNoteId());
+        noteActionPresenter.setNoteId(note.getNoteId(), context);
     }
 
     @Override

@@ -81,6 +81,14 @@ public final class DiscussionThread implements Serializable {
         return new LinkedHashSet<Note>(sortedNotes);
     }
 
+    /**
+     * Determines whether or not the specified note, identified by the specified {@link NoteId} has some replies.
+     * @param noteId The {@link NoteId} to check for.  Not {@code null}.
+     * @return {@code true} if the note identified by {@code NoteId} has one or more replies, otherwise {@code false}
+     */
+    public boolean hasReplies(NoteId noteId) {
+        return !replyToMap.get(Optional.of(noteId)).isEmpty();
+    }
 
 
 

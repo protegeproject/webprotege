@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,13 +33,28 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
         }
     };
 
+    private DeleteNoteHandler deleteNoteHandler = new DeleteNoteHandler() {
+        @Override
+        public void handleDeleteNote() {
+            GWT.log("No DeleteNoteHandler registered");
+        }
+    };
+
     @UiField
-    protected HasClickHandlers replyWidget;
+    protected ButtonBase replyWidget;
+
+    @UiField
+    protected ButtonBase deleteWidget;
 
 
     @UiHandler("replyWidget")
     protected void handleReplyClicked(ClickEvent clickEvent) {
         replyToNoteHandler.handleReplyToNote();
+    }
+
+    @UiHandler("deleteWidget")
+    protected void handleDeleteClicked(ClickEvent clickEvent) {
+        deleteNoteHandler.handleDeleteNote();
     }
 
     public NoteActionViewImpl() {
@@ -49,6 +65,16 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
     @Override
     public void setReplyToNoteHandler(ReplyToNoteHandler handler) {
         replyToNoteHandler = handler;
+    }
+
+    @Override
+    public void setDeleteNoteHandler(DeleteNoteHandler handler) {
+        deleteNoteHandler = handler;
+    }
+
+    @Override
+    public void setCanDelete(boolean canDelete) {
+        deleteWidget.setVisible(canDelete);
     }
 
     @Override

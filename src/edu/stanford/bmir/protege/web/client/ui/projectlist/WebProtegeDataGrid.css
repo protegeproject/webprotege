@@ -1,5 +1,5 @@
 @def selectionBorderWidth 2px;
-@def bordercolour rgba(230, 230, 230, 1.0);
+@def bordercolour #f1f1f1;
 @def selectionBackground rgba(215, 230, 250, 1.0)
 @def defpadding 7px;
 
@@ -26,7 +26,7 @@
 }
 
 .dataGridHeader {
-    border-bottom: 2px solid silver;
+    border-bottom: 1px solid #808080;
     text-align: left;
     color: #808080;
     font-size: 12px;

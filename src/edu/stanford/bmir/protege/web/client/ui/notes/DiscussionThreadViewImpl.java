@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
@@ -43,11 +42,10 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
     public void addNote(NoteContainerPresenter notePresenter, int depth) {
         Widget noteView = notePresenter.getWidget();
         if(!notePresenter.getNote().getInReplyTo().isPresent()) {
-            final NoteSubjectView noteSubjectLabel = new NoteSubjectViewImpl();
-            NoteSubjectViewPresenter subjectPresenter = new NoteSubjectViewPresenter(noteSubjectLabel);
-            subjectPresenter.setSubject(Optional.of(notePresenter.getNote().getSubject()));
-            subjectPresenter.setAuthor(notePresenter.getNote().getAuthor());
-            notesList.setWidget(notesList.getRowCount(), 0, subjectPresenter.getView().getWidget());
+            final NoteHeaderView noteHeaderLabel = new NoteHeaderViewImpl();
+            NoteHeaderPresenter subjectPresenter = new NoteHeaderPresenter(noteHeaderLabel);
+            subjectPresenter.setNote(notePresenter.getNote());
+            notesList.setWidget(notesList.getRowCount(), 0, subjectPresenter.getWidget());
         }
         SimplePanel wrapperPanel = new SimplePanel(noteView);
         Element element = wrapperPanel.getElement();
@@ -56,10 +54,7 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
         notesList.setWidget(notesList.getRowCount(), 0, wrapperPanel);
     }
 
-//    @Override
-//    public void removeNote(NoteView noteView) {
-//        notesList.remove(noteView.getWidget());
-//    }
+
 
     @Override
     public Widget getWidget() {

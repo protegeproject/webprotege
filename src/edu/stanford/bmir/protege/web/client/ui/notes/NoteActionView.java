@@ -11,7 +11,11 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public interface NoteActionView extends IsWidget {
 
-    void setReplyToNoteHandler(ReplyToNoteHandler  handler);
+    void setReplyToNoteHandler(ReplyToNoteHandler handler);
+
+    void setDeleteNoteHandler(DeleteNoteHandler handler);
+
+    void setCanDelete(boolean canDelete);
 
     Widget getWidget();
 

@@ -10,10 +10,13 @@
         }
 
         .left-bar {
+            border-right: 1px solid #F1F1F1;
+            bottom: 0;
+            left: 0;
+            padding-right: 5px;
+            padding-top: 80px;
             position: absolute;
-            left: 0px;
-            top: 125px;
-            bottom: 0px;
+            top: 0;
             width: 230px;
         }
 

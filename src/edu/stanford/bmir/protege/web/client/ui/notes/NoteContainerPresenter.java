@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 
 /**
@@ -23,9 +24,9 @@ public class NoteContainerPresenter {
         this.noteContainerView = noteContainerView;
     }
 
-    public void setNote(Note note) {
+    public void setNote(Note note, DiscussionThread context) {
         this.note = note;
-        noteContainerView.setNote(note);
+        noteContainerView.setNote(note, context);
     }
 
     public NoteContainerView getNoteContainerView() {

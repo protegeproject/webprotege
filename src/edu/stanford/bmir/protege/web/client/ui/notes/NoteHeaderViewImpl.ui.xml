@@ -4,6 +4,9 @@
         .outer {
             padding-top: 2px;
             border-top: dotted 1px ;
+            position: relative;
+            padding-left: 5px;
+            padding-right: 5px;
         }
         .note-subject-label {
             font-weight: bold;
@@ -15,10 +18,24 @@
             font-size: 10px;
             display: inline;
         }
+        .status-label {
+            color: maroon;
+            font-size: 10px;
+            display: inline;
+        }
+        .resolved-panel {
+            position: absolute;
+            top: 2px;
+            right: 5px;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.outer}">
         <g:InlineLabel ui:field="subjectLabel" addStyleNames="{style.note-subject-label}"/>
         <g:HTMLPanel addStyleNames="{style.started-by-label}"> started by </g:HTMLPanel>
         <g:InlineLabel ui:field="startedByLabel" addStyleNames="{style.started-by-label}"/>
+        <g:HTMLPanel addStyleNames="{style.resolved-panel}">
+            <g:InlineLabel ui:field="statusLabel" addStyleNames="{style.status-label}"/>
+            <g:Button text="Resolve" ui:field="toggleStatusButton" addStyleNames="web-protege-button-small"/>
+        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

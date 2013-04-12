@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 
 /**
@@ -24,10 +25,17 @@ public class NoteActionPresenter {
                 MessageBox.alert("Reply to note " + currentNoteId);
             }
         });
+        view.setDeleteNoteHandler(new DeleteNoteHandler() {
+            @Override
+            public void handleDeleteNote() {
+                MessageBox.alert("Delete note " + currentNoteId);
+            }
+        });
     }
 
-    public void setNoteId(NoteId noteId) {
+    public void setNoteId(NoteId noteId, DiscussionThread context) {
         this.currentNoteId = noteId;
+        view.setCanDelete(!context.hasReplies(noteId));
     }
 
     public NoteActionView getView() {

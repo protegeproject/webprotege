@@ -22,7 +22,7 @@ public final class NoteField<T extends Serializable> implements Serializable, Co
      */
     public static final NoteField<String> BODY = new NoteField<String>("body", NoteFieldType.STRING);
 
-    public static final NoteField<Boolean> RESOLVED = new NoteField<Boolean>("resolved", NoteFieldType.BOOLEAN);
+    public static final NoteField<NoteStatus> STATUS = new NoteField<NoteStatus>("resolved", NoteFieldType.NOTE_STATUS);
 
 
     private String fieldName;

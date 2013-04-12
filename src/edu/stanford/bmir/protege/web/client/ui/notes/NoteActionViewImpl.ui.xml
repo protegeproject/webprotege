@@ -2,5 +2,6 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <g:HTMLPanel>
         <g:Button ui:field="replyWidget" text="Reply" addStyleNames="web-protege-button-small"/>
+        <g:Button ui:field="deleteWidget" text="Delete" addStyleNames="web-protege-button-small"/>
     </g:HTMLPanel>
 </ui:UiBinder>

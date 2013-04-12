@@ -34,6 +34,8 @@ public final class NoteFieldType<T extends Serializable> implements Serializable
 
     public static final NoteFieldType<NoteType> NOTE_TYPE = new NoteFieldType<NoteType>();
 
+    public static final NoteFieldType<NoteStatus> NOTE_STATUS = new NoteFieldType<NoteStatus>();
+
     private NoteFieldType() {
     }
 }

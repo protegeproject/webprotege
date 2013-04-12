@@ -11,23 +11,29 @@
             padding-bottom: 5px;
         }
 
+        /*.container-style * button {*/
+            /*border-radius: 2px 2px 2px 2px;*/
+            /*cursor: default;*/
+            /*font-size: 9px;*/
+            /*font-weight: bold;*/
+            /*outline: 0 none;*/
+            /*padding: 0 2px;*/
+            /*text-align: center;*/
+            /*color: white;*/
+            /*border: 1px solid #a9a9a9;*/
+            /*background: #d3d3d3;*/
+        /*}*/
+
         .container-style * button {
-            border-radius: 2px 2px 2px 2px;
-            cursor: default;
-            font-size: 9px;
-            font-weight: bold;
-            outline: 0 none;
-            padding: 0 2px;
-            text-align: center;
-            color: white;
-            border: 1px solid #a9a9a9;
-            background: #d3d3d3;
+            opacity: 0.3;
+            cursor: pointer;
         }
 
         .container-style:hover * button {
             /*visibility: visible;*/
-            background: #a9a9a9;
-
+            /*background: #a9a9a9;*/
+            opacity: 1.0;
+            cursor: pointer;
         }
 
         .note-view-style {
