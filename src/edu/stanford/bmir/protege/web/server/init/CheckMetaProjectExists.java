@@ -15,6 +15,8 @@ import java.io.IOException;
  */
 public class CheckMetaProjectExists implements ConfigurationTask {
 
+    private static final String DEFAULT_PROJECTS_DIRECTORY_NAME = "default-projects";
+
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
             File metaProjectFile = LocalMetaProjectManager.getMetaProjectFile();
@@ -27,7 +29,7 @@ public class CheckMetaProjectExists implements ConfigurationTask {
     private void createFreshMetaProject(ServletContext servletContext, File metaProjectFile) {
         try {
             File webappRoot = new File(servletContext.getRealPath(""));
-            File templateProjectsDirectory = new File(webappRoot, "projects");
+            File templateProjectsDirectory = new File(webappRoot, DEFAULT_PROJECTS_DIRECTORY_NAME);
             File templateMetaProjectDirectory = new File(templateProjectsDirectory, "metaproject");
             final File metaProjectDirectory = metaProjectFile.getParentFile();
             metaProjectDirectory.mkdirs();
