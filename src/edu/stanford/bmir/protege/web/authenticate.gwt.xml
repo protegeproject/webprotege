@@ -1,21 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  When updating your version of GWT, you should also update this DTD reference,
+  so that your app can take advantage of the latest GWT module capabilities.
+-->
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.5.1//EN"
+  "http://google-web-toolkit.googlecode.com/svn/tags/2.5.1/distro-source/core/src/gwt-module.dtd">
+
 <module rename-to="authenticate">
 
     <source path="client"/>
     <source path="shared"/>
 
-	<!-- Inherit the core Google Web Toolkit stuff -->
 	<inherits name="com.google.gwt.user.User"/>
-
 	<inherits name="com.google.gwt.place.Place"/>
-	<!-- Inherit the GWT-Ext Toolkit stff -->
-	<inherits name='com.gwtext.GwtExt' />
-    <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
     <inherits name="com.google.common.cache.Cache"/>
-
-    <inherits name="com.google.common.collect.Collect"/>
-	<entry-point class="edu.stanford.bmir.protege.web.client.Authenticate"/> 
-
     <inherits name="com.google.gwt.json.JSON"/>
-    <servlet path="/authen" class="edu.stanford.bmir.protege.web.server.AuthenticateServiceImpl"/>
+    <inherits name="com.google.common.collect.Collect"/>
+
+	<inherits name='com.gwtext.GwtExt' />
+
+    <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
+
+	<entry-point class="edu.stanford.bmir.protege.web.client.Authenticate"/> 
     
 </module>
