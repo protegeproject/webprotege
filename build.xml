@@ -67,7 +67,7 @@
 		<echo message="Using Java from: JAVA_HOME=${env.JAVA_HOME}" />
 		<echo message="Java version: ${ant.java.version}" />
 		<echo message="Using GWT from: ${gwt.dir}" />
-		<echo message="Additional GWT arguments for the GWT compile: ${gwt.args}" />
+		<echo message="Additional GWT arguments for the GWT compile.java: ${gwt.args}" />
 		<echo message="Output WAR file in: ${build}/${war.name}.war" />
 		<echo message="******************************************" />
 		
@@ -96,6 +96,7 @@
 				<exclude name="WEB-INF/deploy/**" />
 				<exclude name="WEB-INF/deploy" />
 				<exclude name="WEB-INF/lib/gwt-servlet.jar" />
+				<exclude name="WEB-INF/lib/gwt-servlet-deps.jar" />
 			</fileset>
 		</copy>
 	</target>
@@ -123,7 +124,7 @@
     #   ********** Compilation *************
     -->
 
-	<target name="compile" depends="init, checkLibsAndReport" description="Compile java source to bytecode">
+	<target name="compile.java" depends="init, checkLibsAndReport" description="Compile java source to bytecode">
 		<mkdir dir="war/WEB-INF/classes" />
 		<javac srcdir="${src}" includes="**" encoding="utf-8" includeAntRuntime="false"
 			destdir="${classes}" nowarn="true" debug="true" debuglevel="lines,vars,source">
@@ -140,7 +141,7 @@
 	</target>
 
 
-	<target name="webprotege.lib" depends="stage.war, compile">
+	<target name="webprotege.lib" depends="stage.war, compile.java">
 		<jar file="${war}/WEB-INF/lib/${jar.name}" basedir="${classes}" />
 	</target>
 
@@ -151,7 +152,8 @@
 	</target>
 
 
-	<target name="compile.js" depends="compile,check.js.compiled, stage.war" unless="js.up.to.date" description="GWT compile to JavaScript (production mode)">
+	<target name="compile.js" depends="compile.java,check.js.compiled, stage.war" unless="js.up.to.date" 
+			description="GWT compile to JavaScript (production mode)">
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
 			<classpath>
 				<pathelement location="${src}"/>
@@ -163,13 +165,17 @@
 
 			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
 			<jvmarg value="-Xmx1256M"/>
+			
 			<arg line="-war"/>
-			<arg value="war"/>
+			<arg value="${war}"/>
+			
 			<arg line = "-logLevel"/>
 			<arg line = "INFO"/>
+			
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
 			<arg line="${gwt.args}"/>
-			<arg value="${gwt.xml.target}" />
+			
+			<arg value="${gwt.xml.target}" />			
 			<arg value="${gwt.xml.target.authenticate}" />
 		</java>
 		<touch file="${war}/BUILT" />
@@ -194,6 +200,7 @@
 	<target name="war" depends="webprotege.lib,compile.js">
 		<delete file="${war}/WEB-INF/lib/gwt-user.jar" />
 		<copy file="${gwt.dir}/gwt-servlet.jar" todir="${war}/WEB-INF/lib" />
+		<copy file="${gwt.dir}/gwt-servlet-deps.jar" todir="${war}/WEB-INF/lib" />
 		<war destfile="${build}/${war.name}.war" basedir="${war}" />
 	</target>
 
