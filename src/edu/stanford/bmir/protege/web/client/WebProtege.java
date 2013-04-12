@@ -25,7 +25,6 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InviteUserU
 public class WebProtege implements EntryPoint {
 
     public void onModuleLoad() {
-
         Application.init(new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -38,25 +37,18 @@ public class WebProtege implements EntryPoint {
                 handleUIInitialization();
             }
         });
-
-
     }
 
     private void handleUIInitialization() {
-
-
-
         initServletMagagers();
 
         // This doesn't feel like it belongs here
-
         if (isInvitation()) {
             InviteUserUtil inviteUserUtil = new InviteUserUtil();
             inviteUserUtil.ProcessInvitation();
         }
 
         buildUI();
-
     }
 
     /**
@@ -83,13 +75,9 @@ public class WebProtege implements EntryPoint {
         HierarchyServiceManager.getInstance();
         OpenIdServiceManager.getInstance();
         NotificationServiceManager.getInstance();
-
     }
 
     protected void buildUI() {
-
-
-
         Panel rootPanel = new Panel();
         rootPanel.setId("rootpanel");
         rootPanel.setLayout(new FitLayout());
@@ -105,14 +93,10 @@ public class WebProtege implements EntryPoint {
 
         splittingPanel.add(new TopPanel(), new AnchorLayoutData("100% 50px"));
 
-
-
         final ProjectDisplayContainerPanel projectDisplayContainerPanel = new ProjectDisplayContainerPanel();
         projectDisplayContainerPanel.setId("ontologycontainer");
 
-
         splittingPanel.add(projectDisplayContainerPanel, new AnchorLayoutData("100% 90%"));
-
 
         projectDisplayContainerPanel.addListener(new TabPanelListenerAdapter() {
             @Override
@@ -132,9 +116,6 @@ public class WebProtege implements EntryPoint {
         Viewport viewport = new Viewport(rootPanel);
 
         rootPanel.doLayout();
-
     }
-
-
 
 }
