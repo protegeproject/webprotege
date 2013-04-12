@@ -26,21 +26,11 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
 
     private static final long serialVersionUID = -2875415014621934377L;
 
-    private static final String PROJECT_CONFIG_DIR = "projectConfigurations";
-
-    private static String configurationFilePrefix = null;
-
-    public static final String PROJECT_CONFIGURATION_FILE_NAME_PREFIX = "configuration";
-
-    public static final String PROJECT_CONFIGURATION_FILE_EXTENSION = ".xml";
-
-    public static final String DEFAULT_OBO_CONFIGURATION_FILE_NAME = "default-obo-configuration";
-
-    public static final String DEFAULT_OWL_CONFIGURATION_FILE_NAME = "default-owl-configuration";
 
 
     private static File getDefaultConfigurationsDirectory() {
-        return new File(PROJECT_CONFIG_DIR);
+        final File dataDirectory = WebProtegeFileStore.getInstance().getDataDirectory();
+        return new File(dataDirectory, UIConfigurationConstants.DEFAULT_UI_CONFIGURATION_DATA_DIRECTORY_NAME);
     }
 
     private static File getProjectConfigurationsDirectory(ProjectId projectId) {
@@ -49,15 +39,15 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
     }
     
     private static File getUserProjectConfigurationFile(ProjectId projectId, UserId userId) {
-        return new File(getProjectConfigurationsDirectory(projectId), PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getId() + "_" + userId.getUserName() + PROJECT_CONFIGURATION_FILE_EXTENSION);
+        return new File(getProjectConfigurationsDirectory(projectId), UIConfigurationConstants.PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getId() + "_" + userId.getUserName() + UIConfigurationConstants.PROJECT_CONFIGURATION_FILE_EXTENSION);
     }
     
     private static File getCustomProjectConfigurationFile(ProjectId projectId) {
-        return new File(getProjectConfigurationsDirectory(projectId), PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getId() + PROJECT_CONFIGURATION_FILE_EXTENSION);
+        return new File(getProjectConfigurationsDirectory(projectId), UIConfigurationConstants.PROJECT_CONFIGURATION_FILE_NAME_PREFIX + "_" + projectId.getId() + UIConfigurationConstants.PROJECT_CONFIGURATION_FILE_EXTENSION);
     }
     
     private static File getDefaultProjectConfigurationFile(ProjectId projectId) {
-        return new File(getDefaultConfigurationsDirectory(), getDefaultProjectConfigurationName(projectId) + PROJECT_CONFIGURATION_FILE_EXTENSION);
+        return new File(getDefaultConfigurationsDirectory(), getDefaultProjectConfigurationName(projectId) + UIConfigurationConstants.PROJECT_CONFIGURATION_FILE_EXTENSION);
     }
     
 
@@ -96,10 +86,10 @@ public class ProjectConfigurationServiceImpl extends RemoteServiceServlet implem
     private static String getDefaultProjectConfigurationFileName(OWLAPIProjectType projectType) {
         // TODO: Make configurable via a properties file or something similar
         if(projectType.equals(OWLAPIProjectType.getOBOProjectType())) {
-            return DEFAULT_OBO_CONFIGURATION_FILE_NAME;
+            return UIConfigurationConstants.DEFAULT_OBO_CONFIGURATION_FILE_NAME;
         }
         else {
-            return DEFAULT_OWL_CONFIGURATION_FILE_NAME;
+            return UIConfigurationConstants.DEFAULT_OWL_CONFIGURATION_FILE_NAME;
         }
     }
 

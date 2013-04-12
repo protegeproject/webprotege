@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import edu.stanford.bmir.protege.web.server.init.*;
 
 import javax.servlet.ServletContext;
@@ -15,7 +14,13 @@ import java.util.List;
  */
 public class WebProtegeConfigurationChecker {
 
-    private List<ConfigurationTask> configurationTasks = Arrays.asList(new LoadWebProtegeProperties(), new CheckWebProtegeDataDirectoryExists(), new CheckDataDirectoryIsReadableAndWritable(), new CheckMetaProjectExists(), new CheckMongoDBConnectionTask());
+    private List<ConfigurationTask> configurationTasks = Arrays.asList(
+            new LoadWebProtegeProperties(),
+            new CheckWebProtegeDataDirectoryExists(),
+            new CheckDataDirectoryIsReadableAndWritable(),
+            new CheckMetaProjectExists(),
+            new CheckUIConfigurationDataExists(),
+            new CheckMongoDBConnectionTask());
 
     public boolean performConfiguration(ServletContext servletContext) throws WebProtegeConfigurationException {
         for(ConfigurationTask task : configurationTasks) {
