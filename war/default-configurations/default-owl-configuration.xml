@@ -26,7 +26,7 @@
                     <width>0.55</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
+                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
                             <height>200</height>
                             <width>0</width>
                         </portlet>
@@ -80,7 +80,7 @@
                     <width>0.55</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
+                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
                             <height>200</height>
                             <width>0</width>
                         </portlet>
@@ -139,7 +139,7 @@
                     <width>0.55</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
+                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
                             <height>200</height>
                             <width>0</width>
                         </portlet>
@@ -192,7 +192,7 @@
                     <width>0.66</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
+                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
                             <height>600</height>
                             <width>0</width>
                         </portlet>

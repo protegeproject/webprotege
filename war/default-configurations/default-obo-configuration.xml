@@ -1,57 +1,99 @@
 <project>
     <tabs>
 
+		<!-- ********************************** -->
+		<!--    OBO Term Text Editor Tab        -->
+		<!-- ********************************** -->
         <tab>
             <name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>
             <label>OBO Term Text Editor</label>
             <columns>
+            
+            	<!-- Column 1 -->
                 <column>
-                    <width>0.3</width>
+                    <width>0.25</width>
                     <portlets>
+                        
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
-                            <height>740</height>
-                            <width>0</width>
+                            <height>670</height>
                             <index>0</index>
                         </portlet>
+                                                
                     </portlets>
                 </column>
+                
+                <!-- Column 2 -->
                 <column>
-                    <width>0.7</width>
+                    <width>0.55</width>
                     <portlets>
+                        
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductPortlet</name>
-                            <height>200</height>
+                            <height>150</height>
                             <width>0</width>
                             <index>3</index>
                         </portlet>
+                        
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermRelationshipPortlet</name>
-                            <height>200</height>
+                            <height>190</height>
                             <width>0</width>
                             <index>2</index>
                         </portlet>
+                        
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermDefinitionPortlet</name>
-                            <height>180</height>
+                            <height>170</height>
                             <width>0</width>
                             <index>1</index>
                         </portlet>
+                        
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermIdEditorPortlet</name>
                             <height>200</height>
                             <width>0</width>
                             <index>0</index>
                         </portlet>
+                        
                     </portlets>
                 </column>
+                
+                <!-- Column 3 -->
+                <column>
+                    <width>0.20</width>
+                    <portlets>
+						
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
+                            <height>305</height>
+                            <width>200</width>
+                            <index>0</index>
+                        </portlet>
+                        
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
+                            <height>350</height>
+                            <width>200</width>
+                            <index>1</index>
+                        </portlet>
+                        
+                    </portlets>
+                </column>
+            
             </columns>
+            <controllingPortlet reference="../columns/column/portlets/portlet"/>
         </tab>
 
+		<!-- ********************************** -->
+		<!--      OBO Term Synonyms Tab         -->
+		<!-- ********************************** -->
         <tab>
             <name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>
             <label>OBO Term Synonyms</label>
             <columns>
+            
+            	<!-- Column 1 -->
                 <column>
                     <width>0.3</width>
                     <portlets>
@@ -63,6 +105,8 @@
                         </portlet>
                     </portlets>
                 </column>
+                
+                <!-- Column 2 -->
                 <column>
                     <width>0.7</width>
                     <portlets>
@@ -84,10 +128,15 @@
         </tab>
 
 
+		<!-- ********************************** -->
+		<!--     Notes and Discussions Tab     	-->
+		<!-- ********************************** -->
         <tab>
             <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTab</name>
             <label>Notes and Discussions</label>
             <columns>
+            
+            	<!-- Column 1 -->
                 <column>
                     <width>0.33</width>
                     <portlets>
@@ -98,11 +147,13 @@
                         </portlet>
                     </portlets>
                 </column>
+                
+                <!-- Column 2 -->
                 <column>
                     <width>0.66</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet</name>
+                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
                             <height>600</height>
                             <width>0</width>
                         </portlet>
@@ -111,5 +162,84 @@
             </columns>
             <controllingPortlet reference="../columns/column/portlets/portlet"/>
         </tab>
+        
+        <!-- ********************************** -->
+		<!--      Changes By Entity Tab         -->
+		<!-- ********************************** -->
+        <tab>
+            <name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>
+            <label>Changes By Entity</label>
+            <columns>
+				
+				<!-- Column 1 -->
+                <column>
+                    <width>0.3</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
+                            <height>600</height>
+                            <width>0</width>
+                        </portlet>
+                    </portlets>
+                </column>
+                
+                <!-- Column 2 -->
+                <column>
+                    <width>0.7</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet</name>
+                            <height>600</height>
+                            <width>450</width>
+                        </portlet>
+                    </portlets>
+                </column>
+                
+            </columns>
+            <controllingPortlet reference="../columns/column/portlets/portlet"/>
+        </tab>
+
+        
+        <!-- ********************************** -->
+		<!--       Project Dashboard Tab        -->
+		<!-- ********************************** -->
+        <tab>
+            <name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>
+            <label>Project Dashboard</label>
+            <columns>
+				
+				<!-- Column 1 -->
+                <column>
+                    <width>0.5</width>
+                    <portlets>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet</name>
+                            <height>600</height>
+                            <width>450</width>
+                        </portlet>
+                    </portlets>
+                </column>
+                
+                <!-- Column 2 -->
+                <column>
+                    <width>0.5</width>
+                    <portlets>
+						<portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.revisions.RevisionsPortlet</name>
+                            <height>350</height>
+                            <width>450</width>
+                        </portlet>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet</name>
+                            <height>240</height>
+                            <width>450</width>
+                        </portlet>
+                    </portlets>
+                </column>
+                
+            </columns>
+        </tab>
+    
     </tabs>
+    
 </project>
