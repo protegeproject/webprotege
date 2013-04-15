@@ -44,7 +44,7 @@
                         
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermDefinitionPortlet</name>
-                            <height>170</height>
+                            <height>173</height>
                             <width>0</width>
                             <index>1</index>
                         </portlet>
@@ -66,7 +66,7 @@
 						
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
-                            <height>305</height>
+                            <height>310</height>
                             <width>200</width>
                             <index>0</index>
                         </portlet>
@@ -99,9 +99,9 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
-                            <height>740</height>
+                            <height>670</height>
                             <width>0</width>
-                            <index>1</index>
+                            <index>0</index>
                         </portlet>
                     </portlets>
                 </column>
@@ -118,7 +118,7 @@
                         </portlet>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.obo.OBOTermSynonymsPortlet</name>
-                            <height>550</height>
+                            <height>532</height>
                             <width>0</width>
                             <index>1</index>
                         </portlet>
@@ -139,7 +139,7 @@
                         
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
-                            <height>350</height>
+                            <height>353</height>
                             <width>200</width>
                             <index>1</index>
                         </portlet>
