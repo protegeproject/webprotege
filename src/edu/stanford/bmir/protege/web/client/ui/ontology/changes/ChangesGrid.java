@@ -34,7 +34,7 @@ public class ChangesGrid extends GridPanel {
 
         setAutoWidth(true);
         setAutoExpandColumn("ChangesGrid_ChangeDescCol");
-        setId("changes-grid");
+
         setStripeRows(true);
         setTitle("Change History");
         setFrame(true);
