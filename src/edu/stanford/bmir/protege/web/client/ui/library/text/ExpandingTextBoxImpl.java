@@ -87,7 +87,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
                     event.preventDefault();
                     acceptKeyHandler.handleAcceptKey();
                 }
-                else if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && event.isControlKeyDown() && mode == ExpandingTextBoxMode.MULTI_LINE) {
+                else if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && event.isControlKeyDown() && mode == ExpandingTextBoxMode.MULTI_LINE) {
                     event.preventDefault();
                     acceptKeyHandler.handleAcceptKey();
                 }

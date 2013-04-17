@@ -4,10 +4,10 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ValueBoxBase;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.library.recaptcha.RecaptchaWidget;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
@@ -20,6 +20,8 @@ import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements WebProtegeDialogValidator {
 
     public static final int PASSWORD_MIN_LENGTH = 1;
+
+    private static final int VISIBLE_LENGTH = 50;
 
     private final TextBox emailField;
 
@@ -37,15 +39,25 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
 
 
     public WebProtegeSignupDialogForm() {
-        emailField = new TextBox();
-        emailField.setVisibleLength(50);
-        addWidget("Email address", emailField);
+
+        emailField = addTextBox("Email address", "Enter your email address", "", null);
+        emailField.setVisibleLength(VISIBLE_LENGTH);
+
         addVerticalSpacer();
 
-        userNameField = new TextBox();
+        userNameField = addTextBox("User name", "Choose a user name (e.g. Harry Potter)", "", new WebProtegeDialogInlineValidator<ValueBoxBase<String>>() {
+            @Override
+            public InlineValidationResult getValidation(ValueBoxBase<String> widget) {
+                final String enteredUserName = widget.getText().trim();
+                if(enteredUserName.equalsIgnoreCase(UserId.getGuest().getUserName())) {
+                    return InlineValidationResult.getInvalid("You cannot choose the user name '" + enteredUserName + "'.  Please choose a different user name.");
+                }
+                else {
+                    return InlineValidationResult.getValid();
+                }
+            }
+        });
         userNameField.setVisibleLength(50);
-        userNameField.getElement().setAttribute("placeHolder", "Choose a user name (e.g. Harry Potter)");
-        addWidget("User name", userNameField);
 
         addVerticalSpacer();
         passwordField = new PasswordTextBox();
@@ -133,7 +145,11 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
             return ValidationState.INVALID;
         }
 
-
+        InlineValidationResult inlineValidationResult = runTextFieldValidation();
+        if(inlineValidationResult.isInvalid()) {
+            validationMessage = inlineValidationResult.getMessage();
+            return ValidationState.INVALID;
+        }
         return ValidationState.VALID;
     }
 

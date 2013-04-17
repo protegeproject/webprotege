@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.server.db.mongodb;
 
+import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.util.ApplicationProperties;
 
 import java.net.UnknownHostException;
@@ -117,7 +119,7 @@ public class MongoDBManager {
     }
 
 
-    public MongoClient getClient() {
+    private MongoClient getClient() {
         return client;
     }
 
@@ -129,5 +131,21 @@ public class MongoDBManager {
     private String getMongoDBNotFoundMessage() {
         return "WebProtege could not connect to mongodb.  Please check that the mongod daemon is either running on the default host (" + DEFAULT_HOST_NAME + ") and default port (" + DEFAULT_PORT + "), or that the mongod daemon is running on a custom host and port and that you have specified the custom host and port in the protege.properties with the parameters " + HOST_PROPERTY_NAME + " and " + PORT_PROPERTY_NAME;
     }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private DB getProjectDB(ProjectId projectId) {
+        return client.getDB("prj-" + projectId.getId());
+    }
+
+    public <R, T extends Throwable> R runCommand(ProjectDBCommand<R, T> command) throws T {
+        DB db = getProjectDB(command.getProjectId());
+        R result = command.run(command.getProjectId(), db);
+        return result;
+    }
+
 
 }

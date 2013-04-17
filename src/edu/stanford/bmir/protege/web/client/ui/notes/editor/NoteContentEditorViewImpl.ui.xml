@@ -1,0 +1,14 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text"
+             xmlns:dlg="urn:import:edu.stanford.bmir.protege.web.client.ui.library.dlg">
+    <ui:style>
+        .topic-field {
+            margin-bottom: 12px;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <text:PlaceholderTextBox ui:field="topicField" width="100%" visibleLength="60" addStyleNames="{style.topic-field}" placeholder="Topic"/>
+        <text:PlaceholderTextArea ui:field="bodyArea" width="100%" placeholder="Reply" visibleLines="7" characterWidth="60"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

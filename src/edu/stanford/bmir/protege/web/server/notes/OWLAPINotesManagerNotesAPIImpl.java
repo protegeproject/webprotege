@@ -14,10 +14,10 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.EntityNotesChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.notes.*;
+import edu.stanford.bmir.protege.web.shared.notes.NoteType;
 import org.protege.notesapi.NotesException;
 import org.protege.notesapi.NotesManager;
-import org.protege.notesapi.notes.AnnotatableThing;
-import org.protege.notesapi.notes.Annotation;
+import org.protege.notesapi.notes.*;
 import org.protege.notesapi.oc.impl.DefaultOntologyComponent;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentFormat;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentSerializer;
@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -247,12 +249,13 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         UserId author = UserId.getUserId(annotation.getAuthor());
         String body = annotation.getBody() == null ? "" : annotation.getBody();
         long timestamp = annotation.getCreatedAt();
-        String noteType = annotation.getType().name();
         Optional<String> subject = annotation.getSubject() == null ? Optional.<String>absent() : Optional.<String>of(annotation.getSubject());
 
         NoteId noteId = NoteId.createNoteIdFromLexicalForm(annotation.getId());
-
-        return Note.createNote(noteId, inReplyTo, timestamp, author, NoteType.getComment(), subject, body);
+        NoteHeader noteHeader = new NoteHeader(noteId, inReplyTo, author, timestamp);
+        NoteStatus noteStatus = annotation.getArchived() != null && annotation.getArchived() ? NoteStatus.RESOLVED : NoteStatus.OPEN;
+        NoteContent noteContent = NoteContent.builder().setBody(body).setNoteStatus(noteStatus).setNoteType(NoteType.COMMENT).setSubject(subject).build();
+        return Note.createNote(noteHeader, noteContent);
     }
 
 
@@ -340,12 +343,12 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     private void postNotePostedEvent(NoteTarget target, Optional<OWLEntityData> targetAsEntityData, String noteId, String subject, String author, String body, String annotatedThingId) {
         NoteHeader noteHeader = new NoteHeader(NoteId.createNoteIdFromLexicalForm(noteId), Optional.<NoteId>absent(), UserId.getUserId(author), System.currentTimeMillis());
         NoteContent.Builder builder = NoteContent.builder();
-        builder.addField(NoteField.BODY, body);
+        builder.setBody(body);
         if (subject != null && !subject.isEmpty()) {
-            builder.addField(NoteField.SUBJECT, subject);
+            builder.setSubject(subject);
         }
         NoteDetails noteDetails = new NoteDetails(noteHeader, builder.build());
-        project.getEventManager().postEvent(new NotePostedEvent(project.getProjectId(), target, targetAsEntityData, noteDetails));
+        project.getEventManager().postEvent(new NotePostedEvent(project.getProjectId(), targetAsEntityData, noteDetails));
     }
 
     @Override
@@ -361,6 +364,12 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         return getNotesDataForAnnotation(annotation, annotates.iterator().next(), NoteRetrievalType.THREAD);
     }
 
+    @Override
+    public void deleteNoteAndReplies(NoteId noteId) {
+        notesManager.deleteNote(noteId.getLexicalForm());
+        project.getEventManager().postEvent(new NoteDeletedEvent(project.getProjectId(), noteId));
+    }
+
     public List<NotesData> deleteNoteAndRepliesForObjectId(String objectId) {
         if(objectId == null) {
             return Collections.emptyList();
@@ -373,6 +382,19 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     public void setArchivedStatus(String noteId, ArchivesStatus archivesStatus) {
         Annotation note = notesManager.getNote(noteId);
         note.setArchived(archivesStatus == ArchivesStatus.ARCHIVED);
+        NoteStatus status = (archivesStatus == ArchivesStatus.ARCHIVED ? NoteStatus.RESOLVED : NoteStatus.OPEN);
+        project.getEventManager().postEvent(new NoteStatusChangedEvent(project.getProjectId(), NoteId.createNoteIdFromLexicalForm(noteId), status));
+    }
+
+    @Override
+    public void setNoteStatus(NoteId noteId, NoteStatus noteStatus) {
+        if(noteStatus == NoteStatus.OPEN) {
+            setArchivedStatus(noteId.getLexicalForm(), ArchivesStatus.NOT_ARCHIVED);
+        }
+        else {
+            setArchivedStatus(noteId.getLexicalForm(), ArchivesStatus.ARCHIVED);
+        }
+        project.getEventManager().postEvent(new NoteStatusChangedEvent(project.getProjectId(), noteId, noteStatus));
     }
 
     public int getDirectNotesCount(OWLEntity entity) {
@@ -396,8 +418,52 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         return count;
     }
 
+    @Override
+    public Note addReplyToNote(NoteId inReplyToId, NoteContent replyContent, UserId author) {
+        try {
+            AnnotatableThing target = getAnnotatableThingForObjectId(inReplyToId.getLexicalForm());
+            final String subject = replyContent.getSubject().or("");
+            final String body = replyContent.getBody().or("");
+            final org.protege.notesapi.notes.NoteType noteType = org.protege.notesapi.notes.NoteType.Comment;
+            Annotation annotation = notesManager.createSimpleNote(noteType, subject, body, author.getUserName(), target);
+            final long timeStamp = System.currentTimeMillis();
+            annotation.setCreatedAt(timeStamp);
+            final NoteId noteId = NoteId.createNoteIdFromLexicalForm(annotation.getId());
+            NoteHeader noteHeader = new NoteHeader(noteId, Optional.of(inReplyToId), author, timeStamp);
+            Note note = Note.createNote(noteHeader, replyContent);
+            project.getEventManager().postEvent(new NotePostedEvent(project.getProjectId(), new NoteDetails(noteHeader, replyContent), Optional.of(inReplyToId)));
+            return note;
+        }
+        catch (NotesException e) {
+            throw new RuntimeException("Problem creating note: " + e.getMessage());
+        }
+    }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public Note addNoteToEntity(OWLEntity targetEntity, NoteContent noteContent, UserId author) {
+        try {
+            checkNotNull(targetEntity);
+            checkNotNull(noteContent);
+            checkNotNull(author);
+            AnnotatableThing target = getAnnotatableThingForObjectId(targetEntity.getIRI().toString());
+            final String subject = noteContent.getSubject().or("");
+            final String body = noteContent.getBody().or("");
+            final org.protege.notesapi.notes.NoteType noteType = org.protege.notesapi.notes.NoteType.Comment;
+            Annotation annotation = notesManager.createSimpleNote(noteType, subject, body, author.getUserName(), target);
+            final long timeStamp = System.currentTimeMillis();
+            annotation.setCreatedAt(timeStamp);
+            final NoteId noteId = NoteId.createNoteIdFromLexicalForm(annotation.getId());
+            NoteHeader noteHeader = new NoteHeader(noteId, Optional.<NoteId>absent(), author, timeStamp);
+            Note note = Note.createNote(noteHeader, noteContent);
+            OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity, project.getRenderingManager().getBrowserText(targetEntity));
+            project.getEventManager().postEvent(new NotePostedEvent(project.getProjectId(), Optional.of(entityData), new NoteDetails(noteHeader, noteContent)));
+            return note;
+        }
+        catch (NotesException e) {
+            throw new RuntimeException("Problem creating note: " + e.getMessage());
+        }
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

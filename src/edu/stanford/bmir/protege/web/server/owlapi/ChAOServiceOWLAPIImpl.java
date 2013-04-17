@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
 import edu.stanford.bmir.protege.web.server.notes.ArchivesStatus;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
+import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.protege.notesapi.notes.NoteType;
@@ -201,7 +202,7 @@ public class ChAOServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet implem
     public List<ChangeData> getChanges(String projectName, Date start, Date end) {
         OWLAPIProject project = getProject(projectName);
         OWLAPIChangeManager changeManager = project.getChangeManager();
-        return changeManager.getChangeDataInTimestampInterval(start.getTime(), end.getTime());
+        return changeManager.getChangeDataInTimestampInterval(start.getTime(), end.getTime(), RevisionType.EDIT);
     }
 
     public Integer getNumChanges(String projectName, Date start, Date end) {

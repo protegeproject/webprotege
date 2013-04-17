@@ -84,6 +84,27 @@ public final class FieldValueList implements Serializable {
         return this.fields.equals(other.fields) && this.valueMap.equals(other.valueMap);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("FieldValueList");
+        sb.append("(");
+        for(Iterator<NoteField<? extends Serializable>> it = valueMap.keySet().iterator(); it.hasNext(); ) {
+            NoteField<? extends Serializable> field = it.next();
+            sb.append("FieldValue(");
+            sb.append("Field(");
+            sb.append(field.getFieldName());
+            sb.append(") Value(");
+            sb.append(valueMap.get(field).toString());
+            sb.append("))");
+            if(it.hasNext()) {
+                sb.append(" ");
+            }
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

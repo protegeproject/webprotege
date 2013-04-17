@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.event;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.notes.NoteDetails;
+import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 import edu.stanford.bmir.protege.web.shared.notes.NoteTarget;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -18,36 +19,41 @@ public class NotePostedEvent extends ProjectEvent<NotePostedHandler> {
 
     private NoteDetails noteDetails;
 
-    private NoteTarget noteTarget;
+    private Optional<NoteId> inReplyTo;
 
-    private OWLEntityData targetAsEntityData;
+    private Optional<OWLEntityData> targetAsEntityData;
 
-    public NotePostedEvent(ProjectId source, NoteTarget noteTarget, NoteDetails noteDetails) {
+//    public NotePostedEvent(ProjectId source, NoteTarget noteTarget, NoteDetails noteDetails) {
+//        super(source);
+//        this.noteDetails = noteDetails;
+//        this.noteTarget = noteTarget;
+//        // Internal
+//        this.targetAsEntityData = null;
+//    }
+
+    public NotePostedEvent(ProjectId source, Optional<OWLEntityData> targetAsEntityData, NoteDetails noteDetails) {
         super(source);
         this.noteDetails = noteDetails;
-        this.noteTarget = noteTarget;
-        // Internal
-        this.targetAsEntityData = null;
+        this.targetAsEntityData = targetAsEntityData;
+        this.inReplyTo = Optional.absent();
     }
 
-    public NotePostedEvent(ProjectId source, NoteTarget noteTarget, Optional<OWLEntityData> targetAsEntityData, NoteDetails noteDetails) {
+    public NotePostedEvent(ProjectId source, NoteDetails noteDetails, Optional<NoteId> inReplyTo) {
         super(source);
         this.noteDetails = noteDetails;
-        this.noteTarget = noteTarget;
-        this.targetAsEntityData = targetAsEntityData.isPresent() ? targetAsEntityData.get() : null;
+        this.inReplyTo = inReplyTo;
+        this.targetAsEntityData = Optional.absent();
     }
 
     private NotePostedEvent() {
     }
 
-
-
-    public NoteTarget getNoteTarget() {
-        return noteTarget;
+    public Optional<NoteId> getInReplyTo() {
+        return inReplyTo;
     }
 
     public Optional<OWLEntityData> getTargetAsEntityData() {
-        return Optional.fromNullable(targetAsEntityData);
+        return targetAsEntityData;
     }
 
     public NoteDetails getNoteDetails() {
@@ -67,7 +73,7 @@ public class NotePostedEvent extends ProjectEvent<NotePostedHandler> {
 
     @Override
     public int hashCode() {
-        return "NotePostedEvent".hashCode() + this.noteTarget.hashCode() + this.noteDetails.hashCode();
+        return "NotePostedEvent".hashCode() + targetAsEntityData.hashCode() + inReplyTo.hashCode() + this.noteDetails.hashCode();
     }
 
     @Override
@@ -79,16 +85,18 @@ public class NotePostedEvent extends ProjectEvent<NotePostedHandler> {
             return false;
         }
         NotePostedEvent other = (NotePostedEvent) obj;
-        return this.noteTarget.equals(other.noteTarget) && this.noteDetails.equals(other.noteDetails);
+        return this.targetAsEntityData.equals(other.targetAsEntityData) && this.inReplyTo.equals(inReplyTo)  && this.noteDetails.equals(other.noteDetails);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("NotePostedEvent");
-        sb.append("(");
-        sb.append(noteTarget);
-        sb.append(" ");
+        sb.append("( Target(");
+        sb.append(targetAsEntityData);
+        sb.append(") InReplyTo(");
+        sb.append(inReplyTo);
+        sb.append(") ");
         sb.append(noteDetails);
         sb.append(")");
         return sb.toString();

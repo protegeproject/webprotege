@@ -11,6 +11,10 @@
             padding-bottom: 5px;
         }
 
+        .container-style:hover {
+            background: #efefef;
+        }
+
         /*.container-style * button {*/
             /*border-radius: 2px 2px 2px 2px;*/
             /*cursor: default;*/
@@ -25,14 +29,12 @@
         /*}*/
 
         .container-style * button {
-            opacity: 0.3;
+            visibility: hidden;
             cursor: pointer;
         }
 
         .container-style:hover * button {
-            /*visibility: visible;*/
-            /*background: #a9a9a9;*/
-            opacity: 1.0;
+            visibility: visible;
             cursor: pointer;
         }
 

@@ -33,7 +33,7 @@ public class NoteDetailsEditor extends Composite implements NoteDetailsDisplay {
     public void setValue(NoteDetails object) {
         editorPanel.setAuthor(object.getNoteHeader().getAuthor().getUserName());
         editorPanel.setDate(object.getNoteHeader().getTimestamp());
-        editorPanel.setBody(object.getNoteContent().getBody());
+        editorPanel.setBody(object.getNoteContent().getBody().or(""));
     }
 
     @Override
@@ -51,8 +51,8 @@ public class NoteDetailsEditor extends Composite implements NoteDetailsDisplay {
         NoteDetails last = lastDetails.get();
         NoteHeader header = last.getNoteHeader();
         NoteContent.Builder contentBuilder = NoteContent.builder();
-        contentBuilder.addField(NoteField.TYPE, NoteType.getComment());
-        contentBuilder.addField(NoteField.BODY, editorPanel.getBody());
+        contentBuilder.setNoteType(NoteType.COMMENT);
+        contentBuilder.setBody(editorPanel.getBody());
         NoteContent content = contentBuilder.build();
         return Optional.of(new NoteDetails(header, content));
     }

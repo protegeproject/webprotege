@@ -31,7 +31,8 @@ public class NotePresenter  {
         noteView.setAuthor(author);
         long timestamp = note.getTimestamp();
         noteView.setTimestamp(timestamp);
-        SafeHtml body = new SafeHtmlBuilder().appendHtmlConstant(note.getBody()).toSafeHtml();
+        String bodyHtml = note.getBody().replace("\n", "<br>");
+        SafeHtml body = new SafeHtmlBuilder().appendHtmlConstant(bodyHtml).toSafeHtml();
         noteView.setBody(body);
     }
 

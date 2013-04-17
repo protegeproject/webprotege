@@ -26,15 +26,16 @@ public class SettingsMongoDBImpl implements Settings {
 
 
     private BasicDBObject getSettingsObject() {
-        DB db = getDB();
-        DBCollection settingsCollection = db.getCollection("settings");
-        DBObject dbObject = settingsCollection.findOne();
-        return (BasicDBObject) dbObject;
+//        DB db = getDB();
+//        DBCollection settingsCollection = db.getCollection("settings");
+//        DBObject dbObject = settingsCollection.findOne();
+//        return (BasicDBObject) dbObject;
+        return null;
     }
 
-    private DB getDB() {
-        return MongoDBManager.get().getClient().getDB(dbName);
-    }
+//    private DB getDB() {
+//        return MongoDBManager.get().getClient().getDB(dbName);
+//    }
 
     @Override
     public void clear(String propertyName) {
@@ -44,7 +45,7 @@ public class SettingsMongoDBImpl implements Settings {
     }
 
     private DBCollection getSettingsCollection() {
-        return getDB().getCollection("settings");
+        return null;//getDB().getCollection("settings");
     }
 
     @Override

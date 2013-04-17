@@ -4,6 +4,8 @@ import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import java.io.Serializable;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -31,31 +33,26 @@ public class SignupInfo implements Serializable {
     /**
      * Creates a SignupInfo with information required for sign up and information (provided by ReCaptcha) required to
      * validate that a real human is signing up, and not a bot.
-     * @param emailAddress The email address.  Must not be null.
-     * @param password The password.  Must not be null.
-     * @param userName The user name for the user signing up for the account. Must not be null.
-     * @param verificationChallenge The verification challenge (from the ReCaptcha widget). Must not be null.
-     * @param verificationResponse The verification response (from the ReCaptcha widget).  Must not be null.
-     * @throws NullPointerException if any parameters are null.
+     * @param emailAddress The email address.  Must not be {@code null}.
+     * @param password The password.  Must not be {@code null}.
+     * @param userName The user name for the user signing up for the account. Must not be {@code null}.  Must not be
+     * equal to the guest user name.  See {@link edu.stanford.bmir.protege.web.client.rpc.data.UserId#getGuest()}
+     * @param verificationChallenge The verification challenge (from the ReCaptcha widget). Must not be {@code null}.
+     * @param verificationResponse The verification response (from the ReCaptcha widget).  Must not be {@code null}.
+     * @throws NullPointerException if any parameter is {@code null}.
      *
      */
     public SignupInfo(EmailAddress emailAddress, String userName, String password, String verificationChallenge, String verificationResponse) {
-        if(emailAddress == null) {
-            throw new NullPointerException("emailAddress must not be null");
-        }
-        if(password == null) {
-            throw new NullPointerException("password must not be null");
-        }
-        this.emailAddress = emailAddress;
-        this.userName = userName;
-        this.password = password;
-        this.verificationChallenge = verificationChallenge;
-        this.verificationResponse = verificationResponse;
+        this.emailAddress = checkNotNull(emailAddress);
+        this.userName = checkNotNull(userName);
+        this.password = checkNotNull(password);
+        this.verificationChallenge = checkNotNull(verificationChallenge);
+        this.verificationResponse = checkNotNull(verificationResponse);
     }
 
     /**
      * Gets the email address.
-     * @return The email address.   Not null.
+     * @return The email address.   Not {@code null}.
      */
     public EmailAddress getEmailAddress() {
         return emailAddress;
@@ -63,12 +60,16 @@ public class SignupInfo implements Serializable {
 
     /**
      * Gets the password.
-     * @return The password.  Not null.
+     * @return The password.  Not {@code null}.
      */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Gets the user name
+     * @return The user name.  Not {@code null}.
+     */
     public String getUserName() {
         return userName;
     }

@@ -12,14 +12,15 @@
         }
 
         .author {
-            font-weight: bold;
+            /*font-weight: bold;*/
             padding-bottom: 2px;
             color: #648dbe;
+            color: #989898;
         }
 
         .date {
             font-size: 10px;
-            color: #808080;
+            color: #B3B3B3;
             padding-left: 2px;
             display: inline;
         }

@@ -25,17 +25,18 @@ public final class NoteHeader implements Serializable, Comparable<NoteHeader> {
 
     private long timestamp;
 
+    /**
+     * For serialization only
+     */
+    private NoteHeader() {
+    }
+
+
     public NoteHeader(NoteId noteId, Optional<NoteId> replyToId, UserId author, long timestamp) {
         this.noteId = noteId;
         this.replyToId = replyToId;
         this.author = author;
         this.timestamp = timestamp;
-    }
-
-    /**
-     * For serialization only
-     */
-    private NoteHeader() {
     }
 
     public NoteId getNoteId() {
@@ -56,7 +57,6 @@ public final class NoteHeader implements Serializable, Comparable<NoteHeader> {
 
     @Override
     public int hashCode() {
-//        return "NoteHeader".hashCode() + noteId.hashCode() + (replyToId != null ? replyToId.hashCode() : 0) + author.hashCode() + (int) timestamp;
         return "NoteHeader".hashCode() + noteId.hashCode() + replyToId.hashCode() + (int) timestamp;
     }
 
@@ -70,7 +70,6 @@ public final class NoteHeader implements Serializable, Comparable<NoteHeader> {
         }
         NoteHeader other = (NoteHeader) obj;
         return this.noteId.equals(other.noteId) && this.author.equals(other.author) && this.timestamp == other.timestamp && this.replyToId.equals(other.replyToId);
-//        return this.noteId.equals(other.noteId) && this.author.equals(other.author) && this.timestamp == other.timestamp && (this.replyToId == other.replyToId || this.replyToId != null && other.replyToId != null && this.replyToId.equals(other.replyToId));
     }
 
     @Override

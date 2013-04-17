@@ -24,20 +24,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Immutable
 public final class Note implements Serializable {
 
-    private NoteHeader noteHeader;
+    private NoteHeader header;
 
     private NoteContent content;
 
 
     /**
      * Constructs a {@link Note}.
-     * @param noteHeader The header of the note.  Not {@code null}.
+     * @param header The header of the note.  Not {@code null}.
      * @param content The content of the note.  Note {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    private Note(NoteHeader noteHeader, NoteContent content) {
-        this.noteHeader = noteHeader;
-        this.noteHeader = checkNotNull(noteHeader);
+    private Note(NoteHeader header, NoteContent content) {
+        this.header = header;
+        this.header = checkNotNull(header);
         this.content = checkNotNull(content);
     }
 
@@ -46,15 +46,19 @@ public final class Note implements Serializable {
      */
     private Note() {
     }
-    
+
+    public static Note createNote(NoteHeader noteHeader, NoteContent noteContent) {
+        return new Note(noteHeader, noteContent);
+    }
+
     public static Note createNote(NoteId noteId, Optional<NoteId> inReplyTo, long timestamp, UserId author, NoteType noteType, Optional<String> subject, String body) {
         final NoteHeader header = new NoteHeader(noteId, inReplyTo, author, timestamp);
-        NoteContent content = NoteContent.builder().addField(NoteField.BODY, body).addField(NoteField.SUBJECT, subject.or("")).build();
+        NoteContent content = NoteContent.builder().setBody(body).setSubject(subject).setNoteType(noteType).build();
         return new Note(header, content);
     }
     
     public static Note createComment(NoteId noteId, Optional<NoteId> inReplyTo, long createdAt, UserId createdBy, Optional<String> subject, String body) {
-        return createNote(noteId, inReplyTo, createdAt, createdBy, NoteType.getComment(), subject, body);
+        return createNote(noteId, inReplyTo, createdAt, createdBy, NoteType.COMMENT, subject, body);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +77,7 @@ public final class Note implements Serializable {
      * @return The NoteId for this Note.  Not <code>null</code>.
      */
     public NoteId getNoteId() {
-        return noteHeader.getNoteId();
+        return header.getNoteId();
     }
 
     /**
@@ -81,32 +85,29 @@ public final class Note implements Serializable {
      * @return The {@link Optional} {@link NoteId} representing the {@link Note} that this {@link Note} is a reply to.
      */
     public Optional<NoteId> getInReplyTo() {
-        return noteHeader.getReplyToId();
+        return header.getReplyToId();
     }
 
     public long getTimestamp() {
-        return noteHeader.getTimestamp();
+        return header.getTimestamp();
     }
 
     public UserId getAuthor() {
-        return noteHeader.getAuthor();
+        return header.getAuthor();
     }
 
     public String getSubject() {
-        return content.getFieldValue(NoteField.SUBJECT).or("");
+        return content.getSubject().or("");
     }
 
-//    public NoteType getNoteType() {
-//        return content.getNoteType();
-//    }
 
     public String getBody() {
-        return content.getBody();
+        return content.getBody().or("");
     }
 
 
-    public NoteHeader getNoteHeader() {
-        return noteHeader;
+    public NoteHeader getHeader() {
+        return header;
     }
 
     public NoteContent getContent() {
@@ -115,7 +116,7 @@ public final class Note implements Serializable {
 
     @Override
     public int hashCode() {
-        return "Note".hashCode() + noteHeader.hashCode() + content.hashCode();
+        return "Note".hashCode() + header.hashCode() + content.hashCode();
     }
 
     @Override
@@ -127,7 +128,7 @@ public final class Note implements Serializable {
             return false;
         }
         Note other = (Note) obj;
-        return this.noteHeader.equals(other.noteHeader) && this.content.equals(other.content);
+        return this.header.equals(other.header) && this.content.equals(other.content);
     }
 
 
@@ -169,7 +170,7 @@ public final class Note implements Serializable {
             this.author = author;
             this.replyToId = Optional.absent();
             this.timestamp = new Date().getTime();
-            this.noteType = NoteType.getComment();
+            this.noteType = NoteType.COMMENT;
             this.subject = Optional.absent();
             this.body = "";
         }
@@ -217,7 +218,7 @@ public final class Note implements Serializable {
          */
         public Note build() {
             NoteHeader noteHeader = new NoteHeader(noteId, replyToId, author, timestamp);
-            NoteContent noteContent = new NoteContent(body);
+            NoteContent noteContent = NoteContent.builder().setBody(body).setSubject(subject).setNoteType(noteType).build();
             return new Note(noteHeader, noteContent);
         }
     }

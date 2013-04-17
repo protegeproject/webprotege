@@ -14,70 +14,30 @@ import java.io.Serializable;
  *
  * </p>
  */
-public final class NoteType implements Serializable, Comparable<NoteType> {
-   
-    private static final NoteType COMMENT = getReplyTypeFromShortName("Comment");
+public enum NoteType {
 
 
-    public static NoteType getNoteTypeFromIRI(IRI iri) {
-        return new NoteType(iri, iri.getFragment());
-    }
-
-    public static NoteType getReplyTypeFromShortName(String shortName) {
-        IRI fullIRI = IRI.create(NotesVocabulary.NOTES_VOCABULARY_BASE + shortName);
-        return new NoteType(fullIRI, shortName);
-    }
-    
-    public static NoteType getComment() {
-        return COMMENT;
-    }
+    COMMENT("Comment");
     
 
-    private IRI noteTypeIRI;
+    private String shortName;
 
-    private String defaultShortName;
+    private IRI iri;
 
     // Empty constructor for the purposes of serialization
     private NoteType() {
     }
 
-    private NoteType(IRI replyTypeIRI, String defaultShortName) {
-        this.noteTypeIRI = replyTypeIRI;
-        this.defaultShortName = defaultShortName;
+    private NoteType(String shortName) {
+        this.shortName = shortName;
+        this.iri = IRI.create(NotesVocabulary.NOTES_VOCABULARY_BASE + shortName);
     }
 
-
-    public IRI getTypeIRI() {
-        return noteTypeIRI;
+    public String getShortName() {
+        return shortName;
     }
 
-    public String getDefaultShortName() {
-        return defaultShortName;
-    }
-
-    @Override
-    public int hashCode() {
-        return "NoteType".hashCode() + noteTypeIRI.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof NoteType)) {
-            return false;
-        }
-        NoteType other = (NoteType) obj;
-        return this.noteTypeIRI.equals(other.noteTypeIRI);
-    }
-
-    public int compareTo(NoteType o) {
-        if(this.noteTypeIRI.equals(o.noteTypeIRI)) {
-            return 0;
-        }
-        else {
-            return this.defaultShortName.compareTo(o.defaultShortName);
-        }
+    public IRI getIRI() {
+        return iri;
     }
 }

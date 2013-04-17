@@ -2,8 +2,9 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.MessageBox;
-import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
-import edu.stanford.bmir.protege.web.shared.notes.NoteId;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorDialog;
+import edu.stanford.bmir.protege.web.shared.notes.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,24 +18,17 @@ public class NoteActionPresenter {
 
     private NoteId currentNoteId;
 
+
     public NoteActionPresenter(NoteActionView noteActionView) {
         this.view = noteActionView;
-        view.setReplyToNoteHandler(new ReplyToNoteHandler() {
-            @Override
-            public void handleReplyToNote() {
-                MessageBox.alert("Reply to note " + currentNoteId);
-            }
-        });
-        view.setDeleteNoteHandler(new DeleteNoteHandler() {
-            @Override
-            public void handleDeleteNote() {
-                MessageBox.alert("Delete note " + currentNoteId);
-            }
-        });
     }
 
     public void setNoteId(NoteId noteId, DiscussionThread context) {
         this.currentNoteId = noteId;
+        view.setReplyToNoteHandler(new ReplyToNoteHandlerImpl(currentNoteId));
+
+        view.setDeleteNoteHandler(new DeleteNoteHandlerImpl(currentNoteId));
+
         view.setCanDelete(!context.hasReplies(noteId));
     }
 

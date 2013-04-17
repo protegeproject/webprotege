@@ -14,6 +14,12 @@ public enum NoteStatus {
 
     private String displayText;
 
+    /**
+     * For serialization only
+     */
+    private NoteStatus() {
+    }
+
     private NoteStatus(String displayText) {
         this.displayText = displayText;
     }

@@ -10,6 +10,11 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public interface DiscussionThreadView {
 
+
+    void setPostNewTopicHandler(PostNewTopicHandler handler);
+
+    void setPostNewTopicEnabled(boolean enabled);
+
     void removeAllNotes();
 
     void addNote(NoteContainerPresenter notePresenter, int depth);

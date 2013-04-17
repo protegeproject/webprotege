@@ -2,7 +2,8 @@ package edu.stanford.bmir.protege.web.server.notes;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
-import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.notes.*;
 import org.protege.notesapi.notes.NoteType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -24,11 +25,20 @@ public interface OWLAPINotesManager {
     
     List<NotesData> deleteNoteAndRepliesForObjectId(String objectId);
 
+    void deleteNoteAndReplies(NoteId noteId);
+
+    Note addReplyToNote(NoteId inReplyToId, NoteContent replyContent, UserId author);
+
+    Note addNoteToEntity(OWLEntity targetEntity, NoteContent noteContent, UserId author);
+
     NotesData addReplyToObjectId(String subject, String author, String body, NoteType noteType, String annotatedThingId);
 
     NotesData changeNoteContent(String noteId, String subject, String author, String body, NoteType noteType);
 
     void setArchivedStatus(String noteId, ArchivesStatus archivesStatus);
+
+
+    void setNoteStatus(NoteId noteId, NoteStatus noteStatus);
 
     int getDirectNotesCount(OWLEntity entity);
 

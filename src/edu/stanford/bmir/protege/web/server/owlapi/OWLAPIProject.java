@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.HighLevelEventGenerator;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
+import edu.stanford.bmir.protege.web.server.notes.api.NoteStore;
+import edu.stanford.bmir.protege.web.server.notes.impl.db.NoteStoreImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
@@ -210,6 +212,10 @@ public class OWLAPIProject implements HasDispose {
         }
     }
 
+//    public NoteStore getNoteStore() {
+//        return noteStore;
+//    }
+
     private void saveProjectAttributes() {
         projectAttributesSaver.submit(new Runnable() {
             public void run() {
@@ -234,6 +240,8 @@ public class OWLAPIProject implements HasDispose {
         changeManager = new OWLAPIChangeManager(this);
 
         notesManager = new OWLAPINotesManagerNotesAPIImpl(this);
+
+//        noteStore = new NoteStoreImpl(this.getProjectId());
 
 
         // MH: All of this is highly dodgy and not at all thread safe.  It is therefore BROKEN!  Needs fixing.

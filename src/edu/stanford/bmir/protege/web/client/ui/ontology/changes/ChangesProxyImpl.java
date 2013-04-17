@@ -15,10 +15,13 @@ import java.util.Date;
 public class ChangesProxyImpl extends GWTProxy {
 
     private ProjectId projectId = null;
+
     private String entityName = null;
+
     private Date startDate = null;
+
     private Date endDate = null;
-    
+
     public ProjectId getProjectId() {
         return projectId;
     }
@@ -50,15 +53,16 @@ public class ChangesProxyImpl extends GWTProxy {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
-    
-    
-    public ChangesProxyImpl() { 
+
+
+    public ChangesProxyImpl() {
     }
-    
+
     @Override
     public void load(int start, int limit, String sort, String dir, final JavaScriptObject o, UrlParam[] baseParams) {
 
         class ChangesHandler implements AsyncCallback<PaginationData<ChangeData>> {
+
             public void onFailure(Throwable caught) {
                 loadResponse(o, false, 0, (JavaScriptObject) null);
             }
@@ -66,7 +70,8 @@ public class ChangesProxyImpl extends GWTProxy {
             public void onSuccess(PaginationData<ChangeData> result) {
                 if (result != null && result.getTotalRecords() != 0) {
                     loadResponse(o, true, result.getTotalRecords(), getRecords(result));
-                } else {
+                }
+                else {
                     loadResponse(o, false, 0, (JavaScriptObject) null);
                 }
             }
@@ -85,16 +90,15 @@ public class ChangesProxyImpl extends GWTProxy {
             }
 
             private Object[] getRow(Object desc, Object author, Object timestamp, Object appliesTo) {
-                return new Object[] { desc, author, timestamp, appliesTo };
+                return new Object[]{desc, author, timestamp, appliesTo};
             }
         }
 
         if (entityName != null) {
-            ChAOServiceManager.getInstance().getChanges(projectId, entityName, start, limit, sort, dir,
-                    new ChangesHandler());
-        } else { //no entity, get changes for the entire project
-            ChAOServiceManager.getInstance().getChanges(projectId, startDate, endDate, start, limit, sort, dir,
-                    new ChangesHandler());
+            ChAOServiceManager.getInstance().getChanges(projectId, entityName, start, limit, sort, dir, new ChangesHandler());
+        }
+        else { //no entity, get changes for the entire project
+            ChAOServiceManager.getInstance().getChanges(projectId, startDate, endDate, start, limit, sort, dir, new ChangesHandler());
         }
     }
 

@@ -66,6 +66,16 @@ public class WebProtegeDialog<D> extends DialogBox {
 
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        setText(controller.getTitle());
+        super.setVisible(visible);
+    }
+
+    public WebProtegeDialogController<D> getController() {
+        return controller;
+    }
+
     private Widget createButtonBar() {
         FlowPanel buttonBar = new FlowPanel();
         buttonBar.setStyleName("web-protege-dialog-button-bar");

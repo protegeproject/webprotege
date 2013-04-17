@@ -1,14 +1,22 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
+import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadResult;
-import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
-import edu.stanford.bmir.protege.web.shared.notes.Note;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
+import edu.stanford.bmir.protege.web.shared.event.NotePostedHandler;
+import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -18,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/04/2013
  */
-public class DiscussionThreadPresenter {
+public class DiscussionThreadPresenter implements HasDispose {
 
     private DiscussionThreadView view;
 
@@ -26,30 +34,52 @@ public class DiscussionThreadPresenter {
 
     private ProjectId projectId;
 
+    private Set<NoteId> currentNoteIds = new HashSet<NoteId>();
+
+    private HandlerRegistration notePostedHandlerReg;
+
+    private HandlerRegistration noteDeletedHandlerReg;
+
+
     public DiscussionThreadPresenter(ProjectId projectId) {
         view = new DiscussionThreadViewImpl();
         this.projectId = checkNotNull(projectId);
+
+        notePostedHandlerReg = EventBusManager.getManager().registerHandlerToProject(projectId, NotePostedEvent.TYPE, new NotePostedHandler() {
+            @Override
+            public void handleNotePosted(NotePostedEvent event) {
+                refreshForNotePosted(event);
+            }
+        });
+
+        noteDeletedHandlerReg = EventBusManager.getManager().registerHandlerToProject(projectId, NoteDeletedEvent.TYPE, new NoteDeletedHandler() {
+            @Override
+            public void handleNoteDeleted(NoteDeletedEvent event) {
+                reload();
+            }
+        });
     }
 
-    public void attach() {
-
-    }
-
-    public void detach() {
-
-    }
 
     public void clearTarget() {
         view.removeAllNotes();
         currentTarget = null;
+        view.setPostNewTopicEnabled(false);
+        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget)));
     }
 
     public void setTarget(OWLEntity target) {
         currentTarget = target;
-        view.removeAllNotes();
-        DispatchServiceManager.get().execute(new GetDiscussionThreadAction(projectId, target), new AsyncCallback<GetDiscussionThreadResult>() {
+        view.setPostNewTopicEnabled(currentTarget != null);
+        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget)));
+        reload();
+    }
+
+    private void reload() {
+        DispatchServiceManager.get().execute(new GetDiscussionThreadAction(projectId, currentTarget), new AsyncCallback<GetDiscussionThreadResult>() {
             @Override
             public void onFailure(Throwable caught) {
+                GWT.log("There was a problem retrieving the notes from the server", caught);
             }
 
             @Override
@@ -58,13 +88,37 @@ public class DiscussionThreadPresenter {
             }
         });
 
-
     }
 
+    private void refreshForNotePosted(NotePostedEvent event) {
+        GWT.log("Should refresh for posted note");
+//        if(event.getInReplyTo().isPresent()) {
+//            if(currentNoteIds.isEmpty() || currentNoteIds.contains(event.getInReplyTo().get())) {
+                reload();
+//            }
+//        }
+//        else if(event.getTargetAsEntityData().isPresent()) {
+//           if(currentTarget.equals(event.getTargetAsEntityData().get().getEntity())) {
+//               reload();
+//           }
+//        }
+    }
+
+
     private void displayDiscussionThread(DiscussionThread thread) {
-        for(Note rootNote : thread.getRootNotes()) {
+        view.removeAllNotes();
+        final List<Note> rootNotes = new ArrayList<Note>(thread.getRootNotes());
+        Collections.sort(rootNotes, new Comparator<Note>() {
+            @Override
+            public int compare(Note o1, Note o2) {
+                return (int) -(o1.getTimestamp() - o2.getTimestamp());
+            }
+        });
+        for(Note rootNote : rootNotes) {
             appendNote(rootNote, 0, thread);
         }
+        currentNoteIds.clear();
+        currentNoteIds.addAll(thread.getNoteIds());
     }
 
 
@@ -79,5 +133,11 @@ public class DiscussionThreadPresenter {
 
     public Widget getWidget() {
         return view.getWidget();
+    }
+
+    @Override
+    public void dispose() {
+        notePostedHandlerReg.removeHandler();
+        noteDeletedHandlerReg.removeHandler();
     }
 }

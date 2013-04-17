@@ -55,6 +55,21 @@ public final class DiscussionThread implements Serializable {
     }
 
     /**
+     * Gets all of the {@link NoteId} of the notes that appear in this {@link DiscussionThread}.
+     * @return A {@link Set} of {@link NoteId} objects that identify all of the notes that appear in this thread.
+     * Not {@code null}.
+     */
+    public Set<NoteId> getNoteIds() {
+        Set<NoteId> result = new HashSet<NoteId>();
+        for(Optional<NoteId> noteId : replyToMap.keys()) {
+            if(noteId.isPresent()) {
+                result.add(noteId.get());
+            }
+        }
+        return result;
+    }
+
+    /**
      * Gets the root {@link Note}s in this thread.  Root notes are those notes which have a reply to id corresponding
      * to {@link com.google.common.base.Optional#absent()}.
      * @return A (possibly empty) set of {@link Note} objects representing the root notes.  Not {@code null}.
@@ -75,7 +90,7 @@ public final class DiscussionThread implements Serializable {
         Collections.sort(sortedNotes, new Comparator<Note>() {
             @Override
             public int compare(Note o1, Note o2) {
-                return o1.getNoteHeader().compareTo(o2.getNoteHeader());
+                return o1.getHeader().compareTo(o2.getHeader());
             }
         });
         return new LinkedHashSet<Note>(sortedNotes);

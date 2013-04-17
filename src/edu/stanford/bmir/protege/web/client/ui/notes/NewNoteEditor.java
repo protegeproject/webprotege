@@ -46,7 +46,7 @@ public class NewNoteEditor extends Composite implements NewNoteDisplay {
     public NewNoteEditor(UserId userId) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
-        NoteContent noteContent = NoteContent.builder().addField(NoteField.TYPE, NoteType.getComment()).addField(NoteField.BODY, getBody()).build();
+        NoteContent noteContent = NoteContent.builder().setNoteType(NoteType.COMMENT).setBody(getBody()).build();
     }
 
     public String getBody() {
@@ -63,8 +63,8 @@ public class NewNoteEditor extends Composite implements NewNoteDisplay {
 
     @Override
     public void setValue(NoteContent object) {
-        subjectField.setValue(object.getFieldValue(NoteField.SUBJECT).or(""));
-        bodyField.setValue(object.getFieldValue(NoteField.BODY).or(""));
+        subjectField.setValue(object.getSubject().or(""));
+        bodyField.setValue(object.getBody().or(""));
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
     }
 
@@ -77,7 +77,7 @@ public class NewNoteEditor extends Composite implements NewNoteDisplay {
 
     @Override
     public Optional<NoteContent> getValue() {
-        final NoteContent content = NoteContent.builder().addField(NoteField.SUBJECT, getSubject()).addField(NoteField.BODY, getBody()).build();
+        final NoteContent content = NoteContent.builder().setSubject(getSubject()).setBody(getBody()).build();
         return Optional.of(content);
     }
 

@@ -117,7 +117,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             setActiveTab(0);
         }
         else {
-            ProjectDisplayImpl display = projectId2ProjectPanelMap.get(projectId);
+            ProjectDisplayImpl display = projectId2ProjectPanelMap.get(projectId.get());
             if (display != null) {
             	setActiveTab(display.getLabel());
             }
@@ -164,7 +164,6 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         };
 
         myWebProTab = new MyWebProtegeTab(loadProjectRequestHandler);
-        myWebProTab.setId("mywebprotegetab");
         myWebProTab.setTitle(myWebProTab.getLabel());
         add(myWebProTab);
 

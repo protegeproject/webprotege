@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.notes;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -16,7 +18,7 @@ public class NoteAddedEvent {
 
     private Optional<NoteId> inReplyTo;
 
-    public NoteAddedEvent(NoteId noteId, Optional<NoteId> inReplyTo) {
+    public NoteAddedEvent(ProjectId projectId, NoteId noteId, Optional<NoteId> inReplyTo) {
         this.noteId = checkNotNull(noteId);
         this.inReplyTo = checkNotNull(inReplyTo);
     }

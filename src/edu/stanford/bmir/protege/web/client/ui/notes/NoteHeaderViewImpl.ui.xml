@@ -3,7 +3,7 @@
     <ui:style>
         .outer {
             padding-top: 2px;
-            border-top: dotted 1px ;
+            border-top: solid 10px #ffffff;
             position: relative;
             padding-left: 5px;
             padding-right: 5px;
@@ -19,7 +19,6 @@
             display: inline;
         }
         .status-label {
-            color: maroon;
             font-size: 10px;
             display: inline;
         }
@@ -28,11 +27,19 @@
             top: 2px;
             right: 5px;
         }
+        .status-resolved {
+            color: green;
+        }
+        .status-open {
+            color: maroon;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.outer}">
         <g:InlineLabel ui:field="subjectLabel" addStyleNames="{style.note-subject-label}"/>
-        <g:HTMLPanel addStyleNames="{style.started-by-label}"> started by </g:HTMLPanel>
-        <g:InlineLabel ui:field="startedByLabel" addStyleNames="{style.started-by-label}"/>
+        <g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{style.started-by-label}">started by</g:HTMLPanel>
+            <g:InlineLabel ui:field="startedByLabel" addStyleNames="{style.started-by-label}"/>
+        </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.resolved-panel}">
             <g:InlineLabel ui:field="statusLabel" addStyleNames="{style.status-label}"/>
             <g:Button text="Resolve" ui:field="toggleStatusButton" addStyleNames="web-protege-button-small"/>

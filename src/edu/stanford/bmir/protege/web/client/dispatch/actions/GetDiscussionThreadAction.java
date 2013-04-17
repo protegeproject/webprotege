@@ -4,6 +4,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -20,7 +22,7 @@ public class GetDiscussionThreadAction extends AbstractHasProjectAction<GetDiscu
 
     public GetDiscussionThreadAction(ProjectId projectId, OWLEntity targetEntity) {
         super(projectId);
-        this.targetEntity = targetEntity;
+        this.targetEntity = checkNotNull(targetEntity);
     }
 
     public OWLEntity getTargetEntity() {

@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -45,14 +43,18 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
     @Override
     public void initialize() {
         presenter = new DiscussionThreadPresenter(getProjectId());
-        final ScrollPanel scrollPanel = new ScrollPanel(presenter.getWidget());
-        scrollPanel.setHeight("100%");
-        add(scrollPanel);
-
+        add(presenter.getWidget());
+        setHeight(500);
     }
 
     @Override
     public Collection<EntityData> getSelection() {
         return Collections.emptyList();
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.dispose();
+        super.onDestroy();
     }
 }

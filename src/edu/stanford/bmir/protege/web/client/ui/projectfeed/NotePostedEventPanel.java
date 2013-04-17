@@ -69,11 +69,11 @@ public class NotePostedEventPanel extends Composite implements ProjectFeedItemDi
         timeLabel.setBaseTime(noteHeader.getTimestamp());
         final SafeHtmlBuilder builder = new SafeHtmlBuilder();
         final NoteContent noteContent = event.getNoteDetails().getNoteContent();
-        final Optional<String> subject = noteContent.getFieldValue(NoteField.SUBJECT);
+        final Optional<String> subject = noteContent.getSubject();
         if (subject.isPresent()) {
             builder.appendHtmlConstant("<span style=\"font-weight: bold; padding-right: 4px;\">" + subject.or("") + ":</span>");
         }
-        bodyLabel.setHTML(builder.appendHtmlConstant(noteContent.getBody()).toSafeHtml());
+        bodyLabel.setHTML(builder.appendHtmlConstant(noteContent.getBody().or("")).toSafeHtml());
     }
 
     @Override

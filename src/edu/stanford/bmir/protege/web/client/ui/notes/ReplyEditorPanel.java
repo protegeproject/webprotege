@@ -78,7 +78,7 @@ public class ReplyEditorPanel extends Composite implements ReplyDisplay {
 
     @Override
     public void setValue(NoteContent object) {
-        bodyField.setText(object.getBody());
+        bodyField.setText(object.getBody().or(""));
         dirty = false;
     }
 
@@ -90,7 +90,7 @@ public class ReplyEditorPanel extends Composite implements ReplyDisplay {
 
     @Override
     public Optional<NoteContent> getValue() {
-        return Optional.of(new NoteContent(getBody()));
+        return Optional.of(NoteContent.builder().setBody(getBody()).build());
     }
 
     @Override

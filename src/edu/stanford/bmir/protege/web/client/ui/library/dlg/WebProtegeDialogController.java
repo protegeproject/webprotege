@@ -44,6 +44,10 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     /**
      * Gets the buttons (e.g. OK, Cancel) that appear on the dialog.
      * @return A list of the buttons.

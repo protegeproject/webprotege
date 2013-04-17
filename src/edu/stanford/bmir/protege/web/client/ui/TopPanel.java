@@ -80,7 +80,6 @@ public class TopPanel extends Panel {
         setLayout(new FitLayout());
         setAutoWidth(true);
         setCls("top-panel");
-        setId("top-panel");
 
         // Outer panel to house logo and inner panel
         HorizontalPanel outer = new HorizontalPanel();

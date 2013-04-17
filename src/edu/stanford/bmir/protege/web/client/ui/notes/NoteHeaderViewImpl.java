@@ -34,7 +34,7 @@ public class NoteHeaderViewImpl extends Composite implements NoteHeaderView {
     };
 
     @UiField
-    protected HasText subjectLabel;
+    protected Label subjectLabel;
 
     @UiField
     protected HasText startedByLabel;
@@ -43,7 +43,7 @@ public class NoteHeaderViewImpl extends Composite implements NoteHeaderView {
     protected ButtonBase toggleStatusButton;
 
     @UiField
-    protected HasText statusLabel;
+    protected Label statusLabel;
 
     public NoteHeaderViewImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
@@ -83,10 +83,20 @@ public class NoteHeaderViewImpl extends Composite implements NoteHeaderView {
     @Override
     public void setStatus(Optional<NoteStatus> noteStatus) {
         if (noteStatus.isPresent()) {
-            statusLabel.setText(noteStatus.get().getDisplayText());
+            final NoteStatus status = noteStatus.get();
+            statusLabel.setText(status.getDisplayText());
+            if (status == NoteStatus.RESOLVED) {
+                statusLabel.getElement().getStyle().setColor("green");
+                subjectLabel.getElement().getStyle().setColor("green");
+            }
+            else {
+                statusLabel.getElement().getStyle().setColor("maroon");
+                subjectLabel.getElement().getStyle().setColor("maroon");
+            }
+            toggleStatusButton.setText(status == NoteStatus.OPEN ? "Resolve" : "Re-open");
         }
         else {
-            statusLabel.setText("open");
+            statusLabel.setText("");
         }
     }
 

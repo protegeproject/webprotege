@@ -150,10 +150,14 @@ public class WebProtegeDialogForm extends WebProtegePanel implements HasInitialF
         textBox.setVisibleLength(DEFAULT_TEXT_BOX_VISIBILE_LENGTH);
     }
 
-    public void runTextFieldValidation() {
+    public InlineValidationResult runTextFieldValidation() {
         for(WebProtegeDialogTextFieldValidationManager manager : inlineValidators) {
-            manager.runValidation();
+            InlineValidationResult result = manager.runValidation();
+            if(result.isInvalid()) {
+                return result;
+            }
         }
+        return InlineValidationResult.getValid();
     }
 
     public SuggestBox addSuggestBox(String label, String placeholderText, String initialValue, SuggestOracle suggestOracle, WebProtegeDialogInlineValidator validator) {
