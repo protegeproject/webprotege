@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.safehtml.client.HasSafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -54,8 +56,23 @@ public class NoteViewImpl extends Composite implements NoteView {
 
     @Override
     public void setBody(SafeHtml safeHtml) {
-        bodyField.setHTML(safeHtml);
+        String modifiedHtml = parseLinks(safeHtml.asString());
+        modifiedHtml = makeLinksOpenInNewWindow(modifiedHtml);
+        bodyField.setHTML(new SafeHtmlBuilder().appendHtmlConstant(modifiedHtml).toSafeHtml());
     }
+
+
+    private String makeLinksOpenInNewWindow(String html) {
+        RegExp linkRegExp = RegExp.compile("(<a)([^>]*)(>)", "g");
+        return linkRegExp.replace(html, "$1$2 target=\"_blank\"$3");
+    }
+
+    private String parseLinks(String html) {
+//        RegExp urlRegExp = RegExp.compile("(https?://[^\\s<]*)", "g");
+//        return urlRegExp.replace(html, "<a href=\"$1\">$1</a>");
+        return html;
+    }
+
 
     @Override
     public Widget getWidget() {

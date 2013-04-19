@@ -1,6 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
+
         textarea, pre {
             margin: 0;
             padding: 0;
@@ -95,12 +96,12 @@
 
     </ui:style>
 
-    <g:HTMLPanel>
-        <div class="{style.expandingarea}">
+    <g:HTMLPanel addStyleNames="{style.expandingarea}">
+        <!--<div class="{style.expandingarea}">-->
             <pre class="class-icon-inset"><span/><br/></pre>
             <g:SuggestBox ui:field="suggestBox"/>
             <g:Anchor addStyleNames="{style.button-loc}" text="&#x25B6;" title="Navigate to entity" ui:field="anchor"/>
-        </div>
+        <!--</div>-->
     </g:HTMLPanel>
     <!--<g:HTMLPanel>-->
         <!--<div class="{style.expandingarea}">-->

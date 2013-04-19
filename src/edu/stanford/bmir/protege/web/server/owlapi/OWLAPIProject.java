@@ -28,6 +28,8 @@ import edu.stanford.smi.protege.util.Log;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
 import org.coode.owlapi.rdf.rdfxml.RDFXMLOntologyStorer;
+import org.obolibrary.obo2owl.Obo2Owl;
+import org.obolibrary.oboformat.parser.OBOFormatParser;
 import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
@@ -35,8 +37,7 @@ import org.protege.owlapi.model.ProtegeOWLOntologyManager;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentParserFactory;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentStorer;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLParseException;
-import org.semanticweb.owlapi.io.OWLParserException;
-import org.semanticweb.owlapi.io.OWLParserFactoryRegistry;
+import org.semanticweb.owlapi.io.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.NonMappingOntologyIRIMapper;
 import org.semanticweb.owlapi.util.OWLObjectDuplicator;
@@ -160,6 +161,7 @@ public class OWLAPIProject implements HasDispose {
         EmptyInMemOWLOntologyFactory imMemFactory = new EmptyInMemOWLOntologyFactory();
         delegateManager.addOntologyFactory(imMemFactory);
         imMemFactory.setOWLOntologyManager(manager);
+
 
         OWLParserFactoryRegistry.getInstance().registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
         ParsableOWLOntologyFactory parsingFactory = new ParsableOWLOntologyFactory();

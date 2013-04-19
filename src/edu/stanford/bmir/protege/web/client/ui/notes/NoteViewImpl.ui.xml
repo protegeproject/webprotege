@@ -39,7 +39,9 @@
         <g:HTMLPanel addStyleNames="{style.user-image}">
             <g:InlineLabel addStyleNames="{style.author}" ui:field="authorField"/>
             <timelabel:ElapsedTimeLabel addStyleNames="{style.date}" ui:field="dateField"/>
-            <g:HTML addStyleNames="{style.body}" ui:field="bodyField"/>
+            <div class="note-content">
+                <g:HTML addStyleNames="{style.body}" ui:field="bodyField"/>
+            </div>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

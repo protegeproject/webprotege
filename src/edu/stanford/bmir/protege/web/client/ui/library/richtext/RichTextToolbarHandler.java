@@ -8,5 +8,15 @@ package edu.stanford.bmir.protege.web.client.ui.library.richtext;
  */
 public interface RichTextToolbarHandler {
 
-    void handleSetFontWeight();
+    void handleToggleFontWeight();
+
+    void handleToggleFontStyle();
+
+    void handleToggleTextDecoration();
+
+    void handleInsertUnorderedList();
+
+    void handleInsertOrderedList();
+
+    void handleCreateLink();
 }

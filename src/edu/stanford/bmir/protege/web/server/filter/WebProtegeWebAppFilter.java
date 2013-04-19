@@ -15,6 +15,7 @@ public class WebProtegeWebAppFilter implements Filter {
 
     private static RuntimeException configError;
 
+
     public static void setConfigError(WebProtegeConfigurationException configError) {
         WebProtegeWebAppFilter.configError = configError;
     }

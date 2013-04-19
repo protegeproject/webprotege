@@ -8,5 +8,12 @@ package edu.stanford.bmir.protege.web.client.ui.library.richtext;
  */
 public interface RichTextToolbar {
 
+    void setRichTextToolbarHandler(RichTextToolbarHandler handler);
+
+    void setTextDecoration(TextDecoration textDecoration);
+
+    void setFontWeight(FontWeight fontWeight);
+
+    void setFontStyle(FontStyle fontStyle);
 
 }

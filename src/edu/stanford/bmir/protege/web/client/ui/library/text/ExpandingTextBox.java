@@ -19,13 +19,13 @@ import edu.stanford.bmir.protege.web.client.ui.library.common.HasTextRendering;
  *     using a GWT {@link SuggestBox}.
  * </p>
  */
-public class ExpandingTextBox extends Composite implements Focusable, HasText, HasEnabled, HasValue<String>, HasTextRendering, HasPlaceholder, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers {
+public class ExpandingTextBox extends SimplePanel implements Focusable, HasText, HasEnabled, HasValue<String>, HasTextRendering, HasPlaceholder, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers {
 
     private final ExpandingTextBoxImpl impl;
 
     public ExpandingTextBox() {
         impl = new ExpandingTextBoxImpl();
-        initWidget(impl);
+        setWidget(impl);
     }
 
     public ExpandingTextBoxMode getMode() {
