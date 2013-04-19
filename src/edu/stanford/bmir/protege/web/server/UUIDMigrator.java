@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;
@@ -35,6 +36,8 @@ public class UUIDMigrator {
 
     private static final String POLICY_CONTROLLED_OBJECT_CLS_NAME = "PolicyControlledObject";
 
+    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(UUIDMigrator.class);
+
     private MetaProjectManager mpm;
 
     private MetaProject metaProject;
@@ -63,7 +66,7 @@ public class UUIDMigrator {
     }
 
     private void performUUIDMigration(MetaProjectImpl metaProjectImpl, KnowledgeBase kb) {
-        WebProtegeLoggerManager.get(UUIDMigrator.class).info("Migrating metaproject to use UUID based format");
+        LOGGER.info("Migrating metaproject to use UUID based format");
         createDisplayNameSlot(kb);
         for (ProjectInstance pi : metaProjectImpl.getProjects()) {
             migrateProjectInstance(kb, pi);
@@ -72,13 +75,15 @@ public class UUIDMigrator {
     }
 
     private void migrateProjectInstance(KnowledgeBase kb, ProjectInstance pi) {
+        LOGGER.info("Processing " + pi.getName());
         final Instance protegeInstance = pi.getProtegeInstance();
         final String existingName = pi.getName();
+
         final Slot displayNameSlot = kb.getSlot(DISPLAY_NAME_SLOT_NAME);
+        protegeInstance.setOwnSlotValue(displayNameSlot, existingName);
 
         final ProjectId newProjectId = ProjectIdFactory.getFreshProjectId();
-        protegeInstance.rename(newProjectId.getId());
-        protegeInstance.setOwnSlotValue(displayNameSlot, existingName);
+        pi.setName(newProjectId.getId());
         moveProjectDirectoryOnDisk(existingName, newProjectId);
     }
 
@@ -93,6 +98,9 @@ public class UUIDMigrator {
             File oldProjectDirectory = new File(newProjectDirectory.getParent(), oldProjectName);
             if(oldProjectDirectory.exists()) {
                 oldProjectDirectory.renameTo(newProjectDirectory);
+            }
+            else {
+                LOGGER.info("Project directory does not exist: " + oldProjectDirectory.getAbsolutePath());
             }
         }
     }
