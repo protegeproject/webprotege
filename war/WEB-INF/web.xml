@@ -166,7 +166,7 @@
 
 	<servlet-mapping>
 		<servlet-name>DownloadServlet</servlet-name>
-		<url-pattern>/webprotege/download</url-pattern>
+		<url-pattern>/download</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
