@@ -30,6 +30,14 @@ public final class DiscussionThread implements Serializable {
     }
 
     /**
+     * Gets the size of this discussion thread.
+     * @return The size of this thread.  This corresponds to the number of notes in the thread
+     */
+    public int size() {
+        return replyToMap.values().size();
+    }
+
+    /**
      * Constructs a discussion thread from the specified set of {@link Note}s. The discussion thread is constructed
      * based on the reply to ids of each {@link Note}.  Root notes are those notes for which the reply to id is
      * an absent optional value (i.e. {@link com.google.common.base.Optional#absent()}).

@@ -1,16 +1,29 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
+import java.util.*;
+
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.data.Node;
 import com.gwtext.client.dd.DragData;
 import com.gwtext.client.dd.DragDrop;
-import com.gwtext.client.widgets.*;
+import com.gwtext.client.widgets.Button;
+import com.gwtext.client.widgets.Component;
+import com.gwtext.client.widgets.CycleButton;
+import com.gwtext.client.widgets.MessageBox;
+import com.gwtext.client.widgets.MessageBoxConfig;
+import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.Tool;
+import com.gwtext.client.widgets.Toolbar;
+import com.gwtext.client.widgets.ToolbarButton;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.WindowListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
@@ -25,47 +38,43 @@ import com.gwtext.client.widgets.menu.event.BaseItemListener;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import com.gwtext.client.widgets.menu.event.CheckItemListener;
 import com.gwtext.client.widgets.menu.event.CheckItemListenerAdapter;
-import com.gwtext.client.widgets.tree.*;
+import com.gwtext.client.widgets.tree.DefaultSelectionModel;
+import com.gwtext.client.widgets.tree.DropNodeCallback;
+import com.gwtext.client.widgets.tree.MultiSelectionModel;
+import com.gwtext.client.widgets.tree.TreeNode;
+import com.gwtext.client.widgets.tree.TreePanel;
+import com.gwtext.client.widgets.tree.TreeSelectionModel;
 import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter;
 import com.gwtext.client.widgets.tree.event.MultiSelectionModelListener;
 import com.gwtext.client.widgets.tree.event.TreeNodeListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
-import edu.stanford.bmir.protege.web.client.Application;
+
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.SubclassEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
-import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.DiscussionThreadDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
-import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NoteInputPanel;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.util.GlobalSelectionManager;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.event.*;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedHandler;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedHandler;
+import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.watches.*;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
-
-import java.util.*;
 
 /**
  * Portlet for displaying class trees. It can be configured to show only a
@@ -1457,35 +1466,10 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private void showClassNotes(final Node node) {
-        final EntityData entity = (EntityData) node.getUserObject();
-
-        final com.gwtext.client.widgets.Window window = new com.gwtext.client.widgets.Window();
-        window.setTitle("View/Edit Notes on " + entity.getBrowserText());
-        window.setWidth(600);
-        window.setHeight(480);
-        window.setMinWidth(300);
-        window.setMinHeight(350);
-        window.setLayout(new FitLayout());
-        window.setPaddings(5);
-        window.setButtonAlign(Position.CENTER);
-
-        //window.setCloseAction(Window.HIDE);
-        window.setPlain(true);
-
-        window.addListener(new WindowListenerAdapter() {
-            @Override
-            public void onClose(Panel panel) {
-                nodesWithNotesOpen.remove(entity);
-            }
-
-        });
-
-        final NoteInputPanel nip = new NoteInputPanel(getProjectId(), "Please enter your note:", true, entity, window);
-
-        window.add(nip);
-        window.show();
-
-        nodesWithNotesOpen.add(entity);
+        SubclassEntityData subClassData = (SubclassEntityData) node.getUserObject();
+        String name = subClassData.getName();
+        OWLClass cls = DataFactory.getOWLClass(name);
+        DiscussionThreadDialog.showDialog(getProjectId(), cls);
     }
 
     private boolean hasChild(final TreeNode parentNode, final String childId) {

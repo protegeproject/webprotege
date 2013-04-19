@@ -14,11 +14,10 @@ import com.gwtext.client.widgets.form.TextArea;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
-import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.EmptySuccessWebProtegeCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchGridPanel;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
@@ -27,7 +26,12 @@ import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.util.ClassSelectionField;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.field.TextAreaField;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityAction;
+import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityResult;
+import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.Collection;
 
@@ -91,19 +95,7 @@ public class CreateClassPanel extends FormPanel implements Selectable {
         //FIXME: ICD specific!!!!
         
         parentsField = new ClassSelectionField(projectId, "Parent(s)", true, topClass);
-//        {
-//            @Override
-//            protected edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet createSelectable() {
-//                ClassTreePortlet treePortlet = new ICDClassTreePortlet(project, true, false, false, false, topClass);
-//                treePortlet.setDraggable(false);
-//                treePortlet.setClosable(false);
-//                treePortlet.setCollapsible(false);
-//                treePortlet.setHeight(300);
-//                treePortlet.setWidth(450);
-//
-//                return treePortlet;
-//            };
-//        };
+
         add(parentsField, new AnchorLayoutData("98%"));
 
         reasonField = new TextAreaField();
@@ -197,21 +189,12 @@ public class CreateClassPanel extends FormPanel implements Selectable {
     }
 
     protected void createNote(final EntityData newClass, String opDesc, String reasonForChange) {
-        NotesData noteData = new NotesData();
-        noteData.setAuthor(Application.get().getUserId().getUserName());
-        noteData.setSubject("[Reason for change]: " + opDesc);
-        noteData.setBody(reasonForChange);
-        noteData.setAnnotatedEntity(newClass);
-        ChAOServiceManager.getInstance().createNote(projectId, noteData, false, new AbstractAsyncHandler<NotesData>() {
-            @Override
-            public void handleFailure(Throwable caught) {
-                GWT.log("Could not create note for " + newClass);
-            }
-            @Override
-            public void handleSuccess(NotesData result) {
-                //TODO: maybe update notes count?
-            }
-        });
+
+        NoteContent.Builder builder = NoteContent.builder();
+        builder.setSubject("Reason for change: " + opDesc);
+        builder.setBody(reasonForChange);
+        final OWLClass cls = DataFactory.getOWLClass(newClass.getName());
+        DispatchServiceManager.get().execute(new AddNoteToEntityAction(projectId, cls, builder.build()), new EmptySuccessWebProtegeCallback<AddNoteToEntityResult>());
     }
 
     public String getOperationDescription() {

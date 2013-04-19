@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
@@ -16,16 +15,15 @@ import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
-import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.NotesData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
-import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NoteInputPanel;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalSearchComponent;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +31,7 @@ import java.util.Map;
 public class ReferenceFieldWidget extends InstanceGridWidget {
 
     private BioPortalSearchComponent bpSearchComponent = null;
+
     protected Map<String, Object> bpSearchProperties;
 
     public ReferenceFieldWidget(Project project) {
@@ -51,7 +50,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         Map<String, Object> projectConfiguration = getProject().getProjectLayoutConfiguration().getProperties();
         if (projectConfiguration != null) {
             Map<String, Object> globalBpSearchProperties = (Map<String, Object>) projectConfiguration.get(FormConstants.BP_SEARCH_PROPERTIES);
-            if(globalBpSearchProperties != null) {
+            if (globalBpSearchProperties != null) {
                 bpSearchProperties.putAll(globalBpSearchProperties);
             }
         }
@@ -68,10 +67,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
     protected Anchor createReplaceNewValueHyperlink() {
         final Map<String, Object> widgetConfiguration = getWidgetConfiguration();
         final ProjectLayoutConfiguration projectLayoutConfiguration = getProject().getProjectLayoutConfiguration();
-        Anchor addNewLink = new Anchor(
-                InstanceGridWidgetConstants.getIconLink(
-                        InstanceGridWidgetConstants.getReplaceNewValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Replace term"),
-                        InstanceGridWidgetConstants.getReplaceIcon(widgetConfiguration, projectLayoutConfiguration)), true);
+        Anchor addNewLink = new Anchor(InstanceGridWidgetConstants.getIconLink(InstanceGridWidgetConstants.getReplaceNewValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Replace term"), InstanceGridWidgetConstants.getReplaceIcon(widgetConfiguration, projectLayoutConfiguration)), true);
         addNewLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (isWriteOperationAllowed()) {
@@ -86,16 +82,13 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
     protected Anchor createReplaceExistingHyperlink() {
         final Map<String, Object> widgetConfiguration = getWidgetConfiguration();
         final ProjectLayoutConfiguration projectLayoutConfiguration = getProject().getProjectLayoutConfiguration();
-        Anchor addNewLink = new Anchor(
-                InstanceGridWidgetConstants.getIconLink(
-                        InstanceGridWidgetConstants.getReplaceExistingValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Find & Replace <br/>term"),
-                        InstanceGridWidgetConstants.getReplaceIcon(widgetConfiguration, projectLayoutConfiguration)), true);
+        Anchor addNewLink = new Anchor(InstanceGridWidgetConstants.getIconLink(InstanceGridWidgetConstants.getReplaceExistingValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Find & Replace <br/>term"), InstanceGridWidgetConstants.getReplaceIcon(widgetConfiguration, projectLayoutConfiguration)), true);
         addNewLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                if (isWriteOperationAllowed()){
+                if (isWriteOperationAllowed()) {
                     //TODO fix this
                     //onAddNewReference((String) ReferenceFieldWidget.this.getWidgetConfiguration().get(FormConstants.LABEL));
-                    onAddNewReference( true);
+                    onAddNewReference(true);
                 }
             }
         });
@@ -116,7 +109,8 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
     public String preRenderColumnContent(String content, String fieldType) {
         if (fieldType != null && fieldType.equals("nolink")) {
             //do nothing
-        } else {
+        }
+        else {
             if (content.startsWith("http://")) {
                 content = "<a href= \"" + content + "\" target=\"_blank\">" + content + "</a>";
             }
@@ -128,10 +122,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
     protected Anchor createAddExistingHyperlink() {
         final Map<String, Object> widgetConfiguration = getWidgetConfiguration();
         final ProjectLayoutConfiguration projectLayoutConfiguration = getProject().getProjectLayoutConfiguration();
-        Anchor addNewLink = new Anchor(
-                InstanceGridWidgetConstants.getIconLink(
-                        InstanceGridWidgetConstants.getAddExistingValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Find term"),
-                        InstanceGridWidgetConstants.getAddIcon(widgetConfiguration, projectLayoutConfiguration)), true);
+        Anchor addNewLink = new Anchor(InstanceGridWidgetConstants.getIconLink(InstanceGridWidgetConstants.getAddExistingValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Find term"), InstanceGridWidgetConstants.getAddIcon(widgetConfiguration, projectLayoutConfiguration)), true);
         addNewLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 //TODO fix this
@@ -147,10 +138,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
     public Anchor createAddNewValueHyperlink() {
         final Map<String, Object> widgetConfiguration = getWidgetConfiguration();
         final ProjectLayoutConfiguration projectLayoutConfiguration = getProject().getProjectLayoutConfiguration();
-        Anchor addNewLink = new Anchor(
-                InstanceGridWidgetConstants.getIconLink(
-                        InstanceGridWidgetConstants.getAddNewValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Add term"),
-                        InstanceGridWidgetConstants.getAddIcon(widgetConfiguration, projectLayoutConfiguration)), true);
+        Anchor addNewLink = new Anchor(InstanceGridWidgetConstants.getIconLink(InstanceGridWidgetConstants.getAddNewValueActionDesc(widgetConfiguration, projectLayoutConfiguration, "Add term"), InstanceGridWidgetConstants.getAddIcon(widgetConfiguration, projectLayoutConfiguration)), true);
         addNewLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 if (isWriteOperationAllowed()) {
@@ -179,7 +167,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 
         bpSearchComponent.setProperty(getProperty());
 
-        if (store.getRecords() != null && store.getRecords().length > 0){
+        if (store.getRecords() != null && store.getRecords().length > 0) {
             bpSearchComponent.setReplaceExisting(replaceExisting);
             bpSearchComponent.setCurrentValue(store.getAt(0).getAsString(INSTANCE_FIELD_NAME));
         }
@@ -215,9 +203,9 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         final TextField txtSource = new TextField("Terminology");
         final TextField txtURL = new TextField("URL");
         HTMLPanel verticalSpacer = new HTMLPanel("<BR /><BR />");
-        final NoteInputPanel nip = new NoteInputPanel(getProjectId(), "Enter a comment about this reference (optional):",
-                false, "", "", null, window);
-        nip.showButtons(false);
+//        final NoteInputPanel nip = new NoteInputPanel(getProjectId(), "Enter a comment about this reference (optional):",
+//                false, "", "", null, window);
+//        nip.showButtons(false);
 
         Button btnCreate = new Button("Create reference", new ButtonListenerAdapter() {
             @Override
@@ -227,7 +215,8 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
                 String source = txtSource.getText();
                 String url = txtURL.getText();
                 if (label.length() > 0 || code.length() > 0 || source.length() > 0 || url.length() > 0) {
-                    createNewReference(label, code, source, url, nip);
+//                    createNewReference(label, code, source, url, null);
+                    createNewReference(label, code, source, url);
                 }
                 window.close();
             }
@@ -245,7 +234,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         formPanel.add(txtURL, new AnchorLayoutData("100%"));
         formPanel.add(verticalSpacer);
 
-        wrappingPanel.add(nip, new AnchorLayoutData("100% 170"));
+        wrappingPanel.add(null, new AnchorLayoutData("100% 170"));
 
         FormPanel formPanelBottom = new FormPanel();
         TextField dummyField = new TextField(); //we need to add this to the bottom formPanel
@@ -262,19 +251,20 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         window.show();
     }
 
-    private void createNewReference(String label, String termId, String ontologyId, String url,
-            final NoteInputPanel noteInputPanel) {
+    private void createNewReference(String label, String termId, String ontologyId, String url) {
+//    private void createNewReference(String label, String termId, String ontologyId, String url, final NoteInputPanel noteInputPanel) {
         bpSearchComponent = new BioPortalSearchComponent(getProjectId(), !multiValue) {
             @Override
             protected AbstractAsyncHandler<EntityData> getCreateManualreferenceHandler() {
-                return new CreateManualReferenceHandler(noteInputPanel);
+                return new CreateManualReferenceHandler();
             }
         };
         bpSearchComponent.setConfigProperties(bpSearchProperties);
         bpSearchComponent.setEntity(getSubject(), false);//do not reload because bpSearchProperties is not visible
-        if (!isReplace()){
+        if (!isReplace()) {
             bpSearchComponent.createReference(ontologyId, termId, termId, label, url);
-        } else {
+        }
+        else {
             bpSearchComponent.replaceReference(ontologyId, termId, termId, label, url, store.getAt(0).getAsString(INSTANCE_FIELD_NAME));
         }
     }
@@ -294,43 +284,27 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         //window.setCloseAction(Window.HIDE);
         window.setPlain(true);
 
-        final NoteInputPanel nip = new NoteInputPanel(getProjectId(), "Enter a comment about this reference (optional):",
-                false, refInstance, window, new AsyncCallback<NotesData>() {
-            public void onFailure(Throwable caught) {
-                if (caught != null) {
-                    MessageBox.alert(caught.getMessage());
-                }
-                window.close();
-            }
-
-            public void onSuccess(NotesData note) {
-                addUserComment(getProjectId(), note);
-                window.close();
-            }
-        });
-        window.add(nip);
-
-        window.show();
-        nip.getMainComponentForFocus().focus();
+//        final NoteInputPanel nip = new NoteInputPanel(getProjectId(), "Enter a comment about this reference (optional):", false, refInstance, window, new AsyncCallback<NotesData>() {
+//            public void onFailure(Throwable caught) {
+//                if (caught != null) {
+//                    MessageBox.alert(caught.getMessage());
+//                }
+//                window.close();
+//            }
+//
+//            public void onSuccess(NotesData note) {
+//                addUserComment(getProjectId(), note);
+//                window.close();
+//            }
+//        });
+//        window.add(nip);
+//
+//        window.show();
+//        nip.getMainComponentForFocus().focus();
     }
 
-    public static void addUserComment(final ProjectId projectId, NotesData note) {
-        if (note != null
-                && ((note.getSubject() != null && note.getSubject().length() > 0) || (note.getBody() != null && note
-                        .getBody().length() > 0))) {
-            ChAOServiceManager.getInstance().createNote(projectId, note, false,
-                    new AbstractAsyncHandler<NotesData>() {
-                @Override
-                public void handleFailure(Throwable caught) {
-                    MessageBox.alert("Creating note failed: " + caught.getMessage());
-                }
-
-                @Override
-                public void handleSuccess(NotesData result) {
-                    GWT.log("Note added successfully: " + result.toString(), null);
-                }
-            });
-        }
+    public static void addUserComment(final ProjectId projectId, NoteContent noteContent, OWLEntity targetEntity) {
+        MessageBox.alert("This functionality is not currently available.  We apologise for any inconvenience.");
     }
 
     /*
@@ -338,6 +312,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
      */
 
     class ImportBioPortalConceptHandler extends AbstractAsyncHandler<EntityData> {
+
         private BioPortalSearchComponent bpSearchComponent;
 
         public ImportBioPortalConceptHandler(BioPortalSearchComponent bioPortalSearchComponent) {
@@ -358,7 +333,8 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
                 //activate this code if we need it in the future
                 //addUserCommentOnReference(getProject(), refInstance);
                 refresh();
-            } else {
+            }
+            else {
                 MessageBox.alert("Import operation DID NOT SUCCED!");
             }
         }
@@ -366,10 +342,12 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 
 
     class CreateManualReferenceHandler extends AbstractAsyncHandler<EntityData> {
-        private NoteInputPanel noteInputPanel;
 
-        public CreateManualReferenceHandler(NoteInputPanel noteInputPanel) {
-            this.noteInputPanel = noteInputPanel;
+//        private NoteInputPanel noteInputPanel;
+
+        public CreateManualReferenceHandler() {
+//        public CreateManualReferenceHandler(NoteInputPanel noteInputPanel) {
+//            this.noteInputPanel = noteInputPanel;
         }
 
         @Override
@@ -383,9 +361,10 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
             refresh();
             if (refInstance != null) {
                 //addUserCommentOnReference(getProject(), refInstance);
-                noteInputPanel.setAnnotatedEntity(refInstance);
-                noteInputPanel.doSendNote();
-            } else {
+//                noteInputPanel.setAnnotatedEntity(refInstance);
+//                noteInputPanel.doSendNote();
+            }
+            else {
                 MessageBox.alert("Reference creation DID NOT SUCCEDED!");
             }
         }

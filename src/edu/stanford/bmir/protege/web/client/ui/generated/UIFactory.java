@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.generated;
 
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.ui.frame.ClassFramePortlet;
 import edu.stanford.bmir.protege.web.client.ui.frame.NamedIndividualFramePortlet;
@@ -21,16 +22,11 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.AnnotationsPort
 import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.ImportsTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.MetadataTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.MetricsPortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTab;
-import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.notes.OntologyNotesTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.restrictions.HTMLRestrictionsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.restrictions.RestrictionsPortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.reviews.ReviewsPortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.reviews.ReviewsTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.revisions.RevisionsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalSearchPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.OtherTerminologiesTab;
@@ -86,14 +82,8 @@ public class UIFactory {
         else if (tabJavaClassName.equals(UserDefinedTab.class.getName())) {
             return new UserDefinedTab(project);
         }
-        else if (tabJavaClassName.equals(ReviewsTab.class.getName())) {
-            return new ReviewsTab(project);
-        }
         else if (tabJavaClassName.equals(ManageHierarchyTab.class.getName())) {
             return new ManageHierarchyTab(project);
-        }
-        else if (tabJavaClassName.equals(OntologyNotesTab.class.getName())) {
-            return new OntologyNotesTab(project);
         }
         else if (tabJavaClassName.equals(ChangeAnalysisTab.class.getName())) {
             return new ChangeAnalysisTab(project);
@@ -106,124 +96,117 @@ public class UIFactory {
      */
 
     public static EntityPortlet createPortlet(Project project, String portletJavaClassName) {
-        if (portletJavaClassName.equals(AllPropertiesPortlet.class.getName())) {
-            return new AllPropertiesPortlet(project);
-        }
-        else if (portletJavaClassName.equals(AnnotationsPortlet.class.getName())) {
-            return new AnnotationsPortlet(project);
-        }
-        else if (portletJavaClassName.equals(ClassTreePortlet.class.getName())) {
-            return new ClassTreePortlet(project);
-        }
-        else if (portletJavaClassName.equals(LabelingClassTreePortlet.class.getName())) {
-            return new LabelingClassTreePortlet(project);
-        }
-        else if (portletJavaClassName.equals(ImportsTreePortlet.class.getName())) {
-            return new ImportsTreePortlet(project);
-        }
-        else if (portletJavaClassName.equals(IndividualsListPortlet.class.getName())) {
-            return new IndividualsListPortlet(project);
-        }
-        else if (portletJavaClassName.equals(MetricsPortlet.class.getName())) {
-            return new MetricsPortlet(project);
-        }
-        else if (portletJavaClassName.equals(NotesPortlet.class.getName())) {
-            return new NotesPortlet(project);
-        }
-        else if (portletJavaClassName.equals(PropertiesTreePortlet.class.getName())) {
-            return new PropertiesTreePortlet(project);
-        }
-        else if (portletJavaClassName.equals(HTMLRestrictionsPortlet.class.getName())) {
-            return new HTMLRestrictionsPortlet(project);
-        }
-        else if (portletJavaClassName.equals(PropertyFieldPortlet.class.getName())) {
-            return new PropertyFieldPortlet(project);
-        }
-        else if (portletJavaClassName.equals(BioPortalSearchPortlet.class.getName())) {
-            return new BioPortalSearchPortlet(project);
-        }
-        else if (portletJavaClassName.equals(ChangeSummaryPortlet.class.getName())) {
-            return new ChangeSummaryPortlet(project);
-        }
-        else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
-            return new WatchedEntitiesPortlet(project);
-        }
-        else if (portletJavaClassName.equals(ReviewsPortlet.class.getName())) {
-            return new ReviewsPortlet(project);
-        }
-        else if (portletJavaClassName.equals(ManageHierarchyPortlet.class.getName())) {
-            return new ManageHierarchyPortlet(project);
-        }
-        else if (portletJavaClassName.equals(HtmlMessagePortlet.class.getName())) {
-            return new HtmlMessagePortlet(project);
-        }
-        else if (portletJavaClassName.equals(SuperclassesPortlet.class.getName())) {
-            return new SuperclassesPortlet(project);
-        }
-        else if (portletJavaClassName.equals(ChangesPortlet.class.getName())) {
-            return new ChangesPortlet(project);
-        }
-        else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
-            return new WatchedEntitiesPortlet(project);
-        }
-        else if (portletJavaClassName.equals(PropertiesViewPortlet.class.getName())) {
-            return new PropertiesViewPortlet(project);
-        }
-        else if (portletJavaClassName.equals(ChangeTablePortlet.class.getName())) {
-            return new ChangeTablePortlet(project);
-        }
-        else if (portletJavaClassName.equals(ChangeTreePortlet.class.getName())) {
-            return new ChangeTreePortlet(project);
-        }
-        else if (portletJavaClassName.equals(NotesTreePortlet.class.getName())) {
-            return new NotesTreePortlet(project);
-        }
-        else if (portletJavaClassName.equals(BioPortalProposalsPortlet.class.getName())) {
-            return new BioPortalProposalsPortlet(project);
-        }
-        else if (portletJavaClassName.equals(RestrictionsPortlet.class.getName())) {
-            return new RestrictionsPortlet(project);
-        }
+        try {
+            if (portletJavaClassName.equals(AllPropertiesPortlet.class.getName())) {
+                return new AllPropertiesPortlet(project);
+            }
+            else if (portletJavaClassName.equals(AnnotationsPortlet.class.getName())) {
+                return new AnnotationsPortlet(project);
+            }
+            else if (portletJavaClassName.equals(ClassTreePortlet.class.getName())) {
+                return new ClassTreePortlet(project);
+            }
+            else if (portletJavaClassName.equals(LabelingClassTreePortlet.class.getName())) {
+                return new LabelingClassTreePortlet(project);
+            }
+            else if (portletJavaClassName.equals(ImportsTreePortlet.class.getName())) {
+                return new ImportsTreePortlet(project);
+            }
+            else if (portletJavaClassName.equals(IndividualsListPortlet.class.getName())) {
+                return new IndividualsListPortlet(project);
+            }
+            else if (portletJavaClassName.equals(MetricsPortlet.class.getName())) {
+                return new MetricsPortlet(project);
+            }
+            else if (portletJavaClassName.equals(PropertiesTreePortlet.class.getName())) {
+                return new PropertiesTreePortlet(project);
+            }
+            else if (portletJavaClassName.equals(HTMLRestrictionsPortlet.class.getName())) {
+                return new HTMLRestrictionsPortlet(project);
+            }
+            else if (portletJavaClassName.equals(PropertyFieldPortlet.class.getName())) {
+                return new PropertyFieldPortlet(project);
+            }
+            else if (portletJavaClassName.equals(BioPortalSearchPortlet.class.getName())) {
+                return new BioPortalSearchPortlet(project);
+            }
+            else if (portletJavaClassName.equals(ChangeSummaryPortlet.class.getName())) {
+                return new ChangeSummaryPortlet(project);
+            }
+            else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
+                return new WatchedEntitiesPortlet(project);
+            }
+            else if (portletJavaClassName.equals(ManageHierarchyPortlet.class.getName())) {
+                return new ManageHierarchyPortlet(project);
+            }
+            else if (portletJavaClassName.equals(HtmlMessagePortlet.class.getName())) {
+                return new HtmlMessagePortlet(project);
+            }
+            else if (portletJavaClassName.equals(SuperclassesPortlet.class.getName())) {
+                return new SuperclassesPortlet(project);
+            }
+            else if (portletJavaClassName.equals(ChangesPortlet.class.getName())) {
+                return new ChangesPortlet(project);
+            }
+            else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
+                return new WatchedEntitiesPortlet(project);
+            }
+            else if (portletJavaClassName.equals(PropertiesViewPortlet.class.getName())) {
+                return new PropertiesViewPortlet(project);
+            }
+            else if (portletJavaClassName.equals(ChangeTablePortlet.class.getName())) {
+                return new ChangeTablePortlet(project);
+            }
+            else if (portletJavaClassName.equals(ChangeTreePortlet.class.getName())) {
+                return new ChangeTreePortlet(project);
+            }
+            else if (portletJavaClassName.equals(BioPortalProposalsPortlet.class.getName())) {
+                return new BioPortalProposalsPortlet(project);
+            }
+            else if (portletJavaClassName.equals(RestrictionsPortlet.class.getName())) {
+                return new RestrictionsPortlet(project);
+            }
 
-        else if (portletJavaClassName.equals(OBOTermRelationshipPortlet.class.getName())) {
-            return new OBOTermRelationshipPortlet(project);
+            else if (portletJavaClassName.equals(OBOTermRelationshipPortlet.class.getName())) {
+                return new OBOTermRelationshipPortlet(project);
+            }
+            else if (portletJavaClassName.equals(OBOTermDefinitionPortlet.class.getName())) {
+                return new OBOTermDefinitionPortlet(project);
+            }
+            else if (portletJavaClassName.equals(OBOTermIdEditorPortlet.class.getName())) {
+                return new OBOTermIdEditorPortlet(project);
+            }
+            else if (portletJavaClassName.equals(OBOTermMetadataPortlet.class.getName())) {
+                return new OBOTermMetadataPortlet(project);
+            }
+            else if (portletJavaClassName.equals(OBOTermSynonymsPortlet.class.getName())) {
+                return new OBOTermSynonymsPortlet(project);
+            }
+            else if (portletJavaClassName.equals(OBOTermCrossProductPortlet.class.getName())) {
+                return new OBOTermCrossProductPortlet(project);
+            }
+            else if (portletJavaClassName.equals(OBOTermXRefsEditorPortlet.class.getName())) {
+                return new OBOTermXRefsEditorPortlet(project);
+            }
+            else if (portletJavaClassName.equals(RevisionsPortlet.class.getName())) {
+                return new RevisionsPortlet(project);
+            }
+            else if (portletJavaClassName.equals(ClassFramePortlet.class.getName())) {
+                return new ClassFramePortlet(project);
+            }
+            else if (portletJavaClassName.equals(NamedIndividualFramePortlet.class.getName())) {
+                return new NamedIndividualFramePortlet(project);
+            }
+            else if (portletJavaClassName.equals(ProjectFeedPortlet.class.getName())) {
+                return new ProjectFeedPortlet(project);
+            }
+            else if (portletJavaClassName.equals(DiscussionThreadPortlet.class.getName())) {
+                return new DiscussionThreadPortlet(project);
+            }
         }
-        else if (portletJavaClassName.equals(OBOTermDefinitionPortlet.class.getName())) {
-            return new OBOTermDefinitionPortlet(project);
+        catch (Exception e) {
+            GWT.log("Error when creating portlet", e);
         }
-        else if (portletJavaClassName.equals(OBOTermIdEditorPortlet.class.getName())) {
-            return new OBOTermIdEditorPortlet(project);
-        }
-        else if (portletJavaClassName.equals(OBOTermMetadataPortlet.class.getName())) {
-            return new OBOTermMetadataPortlet(project);
-        }
-        else if (portletJavaClassName.equals(OBOTermSynonymsPortlet.class.getName())) {
-            return new OBOTermSynonymsPortlet(project);
-        }
-        else if (portletJavaClassName.equals(OBOTermCrossProductPortlet.class.getName())) {
-            return new OBOTermCrossProductPortlet(project);
-        }
-        else if (portletJavaClassName.equals(OBOTermXRefsEditorPortlet.class.getName())) {
-            return new OBOTermXRefsEditorPortlet(project);
-        }
-        else if (portletJavaClassName.equals(RevisionsPortlet.class.getName())) {
-            return new RevisionsPortlet(project);
-        }
-        else if (portletJavaClassName.equals(ClassFramePortlet.class.getName())) {
-            return new ClassFramePortlet(project);
-        }
-        else if (portletJavaClassName.equals(NamedIndividualFramePortlet.class.getName())) {
-            return new NamedIndividualFramePortlet(project);
-        }
-        else if (portletJavaClassName.equals(ProjectFeedPortlet.class.getName())) {
-            return new ProjectFeedPortlet(project);
-        }
-        else if (portletJavaClassName.equals(DiscussionThreadPortlet.class.getName())) {
-            return new DiscussionThreadPortlet(project);
-        }
-//        else if(portletJavaClassName.equals(ObjectPropertyFramePortlet.class.getName())) {
-//            return new ObjectPropertyFramePortlet(project);
-//        }
         return null;
     }
 
@@ -234,7 +217,7 @@ public class UIFactory {
          * OtherTerminologiesTab.class.getName(),
          *
          */
-        String[] tabs = {ClassesTab.class.getName(), PropertiesTab.class.getName(), IndividualsTab.class.getName(), MetadataTab.class.getName(), NotesTab.class.getName(), ChangeAnalysisTab.class.getName(), OntologyNotesTab.class.getName()};
+        String[] tabs = {ClassesTab.class.getName(), PropertiesTab.class.getName(), IndividualsTab.class.getName(), MetadataTab.class.getName(), NotesTab.class.getName(), ChangeAnalysisTab.class.getName()};
         return Arrays.asList(tabs);
     }
 
@@ -245,7 +228,7 @@ public class UIFactory {
          * ChangeTreePortlet.class.getName(), ChangeSummaryPortlet.class.getName(), ChangeTablePortlet.class.getName(),
          * NotesPortlet.class.getName(),
          */
-        String[] portlets = {DiscussionThreadPortlet.class.getName(), ChangeSummaryPortlet.class.getName(), ProjectFeedPortlet.class.getName(), AnnotationsPortlet.class.getName(), NamedIndividualFramePortlet.class.getName(), ClassFramePortlet.class.getName(), AllPropertiesPortlet.class.getName(), PropertiesViewPortlet.class.getName(), ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(), IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(), OntologiesPortlet.class.getName(), PropertiesTreePortlet.class.getName(), HTMLRestrictionsPortlet.class.getName(), RestrictionsPortlet.class.getName(), BioPortalSearchPortlet.class.getName(), SuperclassesPortlet.class.getName(), ChangesPortlet.class.getName(), WatchedEntitiesPortlet.class.getName(), NotesTreePortlet.class.getName(), NotesTreePortlet.class.getName(), BioPortalProposalsPortlet.class.getName(), OBOTermCrossProductPortlet.class.getName(), OBOTermRelationshipPortlet.class.getName(), OBOTermSynonymsPortlet.class.getName(), OBOTermMetadataPortlet.class.getName(), OBOTermIdEditorPortlet.class.getName(), OBOTermDefinitionPortlet.class.getName(), OBOTermXRefsEditorPortlet.class.getName(), RevisionsPortlet.class.getName()};
+        String[] portlets = {DiscussionThreadPortlet.class.getName(), ChangeSummaryPortlet.class.getName(), ProjectFeedPortlet.class.getName(), AnnotationsPortlet.class.getName(), NamedIndividualFramePortlet.class.getName(), ClassFramePortlet.class.getName(), AllPropertiesPortlet.class.getName(), PropertiesViewPortlet.class.getName(), ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(), IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(), OntologiesPortlet.class.getName(), PropertiesTreePortlet.class.getName(), HTMLRestrictionsPortlet.class.getName(), RestrictionsPortlet.class.getName(), BioPortalSearchPortlet.class.getName(), SuperclassesPortlet.class.getName(), ChangesPortlet.class.getName(), WatchedEntitiesPortlet.class.getName(), BioPortalProposalsPortlet.class.getName(), OBOTermCrossProductPortlet.class.getName(), OBOTermRelationshipPortlet.class.getName(), OBOTermSynonymsPortlet.class.getName(), OBOTermMetadataPortlet.class.getName(), OBOTermIdEditorPortlet.class.getName(), OBOTermDefinitionPortlet.class.getName(), OBOTermXRefsEditorPortlet.class.getName(), RevisionsPortlet.class.getName()};
 
         List<String> portletsList = Arrays.asList(portlets);
         Collections.sort(portletsList, new Comparator<String>() {

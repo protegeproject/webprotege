@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.search;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,9 +20,13 @@ import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NoteInputPanel;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorDialog;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorHandler;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.ReferenceFieldWidget;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.HashMap;
@@ -65,8 +70,7 @@ public class BioPortalSearchComponent extends GridPanel {
         if (configPropertiesMap != null) {
             this.configPropertiesMap = configPropertiesMap;
         } else {
-            GWT.log("The argument passed to setConfigurationProperties should not be null!", new NullPointerException(
-                    "configPropertiesMap is null"));
+            GWT.log("The argument passed to setConfigurationProperties should not be null!");
             this.configPropertiesMap = new HashMap<String, Object>();
         }
     }
@@ -378,7 +382,7 @@ public class BioPortalSearchComponent extends GridPanel {
     }
 
     private void onLeaveAComment() {
-        createReferenceIfUserComments(projectId);
+        createReferenceIfUserComments();
     }
 
     public EntityData getEntity() {
@@ -445,7 +449,10 @@ public class BioPortalSearchComponent extends GridPanel {
 
         String searchString = searchStringTextField.getText();
         if (searchString != null && searchString.length() > 0) {
-            getEl().mask("Loading search results", true);
+            final ExtElement el = getEl();
+            if (el != null) {
+                el.mask("Loading search results", true);
+            }
             if (configPropertiesMap != null) {
                 BioPortalSearchData bpSearchData = new BioPortalSearchData();
                 initBioPortalSearchData(bpSearchData);
@@ -546,46 +553,18 @@ public class BioPortalSearchComponent extends GridPanel {
         return res;
     }
 
-    public void createReferenceIfUserComments(final ProjectId projectId) {
-
-        final Window window = new Window();
-        window.setTitle("Comment on reference");
-        window.setWidth(600);
-        window.setHeight(350);
-        window.setMinWidth(300);
-        window.setMinHeight(250);
-        window.setLayout(new FitLayout());
-        window.setPaddings(5);
-        window.setButtonAlign(Position.CENTER);
-
-        //window.setCloseAction(Window.HIDE);
-        window.setPlain(true);
-
-        EntityData refInstance = null; //refInstance is not created at this point
-
-        final NoteInputPanel nip = new NoteInputPanel(projectId, "Enter a comment about this reference (optional):",
-                false, refInstance, window, new AsyncCallback<NotesData>() {
-                    public void onFailure(Throwable caught) {
-                        if (caught != null) {
-                            MessageBox.alert(caught.getMessage());
-                        }
-                    }
-
-                    public void onSuccess(NotesData note) {
-                        if (note != null
-                                && ((note.getSubject() != null && note.getSubject().length() > 0) || (note.getBody() != null && note
-                                        .getBody().length() > 0))) {
-                            createDNFReference(note);
-                        }
-                    }
-                });
-        window.add(nip);
-
-        window.show();
-        nip.getMainComponentForFocus().focus();
+    public void createReferenceIfUserComments() {
+        NoteContentEditorDialog.showDialog(NoteContentEditorMode.NEW_TOPIC, new NoteContentEditorHandler() {
+            @Override
+            public void handleAccept(Optional<NoteContent> noteContent) {
+                if (noteContent.isPresent()) {
+                    createDNFReference(noteContent.get());
+                }
+            }
+        });
     }
 
-    public void createDNFReference(NotesData note) {
+    public void createDNFReference(NoteContent noteContent) {
         GWT.log("onCreateDNFReference", null);
         BioPortalReferenceData bpRefData = new BioPortalReferenceData();
 
@@ -606,7 +585,7 @@ public class BioPortalSearchComponent extends GridPanel {
                 UIUtil.getAppliedToTransactionString("Create a 'Did not find' reference on "
                         + getEntity().getBrowserText() + " "
                         + (String) configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
-                getCreateDNFConceptHandler(note));
+                getCreateDNFConceptHandler(noteContent));
     }
 
     public void createReference(String ontologyVersionId, String conceptId, String conceptIdShort, String preferredName, String url) {
@@ -793,15 +772,15 @@ public class BioPortalSearchComponent extends GridPanel {
         }
     }
 
-    protected AbstractAsyncHandler<EntityData> getCreateDNFConceptHandler(NotesData note) {
-        return new CreateDNFConceptHandler(note);
+    protected AbstractAsyncHandler<EntityData> getCreateDNFConceptHandler(NoteContent noteContent) {
+        return new CreateDNFConceptHandler(noteContent);
     }
 
     class CreateDNFConceptHandler extends AbstractAsyncHandler<EntityData> {
-        private NotesData note;
+        private NoteContent noteContent;
 
-        public CreateDNFConceptHandler(NotesData note) {
-            this.note = note;
+        public CreateDNFConceptHandler(NoteContent noteContent) {
+            this.noteContent = noteContent;
         }
 
         @Override
@@ -814,10 +793,8 @@ public class BioPortalSearchComponent extends GridPanel {
         @Override
         public void handleSuccess(EntityData refInstance) {
             doUnmask(BioPortalSearchComponent.this);
-            MessageBox.alert(refInstance != null ? "Reference creation SUCCEDED! Reference instance: " + refInstance
-                    : "Reference creation DID NOT SUCCEDED!");
-            this.note.setAnnotatedEntity(refInstance);
-            ReferenceFieldWidget.addUserComment(projectId, note);
+            MessageBox.alert(refInstance != null ? "Reference creation SUCCEDED! Reference instance: " + refInstance : "Reference creation DID NOT SUCCEDED!");
+            ReferenceFieldWidget.addUserComment(projectId, noteContent, DataFactory.getOWLClass(refInstance.getName()));
         }
     }
 }

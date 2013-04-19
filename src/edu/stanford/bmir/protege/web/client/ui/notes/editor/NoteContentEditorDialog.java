@@ -24,4 +24,16 @@ public class NoteContentEditorDialog extends WebProtegeDialog<Optional<NoteConte
         controller.setMode(mode);
         controller.setTitle(mode.getModeTitle());
     }
+
+
+    public static void showDialog(NoteContentEditorMode mode, final NoteContentEditorHandler handler) {
+        NoteContentEditorDialog dlg = new NoteContentEditorDialog();
+        dlg.setMode(mode);
+        dlg.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Optional<NoteContent>>() {
+            @Override
+            public void handleHide(Optional<NoteContent> data, WebProtegeDialogCloser closer) {
+                handler.handleAccept(data);
+            }
+        });
+    }
 }

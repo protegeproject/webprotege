@@ -27,7 +27,6 @@ import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.Project;
 import edu.stanford.bmir.protege.web.client.model.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
-import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectConfigurationServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
@@ -146,25 +145,6 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     private void getProjectConfiguration() {
         UIUtil.showLoadProgessBar("Loading UI configuration", "Loading");
         ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(projectId, Application.get().getUserId(), new GetProjectConfigurationHandler());
-
-        //FIXME delete this hack once we figure it out how to make it the ComboBox fill-in mechanism work properly
-        //      in NoteInputPanel at display time
-        ChAOServiceManager.getInstance().getAvailableNoteTypes(projectId, new AsyncCallback<Collection<EntityData>>() {
-            public void onFailure(Throwable caught) {
-                GWT.log("Error getting the list of available note types", caught);
-            }
-
-            public void onSuccess(Collection<EntityData> result) {
-                if (result != null) {
-                    String[] noteTypes = new String[result.size()];
-                    int i = 0;
-                    for (EntityData noteType : result) {
-                        noteTypes[i++] = noteType.getBrowserText();
-                    }
-                    UIUtil.setNoteTypes(noteTypes);
-                }
-            }
-        });
     }
 
     public void layoutProject() {
@@ -246,13 +226,18 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     protected void onPortletAdded(String javaClassName) {
-        EntityPortlet portlet = UIFactory.createPortlet(getProject(), javaClassName);
-        if (portlet == null) {
-            return;
+        try {
+            EntityPortlet portlet = UIFactory.createPortlet(getProject(), javaClassName);
+            if (portlet == null) {
+                return;
+            }
+            AbstractTab activeTab = getActiveOntologyTab();
+            activeTab.addPortlet(portlet, activeTab.getColumnCount() - 1);
+            doLayout();
         }
-        AbstractTab activeTab = getActiveOntologyTab();
-        activeTab.addPortlet(portlet, activeTab.getColumnCount() - 1);
-        doLayout();
+        catch (Exception e) {
+            GWT.log("Problem adding portlet", e);
+        }
 
     }
 

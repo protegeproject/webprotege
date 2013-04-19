@@ -14,25 +14,25 @@ import java.util.List;
  */
 public interface ChAOServiceAsync {
 
-    /*
-     * Notes methods
-     */
-
-    void getNotes(String projectName, String entityName, boolean topLevel, AsyncCallback<List<NotesData>> cb);
-
-    void getNotes(String projectName, String entityName, boolean ontologyLevelNotes, boolean topLevelNotesOnly, AsyncCallback<List<NotesData>> cb);
-
-    void getAvailableNoteTypes(String projectName, AsyncCallback<Collection<EntityData>> cb);
-
-    void createNote(String projectName, NotesData newNote, boolean topLevel, AsyncCallback<NotesData> cb);
-
-    void deleteNote(String projectName, String noteId, AsyncCallback<Void> callback);
-
-    void getReplies(String projectName, String noteId, boolean topLevelOnly, AsyncCallback<List<NotesData>> cb);
-
-    void editNote(String projectName, NotesData note, String noteId, AsyncCallback<NotesData> cb);
-
-    void archiveNote(String projectName, String nodeId, boolean archive, AsyncCallback<Boolean> cb);
+//    /*
+//     * Notes methods
+//     */
+//
+//    void getNotes(String projectName, String entityName, boolean topLevel, AsyncCallback<List<NotesData>> cb);
+//
+//    void getNotes(String projectName, String entityName, boolean ontologyLevelNotes, boolean topLevelNotesOnly, AsyncCallback<List<NotesData>> cb);
+//
+//    void getAvailableNoteTypes(String projectName, AsyncCallback<Collection<EntityData>> cb);
+//
+//    void createNote(String projectName, NotesData newNote, boolean topLevel, AsyncCallback<NotesData> cb);
+//
+//    void deleteNote(String projectName, String noteId, AsyncCallback<Void> callback);
+//
+//    void getReplies(String projectName, String noteId, boolean topLevelOnly, AsyncCallback<List<NotesData>> cb);
+//
+//    void editNote(String projectName, NotesData note, String noteId, AsyncCallback<NotesData> cb);
+//
+//    void archiveNote(String projectName, String nodeId, boolean archive, AsyncCallback<Boolean> cb);
 
     /*
      * Change methods
@@ -58,18 +58,5 @@ public interface ChAOServiceAsync {
 
     void getWatchedEntities(String projectName, String userName, AsyncCallback<Collection<ChangeData>> cb);
 
-
-
-    /*
-     * Reviews
-     */
-
-    void getReviewers(String projectName, AsyncCallback<List<String>> cb);
-
-    void getReviews(String projectName, String entityName, AsyncCallback<Collection<ReviewData>> cb);
-
-    void requestReview(String projectName, String entityName, List<String> reviewerNames, AsyncCallback<Void> cb);
-
-    void addReview(String projectName, String userName, NotesData data, AsyncCallback<Void> cb);
 
 }
