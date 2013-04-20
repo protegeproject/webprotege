@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.events;
+package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;

@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.events;
+package edu.stanford.bmir.protege.web.client.project;
 
 /**
  * Author: Matthew Horridge<br>

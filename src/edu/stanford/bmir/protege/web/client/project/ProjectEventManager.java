@@ -1,9 +1,11 @@
-package edu.stanford.bmir.protege.web.client.events;
+package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.SimpleEventBus;
+import edu.stanford.bmir.protege.web.client.events.EventDispatchManager;
+import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

@@ -18,6 +18,8 @@ import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.events.*;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedHandler;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
