@@ -38,9 +38,9 @@ public class AdminServiceManager {
         proxy.setUserEmail(userId.getUserName(), email, callback);
     }
 
-    public void getProjects(UserId userId, AsyncCallback<Collection<ProjectData>> cb) {
-        proxy.getProjects(userId.getUserName(), cb);
-    }
+//    public void getProjects(UserId userId, AsyncCallback<Collection<ProjectData>> cb) {
+//        proxy.getProjects(userId.getUserName(), cb);
+//    }
 
     public void getAllowedOperations(ProjectId projectId, UserId userId, AsyncCallback<PermissionsSet> cb) {
         proxy.getAllowedOperations(projectId.getId(), userId.getUserName(), cb);

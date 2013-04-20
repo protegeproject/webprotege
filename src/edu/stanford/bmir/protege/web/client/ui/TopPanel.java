@@ -24,9 +24,6 @@ import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.editprofile.EditProfileUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
@@ -537,25 +534,25 @@ public class TopPanel extends Panel {
             MessageBox.alert("No project is selected");
             return;
         }
-        ProjectManagerServiceAsync service = GWT.create(ProjectManagerService.class);
-        service.getProjectData(activeProjectId.get(), new AsyncCallback<ProjectData>() {
-            public void onFailure(Throwable caught) {
-                MessageBox.alert("There was a problem getting the project data from the server.  Please try again.");
-            }
-
-            public void onSuccess(ProjectData result) {
-                showBioPortalUploadDialog(result);
-            }
-        });
+//        ProjectManagerServiceAsync service = GWT.create(ProjectManagerService.class);
+//        service.getProjectData(activeProjectId.get(), new AsyncCallback<ProjectData>() {
+//            public void onFailure(Throwable caught) {
+//                MessageBox.alert("There was a problem getting the project data from the server.  Please try again.");
+//            }
+//
+//            public void onSuccess(ProjectData result) {
+//                showBioPortalUploadDialog(result);
+//            }
+//        });
     }
     
-    private void showBioPortalUploadDialog(ProjectData projectData) {
-//        UserData userData = Application.get().getUser();
-//        if(userData != null && projectData != null) {
-//            PublishToBioPortalDialog dlg = new PublishToBioPortalDialog(projectData, userData);
-//            dlg.show();
-//        }
-    }
+//    private void showBioPortalUploadDialog(ProjectData projectData) {
+////        UserData userData = Application.get().getUser();
+////        if(userData != null && projectData != null) {
+////            PublishToBioPortalDialog dlg = new PublishToBioPortalDialog(projectData, userData);
+////            dlg.show();
+////        }
+//    }
     
     
 

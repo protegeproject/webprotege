@@ -44,7 +44,7 @@ public abstract class MetaProjectManager {
 
     public abstract List<ProjectDetails> getListableReadableProjects(UserId userId);
 
-    public abstract List<ProjectData> getProjectsData(String userName);
+//    public abstract List<ProjectData> getProjectsData(String userName);
 
     public abstract Collection<Operation> getAllowedOperations(String project, String userName);
 

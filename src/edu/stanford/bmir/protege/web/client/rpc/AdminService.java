@@ -36,17 +36,10 @@ public interface AdminService extends RemoteService {
 
     void sendPasswordReminder(String userName);
 
-    Collection<ProjectData> getProjects(String user);
-
     PermissionsSet getAllowedOperations(String project, String user);
 
     PermissionsSet getAllowedServerOperations(String userName);
 
-//    /**
-//     * For now, it will refresh the users list. Later: it should refresh also
-//     * the projects list. TODO: Need to notify the users about this.
-//     */
-//    void refreshMetaproject();
 
     LoginChallengeData getUserSaltAndChallenge(String userName);
 
@@ -57,8 +50,6 @@ public interface AdminService extends RemoteService {
      * webprotege account)
      */
     String checkUserLoggedInMethod();
-
-    //String getUserName();
 
     void clearPreviousLoginAuthenticationData();
 

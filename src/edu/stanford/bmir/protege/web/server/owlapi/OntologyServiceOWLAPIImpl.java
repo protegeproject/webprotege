@@ -223,25 +223,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         return toName(id);
     }
 
-    /**
-     * As far as I can tell, this actually refers to ontology annotations. The default implementation returns ontology
-     * annotations, and this method is only called by the AnnotationPortlet which presents ontology annotations.
-     * As implemented, this method returns the annotations on the project root ontology.
-     * @param projectName The name of the project.
-     * @param entityName Not sure what this is for!
-     * @return A list of annotation data which corresponds to ontology annotations.
-     */
-    public List<AnnotationData> getAnnotationProperties(String projectName, String entityName) {
-        List<AnnotationData> result = new ArrayList<AnnotationData>();
-        OWLAPIProject project = getProject(projectName);
-        OWLOntology rootOntology = project.getRootOntology();
-        for (OWLAnnotation annotation : rootOntology.getAnnotations()) {
-            RenderingManager rm = project.getRenderingManager();
-            AnnotationData data = rm.getAnnotationData(annotation);
-            result.add(data);
-        }
-        return result;
-    }
 
     /**
      * Gets the imports of the root ontology for the specified project.

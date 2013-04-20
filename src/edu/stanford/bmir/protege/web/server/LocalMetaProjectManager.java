@@ -146,43 +146,43 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
     }
 
 
-    public List<ProjectData> getProjectsData(String userName) {
-        List<ProjectData> projectData = new ArrayList<ProjectData>();
-
-        Policy policy = metaproject.getPolicy();
-        User user = userName == null ? null : policy.getUserByName(userName);
-
-        for (ProjectInstance projectInstance : metaproject.getProjects()) {
-            if (!isAuthorisedToReadAndList(policy, user, projectInstance)) {
-                continue;
-            }
-
-            try {
-                String description = projectInstance.getDescription();
-                String location = projectInstance.getLocation();
-                String name = projectInstance.getName();
-                User projectUser = projectInstance.getOwner();
-                String owner = "";
-                if (projectUser != null) {
-                    owner = projectUser.getName();
-                }
-                boolean inTrash = isInTrash(projectInstance);
-
-                ProjectData pd = new ProjectData(description, location, name, owner, inTrash);
-
-                Log.getLogger().info("Found project def in metaproject: " + pd.getName() + " at: " + pd.getLocation());
-                projectData.add(pd);
-
-            }
-            catch (Exception e) {
-                Log.getLogger().log(Level.WARNING, "Found project def with problems: " + projectInstance + " Message: " + e.getMessage(), e);
-            }
-        }
-
-        Collections.sort(projectData, new ProjectsDataComparator());
-
-        return projectData;
-    }
+//    public List<ProjectData> getProjectsData(String userName) {
+//        List<ProjectData> projectData = new ArrayList<ProjectData>();
+//
+//        Policy policy = metaproject.getPolicy();
+//        User user = userName == null ? null : policy.getUserByName(userName);
+//
+//        for (ProjectInstance projectInstance : metaproject.getProjects()) {
+//            if (!isAuthorisedToReadAndList(policy, user, projectInstance)) {
+//                continue;
+//            }
+//
+//            try {
+//                String description = projectInstance.getDescription();
+//                String location = projectInstance.getLocation();
+//                String name = projectInstance.getName();
+//                User projectUser = projectInstance.getOwner();
+//                String owner = "";
+//                if (projectUser != null) {
+//                    owner = projectUser.getName();
+//                }
+//                boolean inTrash = isInTrash(projectInstance);
+//
+//                ProjectData pd = new ProjectData(description, location, name, owner, inTrash);
+//
+//                Log.getLogger().info("Found project def in metaproject: " + pd.getName() + " at: " + pd.getLocation());
+//                projectData.add(pd);
+//
+//            }
+//            catch (Exception e) {
+//                Log.getLogger().log(Level.WARNING, "Found project def with problems: " + projectInstance + " Message: " + e.getMessage(), e);
+//            }
+//        }
+//
+//        Collections.sort(projectData, new ProjectsDataComparator());
+//
+//        return projectData;
+//    }
 
     private boolean isAuthorisedToReadAndList(Policy policy, User user, ProjectInstance projectInstance) {
         User owner = projectInstance.getOwner();
@@ -256,16 +256,6 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         metaproject.dispose();
         synchronized (this) {
             notifyAll();
-        }
-    }
-
-    /*
-     * Helper class
-     */
-    class ProjectsDataComparator implements Comparator<ProjectData> {
-
-        public int compare(ProjectData prj1, ProjectData prj2) {
-            return prj1.getName().compareTo(prj2.getName());
         }
     }
 

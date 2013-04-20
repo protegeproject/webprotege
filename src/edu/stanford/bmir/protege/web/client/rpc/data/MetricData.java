@@ -24,12 +24,4 @@ public class MetricData implements Serializable {
 	public String getMetricValue() {
 		return metricValue;
 	}
-
-	public void setMetricName(String metricName) {
-		this.metricName = metricName;
-	}
-
-	public void setMetricValue(String metricValue) {
-		this.metricValue = metricValue;
-	}
 }

@@ -75,9 +75,9 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         MetaProjectManager.getManager().setUserEmail(userName, email);
     }
 
-    public List<ProjectData> getProjects(String user) {
-        return MetaProjectManager.getManager().getProjectsData(user);
-    }
+//    public List<ProjectData> getProjects(String user) {
+//        return MetaProjectManager.getManager().getProjectsData(user);
+//    }
 
     public PermissionsSet getAllowedOperations(String project, String user) {
         Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(project, user);

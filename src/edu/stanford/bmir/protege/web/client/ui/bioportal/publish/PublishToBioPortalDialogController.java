@@ -3,9 +3,9 @@ package edu.stanford.bmir.protege.web.client.ui.bioportal.publish;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 
 /**
@@ -20,9 +20,9 @@ public class PublishToBioPortalDialogController extends WebProtegeOKCancelDialog
 
     private PublishToBioPortalForm publishForm;
 
-    public PublishToBioPortalDialogController(ProjectData projectData, UserDetails userDetails) {
+    public PublishToBioPortalDialogController(ProjectDetails details, UserDetails userDetails) {
         super(TITLE);
-        this.publishForm = new PublishToBioPortalForm(projectData, userDetails);
+        this.publishForm = new PublishToBioPortalForm(details, userDetails);
         for(WebProtegeDialogValidator validator : publishForm.getValidators()) {
             addDialogValidator(validator);
         }

@@ -13,8 +13,8 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 
@@ -77,7 +77,7 @@ public class PublishToBioPortalForm extends FlowPanel {
     
     private final Label incorrectUserNameOrPasswordLabel;
 
-    public PublishToBioPortalForm(ProjectData projectData, UserDetails userDetails) {
+    public PublishToBioPortalForm(ProjectDetails details, UserDetails userDetails) {
 
         verificationCheckTimer = new Timer() {
             @Override
@@ -166,7 +166,7 @@ public class PublishToBioPortalForm extends FlowPanel {
 //        form.addWidget("", ontologyIdLabel);
 
 
-        ProjectId projectId = ProjectId.get(projectData.getName());
+        ProjectId projectId = details.getProjectId();
         ontologyAcroymnTextBox = form.addTextBox("Acronym", "Maximum 16 characters, no spaces, all upper case", projectId.getSuggestedAcronym(), new NonEmptyWebProtegeDialogTextFieldValidator("Please specify an acronym"));
         versionNumberTextBox = form.addTextBox("Version", "e.g. 1.0.3", "", new NonEmptyWebProtegeDialogTextFieldValidator("Please specify a version string"));
 

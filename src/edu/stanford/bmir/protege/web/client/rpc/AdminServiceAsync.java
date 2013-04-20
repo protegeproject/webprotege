@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
@@ -22,7 +21,7 @@ public interface AdminServiceAsync {
 
     void sendPasswordReminder(String userName, AsyncCallback<Void> callback);
 
-    void getProjects(String user, AsyncCallback<Collection<ProjectData>> cb);
+//    void getProjects(String user, AsyncCallback<Collection<ProjectData>> cb);
 
     void getAllowedOperations(String project, String user, AsyncCallback<PermissionsSet> cb);
 

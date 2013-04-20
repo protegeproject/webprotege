@@ -33,61 +33,6 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
     public ProjectManagerServiceImpl() {
     }
 
-    public synchronized List<ProjectData> getProjects() {
-        List<ProjectData> rawList = getMetaProjectManager().getProjectsData(null);
-        List<ProjectData> filteredProjects = filterOutNonExistantProjects(rawList);
-        for(ProjectData projectData : filteredProjects) {
-            augmentProjectData(ProjectId.get(projectData.getName()), projectData);
-        }
-        return filteredProjects;
-    }
-
-
-    public synchronized List<ProjectData> getProjects(UserId userId) {
-        // Don't think the call to get the project data from the metaproject is thread safe
-        String userName = userId.getUserName();
-        final List<ProjectData> projectsData = getMetaProjectManager().getProjectsData(userName);
-        final ArrayList<ProjectData> rawList = new ArrayList<ProjectData>(projectsData);
-        List<ProjectData> filteredProjects = filterOutNonExistantProjects(rawList);
-        for(ProjectData projectData : filteredProjects) {
-            augmentProjectData(ProjectId.get(projectData.getName()), projectData);
-        }
-        return filteredProjects;
-    }
-
-    public ProjectData getProjectData(ProjectId projectId) throws ProjectNotRegisteredException {
-        OWLAPIProjectMetadataManager mdm = OWLAPIProjectMetadataManager.getManager();
-        String projectDescripion = mdm.getDescription(projectId);
-        List<UserId> owners = mdm.getOwners(projectId);
-        String owner = owners.isEmpty() ? "" : owners.get(0).getUserName();
-        ProjectData projectData = new ProjectData(projectDescripion, "", projectId.getId(), owner, false);
-        augmentProjectData(projectId, projectData);
-        return projectData;
-    }
-
-    private void augmentProjectData(ProjectId projectId, ProjectData projectData) {
-        OWLAPIProjectMetadataManager mdm = OWLAPIProjectMetadataManager.getManager();
-        projectData.setLastModified(mdm.getLastModifiedTime(projectId));
-        projectData.setLastModifiedBy(mdm.getLastModifiedBy(projectId).getUserName());
-        projectData.setInTrash(mdm.isInTrash(projectId));
-    }
-
-    private synchronized List<ProjectData> filterOutNonExistantProjects(List<ProjectData> rawList) {
-        List<ProjectData> result = new ArrayList<ProjectData>(rawList.size() + 1);
-        for (ProjectData projectData : rawList) {
-            String projectName = projectData.getName();
-            ProjectId projectId = ProjectId.get(projectName);
-            OWLAPIProjectDocumentStore docMan = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
-            if (docMan.exists()) {
-                result.add(projectData);
-            }
-            else {
-                LOGGER.info("Filtering out non-existent project: %s", projectId.getId());
-            }
-        }
-        return result;
-    }
-
     public synchronized List<String> getProjectNames() {
         List<String> result = new ArrayList<String>();
         MetaProjectManager mpm = getMetaProjectManager();
@@ -190,19 +135,6 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         SharingSettingsManager.getManager().updateSharingSettings(getThreadLocalRequest(), new ProjectSharingSettings(projectId, SharingSetting.NONE, userSharingSettings));
     }
 
-    public synchronized void moveProjectsToTrash(Set<ProjectId> projectIds) throws NotSignedInException, NotProjectOwnerException {
-        ensureSignedIn();
-        for (ProjectId projectId : projectIds) {
-            OWLAPIProjectMetadataManager.getManager().setInTrash(projectId, true);
-        }
-    }
-
-    public synchronized void removeProjectsFromTrash(Set<ProjectId> projectIds) throws NotSignedInException, NotProjectOwnerException {
-        ensureSignedIn();
-        for (ProjectId projectId : projectIds) {
-            OWLAPIProjectMetadataManager.getManager().setInTrash(projectId, false);
-        }
-    }
 
     public long getLastAccessTime(ProjectId projectId) {
         return OWLAPIProjectManager.getProjectManager().getLastAccessTime(projectId);
@@ -236,8 +168,7 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
 
     public ProjectConfigurationInfo getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException {
         ProjectType projectType = getProjectType(projectId);
-        String description = getProjectData(projectId).getDescription();
-//        String defaultLanguage = OWLAPIProjectMetadataManager.getManager().getDefaultLanguage(projectId);
+        String description = OWLAPIProjectMetadataManager.getManager().getDescription(projectId);
         return new ProjectConfigurationInfo(projectId, projectType, "en", description);
     }
 

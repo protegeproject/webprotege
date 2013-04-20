@@ -687,28 +687,7 @@ public class RenderingManager implements BrowserTextProvider  {
         }
         return df.getTopDatatype();
     }
-    
-    public AnnotationData getAnnotationData(OWLAnnotation annotation) {
-        OWLAnnotationProperty property = annotation.getProperty();
-        final AnnotationData annotationData = new AnnotationData(property.getIRI().toString());
-        annotation.getValue().accept(new OWLAnnotationValueVisitor() {
-            public void visit(IRI iri) {
-                annotationData.setValue(iri.toString());
-            }
 
-            public void visit(OWLAnonymousIndividual individual) {
-                annotationData.setValue(individual.getID().toString());
-            }
-
-            public void visit(OWLLiteral literal) {
-                annotationData.setValue(literal.getLiteral());
-                if(literal.hasLang()) {
-                    annotationData.setLang(literal.getLang());
-                }
-            }
-        });
-        return annotationData;
-    }
 
     /**
      * Gets the browser text for a given OWLObject.

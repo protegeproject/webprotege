@@ -2,9 +2,7 @@ package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationInfo;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -13,12 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface ProjectManagerServiceAsync {
-
-    void getProjects(AsyncCallback<List<ProjectData>> async);
-
-    void getProjects(UserId projectOwner, AsyncCallback<List<ProjectData>> async);
-
-    void isRegisteredProject(ProjectId projectId, AsyncCallback<Boolean> async);
 
     /**
      * Creates a new project.  The project is initialised based on the {@link edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings}
@@ -58,8 +50,6 @@ public interface ProjectManagerServiceAsync {
     void getOwnedProjectNames(AsyncCallback<List<String>> async);
 
     void getLastAccessTime(ProjectId projectId, AsyncCallback<Long> async);
-
-    void getProjectData(ProjectId projectId, AsyncCallback<ProjectData> async);
 
 
     /**
