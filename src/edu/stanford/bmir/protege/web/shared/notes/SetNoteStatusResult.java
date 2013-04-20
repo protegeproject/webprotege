@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.notes;
 
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasEventListResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -13,9 +14,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/04/2013
  */
-public class SetNoteStatusResult implements Result, HasProjectId, HasEventList<ProjectEvent<?>> {
-
-    private EventList<ProjectEvent<?>> eventEventList;
+public class SetNoteStatusResult extends AbstractHasEventListResult implements HasProjectId {
 
     private ProjectId projectId;
 
@@ -28,15 +27,10 @@ public class SetNoteStatusResult implements Result, HasProjectId, HasEventList<P
     }
 
     public SetNoteStatusResult(EventList<ProjectEvent<?>> eventEventList, ProjectId projectId, NoteId noteId, NoteStatus noteStatus) {
-        this.eventEventList = eventEventList;
+        super(eventEventList);
         this.projectId = projectId;
         this.noteId = noteId;
         this.noteStatus = noteStatus;
-    }
-
-    @Override
-    public EventList<ProjectEvent<?>> getEventList() {
-        return eventEventList;
     }
 
     @Override
@@ -44,10 +38,10 @@ public class SetNoteStatusResult implements Result, HasProjectId, HasEventList<P
         return projectId;
     }
 
-    public NoteId getNoteId() {
-        return noteId;
-    }
-
+//    public NoteId getNoteId() {
+//        return noteId;
+//    }
+//
     public NoteStatus getNoteStatus() {
         return noteStatus;
     }

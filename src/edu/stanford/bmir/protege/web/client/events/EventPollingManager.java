@@ -82,7 +82,7 @@ public class EventPollingManager {
         }
         GWT.log("Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag());
         EventTag eventListStartTag = eventList.getStartTag();
-        if(nextTag.isGreaterOrEqualTo(eventListStartTag)) {
+        if(!eventList.getStartTag().equals(eventList.getEndTag()) && nextTag.isGreaterOrEqualTo(eventListStartTag)) {
             // We haven't missed any events - our next retrieval will be from where we got the event to.
             nextTag = eventList.getEndTag();
             GWT.log("Updated events.  Next tag is " + nextTag);

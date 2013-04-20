@@ -20,6 +20,8 @@ import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteAction;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteAction;
 import edu.stanford.bmir.protege.web.shared.notes.SetNoteStatusAction;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
+import edu.stanford.bmir.protege.web.shared.project.MoveProjectsToTrashAction;
+import edu.stanford.bmir.protege.web.shared.project.RemoveProjectsFromTrashAction;
 import edu.stanford.bmir.protege.web.shared.watches.AddWatchAction;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesAction;
 
@@ -80,6 +82,10 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         register(new AddReplyToNoteActionHandler(), AddReplyToNoteAction.class);
         register(new SetNoteStatusActionHandler(), SetNoteStatusAction.class);
         register(new DeleteNoteActionHandler(), DeleteNoteAction.class);
+
+
+        register(new MoveProjectsToTrashActionHandler(), MoveProjectsToTrashAction.class);
+        register(new RemoveProjectsFromTrashActionHandler(), RemoveProjectsFromTrashAction.class);
     }
 
 

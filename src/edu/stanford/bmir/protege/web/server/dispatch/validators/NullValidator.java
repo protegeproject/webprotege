@@ -25,7 +25,7 @@ public class NullValidator<A extends Action<R>, R extends Result> implements Req
     }
 
     @SuppressWarnings("unchecked")
-    public static <A extends Action<R>, R extends Result> NullValidator<A, R> get() {
-        return (NullValidator<A, R>) instance;
+    public static <A extends Action<?>> RequestValidator<A> get() {
+        return (NullValidator<A, ?>) instance;
     }
 }

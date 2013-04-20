@@ -137,10 +137,6 @@
 		<servlet-class>edu.stanford.bmir.protege.web.server.BioPortalAPIServiceImpl</servlet-class>
 	</servlet>
 
-	<servlet>
-		<servlet-name>IRIService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.IRIServiceImpl</servlet-class>
-	</servlet>
 
 	<servlet>
 		<servlet-name>RenderingService</servlet-name>
@@ -281,10 +277,6 @@
 		<url-pattern>/webprotege/bioportalapi</url-pattern>
 	</servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>IRIService</servlet-name>
-		<url-pattern>/webprotege/iriservice</url-pattern>
-	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>RenderingService</servlet-name>

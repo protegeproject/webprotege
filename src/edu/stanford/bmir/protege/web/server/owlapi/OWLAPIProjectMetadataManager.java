@@ -311,48 +311,4 @@ public class OWLAPIProjectMetadataManager {
     }
 
 
-    // TODO: COLLECTIONS?
-   
-    
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//    private class PropertyValueImpl implements PropertyValue {
-//
-//        private String propertyName;
-//
-//        private String propertyValue;
-//
-//        private PropertyValueImpl(String propertyName, String propertyValue) {
-//            this.propertyName = propertyName;
-//            this.propertyValue = propertyValue;
-//        }
-//
-//        public String getPropertyName() {
-//            return propertyName;
-//        }
-//
-//        public void setPropertyName(String propertyName) {
-//            this.propertyName = propertyName;
-//        }
-//
-//        public String getPropertyValue() {
-//            return propertyValue;
-//        }
-//
-//        public void setPropertyValue(String propertyValue) {
-//            this.propertyValue = propertyValue;
-//        }
-//    }
-
-//    public String getDefaultLanguage(ProjectId projectId) {
-//        return getPropertyValue(projectId, DEFAULT_LANGUAGE_PROPERTY_NAME, "en");
-//    }
-//
-//    public void setDefaultLanguage(ProjectId projectId, String defaultLanguage) {
-//        setPropertyValue(projectId, DEFAULT_LANGUAGE_PROPERTY_NAME, defaultLanguage);
-//    }
 }

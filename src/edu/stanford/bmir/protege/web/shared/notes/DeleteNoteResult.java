@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.notes;
 
+import edu.stanford.bmir.protege.web.shared.dispatch.AbstractHasEventListResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -11,9 +12,7 @@ import edu.stanford.bmir.protege.web.shared.events.EventList;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/04/2013
  */
-public class DeleteNoteResult implements Result, HasEventList<ProjectEvent<?>> {
-
-    private EventList<ProjectEvent<?>> eventList;
+public class DeleteNoteResult extends AbstractHasEventListResult {
 
     private NoteId noteId;
 
@@ -21,16 +20,13 @@ public class DeleteNoteResult implements Result, HasEventList<ProjectEvent<?>> {
     }
 
     public DeleteNoteResult(NoteId noteId, EventList<ProjectEvent<?>> events) {
+        super(events);
         this.noteId = noteId;
-        this.eventList = events;
     }
 
     public NoteId getNoteId() {
         return noteId;
     }
 
-    @Override
-    public EventList<ProjectEvent<?>> getEventList() {
-        return eventList;
-    }
+
 }
