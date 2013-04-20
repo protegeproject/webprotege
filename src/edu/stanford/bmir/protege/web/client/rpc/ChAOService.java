@@ -18,26 +18,6 @@ import java.util.List;
 @RemoteServiceRelativePath("chao")
 public interface ChAOService extends RemoteService {
 
-//    /*
-//     * Notes methods
-//     */
-//
-//    public List<NotesData> getNotes(String projectName, String entityName, boolean ontologyLevelNotes);
-//
-//    public List<NotesData> getNotes(String projectName, String entityName, boolean ontologyLevelNotes, boolean topLevelNotesOnly);
-//
-//    public Collection<EntityData> getAvailableNoteTypes(String projectName);
-//
-//    public NotesData createNote(String projectName, NotesData newNote, boolean topLevel);
-//
-//    public void deleteNote(String projectName, String noteId);
-//
-//    public Boolean archiveNote(String projectName, String nodeId, boolean archive);
-//
-//    public NotesData editNote(String projectName, NotesData note, String noteId);
-//
-//    public List<NotesData> getReplies(String projectName, String noteId, boolean topLevelOnly);
-
     /*
      * Changes
      */

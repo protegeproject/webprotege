@@ -55,13 +55,6 @@ public interface AdminService extends RemoteService {
 
     String getNewSalt();
 
-    /**
-     * Used to change password through encryption instead of SSL
-     *
-     * @param userName
-     * @param encryptedPassword
-     * @param salt
-     */
     boolean changePasswordEncrypted(String userName, String encryptedPassword, String salt);
 
     UserId getCurrentUserInSession();

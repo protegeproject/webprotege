@@ -21,21 +21,15 @@ public interface AdminServiceAsync {
 
     void sendPasswordReminder(String userName, AsyncCallback<Void> callback);
 
-//    void getProjects(String user, AsyncCallback<Collection<ProjectData>> cb);
-
     void getAllowedOperations(String project, String user, AsyncCallback<PermissionsSet> cb);
 
     void getAllowedServerOperations(String userName, AsyncCallback<PermissionsSet> callback);
-
-//    void refreshMetaproject(AsyncCallback<Void> cb);
 
     void getUserSaltAndChallenge(String userName, AsyncCallback<LoginChallengeData> callback);
 
     void authenticateToLogin(String userName, String response, AsyncCallback<UserId> callback);
 
     void checkUserLoggedInMethod(AsyncCallback<String> callback);
-
-    //void getUserName(AsyncCallback<String> callback);
 
     void clearPreviousLoginAuthenticationData(AsyncCallback<Void> callback);
 

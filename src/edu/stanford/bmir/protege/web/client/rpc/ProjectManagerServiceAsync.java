@@ -30,19 +30,6 @@ public interface ProjectManagerServiceAsync {
     void getProjectNames(AsyncCallback<List<String>> async);
 
     /**
-     * Removes a project from the trash.
-     * @param projectIds
-     */
-    void removeProjectsFromTrash(Set<ProjectId> projectIds, AsyncCallback<Void> async);
-
-    /**
-     * Moves a set of projects to the trash.
-     * @param projectIds The projects to move to the trash.  Not null.
-     * @throws NullPointerException if projectIds is null.
-     */
-    void moveProjectsToTrash(Set<ProjectId> projectIds, AsyncCallback<Void> async);
-
-    /**
      * Gets a list of project names for which the signed in user is the owner.
      * @return A list of project names for which the signed in user is the owner.  This list will be empty if the user
      *         is not signed in.

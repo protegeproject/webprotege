@@ -38,10 +38,6 @@ public class AdminServiceManager {
         proxy.setUserEmail(userId.getUserName(), email, callback);
     }
 
-//    public void getProjects(UserId userId, AsyncCallback<Collection<ProjectData>> cb) {
-//        proxy.getProjects(userId.getUserName(), cb);
-//    }
-
     public void getAllowedOperations(ProjectId projectId, UserId userId, AsyncCallback<PermissionsSet> cb) {
         proxy.getAllowedOperations(projectId.getId(), userId.getUserName(), cb);
     }
@@ -53,10 +49,6 @@ public class AdminServiceManager {
     public void changePassword(UserId userId, String password, AsyncCallback<Void> cb) {
         proxy.changePassword(userId.getUserName(), password, cb);
     }
-
-//    public void refreshMetaproject(AsyncCallback<Void> cb) {
-//        proxy.refreshMetaproject(cb);
-//    }
 
     public void sendPasswordReminder(UserId userId, AsyncCallback<Void> cb) {
         proxy.sendPasswordReminder(userId.getUserName(), cb);
@@ -74,10 +66,6 @@ public class AdminServiceManager {
         proxy.checkUserLoggedInMethod(cb);
     }
 
- /*   public void getuserId.getUserName()(AsyncCallback<String> cb) {
-        proxy.getuserId.getUserName()(cb);
-    }
-*/
     public void clearPreviousLoginAuthenticationData(AsyncCallback<Void> cb) {
         proxy.clearPreviousLoginAuthenticationData(cb);
     }

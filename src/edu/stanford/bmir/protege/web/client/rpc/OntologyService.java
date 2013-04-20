@@ -32,9 +32,6 @@ public interface OntologyService extends RemoteService {
      */
     public Integer loadProject(String projectName);
 
-
-//    public List<OntologyEvent> getEvents(String projectName, long fromVersion);
-
     public Boolean hasWritePermission(String projectName, String userName);
 
 
@@ -65,12 +62,6 @@ public interface OntologyService extends RemoteService {
     /*
      * Class methods
      */
-
-//    public EntityData createCls(ProjectId projectId, String className, OWLClass superCls, UserId userId,
-//            String operationDescription);
-
-//    public EntityData createCls(ProjectId projectId, String clsName, OWLClass superCls, boolean createMetaClses,
-//            UserId userId, String operationDescription);
 
     public EntityData createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls,
             String propertyName, EntityData propertyValue, UserId userId, String operationDescription);

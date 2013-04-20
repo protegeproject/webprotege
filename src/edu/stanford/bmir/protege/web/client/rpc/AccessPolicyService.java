@@ -15,26 +15,6 @@ import java.util.List;
 @RemoteServiceRelativePath("../accesspolicy")
 public interface AccessPolicyService extends RemoteService {
 
-//    String getOwner(String projectName);
-
-//    boolean canManageProject(String projectName, String userName);
-//
-//    List<String> getUsers();
-//
-//    void addReadPermission(String projectName, List<String> userName);
-//
-//    void removeReadPermission(String projectName, List<String> userName);
-//
-//    void addWritePermission(String projectName, List<String> userName);
-//
-//    void removeWritePermission(String projectName, List<String> userName);
-
-//    Collection<AccessPolicyUserData> getUsersWithReadOnlyAccess(String projectName);
-//
-//    Collection<AccessPolicyUserData> getUsersWithWriteAccess(String projectName);
-//
-//    boolean checkIfAdditionalPolicyPresent(String projectName);
-
     void createTemporaryAccountForInvitation(String projectName, String invitationBaseURL, List<Invitation> invitation);
 
     boolean isInvitedAccountPresent(String invitationId);
@@ -44,7 +24,4 @@ public interface AccessPolicyService extends RemoteService {
     AccessPolicyUserData updateInvitedTemporaryAccount(String name, String hashedPassword, String emailId);
 
     boolean isInvitationValid(String invitationId);
-
-//    Collection<AccessPolicyUserData> getUsersWithAccess(String projectName);
-
 }

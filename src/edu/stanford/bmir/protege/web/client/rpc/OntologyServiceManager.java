@@ -25,31 +25,9 @@ public class OntologyServiceManager {
         proxy = (OntologyServiceAsync) GWT.create(OntologyService.class);
     }
 
-//    /*
-//     * Project management methods
-//     */
-//
-//    public void loadProject(ProjectId projectId, AsyncCallback<Integer> cb) {
-//        proxy.loadProject(projectId.getDisplayName(), cb);
-//    }
-//
-
-
-//    public void getEvents(ProjectId projectId, long fromVersion, AsyncCallback<List<OntologyEvent>> cb) {
-//        proxy.getEvents(projectId.getDisplayName(), fromVersion, cb);
-//    }
-
     public void hasWritePermission(ProjectId projectId, UserId userId, AsyncCallback<Boolean> cb) {
         proxy.hasWritePermission(projectId.getId(), userId.getUserName(), cb);
     }
-
-//    /*
-//     * Ontology methods
-//     */
-//
-//    public void getAnnotationProperties(ProjectId projectId, String entityName, AsyncCallback<List<AnnotationData>> cb) {
-//        proxy.getAnnotationProperties(projectId.getDisplayName(), entityName, cb);
-//    }
 
     public void getImportedOntologies(ProjectId projectId, AsyncCallback<ImportsData> cb) {
         proxy.getImportedOntologies(projectId.getId(), cb);
@@ -95,11 +73,6 @@ public class OntologyServiceManager {
         proxy.getEntity(projectId.getId(), entityName, cb);
     }
 
-//    public void deleteEntity(ProjectId projectId, String entityName, UserId userId, String operationDescription,
-//            AsyncCallback<Void> cb) {
-//        proxy.deleteEntity(projectId.getDisplayName(), entityName, user, operationDescription, cb);
-//    }
-
     /*
      * Class methods
      */
@@ -115,31 +88,6 @@ public class OntologyServiceManager {
     public void getIndividuals(ProjectId projectId, String className, int start, int limit, String sort, String dir,
             AsyncCallback<PaginationData<EntityData>> cb) {
         proxy.getIndividuals(projectId.getId(), className, start, limit, sort, dir, cb);
-    }
-
-//    public void createCls(ProjectId projectId, String clsName, OWLClass superCls, UserId userId,
-//            String operationDescription, AsyncCallback<EntityData> cb) {
-//        proxy.createCls(projectId, clsName, superCls, userId, operationDescription, cb);
-//    }
-
-//    public void createCls(ProjectId projectId, String clsName, OWLClass superCls, boolean createMetaClses, UserId userId,
-//            String operationDescription, AsyncCallback<EntityData> cb) {
-//        proxy.createCls(projectId, clsName, superCls,createMetaClses, userId, operationDescription, cb);
-//    }
-
-    public void createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls, String propertyName,
-            EntityData propertyValue, UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createClsWithProperty(projectId, clsName, superCls, propertyName, propertyValue, userId, operationDescription, cb);
-    }
-
-    public void addSuperCls(ProjectId projectId, String clsName, String superClsName, UserId userId,
-            String operationDescription, AsyncCallback<Void> cb) {
-        proxy.addSuperCls(projectId.getId(), clsName, superClsName, userId.getUserName(), operationDescription, cb);
-    }
-
-    public void removeSuperCls(ProjectId projectId, String clsName, String superClsName, UserId userId,
-            String operationDescription, AsyncCallback<Void> cb) {
-        proxy.removeSuperCls(projectId.getId(), clsName, superClsName, userId.getUserName(), operationDescription, cb);
     }
 
     public void moveCls(ProjectId projectId, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
@@ -179,32 +127,10 @@ public class OntologyServiceManager {
         proxy.getParents(projectId.getId(), className, direct, cb);
     }
 
-    public void getParentsHtml(ProjectId projectId, String className, boolean direct, AsyncCallback<String> cb) {
-        proxy.getParentsHtml(projectId.getId(), className, direct, cb);
-    }
-
     public void getRelatedProperties(ProjectId projectId, String className, AsyncCallback<List<Triple>> callback) {
         proxy.getRelatedProperties(projectId.getId(), className, callback);
     }
 
-    /*
-     * Properties methods
-     */
-
-    public void createObjectProperty(ProjectId projectId, String propertyName, String superPropName, UserId userId,
-            String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createObjectProperty(projectId.getId(), propertyName, superPropName, userId.getUserName(), operationDescription, cb);
-    }
-
-    public void createDatatypeProperty(ProjectId projectId, String propertyName, String superPropName, UserId userId,
-            String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createDatatypeProperty(projectId.getId(), propertyName, superPropName, userId.getUserName(), operationDescription, cb);
-    }
-
-    public void createAnnotationProperty(ProjectId projectId, String propertyName, String superPropName, UserId userId,
-            String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createAnnotationProperty(projectId.getId(), propertyName, superPropName, userId.getUserName(), operationDescription, cb);
-    }
 
     public void getSubproperties(ProjectId projectId, String propertyName, AsyncCallback<List<EntityData>> cb) {
         proxy.getSubproperties(projectId.getId(), propertyName, cb);
