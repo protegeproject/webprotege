@@ -139,6 +139,11 @@ public class NoteContentEditorViewImpl extends Composite implements NoteContentE
 
     @Override
     public Focusable getInitialFocusable() {
-        return topicField;
+        if(topicField.isVisible()) {
+            return topicField;
+        }
+        else {
+            return (Focusable) bodyArea.getWidget();
+        }
     }
 }

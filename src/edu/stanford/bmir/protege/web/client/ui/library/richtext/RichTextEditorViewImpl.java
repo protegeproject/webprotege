@@ -9,10 +9,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.RichTextArea;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -20,7 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/04/2013
  */
-public class RichTextEditorViewImpl extends Composite implements RichTextEditorView {
+public class RichTextEditorViewImpl extends Composite implements RichTextEditorView, Focusable {
 
     private static final RegExp LAST_ELEMENT_BR_REG_EXP = RegExp.compile("(<br>)(</.*>)", "g");
 
@@ -214,5 +211,23 @@ public class RichTextEditorViewImpl extends Composite implements RichTextEditorV
     }
 
 
+    @Override
+    public int getTabIndex() {
+        return richTextArea.getTabIndex();
+    }
 
+    @Override
+    public void setAccessKey(char key) {
+        richTextArea.setAccessKey(key);
+    }
+
+    @Override
+    public void setFocus(boolean focused) {
+        richTextArea.setFocus(focused);
+    }
+
+    @Override
+    public void setTabIndex(int index) {
+        richTextArea.setTabIndex(index);
+    }
 }
