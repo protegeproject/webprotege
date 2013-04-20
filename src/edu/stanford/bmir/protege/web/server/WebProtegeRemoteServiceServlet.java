@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
@@ -36,7 +36,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
 
     /**
      * Gets the userId for the client associated with the current thread local request.
-     * @return The UserId.  Not null (if no user is logged in then the value specified by {@link edu.stanford.bmir.protege.web.client.rpc.data.UserId#getNull()}
+     * @return The UserId.  Not null (if no user is logged in then the value specified by {@link edu.stanford.bmir.protege.web.shared.user.UserId#getNull()}
      * will be returned.
      */
     public UserId getUserInSession() {

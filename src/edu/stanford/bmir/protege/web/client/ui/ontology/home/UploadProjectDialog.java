@@ -23,6 +23,7 @@ import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyRegisteredException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 
 /**

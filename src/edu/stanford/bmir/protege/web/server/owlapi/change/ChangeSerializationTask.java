@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyChangeLog;
 import org.semanticweb.owlapi.model.OWLOntologyChange;

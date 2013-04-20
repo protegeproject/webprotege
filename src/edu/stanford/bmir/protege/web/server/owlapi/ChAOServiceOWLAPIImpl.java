@@ -4,13 +4,11 @@ import edu.stanford.bmir.protege.web.client.rpc.ChAOService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
-import edu.stanford.bmir.protege.web.server.notes.ArchivesStatus;
-import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
-import org.protege.notesapi.notes.NoteType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.*;

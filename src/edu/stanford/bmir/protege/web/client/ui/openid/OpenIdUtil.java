@@ -21,7 +21,7 @@ import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.client.ui.login.HashAlgorithm;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;

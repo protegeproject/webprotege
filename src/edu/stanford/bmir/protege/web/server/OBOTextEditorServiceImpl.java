@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.*;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;

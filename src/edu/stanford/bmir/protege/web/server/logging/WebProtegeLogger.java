@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.servlet.http.HttpServletRequest;
 

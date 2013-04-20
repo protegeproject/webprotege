@@ -53,7 +53,7 @@ public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasP
      * @param action The action to be handled/executed
      * @param project The project that the action should be executed with respect to.
      * @param executionContext The {@link ExecutionContext} that should be used to provide details such as the
-     * {@link edu.stanford.bmir.protege.web.client.rpc.data.UserId} of the user who requested the action be executed.
+     * {@link edu.stanford.bmir.protege.web.shared.user.UserId} of the user who requested the action be executed.
      * @return The result of the execution to be returned to the client.
      */
     protected abstract R execute(A action, OWLAPIProject project, ExecutionContext executionContext);

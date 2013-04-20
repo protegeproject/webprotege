@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.notes.NoteStatus;
 
 /**

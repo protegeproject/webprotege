@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.library.itemarea;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.UserProfileManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.UserProfileManagerServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.ArrayList;
 import java.util.Arrays;

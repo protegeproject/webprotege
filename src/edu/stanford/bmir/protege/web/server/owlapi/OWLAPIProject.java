@@ -2,17 +2,15 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectDocumentNotFoundException;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.events.EventLifeTime;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.HighLevelEventGenerator;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
-import edu.stanford.bmir.protege.web.server.notes.api.NoteStore;
-import edu.stanford.bmir.protege.web.server.notes.impl.db.NoteStoreImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
@@ -28,8 +26,6 @@ import edu.stanford.smi.protege.util.Log;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
 import org.coode.owlapi.rdf.rdfxml.RDFXMLOntologyStorer;
-import org.obolibrary.obo2owl.Obo2Owl;
-import org.obolibrary.oboformat.parser.OBOFormatParser;
 import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
@@ -398,7 +394,7 @@ public class OWLAPIProject implements HasDispose {
      * @param changeDescription A description of the changes. Not {@code null}.
      * @return A {@link ChangeApplicationResult} that describes the changes which took place an any renaminings.
      * @throws NullPointerException if any parameters are {@code null}.
-     * @deprecated Use {@link #applyChanges(edu.stanford.bmir.protege.web.client.rpc.data.UserId,
+     * @deprecated Use {@link #applyChanges(edu.stanford.bmir.protege.web.shared.user.UserId,
      *             edu.stanford.bmir.protege.web.server.change.ChangeListGenerator, ChangeDescriptionGenerator)}
      */
     public ChangeApplicationResult<?> applyChanges(UserId userId, List<OWLOntologyChange> changes, String changeDescription) {

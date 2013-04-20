@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
 import java.util.*;

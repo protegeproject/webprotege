@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceSubCl
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetric;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricValue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import edu.stanford.smi.protege.util.Log;
 import org.ncbo.stanford.bean.concept.ClassBean;
@@ -430,7 +431,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     /**
-     * In this implementation, this method delegates to the {@link #createCls(edu.stanford.bmir.protege.web.shared.project.ProjectId, String, org.semanticweb.owlapi.model.OWLClass, edu.stanford.bmir.protege.web.client.rpc.data.UserId, String)}
+     * In this implementation, this method delegates to the {@link #createCls(edu.stanford.bmir.protege.web.shared.project.ProjectId, String, org.semanticweb.owlapi.model.OWLClass, edu.stanford.bmir.protege.web.shared.user.UserId, String)}
      * method.
      *
      * @param projectId

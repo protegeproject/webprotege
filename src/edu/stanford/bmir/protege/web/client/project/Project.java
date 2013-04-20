@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.project;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
 import edu.stanford.bmir.protege.web.client.permissions.ProjectPermissionManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.LayoutManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;

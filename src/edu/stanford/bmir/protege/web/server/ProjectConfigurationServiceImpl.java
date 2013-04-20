@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.stanford.bmir.protege.web.client.rpc.ProjectConfigurationService;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

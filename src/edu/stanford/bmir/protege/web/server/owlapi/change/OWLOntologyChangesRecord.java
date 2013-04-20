@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.io.Serializable;

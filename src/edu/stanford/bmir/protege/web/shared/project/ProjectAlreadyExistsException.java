@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectCreationException;
-
 import java.io.Serializable;
 
 /**

@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.rpc.RecaptchaService;
 import edu.stanford.bmir.protege.web.client.rpc.RecaptchaServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserNameAlreadyExistsException;
+import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;

@@ -1,11 +1,8 @@
 package edu.stanford.bmir.protege.web.server.notes.api;
 
 
-import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.notes.*;
-
-import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateFrameAction;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
@@ -54,7 +54,7 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
      * @param project The project that the action should be executed with respect to.
      * @param executionContext The {@link edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext} that should be
      * used to provide details such as the
-     * {@link edu.stanford.bmir.protege.web.client.rpc.data.UserId} of the user who requested the action be executed.
+     * {@link edu.stanford.bmir.protege.web.shared.user.UserId} of the user who requested the action be executed.
      * @return The result of the execution to be returned to the client.
      */
     @Override

@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;

@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
 import edu.stanford.bmir.protege.web.shared.watches.HierarchyBranchWatch;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;

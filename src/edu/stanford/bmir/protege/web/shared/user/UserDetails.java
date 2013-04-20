@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
 
 import java.io.Serializable;
 

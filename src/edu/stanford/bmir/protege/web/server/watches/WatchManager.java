@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -26,7 +26,7 @@ public interface WatchManager {
      * Adds the specified watch for the specified user.
      *
      * @param watch The {@link edu.stanford.bmir.protege.web.shared.watches.Watch} to be added for the specified user. Not {@code null}.
-     * @param userId The {@link edu.stanford.bmir.protege.web.client.rpc.data.UserId} which specifies the user to add the watch for. Not {@code null}.
+     * @param userId The {@link edu.stanford.bmir.protege.web.shared.user.UserId} which specifies the user to add the watch for. Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
     void addWatch(Watch watch, UserId userId);
@@ -35,7 +35,7 @@ public interface WatchManager {
      * Removes the specified watch for the specified user.
      *
      * @param watch The {@link edu.stanford.bmir.protege.web.shared.watches.Watch} to be removed for the specified user.  Not {@code null}.
-     * @param userId The {@link edu.stanford.bmir.protege.web.client.rpc.data.UserId} that specifies the user.  Not {@code null}.
+     * @param userId The {@link edu.stanford.bmir.protege.web.shared.user.UserId} that specifies the user.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
     void removeWatch(Watch watch, UserId userId);

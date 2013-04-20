@@ -36,7 +36,7 @@ public class SignupInfo implements Serializable {
      * @param emailAddress The email address.  Must not be {@code null}.
      * @param password The password.  Must not be {@code null}.
      * @param userName The user name for the user signing up for the account. Must not be {@code null}.  Must not be
-     * equal to the guest user name.  See {@link edu.stanford.bmir.protege.web.client.rpc.data.UserId#getGuest()}
+     * equal to the guest user name.  See {@link edu.stanford.bmir.protege.web.shared.user.UserId#getGuest()}
      * @param verificationChallenge The verification challenge (from the ReCaptcha widget). Must not be {@code null}.
      * @param verificationResponse The verification response (from the ReCaptcha widget).  Must not be {@code null}.
      * @throws NullPointerException if any parameter is {@code null}.

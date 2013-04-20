@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
 import com.thoughtworks.xstream.XStream;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
@@ -76,7 +76,7 @@ public class UIConfigurationManager {
      * Gets an input stream which can be used to read the UI configuration for the specified projectId and userId.
      * @param projectId The {@link ProjectId} of the project whose UI configuration is to be read.  Not {@code null}.
      * @param userId The {@link UserId} of the current user.  Not {@code null}.  May correspond to the guest user
-     * (see {@link edu.stanford.bmir.protege.web.client.rpc.data.UserId#getGuest()}.
+     * (see {@link edu.stanford.bmir.protege.web.shared.user.UserId#getGuest()}.
      * @return An {@link InputStream} which can be used to read the UI configuration for the specified user and
      *         specified project.  Not {@code null}.
      * @throws NullPointerException if {@code projectId} or {@code userId} is {@code null}.

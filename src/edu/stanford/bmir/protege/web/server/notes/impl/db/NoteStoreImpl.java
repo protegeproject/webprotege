@@ -7,7 +7,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.server.db.mongodb.ClassDiscussionThreadsCollectionCommand;
 import edu.stanford.bmir.protege.web.server.db.mongodb.MongoDBManager;
 import edu.stanford.bmir.protege.web.server.db.mongodb.NotesCollectionCommand;

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.openid.OpenIdAccountDetails;
 
 import javax.servlet.http.HttpSession;
@@ -56,7 +56,7 @@ public class SessionConstants {
      * Gets the {@link UserId} of the user in the specified {@link HttpSession}.
      * @param session The session.  Not {@code null}.
      * @return The {@link UserId} of the user in the specified user session.  Not {@code null}.  If the user in the
-     * session is not logged in then the id of the guest user will be returned i.e. {@link edu.stanford.bmir.protege.web.client.rpc.data.UserId#getGuest()}.
+     * session is not logged in then the id of the guest user will be returned i.e. {@link edu.stanford.bmir.protege.web.shared.user.UserId#getGuest()}.
      */
     public static UserId getUserId(HttpSession session) {
         Optional<UserId> userId = getAttribute(USER_ID, session);

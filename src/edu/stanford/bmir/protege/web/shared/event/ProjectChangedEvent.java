@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.shared.event;
 
 
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
