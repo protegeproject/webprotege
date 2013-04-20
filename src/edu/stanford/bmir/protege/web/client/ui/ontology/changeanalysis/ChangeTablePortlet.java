@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis;
 
 import com.gwtext.client.widgets.PagingToolbar;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesProxyImpl;

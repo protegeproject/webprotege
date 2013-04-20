@@ -5,7 +5,7 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.ui.HTML;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.layout.AnchorLayout;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
 
 import java.util.Map;

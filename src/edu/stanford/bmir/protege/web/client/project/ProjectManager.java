@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.model;
+package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;

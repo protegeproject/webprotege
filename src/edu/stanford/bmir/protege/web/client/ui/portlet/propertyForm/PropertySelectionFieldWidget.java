@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 

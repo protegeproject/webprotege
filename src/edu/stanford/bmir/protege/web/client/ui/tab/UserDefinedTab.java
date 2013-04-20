@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 

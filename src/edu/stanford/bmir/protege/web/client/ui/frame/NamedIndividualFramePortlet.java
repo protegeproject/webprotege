@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateNamedIndividualFrameAction;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.AbstractObjectEditorPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.EditorContext;
 import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.NamedIndividualFrameEditorFactory;

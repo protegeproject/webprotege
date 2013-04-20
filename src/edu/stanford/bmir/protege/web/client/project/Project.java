@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.model;
+package edu.stanford.bmir.protege.web.client.project;
 
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.events.EventPollingManager;

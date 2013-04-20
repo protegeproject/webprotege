@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.search;
 
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;

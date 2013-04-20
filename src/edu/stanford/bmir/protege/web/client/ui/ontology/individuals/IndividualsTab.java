@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.gwtext.client.data.Record;
 import com.gwtext.client.data.Store;
 import com.gwtext.client.data.event.StoreListenerAdapter;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.library.common.Refreshable;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;

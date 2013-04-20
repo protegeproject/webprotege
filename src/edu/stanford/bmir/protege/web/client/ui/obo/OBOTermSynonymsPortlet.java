@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermSynonym;
 import org.semanticweb.owlapi.model.OWLEntity;

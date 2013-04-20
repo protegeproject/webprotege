@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;

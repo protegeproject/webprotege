@@ -13,7 +13,7 @@ import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.form.Label;
 import com.gwtext.client.widgets.layout.ColumnLayout;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;

@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.layout.FitLayout;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ParentsPanel;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;

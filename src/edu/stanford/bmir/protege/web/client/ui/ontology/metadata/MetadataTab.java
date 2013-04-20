@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 
 /**

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.properties;
 
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.AllPropertiesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 

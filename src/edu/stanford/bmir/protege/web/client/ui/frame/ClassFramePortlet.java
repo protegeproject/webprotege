@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateClassFrameAction;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.AbstractObjectEditorPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.ClassFrameEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.EditorContext;

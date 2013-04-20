@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.generated;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.model.Project;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.frame.ClassFramePortlet;
 import edu.stanford.bmir.protege.web.client.ui.frame.NamedIndividualFramePortlet;
 import edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet;
