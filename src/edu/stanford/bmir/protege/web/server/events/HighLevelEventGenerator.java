@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityBrowserTextChangeSet;
@@ -33,7 +34,7 @@ public class HighLevelEventGenerator {
         this.revisionNumber = revisionNumber;
     }
 
-    public List<ProjectEvent<?>> getHighLevelEvents(List<OWLOntologyChange> ontologyChanges) {
+    public List<ProjectEvent<?>> getHighLevelEvents(List<OWLOntologyChange> ontologyChanges, RevisionNumber revisionNumber) {
         // A HORRIBLE HORRIBLE stopgap
         final List<ProjectEvent<?>> result = new ArrayList<ProjectEvent<?>>();
         final Set<OWLEntity> changedEntities = new HashSet<OWLEntity>();
@@ -155,14 +156,19 @@ public class HighLevelEventGenerator {
                 result.add(new BrowserTextChangedEvent(o.getEntity(), o.getNewBrowserText(), project.getProjectId()));
             }
         }
+
         Set<OWLEntityData> changedEntitiesData = new HashSet<OWLEntityData>();
-        for(OWLEntity entity : changedEntities) {
+        for (OWLEntity entity : changedEntities) {
             String browserText = project.getRenderingManager().getBrowserText(entity);
             changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
         }
-        result.add(new ProjectChangedEvent(project.getProjectId(), userId, System.currentTimeMillis(), changedEntitiesData, revisionNumber));
+        RevisionSummary revisionSummary = project.getChangeManager().getRevisionSummary(revisionNumber);
+        ProjectEvent<?> event = new ProjectChangedEvent(project.getProjectId(), revisionSummary, changedEntitiesData);
+        result.add(event);
         return result;
     }
+
+
 
 
 

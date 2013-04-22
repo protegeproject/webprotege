@@ -499,6 +499,7 @@ public class OWLAPIProject implements HasDispose {
             // Now we do the actual changing, so we lock the project here.  No writes or reads can take place whilst
             // we apply the changes
             RevisionNumber revisionNumber;
+            long timestamp;
             try {
                 projectChangeWriteLock.lock();
                 appliedChanges = delegateManager.applyChanges(minimisedChanges);
@@ -519,7 +520,7 @@ public class OWLAPIProject implements HasDispose {
             List<ProjectEvent<?>> highLevelEvents = new ArrayList<ProjectEvent<?>>();
             HighLevelEventGenerator hle = new HighLevelEventGenerator(this, userId, revisionNumber);
 
-            highLevelEvents.addAll(hle.getHighLevelEvents(appliedChanges));
+            highLevelEvents.addAll(hle.getHighLevelEvents(appliedChanges, revisionNumber));
 
 
             for(HierarchyChangeComputer<?> computer : computers) {

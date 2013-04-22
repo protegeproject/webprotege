@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.client.ui.library.timelabel;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
+import edu.stanford.bmir.protege.web.shared.TimeUtil;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -22,65 +21,6 @@ import java.util.Date;
  * </p>
  */
 public class ElapsedTimeLabel extends Composite {
-
-    public static final int ONE_MINUTE = 60 * 1000;
-
-    public static final int ONE_HOUR = 60 * 60 * 1000;
-
-    public static final int ONE_DAY = 24 * 60 * 60 * 1000;
-
-    public static final DateTimeFormat DAY_MONTH_FORMAT = DateTimeFormat.getFormat("dd MMMM");
-
-    public static final DateTimeFormat DAY_MONTH_YEAR_FORMAT = DateTimeFormat.getFormat("dd MMMM YYYY");
-
-
-
-    private static String getTimeRendering(long timestamp) {
-        long currentTimestamp = getCurrentTime();
-        long delta = currentTimestamp - timestamp;
-        if(delta <= ONE_MINUTE) {
-            return "Less than one minute ago";
-        }
-        if(delta < ONE_HOUR) {
-            int mins = (int) delta / ONE_MINUTE;
-            if(mins == 1) {
-                return "one minute ago";
-            }
-            else {
-                return mins + " minutes ago";
-            }
-        }
-        final Date timestampDate = new Date(timestamp);
-        final Date todayDate = new Date();
-
-        final int timestampDay = timestampDate.getDay();
-        final int todayDay = todayDate.getDay();
-        if(todayDay - timestampDay == 1) {
-            return "yesterday";
-        }
-        else if (delta < ONE_DAY) {
-            int hours = (int) delta / ONE_HOUR;
-            if(hours == 1) {
-                return "one hour ago";
-            }
-            else {
-                return hours + " hours ago";
-            }
-        }
-        int days = (int) delta / ONE_DAY;
-//        if(days == 1) {
-//            return "yesterday";
-//        }
-//        else {
-            if(timestampDate.getYear() == todayDate.getYear()) {
-                return DAY_MONTH_FORMAT.format(timestampDate);
-            }
-            else {
-                return DAY_MONTH_YEAR_FORMAT.format(timestampDate);
-            }
-
-//        }
-    }
 
     interface TimeLabelUiBinder extends UiBinder<HTMLPanel, ElapsedTimeLabel> {
 
@@ -129,7 +69,7 @@ public class ElapsedTimeLabel extends Composite {
     }
 
     private void updateDisplay() {
-        String rendering = getTimeRendering(baseTime);
+        String rendering = TimeUtil.getTimeRendering(baseTime);
         elapsedTimeLabel.setText(rendering);
     }
 

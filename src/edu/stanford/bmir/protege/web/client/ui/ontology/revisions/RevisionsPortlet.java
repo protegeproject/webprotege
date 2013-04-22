@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
-import com.google.gwt.user.client.ui.ScrollPanel;
+import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
@@ -18,30 +18,36 @@ public class RevisionsPortlet extends AbstractEntityPortlet {
 
     public static final int INITIAL_HEIGHT = 400;
 
-    private RevisionsList revisionsList;
+    private RevisionsListViewPresenter presenter;
 
     public RevisionsPortlet(Project project) {
         super(project);
     }
 
-
-
     @Override
     public void reload() {
-//        revisionsList.reload();
+        presenter.reload();
     }
 
     @Override
     public void initialize() {
+        setLayout(new FitLayout());
         setHeight(INITIAL_HEIGHT);
-        revisionsList = new RevisionsList(getProjectId());
-        final ScrollPanel widget = new ScrollPanel(revisionsList);
-        widget.setSize("100%", "100%");
-        add(widget);
+        presenter = new RevisionsListViewPresenter(getProjectId(), new RevisionsListViewImpl());
+        presenter.reload();
+        add(presenter.getWidget());
         setTitle("Revisions");
     }
 
     public Collection<EntityData> getSelection() {
         return Collections.emptyList();
     }
+
+    @Override
+    protected void onDestroy() {
+        presenter.dispose();
+        super.onDestroy();
+    }
+
+
 }

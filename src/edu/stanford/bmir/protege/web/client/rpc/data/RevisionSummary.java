@@ -52,7 +52,7 @@ public class RevisionSummary implements Serializable, Comparable<RevisionSummary
 
     @Override
     public int hashCode() {
-        return "RevisionSummary".hashCode() + revisionNumber.hashCode() + userId.hashCode() + (int) timestamp + changeCount;
+        return "RevisionSummary".hashCode() + revisionNumber.hashCode() + userId.hashCode() + ((int) timestamp) + changeCount;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class RevisionSummary implements Serializable, Comparable<RevisionSummary
             return false;
         }
         RevisionSummary other = (RevisionSummary) obj;
-        return this.timestamp == other.timestamp && this.revisionNumber.equals(other.revisionNumber) && this.userId.equals(userId) && this.changeCount == ((RevisionSummary) obj).changeCount;
+        return this.timestamp == other.timestamp && this.revisionNumber.equals(other.revisionNumber) && this.userId.equals(userId) && this.changeCount == other.changeCount;
     }
 
     /**

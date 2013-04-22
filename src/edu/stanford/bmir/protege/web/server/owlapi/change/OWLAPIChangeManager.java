@@ -7,6 +7,11 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
 import edu.stanford.bmir.protege.web.shared.watches.HierarchyBranchWatch;
@@ -190,20 +195,34 @@ public class OWLAPIChangeManager {
         writeLock.lock();
         try {
             // Requires a read lock -
-            RevisionNumber revision = getCurrentRevision().getNextRevisionNumber();
+            RevisionNumber revisionNumber = getCurrentRevision().getNextRevisionNumber();
             long timestamp = System.currentTimeMillis();
             final String highlevelDescription = desc != null ? desc : "";
             List<OWLOntologyChangeRecord> records = new ArrayList<OWLOntologyChangeRecord>(changes.size());
             for (OWLOntologyChange change : changes) {
                 records.add(change.getChangeRecord());
             }
-            revisions.add(new Revision(userId, revision, records, timestamp, highlevelDescription, revisionType));
-            persistChanges(timestamp, revision, revisionType, userId, changes, highlevelDescription, immediately);
+            final Revision revision = new Revision(userId, revisionNumber, records, timestamp, highlevelDescription, revisionType);
+            revisions.add(revision);
+            persistChanges(timestamp, revisionNumber, revisionType, userId, changes, highlevelDescription, immediately);
+//            fireProjectChangedEvent(userId, changes, revisionNumber, timestamp, revision);
+
         }
         finally {
             writeLock.unlock();
         }
     }
+
+//    private void fireProjectChangedEvent(UserId userId, List<? extends OWLOntologyChange> changes, RevisionNumber revisionNumber, long timestamp, Revision revision) {
+//        Set<OWLEntityData> changedEntitiesData = new HashSet<OWLEntityData>();
+//        for (OWLEntity entity : revision.getEntities(project)) {
+//            String browserText = project.getRenderingManager().getBrowserText(entity);
+//            changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
+//        }
+//        RevisionSummary revisionSummary = new RevisionSummary(revisionNumber, userId, timestamp, changes.size());
+//        ProjectEvent<?> event = new ProjectChangedEvent(project.getProjectId(), revisionSummary, changedEntitiesData);
+//        EventBusManager.getManager().postEvent(event);
+//    }
 
     private void persistChanges(long timestamp, RevisionNumber revision, RevisionType type, UserId userId, List<? extends OWLOntologyChange> changes, String highlevelDescription, boolean immediately) {
         try {
@@ -725,7 +744,6 @@ public class OWLAPIChangeManager {
             }
         }
     }
-
 
 
 }
