@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
+import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
@@ -34,7 +35,9 @@ public class RevisionsPortlet extends AbstractEntityPortlet {
     public void initialize() {
         setHeight(INITIAL_HEIGHT);
         revisionsList = new RevisionsList(getProjectId());
-        add(revisionsList);
+        final ScrollPanel widget = new ScrollPanel(revisionsList);
+        widget.setSize("100%", "100%");
+        add(widget);
         setTitle("Revisions");
     }
 
