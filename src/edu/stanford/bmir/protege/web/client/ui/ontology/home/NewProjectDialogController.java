@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
@@ -29,8 +30,8 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
         return widget;
     }
 
-    public Focusable getInitialFocusable() {
-        return widget.getDefaultWidget();
+    public Optional<Focusable> getInitialFocusable() {
+        return widget.getInitialFocusable();
     }
 
     public NewProjectInfo getData() {

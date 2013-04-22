@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.dlg;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.ArrayList;
@@ -242,7 +243,7 @@ public class WebProtegeDialogForm extends WebProtegePanel implements HasInitialF
         return label.endsWith(LABEL_SUFFIX) ? label : label + LABEL_SUFFIX;
     }
     
-    public Focusable getInitialFocusable() {
-        return initialFocusable;
+    public Optional<Focusable> getInitialFocusable() {
+        return Optional.fromNullable(initialFocusable);
     }
 }

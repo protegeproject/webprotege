@@ -5,15 +5,22 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadResult;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
+import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedHandler;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.*;
@@ -36,26 +43,39 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private Set<NoteId> currentNoteIds = new HashSet<NoteId>();
 
-    private HandlerRegistration notePostedHandlerReg;
-
-    private HandlerRegistration noteDeletedHandlerReg;
+    private HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
 
 
     public DiscussionThreadPresenter(ProjectId projectId) {
         view = new DiscussionThreadViewImpl();
         this.projectId = checkNotNull(projectId);
 
-        notePostedHandlerReg = EventBusManager.getManager().registerHandlerToProject(projectId, NotePostedEvent.TYPE, new NotePostedHandler() {
+        handlerRegistrationManager.registerHandlerToProject(projectId, NotePostedEvent.TYPE, new NotePostedHandler() {
             @Override
             public void handleNotePosted(NotePostedEvent event) {
                 refreshForNotePosted(event);
             }
         });
 
-        noteDeletedHandlerReg = EventBusManager.getManager().registerHandlerToProject(projectId, NoteDeletedEvent.TYPE, new NoteDeletedHandler() {
+        handlerRegistrationManager.registerHandlerToProject(projectId, NoteDeletedEvent.TYPE, new NoteDeletedHandler() {
             @Override
             public void handleNoteDeleted(NoteDeletedEvent event) {
+                GWT.log("Received delete");
                 reload();
+            }
+        });
+
+        handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
+            @Override
+            public void handleUserLoggedIn(UserLoggedInEvent event) {
+
+            }
+        });
+
+        handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
+            @Override
+            public void handleUserLoggedOut(UserLoggedOutEvent event) {
+
             }
         });
     }
@@ -70,7 +90,8 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     public void setTarget(OWLEntity target) {
         currentTarget = target;
-        view.setPostNewTopicEnabled(currentTarget != null);
+        UserId userId = Application.get().getUserId();
+        view.setPostNewTopicEnabled(currentTarget != null && !userId.isGuest());
         view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget)));
         reload();
     }
@@ -137,7 +158,6 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     @Override
     public void dispose() {
-        notePostedHandlerReg.removeHandler();
-        noteDeletedHandlerReg.removeHandler();
+        handlerRegistrationManager.removeHandlers();
     }
 }

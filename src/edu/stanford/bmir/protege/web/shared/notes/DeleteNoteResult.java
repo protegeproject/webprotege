@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.shared.events.EventList;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/04/2013
  */
-public class DeleteNoteResult extends AbstractHasEventListResult {
+public class DeleteNoteResult extends AbstractHasEventListResult<ProjectEvent<?>> {
 
     private NoteId noteId;
 

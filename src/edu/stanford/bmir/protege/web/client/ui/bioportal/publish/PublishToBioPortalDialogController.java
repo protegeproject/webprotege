@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.bioportal.publish;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
@@ -34,7 +35,7 @@ public class PublishToBioPortalDialogController extends WebProtegeOKCancelDialog
     }
 
     @Override
-    public Focusable getInitialFocusable() {
+    public Optional<Focusable> getInitialFocusable() {
         return publishForm.getInitialFocusable();
     }
 

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.projectconfig;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
@@ -41,7 +42,7 @@ public class EntityGeneratorSettingsDialogController extends WebProtegeOKCancelD
     }
 
     @Override
-    public Focusable getInitialFocusable() {
+    public Optional<Focusable> getInitialFocusable() {
         return form.getInitialFocusable();
     }
 

@@ -13,6 +13,8 @@ public interface NoteActionView extends IsWidget {
 
     void setReplyToNoteHandler(ReplyToNoteHandler handler);
 
+    void setCanReply(boolean canReply);
+
     void setDeleteNoteHandler(DeleteNoteHandler handler);
 
     void setCanDelete(boolean canDelete);

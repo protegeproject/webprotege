@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
@@ -30,8 +31,8 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
     }
 
     @Override
-    public Focusable getInitialFocusable() {
-        return uploadFileWidget.getDefaultWidget();
+    public Optional<Focusable> getInitialFocusable() {
+        return uploadFileWidget.getInitialFocusable();
     }
 
     @Override

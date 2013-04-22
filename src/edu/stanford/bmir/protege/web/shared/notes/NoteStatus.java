@@ -8,7 +8,7 @@ package edu.stanford.bmir.protege.web.shared.notes;
  */
 public enum NoteStatus {
 
-    OPEN("open"),
+    OPEN("unresolved"),
 
     RESOLVED("resolved");
 

@@ -31,7 +31,7 @@ public class NoteEditorDialogController extends WebProtegeOKCancelDialogControll
     }
 
     @Override
-    public Focusable getInitialFocusable() {
+    public Optional<Focusable> getInitialFocusable() {
         return view.getInitialFocusable();
     }
 

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.notes.editor;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
@@ -16,6 +17,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 public class DiscussionThreadDialog extends WebProtegeDialog<Void> {
 
 
+    private static final String WIDTH_PX = "600px";
+
+    private static final String HEIGHT_PX = "500px";
 
     private DiscussionThreadDialog(String title, final Widget widget) {
         super(new WebProtegeOKDialogController<Void>(title) {
@@ -25,8 +29,8 @@ public class DiscussionThreadDialog extends WebProtegeDialog<Void> {
             }
 
             @Override
-            public Focusable getInitialFocusable() {
-                return null;
+            public Optional<Focusable> getInitialFocusable() {
+                return Optional.absent();
             }
 
             @Override
@@ -43,8 +47,9 @@ public class DiscussionThreadDialog extends WebProtegeDialog<Void> {
     public static void showDialog(ProjectId projectId, OWLEntity target) {
         final DiscussionThreadPresenter presenter = new DiscussionThreadPresenter(projectId);
         presenter.setTarget(target);
-        DiscussionThreadDialog dlg = new DiscussionThreadDialog("Discussions", presenter.getWidget());
-        dlg.setWidth("600px");
+        Widget widget = presenter.getWidget();
+        widget.setSize(WIDTH_PX, HEIGHT_PX);
+        DiscussionThreadDialog dlg = new DiscussionThreadDialog("Discussions", widget);
         dlg.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Void>() {
             @Override
             public void handleHide(Void data, WebProtegeDialogCloser closer) {

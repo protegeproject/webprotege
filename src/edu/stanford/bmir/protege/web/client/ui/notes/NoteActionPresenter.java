@@ -2,9 +2,11 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorDialog;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,20 +18,17 @@ public class NoteActionPresenter {
 
     private NoteActionView view;
 
-    private NoteId currentNoteId;
-
 
     public NoteActionPresenter(NoteActionView noteActionView) {
         this.view = noteActionView;
     }
 
-    public void setNoteId(NoteId noteId, DiscussionThread context) {
-        this.currentNoteId = noteId;
-        view.setReplyToNoteHandler(new ReplyToNoteHandlerImpl(currentNoteId));
-
-        view.setDeleteNoteHandler(new DeleteNoteHandlerImpl(currentNoteId));
-
-        view.setCanDelete(!context.hasReplies(noteId));
+    public void setNote(Note note, DiscussionThread context) {
+        UserId userId = Application.get().getUserId();
+        view.setReplyToNoteHandler(new ReplyToNoteHandlerImpl(note.getNoteId()));
+        view.setCanReply(!userId.isGuest());
+        view.setDeleteNoteHandler(new DeleteNoteHandlerImpl(note.getNoteId()));
+        view.setCanDelete(!context.hasReplies(note.getNoteId()) && note.getAuthor().equals(userId));
     }
 
     public NoteActionView getView() {

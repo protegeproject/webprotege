@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.entity;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
@@ -30,7 +31,7 @@ public class CreateEntityDialogController extends WebProtegeOKCancelDialogContro
     }
 
     @Override
-    public Focusable getInitialFocusable() {
+    public Optional<Focusable> getInitialFocusable() {
         return form.getInitialFocusable();
     }
 

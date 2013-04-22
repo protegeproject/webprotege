@@ -21,7 +21,7 @@ public class NoteDeletedEvent extends ProjectEvent<NoteDeletedHandler> {
     }
 
     public NoteDeletedEvent(ProjectId source, NoteId noteId) {
-        super(source);
+        super(checkNotNull(source));
         this.noteId = checkNotNull(noteId);
     }
 
@@ -36,5 +36,6 @@ public class NoteDeletedEvent extends ProjectEvent<NoteDeletedHandler> {
 
     @Override
     protected void dispatch(NoteDeletedHandler handler) {
+        handler.handleNoteDeleted(this);
     }
 }

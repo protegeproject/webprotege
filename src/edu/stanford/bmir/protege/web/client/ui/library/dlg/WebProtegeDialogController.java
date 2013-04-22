@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.dlg;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -80,10 +81,11 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
     public abstract Widget getWidget();
 
     /**
-     * Gets the focusable that should receive the focus when the dialog is shown.
-     * @return The focusable that will receive the focus. Not <code>null</code>
+     * Gets the {@link Focusable} that should receive the focus when the dialog is shown.  If no widget should receive the focus
+     * then {@link com.google.common.base.Optional#absent()} will be returned.
+     * @return The {@link Focusable} that will receive the focus. Not <code>null</code>
      */
-    public abstract Focusable getInitialFocusable();
+    public abstract Optional<Focusable> getInitialFocusable();
 
     /**
      * Gets the installed validators for the contents of the widget provided by this controller.

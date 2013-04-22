@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.signup;
 
+import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -72,8 +73,8 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
 
 
 
-    public Focusable getInitialFocusable() {
-        return emailField;
+    public Optional<Focusable> getInitialFocusable() {
+        return Optional.<Focusable>of(emailField);
     }
     
     public EmailAddress getEmailAddress() {

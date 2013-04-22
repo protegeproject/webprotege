@@ -34,7 +34,7 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
     }
 
     @Override
-    protected RequestValidator getAdditionalRequestValidator(CreateClassAction action, RequestContext requestContext) {
+    protected RequestValidator<CreateClassAction> getAdditionalRequestValidator(CreateClassAction action, RequestContext requestContext) {
         return new UserHasProjectWritePermissionValidator();
     }
 
@@ -42,20 +42,6 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
     @Override
     protected ChangeListGenerator<OWLClass> getChangeListGenerator(final CreateClassAction action, OWLAPIProject project, ExecutionContext executionContext) {
         return new CreateClassChangeGenerator(action.getBrowserText(), action.getSuperClass());
-//        return new ChangeListGenerator<OWLClass>() {
-//            @Override
-//            public GeneratedOntologyChanges<OWLClass> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
-//                GeneratedOntologyChanges<Set<OWLClass>> temp = new CreateClassChangeGenerator(Collections.singleton(action.getBrowserText()), Optional.of(action.getSuperClass())).generateChanges(project, context);
-//                GeneratedOntologyChanges.Builder<OWLClass> builder = new GeneratedOntologyChanges.Builder<OWLClass>();
-//                builder.addAll(temp.getChanges());
-//                return builder.build(temp.getResult().get().iterator().next());
-//            }
-//
-//            @Override
-//            public OWLClass getRenamedResult(OWLClass result, RenameMap renameMap) {
-//                return renameMap.getRenamedEntity(result);
-//            }
-//        };
     }
 
     @Override
@@ -72,31 +58,6 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
         browserTextMap.addAll(pathToRoot);
         return new CreateClassResult(subclass, pathToRoot, browserTextMap.build(project.getRenderingManager()), eventList);
     }
-
-//    @Override
-//    protected CreateClassResult executeProjectChanges(CreateClassAction action, OWLAPIProject project, ExecutionContext executionContext) {
-//
-//        final UserId userId = executionContext.getUserId();
-//        final OWLClass superClass = action.getParent();
-//
-//        CreateClassChangeGenerator changeListGenerator = new CreateClassChangeGenerator(action.getBrowserText(), superClass);
-//        ProjectChangeMessages msg = GWT.create(ProjectChangeMessages.class);
-//        String desc = msg.createdClass(action.getBrowserText(), project.getRenderingManager().getBrowserText(action.getParent()));
-//        ChangeApplicationResult<OWLClass> result = project.applyChanges(userId, changeListGenerator, desc);
-//        OWLClass actualClass = result.getSubject().get();
-//
-//        ObjectPath<OWLClass> pathToRoot = getPathToRoot(project, actualClass, superClass);
-//
-//        BrowserTextMap.Builder builder = new BrowserTextMap.Builder();
-//        builder.addAll(actualClass);
-//        builder.addAll(pathToRoot);
-//        final BrowserTextMap browserTextMap = builder.build(project.getRenderingManager());
-//
-//        return new CreateClassResult(actualClass, pathToRoot, browserTextMap);
-//    }
-
-
-
 
     private ObjectPath<OWLClass> getPathToRoot(OWLAPIProject project, OWLClass subClass, OWLClass superClass) {
         Set<List<OWLClass>> paths = project.getClassHierarchyProvider().getPathsToRoot(subClass);

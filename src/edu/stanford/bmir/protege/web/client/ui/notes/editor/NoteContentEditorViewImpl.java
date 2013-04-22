@@ -4,9 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
@@ -14,11 +12,9 @@ import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.ui.library.richtext.RichTextEditorPresenter;
 import edu.stanford.bmir.protege.web.client.ui.library.richtext.RichTextEditorView;
 import edu.stanford.bmir.protege.web.client.ui.library.richtext.RichTextToolbar;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
-import edu.stanford.bmir.protege.web.shared.notes.NoteField;
 import edu.stanford.bmir.protege.web.shared.notes.NoteType;
 
 /**
@@ -138,12 +134,12 @@ public class NoteContentEditorViewImpl extends Composite implements NoteContentE
     }
 
     @Override
-    public Focusable getInitialFocusable() {
+    public Optional<Focusable> getInitialFocusable() {
         if(topicField.isVisible()) {
-            return topicField;
+            return Optional.<Focusable>of(topicField);
         }
         else {
-            return (Focusable) bodyArea.getWidget();
+            return Optional.of((Focusable) bodyArea.getWidget());
         }
     }
 }

@@ -48,7 +48,7 @@ public class NoteContainerViewImpl extends Composite implements NoteContainerVie
     @Override
     public void setNote(Note note, DiscussionThread context) {
         notePresenter.setNote(note);
-        noteActionPresenter.setNoteId(note.getNoteId(), context);
+        noteActionPresenter.setNote(note, context);
     }
 
     @Override

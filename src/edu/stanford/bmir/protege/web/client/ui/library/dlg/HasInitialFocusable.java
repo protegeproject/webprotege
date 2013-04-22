@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.dlg;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 
 /**
@@ -10,5 +11,5 @@ import com.google.gwt.user.client.ui.Focusable;
  */
 public interface HasInitialFocusable {
 
-    public Focusable getInitialFocusable();
+    public Optional<Focusable> getInitialFocusable();
 }

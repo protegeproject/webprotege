@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.entity;
 
+import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
 import com.google.gwt.user.client.ui.Focusable;
@@ -55,8 +56,8 @@ public class CreateEntityForm extends WebProtegeDialogForm {
         return result;
     }
 
-    public Focusable getInitialFocusable() {
-        return entityBrowserTextField;
+    public Optional<Focusable> getInitialFocusable() {
+        return Optional.<Focusable>of(entityBrowserTextField);
     }
 
     private String getTypeName() {

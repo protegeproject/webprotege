@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 
 /**
@@ -83,7 +84,8 @@ public class NoteHeaderPresenter implements HasDispose {
 
     private void updateStatus() {
         noteHeaderView.setStatus(Optional.of(currentNoteStatus));
-        noteHeaderView.setResolveOptionVisible(Application.get().getUserId().equals(note.getAuthor()));
+        final UserId userId = Application.get().getUserId();
+        noteHeaderView.setResolveOptionVisible(!userId.isGuest() && userId.equals(note.getAuthor()));
     }
 
     @Override

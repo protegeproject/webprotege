@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.projectconfig;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
@@ -72,7 +73,7 @@ public class ProjectConfigurationDialogController extends WebProtegeOKCancelDial
      * @return The focusable that will receive the focus. Not <code>null</code>
      */
     @Override
-    public Focusable getInitialFocusable() {
+    public Optional<Focusable> getInitialFocusable() {
         return dialogForm.getInitialFocusable();
     }
 

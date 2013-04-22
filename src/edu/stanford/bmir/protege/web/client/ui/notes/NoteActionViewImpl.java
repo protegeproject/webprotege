@@ -67,13 +67,18 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
     }
 
     @Override
+    public void setCanReply(boolean canReply) {
+        replyWidget.setEnabled(canReply);
+    }
+
+    @Override
     public void setDeleteNoteHandler(DeleteNoteHandler handler) {
         deleteNoteHandler = handler;
     }
 
     @Override
     public void setCanDelete(boolean canDelete) {
-        deleteWidget.setVisible(canDelete);
+        deleteWidget.setEnabled(canDelete);
     }
 
     @Override

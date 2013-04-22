@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
@@ -27,7 +28,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/01/2012
  */
-public class NewProjectInfoWidget extends WebProtegeDialogForm {
+public class NewProjectInfoWidget extends WebProtegeDialogForm implements HasInitialFocusable {
 
     public static final String FIELD_WIDTH = "300px";
 
@@ -151,9 +152,7 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm {
 //        return projectTypeDropDown.getSelectedItem();
     }
 
-    public Focusable getDefaultWidget() {
-        return projectNameTextBox;
-    }
+
 
 
     private class EmptyProjectNameValidator implements WebProtegeDialogValidator {

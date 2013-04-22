@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.library.msgbox;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
-import com.google.web.bindery.requestfactory.gwt.rebind.model.HasExtraTypes;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
 
@@ -44,8 +44,8 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
     }
 
     @Override
-    public Focusable getInitialFocusable() {
-        return inputArea;
+    public Optional<Focusable> getInitialFocusable() {
+        return Optional.<Focusable>of(inputArea);
     }
 
     @Override

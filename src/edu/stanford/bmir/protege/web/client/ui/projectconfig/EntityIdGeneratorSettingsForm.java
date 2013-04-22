@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.projectconfig;
 
+import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityIdGeneratorSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityIdUserRange;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/10/2012
  */
-public class EntityIdGeneratorSettingsForm extends FlowPanel {
+public class EntityIdGeneratorSettingsForm extends FlowPanel implements HasInitialFocusable {
 
     public static final int DEFAULT_ID_LENGTH = 7;
 
@@ -84,8 +86,8 @@ public class EntityIdGeneratorSettingsForm extends FlowPanel {
         exampleLabel.setText(getIdBase() + getIdPrefix() + "_" + exampleIdBuilder.toString());
     }
 
-    public Focusable getInitialFocusable() {
-        return baseField;
+    public Optional<Focusable> getInitialFocusable() {
+        return Optional.<Focusable>of(baseField);
     }
     
     public void setData(EntityIdGeneratorSettings data) {

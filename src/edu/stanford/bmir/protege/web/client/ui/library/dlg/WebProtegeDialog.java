@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.library.dlg;
 
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.Timer;
@@ -149,9 +150,9 @@ public class WebProtegeDialog<D> extends DialogBox {
         Timer timer = new Timer() {
             @Override
             public void run() {
-                Focusable initialFocusable = controller.getInitialFocusable();
-                if (initialFocusable != null) {
-                    initialFocusable.setFocus(true);
+                Optional<Focusable> initialFocusable = controller.getInitialFocusable();
+                if (initialFocusable.isPresent()) {
+                    initialFocusable.get().setFocus(true);
                 }
             }
         };

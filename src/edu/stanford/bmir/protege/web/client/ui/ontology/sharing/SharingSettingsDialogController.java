@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
@@ -30,7 +31,7 @@ public class SharingSettingsDialogController extends WebProtegeOKCancelDialogCon
     }
 
     @Override
-    public Focusable getInitialFocusable() {
+    public Optional<Focusable> getInitialFocusable() {
         return null;
     }
 

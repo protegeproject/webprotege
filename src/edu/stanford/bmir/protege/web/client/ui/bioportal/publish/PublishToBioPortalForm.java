@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.bioportal.publish;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -26,7 +27,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/10/2012
  */
-public class PublishToBioPortalForm extends FlowPanel {
+public class PublishToBioPortalForm extends FlowPanel implements HasInitialFocusable {
 
 
     private static final int VERIFICATION_CHECK_DELAY_MS = 500;
@@ -292,7 +293,7 @@ public class PublishToBioPortalForm extends FlowPanel {
         return bioportalUserNameTextBox.getText().trim();
     }
 
-    public Focusable getInitialFocusable() {
+    public Optional<Focusable> getInitialFocusable() {
         return form.getInitialFocusable();
     }
 

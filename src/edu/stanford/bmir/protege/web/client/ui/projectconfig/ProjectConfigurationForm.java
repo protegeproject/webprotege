@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.projectconfig;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.TextArea;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasFormData;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDown;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDownModel;
@@ -19,7 +21,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/07/2012
  */
-public class ProjectConfigurationForm extends FlowPanel implements HasFormData<ProjectConfigurationInfo> {
+public class ProjectConfigurationForm extends FlowPanel implements HasFormData<ProjectConfigurationInfo>, HasInitialFocusable {
 
     public static final String PROJECT_TYPE_DROPDOWN_FIELD_NAME = "Type";
 
@@ -128,7 +130,7 @@ public class ProjectConfigurationForm extends FlowPanel implements HasFormData<P
 
     }
     
-    public Focusable getInitialFocusable() {
-        return projectTypeDropDown;
+    public Optional<Focusable> getInitialFocusable() {
+        return Optional.<Focusable>of(projectTypeDropDown);
     }
 }
