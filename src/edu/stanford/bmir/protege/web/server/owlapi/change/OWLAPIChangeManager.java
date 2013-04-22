@@ -3,10 +3,7 @@ package edu.stanford.bmir.protege.web.server.owlapi.change;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
-import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
-import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
@@ -177,8 +174,7 @@ public class OWLAPIChangeManager {
                     }
                 }
             }
-
-            logChangesInternal(UserId.getGuest(), changes, "Initial import", RevisionType.BASELINE, true);
+            logChangesInternal(UserId.getUserId("system"), changes, "Initial import", RevisionType.BASELINE, true);
         }
         finally {
             writeLock.unlock();
