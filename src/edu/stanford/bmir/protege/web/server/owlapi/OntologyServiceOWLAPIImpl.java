@@ -810,7 +810,9 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                     annotationPropertyRoots.add(rm.getEntityData(iri));
                 }
             }
-            return new ArrayList<EntityData>(annotationPropertyRoots);
+            final ArrayList<EntityData> result = new ArrayList<EntityData>(annotationPropertyRoots);
+            sortListOfEntityData(result);
+            return result;
         }
 
 
@@ -849,8 +851,17 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 }
             }
         }
-
+        sortListOfEntityData(result);
         return result;
+    }
+
+    private void sortListOfEntityData(List<EntityData> result) {
+        Collections.sort(result, new Comparator<EntityData>() {
+            @Override
+            public int compare(EntityData o1, EntityData o2) {
+                return o1.getName().compareToIgnoreCase(o2.getName());
+            }
+        });
     }
 
 

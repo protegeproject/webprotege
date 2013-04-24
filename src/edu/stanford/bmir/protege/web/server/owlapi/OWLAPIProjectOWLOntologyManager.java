@@ -43,10 +43,6 @@ public class OWLAPIProjectOWLOntologyManager implements OWLOntologyManager {
         sealed = true;
     }
 
-    public OWLOntologyManager getDelegate() {
-        return delegate;
-    }
-
     public OWLDataFactory getOWLDataFactory() {
         return delegate.getOWLDataFactory();
     }
@@ -425,10 +421,14 @@ public class OWLAPIProjectOWLOntologyManager implements OWLOntologyManager {
     }
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     private class OntologyCreationNotAllowedException extends OWLOntologyCreationException {
 
-        private OntologyCreationNotAllowedException() {
-        }
     }
 
     private class ImportLoadingNotAllowedException extends RuntimeException {
@@ -444,7 +444,6 @@ public class OWLAPIProjectOWLOntologyManager implements OWLOntologyManager {
 
     }
 
-
     private class OntologyFormatChangeNotAllowedException extends RuntimeException {
 
     }
@@ -454,7 +453,6 @@ public class OWLAPIProjectOWLOntologyManager implements OWLOntologyManager {
     }
 
     private class DirectChangeApplicationNotAllowedException extends RuntimeException {
-
 
     }
 }

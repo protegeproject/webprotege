@@ -20,7 +20,7 @@ public class PropertyValueList implements Serializable, HasSignature, HasPropert
     private PropertyValueList() {
     }
 
-    public PropertyValueList(Collection<PropertyValue> propertyValues) {
+    public PropertyValueList(Collection<? extends PropertyValue> propertyValues) {
         this.propertyValues = new ArrayList<PropertyValue>(propertyValues);
     }
 

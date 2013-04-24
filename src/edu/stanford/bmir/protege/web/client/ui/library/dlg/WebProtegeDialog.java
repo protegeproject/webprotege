@@ -151,7 +151,7 @@ public class WebProtegeDialog<D> extends DialogBox {
             @Override
             public void run() {
                 Optional<Focusable> initialFocusable = controller.getInitialFocusable();
-                if (initialFocusable.isPresent()) {
+                if (initialFocusable != null && initialFocusable.isPresent()) {
                     initialFocusable.get().setFocus(true);
                 }
             }

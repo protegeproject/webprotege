@@ -17,4 +17,5 @@ public class WebProtegeOWLManager {
         manager.addOntologyStorer(new BinaryOWLOntologyDocumentStorer());
         return manager;
     }
+
 }

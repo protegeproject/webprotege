@@ -50,6 +50,10 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     @UiField
     protected Button uploadProjectButton;
 
+    @UiField HTMLPanel noticesPanel;
+
+    @UiField Button closeNotices;
+
 
     private ProjectManagerViewCategory lastViewCategory;
 
@@ -140,6 +144,10 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
         uploadProjectRequestHandler.handleUploadProjectRequest();
     }
 
+    @UiHandler("closeNotices")
+    protected void handleCloseNoticesClicked(ClickEvent event) {
+        noticesPanel.setVisible(false);
+    }
 
 
 
@@ -177,8 +185,6 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     public void setViewCategoryChangedHandler(ViewCategoryChangedHandler handler) {
         this.viewCategoryChangedHandler = handler;
     }
-
-
 
     @Override
     public Widget getWidget() {

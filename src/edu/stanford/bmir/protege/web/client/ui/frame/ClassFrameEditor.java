@@ -11,6 +11,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -30,7 +32,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/12/2012
  */
-public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPresenter {
+public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPresenter, EditorView<LabelledFrame<ClassFrame>> {
 
     @UiField
     protected TextBox displayNameField;
@@ -256,5 +258,10 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<LabelledFrame<ClassFrame>>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
+    }
+
+    @Override
+    public Widget getWidget() {
+        return this;
     }
 }

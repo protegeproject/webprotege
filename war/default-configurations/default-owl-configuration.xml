@@ -1,181 +1,182 @@
 <project>
     <tabs>
-		
-		<!-- ********************************** -->
-		<!--          Classes Tab               -->
-		<!-- ********************************** -->
+
+        <!-- ********************************** -->
+        <!--          Classes Tab               -->
+        <!-- ********************************** -->
         <tab>
             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassesTab</name>
             <label>Classes</label>
             <columns>
-				
-				<!-- Column 1 -->
+
+                <!-- Column 1 -->
                 <column>
                     <width>0.25</width>
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
-                            <height>600</height>
+                            <height>750</height>
                             <width>200</width>
                         </portlet>
                     </portlets>
                 </column>
 
-				<!-- Column 2 -->
+                <!-- Column 2 -->
                 <column>
                     <width>0.55</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
-                            <height>200</height>
-                            <width>0</width>
-                        </portlet>
-                        <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.frame.ClassFramePortlet</name>
-                            <height>390</height>
+                            <name>edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet</name>
+                            <height>750</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
                 </column>
 
-				<!-- Column 3 -->
+                <!-- Column 3 -->
                 <column>
                     <width>0.20</width>
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
-                            <height>600</height>
-                            <width>200</width>
+                            <height>240</height>
+                            <width>0</width>
+                        </portlet>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
+                            <height>500</height>
+                            <width>0</width>
                         </portlet>
                     </portlets>
                 </column>
-                
+
             </columns>
             <controllingPortlet reference="../columns/column/portlets/portlet"/>
         </tab>
-        
-        
+
+
         <!-- ********************************** -->
-		<!--          Properties Tab            -->
-		<!-- ********************************** -->
+        <!--          Properties Tab            -->
+        <!-- ********************************** -->
         <tab>
             <name>edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTab</name>
             <label>Properties</label>
             <columns>
-				
-				<!-- Column 1 -->
+
+                <!-- Column 1 -->
                 <column>
                     <width>0.25</width>
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet</name>
-                            <height>600</height>
+                            <height>750</height>
                             <width>200</width>
                         </portlet>
                     </portlets>
                 </column>
 
-				<!-- Column 2 -->
+                <!-- Column 2 -->
                 <column>
                     <width>0.55</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
-                            <height>200</height>
-                            <width>0</width>
-                        </portlet>
-                        <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.AllPropertiesPortlet</name>
-                            <height>390</height>
+                            <name>edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet</name>
+                            <height>750</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
                 </column>
 
-				<!-- Column 3 -->
+                <!-- Column 3 -->
                 <column>
                     <width>0.20</width>
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
-                            <height>600</height>
-                            <width>200</width>
+                            <height>240</height>
+                            <width>0</width>
+                        </portlet>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
+                            <height>500</height>
+                            <width>0</width>
                         </portlet>
                     </portlets>
                 </column>
-                
+
+
             </columns>
             <controllingPortlet reference="../columns/column/portlets/portlet"/>
-        </tab>      
-        
-        
+        </tab>
+
+
         <!-- ********************************** -->
-		<!--          Individuals Tab           -->
-		<!-- ********************************** -->
+        <!--          Individuals Tab           -->
+        <!-- ********************************** -->
         <tab>
             <name>edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsTab</name>
             <label>Individuals</label>
             <columns>
-				
-				<!-- Column 1 -->
+
+                <!-- Column 1 -->
                 <column>
                     <width>0.25</width>
                     <portlets>
-						<portlet>
+                        <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet</name>
-                            <height>390</height>
+                            <height>370</height>
                             <width>0</width>
                         </portlet>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
-                            <height>200</height>
+                            <height>370</height>
                             <width>200</width>
                         </portlet>
                     </portlets>
                 </column>
 
-				<!-- Column 2 -->
+                <!-- Column 2 -->
                 <column>
                     <width>0.55</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
-                            <height>200</height>
-                            <width>0</width>
-                        </portlet>
-                        <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.frame.NamedIndividualFramePortlet</name>
-                            <height>390</height>
+                            <name>edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet</name>
+                            <height>750</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
                 </column>
 
-				<!-- Column 3 -->
+                <!-- Column 3 -->
                 <column>
                     <width>0.20</width>
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
-                            <height>600</height>
-                            <width>200</width>
+                            <height>240</height>
+                            <width>0</width>
+                        </portlet>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
+                            <height>500</height>
+                            <width>0</width>
                         </portlet>
                     </portlets>
                 </column>
-                
+
             </columns>
             <controllingPortlet reference="../columns/column/portlets/portlet"/>
         </tab>
-        
+
         <!-- ********************************** -->
-		<!--          Notes Tab                 -->
-		<!-- ********************************** -->
+        <!--          Notes Tab                 -->
+        <!-- ********************************** -->
         <tab>
             <name>edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTab</name>
             <label>Notes and Discussions</label>
             <columns>
-				
-				<!-- Column 1 -->
+
+                <!-- Column 1 -->
                 <column>
                     <width>0.33</width>
                     <portlets>
@@ -187,7 +188,7 @@
                     </portlets>
                 </column>
 
-				<!-- Column 2 -->
+                <!-- Column 2 -->
                 <column>
                     <width>0.66</width>
                     <portlets>
@@ -198,20 +199,20 @@
                         </portlet>
                     </portlets>
                 </column>
-                
+
             </columns>
             <controllingPortlet reference="../columns/column/portlets/portlet"/>
         </tab>
-        
+
         <!-- ********************************** -->
-		<!--      Changes By Entity Tab         -->
-		<!-- ********************************** -->
+        <!--      Changes By Entity Tab         -->
+        <!-- ********************************** -->
         <tab>
             <name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>
             <label>Changes By Entity</label>
             <columns>
-				
-				<!-- Column 1 -->
+
+                <!-- Column 1 -->
                 <column>
                     <width>0.3</width>
                     <portlets>
@@ -222,7 +223,7 @@
                         </portlet>
                     </portlets>
                 </column>
-                
+
                 <!-- Column 2 -->
                 <column>
                     <width>0.7</width>
@@ -234,21 +235,21 @@
                         </portlet>
                     </portlets>
                 </column>
-                
+
             </columns>
             <controllingPortlet reference="../columns/column/portlets/portlet"/>
         </tab>
 
-        
+
         <!-- ********************************** -->
-		<!--       Project Dashboard Tab        -->
-		<!-- ********************************** -->
+        <!--       Project Dashboard Tab        -->
+        <!-- ********************************** -->
         <tab>
             <name>edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab</name>
             <label>Project Dashboard</label>
             <columns>
-				
-				<!-- Column 1 -->
+
+                <!-- Column 1 -->
                 <column>
                     <width>0.5</width>
                     <portlets>
@@ -259,12 +260,12 @@
                         </portlet>
                     </portlets>
                 </column>
-                
+
                 <!-- Column 2 -->
                 <column>
                     <width>0.5</width>
                     <portlets>
-						<portlet>
+                        <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.revisions.RevisionsPortlet</name>
                             <height>350</height>
                             <width>450</width>
@@ -276,10 +277,10 @@
                         </portlet>
                     </portlets>
                 </column>
-                
+
             </columns>
         </tab>
-        
+
     </tabs>
-    
+
 </project>

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor;
 
+import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -14,10 +15,10 @@ import java.io.Serializable;
  *     A factory object for an editor that edits objects of type {@code T}.
  * </p>
  */
-public interface EditorConfigurationFactory<T extends Serializable> {
+public interface EditorConfigurationFactory<O extends Serializable> {
 
-    public ValueEditor<T> getEditor(ProjectId projectId);
+    public ValueEditor<O> getEditor(ProjectId projectId);
 
-    public EditorUpdateStrategy<T> getUpdateStrategy(ProjectId projectId);
+    public EditorUpdateStrategy<O> getUpdateStrategy(ProjectId projectId);
 
 }

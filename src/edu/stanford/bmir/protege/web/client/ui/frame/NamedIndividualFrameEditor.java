@@ -11,6 +11,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -38,7 +40,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/12/2012
  */
-public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFrame<NamedIndividualFrame>> implements ValueEditor<LabelledFrame<NamedIndividualFrame>>, HasEnabled {
+public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFrame<NamedIndividualFrame>> implements ValueEditor<LabelledFrame<NamedIndividualFrame>>, HasEnabled, EditorView<LabelledFrame<NamedIndividualFrame>> {
 
     private NamedIndividualFrame editedFrame;
 
@@ -83,7 +85,9 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
         sameAs.setPlaceholder("Enter individual name");
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
+        iriField.setEnabled(false);
     }
+
 
     public boolean isDirty() {
         return assertions.isDirty() || dirty || types.isDirty() || sameAs.isDirty();
@@ -143,6 +147,11 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
     @Override
     public boolean isWellFormed() {
         return !getDisplayName().isEmpty() && types.isWellFormed() && assertions.isWellFormed() && sameAs.isWellFormed();
+    }
+
+    @Override
+    public Widget getWidget() {
+        return this;
     }
 
     @Override

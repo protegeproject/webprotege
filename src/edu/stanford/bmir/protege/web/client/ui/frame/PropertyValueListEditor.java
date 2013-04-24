@@ -626,7 +626,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     }
 
     private void ensureBlankRow() {
-        if (!isLastRowEmpty() && isEnabled()) {
+        if (!isLastRowEmpty()) {
             addBlankRow();
         }
     }

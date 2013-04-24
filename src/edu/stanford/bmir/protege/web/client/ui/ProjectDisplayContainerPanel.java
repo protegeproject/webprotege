@@ -151,6 +151,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         }
         projectId2ProjectPanelMap.clear();
         activate(0);
+
     }
 
 

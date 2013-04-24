@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
+import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteAction;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteAction;
@@ -51,6 +52,15 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
 
         register(new GetClassFrameActionHandler(), GetClassFrameAction.class);
         register(new UpdateClassFrameActionHandler(), UpdateClassFrameAction.class);
+        
+        register(new GetObjectPropertyFrameActionHandler(), GetObjectPropertyFrameAction.class);
+        register(new UpdateObjectPropertyFrameHandler(), UpdateObjectPropertyFrameAction.class);
+
+        register(new GetDataPropertyFrameActionHandler(), GetDataPropertyFrameAction.class);
+        register(new UpdateDataPropertyFrameHandler(), UpdateDataPropertyFrameAction.class);
+
+        register(new GetAnnotationPropertyFrameActionHandler(), GetAnnotationPropertyFrameAction.class);
+        register(new UpdateAnnotationPropertyFrameActionHandler(), UpdateAnnotationPropertyFrameAction.class);
 
         register(new GetNamedIndividualFrameActionHandler(), GetNamedIndividualFrameAction.class);
         register(new UpdateNamedIndividualFrameHandler(), UpdateNamedIndividualFrameAction.class);

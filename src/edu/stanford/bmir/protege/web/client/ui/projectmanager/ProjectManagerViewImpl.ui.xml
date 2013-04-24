@@ -1,3 +1,4 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:projectlist="urn:import:edu.stanford.bmir.protege.web.client.ui.projectlist"
@@ -56,12 +57,33 @@
             right: 0px;
             /*border: green 1px solid;*/
         }
+
+        .notes-panel {
+            margin-top: 80px;
+            margin-left: 10px;
+            color: #464646;
+        }
+
+        .notes-panel br {
+            margin-top: 10px;
+        }
+
+        .notes-panel-close-button {
+            margin-top: 15px;
+        }
+
     </ui:style>
+
 
 
     <g:HTMLPanel addStyleNames="{style.table-style}">
         <g:FlowPanel addStyleNames="{style.left-bar}">
             <sidebar:SideBar ui:field="sideBar"/>
+
+            <g:HTMLPanel addStyleNames="postit {style.notes-panel}" ui:field="noticesPanel"><b>Welcome to WebProt&eacute;g&eacute;</b><br/><br/>This version of WebProt&eacute;g&eacute; was previously hosted at <span style="font-size: smaller; font-weight: bold;">webprotege-beta.stanford.edu</span><br/><br/>If you are looking for the version of WebProt&eacute;g&eacute; that was previously hosted here you can find it at <br/><a target="_blank"
+                    href="http://wp-obs.stanford.edu">http://wp-obs.stanford.edu</a>
+                <g:Button addStyleNames="web-protege-button-small {style.notes-panel-close-button}" text="Close" ui:field="closeNotices"/></g:HTMLPanel>
+
         </g:FlowPanel>
         <g:FlowPanel addStyleNames="{style.top-button-bar-position}">
             <g:Button ui:field="createProjectButton" text="&#x2600; Create Project ..." enabled="false" addStyleNames="web-protege-button"/>

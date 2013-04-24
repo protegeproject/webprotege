@@ -7,11 +7,13 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
 import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
+import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -32,7 +34,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/01/2013
  */
-public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameEditor, ValueEditor<LabelledObjectPropertyFrame>, HasEnabled {
+public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameEditor, ValueEditor<LabelledFrame<ObjectPropertyFrame>>, HasEnabled, EditorView<LabelledFrame<ObjectPropertyFrame>> {
 
     @UiField
     protected TextBox displayNameField;
@@ -51,7 +53,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
 
     private boolean dirty = false;
 
-    private Optional<LabelledObjectPropertyFrame> previouslySetValue = Optional.absent();
+    private Optional<LabelledFrame<ObjectPropertyFrame>> previouslySetValue = Optional.absent();
 
     interface ObjectPropertyFrameEditorUiBinder extends UiBinder<HTMLPanel, ObjectPropertyFrameEditor> {
 
@@ -79,6 +81,39 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     }
 
     private boolean enabled = false;
+
+
+    private void fireEventIfWellFormed() {
+        if(isWellFormed()) {
+            dirty = true;
+            ValueChangeEvent.fire(this, getValue());
+        }
+    }
+
+    @UiHandler("displayNameField")
+    protected void handleDisplayNameChanged(ValueChangeEvent<String> event) {
+        fireEventIfWellFormed();
+    }
+
+    @UiHandler("annotations")
+    protected void handleAnnotationsChanged(ValueChangeEvent<Optional<PropertyValueList>> event) {
+        fireEventIfWellFormed();
+    }
+
+    @UiHandler("domains")
+    protected void handleDomainsChanged(ValueChangeEvent<Optional<OWLPrimitiveDataList>> event) {
+        fireEventIfWellFormed();
+    }
+
+    @UiHandler("ranges")
+    protected void handleRangesChanged(ValueChangeEvent<Optional<OWLPrimitiveDataList>> event) {
+        fireEventIfWellFormed();
+    }
+
+
+
+
+
 
     /**
      * Returns true if the widget is enabled, false if not.
@@ -113,7 +148,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     }
 
     @Override
-    public void setValue(LabelledObjectPropertyFrame object) {
+    public void setValue(LabelledFrame<ObjectPropertyFrame> object) {
         dirty = false;
         displayNameField.setValue(object.getDisplayName());
         final ObjectPropertyFrame frame = object.getFrame();
@@ -166,7 +201,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     }
 
     @Override
-    public Optional<LabelledObjectPropertyFrame> getValue() {
+    public Optional<LabelledFrame<ObjectPropertyFrame>> getValue() {
         if(!previouslySetValue.isPresent()) {
             return previouslySetValue;
         }
@@ -179,7 +214,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         List<OWLClass> editedDomains = domains.getValue().get().getEntitiesOfType(EntityType.CLASS);
         List<OWLClass> editedRanges = ranges.getValue().get().getEntitiesOfType(EntityType.CLASS);
         ObjectPropertyFrame frame = new ObjectPropertyFrame(subject, annotationValueSet, new HashSet<OWLClass>(editedDomains), new HashSet<OWLClass>(editedRanges), Collections.<OWLObjectProperty>emptySet());
-        return Optional.of(new LabelledObjectPropertyFrame(displayName, frame));
+        return Optional.of(new LabelledFrame<ObjectPropertyFrame>(displayName, frame));
     }
 
     private String getDisplayName() {
@@ -211,7 +246,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<LabelledObjectPropertyFrame>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<LabelledFrame<ObjectPropertyFrame>>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 }
