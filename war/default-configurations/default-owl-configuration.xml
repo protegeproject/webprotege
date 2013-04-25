@@ -15,7 +15,7 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
-                            <height>750</height>
+                            <height>650</height>
                             <width>200</width>
                         </portlet>
                     </portlets>
@@ -27,7 +27,7 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet</name>
-                            <height>750</height>
+                            <height>650</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
@@ -39,12 +39,12 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
-                            <height>240</height>
+                            <height>190</height>
                             <width>0</width>
                         </portlet>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
-                            <height>500</height>
+                            <height>450</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
@@ -69,7 +69,7 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet</name>
-                            <height>750</height>
+                            <height>650</height>
                             <width>200</width>
                         </portlet>
                     </portlets>
@@ -81,7 +81,7 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet</name>
-                            <height>750</height>
+                            <height>650</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
@@ -93,12 +93,12 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
-                            <height>240</height>
+                            <height>190</height>
                             <width>0</width>
                         </portlet>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
-                            <height>500</height>
+                            <height>450</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
@@ -124,12 +124,12 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet</name>
-                            <height>370</height>
+                            <height>320</height>
                             <width>0</width>
                         </portlet>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
-                            <height>370</height>
+                            <height>320</height>
                             <width>200</width>
                         </portlet>
                     </portlets>
@@ -141,7 +141,7 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet</name>
-                            <height>750</height>
+                            <height>650</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
@@ -153,12 +153,12 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
-                            <height>240</height>
+                            <height>190</height>
                             <width>0</width>
                         </portlet>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
-                            <height>500</height>
+                            <height>450</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
@@ -182,7 +182,7 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
-                            <height>600</height>
+                            <height>650</height>
                             <width>200</width>
                         </portlet>
                     </portlets>
@@ -194,7 +194,7 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
-                            <height>600</height>
+                            <height>650</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
@@ -218,7 +218,7 @@
                     <portlets>
                         <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
-                            <height>600</height>
+                            <height>650</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
