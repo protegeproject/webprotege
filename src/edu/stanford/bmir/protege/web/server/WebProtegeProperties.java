@@ -194,7 +194,13 @@ public class WebProtegeProperties implements Serializable {
                     builder.put(propertyName, propertyName.getDefaultValue());
                 }
                 else {
-                    throw new WebProtegeConfigurationException("Property " + propertyName.getPropertyName() + " does not have a default value and no value has been specified in the " + WEB_PROTEGE_PROPERTIES_FILE_NAME + " file.  Please specify a value for this property in the " + WEB_PROTEGE_PROPERTIES_FILE_NAME + " file.");
+                    throw new WebProtegeConfigurationException("Property " + propertyName.getPropertyName() +
+                    		" does not have a default value and no value has been specified in the " + WEB_PROTEGE_PROPERTIES_FILE_NAME + 
+                    		" file, or as a Java argument, or environment variable." +
+                    		" To fix this error, you may: " +
+                    				"(1) Specify a value for this property in the " + WEB_PROTEGE_PROPERTIES_FILE_NAME + " file; or " +
+                    				"(2) Add the property as a Java argument when starting your servlet container (-Dwebprotege." + propertyName.getPropertyName() + "=your_value); or " +
+                    				"(3) Add the property as an environment variable (webprotege." + propertyName.getPropertyName() + "=your_value).");
                 }
             }
         }
