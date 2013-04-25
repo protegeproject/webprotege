@@ -225,7 +225,9 @@ public class OWLAPIProjectDocumentStore {
             File projectAttributesFile = getProjectAttributesFile();
             if (projectAttributesFile.exists()) {
                 DataInputStream dataInput = new DataInputStream(new BufferedInputStream(new FileInputStream(projectAttributesFile)));
-                return new OWLAPIProjectAttributes(dataInput);
+                OWLAPIProjectAttributes attributes = new OWLAPIProjectAttributes(dataInput);
+                dataInput.close();
+                return attributes;
             }
             else {
                 OWLAPIProjectAttributes freshProjectAttributes = new OWLAPIProjectAttributes();
@@ -255,7 +257,9 @@ public class OWLAPIProjectDocumentStore {
     public OWLOntology loadRootOntologyIntoManager(OWLOntologyManager manager) throws OWLOntologyCreationException {
         try {
 
-            getProjectReadWriteLock(projectId).readLock().lock();
+            getProjectReadWriteLock(projectId).writeLock().lock();
+
+            LOGGER.info("I am loading " + projectId);
 
             long t0 = System.currentTimeMillis();
             OWLOntologyLoaderListener loaderListener = new OWLOntologyLoaderListener() {
@@ -264,6 +268,9 @@ public class OWLAPIProjectDocumentStore {
                 }
 
                 public void finishedLoadingOntology(LoadingFinishedEvent event) {
+                    // Give something else a chance - in case we have LOTS of imports
+                    LOGGER.info("Yielding for others");
+                    Thread.yield();
                     if (event.isSuccessful()) {
                         LOGGER.info("Loading finished: " + event.getDocumentIRI() + " (Loaded: " + event.getOntologyID() + ")");
                     }
@@ -307,7 +314,7 @@ public class OWLAPIProjectDocumentStore {
             }
         }
         finally {
-            getProjectReadWriteLock(projectId).readLock().unlock();
+            getProjectReadWriteLock(projectId).writeLock().unlock();
         }
 
     }

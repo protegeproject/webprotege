@@ -81,7 +81,7 @@ public class UIConfigurationManager {
      *         specified project.  Not {@code null}.
      * @throws NullPointerException if {@code projectId} or {@code userId} is {@code null}.
      */
-    public InputStream getUIConfigurationInputStream(ProjectId projectId, UserId userId) throws IOException {
+    private InputStream getUIConfigurationInputStream(ProjectId projectId, UserId userId) throws IOException {
         checkNotNull(projectId);
         checkNotNull(userId);
         return new BufferedInputStream(new FileInputStream(getUIConfigurationFile(projectId, userId)));
@@ -109,7 +109,7 @@ public class UIConfigurationManager {
 
     }
 
-    public OutputStream getUIConfigurationOutputStream(ProjectId projectId, UserId userId) throws IOException {
+    private OutputStream getUIConfigurationOutputStream(ProjectId projectId, UserId userId) throws IOException {
         checkNotNull(projectId);
         checkNotNull(userId);
         final File configurationFile = getConfigurationFile(projectId, userId);

@@ -889,7 +889,6 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         if (fieldType != null) {
             if (fieldType.equals(FormConstants.FIELD_TYPE_COMBOBOX)) {
                 Map<String, String> allowedValues = UIUtil.getAllowedValuesConfigurationProperty(config);
-                System.out.println("Allowed Values Map: " + allowedValues);
                 String[][] displayValues;
                 if (allowedValues == null) {
                     displayValues = new String[][]{};
@@ -911,7 +910,6 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
                 cb.setDisplayField("displayText");
                 cb.setValueField("value");
                 boolean allowedValuesOnly = UIUtil.getBooleanConfigurationProperty(config, FormConstants.ALLOWED_VALUES_ONLY, true);
-                System.out.println("Allowed Values Only: " + allowedValuesOnly);
                 cb.setForceSelection(allowedValuesOnly);
                 if (! allowedValuesOnly) {
                     //Apparently we need to add this because the 'setForceSelection(boolean)' method 

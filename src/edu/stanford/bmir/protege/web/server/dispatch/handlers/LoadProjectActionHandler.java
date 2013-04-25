@@ -8,6 +8,10 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
@@ -25,7 +29,7 @@ import java.util.Collection;
  */
 public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction, LoadProjectResult> {
 
-    private static final UserHasProjectReadPermissionValidator<LoadProjectAction,LoadProjectResult> VALIDATOR = new UserHasProjectReadPermissionValidator<LoadProjectAction, LoadProjectResult>();
+    private static final UserHasProjectReadPermissionValidator<LoadProjectAction, LoadProjectResult> VALIDATOR = new UserHasProjectReadPermissionValidator<LoadProjectAction, LoadProjectResult>();
 
     @Override
     public Class<LoadProjectAction> getActionClass() {
@@ -38,13 +42,15 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
     }
 
     @Override
-    public LoadProjectResult execute(LoadProjectAction action, ExecutionContext executionContext) {
+    public LoadProjectResult execute(final LoadProjectAction action, ExecutionContext executionContext) {
+        // Load project in parallel (as we don't return it, but want it ready for further calls).
+        final WebProtegeLogger webProtegeLogger = WebProtegeLoggerManager.get(LoadProjectActionHandler.class);
         long t0 = System.currentTimeMillis();
-        // We don't actually need to load the project here - leave it to be loaded on demand.  This way, things
-        // can be done in parallel (the UI is the slowest part).
-
-//        OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
-//        OWLAPIProject project = pm.getProject(action.getProjectId());
+        webProtegeLogger.info("Loading project: " + action.getProjectId());
+        OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
+        OWLAPIProject project = pm.getProject(action.getProjectId());
+        long t1 = System.currentTimeMillis();
+        webProtegeLogger.info(".... loaded project in " + (t1 - t0) + " ms");
         final ProjectId projectId = action.getProjectId();//project.getProjectId();
 
         final OWLAPIProjectMetadataManager manager = OWLAPIProjectMetadataManager.getManager();
@@ -52,10 +58,9 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
 
         Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(projectId.getId(), executionContext.getUserId().getUserName());
         PermissionsSet.Builder builder = PermissionsSet.builder();
-        for(Operation op : ops) {
+        for (Operation op : ops) {
             builder.addPermission(Permission.getPermission(op.getName()));
         }
-        long t1 = System.currentTimeMillis();
         return new LoadProjectResult(executionContext.getUserId(), builder.build(), projectDetails);
     }
 }

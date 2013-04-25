@@ -83,7 +83,8 @@ public class OWLAPIChangeManager {
             }
             long t0 = System.currentTimeMillis();
             BinaryOWLOntologyChangeLog changeLog = new BinaryOWLOntologyChangeLog();
-            changeLog.readChanges(new BufferedInputStream(new FileInputStream(changeHistoryFile)), project.getDataFactory(), new BinaryOWLChangeLogHandler() {
+            final BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(changeHistoryFile));
+            changeLog.readChanges(inputStream, project.getDataFactory(), new BinaryOWLChangeLogHandler() {
                 public void handleChangesRead(OntologyChangeRecordList list, SkipSetting skipSetting, long l) {
                     BinaryOWLMetadata metadata = list.getMetadata();
                     String userName = metadata.getStringAttribute(USERNAME_METADATA_ATTRIBUTE, "");
@@ -101,6 +102,7 @@ public class OWLAPIChangeManager {
                     revisions.add(chgList);
                 }
             }, SkipSetting.SKIP_NONE);
+            inputStream.close();
             long t1 = System.currentTimeMillis();
             LOGGER.info("Loaded " + revisions.size() + " changes in " + (t1 - t0));
         }

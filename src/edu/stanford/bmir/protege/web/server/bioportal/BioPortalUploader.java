@@ -49,6 +49,7 @@ public class BioPortalUploader {
         File ontologyDocument = File.createTempFile("BioPortalOntology", ".zip");
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(ontologyDocument));
         store.exportProjectRevision(revisionNumber, bos, new RDFXMLOntologyFormat());
+        bos.close();
         return ontologyDocument;
     }
 

@@ -110,7 +110,7 @@ public class DispatchServiceManager {
 
     private Optional<Throwable> handleError(Throwable throwable, Action<?> action) {
         if(throwable instanceof IncompatibleRemoteServiceException) {
-            displayAlert("Maintenance has been performed on the server.  Please refresh your browser.");
+            displayAlert("WebProtege has been upgraded.  Please refresh your browser.");
             GWT.log("Incompatible remote service exception", throwable);
             return Optional.absent();
         }
