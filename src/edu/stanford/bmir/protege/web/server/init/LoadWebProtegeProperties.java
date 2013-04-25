@@ -8,6 +8,8 @@ import java.util.Properties;
 import javax.servlet.ServletContext;
 
 import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,7 +21,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LoadWebProtegeProperties implements ConfigurationTask {
 
-    /**
+    private static WebProtegeLogger log = WebProtegeLoggerManager.get(LoadWebProtegeProperties.class);
+	/**
      * A prefix for properties specified on the command line or via environment variables
      */
     private static final String SYSTEM_PROPERTY_PREFIX = "webprotege.";
@@ -55,10 +58,24 @@ public class LoadWebProtegeProperties implements ConfigurationTask {
         checkNotNull(properties);
         for(WebProtegeProperties.PropertyName propertyName : WebProtegeProperties.PropertyName.values()) {
             String systemPropertyName = SYSTEM_PROPERTY_PREFIX + propertyName.getPropertyName();
-            String value = System.getProperty(systemPropertyName, null);
+            String value = getSystemProperty(systemPropertyName);
             if(value != null) {
                 properties.setProperty(propertyName.getPropertyName(), value);
+                log.info("WebProtege configuration (using system variable): " + systemPropertyName + " = " + value);
             }
         }
+    }
+    
+    private static String getSystemProperty(String property) {
+    	String value = null;
+    	try {
+    		value = System.getProperty(property, null);
+    		if (value == null) {
+    			value = System.getenv(property);
+    		}
+    	} catch (SecurityException e) {
+    		log.info("Cannot access system or environment variable: " + property + " Message: " + e.getMessage());
+    	}
+    	return value;
     }
 }
