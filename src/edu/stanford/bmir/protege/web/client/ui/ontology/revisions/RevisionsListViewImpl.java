@@ -143,7 +143,6 @@ public class RevisionsListViewImpl extends Composite implements RevisionsListVie
         @Override
         public String getValue(RevisionSummary object) {
             return TimeUtil.getTimeRendering(object.getTimestamp());
-//            return DateTimeFormat.getFormat("EEEE dd MMMM yyyy 'at' hh:mm a").format(new Date(object.getTimestamp()));
         }
     }
 
