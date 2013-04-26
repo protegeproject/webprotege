@@ -13,21 +13,17 @@ import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLMetadata;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentFormat;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentSerializer;
+import org.semanticweb.owlapi.binaryowl.*;
 import org.semanticweb.owlapi.binaryowl.change.OntologyChangeDataList;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
+import org.semanticweb.owlapi.change.SetOntologyIDData;
 import org.semanticweb.owlapi.io.FileDocumentSource;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.AutoIRIMapper;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.zip.ZipEntry;
@@ -259,8 +255,6 @@ public class OWLAPIProjectDocumentStore {
 
             getProjectReadWriteLock(projectId).writeLock().lock();
 
-            LOGGER.info("I am loading " + projectId);
-
             long t0 = System.currentTimeMillis();
             OWLOntologyLoaderListener loaderListener = new OWLOntologyLoaderListener() {
                 public void startedLoadingOntology(LoadingStartedEvent event) {
@@ -290,19 +284,25 @@ public class OWLAPIProjectDocumentStore {
             manager.addMissingImportListener(missingImportListener);
             File ontologyDataDirectory = projectFileStore.getOntologyDataDirectory();
             File rootOntologyDocument = new File(ontologyDataDirectory, ROOT_ONTOLOGY_DOCUMENT_NAME);
-            AutoIRIMapper iriMapper = new AutoIRIMapper(ontologyDataDirectory, true);
-            manager.addIRIMapper(iriMapper);
             manager.addIRIMapper(new OWLOntologyIRIMapper() {
                 @Override
                 public IRI getDocumentIRI(IRI iri) {
+                    LOGGER.info("Fetching ontology from WEB " + iri.toQuotedString());
                     return iri;
                 }
             });
+            // Important - add last
+            ImportsCacheIRIMapper iriMapper = new ImportsCacheIRIMapper(projectFileStore.getImportsCacheDataDirectory());
+            manager.addIRIMapper(iriMapper);
+
+
             try {
                 OWLOntologyLoaderConfiguration config = new OWLOntologyLoaderConfiguration();
                 config = config.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
                 FileDocumentSource documentSource = new FileDocumentSource(rootOntologyDocument);
-                return manager.loadOntologyFromOntologyDocument(documentSource, config);
+                OWLOntology rootOntology = manager.loadOntologyFromOntologyDocument(documentSource, config);
+                cacheImports(iriMapper, rootOntology);
+                return rootOntology;
 
             }
             finally {
@@ -317,6 +317,38 @@ public class OWLAPIProjectDocumentStore {
             getProjectReadWriteLock(projectId).writeLock().unlock();
         }
 
+
+
+    }
+
+    private void cacheImports(ImportsCacheIRIMapper iriMapper, OWLOntology rootOntology) {
+        projectFileStore.getImportsCacheDataDirectory().mkdirs();
+        for(OWLOntology ont : rootOntology.getImportsClosure()) {
+            // TODO: Not project ontology
+            if(!ont.equals(rootOntology) && !iriMapper.contains(ont.getOntologyID())) {
+                DataOutputStream os = null;
+                try {
+                    final File file = new File(projectFileStore.getImportsCacheDataDirectory(), UUID.randomUUID() + ".binary");
+                    os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+                    BinaryOWLOntologyDocumentSerializer serializer = new BinaryOWLOntologyDocumentSerializer();
+                    serializer.write(ont, os);
+                    LOGGER.info("Cached imported ontology: " + ont.getOntologyID() + " in " + file.getName());
+                }
+                catch (IOException e) {
+                    LOGGER.severe(e);
+                }
+                finally {
+                    try {
+                        if (os != null) {
+                            os.close();
+                        }
+                    }
+                    catch (IOException e) {
+                        LOGGER.severe(e);
+                    }
+                }
+            }
+        }
     }
 
 
@@ -558,6 +590,107 @@ public class OWLAPIProjectDocumentStore {
     private File getBinaryOntologyDocumentFile() {
         return new File(projectFileStore.getOntologyDataDirectory(), ROOT_ONTOLOGY_DOCUMENT_NAME);
     }
+
+
+    private static class ImportsCacheIRIMapper implements OWLOntologyIRIMapper {
+
+        private File dir;
+
+        private Set<OWLOntologyID> ontologyIDs = new HashSet<OWLOntologyID>();
+
+        private Map<IRI, IRI> iri2Document = new HashMap<IRI, IRI>();
+
+        private ImportsCacheIRIMapper(File dir) {
+            this.dir = dir;
+            fillCache();
+        }
+
+        public boolean contains(OWLOntologyID ontologyID) {
+            return ontologyIDs.contains(ontologyID);
+        }
+
+        private void fillCache() {
+            final File[] cachedDocuments = dir.listFiles();
+            if(cachedDocuments == null) {
+                return;
+            }
+            for(File ontologyDocument : cachedDocuments) {
+                if (!ontologyDocument.isHidden() && !ontologyDocument.isDirectory()) {
+                    parseFile(ontologyDocument);
+                }
+            }
+            for(OWLOntologyID id : ontologyIDs) {
+                LOGGER.info("Cached import: " + id);
+            }
+        }
+
+        private void parseFile(File ontologyDocument) {
+            InputStream is = null;
+            try {
+                BinaryOWLOntologyDocumentSerializer serializer = new BinaryOWLOntologyDocumentSerializer();
+                is = new BufferedInputStream(new FileInputStream(ontologyDocument));
+                final Handler handler = new Handler();
+                serializer.read(is, handler, new OWLDataFactoryImpl());
+                OWLOntologyID id = handler.getOntologyID();
+                if(!id.isAnonymous()) {
+                    ontologyIDs.add(id);
+                    iri2Document.put(id.getOntologyIRI(), IRI.create(ontologyDocument.toURI()));
+                    if(id.getVersionIRI() != null) {
+                        iri2Document.put(id.getVersionIRI(), IRI.create(ontologyDocument));
+                    }
+                }
+            }
+            catch (IOException e) {
+                LOGGER.severe(e);
+            }
+            catch (BinaryOWLParseException e) {
+                LOGGER.severe(e);
+            }
+            catch (UnloadableImportException e) {
+                LOGGER.severe(e);
+            }
+            finally {
+                try {
+                    if (is != null) {
+                        is.close();
+                    }
+                }
+                catch (IOException e) {
+                    LOGGER.severe(e);
+                }
+            }
+        }
+
+        @Override
+        public IRI getDocumentIRI(IRI ontologyIRI) {
+            return iri2Document.get(ontologyIRI);
+        }
+    }
+
+
+    private static class Handler extends BinaryOWLOntologyDocumentHandlerAdapter<OWLRuntimeException> {
+
+        private OWLOntologyID ontologyID;
+
+        @Override
+        public void handleOntologyID(OWLOntologyID ontologyID) throws OWLRuntimeException {
+            this.ontologyID = ontologyID;
+        }
+
+        @Override
+        public void handleChanges(OntologyChangeDataList changesList) {
+            for(OWLOntologyChangeData changeData : changesList) {
+                if(changeData instanceof SetOntologyIDData) {
+                    ontologyID = ((SetOntologyIDData) changeData).getNewId();
+                }
+            }
+        }
+
+        public OWLOntologyID getOntologyID() {
+            return ontologyID;
+        }
+    }
+
 
 
 }

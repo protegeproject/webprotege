@@ -36,8 +36,7 @@ public class OWLAPIProjectCache {
 
     private final Lock WRITE_LOCK = projectMapReadWriteLoc.writeLock();
 
-    // No need for this to be a concurrent hash map.  All access is controlled by this class.
-    private Map<ProjectId, OWLAPIProject> projectId2ProjectMap = new HashMap<ProjectId, OWLAPIProject>();
+    private Map<ProjectId, OWLAPIProject> projectId2ProjectMap = new ConcurrentHashMap<ProjectId, OWLAPIProject>();
 
 
     private ReadWriteLock LAST_ACCESS_LOCK = new ReentrantReadWriteLock();
@@ -103,27 +102,14 @@ public class OWLAPIProjectCache {
 
 
     public OWLAPIProject getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
-//        projectIdLockingMap.putIfAbsent(projectId, projectId);
-//        ProjectId id = projectIdLockingMap.get(projectId);
+        // TODO: Replace with map to intern project
         synchronized (projectId.getId().intern()) {
             try {
-
-//                if(projectId.getId().endsWith("c84ab51")) {
-//                    try {
-//                        Thread.sleep(5000);
-//                    }
-//                    catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
                 OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
                 OWLAPIProject project = projectId2ProjectMap.get(projectId);
                 if (project == null) {
-                    System.err.println("================================LOADING=============================== " + projectId);
                     project = OWLAPIProject.getProject(documentStore);
                     projectId2ProjectMap.put(projectId, project);
-                    System.err.println("++++++++++++++++++++++++++++++++LOADED " + projectId + "++++++++++++++++++++++++++++++++++++++++++++++++++");
-
                 }
                 logProjectAccess(projectId);
                 return project;

@@ -119,7 +119,7 @@ public class OWLAPIProject implements HasDispose {
 
     private String defaultLanguage = "en";
 
-    public static synchronized OWLAPIProject getProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
+    public static OWLAPIProject getProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
         return new OWLAPIProject(documentStore);
     }
 

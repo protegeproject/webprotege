@@ -47,6 +47,8 @@ public class OWLAPIProjectFileStore {
 
     private static final String ROOT_ONTOLOGY_DOCUMENT_NAME = "root-ontology.binary";
 
+    private static final String IMPORTS_CACHE_DIRECTORY_NAME = "imports-cache";
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,6 +108,8 @@ public class OWLAPIProjectFileStore {
     
     private File downloadCacheDirectory;
 
+    private File importsCacheDirectory;
+
     /**
      * Constructs a {@link OWLAPIProjectFileStore} which resides at a given location in the file system.
      * @param webProtegeDataDirectory The root directory where data will be stored.
@@ -123,6 +127,7 @@ public class OWLAPIProjectFileStore {
         this.notesDataDirectory = new File(projectDirectory, NOTES_DATA_DIRECTORY_NAME);
         this.ontologyDataDirectory = new File(projectDirectory, ONTOLOGY_DATA_DIRECTORY_NAME);
         this.downloadCacheDirectory = new File(projectDirectory, DOWNLOAD_CACHE_DIRECTORY);
+        this.importsCacheDirectory = new File(projectDirectory, IMPORTS_CACHE_DIRECTORY_NAME);
     }
 
     public void initDirectories() {
@@ -146,6 +151,10 @@ public class OWLAPIProjectFileStore {
 
     public File getOntologyDataDirectory() {
         return ontologyDataDirectory;
+    }
+
+    public File getImportsCacheDataDirectory() {
+        return importsCacheDirectory;
     }
 
     public File getNotesDataDirectory() {
