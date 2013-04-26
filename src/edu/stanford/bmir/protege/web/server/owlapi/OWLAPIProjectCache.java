@@ -8,14 +8,12 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.util.Log;
 import org.semanticweb.owlapi.io.OWLParserException;
 
-import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 
@@ -27,7 +25,7 @@ import java.util.logging.Level;
  */
 public class OWLAPIProjectCache {
 
-    private final ConcurrentMap<ProjectId, ProjectId> projectIdLockingMap;
+    private final ConcurrentMap<ProjectId, ProjectId> projectIdInterningMap;
 
 
     private final ReadWriteLock projectMapReadWriteLoc = new ReentrantReadWriteLock();
@@ -68,7 +66,7 @@ public class OWLAPIProjectCache {
 
 
         MapMaker mapMaker = new MapMaker();
-        projectIdLockingMap = mapMaker.concurrencyLevel(5).initialCapacity(30).weakKeys().makeMap();
+        projectIdInterningMap = mapMaker.concurrencyLevel(5).initialCapacity(20).weakKeys().makeMap();
 
     }
 
@@ -102,8 +100,7 @@ public class OWLAPIProjectCache {
 
 
     public OWLAPIProject getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
-        // TODO: Replace with map to intern project
-        synchronized (projectId.getId().intern()) {
+        synchronized (getInternedProjectId(projectId)) {
             try {
                 OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
                 OWLAPIProject project = projectId2ProjectMap.get(projectId);
@@ -121,6 +118,16 @@ public class OWLAPIProjectCache {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    /**
+     * Gets an interned {@link ProjectId} that is equal to the specified {@link ProjectId}
+     * @param projectId The project id to intern.
+     * @return The interned project Id.  Not {@code null}.
+     */
+    private ProjectId getInternedProjectId(ProjectId projectId) {
+        projectIdInterningMap.putIfAbsent(projectId, projectId);
+        return projectIdInterningMap.get(projectId);
     }
 
     public OWLAPIProject getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException {
