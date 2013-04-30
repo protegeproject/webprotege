@@ -43,7 +43,7 @@ public interface AdminService extends RemoteService {
 
     LoginChallengeData getUserSaltAndChallenge(String userName);
 
-    UserId authenticateToLogin(String userName, String response);
+    UserId authenticateToLogin(String userNameOrEmail, String response);
 
     /**
      * Checks whether user logged in and returns the login method(openid or

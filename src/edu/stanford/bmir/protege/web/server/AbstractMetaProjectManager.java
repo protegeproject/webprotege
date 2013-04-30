@@ -1,12 +1,15 @@
 package edu.stanford.bmir.protege.web.server;
 
 import com.google.common.base.Optional;
+
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.smi.protege.server.metaproject.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 public abstract class AbstractMetaProjectManager extends MetaProjectManager {
@@ -56,6 +59,7 @@ public abstract class AbstractMetaProjectManager extends MetaProjectManager {
             throw new IllegalArgumentException("Invalid user name: " + userName);
         }
         user.setEmail(email);
+        OWLAPIMetaProjectStore.getStore().saveMetaProject(this);
     }
 
     public Collection<Operation> getAllowedOperations(String projectName, String userName) {
@@ -118,6 +122,31 @@ public abstract class AbstractMetaProjectManager extends MetaProjectManager {
             }
         }
         return Optional.absent();
+    }
+    
+    public User getUser(String userNameOrEmail) {
+        if (userNameOrEmail == null) {
+            return null;
+        }
+
+        //try to get it by name first
+        User user = getMetaProject().getUser(userNameOrEmail);
+        if (user != null) {
+            return user;
+        }
+
+        //get user by email
+        Set<User> users = getMetaProject().getUsers();
+        Iterator<User> it = users.iterator();
+
+        while (it.hasNext() && user == null) {
+            User u = it.next();
+            if (userNameOrEmail.equals(u.getEmail())) {
+                user = u;
+            }
+        }
+
+        return user;
     }
 
 }

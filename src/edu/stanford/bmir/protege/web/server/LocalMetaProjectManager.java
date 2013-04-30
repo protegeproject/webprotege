@@ -1,6 +1,12 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -13,13 +19,15 @@ import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protege.server.ServerProperties;
-import edu.stanford.smi.protege.server.metaproject.*;
+import edu.stanford.smi.protege.server.metaproject.Group;
+import edu.stanford.smi.protege.server.metaproject.GroupOperation;
+import edu.stanford.smi.protege.server.metaproject.MetaProject;
+import edu.stanford.smi.protege.server.metaproject.MetaProjectConstants;
+import edu.stanford.smi.protege.server.metaproject.Operation;
+import edu.stanford.smi.protege.server.metaproject.Policy;
+import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
+import edu.stanford.smi.protege.server.metaproject.User;
 import edu.stanford.smi.protege.server.metaproject.impl.MetaProjectImpl;
-import edu.stanford.smi.protege.util.Log;
-
-import java.io.File;
-import java.util.*;
-import java.util.logging.Level;
 
 
 public class LocalMetaProjectManager extends AbstractMetaProjectManager {
@@ -259,14 +267,6 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         }
     }
 
-
-    public String getUserSalt(String userName) {
-        User user = getMetaProject().getUser(userName);
-        if (user == null) {
-            return null;
-        }
-        return user.getSalt();
-    }
 
     public boolean allowsCreateUser() {
         return ServerProperties.getAllowsCreateUsers();

@@ -1,7 +1,12 @@
 package edu.stanford.bmir.protege.web.server;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
+
+import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
@@ -9,9 +14,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.Operation;
-
-import java.util.Collection;
-import java.util.List;
+import edu.stanford.smi.protege.server.metaproject.User;
 
 /**
  * This interface assumes a particular implementation i.e. a Protege 3 implementation with Project object.
@@ -71,10 +74,11 @@ public abstract class MetaProjectManager {
     
     public abstract Optional<UserId> getUserAssociatedWithOpenId(String userOpenId);
 
-    public abstract String getUserSalt(String userName);
-
     public abstract boolean allowsCreateUser();
 
+    //FIXME: this adds a dependency on the Protege 3 User class. But this implementation will be replace soon,
+    //so, hopefully this is not so bad.
+    public abstract User getUser(String userNameOrEmail);
 
     public abstract ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException;
 

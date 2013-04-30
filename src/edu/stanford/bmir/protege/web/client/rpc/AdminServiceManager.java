@@ -58,6 +58,7 @@ public class AdminServiceManager {
         proxy.getUserSaltAndChallenge(userId.getUserName(), cb);
     }
 
+    //FIXME: userId - should be a string, can be the user id or the email
     public void authenticateToLogin(UserId userId, String response, AsyncCallback<UserId> cb) {
         proxy.authenticateToLogin(userId.getUserName(), response, cb);
     }

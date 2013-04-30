@@ -27,7 +27,7 @@ public interface AdminServiceAsync {
 
     void getUserSaltAndChallenge(String userName, AsyncCallback<LoginChallengeData> callback);
 
-    void authenticateToLogin(String userName, String response, AsyncCallback<UserId> callback);
+    void authenticateToLogin(String userNameOrEmail, String response, AsyncCallback<UserId> callback);
 
     void checkUserLoggedInMethod(AsyncCallback<String> callback);
 

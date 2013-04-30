@@ -113,8 +113,12 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         EmailUtil.sendEmail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY);
     }
 
-    public LoginChallengeData getUserSaltAndChallenge(String userName) {
-        String userSalt = MetaProjectManager.getManager().getUserSalt(userName);
+    public LoginChallengeData getUserSaltAndChallenge(String userNameOrEmail) {
+    	User user = MetaProjectManager.getManager().getUser(userNameOrEmail);
+        if (user == null) {
+            return null;
+        }
+        String userSalt = user.getSalt();
         if (userSalt == null) {
             return null;
         }
@@ -129,21 +133,21 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         return MetaProjectManager.getManager().allowsCreateUser();
     }
 
-    public UserId authenticateToLogin(String userName, String response) {
+    public UserId authenticateToLogin(String userNameOrEmail, String response) {
         HttpServletRequest request = this.getThreadLocalRequest();
         HttpSession session = request.getSession();
 
         String challenge = (String) session.getAttribute(AuthenticationConstants.LOGIN_CHALLENGE);
         session.setAttribute(AuthenticationConstants.LOGIN_CHALLENGE, null);
 
-        User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
+        User user = MetaProjectManager.getManager().getUser(userNameOrEmail);
         if (user == null) { //user not in metaproject
             return UserId.getGuest();
         }
         AuthenticationUtil authenticatinUtil = new AuthenticationUtil();
         boolean isverified = authenticatinUtil.verifyChallengedHash(user.getDigestedPassword(), response, challenge);
         if (isverified) {
-            UserId userId = UserId.getUserId(userName);
+            UserId userId = UserId.getUserId(user.getName());
             SessionConstants.setAttribute(SessionConstants.USER_ID, userId, session);
             return userId;
         }
