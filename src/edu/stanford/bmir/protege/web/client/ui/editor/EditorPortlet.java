@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.awt.*;
 import java.util.Collection;
@@ -49,7 +50,7 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
         EditorContextMapper contextMapper = new EditorContextMapper();
         contextMapper.registerSelector(new EntityDataContextSelector());
 
-        editorPresenter = new EditorPresenter(contextMapper);
+        editorPresenter = new EditorPresenter(getProjectId(), contextMapper);
         editorPresenter.addEditorContextChangedHandler(new EditorContextChangedHandler() {
             @Override
             public void handleEditorContextChanged(EditorContextChangedEvent editorContextChangedEvent) {
@@ -75,5 +76,10 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
             return Optional.absent();
         }
         return Optional.<EditorCtx>of(new OWLEntityDataContext(getProjectId(), sel.get()));
+    }
+
+    @Override
+    protected void onDestroy() {
+        editorPresenter.dispose();
     }
 }
