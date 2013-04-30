@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -15,6 +16,8 @@ public class DownloadProjectRequestHandlerImpl implements DownloadProjectRequest
     @Override
     public void handleProjectDownloadRequest(ProjectId projectId) {
         String encodedProjectName = URL.encode(projectId.getId());
-        Window.open("download?ontology=" + encodedProjectName, "Download ontology", "");
+        String baseURL = GWT.getHostPageBaseURL();
+        String downloadURL = baseURL + "download?ontology=" + encodedProjectName;
+        Window.open(downloadURL, "Download ontology", "");
     }
 }

@@ -1,8 +1,12 @@
 package edu.stanford.bmir.protege.web.server.notes.converter;
 
+import com.google.common.base.Optional;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,7 +21,7 @@ public class CHAONoteData implements Comparable<CHAONoteData> {
 
     private String author;
     
-    private String subject;
+    private Optional<String> subject;
     
     private String body;
     
@@ -27,7 +31,7 @@ public class CHAONoteData implements Comparable<CHAONoteData> {
     
     private List<CHAONoteData> replies = new ArrayList<CHAONoteData>();
 
-    public CHAONoteData(String author, String subject, String body, String type, long timestamp, List<CHAONoteData> replies) {
+    public CHAONoteData(String author, Optional<String> subject, String body, String type, long timestamp, List<CHAONoteData> replies) {
         this.author = author;
         this.subject = subject;
         this.body = body;
@@ -36,11 +40,12 @@ public class CHAONoteData implements Comparable<CHAONoteData> {
         this.replies.addAll(replies);
     }
 
+
     public String getAuthor() {
         return author;
     }
 
-    public String getSubject() {
+    public Optional<String> getSubject() {
         return subject;
     }
 
@@ -96,7 +101,7 @@ public class CHAONoteData implements Comparable<CHAONoteData> {
 
         sb.append(prefix);
         sb.append("SUBJECT  : ");
-        sb.append(subject);
+        sb.append(subject.or(""));
         sb.append("\n");
 
 

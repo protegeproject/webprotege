@@ -52,10 +52,22 @@
         .project-list-position {
             position: absolute;
             top: 60px;
-            bottom: 0px;
+            bottom: 25px;
             left: 250px;
             right: 0px;
             /*border: green 1px solid;*/
+        }
+
+        .footer {
+            position: absolute;
+            height: 25px;
+            bottom: 0px;
+            left: 250px;
+            right: 0px;
+            color: #808080;
+            font-size: 10px;
+            border-top: 1px solid #f1f1f1;
+            padding-top: 2px;
         }
 
         .notes-panel {
@@ -71,6 +83,8 @@
         .notes-panel-close-button {
             margin-top: 15px;
         }
+
+
 
     </ui:style>
 
@@ -94,6 +108,12 @@
         <g:FlowPanel addStyleNames="{style.project-list-position}">
             <projectlist:ProjectListViewImpl ui:field="projectListView" width="100%" height="100%"/>
         </g:FlowPanel>
+
+        <g:HTMLPanel addStyleNames="{style.footer}">
+            WebProt&eacute;g&eacute; is developed by the Prot&eacute;g&eacute; team in the <a href="http://bmir.stanford.edu">Biomedical Informatics
+            Research Group (BMIR)</a> at Stanford University, California. The work is supported by Grant GM103316 from the National Institute of General Medical Sciences
+            at the United States National Institute of Health.
+        </g:HTMLPanel>
 
     </g:HTMLPanel>
 </ui:UiBinder>

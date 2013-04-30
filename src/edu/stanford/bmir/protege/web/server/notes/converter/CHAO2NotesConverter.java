@@ -1,12 +1,25 @@
 package edu.stanford.bmir.protege.web.server.notes.converter;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
+import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.shared.notes.*;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.protege.notesapi.NotesManager;
+import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentParserFactory;
+import org.semanticweb.owlapi.io.OWLParserFactoryRegistry;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.AutoIRIMapper;
 
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Author: Matthew Horridge<br>
@@ -85,15 +98,8 @@ public class CHAO2NotesConverter {
 
     private OWLDataProperty dateProperty;
 
-
-    private final OWLOntologyManager manager;
-
     private OWLDataFactory df;
 
-
-    private File notesOntologyDocument;
-
-    private File domainOntologyDocument;
 
 
     private OWLOntology domainOntology;
@@ -101,16 +107,19 @@ public class CHAO2NotesConverter {
     private OWLOntology notesOntology;
 
 
-    private Map<OWLClass, OWLNamedIndividual> cls2OntologyClsIndividualMap = new HashMap<OWLClass, OWLNamedIndividual>();
+    private Map<OWLEntity, OWLNamedIndividual> entity2OntologyClsIndividualMap = new HashMap<OWLEntity, OWLNamedIndividual>();
 
 
-    private Map<OWLNamedIndividual, Set<OWLNamedIndividual>> notes2Replies = new HashMap<OWLNamedIndividual, Set<OWLNamedIndividual>>();
+    //    private Map<OWLNamedIndividual, Set<OWLNamedIndividual>> notes2Replies = new HashMap<OWLNamedIndividual, Set<OWLNamedIndividual>>();
+    private Multimap<OWLNamedIndividual, OWLNamedIndividual> notes2Replies = HashMultimap.create();
 
-    public CHAO2NotesConverter(File domainOntologyDocument, File notesOntologyDocument, String base) {
-        this.domainOntologyDocument = domainOntologyDocument;
-        this.notesOntologyDocument = notesOntologyDocument;
-        manager = WebProtegeOWLManager.createOWLOntologyManager();
-        df = manager.getOWLDataFactory();
+
+
+    public CHAO2NotesConverter(OWLOntology domainOntology, OWLOntology notesOntology, String base) {
+        this.domainOntology = domainOntology;
+        this.notesOntology = notesOntology;
+        OWLParserFactoryRegistry.getInstance().registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
+        df = notesOntology.getOWLOntologyManager().getOWLDataFactory();
         ontologyClass = df.getOWLClass(IRI.create(base + "#" + ONTOLOGY_CLASS_IRI_FRAGMENT));
         currentNameProperty = df.getOWLDataProperty(IRI.create(base + "#" + CURRENT_NAME_FRAGMENT));
         annotatesProperty = df.getOWLObjectProperty(IRI.create(base + "#" + ANNOTATES_NAME_FRAGMENT));
@@ -120,35 +129,27 @@ public class CHAO2NotesConverter {
         createdProperty = df.getOWLObjectProperty(IRI.create(base + "#" + CREATED_NAME_FRAGMENT));
         dateProperty = df.getOWLDataProperty(IRI.create(base + "#" + DATE_NAME_FRAGMENT));
 
-        loadOntologies();
-
 
         mapOntologyClasses();
-
     }
 
 
-    private void loadOntologies() {
-        try {
-            domainOntology = WebProtegeOWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(domainOntologyDocument);
-            notesOntology = manager.loadOntologyFromOntologyDocument(notesOntologyDocument);
-        }
-        catch (OWLOntologyCreationException e) {
-            throw new RuntimeException(e);
-        }
 
-    }
+
 
     private void mapOntologyClasses() {
         for (OWLClassAssertionAxiom ax : notesOntology.getClassAssertionAxioms(ontologyClass)) {
-            OWLNamedIndividual ontologyClsIndividual = ax.getIndividual().asOWLNamedIndividual();
-            IRI ontologyClsIndividualIRI = ontologyClsIndividual.getIRI();
-            Set<OWLLiteral> values = ontologyClsIndividual.getDataPropertyValues(currentNameProperty, notesOntology);
-            for (OWLLiteral val : values) {
-                String iriLiteral = val.getLiteral().trim();
-                IRI iri = IRI.create(iriLiteral);
-                if (domainOntology.containsEntityInSignature(iri)) {
-                    cls2OntologyClsIndividualMap.put(df.getOWLClass(iri), ontologyClsIndividual);
+            final OWLIndividual individual = ax.getIndividual();
+            if (individual.isNamed()) {
+                OWLNamedIndividual ontologyClsIndividual = individual.asOWLNamedIndividual();
+                IRI ontologyClsIndividualIRI = ontologyClsIndividual.getIRI();
+                Set<OWLLiteral> values = ontologyClsIndividual.getDataPropertyValues(currentNameProperty, notesOntology);
+                for (OWLLiteral val : values) {
+                    String iriLiteral = val.getLiteral().trim();
+                    IRI iri = IRI.create(iriLiteral);
+                    if (domainOntology.containsEntityInSignature(iri)) {
+                        entity2OntologyClsIndividualMap.put(df.getOWLClass(iri), ontologyClsIndividual);
+                    }
                 }
             }
         }
@@ -160,29 +161,101 @@ public class CHAO2NotesConverter {
                 OWLNamedIndividual subjectNoteIndividual = ax.getObject().asOWLNamedIndividual();
                 // Subject becomes object
                 OWLNamedIndividual objectNoteIndividual = ax.getSubject().asOWLNamedIndividual();
-                Set<OWLNamedIndividual> noteObjectIRIs = notes2Replies.get(subjectNoteIndividual);
-                if (noteObjectIRIs == null) {
-                    noteObjectIRIs = new HashSet<OWLNamedIndividual>();
-                    notes2Replies.put(subjectNoteIndividual, noteObjectIRIs);
-                }
-                noteObjectIRIs.add(objectNoteIndividual);
+                notes2Replies.put(subjectNoteIndividual, objectNoteIndividual);
             }
         }
 
-        for (OWLClass cls : cls2OntologyClsIndividualMap.keySet()) {
-            OWLNamedIndividual individual = cls2OntologyClsIndividualMap.get(cls);
-            Set<OWLNamedIndividual> notes = notes2Replies.get(individual);
-            if (notes != null) {
-                List<CHAONoteData> noteDatas = new ArrayList<CHAONoteData>();
-                for (OWLNamedIndividual note : notes) {
-                    CHAONoteData noteData = dumpNote(note, 1);
-                    noteDatas.add(noteData);
-                }
+        for (OWLEntity entity : entity2OntologyClsIndividualMap.keySet()) {
+            OWLNamedIndividual individual = entity2OntologyClsIndividualMap.get(entity);
+            List<CHAONoteData> noteDatas = new ArrayList<CHAONoteData>();
+            for (OWLNamedIndividual note : notes2Replies.get(individual)) {
+                CHAONoteData noteData = dumpNote(note, 1);
+                noteDatas.add(noteData);
             }
 
         }
+    }
+
+    public void convertToNotes(OWLAPINotesManager notesManager) {
+        for (OWLEntity entity : entity2OntologyClsIndividualMap.keySet()) {
+            OWLNamedIndividual representativeInd = entity2OntologyClsIndividualMap.get(entity);
+            final Collection<OWLNamedIndividual> namedIndividuals = notes2Replies.get(representativeInd);
+            if (!namedIndividuals.isEmpty()) {
+                for (OWLNamedIndividual noteInd : namedIndividuals) {
+                    CHAONoteData data = dumpNote(noteInd, 0);
+                    for(CHAONoteData d : data.getReplies()) {
+                        convertToNotes(notesManager, d, entity);
+                    }
+                }
+            }
+        }
+    }
 
 
+
+    private void convertToNotes(OWLAPINotesManager notesManager, CHAONoteData noteData, OWLEntity entity) {
+        NoteContent content = NoteContent.builder().setSubject(noteData.getSubject()).setBody(noteData.getBody()).setNoteType(NoteType.COMMENT).build();
+        final UserId author = UserId.getUserId(noteData.getAuthor());
+        Note note = notesManager.addNoteToEntity(entity, content, author, noteData.getTimestamp());
+        for(CHAONoteData reply : noteData.getReplies()) {
+            convertToNotes(notesManager, reply, note.getNoteId());
+        }
+
+    }
+
+    private void convertToNotes(OWLAPINotesManager notesManager, CHAONoteData noteData, NoteId replyTo) {
+        NoteContent content = NoteContent.builder().setSubject(noteData.getSubject()).setBody(noteData.getBody()).setNoteType(NoteType.COMMENT).build();
+        Note note = notesManager.addReplyToNote(replyTo, content, UserId.getUserId(noteData.getAuthor()), noteData.getTimestamp());
+        for(CHAONoteData reply : noteData.getReplies()) {
+            convertToNotes(notesManager, reply, note.getNoteId());
+        }
+
+    }
+
+    public Multimap<OWLEntity, Note> convertToNotes() {
+        Multimap<OWLEntity, Note> result = HashMultimap.create();
+        for (OWLEntity entity : entity2OntologyClsIndividualMap.keySet()) {
+            OWLNamedIndividual representativeInd = entity2OntologyClsIndividualMap.get(entity);
+            final Collection<OWLNamedIndividual> namedIndividuals = notes2Replies.get(representativeInd);
+            if (!namedIndividuals.isEmpty()) {
+                for (OWLNamedIndividual noteInd : namedIndividuals) {
+                    CHAONoteData data = dumpNote(noteInd, 0);
+                    for(CHAONoteData d : data.getReplies()) {
+                        Set<Note> notes = new HashSet<Note>();
+                        convertToNotes(notes, d, Optional.<NoteId>absent());
+                        result.putAll(entity, notes);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private void convertToNotes(Set<Note> notes, CHAONoteData noteData, Optional<NoteId> replyTo) {
+        NoteId noteId = NoteId.createNoteIdFromLexicalForm("Note_" + UUID.randomUUID().toString());
+        NoteHeader header = new NoteHeader(noteId, replyTo, UserId.getUserId(noteData.getAuthor()), noteData.getTimestamp());
+        NoteContent content = NoteContent.builder().setSubject(noteData.getSubject()).setBody(noteData.getBody()).setNoteType(NoteType.COMMENT).build();
+        Note note = Note.createNote(header, content);
+        notes.add(note);
+        for(CHAONoteData reply : noteData.getReplies()) {
+            convertToNotes(notes, reply, Optional.of(noteId));
+        }
+
+    }
+
+    private void dumpNotes() {
+
+        for (OWLEntity entity : entity2OntologyClsIndividualMap.keySet()) {
+            OWLNamedIndividual representativeInd = entity2OntologyClsIndividualMap.get(entity);
+            final Collection<OWLNamedIndividual> namedIndividuals = notes2Replies.get(representativeInd);
+            if (!namedIndividuals.isEmpty()) {
+                System.out.println("--------------------------------------------------------------------------------------");
+                System.out.println(entity.getEntityType() + ": " + entity);
+                for (OWLNamedIndividual noteInd : namedIndividuals) {
+                    System.out.println(dumpNote(noteInd, 0));
+                }
+            }
+        }
     }
 
     private CHAONoteData dumpNote(OWLNamedIndividual note, int depth) {
@@ -218,7 +291,7 @@ public class CHAO2NotesConverter {
             }
         }
 
-        Set<OWLNamedIndividual> replyIds = notes2Replies.get(note);
+        Collection<OWLNamedIndividual> replyIds = notes2Replies.get(note);
         List<CHAONoteData> replies = new ArrayList<CHAONoteData>();
         if (replyIds != null) {
             for (OWLNamedIndividual reply : replyIds) {
@@ -226,8 +299,56 @@ public class CHAO2NotesConverter {
                 replies.add(replyNoteData);
             }
         }
-        return new CHAONoteData(author, subject, body, typeName, timestamp, replies);
+
+        return new CHAONoteData(author, cleanSubject(subject), cleanBody(body), typeName, timestamp, replies);
     }
+
+    private static Optional<String> cleanSubject(String subject) {
+        final String trimmedSubject = subject.trim();
+        if(trimmedSubject.startsWith("Re:")) {
+            return Optional.absent();
+        }
+        else if(trimmedSubject.isEmpty()) {
+            return Optional.absent();
+        }
+        else {
+            return Optional.of(trimmedSubject);
+        }
+    }
+
+
+    private static String cleanBody(String body) {
+        body = removeNBSP(body);
+        String stripped = removeQuotedReplies(body);
+        stripped = removeTrailingBR(stripped);
+        return removeNL(stripped);
+    }
+
+    private static String removeTrailingBR(String stripped) {
+        Pattern brEnding = Pattern.compile("((<br>)+)\\Z");
+        final Matcher matcher = brEnding.matcher(stripped);
+        if (matcher.find()) {
+            return stripped.substring(0, matcher.start());
+        }
+        else {
+            return stripped;
+        }
+    }
+
+    private static String removeNL(String s) {
+        return s.replaceAll("\\s*\\n\\s*", " ");
+    }
+
+    private static String removeQuotedReplies(String body) {
+        Pattern pattern = Pattern.compile("=====.*", Pattern.DOTALL);
+        Matcher m = pattern.matcher(body);
+        return m.replaceAll("").trim();
+    }
+
+    private static String removeNBSP(String body) {
+        return body.replace("&nbsp;", " ").trim();
+    }
+
 
     private static String getFirstLiteralValue(Set<OWLLiteral> literals, String defaultValue) {
         if (literals.isEmpty()) {
@@ -239,10 +360,9 @@ public class CHAO2NotesConverter {
     }
 
 
-    public static void main(String[] args) {
-        File file = new File("/Users/matthewhorridge/Desktop/OPL_2012.06.08/opl_2012.06.08_chao.owl");
-        File domainOntologyDocument = new File("/Users/matthewhorridge/Desktop/OPL_2012.06.08/opl_2012.06.08.owl");
-        CHAO2NotesConverter converter = new CHAO2NotesConverter(domainOntologyDocument, file, "http://www.owl-ontologies.com/Ontology1339206360.owl");
-
+    public static void main(String[] args) throws Exception {
+        File file = new File("/Users/matthewhorridge/Desktop/oplchao/2013.04.26.OPL_annotation.owl");
+        File domainOntologyDocument = new File("/Users/matthewhorridge/Desktop/oplchao/opl.owl");
+//        CHAO2NotesConverter converter = new CHAO2NotesConverter(domainOntologyDocument, file, "http://www.owl-ontologies.com/Ontology1367000748.owl");
     }
 }
