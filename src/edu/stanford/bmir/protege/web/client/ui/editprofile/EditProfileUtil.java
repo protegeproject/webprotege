@@ -230,7 +230,7 @@ public class EditProfileUtil {
             GWT.log("Error at Editing Profile Info", caught);
             win.getEl().unmask();
             MessageBox.alert("Error",
-            "There was an error at changing the User Profile Infomation.<br />Please try again later.");
+            "There was an error at changing the user profile.<br />Please try again later.");
         }
 
         @Override
@@ -240,8 +240,7 @@ public class EditProfileUtil {
             if (completions > 2){
             win.getEl().unmask();
             win.close();
-            MessageBox.alert("Profile Information was Updated successfully.");
-                completions = 0;
+            completions = 0;
             }
             }
         }
@@ -382,7 +381,7 @@ public class EditProfileUtil {
                     timer.cancel();
 
                     if (passwordChangedCookie.equalsIgnoreCase(AuthenticationConstants.CHANGE_PASSWORD_SUCCESS)) {
-                        MessageBox.alert("Password Changed successfully");
+                        MessageBox.alert("Password changed successfully");
                     }
                     Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
                 }
