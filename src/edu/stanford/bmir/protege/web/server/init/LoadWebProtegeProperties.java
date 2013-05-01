@@ -33,7 +33,7 @@ public class LoadWebProtegeProperties implements ConfigurationTask {
         String fileName = WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE_NAME;
         File file = new File(new File(servletContext.getRealPath("")), fileName);
         if(!file.exists()) {
-            throw new WebProtegeConfigurationException("The WebProtege properties configuration file could not be found.  WebProtege expected to find the file " + file.getAbsolutePath() + " but it could not find it.");
+            return;
         }
         try {
             Properties properties = new Properties();
