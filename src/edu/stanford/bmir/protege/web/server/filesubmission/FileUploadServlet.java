@@ -8,11 +8,10 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.semanticweb.owlapi.io.FileDocumentSource;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.io.UnparsableOntologyException;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.UnloadableImportException;
+import org.semanticweb.owlapi.model.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -186,7 +185,8 @@ public class FileUploadServlet extends HttpServlet {
     private void processOntology(File ontologyDocument) throws OWLOntologyCreationException {
         LOGGER.info("Parsing uploaded file ontology...");
         OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
-        manager.loadOntologyFromOntologyDocument(ontologyDocument);
+        OWLOntologyLoaderConfiguration configuration = new OWLOntologyLoaderConfiguration().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
+        manager.loadOntologyFromOntologyDocument(new FileDocumentSource(ontologyDocument), configuration);
         LOGGER.info("    .... parsed");
     }
     
