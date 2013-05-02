@@ -21,6 +21,10 @@ import static edu.stanford.bmir.protege.web.server.WebProtegeProperties.Property
 public class WebProtegeProperties implements Serializable {
 
 
+
+    private static WebProtegeProperties instance;
+
+
     public static enum Optionality {
 
         HAS_DEFAULT_VALUE,
@@ -163,26 +167,22 @@ public class WebProtegeProperties implements Serializable {
         }
     }
 
-    private static ImmutableMap<PropertyName, Optional<String>> propertyValueMap;
+    private ImmutableMap<PropertyName, Optional<String>> propertyValueMap;
 
 
     public static final String WEB_PROTEGE_PROPERTIES_FILE_NAME = "webprotege.properties";
 
+
     /**
-     * Initialises the {@link WebProtegeProperties} object with property values from the specified {@link Properties}
-     * object.
-     * @param properties The properties object which should be used for initialization.  Not {@code null}.  Only property
-     * values whose property names are equal to the property names specified by the {@link PropertyName} enum will be
-     * read.
-     * @throws WebProtegeConfigurationException If one of the expected property values listed in
-     * {@link edu.stanford.bmir.protege.web.server.WebProtegeProperties.PropertyName#values()} does not have a default
-     * value and does not have a value specified in {@code properties}.
-     *
+     * Internal constructor to initialize properties.
+     * @param properties A {@link Properties} object which contains the properties to be used in the initialization.
+     * Not {@code null}.
+     * @throws NullPointerException if {@code properties} is {@code null}.
+     * @throws WebProtegeConfigurationException if required property values are missing.  See the {@link PropertyName}
+     * enum for a list of required properties (which do not have defaults).
      */
-    public static void initFromProperties(Properties properties) throws WebProtegeConfigurationException {
-        if (propertyValueMap != null) {
-            throw new IllegalStateException("WebProtegeProperties has already been initialized");
-        }
+    private WebProtegeProperties(final Properties properties) {
+        checkNotNull(properties);
         ImmutableMap.Builder<PropertyName, Optional<String>> builder = ImmutableMap.builder();
         for (PropertyName propertyName : values()) {
             final String value = properties.getProperty(propertyName.getPropertyName(), null);
@@ -195,16 +195,45 @@ public class WebProtegeProperties implements Serializable {
                 }
                 else {
                     throw new WebProtegeConfigurationException("Property " + propertyName.getPropertyName() +
-                    		" does not have a default value and no value has been specified in the " + WEB_PROTEGE_PROPERTIES_FILE_NAME + 
-                    		" file, or as a Java argument, or environment variable." +
-                    		" To fix this error, you may: " +
-                    				"(1) Specify a value for this property in the " + WEB_PROTEGE_PROPERTIES_FILE_NAME + " file; or " +
-                    				"(2) Add the property as a Java argument when starting your servlet container (-Dwebprotege." + propertyName.getPropertyName() + "=your_value); or " +
-                    				"(3) Add the property as an environment variable (webprotege." + propertyName.getPropertyName() + "=your_value).");
+                            " does not have a default value and no value has been specified in the " + WEB_PROTEGE_PROPERTIES_FILE_NAME +
+                            " file, or as a Java argument, or environment variable." +
+                            " To fix this error, you may: " +
+                            "(1) Specify a value for this property in the " + WEB_PROTEGE_PROPERTIES_FILE_NAME + " file; or " +
+                            "(2) Add the property as a Java argument when starting your servlet container (-Dwebprotege." + propertyName.getPropertyName() + "=your_value); or " +
+                            "(3) Add the property as an environment variable (webprotege." + propertyName.getPropertyName() + "=your_value).");
                 }
             }
         }
         propertyValueMap = builder.build();
+    }
+
+    /**
+     * Gets the one and only instance of {@link WebProtegeProperties}.
+     * @return The singleton instance of {@link WebProtegeProperties}.  Not {@code null}.
+     */
+    public static WebProtegeProperties get() {
+        if(instance == null) {
+            throw new IllegalStateException("WebProtegeProperties has not been initialized.  WebProtegeProperties.initFromProperties(Properties) must be called ONCE by some initializer.");
+        }
+        return instance;
+    }
+
+    /**
+     * Initialises the {@link WebProtegeProperties} object with property values from the specified {@link Properties}
+     * object.  This method should only be called once by some initial setup for the application.
+     * @param properties The properties object which should be used for initialization.  Not {@code null}.  Only property
+     * values whose property names are equal to the property names specified by the {@link PropertyName} enum will be
+     * read.
+     * @throws WebProtegeConfigurationException If one of the expected property values listed in
+     * {@link edu.stanford.bmir.protege.web.server.WebProtegeProperties.PropertyName#values()} does not have a default
+     * value and does not have a value specified in {@code properties}.
+     *
+     */
+    public static void initFromProperties(Properties properties) throws WebProtegeConfigurationException {
+        if (instance != null) {
+            throw new IllegalStateException("WebProtegeProperties has already been initialized");
+        }
+        instance = new WebProtegeProperties(properties);
     }
 
     /**
@@ -214,12 +243,12 @@ public class WebProtegeProperties implements Serializable {
      *         does not have a value and {@code defaultValue} is specified as {@code null}.
      * @throws NullPointerException if {@code propertyName} is {@code null}.
      */
-    private static Optional<String> getOptionalString(PropertyName propertyName) {
+    private Optional<String> getOptionalString(PropertyName propertyName) {
         return propertyValueMap.get(checkNotNull(propertyName));
     }
 
 
-    private static String getRequiredString(PropertyName propertyName) {
+    private String getRequiredString(PropertyName propertyName) {
         Optional<String> value = propertyValueMap.get(propertyName);
         if (!value.isPresent()) {
             throw new RuntimeException("value is not present for required property value");
@@ -236,62 +265,62 @@ public class WebProtegeProperties implements Serializable {
     ////
 
 
-    public static String getApplicationName() {
+    public String getApplicationName() {
         return getRequiredString(APPLICATION_NAME);
     }
 
-    public static File getDataDirectory() {
+    public  File getDataDirectory() {
         String dataDirectory = getRequiredString(DATA_DIRECTORY);
         return new File(dataDirectory);
     }
 
-    public static Optional<String> getEmailHostName() {
+    public  Optional<String> getEmailHostName() {
         return getOptionalString(EMAIL_HOST);
     }
 
-    public static Optional<String> getEmailPort() {
+    public  Optional<String> getEmailPort() {
         return getOptionalString(EMAIL_PORT);
     }
 
-    public static Optional<String> getEmailAccount() {
+    public  Optional<String> getEmailAccount() {
         return getOptionalString(EMAIL_ACCOUNT);
     }
 
-    public static Optional<String> getEmailPassword() {
+    public  Optional<String> getEmailPassword() {
         return getOptionalString(EMAIL_PASSWORD);
     }
 
-    public static boolean isLoginWithHttps() {
+    public  boolean isLoginWithHttps() {
         Optional<String> value = getOptionalString(HTTPS_ENABLED);
         return value.isPresent() && Boolean.getBoolean(value.get());
     }
 
-    public static int getHttpsPort() {
+    public  int getHttpsPort() {
         String value = getRequiredString(HTTPS_PORT);
         return Integer.parseInt(value);
     }
 
-    public static boolean isOpenIdAuthenticationEnabled() {
+    public  boolean isOpenIdAuthenticationEnabled() {
         return "true".equals(getRequiredString(OPEN_ID_ENABLED));
     }
 
-    public static Optional<String> getAdministratorEmail() {
+    public  Optional<String> getAdministratorEmail() {
         return getOptionalString(ADMIN_EMAIL);
     }
 
 
-    public static String getSslFactory() {
+    public  String getSslFactory() {
         return "javax.net.ssl.SSLSocketFactory";
 //        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_SSL_FACTORY_PROP, "javax.net.ssl.SSLSocketFactory");
     }
 
 
-    public static int getAccountInvitationExpirationPeriodInDays() {
+    public  int getAccountInvitationExpirationPeriodInDays() {
         return Integer.MAX_VALUE;
     }
 
 
-    public static Map<String, String> getClientMap() {
+    public  Map<String, String> getClientMap() {
         Map<String, String> result = new HashMap<String, String>();
         for (PropertyName propertyName : propertyValueMap.keySet()) {
             if (propertyName.isClientProperty()) {
@@ -302,7 +331,6 @@ public class WebProtegeProperties implements Serializable {
             }
         }
         return result;
-
     }
 
 }

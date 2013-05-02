@@ -15,6 +15,6 @@ public class ApplicationPropertiesServiceImpl extends WebProtegeRemoteServiceSer
     private static final long serialVersionUID = -2917459604045537935L;
 
     public Map<String, String> initialize() {
-        return WebProtegeProperties.getClientMap();
+        return WebProtegeProperties.get().getClientMap();
     }
 }

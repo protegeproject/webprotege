@@ -16,7 +16,7 @@ public class CheckDataDirectoryIsReadableAndWritable implements ConfigurationTas
 
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-        File dataDirectory = WebProtegeProperties.getDataDirectory();
+        File dataDirectory = WebProtegeProperties.get().getDataDirectory();
         File testFile = new File(dataDirectory, "write.test." + UUID.randomUUID() + ".txt");
         try {
             try {

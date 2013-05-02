@@ -15,7 +15,7 @@ public class CheckWebProtegeDataDirectoryExists implements ConfigurationTask {
 
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-       File dataDirectory = WebProtegeProperties.getDataDirectory();
+       File dataDirectory = WebProtegeProperties.get().getDataDirectory();
        if(!dataDirectory.exists()) {
            throw new WebProtegeConfigurationException(getDataDirectoryDoesNotExistsMessage(dataDirectory));
        }

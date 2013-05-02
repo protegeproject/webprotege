@@ -166,7 +166,7 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
     }
 
     private boolean isAuthenticateWithOpenId() {
-        return WebProtegeProperties.isOpenIdAuthenticationEnabled();
+        return WebProtegeProperties.get().isOpenIdAuthenticationEnabled();
     }
 
     public UserData checkIfOpenIdInSessionForLogin() {

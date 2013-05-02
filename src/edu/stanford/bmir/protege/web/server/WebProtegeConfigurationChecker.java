@@ -14,8 +14,10 @@ import java.util.List;
  */
 public class WebProtegeConfigurationChecker {
 
+    /**
+     * A list of initialization tasks.  Ordering should be unimportant.
+     */
     private List<ConfigurationTask> configurationTasks = Arrays.asList(
-            new LoadWebProtegeProperties(),
             new CheckWebProtegeDataDirectoryExists(),
             new CheckDataDirectoryIsReadableAndWritable(),
             new CheckMetaProjectExists(),
@@ -24,6 +26,10 @@ public class WebProtegeConfigurationChecker {
     );
 
     public boolean performConfiguration(ServletContext servletContext) throws WebProtegeConfigurationException {
+
+        LoadWebProtegeProperties loadWebProtegeProperties = new LoadWebProtegeProperties();
+        loadWebProtegeProperties.run(servletContext);
+
         for(ConfigurationTask task : configurationTasks) {
             task.run(servletContext);
         }

@@ -107,7 +107,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
             throw new IllegalArgumentException("User " + userName + " does not have an email configured.");
         }
         changePassword(userName, EmailConstants.RESET_PASSWORD);
-        if(!WebProtegeProperties.getEmailAccount().isPresent()) {
+        if(!WebProtegeProperties.get().getEmailAccount().isPresent()) {
             throw new WebProtegeConfigurationException("Email is not configured on the server.  Please contact the administrator");
         }
         EmailUtil.sendEmail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY);

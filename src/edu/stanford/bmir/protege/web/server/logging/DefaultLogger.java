@@ -134,7 +134,7 @@ public class DefaultLogger implements WebProtegeLogger {
 
     private void emailMessage(String message) {
         try {
-            Optional<String> adminEmail = WebProtegeProperties.getAdministratorEmail();
+            Optional<String> adminEmail = WebProtegeProperties.get().getAdministratorEmail();
             if (adminEmail.isPresent()) {
                 EmailUtil.sendEmail(adminEmail.get(), SUBJECT, message);
             }

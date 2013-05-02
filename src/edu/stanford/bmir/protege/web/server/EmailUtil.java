@@ -19,9 +19,9 @@ public class EmailUtil {
         checkNotNull(subject);
         checkNotNull(message);
 
-        Optional<String> host = WebProtegeProperties.getEmailHostName();
-        Optional<String> account = WebProtegeProperties.getEmailAccount();
-        Optional<String> port = WebProtegeProperties.getEmailPort();
+        Optional<String> host = WebProtegeProperties.get().getEmailHostName();
+        Optional<String> account = WebProtegeProperties.get().getEmailAccount();
+        Optional<String> port = WebProtegeProperties.get().getEmailPort();
         if (!host.isPresent() || !account.isPresent() || !port.isPresent()) {
             throw new WebProtegeConfigurationException("Cannot send email.  Email has not been configured via webprotege.properties.");
         }
@@ -34,14 +34,14 @@ public class EmailUtil {
         props.put("mail.debug", "false");
         props.put("mail.smtp.port", port.get());
         props.put("mail.smtp.socketFactory.port", port.get());
-        props.put("mail.smtp.socketFactory.class", WebProtegeProperties.getSslFactory());
+        props.put("mail.smtp.socketFactory.class", WebProtegeProperties.get().getSslFactory());
         props.put("mail.smtp.socketFactory.fallback", "false");
 
 
         Session session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(WebProtegeProperties.getEmailAccount().get(), WebProtegeProperties.getEmailPassword().get());
+                return new PasswordAuthentication(WebProtegeProperties.get().getEmailAccount().get(), WebProtegeProperties.get().getEmailPassword().get());
             }
         });
 

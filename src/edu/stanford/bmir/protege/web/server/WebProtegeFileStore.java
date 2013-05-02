@@ -26,7 +26,7 @@ public class WebProtegeFileStore {
 
 
 
-    private static final WebProtegeFileStore instance = new WebProtegeFileStore(WebProtegeProperties.getDataDirectory());
+    private static final WebProtegeFileStore instance = new WebProtegeFileStore(WebProtegeProperties.get().getDataDirectory());
 
 
     private final File dataDirectory;

@@ -845,7 +845,7 @@ public class AccessPolicyManager {
      */
     public boolean isInvitationValid(String invitationId) {
         boolean result = false;
-        int expirationPeriodInDays = WebProtegeProperties.getAccountInvitationExpirationPeriodInDays();
+        int expirationPeriodInDays = WebProtegeProperties.get().getAccountInvitationExpirationPeriodInDays();
 
         MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
         User tempUser = metaProjectManager.getMetaProject().getUser(invitationId);

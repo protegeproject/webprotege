@@ -25,7 +25,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
     private static final long serialVersionUID = 5326582825556868383L;
 
     private boolean isAuthenticateWithOpenId() {
-        return WebProtegeProperties.isOpenIdAuthenticationEnabled();
+        return WebProtegeProperties.get().isOpenIdAuthenticationEnabled();
     }
 
     public UserData validateUserAndAddInSession(String name, String password) {
