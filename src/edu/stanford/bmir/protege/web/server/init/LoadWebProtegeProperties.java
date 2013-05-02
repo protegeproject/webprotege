@@ -30,23 +30,22 @@ public class LoadWebProtegeProperties implements ConfigurationTask {
 
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-        String fileName = WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE_NAME;
-        File file = new File(new File(servletContext.getRealPath("")), fileName);
-        if(!file.exists()) {
-            return;
-        }
-        try {
-            Properties properties = new Properties();
-        	FileReader inStream = new FileReader(file);                    	
-            properties.load(inStream);
-            inStream.close();
+    	Properties properties = new Properties();
+    	
+    	String fileName = WebProtegeProperties.WEB_PROTEGE_PROPERTIES_FILE_NAME;
+    	File file = new File(new File(servletContext.getRealPath("")), fileName);
+    	if(file.exists()) {
+    		try {
+    			FileReader inStream = new FileReader(file);                    	
+    			properties.load(inStream);
+    			inStream.close();
+    		} catch (IOException e) {
+    			throw new WebProtegeConfigurationException("Could not read " + file.getAbsolutePath() + ". Message: " + e.getMessage());
+    		}
+    	}
 
-            overridePropertiesWithSystemProperties(properties);
-            WebProtegeProperties.initFromProperties(properties);
-        }
-        catch (IOException e) {
-            throw new WebProtegeConfigurationException("Could not read " + file.getAbsolutePath() + ". Message: " + e.getMessage());
-        }
+    	overridePropertiesWithSystemProperties(properties);
+    	WebProtegeProperties.initFromProperties(properties);
     }
 
     /**
