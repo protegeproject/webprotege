@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.protege.notesapi.NotesManager;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentParserFactory;
 import org.semanticweb.owlapi.io.OWLParserFactoryRegistry;
 import org.semanticweb.owlapi.model.*;
@@ -169,7 +170,7 @@ public class CHAO2NotesConverter {
             OWLNamedIndividual individual = entity2OntologyClsIndividualMap.get(entity);
             List<CHAONoteData> noteDatas = new ArrayList<CHAONoteData>();
             for (OWLNamedIndividual note : notes2Replies.get(individual)) {
-                CHAONoteData noteData = dumpNote(note, 1);
+                CHAONoteData noteData = dumpNote(note, 0);
                 noteDatas.add(noteData);
             }
 
@@ -361,8 +362,15 @@ public class CHAO2NotesConverter {
 
 
     public static void main(String[] args) throws Exception {
-        File file = new File("/Users/matthewhorridge/Desktop/oplchao/2013.04.26.OPL_annotation.owl");
+        OWLParserFactoryRegistry.getInstance().registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
+        File file = new File("/Users/matthewhorridge/Desktop/oplchao/opl-chao.owl");
         File domainOntologyDocument = new File("/Users/matthewhorridge/Desktop/oplchao/opl.owl");
-//        CHAO2NotesConverter converter = new CHAO2NotesConverter(domainOntologyDocument, file, "http://www.owl-ontologies.com/Ontology1367000748.owl");
+        OWLOntologyManager domainMan = OWLManager.createOWLOntologyManager();
+        OWLOntology domainOnt = domainMan.loadOntologyFromOntologyDocument(domainOntologyDocument);
+        OWLOntologyManager chaoMan = OWLManager.createOWLOntologyManager();
+        OWLOntology chaoOnt = chaoMan.loadOntologyFromOntologyDocument(file);
+
+        CHAO2NotesConverter converter = new CHAO2NotesConverter(domainOnt, chaoOnt, "http://www.owl-ontologies.com/Ontology1367000748.owl");
+        converter.dumpNotes();
     }
 }
