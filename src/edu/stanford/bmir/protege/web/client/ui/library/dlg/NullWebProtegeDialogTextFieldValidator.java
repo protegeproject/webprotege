@@ -20,4 +20,14 @@ public class NullWebProtegeDialogTextFieldValidator implements WebProtegeDialogI
     public InlineValidationResult getValidation(ValueBoxBase<String> widget) {
         return InlineValidationResult.getValid();
     }
+
+    @Override
+    public boolean shouldCheckOnKeyUp() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldCheckOnValueChange() {
+        return false;
+    }
 }

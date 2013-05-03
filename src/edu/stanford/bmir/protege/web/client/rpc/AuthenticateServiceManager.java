@@ -54,7 +54,7 @@ public class AuthenticateServiceManager {
     }
 
     //create new user via https
-    public void registerUser(UserId userId, String password, AsyncCallback<UserData> cb) {
-        proxy.registerUser(userId.getUserName(), password, cb);
+    public void registerUser(UserId userId, String password, String email, AsyncCallback<UserData> cb) {
+        proxy.registerUser(userId.getUserName(), password, email, cb);
     }
 }

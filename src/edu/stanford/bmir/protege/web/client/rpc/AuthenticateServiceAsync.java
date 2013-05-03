@@ -30,6 +30,6 @@ public interface AuthenticateServiceAsync {
     
     void sendPasswordReminder(String userName, AsyncCallback<Void> callback);
 
-    void registerUser(String name, String password, AsyncCallback<UserData> callback);
+    void registerUser(String name, String password, String email, AsyncCallback<UserData> callback);
 
 }

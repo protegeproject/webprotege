@@ -67,10 +67,12 @@ public class Authenticate implements EntryPoint {
                     AuthenticationConstants.AUTHEN_USER_WINDOW_CLOSED));
             LoginUtil loginUtil = new LoginUtil();
             loginUtil.loginToAssociateOpenId(true);
-        } else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_CREATE_USER)) {
-            LoginUtil loginUtil = new LoginUtil();
-            loginUtil.createNewUser(true);
         }
+        // Not sure what this is used for - ask Tania
+//        else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_CREATE_USER)) {
+//            LoginUtil loginUtil = new LoginUtil();
+//            loginUtil.createNewUser(true);
+//        }
     }
 
     protected void setWindowClosedCookie(String randomNumber) {

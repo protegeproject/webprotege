@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
+import edu.stanford.bmir.protege.web.shared.user.UserEmailAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
@@ -28,6 +29,8 @@ import edu.stanford.smi.protege.server.metaproject.Policy;
 import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
 import edu.stanford.smi.protege.server.metaproject.User;
 import edu.stanford.smi.protege.server.metaproject.impl.MetaProjectImpl;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class LocalMetaProjectManager extends AbstractMetaProjectManager {
@@ -86,10 +89,18 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
     }
 
 
-    public UserData registerUser(String userName, String password) throws UserRegistrationException {
+    public UserData registerUser(String userName, String email, String password) throws UserRegistrationException {
+        checkNotNull(userName);
+        checkNotNull(email);
+        checkNotNull(password);
         User existingUser = metaproject.getUser(userName);
         if (existingUser != null) {
             throw new UserNameAlreadyExistsException(userName);
+        }
+        for(User user : metaproject.getUsers()) {
+            if(email.equals(user.getEmail())) {
+                throw new UserEmailAlreadyExistsException(email);
+            }
         }
         User newUser = metaproject.createUser(userName, password);
         return AuthenticationUtil.createUserData(UserId.getUserId(newUser.getName()));

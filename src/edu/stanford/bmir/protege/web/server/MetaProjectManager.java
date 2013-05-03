@@ -37,7 +37,7 @@ public abstract class MetaProjectManager {
 
     public abstract boolean hasValidCredentials(String userName, String password);
 
-    public abstract UserData registerUser(String userName, String password) throws UserRegistrationException;
+    public abstract UserData registerUser(String userName, String email, String password) throws UserRegistrationException;
 
     public abstract void changePassword(String userName, String password);
 

@@ -267,7 +267,7 @@ public class OpenIdServiceImpl extends RemoteServiceServlet implements OpenIdSer
             return userData;
         }
 
-        UserData userData = MetaProjectManager.getManager().registerUser(userName, "");
+        UserData userData = MetaProjectManager.getManager().registerUser(userName, emailId, "");
 
         user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
         user.setEmail(emailId);

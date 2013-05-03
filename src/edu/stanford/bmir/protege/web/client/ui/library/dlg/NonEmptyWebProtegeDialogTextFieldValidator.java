@@ -24,4 +24,14 @@ public class NonEmptyWebProtegeDialogTextFieldValidator implements WebProtegeDia
             return InlineValidationResult.getValid();
         }
     }
+
+    @Override
+    public boolean shouldCheckOnKeyUp() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldCheckOnValueChange() {
+        return false;
+    }
 }

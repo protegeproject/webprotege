@@ -25,6 +25,7 @@ import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
@@ -219,10 +220,10 @@ public class LoginUtil {
                 else {
                     UIUtil.mask(win.getEl(), "Please wait until we reset your password and send you an email", true, 1);
                     if (isLoginWithHttps) {
-                        AuthenticateServiceManager.getInstance().sendPasswordReminder(UserId.getUserId(userNameField.getText().trim()), new ForgotPassHandler(win));
+                        AuthenticateServiceManager.getInstance().sendPasswordReminder(UserId.getUserId(userNameField.getText().trim()), new ForgotPassHandler(win, userNameField.getText().trim()));
                     }
                     else {
-                        AdminServiceManager.getInstance().sendPasswordReminder(UserId.getUserId(userNameField.getText()), new ForgotPassHandler(win));
+                        AdminServiceManager.getInstance().sendPasswordReminder(UserId.getUserId(userNameField.getText()), new ForgotPassHandler(win, userNameField.getText().trim()));
                     }
                 }
             }
@@ -384,112 +385,112 @@ public class LoginUtil {
         win.show();
     }
 
-    public void createNewUser(final boolean isLoginWithHttps) {
-        final Window win = new Window();
-        FormPanel newUserformPanel = new FormPanel();
-
-        Label label = new Label("Please enter your Name, Password and other fields");
-        label.setStyleName("login-welcome-msg");
-
-        FlexTable newUserTable = new FlexTable();
-        newUserTable.setWidget(0, 0, label);
-        newUserTable.getFlexCellFormatter().setColSpan(0, 0, 2);
-        newUserTable.getFlexCellFormatter().setHeight(1, 0, "15px");
-        newUserTable.getFlexCellFormatter().setHeight(2, 0, "25px");
-        newUserTable.getFlexCellFormatter().setHeight(3, 0, "25px");
-        newUserTable.getFlexCellFormatter().setHeight(4, 0, "25px");
-        newUserTable.getFlexCellFormatter().setHeight(5, 0, "25px");
-        newUserTable.getFlexCellFormatter().setHeight(6, 0, "50px");
-        newUserformPanel.add(newUserTable);
-
-        final TextBox newUserID = new TextBox();
-        newUserID.setWidth("250px");
-        Label userIdLabel = new Label("User ID:");
-        userIdLabel.setStyleName("label");
-        newUserTable.setWidget(2, 0, userIdLabel);
-        newUserTable.setWidget(2, 1, newUserID);
-
-        final TextBox newUserEmailID = new TextBox();
-        newUserEmailID.setWidth("250px");
-        Label emailIDLabel = new Label("Email:");
-        emailIDLabel.setStyleName("label");
-        newUserTable.setWidget(3, 0, emailIDLabel);
-        newUserTable.setWidget(3, 1, newUserEmailID);
-
-        final PasswordTextBox newUserPassword = new PasswordTextBox();
-        newUserPassword.setWidth("250px");
-        Label newPasswordLabel = new Label("New Password:");
-        newPasswordLabel.setStyleName("label");
-        newUserTable.setWidget(4, 0, newPasswordLabel);
-        newUserTable.setWidget(4, 1, newUserPassword);
-
-        final PasswordTextBox confirmPassword = new PasswordTextBox();
-        confirmPassword.setWidth("250px");
-        Label newConfirmPassLabel = new Label("Confirm Password:");
-        newConfirmPassLabel.setStyleName("label");
-        newUserTable.setWidget(5, 0, newConfirmPassLabel);
-        newUserTable.setWidget(5, 1, confirmPassword);
-
-        confirmPassword.addKeyDownHandler(new KeyDownHandler() {
-            public void onKeyDown(KeyDownEvent event) {
-                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-                    if (newUserEmailID.getText().trim().equals("") || newUserPassword.getText().trim().equals("") || confirmPassword.getText().trim().equals("")) {
-                        MessageBox.alert("User ID and Password cannot be empty.");
-                    }
-                    else {
-                        if (isLoginWithHttps) {
-                            createNewUserViaHttps(newUserID.getText(), newUserPassword, confirmPassword, win);
-                        }
-                        else {
-                            createNewUserViaEncryption(newUserID.getText(), newUserPassword, confirmPassword, newUserEmailID.getText(), win);
-                        }
-                    }
-                }
-            }
-        });
-
-        Button register = new Button("Register", new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                if (newUserEmailID.getText().trim().equals("") || newUserPassword.getText().trim().equals("") || confirmPassword.getText().trim().equals("")) {
-                    MessageBox.alert("Please fill in both the user name and the password.");
-                }
-                else {
-                    if (isLoginWithHttps) {
-                        createNewUserViaHttps(newUserID.getText(), newUserPassword, confirmPassword, win);
-                    }
-                    else {
-                        createNewUserViaEncryption(newUserID.getText(), newUserPassword, confirmPassword, newUserEmailID.getText(), win);
-                    }
-                }
-            }
-        });
-
-        Button cancel = new Button("Cancel", new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                win.close();
-            }
-        });
-
-        HorizontalPanel buttonPanel = new HorizontalPanel();
-        buttonPanel.setSpacing(20);
-        buttonPanel.add(register);
-        buttonPanel.add(cancel);
-
-        newUserTable.setWidget(6, 1, buttonPanel);
-        newUserTable.getFlexCellFormatter().setAlignment(6, 1, HasAlignment.ALIGN_CENTER, HasAlignment.ALIGN_MIDDLE);
-
-        win.setTitle("New User Registration");
-        win.setClosable(true);
-        win.setWidth(428);
-        win.setHeight(240);
-        win.setClosable(true);
-        win.setPaddings(7);
-        win.setCloseAction(Window.HIDE);
-        win.add(newUserformPanel);
-        win.show();
-    }
+//    public void createNewUser(final boolean isLoginWithHttps) {
+//        final Window win = new Window();
+//        FormPanel newUserformPanel = new FormPanel();
+//
+//        Label label = new Label("Please enter your Name, Password and other fields");
+//        label.setStyleName("login-welcome-msg");
+//
+//        FlexTable newUserTable = new FlexTable();
+//        newUserTable.setWidget(0, 0, label);
+//        newUserTable.getFlexCellFormatter().setColSpan(0, 0, 2);
+//        newUserTable.getFlexCellFormatter().setHeight(1, 0, "15px");
+//        newUserTable.getFlexCellFormatter().setHeight(2, 0, "25px");
+//        newUserTable.getFlexCellFormatter().setHeight(3, 0, "25px");
+//        newUserTable.getFlexCellFormatter().setHeight(4, 0, "25px");
+//        newUserTable.getFlexCellFormatter().setHeight(5, 0, "25px");
+//        newUserTable.getFlexCellFormatter().setHeight(6, 0, "50px");
+//        newUserformPanel.add(newUserTable);
+//
+//        final TextBox newUserID = new TextBox();
+//        newUserID.setWidth("250px");
+//        Label userIdLabel = new Label("User ID:");
+//        userIdLabel.setStyleName("label");
+//        newUserTable.setWidget(2, 0, userIdLabel);
+//        newUserTable.setWidget(2, 1, newUserID);
+//
+//        final TextBox newUserEmailID = new TextBox();
+//        newUserEmailID.setWidth("250px");
+//        Label emailIDLabel = new Label("Email:");
+//        emailIDLabel.setStyleName("label");
+//        newUserTable.setWidget(3, 0, emailIDLabel);
+//        newUserTable.setWidget(3, 1, newUserEmailID);
+//
+//        final PasswordTextBox newUserPassword = new PasswordTextBox();
+//        newUserPassword.setWidth("250px");
+//        Label newPasswordLabel = new Label("New Password:");
+//        newPasswordLabel.setStyleName("label");
+//        newUserTable.setWidget(4, 0, newPasswordLabel);
+//        newUserTable.setWidget(4, 1, newUserPassword);
+//
+//        final PasswordTextBox confirmPassword = new PasswordTextBox();
+//        confirmPassword.setWidth("250px");
+//        Label newConfirmPassLabel = new Label("Confirm Password:");
+//        newConfirmPassLabel.setStyleName("label");
+//        newUserTable.setWidget(5, 0, newConfirmPassLabel);
+//        newUserTable.setWidget(5, 1, confirmPassword);
+//
+//        confirmPassword.addKeyDownHandler(new KeyDownHandler() {
+//            public void onKeyDown(KeyDownEvent event) {
+//                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+//                    if (newUserEmailID.getText().trim().equals("") || newUserPassword.getText().trim().equals("") || confirmPassword.getText().trim().equals("")) {
+//                        MessageBox.alert("User ID and Password cannot be empty.");
+//                    }
+//                    else {
+//                        if (isLoginWithHttps) {
+//                            createNewUserViaHttps(newUserID.getText(), newUserPassword, confirmPassword, win);
+//                        }
+//                        else {
+//                            createNewUserViaEncryption(newUserID.getText(), newUserPassword, confirmPassword, newUserEmailID.getText(), win);
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//
+//        Button register = new Button("Register", new ButtonListenerAdapter() {
+//            @Override
+//            public void onClick(Button button, EventObject e) {
+//                if (newUserEmailID.getText().trim().equals("") || newUserPassword.getText().trim().equals("") || confirmPassword.getText().trim().equals("")) {
+//                    MessageBox.alert("Please fill in both the user name and the password.");
+//                }
+//                else {
+//                    if (isLoginWithHttps) {
+//                        createNewUserViaHttps(newUserID.getText(), newUserPassword, confirmPassword, win);
+//                    }
+//                    else {
+//                        createNewUserViaEncryption(newUserID.getText(), newUserPassword, confirmPassword, newUserEmailID.getText(), win);
+//                    }
+//                }
+//            }
+//        });
+//
+//        Button cancel = new Button("Cancel", new ButtonListenerAdapter() {
+//            @Override
+//            public void onClick(Button button, EventObject e) {
+//                win.close();
+//            }
+//        });
+//
+//        HorizontalPanel buttonPanel = new HorizontalPanel();
+//        buttonPanel.setSpacing(20);
+//        buttonPanel.add(register);
+//        buttonPanel.add(cancel);
+//
+//        newUserTable.setWidget(6, 1, buttonPanel);
+//        newUserTable.getFlexCellFormatter().setAlignment(6, 1, HasAlignment.ALIGN_CENTER, HasAlignment.ALIGN_MIDDLE);
+//
+//        win.setTitle("New User Registration");
+//        win.setClosable(true);
+//        win.setWidth(428);
+//        win.setHeight(240);
+//        win.setClosable(true);
+//        win.setPaddings(7);
+//        win.setCloseAction(Window.HIDE);
+//        win.add(newUserformPanel);
+//        win.show();
+//    }
 
     /**
      * Creates Edit profile Popup
@@ -680,13 +681,13 @@ public class LoginUtil {
         });
     }
 
-    private void createNewUserViaHttps(String userName, PasswordTextBox newUserPasswordField, PasswordTextBox newUserPassword2Field, Window win) {
+    private void createNewUserViaHttps(String userName, String email, PasswordTextBox newUserPasswordField, PasswordTextBox newUserPassword2Field, Window win) {
         String newUserPassword = newUserPasswordField.getText();
         String newUserPassword2 = newUserPassword2Field.getText();
 
         if (newUserPassword.contentEquals(newUserPassword2)) {
             win.getEl().mask("Creating new user...", true);
-            AuthenticateServiceManager.getInstance().registerUser(UserId.getUserId(userName), newUserPassword, new CreateNewUserHandlerViaHttps(win));
+            AuthenticateServiceManager.getInstance().registerUser(UserId.getUserId(userName), newUserPassword, email, new CreateNewUserHandlerViaHttps(win));
         }
         else {
             MessageBox.alert("Passwords do not match. Please try again.");
@@ -892,21 +893,29 @@ public class LoginUtil {
 
         private Window win;
 
-        public ForgotPassHandler(Window win) {
+        private String userName;
+
+        public ForgotPassHandler(Window win, String userName) {
             this.win = win;
+            this.userName = userName;
         }
 
         @Override
         public void handleFailure(Throwable caught) {
             win.getEl().unmask();
-            GWT.log("Error at forgot password callback : ", caught);
-            MessageBox.alert("Error", "There was an error at sending the password reminder.<br />" + "Most likely your user account does not have an email account configured,<br />" + "or the email is invalid.");
+            if(caught instanceof UnrecognizedUserNameException) {
+                MessageBox.alert("Unrecognized user name", "The specified user name (" + userName + ") is not recognized by WebProtege.  Please check that you have spelt it correctly.  Note that user names are case sensitive.");
+            }
+            else {
+                MessageBox.alert("Error", "There was an error resetting your password.");
+            }
+
         }
 
         @Override
         public void handleSuccess(Void nothing) {
             win.getEl().unmask();
-            MessageBox.alert("Sent password", "Your password has been reset. You should receive an email with the new password.<br /> " + "Please change password the next time you log into the system.");
+            MessageBox.alert("Password reset", "Your password has been reset. You should receive an email with the new password.<br /> " + "Please change password the next time you log into the system.");
         }
     }
 

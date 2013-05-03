@@ -663,7 +663,7 @@ public class AccessPolicyManager {
 
                     }
                     else { //Account does not already exist
-                        metaProjectManager.registerUser(invitation.getEmailId(), "");
+                        metaProjectManager.registerUser(invitation.getEmailId(),invitation.getEmailId(), "");
                         metaProjectManager.setUserEmail(invitation.getEmailId(), invitation.getEmailId());
                         tempUser = metaProjectManager.getMetaProject().getUser(invitation.getEmailId());
                         Random random = new Random();

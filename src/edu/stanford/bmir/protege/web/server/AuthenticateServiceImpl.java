@@ -80,7 +80,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
             return userData;
         }
 
-        UserData userData = MetaProjectManager.getManager().registerUser(userName, password);
+        UserData userData = MetaProjectManager.getManager().registerUser(userName, emailId, password);
         user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
         user.setEmail(emailId);
 
@@ -171,8 +171,8 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
 
     }
 
-    public UserData registerUser(String userName, String password) {
-        return MetaProjectManager.getManager().registerUser(userName, password);
+    public UserData registerUser(String userName, String password, String email) {
+        return MetaProjectManager.getManager().registerUser(userName, email, password);
     }
 
 }

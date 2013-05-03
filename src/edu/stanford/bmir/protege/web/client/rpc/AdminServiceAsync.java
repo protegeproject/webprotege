@@ -3,8 +3,11 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
+import edu.stanford.bmir.protege.web.shared.user.UserEmailAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
+import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
 
 import java.util.Collection;
 
@@ -19,7 +22,7 @@ public interface AdminServiceAsync {
 
     void setUserEmail(String userName, String email, AsyncCallback<Void> callback);
 
-    void sendPasswordReminder(String userName, AsyncCallback<Void> callback);
+    void sendPasswordReminder(String userName, AsyncCallback<Void> callback) throws UnrecognizedUserNameException;
 
     void getAllowedOperations(String project, String user, AsyncCallback<PermissionsSet> cb);
 
@@ -37,7 +40,7 @@ public interface AdminServiceAsync {
 
     void changePasswordEncrypted(String userName, String encryptedPassword, String salt, AsyncCallback<Boolean> callback);
 
-    void registerUserViaEncrption(String name, String hashedPassword, String emailId, AsyncCallback<UserData> callback);
+    void registerUserViaEncrption(String name, String hashedPassword, String emailId, AsyncCallback<UserData> callback) throws UserNameAlreadyExistsException, UserEmailAlreadyExistsException;
 
     void getCurrentUserInSession(AsyncCallback<UserId> async);
 

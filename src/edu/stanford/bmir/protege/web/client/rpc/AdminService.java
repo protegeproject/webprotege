@@ -4,10 +4,10 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
+import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
+import edu.stanford.bmir.protege.web.shared.user.UserEmailAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
-
-import java.util.Collection;
 
 /**
  * A service for accessing administrative and configuration data stored in
@@ -26,15 +26,15 @@ import java.util.Collection;
 @RemoteServiceRelativePath("admin")
 public interface AdminService extends RemoteService {
 
-    UserData registerUserViaEncrption(String name, String hashedPassword, String emailId) throws UserNameAlreadyExistsException;
+    UserData registerUserViaEncrption(String name, String hashedPassword, String emailId) throws UserNameAlreadyExistsException, UserEmailAlreadyExistsException;
 
-    void changePassword(String userName, String password);
+    void changePassword(String userName, String password) throws UnrecognizedUserNameException;
 
-    String getUserEmail(String userName);
+    String getUserEmail(String userName) throws UnrecognizedUserNameException;
 
     void setUserEmail(String userName, String email);
 
-    void sendPasswordReminder(String userName);
+    void sendPasswordReminder(String userName) throws UnrecognizedUserNameException;
 
     PermissionsSet getAllowedOperations(String project, String user);
 

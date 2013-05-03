@@ -5,6 +5,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
+import edu.stanford.bmir.protege.web.shared.user.UserEmailAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
 
@@ -50,7 +52,7 @@ public class AdminServiceManager {
         proxy.changePassword(userId.getUserName(), password, cb);
     }
 
-    public void sendPasswordReminder(UserId userId, AsyncCallback<Void> cb) {
+    public void sendPasswordReminder(UserId userId, AsyncCallback<Void> cb) throws UnrecognizedUserNameException{
         proxy.sendPasswordReminder(userId.getUserName(), cb);
     }
 
@@ -80,7 +82,7 @@ public class AdminServiceManager {
         proxy.getNewSalt(cb);
     }
 
-    public void registerUserViaEncrption(String name, String hashedPassword, String emailId, AsyncCallback<UserData> cb) throws UserNameAlreadyExistsException {
+    public void registerUserViaEncrption(String name, String hashedPassword, String emailId, AsyncCallback<UserData> cb) throws UserNameAlreadyExistsException, UserEmailAlreadyExistsException {
         proxy.registerUserViaEncrption(name, hashedPassword, emailId, cb);
     }
     public void getCurrentUserInSession(AsyncCallback<UserId> cb) {

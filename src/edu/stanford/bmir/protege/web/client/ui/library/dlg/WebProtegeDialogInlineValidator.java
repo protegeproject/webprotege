@@ -11,4 +11,8 @@ import com.google.gwt.user.client.ui.Widget;
 public interface WebProtegeDialogInlineValidator<T extends Widget> {
 
     InlineValidationResult getValidation(T widget);
+
+    boolean shouldCheckOnKeyUp();
+
+    boolean shouldCheckOnValueChange();
 }

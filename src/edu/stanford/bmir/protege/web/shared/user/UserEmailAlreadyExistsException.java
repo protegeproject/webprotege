@@ -12,6 +12,9 @@ public class UserEmailAlreadyExistsException extends UserRegistrationException i
 
     private String emailAddress;
 
+    private UserEmailAlreadyExistsException() {
+    }
+
     public UserEmailAlreadyExistsException(String emailAddress) {
         super("User email address already exists: " + emailAddress);
         this.emailAddress = emailAddress;

@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationExceptio
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
+import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
 import edu.stanford.smi.protege.server.metaproject.Operation;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -101,10 +101,10 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
 //        MetaProjectManager.getManager().reloadMetaProject();
 //    }
 
-    public void sendPasswordReminder(String userName) {
+    public void sendPasswordReminder(String userName) throws UnrecognizedUserNameException {
         String email = MetaProjectManager.getManager().getUserEmail(userName);
         if (email == null) {
-            throw new IllegalArgumentException("User " + userName + " does not have an email configured.");
+            throw new UnrecognizedUserNameException("User " + userName + " does not have an email configured.");
         }
         changePassword(userName, EmailConstants.RESET_PASSWORD);
         if(!WebProtegeProperties.get().getEmailAccount().isPresent()) {
@@ -212,21 +212,21 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     }
 
     //used only for https
-    public UserData registerUser(String userName, String password) {
+    public UserData registerUser(String userName, String password, String email) {
         MetaProjectManager mpm = MetaProjectManager.getManager();
-        UserData userData = mpm.registerUser(userName, password);
+        UserData userData = mpm.registerUser(userName, email, password);
         OWLAPIMetaProjectStore.getStore().saveMetaProject(mpm);
         return userData;
     }
 
-    public UserData registerUserViaEncrption(String name, String hashedPassword, String emailId) throws UserNameAlreadyExistsException {
+    public UserData registerUserViaEncrption(String name, String hashedPassword, String emailId) throws UserNameAlreadyExistsException, UserNameAlreadyExistsException {
         HttpServletRequest request = this.getThreadLocalRequest();
         HttpSession session = request.getSession();
         String salt = (String) session.getAttribute(AuthenticationConstants.NEW_SALT);
         String emptyPassword = "";
 
         MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
-        UserData userData = metaProjectManager.registerUser(name, emptyPassword);
+        UserData userData = metaProjectManager.registerUser(name, emailId, emptyPassword);
 
         User user = metaProjectManager.getMetaProject().getUser(name);
         user.setDigestedPassword(hashedPassword, salt);

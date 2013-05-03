@@ -22,20 +22,25 @@ public class WebProtegeDialogTextFieldValidationManager {
 
     private final WebProtegeDialogInlineValidator<ValueBoxBase<String>> validator;
 
-    public WebProtegeDialogTextFieldValidationManager(ValueBoxBase<String> textBox, WebProtegeDialogInlineValidator<ValueBoxBase<String>> validator) {
+    public WebProtegeDialogTextFieldValidationManager(ValueBoxBase<String> textBox, final WebProtegeDialogInlineValidator<ValueBoxBase<String>> validator) {
         this.textBox = textBox;
         this.errorLabel = new InlineLabel();
         this.validator = validator;
         textBox.addKeyUpHandler(new KeyUpHandler() {
             public void onKeyUp(KeyUpEvent event) {
-                runValidation();
+                if (validator.shouldCheckOnKeyUp()) {
+                    runValidation();
+                }
             }
         });
         textBox.addValueChangeHandler(new ValueChangeHandler<String>() {
             public void onValueChange(ValueChangeEvent<String> stringValueChangeEvent) {
-                runValidation();
+                if (validator.shouldCheckOnValueChange()) {
+                    runValidation();
+                }
             }
         });
+
         errorLabel.addStyleName("web-protege-red-foreground");
         errorLabel.setText("");
         errorLabel.setVisible(false);
@@ -47,7 +52,7 @@ public class WebProtegeDialogTextFieldValidationManager {
 
     public InlineValidationResult runValidation() {
         InlineValidationResult validation = validator.getValidation(textBox);
-        if(validation.isInvalid()) {
+        if (validation.isInvalid()) {
             errorLabel.setText(validation.getMessage());
             errorLabel.setVisible(true);
         }

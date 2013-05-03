@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.rpc.RecaptchaService;
 import edu.stanford.bmir.protege.web.client.rpc.RecaptchaServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.shared.user.UserEmailAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
@@ -69,6 +70,10 @@ public class WebProtegeSignupDialog extends WebProtegeDialog<SignupInfo> {
                         if(caught instanceof UserNameAlreadyExistsException) {
                             String username = ((UserNameAlreadyExistsException) caught).getUsername();
                             Window.alert("A user named " + username + " is already registered.  Please choose another name.");
+                        }
+                        else if(caught instanceof UserEmailAlreadyExistsException) {
+                            String email = ((UserEmailAlreadyExistsException) caught).getEmailAddress();
+                            Window.alert("The email address " + email + " is already taken.  Please choose a different email address.");
                         }
                         else {
                             Window.alert("There was a problem registering the specified user account.  Please contact administrator.");

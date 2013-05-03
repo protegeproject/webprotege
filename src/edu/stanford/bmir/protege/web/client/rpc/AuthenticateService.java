@@ -26,5 +26,5 @@ public interface AuthenticateService extends RemoteService {
     
     void sendPasswordReminder(String userName);
     
-    UserData registerUser(String name, String password);
+    UserData registerUser(String name, String password, String email);
 }

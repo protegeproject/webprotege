@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.signup;
 
 import com.google.common.base.Optional;
+import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -12,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.library.recaptcha.RecaptchaWidget;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -22,7 +24,7 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
 
     public static final int PASSWORD_MIN_LENGTH = 1;
 
-    private static final int VISIBLE_LENGTH = 50;
+    private static final int VISIBLE_LENGTH = 60;
 
     private final TextBox emailField;
 
@@ -32,7 +34,7 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
     
     private String validationMessage = "";
 
-    private RegExp EMAIL_PATTERN = RegExp.compile("([^@]+)@([^@]+)");
+    private RegExp EMAIL_PATTERN = RegExp.compile("([^@]+)@([^@\\.]+)\\.([^@]+)");
 
     private final TextBox userNameField;
 
@@ -41,7 +43,34 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
 
     public WebProtegeSignupDialogForm() {
 
-        emailField = addTextBox("Email address", "Enter your email address", "", null);
+        emailField = addTextBox("Email address", "Enter your email address", "", new WebProtegeDialogInlineValidator<ValueBoxBase<String>>() {
+
+            private InlineValidationResult lastValidationResult = InlineValidationResult.getValid();
+
+            @Override
+            public InlineValidationResult getValidation(ValueBoxBase<String> widget) {
+                if(widget.getText().trim().isEmpty()) {
+                    return lastValidationResult = InlineValidationResult.getValid();
+                }
+                MatchResult matchResult = EMAIL_PATTERN.exec(widget.getText().trim());
+                if(matchResult != null) {
+                    return lastValidationResult = InlineValidationResult.getValid();
+                }
+                else {
+                    return lastValidationResult = InlineValidationResult.getInvalid("Invalid email address");
+                }
+            }
+
+            @Override
+            public boolean shouldCheckOnKeyUp() {
+                return lastValidationResult.isInvalid();
+            }
+
+            @Override
+            public boolean shouldCheckOnValueChange() {
+                return true;
+            }
+        });
         emailField.setVisibleLength(VISIBLE_LENGTH);
 
         addVerticalSpacer();
@@ -57,8 +86,18 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
                     return InlineValidationResult.getValid();
                 }
             }
+
+            @Override
+            public boolean shouldCheckOnKeyUp() {
+                return true;
+            }
+
+            @Override
+            public boolean shouldCheckOnValueChange() {
+                return true;
+            }
         });
-        userNameField.setVisibleLength(50);
+        userNameField.setVisibleLength(VISIBLE_LENGTH);
 
         addVerticalSpacer();
         passwordField = new PasswordTextBox();

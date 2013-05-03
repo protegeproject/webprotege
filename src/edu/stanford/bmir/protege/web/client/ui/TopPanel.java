@@ -71,8 +71,6 @@ public class TopPanel extends Panel {
 
     private MenuBar verticalOptionsMenu;
 
-    private MenuItem addUser;
-
     private final Image logoImage;
 
     public TopPanel() {
@@ -178,26 +176,13 @@ public class TopPanel extends Panel {
         if (!userId.isGuest()) { // login
             signupPanel.setVisible(false);
             optionsLinks.setVisible(true);
-            AdminServiceManager.getInstance().getAllowedServerOperations(userId, new AsyncCallback<PermissionsSet>() {
-                public void onSuccess(PermissionsSet permissionsSet) {
-                    if (permissionsSet.contains(Permission.getPermission(PermissionName.CREATE_USERS))) {
-                        addUserMenuItem();
-                    }
-                }
-
-                public void onFailure(Throwable caught) {
-                    GWT.log("Could not get server permission from server", caught);
-                }
-            });
             configureLinkPanel.setVisible(true);
         }
         else { // logout
             signupPanel.setVisible(true);
-            verticalOptionsMenu.removeItem(addUser);
             optionsLinks.setVisible(false);
             configureLinkPanel.setVisible(false);
         }
-//        addUserMenuItem();
     }
 
     protected HorizontalPanel getLinksPanel() {
@@ -368,24 +353,6 @@ public class TopPanel extends Panel {
             }
         });
         verticalOptionsMenu.addItem(changePassword);
-    }
-
-
-    protected void addUserMenuItem() {
-        addUser = new MenuItem("Add User", new Command() {
-            public void execute() {
-
-                Boolean isLoginWithHttps = ClientApplicationPropertiesCache.getLoginWithHttps();
-                LoginUtil loginUtil = new LoginUtil();
-                if (isLoginWithHttps) {
-                    createUserViaHttps(loginUtil);
-                }
-                else {
-                    loginUtil.createNewUser(isLoginWithHttps);
-                }
-            }
-        });
-        verticalOptionsMenu.addItem(addUser);
     }
 
     protected void addEditProfileMenuItem() {
