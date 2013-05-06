@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.notes.converter;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
@@ -57,6 +59,8 @@ import java.util.regex.Pattern;
  * a different base.
  */
 public class CHAO2NotesConverter {
+
+    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(CHAO2NotesConverter.class);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +123,6 @@ public class CHAO2NotesConverter {
     public CHAO2NotesConverter(OWLOntology domainOntology, OWLOntology notesOntology, String base) {
         this.domainOntology = domainOntology;
         this.notesOntology = notesOntology;
-        OWLParserFactoryRegistry.getInstance().registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
         df = notesOntology.getOWLOntologyManager().getOWLDataFactory();
         ontologyClass = df.getOWLClass(IRI.create(base + "#" + ONTOLOGY_CLASS_IRI_FRAGMENT));
         currentNameProperty = df.getOWLDataProperty(IRI.create(base + "#" + CURRENT_NAME_FRAGMENT));
@@ -139,6 +142,7 @@ public class CHAO2NotesConverter {
 
 
     private void mapOntologyClasses() {
+        LOGGER.info("Mapping annotated objects in notes file to ontology classes");
         for (OWLClassAssertionAxiom ax : notesOntology.getClassAssertionAxioms(ontologyClass)) {
             final OWLIndividual individual = ax.getIndividual();
             if (individual.isNamed()) {
@@ -150,6 +154,7 @@ public class CHAO2NotesConverter {
                     IRI iri = IRI.create(iriLiteral);
                     if (domainOntology.containsEntityInSignature(iri)) {
                         entity2OntologyClsIndividualMap.put(df.getOWLClass(iri), ontologyClsIndividual);
+                        LOGGER.info("Mapped " + iri.toQuotedString());
                     }
                 }
             }
@@ -163,18 +168,19 @@ public class CHAO2NotesConverter {
                 // Subject becomes object
                 OWLNamedIndividual objectNoteIndividual = ax.getSubject().asOWLNamedIndividual();
                 notes2Replies.put(subjectNoteIndividual, objectNoteIndividual);
+                LOGGER.info("Mapped reply from " + subjectNoteIndividual.getIRI().toQuotedString() + " to " + objectNoteIndividual.getIRI().toQuotedString());
             }
         }
 
-        for (OWLEntity entity : entity2OntologyClsIndividualMap.keySet()) {
-            OWLNamedIndividual individual = entity2OntologyClsIndividualMap.get(entity);
-            List<CHAONoteData> noteDatas = new ArrayList<CHAONoteData>();
-            for (OWLNamedIndividual note : notes2Replies.get(individual)) {
-                CHAONoteData noteData = dumpNote(note, 0);
-                noteDatas.add(noteData);
-            }
-
-        }
+//        for (OWLEntity entity : entity2OntologyClsIndividualMap.keySet()) {
+//            OWLNamedIndividual individual = entity2OntologyClsIndividualMap.get(entity);
+//            List<CHAONoteData> noteDatas = new ArrayList<CHAONoteData>();
+//            for (OWLNamedIndividual note : notes2Replies.get(individual)) {
+//                CHAONoteData noteData = dumpNote(note, 0);
+//                noteDatas.add(noteData);
+//            }
+//
+//        }
     }
 
     public void convertToNotes(OWLAPINotesManager notesManager) {
@@ -184,9 +190,7 @@ public class CHAO2NotesConverter {
             if (!namedIndividuals.isEmpty()) {
                 for (OWLNamedIndividual noteInd : namedIndividuals) {
                     CHAONoteData data = dumpNote(noteInd, 0);
-                    for(CHAONoteData d : data.getReplies()) {
-                        convertToNotes(notesManager, d, entity);
-                    }
+                    convertToNotes(notesManager, data, entity);
                 }
             }
         }

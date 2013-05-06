@@ -64,6 +64,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OWLAPIProject implements HasDispose {
 
+
+    static {
+        OWLParserFactoryRegistry.getInstance().registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
+    }
+
     public static final EventLifeTime PROJECT_EVENT_LIFE_TIME = EventLifeTime.get(60, TimeUnit.SECONDS);
 
     private OWLAPIProjectDocumentStore documentStore;
@@ -159,7 +164,6 @@ public class OWLAPIProject implements HasDispose {
         imMemFactory.setOWLOntologyManager(manager);
 
 
-        OWLParserFactoryRegistry.getInstance().registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
         ParsableOWLOntologyFactory parsingFactory = new ParsableOWLOntologyFactory();
         delegateManager.addOntologyFactory(parsingFactory);
         parsingFactory.setOWLOntologyManager(manager);
@@ -665,9 +669,11 @@ public class OWLAPIProject implements HasDispose {
     private OWLOntologyChange getRenamedChange(OWLOntologyChange change, final Map<IRI, IRI> renameMap) {
         return change.accept(new OWLOntologyChangeVisitorAdapterEx<OWLOntologyChange>() {
 
+            @SuppressWarnings("unchecked")
             private <T extends OWLObject> T duplicate(T ax) {
                 OWLObjectDuplicator duplicator = new OWLObjectDuplicator(delegateManager.getOWLDataFactory(), renameMap);
-                return duplicator.duplicateObject(ax);
+                OWLObject object = duplicator.duplicateObject(ax);
+                return (T) object;
             }
 
             @Override

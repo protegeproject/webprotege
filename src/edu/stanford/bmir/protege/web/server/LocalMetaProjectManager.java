@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
@@ -139,8 +137,6 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
                 }
             }
         }
-
-
         return result;
     }
 

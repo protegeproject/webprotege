@@ -96,9 +96,13 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
 
     @Override
     public int compareTo(ProjectDetails o) {
-        final int dispNameDiff = displayName.compareTo(o.getDisplayName());
+        final int dispNameDiff = displayName.compareToIgnoreCase(o.getDisplayName());
         if(dispNameDiff != 0) {
             return dispNameDiff;
+        }
+        final int caseSensitiveDiff = displayName.compareTo(o.getDisplayName());
+        if(caseSensitiveDiff != 0) {
+            return caseSensitiveDiff;
         }
         int ownerDiff = owner.compareTo(o.getOwner());
         if(ownerDiff != 0) {

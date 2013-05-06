@@ -194,7 +194,7 @@ public class TimeUtil {
 
         String rendering = formatDay(timestampDate.getDate()) + " " + formatMonth(referenceTimestampDate.getMonth());
         if(!isSameCalendarYear(timestamp, referenceTimestamp)) {
-            rendering += " " + timestampDate.getYear();
+            rendering += " " + (1900 + timestampDate.getYear());
         }
         return rendering;
     }

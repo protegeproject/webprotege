@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.collect.MapMaker;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -25,6 +27,8 @@ import java.util.logging.Level;
  */
 public class OWLAPIProjectCache {
 
+    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(OWLAPIProjectCache.class);
+
     private final ConcurrentMap<ProjectId, ProjectId> projectIdInterningMap;
 
 
@@ -40,6 +44,7 @@ public class OWLAPIProjectCache {
     private ReadWriteLock LAST_ACCESS_LOCK = new ReentrantReadWriteLock();
 
     private Map<ProjectId, Long> lastAccessMap = new HashMap<ProjectId, Long>();
+
 
 
     /**
@@ -147,11 +152,12 @@ public class OWLAPIProjectCache {
             OWLAPIProject project = projectId2ProjectMap.remove(projectId);
             lastAccessMap.remove(projectId);
             project.dispose();
+            LOGGER.info(lastAccessMap.size() + " projects are being accessed");
         }
         finally {
             LAST_ACCESS_LOCK.writeLock().unlock();
             WRITE_LOCK.unlock();
-            Log.getLogger().log(Level.INFO, "Purged project: " + projectId);
+            LOGGER.info("Purged project: " + projectId);
         }
     }
 
@@ -182,7 +188,11 @@ public class OWLAPIProjectCache {
         try {
             LAST_ACCESS_LOCK.writeLock().lock();
             long currentTime = System.currentTimeMillis();
+            int currentSize = lastAccessMap.size();
             lastAccessMap.put(projectId, currentTime);
+            if(lastAccessMap.size() > currentSize) {
+                LOGGER.info(lastAccessMap.size() + " projects are being accessed");
+            }
         }
         finally {
             LAST_ACCESS_LOCK.writeLock().unlock();

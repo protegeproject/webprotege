@@ -34,7 +34,7 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
     
     private String validationMessage = "";
 
-    private RegExp EMAIL_PATTERN = RegExp.compile("([^@]+)@([^@\\.]+)\\.([^@]+)");
+    private RegExp EMAIL_PATTERN = RegExp.compile("([^@]+)@.+");
 
     private final TextBox userNameField;
 
@@ -50,8 +50,9 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
             @Override
             public InlineValidationResult getValidation(ValueBoxBase<String> widget) {
                 if(widget.getText().trim().isEmpty()) {
-                    return lastValidationResult = InlineValidationResult.getValid();
+                    return lastValidationResult = InlineValidationResult.getInvalid("Please enter an email address");
                 }
+
                 MatchResult matchResult = EMAIL_PATTERN.exec(widget.getText().trim());
                 if(matchResult != null) {
                     return lastValidationResult = InlineValidationResult.getValid();
