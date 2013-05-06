@@ -206,6 +206,7 @@
 		<delete file="${war}/WEB-INF/lib/gwt-user.jar" />
 		<copy file="${gwt.dir}/gwt-servlet.jar" todir="${war}/WEB-INF/lib" />
 		<copy file="${gwt.dir}/gwt-servlet-deps.jar" todir="${war}/WEB-INF/lib" />
+		<copy file="webprotege.properties" todir="${war}" />
 		<war destfile="${build}/${war.name}.war" basedir="${war}" />
 	</target>
 
