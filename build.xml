@@ -186,7 +186,12 @@
 	<target name="copy.rpc.in.war" if="set.if.deploy.in.root">
 		<echo message="Copying the rpc files in war (workaround for GWT + proxy bug)" />
 		<copy todir="${war}">
-			<fileset dir="${war}/${gwt.module}">
+			<fileset dir="${war}/${gwt.module.1}">
+				<include name="**/*.rpc" />
+			</fileset>
+		</copy>
+		<copy todir="${war}">
+			<fileset dir="${war}/${gwt.module.2}">
 				<include name="**/*.rpc" />
 			</fileset>
 		</copy>
