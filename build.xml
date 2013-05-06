@@ -10,9 +10,10 @@
 	<property name="jar.name" value="webprotege-lib.jar" />
 
 	<property name="src" location="./src" />
+	<property name="etc" location="./etc" />
 	<property name="war.template" location="./war" />
 	<property name="lib" location="${war.template}/WEB-INF/lib" />
-
+	
 	<property name="build" location="./build" />
 	<property name="classes" location="${build}/classes" />
 	<property name="war" location="${build}/war" />
@@ -207,6 +208,7 @@
 		<copy file="${gwt.dir}/gwt-servlet.jar" todir="${war}/WEB-INF/lib" />
 		<copy file="${gwt.dir}/gwt-servlet-deps.jar" todir="${war}/WEB-INF/lib" />
 		<copy file="webprotege.properties" todir="${war}" />
+		<copy file="${etc}" todir="${war}" />
 		<war destfile="${build}/${war.name}.war" basedir="${war}" />
 	</target>
 
