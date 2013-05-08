@@ -40,8 +40,8 @@ war.name=webprotege
 # deploy.in.root=true
 
 # Only needed if deploy.in.root=true. Should correspond to the module name. Optional.
-# gwt.module=webprotege
-
+# gwt.module.1.short=webprotege
+# gwt.module.2.short=authenticate
 
 # ============= OPTIONAL PROPERTIES IF YOU RUN DEV MODE =====================
 
