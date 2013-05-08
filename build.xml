@@ -18,6 +18,8 @@
 	<property name="classes" location="${build}/classes" />
 	<property name="war" location="${build}/war" />
 	
+	<property name="build.properties" location="build.properties" />
+	
 
 	<!-- 
      #  ********** Finding Libraries *************
@@ -205,12 +207,18 @@
 
 	<target name="war" depends="webprotege.lib,compile.js">
 		<delete file="${war}/WEB-INF/lib/gwt-user.jar" />
+
 		<copy file="${gwt.dir}/gwt-servlet.jar" todir="${war}/WEB-INF/lib" />
 		<copy file="${gwt.dir}/gwt-servlet-deps.jar" todir="${war}/WEB-INF/lib" />
+		
 		<copy file="webprotege.properties" todir="${war}" failonerror="false" />
+		
 		<copy todir="${war}/etc" failonerror="false">
 		    <fileset dir="${etc}"/>
 		</copy>
+		
+		<antcall target="increment.build.number" />
+		<copy file="${build.properties}" todir="${war}" />
 		
 		<war destfile="${build}/${war.name}.war" basedir="${war}" />
 	</target>
@@ -235,6 +243,13 @@
 		</copy>
 	</target>
 
+	<target name="increment.build.number">
+		<propertyfile file="${build.properties}">
+			<entry key="build.number" type="int" operation="+" default="0"/>
+		</propertyfile>
+		<property file="${build.properties}"/>
+		<echo message="Build number is ${build.number}"/>
+	</target>
 	
 	<!-- 
      #  ********** Running *************
