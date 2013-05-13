@@ -416,7 +416,7 @@ public class TopPanel extends Panel {
      */
 
     protected String getFeebackText() {
-        return "<br /> Thank you for using WebProtege " + "<br /><br /> Your feedback is very important to us. " + "Please send your comments, questions, feature requests, bugs, etc. " + "to the protege-discussion mailing list.  If you are not a member of this list you may subscribe at <a href=\"https://mailman.stanford.edu/mailman/listinfo/protege-discussion\"target=\"_blank\">https://mailman.stanford.edu/mailman/listinfo/protege-discussion</a>. <br /><br />";
+        return "<br /> Thank you for using WebProtege " + "<br /><br /> Your feedback is very important to us. " + "Please send your comments, questions, feature requests, bugs, etc. " + "to the webprotege-feedback mailing list.  If you are not a member of this list you may subscribe at <a href=\"https://mailman.stanford.edu/mailman/listinfo/webprotege-feedback\"target=\"_blank\">https://mailman.stanford.edu/mailman/listinfo/protege-discussion</a>. <br /><br />";
     }
 
     /**
