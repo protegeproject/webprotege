@@ -277,7 +277,7 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
             return;
         }
         PrimitiveDataParsingContext context = new PrimitiveDataParsingContext(projectId, allowedTypes, freshEntitiesHandler);
-        primitiveDataParser.parsePrimitiveData(editor.getText(), languageEditor.getValue(), context, new PrimitiveDataParserCallback() {
+        primitiveDataParser.parsePrimitiveData(editor.getText().trim(), languageEditor.getValue(), context, new PrimitiveDataParserCallback() {
             @Override
             public void parsingFailure() {
                 setCurrentData(Optional.<OWLPrimitiveData>absent(), EventStrategy.FIRE_EVENTS);
