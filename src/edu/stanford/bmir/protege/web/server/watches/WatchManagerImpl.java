@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.server.EmailUtil;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
@@ -10,14 +12,12 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.*;
-import edu.stanford.bmir.protege.web.shared.watches.EntityBasedWatch;
-import edu.stanford.bmir.protege.web.shared.watches.Watch;
-import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
-import edu.stanford.bmir.protege.web.shared.watches.WatchRemovedEvent;
+import edu.stanford.bmir.protege.web.shared.watches.*;
 import edu.stanford.smi.protege.server.metaproject.User;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
 
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -35,6 +35,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Date: 21/03/2013
  */
 public class WatchManagerImpl implements WatchManager, HasDispose {
+
+    private static final String WATCHES_FILE_NAME = "watches.csv";
+
+    private static final String ENTITY_FRAME_WATCH_NAME = "EntityFrameWatch";
+
+    private static final String HIERARCHY_BRANCH_WATCH_NAME = "HierarchyBranchWatch";
 
     private ExecutorService emailExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
         @Override
@@ -58,9 +64,16 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     private Lock writeLock = readWriteLock.writeLock();
 
+    private File watchFile;
+
     public WatchManagerImpl(OWLAPIProject project) {
         this.project = project;
+        final OWLAPIProjectFileStore projectFileStore = OWLAPIProjectFileStore.getProjectFileStore(project.getProjectId());
+        watchFile = new File(projectFileStore.getProjectDirectory(), WATCHES_FILE_NAME);
 
+        if(watchFile.exists()) {
+            readWatches();
+        }
         project.getEventManager().addHandler(ClassFrameChangedEvent.TYPE, new ClassFrameChangedEventHandler() {
             @Override
             public void classFrameChanged(ClassFrameChangedEvent event) {
@@ -105,6 +118,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     public void addWatch(Watch watch, UserId userId) {
         insertWatch(watch, userId);
+        appendChange(Operation.ADD, watch, userId);
         project.getEventManager().postEvent(new WatchAddedEvent(project.getProjectId(), watch, userId));
     }
 
@@ -122,18 +136,23 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     public void removeWatch(Watch watch, UserId userId) {
         try {
-            writeLock.lock();
-            boolean removed = userId2Watch.remove(checkNotNull(userId), checkNotNull(watch));
-            watch2UserId.remove(watch, userId);
-            watchObject2Watch.remove(watch.getWatchedObject(), watch);
-
+            boolean removed = uninsertWatch(watch, userId);
             if (removed) {
+                appendChange(Operation.REMOVE, watch, userId);
                 project.getEventManager().postEvent(new WatchRemovedEvent(project.getProjectId(), watch, userId));
             }
         }
         finally {
             writeLock.unlock();
         }
+    }
+
+    private boolean uninsertWatch(Watch watch, UserId userId) {
+        writeLock.lock();
+        boolean removed = userId2Watch.remove(checkNotNull(userId), checkNotNull(watch));
+        watch2UserId.remove(watch, userId);
+        watchObject2Watch.remove(watch.getWatchedObject(), watch);
+        return removed;
     }
 
     public void clearWatches(UserId userId) {
@@ -269,12 +288,112 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
             }
         });
-
-
 //        EmailUtil.sendEmail();
     }
 
     @Override
     public void dispose() {
+    }
+
+    private void readWatches() {
+        try {
+            FileReader fileReader = new FileReader(watchFile);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+            while((line = bufferedReader.readLine()) != null) {
+                int pos = line.indexOf(",");
+                String opName = line.substring(0, pos);
+                String watchTypeName = line.substring(pos + 1, pos = line.indexOf(",", pos + 1));
+                String entityTypeName = line.substring(pos + 1, pos = line.indexOf(",", pos + 1));
+                String iri = line.substring(pos + 2, pos = line.indexOf(">,"));
+                String userName = line.substring(pos + 2);
+                OWLEntity entity = parseEntity(entityTypeName, iri);
+                final Watch watch;
+                if(ENTITY_FRAME_WATCH_NAME.equals(watchTypeName)) {
+                    watch = new EntityFrameWatch(entity);
+                }
+                else {
+                    watch = new HierarchyBranchWatch(entity);
+                }
+                final UserId userId = UserId.getUserId(userName);
+                if(opName.equals(Operation.ADD.name())) {
+                    insertWatch(watch, userId);
+                }
+                else {
+                    uninsertWatch(watch, userId);
+                }
+            }
+            bufferedReader.close();
+        }
+        catch (IOException e) {
+            WebProtegeLoggerManager.get(WatchManagerImpl.class).severe(e);
+        }
+
+    }
+
+    private OWLEntity parseEntity(String entityTypeName, String iri) {
+        OWLEntity entity;
+        if(entityTypeName.equals(EntityType.CLASS.getName())) {
+            entity = project.getDataFactory().getOWLClass(IRI.create(iri));
+        }
+        else if(entityTypeName.equals(EntityType.OBJECT_PROPERTY.getName())) {
+            entity = project.getDataFactory().getOWLObjectProperty(IRI.create(iri));
+        }
+        else if(entityTypeName.equals(EntityType.DATA_PROPERTY.getName())) {
+            entity = project.getDataFactory().getOWLObjectProperty(IRI.create(iri));
+        }
+        else if(entityTypeName.equals(EntityType.ANNOTATION_PROPERTY.getName())) {
+            entity = project.getDataFactory().getOWLObjectProperty(IRI.create(iri));
+        }
+        else if(entityTypeName.equals(EntityType.NAMED_INDIVIDUAL.getName())) {
+            entity = project.getDataFactory().getOWLObjectProperty(IRI.create(iri));
+        }
+        else if(entityTypeName.equals(EntityType.DATATYPE.getName())) {
+            entity = project.getDataFactory().getOWLObjectProperty(IRI.create(iri));
+        }
+        else {
+            throw new RuntimeException("Invalid entity type: " + entityTypeName);
+        }
+        return entity;
+    }
+
+    private synchronized void appendChange(Operation operation, Watch<?> watch, UserId userId) {
+        try {
+            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(watchFile, true)));
+            pw.print(operation);
+            pw.print(",");
+            if(watch instanceof EntityFrameWatch) {
+                pw.print(ENTITY_FRAME_WATCH_NAME);
+                pw.print(",");
+                final EntityFrameWatch entityWatch = (EntityFrameWatch) watch;
+                pw.print(entityWatch.getEntity().getEntityType().getName());
+                pw.print(",");
+                pw.print((entityWatch.getEntity().getIRI().toQuotedString()));
+            }
+            else if(watch instanceof HierarchyBranchWatch) {
+                pw.print(HIERARCHY_BRANCH_WATCH_NAME);
+                pw.print(",");
+                final HierarchyBranchWatch entityWatch = (HierarchyBranchWatch) watch;
+                pw.print(entityWatch.getEntity().getEntityType().getName());
+                pw.print(",");
+                pw.print((entityWatch.getEntity().getIRI().toQuotedString()));
+            }
+            else {
+                throw new RuntimeException("Unknown watch type: " + watch);
+            }
+            pw.print(",");
+            pw.print(userId.getUserName());
+            pw.println();
+            pw.close();
+        }
+        catch (IOException e) {
+            WebProtegeLoggerManager.get(WatchManagerImpl.class).severe(e);
+        }
+    }
+
+
+    private enum Operation {
+        ADD,
+        REMOVE
     }
 }
