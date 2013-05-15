@@ -109,10 +109,12 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
                 final BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(legacy));
                 OWLOntology legacyNotesOntology = OWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(inputStream);
                 String base = legacyNotesOntology.getOntologyID().getOntologyIRI().toString();
+                LOGGER.info("Using base obtained from legacy notes ontology: " + base);
                 CHAO2NotesConverter converter = new CHAO2NotesConverter(project.getRootOntology(), legacyNotesOntology, base);
                 converter.convertToNotes(this);
                 inputStream.close();
                 FileUtils.moveFile(legacy, new File(legacy.getParentFile(), "notes-data.legacy.imported-" + System.currentTimeMillis()));
+                LOGGER.info("Import completed");
             }
             catch (Exception e) {
                 LOGGER.severe(e);

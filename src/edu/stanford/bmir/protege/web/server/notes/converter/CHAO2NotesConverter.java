@@ -217,24 +217,25 @@ public class CHAO2NotesConverter {
 
     }
 
-    public Multimap<OWLEntity, Note> convertToNotes() {
-        Multimap<OWLEntity, Note> result = HashMultimap.create();
-        for (OWLEntity entity : entity2OntologyClsIndividualMap.keySet()) {
-            OWLNamedIndividual representativeInd = entity2OntologyClsIndividualMap.get(entity);
-            final Collection<OWLNamedIndividual> namedIndividuals = notes2Replies.get(representativeInd);
-            if (!namedIndividuals.isEmpty()) {
-                for (OWLNamedIndividual noteInd : namedIndividuals) {
-                    CHAONoteData data = dumpNote(noteInd, 0);
-                    for(CHAONoteData d : data.getReplies()) {
-                        Set<Note> notes = new HashSet<Note>();
-                        convertToNotes(notes, d, Optional.<NoteId>absent());
-                        result.putAll(entity, notes);
-                    }
-                }
-            }
-        }
-        return result;
-    }
+//    public Multimap<OWLEntity, Note> convertToNotes() {
+//        Multimap<OWLEntity, Note> result = HashMultimap.create();
+//        for (OWLEntity entity : entity2OntologyClsIndividualMap.keySet()) {
+//            OWLNamedIndividual representativeInd = entity2OntologyClsIndividualMap.get(entity);
+//            final Collection<OWLNamedIndividual> namedIndividuals = notes2Replies.get(representativeInd);
+//            if (!namedIndividuals.isEmpty()) {
+//                for (OWLNamedIndividual noteInd : namedIndividuals) {
+//                    CHAONoteData data = dumpNote(noteInd, 0);
+//                    result.put(entity, )
+////                    for(CHAONoteData d : data.getReplies()) {
+////                        Set<Note> notes = new HashSet<Note>();
+////                        convertToNotes(notes, d, Optional.<NoteId>absent());
+////                        result.putAll(entity, notes);
+////                    }
+//                }
+//            }
+//        }
+//        return result;
+//    }
 
     private void convertToNotes(Set<Note> notes, CHAONoteData noteData, Optional<NoteId> replyTo) {
         NoteId noteId = NoteId.createNoteIdFromLexicalForm("Note_" + UUID.randomUUID().toString());
@@ -376,5 +377,10 @@ public class CHAO2NotesConverter {
 
         CHAO2NotesConverter converter = new CHAO2NotesConverter(domainOnt, chaoOnt, "http://www.owl-ontologies.com/Ontology1367000748.owl");
         converter.dumpNotes();
+//        Multimap<OWLEntity, Note> notes = converter.convertToNotes();
+//        for(OWLEntity entity : notes.keySet()) {
+//            System.out.println(entity);
+//
+//        }
     }
 }

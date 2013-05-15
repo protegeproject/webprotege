@@ -207,7 +207,11 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
         @Override
         public void render(Cell.Context context, ProjectListEntry object, SafeHtmlBuilder sb) {
             final String projectName = object.getProjectDetails().getDisplayName();
-            sb.appendHtmlConstant("<div style=\"width: 100%; height: 100%; color: #6982AB; cursor: pointer;\" title=\"Open "+ projectName +"\">" + object.getProjectDetails().getDisplayName() + "</div>");
+            SafeHtmlBuilder projectNameBuilder = new SafeHtmlBuilder();
+            String escapedProjectName = projectNameBuilder.appendEscaped(projectName).toSafeHtml().asString();
+
+
+            sb.appendHtmlConstant("<div style=\"width: 100%; height: 100%; color: #6982AB; cursor: pointer;\" title=\"Open " + escapedProjectName + "\">" + object.getProjectDetails().getDisplayName() + "</div>");
         }
 
         @Override
