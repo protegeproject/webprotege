@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -522,6 +523,7 @@ public class OWLAPIProject implements HasDispose {
                 projectChangeWriteLock.unlock();
             }
 
+            WebProtegeLoggerManager.get(OWLAPIProject.class).info("%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
 
             List<ProjectEvent<?>> highLevelEvents = new ArrayList<ProjectEvent<?>>();
             HighLevelEventGenerator hle = new HighLevelEventGenerator(this, userId, revisionNumber);

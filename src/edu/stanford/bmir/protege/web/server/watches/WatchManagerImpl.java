@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.server.EmailUtil;
@@ -273,12 +274,14 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
                 final String displayName = "watched project";
                 final String emailSubject = String.format("Changes made in project %s by %s", displayName, user.getName());
-                String message = "\nChanges made to " + entity.getEntityType().getName() + " " + project.getRenderingManager().getBrowserText(entity) + " " + entity.getIRI().toQuotedString();
+                String message = "\nChanges were made to " + entity.getEntityType().getName() + " " + project.getRenderingManager().getBrowserText(entity) + " " + entity.getIRI().toQuotedString();
                 message = message + (" by " + userId.getUserName() + " on " + new Date() + "\n");
                 //        ontology=SubClassOfTest6&tab=ClassesTab&id=ht
 
                 StringBuilder directLinkBuilder = new StringBuilder();
-                directLinkBuilder.append("http://webprotege-beta.stanford.edu" + "#edit:projectId=");
+                directLinkBuilder.append("http://");
+                directLinkBuilder.append(WebProtegeProperties.get().getEmailHostName().or("webprotege.stanford.edu"));
+                directLinkBuilder.append("#edit:projectId=");
                 directLinkBuilder.append(project.getProjectId().getId());
                 directLinkBuilder.append(";tab=ClassesTab&id=");
                 directLinkBuilder.append(URLEncoder.encode(entity.getIRI().toString()));
