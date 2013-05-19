@@ -76,7 +76,7 @@ public class OWLAPIProject implements HasDispose {
 
     final private OWLAPIProjectOWLOntologyManager manager;
 
-    final private ProjectAccessManager projectAccessManager = new ProjectAccessManager(this);
+    final private ProjectAccessManager projectAccessManager;
 
     private RenderingManager renderingManager;
 
@@ -170,6 +170,7 @@ public class OWLAPIProject implements HasDispose {
 
         manager.setDelegate(delegateManager);
 
+        this.projectAccessManager = new ProjectAccessManager(getProjectId(), projectEventManager);
         this.watchManager = new WatchManagerImpl(this);
 
 

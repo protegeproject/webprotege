@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.UserStartingViewingProjectEvent;
@@ -21,7 +25,9 @@ public class ProjectAccessManager implements HasDispose {
 
     public static final int PURGE_PERIOD = 60000;
 
-    private OWLAPIProject project;
+//    private OWLAPIProject project;
+
+    private ProjectId projectId;
 
     private Map<UserId, Long> userIdAccessTimeMap = new HashMap<UserId, Long>();
 
@@ -34,9 +40,11 @@ public class ProjectAccessManager implements HasDispose {
 
     private Lock writeLock = readWriteLock.writeLock();
 
+    private HasPostEvents<ProjectEvent<?>> postEvents;
 
-    public ProjectAccessManager(OWLAPIProject project) {
-        this.project = project;
+    public ProjectAccessManager(ProjectId projectId, HasPostEvents<ProjectEvent<?>> postEvents) {
+        this.projectId = projectId;
+        this.postEvents = postEvents;
         purgeTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -50,10 +58,11 @@ public class ProjectAccessManager implements HasDispose {
             writeLock.lock();
             Long previousTime = userIdAccessTimeMap.put(userId, System.currentTimeMillis());
             if(previousTime == null) {
-                // First viewing
+                // First viewing for this user
                 if(!userId.isGuest()) {
-                    project.getEventManager().postEvent(new UserStartingViewingProjectEvent(project.getProjectId(), userId));
+                    postEvents.postEvent(new UserStartingViewingProjectEvent(projectId, userId));
                 }
+                logStats();
             }
         }
         finally {
@@ -61,17 +70,25 @@ public class ProjectAccessManager implements HasDispose {
         }
     }
 
+    private void logStats() {
+        WebProtegeLoggerManager.get(ProjectAccessManager.class).info("There are %d users now viewing %s", userIdAccessTimeMap.size(), projectId);
+    }
+
 
     private void purgeUsers() {
         try {
             final long currentTime = System.currentTimeMillis();
             writeLock.lock();
+            int currentUserCount = userIdAccessTimeMap.size();
             for(UserId userId : new ArrayList<UserId>(userIdAccessTimeMap.keySet())) {
                 Long timeStamp = userIdAccessTimeMap.get(userId);
                 if(currentTime - timeStamp > PURGE_PERIOD) {
                     userIdAccessTimeMap.remove(userId);
-                    project.getEventManager().postEvent(new UserStoppedViewingProjectEvent(project.getProjectId(), userId));
+                    postEvents.postEvent(new UserStoppedViewingProjectEvent(projectId, userId));
                 }
+            }
+            if(userIdAccessTimeMap.size() != currentUserCount) {
+                logStats();
             }
         }
         finally {

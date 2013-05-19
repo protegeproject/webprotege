@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
-public class EventManager<E extends SerializableEvent<?>> implements HasDispose {
+public class EventManager<E extends SerializableEvent<?>> implements HasDispose, HasPostEvents<E> {
 
 
     private final ReadWriteLock LOCK = new ReentrantReadWriteLock();
