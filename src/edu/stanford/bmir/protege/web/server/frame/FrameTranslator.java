@@ -17,5 +17,5 @@ public interface FrameTranslator<F extends Frame<S>, S> {
 
     F getFrame(S subject, OWLOntology rootOntology, OWLAPIProject project);
 
-    Set<OWLAxiom> getAxioms(F frame);
+    Set<OWLAxiom> getAxioms(F frame, Mode mode);
 }

@@ -8,10 +8,7 @@ import org.semanticweb.owlapi.util.OWLClassExpressionVisitorExAdapter;
 import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
 import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -50,7 +47,8 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
 
     public Set<PropertyValue> getPropertyValues(OWLEntity subject, OWLAxiom axiom, OWLOntology rootOntology) {
-        PropertyValue result = axiom.accept(new AxiomTranslator(subject, rootOntology));
+        final AxiomTranslator visitor = new AxiomTranslator(subject, rootOntology);
+        PropertyValue result = axiom.accept(visitor);
         if(result == null) {
             return Collections.emptySet();
         }
@@ -59,10 +57,11 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
     }
     
-    public Set<OWLAxiom> getAxioms(OWLEntity subject, PropertyValue propertyValue) {
-        PropertyValueTranslator translator = new PropertyValueTranslator(subject);
-        return Collections.singleton(propertyValue.accept(translator));
+    public Set<OWLAxiom> getAxioms(OWLEntity subject, PropertyValue propertyValue, Mode mode) {
+        PropertyValueTranslator translator = new PropertyValueTranslator(subject, mode);
+        return propertyValue.accept(translator);
     }
+
 
 
 
@@ -153,6 +152,16 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
+        public PropertyValue visit(OWLObjectMinCardinality ce) {
+            if(ce.getCardinality() == 1 && !ce.getProperty().isAnonymous() && !ce.getFiller().isAnonymous()) {
+                return new PropertyClassValue(ce.getProperty().asOWLObjectProperty(), ce.getFiller().asOWLClass());
+            }
+            else {
+                return null;
+            }
+        }
+
+        @Override
         public PropertyValue visit(OWLObjectHasValue desc) {
             if(!desc.getProperty().isAnonymous() && !desc.getValue().isAnonymous()) {
                 return new PropertyIndividualValue(desc.getProperty().asOWLObjectProperty(), desc.getValue().asOWLNamedIndividual());
@@ -173,6 +182,16 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
+        public PropertyValue visit(OWLDataMinCardinality ce) {
+            if(ce.getCardinality() == 1 && !ce.getProperty().isAnonymous() && ce.getFiller().isDatatype()) {
+                return new PropertyDatatypeValue(ce.getProperty().asOWLDataProperty(), ce.getFiller().asOWLDatatype());
+            }
+            else {
+                return null;
+            }
+        }
+
+        @Override
         public PropertyValue visit(OWLDataHasValue desc) {
             return new PropertyLiteralValue(desc.getProperty().asOWLDataProperty(), desc.getValue());
         }
@@ -180,86 +199,113 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
     
     
-    private class PropertyValueTranslator implements PropertyValueVisitor<OWLAxiom, RuntimeException> {
+    private class PropertyValueTranslator implements PropertyValueVisitor<Set<OWLAxiom>, RuntimeException> {
 
         private OWLEntity subject;
 
-        private PropertyValueTranslator(OWLEntity subject) {
+        private Mode mode;
+
+        private PropertyValueTranslator(OWLEntity subject, Mode mode) {
             this.subject = subject;
+            this.mode = mode;
         }
 
         @Override
-        public OWLAxiom visit(final PropertyClassValue propertyValue) {
+        public Set<OWLAxiom> visit(final PropertyClassValue propertyValue) {
             final OWLDataFactory df = DataFactory.get();
-            final OWLClassExpression classExpression = df.getOWLObjectSomeValuesFrom(propertyValue.getProperty(), propertyValue.getValue());
-            return subject.accept(new OWLEntityVisitorExAdapter<OWLAxiom>() {
+            final Set<OWLClassExpression> classExpressions = new HashSet<OWLClassExpression>();
+            classExpressions.add(df.getOWLObjectSomeValuesFrom(propertyValue.getProperty(), propertyValue.getValue()));
+            if(mode == Mode.MAXIMAL) {
+                classExpressions.add(df.getOWLObjectMinCardinality(1, propertyValue.getProperty(), propertyValue.getValue()));
+            }
+            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>() {
                 @Override
-                public OWLAxiom visit(OWLClass subject) {
-                    return df.getOWLSubClassOfAxiom(subject, classExpression);
+                public Set<OWLAxiom> visit(OWLClass subject) {
+                    Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+                    for(OWLClassExpression ce : classExpressions) {
+                        result.add(df.getOWLSubClassOfAxiom(subject, ce));
+                    }
+                    return result;
                 }
 
                 @Override
-                public OWLAxiom visit(OWLNamedIndividual subject) {
-                    return df.getOWLClassAssertionAxiom(classExpression, subject);
+                public Set<OWLAxiom> visit(OWLNamedIndividual subject) {
+                    Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+                    for(OWLClassExpression ce : classExpressions) {
+                        result.add(df.getOWLClassAssertionAxiom(ce, subject));
+                    }
+                    return result;
                 }
             });
         }
 
         @Override
-        public OWLAxiom visit(final PropertyIndividualValue propertyValue) {
+        public Set<OWLAxiom> visit(final PropertyIndividualValue propertyValue) {
             final OWLDataFactory df = DataFactory.get();
             final OWLClassExpression classExpression = df.getOWLObjectHasValue(propertyValue.getProperty(), propertyValue.getValue());
-            return subject.accept(new OWLEntityVisitorExAdapter<OWLAxiom>() {
+            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>() {
                 @Override
-                public OWLAxiom visit(OWLClass subject) {
-                    return df.getOWLSubClassOfAxiom(subject, classExpression);
+                public Set<OWLAxiom> visit(OWLClass subject) {
+                    return Collections.<OWLAxiom>singleton(df.getOWLSubClassOfAxiom(subject, classExpression));
                 }
 
                 @Override
-                public OWLAxiom visit(OWLNamedIndividual subject) {
-                    return df.getOWLObjectPropertyAssertionAxiom(propertyValue.getProperty(), subject, propertyValue.getValue());
+                public Set<OWLAxiom> visit(OWLNamedIndividual subject) {
+                    return Collections.<OWLAxiom>singleton(df.getOWLObjectPropertyAssertionAxiom(propertyValue.getProperty(), subject, propertyValue.getValue()));
                 }
             });
         }
 
         @Override
-        public OWLAxiom visit(final PropertyDatatypeValue propertyValue) {
+        public Set<OWLAxiom> visit(final PropertyDatatypeValue propertyValue) {
             final OWLDataFactory df = DataFactory.get();
-            final OWLClassExpression classExpression = df.getOWLDataSomeValuesFrom(propertyValue.getProperty(), propertyValue.getValue());
-            return subject.accept(new OWLEntityVisitorExAdapter<OWLAxiom>() {
+            final Set<OWLClassExpression> classExpressions = new HashSet<OWLClassExpression>();
+            classExpressions.add(df.getOWLDataSomeValuesFrom(propertyValue.getProperty(), propertyValue.getValue()));
+            if(mode == Mode.MAXIMAL) {
+                classExpressions.add(df.getOWLDataMinCardinality(1, propertyValue.getProperty(), propertyValue.getValue()));
+            }
+            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>() {
                 @Override
-                public OWLAxiom visit(OWLClass subject) {
-                    return df.getOWLSubClassOfAxiom(subject, classExpression);
+                public Set<OWLAxiom> visit(OWLClass subject) {
+                    Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+                    for(OWLClassExpression ce : classExpressions) {
+                        result.add(df.getOWLSubClassOfAxiom(subject, ce));
+                    }
+                    return result;
                 }
 
                 @Override
-                public OWLAxiom visit(OWLNamedIndividual subject) {
-                    return df.getOWLClassAssertionAxiom(classExpression, subject);
+                public Set<OWLAxiom> visit(OWLNamedIndividual subject) {
+                    Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+                    for(OWLClassExpression ce : classExpressions) {
+                        result.add(df.getOWLClassAssertionAxiom(ce, subject));
+                    }
+                    return result;
                 }
             });
         }
 
         @Override
-        public OWLAxiom visit(final PropertyLiteralValue propertyValue) {
+        public Set<OWLAxiom> visit(final PropertyLiteralValue propertyValue) {
             final OWLDataFactory df = DataFactory.get();
             final OWLClassExpression classExpression = df.getOWLDataHasValue(propertyValue.getProperty(), propertyValue.getValue());
-            return subject.accept(new OWLEntityVisitorExAdapter<OWLAxiom>() {
+            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>() {
                 @Override
-                public OWLAxiom visit(OWLClass subject) {
-                    return df.getOWLSubClassOfAxiom(subject, classExpression);
+                public Set<OWLAxiom> visit(OWLClass subject) {
+                    return Collections.<OWLAxiom>singleton(df.getOWLSubClassOfAxiom(subject, classExpression));
                 }
 
                 @Override
-                public OWLAxiom visit(OWLNamedIndividual subject) {
-                    return df.getOWLDataPropertyAssertionAxiom(propertyValue.getProperty(), subject, propertyValue.getValue());
+                public Set<OWLAxiom> visit(OWLNamedIndividual subject) {
+                    return Collections.<OWLAxiom>singleton(df.getOWLDataPropertyAssertionAxiom(propertyValue.getProperty(), subject, propertyValue.getValue()));
                 }
             });
         }
 
         @Override
-        public OWLAxiom visit(PropertyAnnotationValue propertyValue) {
+        public Set<OWLAxiom> visit(PropertyAnnotationValue propertyValue) {
             OWLDataFactory df = DataFactory.get();
-            return df.getOWLAnnotationAssertionAxiom(propertyValue.getProperty(), subject.getIRI(), propertyValue.getValue());
+            return Collections.<OWLAxiom>singleton(df.getOWLAnnotationAssertionAxiom(propertyValue.getProperty(), subject.getIRI(), propertyValue.getValue()));
         }
     }
 }

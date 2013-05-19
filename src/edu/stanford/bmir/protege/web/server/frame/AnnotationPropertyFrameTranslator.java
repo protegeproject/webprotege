@@ -37,7 +37,7 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
     }
 
     @Override
-    public Set<OWLAxiom> getAxioms(AnnotationPropertyFrame frame) {
+    public Set<OWLAxiom> getAxioms(AnnotationPropertyFrame frame, Mode mode) {
         Set<OWLAxiom> result = new HashSet<OWLAxiom>();
         for(PropertyAnnotationValue value : frame.getPropertyValues()) {
             result.add(DataFactory.get().getOWLAnnotationAssertionAxiom(value.getProperty(), frame.getSubject().getIRI(), value.getValue()));

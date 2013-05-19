@@ -48,26 +48,26 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntity>
 
 
         // Get the axioms that were consumed in the translation
-        Set<OWLAxiom> fromAxioms = translator.getAxioms(from);
+        Set<OWLAxiom> fromAxioms = translator.getAxioms(from, Mode.MAXIMAL);
 
         Set<OWLOntology> importsClosure = rootOntology.getImportsClosure();
 
-        Set<OWLAxiom> toAxioms = translator.getAxioms(to);
+        Set<OWLAxiom> toAxioms = translator.getAxioms(to, Mode.MINIMAL);
 
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
         for (OWLAxiom fromAxiom : fromAxioms) {
-            if (!toAxioms.contains(fromAxiom)) {
+//            if (!toAxioms.contains(fromAxiom)) {
                 for (OWLOntology ont : importsClosure) {
                     changes.add(new RemoveAxiom(ont, fromAxiom));
                 }
-            }
+//            }
         }
         for (OWLAxiom toAxiom : toAxioms) {
-            if (!fromAxioms.contains(toAxiom)) {
+//            if (!fromAxioms.contains(toAxiom)) {
                 for (OWLOntology ont : importsClosure) {
                     changes.add(new AddAxiom(ont, toAxiom));
                 }
-            }
+//            }
         }
         // TODO:  Remove redundant changes
         return changes;

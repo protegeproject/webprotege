@@ -97,6 +97,10 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     private void reload() {
+        GWT.log("Current target: " + currentTarget);
+        if(currentTarget == null) {
+            return;
+        }
         DispatchServiceManager.get().execute(new GetDiscussionThreadAction(projectId, currentTarget), new AsyncCallback<GetDiscussionThreadResult>() {
             @Override
             public void onFailure(Throwable caught) {

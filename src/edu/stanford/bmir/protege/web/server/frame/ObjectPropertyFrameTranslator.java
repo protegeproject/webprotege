@@ -55,11 +55,11 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
     }
 
     @Override
-    public Set<OWLAxiom> getAxioms(ObjectPropertyFrame frame) {
+    public Set<OWLAxiom> getAxioms(ObjectPropertyFrame frame, Mode mode) {
         Set<OWLAxiom> result = new HashSet<OWLAxiom>();
         for(PropertyAnnotationValue pv : frame.getAnnotationPropertyValues()) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
-            result.addAll(translator.getAxioms(frame.getSubject(), pv));
+            result.addAll(translator.getAxioms(frame.getSubject(), pv, mode));
         }
         for(OWLClass domain : frame.getDomains()) {
             OWLAxiom ax = DataFactory.get().getOWLObjectPropertyDomainAxiom(frame.getSubject(), domain);

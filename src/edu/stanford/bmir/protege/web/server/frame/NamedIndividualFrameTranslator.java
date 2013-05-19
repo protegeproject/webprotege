@@ -31,8 +31,8 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     }
 
     @Override
-    public Set<OWLAxiom> getAxioms(NamedIndividualFrame frame) {
-        return translateToAxioms(frame.getSubject(), frame);
+    public Set<OWLAxiom> getAxioms(NamedIndividualFrame frame, Mode mode) {
+        return translateToAxioms(frame.getSubject(), frame, mode);
     }
 
     private NamedIndividualFrame translateToNamedIndividualFrame(OWLNamedIndividual subject, OWLOntology rootOntology, OWLAPIProject project) {
@@ -74,14 +74,14 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     }
 
 
-    private Set<OWLAxiom> translateToAxioms(OWLNamedIndividual subject, NamedIndividualFrame frame) {
+    private Set<OWLAxiom> translateToAxioms(OWLNamedIndividual subject, NamedIndividualFrame frame, Mode mode) {
         Set<OWLAxiom> result = new HashSet<OWLAxiom>();
         for(OWLClass cls : frame.getClasses()) {
             result.add(DataFactory.get().getOWLClassAssertionAxiom(cls, subject));
         }
         for(PropertyValue propertyValue : frame.getPropertyValues()) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
-            result.addAll(translator.getAxioms(subject, propertyValue));
+            result.addAll(translator.getAxioms(subject, propertyValue, mode));
         }
         for(OWLNamedIndividual individual : frame.getSameIndividuals()) {
             result.add(DataFactory.get().getOWLSameIndividualAxiom(subject, individual));

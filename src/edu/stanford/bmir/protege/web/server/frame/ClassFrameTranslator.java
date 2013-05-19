@@ -34,8 +34,8 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     }
 
     @Override
-    public Set<OWLAxiom> getAxioms(ClassFrame frame) {
-        return translateToAxioms(frame.getSubject(), frame);
+    public Set<OWLAxiom> getAxioms(ClassFrame frame, Mode mode) {
+        return translateToAxioms(frame.getSubject(), frame, mode);
     }
 
 
@@ -65,14 +65,14 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     }
 
 
-    private Set<OWLAxiom> translateToAxioms(OWLClass subject, ClassFrame classFrame) {
+    private Set<OWLAxiom> translateToAxioms(OWLClass subject, ClassFrame classFrame,  Mode mode) {
         Set<OWLAxiom> result = new HashSet<OWLAxiom>();
         for(OWLClass cls : classFrame.getClasses()) {
             result.add(DataFactory.get().getOWLSubClassOfAxiom(subject, cls));
         }
         for(PropertyValue propertyValue : classFrame.getPropertyValues()) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
-            result.addAll(translator.getAxioms(subject, propertyValue));
+            result.addAll(translator.getAxioms(subject, propertyValue, mode));
 
         }
         return result;

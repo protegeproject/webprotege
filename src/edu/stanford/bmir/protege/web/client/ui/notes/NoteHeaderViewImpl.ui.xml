@@ -11,7 +11,8 @@
         .note-subject-label {
             font-weight: bold;
             min-height: 20px;
-            color: #676767
+            color: #676767;
+            background: #ffffff;
         }
         .started-by-label {
             color: #b3b3b3;
@@ -23,9 +24,10 @@
             display: inline;
         }
         .resolved-panel {
-            position: absolute;
+            /*position: absolute;*/
             top: 2px;
             right: 5px;
+            background: white;
         }
         .status-resolved {
             color: green;

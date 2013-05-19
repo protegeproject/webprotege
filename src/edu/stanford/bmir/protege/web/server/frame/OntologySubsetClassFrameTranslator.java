@@ -55,11 +55,14 @@ public class OntologySubsetClassFrameTranslator {
 
         ClassFrameTranslator translator = new ClassFrameTranslator();
 
+        final OWLAPIProject project = OWLAPIProjectManager.getProjectManager().getProject(projectId);
+        OWLOntology rootOntology = project.getRootOntology();
+
+
         // Get the axioms that were consumed in the translation
-        Set<OWLAxiom> consumedAxioms = translator.getAxioms(serverClassFrame);
+        Set<OWLAxiom> consumedAxioms = translator.getAxioms(serverClassFrame, Mode.MAXIMAL);
 
 
-        OWLAPIProject project = OWLAPIProjectManager.getProjectManager().getProject(projectId);
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
 
         Set<OWLOntology> importsClosure = project.getRootOntology().getImportsClosure();
@@ -95,7 +98,7 @@ public class OntologySubsetClassFrameTranslator {
         // Changes to apply changes
 
 
-        Set<OWLAxiom> toAxioms = translator.getAxioms(to);
+        Set<OWLAxiom> toAxioms = translator.getAxioms(to, Mode.MINIMAL);
 
         for (OWLAxiom fromAxiom : ontologyCandidateAxioms) {
             if (!toAxioms.contains(fromAxiom) && !nonConsumedAxioms.contains(fromAxiom)) {
