@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.EntityLookupService;
 import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceResult;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequest;
@@ -31,8 +29,12 @@ import java.util.Set;
  */
 public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiteralParser {
 
-    private static final EntityLookupServiceAsync LOOKUP_SERVICE_ASYNC = GWT.create(EntityLookupService.class);
 
+    private EntityLookupServiceAsync lookupServiceAsync;
+
+    public DefaultPrimitiveDataParser(EntityLookupServiceAsync lookupServiceAsync) {
+        this.lookupServiceAsync = lookupServiceAsync;
+    }
 
     @Override
     public void parsePrimitiveData(String content, Optional<String> lang, final PrimitiveDataParsingContext context, final PrimitiveDataParserCallback callback) {
@@ -73,7 +75,7 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
         final Set<EntityType<?>> allowedEntityTypes = context.getAllowedEntityTypes();
         final ProjectId projectId = context.getProjectId();
         final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, EntityLookupRequestType.EXACT_MATCH_IGNORE_CASE, 5, allowedEntityTypes);
-        LOOKUP_SERVICE_ASYNC.lookupEntities(projectId, entityLookupRequest, new AsyncCallback<List<EntityLookupServiceResult>>() {
+        lookupServiceAsync.lookupEntities(projectId, entityLookupRequest, new AsyncCallback<List<EntityLookupServiceResult>>() {
             @Override
             public void onFailure(Throwable caught) {
                 // TODO: Handle lookup failure

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusHandler;
@@ -13,6 +14,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.rpc.EntityLookupService;
+import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
@@ -50,6 +52,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements HasEnabled {
 
+   private static final EntityLookupServiceAsync LOOKUP_SERVICE_ASYNC = GWT.create(EntityLookupService.class);
+
+
     public static final int SUGGEST_LIMIT = 20;
 
     public static final String ERROR_STYLE_NAME = "web-protege-error-label";
@@ -77,7 +82,7 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
 
     private String lastIconInsetStyleName = "empty-icon-inset";
 
-    private PrimitiveDataParser primitiveDataParser = new DefaultPrimitiveDataParser();
+    private PrimitiveDataParser primitiveDataParser = new DefaultPrimitiveDataParser(LOOKUP_SERVICE_ASYNC);
 
     private boolean dirty = false;
 
@@ -277,7 +282,8 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
             return;
         }
         PrimitiveDataParsingContext context = new PrimitiveDataParsingContext(projectId, allowedTypes, freshEntitiesHandler);
-        primitiveDataParser.parsePrimitiveData(editor.getText().trim(), languageEditor.getValue(), context, new PrimitiveDataParserCallback() {
+        final String trimmedText = getTrimmedText();
+        primitiveDataParser.parsePrimitiveData(trimmedText, languageEditor.getValue(), context, new PrimitiveDataParserCallback() {
             @Override
             public void parsingFailure() {
                 setCurrentData(Optional.<OWLPrimitiveData>absent(), EventStrategy.FIRE_EVENTS);
@@ -292,13 +298,17 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
         });
     }
 
+    private String getTrimmedText() {
+        return editor.getText().trim();
+    }
+
     private boolean isCurrentDataRendered() {
         if(!currentData.isPresent()) {
-            return editor.getText().isEmpty() && !languageEditor.getValue().isPresent();
+            return getTrimmedText().isEmpty() && !languageEditor.getValue().isPresent();
         }
         OWLPrimitiveData data = currentData.get();
         String currentBrowserText = data.getBrowserText();
-        if(!currentBrowserText.equals(editor.getText())) {
+        if(!currentBrowserText.equals(getTrimmedText())) {
             return false;
         }
         if(!isCurrentEntityTypeAllowed()) {
@@ -523,7 +533,7 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
      */
 //    @Override
     public String getText() {
-        return editor.getText();
+        return getTrimmedText();
     }
 
     /**
@@ -649,7 +659,7 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
 
     private void setupErrorLabel() {
         errorLabel.clear();
-        final String text = editor.getText().trim();
+        final String text = getTrimmedText();
         final HTML errorMessageLabel = new HTML(freshEntitiesHandler.getErrorMessage(text));
         errorLabel.add(errorMessageLabel);
         errorLabel.removeStyleName(ERROR_STYLE_NAME);
@@ -673,7 +683,7 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
 
     @Override
     public void coerceToEntityType(EntityType<?> entityType) {
-        String text = editor.getText();
+        String text = getTrimmedText();
         OWLEntity entity = freshEntitiesHandler.getFreshEntity(text, entityType);
         OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, text);
         setCurrentData(Optional.of(coercedData), EventStrategy.FIRE_EVENTS);
