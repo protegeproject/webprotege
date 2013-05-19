@@ -137,6 +137,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     public void removeWatch(Watch watch, UserId userId) {
         try {
+            writeLock.lock();
             boolean removed = uninsertWatch(watch, userId);
             if (removed) {
                 appendChange(Operation.REMOVE, watch, userId);
@@ -149,10 +150,16 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
     }
 
     private boolean uninsertWatch(Watch watch, UserId userId) {
-        writeLock.lock();
-        boolean removed = userId2Watch.remove(checkNotNull(userId), checkNotNull(watch));
-        watch2UserId.remove(watch, userId);
-        watchObject2Watch.remove(watch.getWatchedObject(), watch);
+        boolean removed;
+        try {
+            writeLock.lock();
+            removed = userId2Watch.remove(checkNotNull(userId), checkNotNull(watch));
+            watch2UserId.remove(watch, userId);
+            watchObject2Watch.remove(watch.getWatchedObject(), watch);
+        }
+        finally {
+            writeLock.unlock();
+        }
         return removed;
     }
 
