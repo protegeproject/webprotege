@@ -110,8 +110,8 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
         addWidget("Confirm Password", confirmPasswordField);
 
         addVerticalSpacer();
-//        verificationWidget = new NullHumanVerificationWidget();
-        verificationWidget = new RecaptchaWidget();
+        verificationWidget = new NullHumanVerificationWidget();
+//        verificationWidget = new RecaptchaWidget();
         addWidget("", verificationWidget.asWidget());
     }
 
