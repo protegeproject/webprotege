@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasResult;
+import org.semanticweb.owlapi.model.AddAxiom;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.util.ArrayList;
@@ -63,6 +66,9 @@ public class GeneratedOntologyChanges<R> implements HasResult<Optional<R>> {
             changes.add(change);
         }
 
+        public void addAxiom(OWLOntology ontology, OWLAxiom axiom) {
+            changes.add(new AddAxiom(ontology, axiom));
+        }
 
         public void addAll(List<OWLOntologyChange> changes) {
             this.changes.addAll(changes);

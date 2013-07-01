@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
+import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLClassExpressionVisitorAdapter;
 import org.semanticweb.owlapi.util.OWLClassExpressionVisitorExAdapter;
@@ -28,7 +31,6 @@ public class OWLClassTripleMapper extends TripleMapper<OWLClass> {
 
         final List<Triple> result = new ArrayList<Triple>();
 
-        
         final RenderingManager rm = getRenderingManager();
 
         
@@ -59,6 +61,22 @@ public class OWLClassTripleMapper extends TripleMapper<OWLClass> {
                     @Override
                     public void visit(OWLObjectHasValue desc) {
                         desc.asSomeValuesFrom().accept(this);
+                    }
+
+                    @Override
+                    public void visit(OWLDataSomeValuesFrom desc) {
+                        if(desc.getFiller().isDatatype()) {
+                            PropertyEntityData propertyEntityData = rm.getPropertyEntityData(desc.getProperty().asOWLDataProperty());
+                            propertyEntityData.setMinCardinality(1);
+                            result.add(new Triple(rm.getEntityData(cls), propertyEntityData, rm.getEntityData(desc.getFiller().asOWLDatatype())));
+                        }
+                    }
+
+                    @Override
+                    public void visit(OWLDataHasValue desc) {
+                        PropertyEntityData propertyEntityData = rm.getPropertyEntityData(desc.getProperty().asOWLDataProperty());
+                        propertyEntityData.setMinCardinality(1);
+                        result.add(new Triple(rm.getEntityData(cls), propertyEntityData, rm.getEntityData(desc.getValue())));
                     }
 
                     @Override

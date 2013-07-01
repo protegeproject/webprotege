@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermSynonym;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditor;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
+import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,51 +15,14 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/05/2012
  */
-public class OBOTermSynonymListEditor extends OBOTermEditorGroup {
-
-    private List<OBOTermSynonymEditor> editors = new ArrayList<OBOTermSynonymEditor>();
+public class OBOTermSynonymListEditor extends ValueListEditorImpl<OBOTermSynonym> {
 
     public OBOTermSynonymListEditor() {
-    }
-    
-    public void setValues(List<OBOTermSynonym> synonyms) {
-        editors.clear();
-        clearEditors();
-        for(OBOTermSynonym synonym : synonyms) {
-            OBOTermSynonymEditor editor = new OBOTermSynonymEditor();
-            editor.setValue(synonym);
-            editors.add(editor);
-            addEditor(editor);
-        }
-//        if(synonyms.isEmpty()) {
-            addBlankEditor();
-//        }
-    }
-
-    private void addBlankEditor() {
-        OBOTermSynonymEditor editor = new OBOTermSynonymEditor();
-        editors.add(editor);
-        addEditor(editor);
-    }
-
-    public List<OBOTermSynonym> getValues() {
-        List<OBOTermSynonym> result = new ArrayList<OBOTermSynonym>();
-        for(OBOTermSynonymEditor editor : editors) {
-            OBOTermSynonym syn = editor.getValue();
-            if (!syn.isEmpty()) {
-                result.add(syn);
+        super(new ValueEditorFactory<OBOTermSynonym>() {
+            @Override
+            public ValueEditor<OBOTermSynonym> createEditor() {
+                return new OBOTermSynonymEditorImpl();
             }
-        }
-        return result;
-    }
-    
-    public boolean isDirty() {
-
-        for(OBOTermSynonymEditor editor : editors) {
-            if(editor.isDirty()) {
-                return true;
-            }
-        }
-        return false;
+        });
     }
 }

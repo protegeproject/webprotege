@@ -4,9 +4,12 @@ import java.util.*;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
 import com.gwtext.client.dd.DragData;
@@ -44,6 +47,7 @@ import com.gwtext.client.widgets.tree.event.MultiSelectionModelListener;
 import com.gwtext.client.widgets.tree.event.TreeNodeListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 
+import edu.stanford.bmir.protege.web.client.csv.CSVImportDialog;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.Application;
@@ -53,6 +57,8 @@ import edu.stanford.bmir.protege.web.client.ui.notes.editor.DiscussionThreadDial
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileDialog;
+import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
@@ -63,6 +69,9 @@ import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.util.GlobalSelectionManager;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
+import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
+import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
+import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileResult;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
@@ -647,7 +656,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         createButton.addListener(new ButtonListenerAdapter() {
             @Override
             public void onClick(final Button button, final EventObject e) {
-                onCreateCls();
+                onCreateCls(e.isAltKey() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES);
             }
         });
         createButton.setDisabled(!hasWritePermission());
@@ -954,7 +963,28 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    protected void onCreateCls() {
+    private enum CreateClassesMode {
+
+        CREATE_SUBCLASSES,
+        IMPORT_CSV
+    }
+
+    protected void onCreateCls(CreateClassesMode mode) {
+
+        if (mode == CreateClassesMode.CREATE_SUBCLASSES) {
+            createSubClasses();
+        }
+        else {
+            createSubClassesByImportingCSVDocument();
+        }
+
+
+
+    }
+
+
+
+    private void createSubClasses() {
         CreateEntityDialog dlg = new CreateEntityDialog(EntityType.CLASS);
         dlg.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CreateEntityInfo>() {
             @Override
@@ -971,6 +1001,47 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             }
         });
         dlg.setVisible(true);
+    }
+
+    private void createSubClassesByImportingCSVDocument() {
+        UploadFileDialog d = new UploadFileDialog("Upload CSV", new UploadFileResultHandler() {
+            @Override
+            public void handleFileUploaded(final DocumentId fileDocumentId) {
+                CSVImportDialog csvImportDialog = new CSVImportDialog(fileDocumentId);
+                csvImportDialog.setVisible(true);
+                csvImportDialog.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CSVImportDescriptor>() {
+                    @Override
+                    public void handleHide(CSVImportDescriptor data, WebProtegeDialogCloser closer) {
+                        UIUtil.showLoadProgessBar("Importing CSV file", "Importing...");
+                        DispatchServiceManager.get().execute(new ImportCSVFileAction(getProjectId(), fileDocumentId, getSelectedClass(), data), new AsyncCallback<ImportCSVFileResult>() {
+                            @Override
+                            public void onFailure(Throwable caught) {
+                                MessageBox.alert("Import failed", "There was a problem importing the csv file");
+                                GWT.log("Problem importing CSV file", caught);
+                            }
+
+                            @Override
+                            public void onSuccess(ImportCSVFileResult result) {
+                                MessageBox.alert("Import success", result.getRowCount() + " rows were imported");
+                            }
+                        });
+                        UIUtil.hideLoadProgessBar();
+                        closer.hide();
+                    }
+                });
+
+            }
+
+            @Override
+            public void handleFileUploadFailed(String errorMessage) {
+                UIUtil.hideLoadProgessBar();
+                MessageBox.alert("There was a problem uploading the CSV file.  Details: " + errorMessage);
+            }
+        });
+        d.setVisible(true);
+
+
+
     }
 
     private AsyncCallback<CreateClassesResult> getCreateClassesActionAsyncHandler() {

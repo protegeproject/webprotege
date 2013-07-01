@@ -282,13 +282,14 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
                 final String displayName = "watched project";
                 final String emailSubject = String.format("Changes made in project %s by %s", displayName, user.getName());
                 String message = "\nChanges were made to " + entity.getEntityType().getName() + " " + project.getRenderingManager().getBrowserText(entity) + " " + entity.getIRI().toQuotedString();
-                message = message + (" by " + userId.getUserName() + " on " + new Date() + "\n");
+                message = message + (" by " + userId.getUserName() + " on " + new Date() + "\n\n");
+                message = message + "You can view this " + entity.getEntityType().getName() + " at the link below:";
                 //        ontology=SubClassOfTest6&tab=ClassesTab&id=ht
 
                 StringBuilder directLinkBuilder = new StringBuilder();
                 directLinkBuilder.append("http://");
-                directLinkBuilder.append(WebProtegeProperties.get().getEmailHostName().or("webprotege.stanford.edu"));
-                directLinkBuilder.append("#edit:projectId=");
+                directLinkBuilder.append(WebProtegeProperties.get().getApplicationHostName().or("webprotege.stanford.edu"));
+                directLinkBuilder.append("#Edit:projectId=");
                 directLinkBuilder.append(project.getProjectId().getId());
                 directLinkBuilder.append(";tab=ClassesTab&id=");
                 directLinkBuilder.append(URLEncoder.encode(entity.getIRI().toString()));

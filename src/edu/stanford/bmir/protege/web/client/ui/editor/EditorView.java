@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

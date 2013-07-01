@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
+import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
+import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerNotFoundException;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
@@ -12,6 +14,8 @@ import edu.stanford.bmir.protege.web.server.notes.DeleteNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
+import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridAction;
+import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
@@ -96,6 +100,10 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
 
         register(new MoveProjectsToTrashActionHandler(), MoveProjectsToTrashAction.class);
         register(new RemoveProjectsFromTrashActionHandler(), RemoveProjectsFromTrashAction.class);
+
+        // CSV
+        register(new GetCSVGridActionHandler(), GetCSVGridAction.class);
+        register(new ImportCSVFileActionHandler(), ImportCSVFileAction.class);
     }
 
 

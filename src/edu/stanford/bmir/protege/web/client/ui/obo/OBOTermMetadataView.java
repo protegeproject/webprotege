@@ -5,7 +5,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.data.obo.*;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueList;
+import edu.stanford.bmir.protege.web.shared.obo.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -40,14 +41,14 @@ public class OBOTermMetadataView extends FlowPanel {
         List<OBOTermEditorGroup> editorGroups = new ArrayList<OBOTermEditorGroup>();
         List<OBOTermEditor> metadataEditors = new ArrayList<OBOTermEditor>();
 
-        idEditor = new OBOTermIdEditor();
-        metadataEditors.add(idEditor);
-        definitionEditor = new OBOTermDefinitionEditor();
-        metadataEditors.add(definitionEditor);
-        relationshipEditor = new OBOTermRelationshipEditor(projectId);
-        metadataEditors.add(relationshipEditor);
-        crossProductEditor = new OBOTermCrossProductEditor(projectId);
-        metadataEditors.add(crossProductEditor);
+        idEditor = new OBOTermIdEditorImpl();
+//        metadataEditors.add(idEditor);
+        definitionEditor = new OBOTermDefinitionEditorImpl();
+//        metadataEditors.add(definitionEditor);
+        relationshipEditor = new OBOTermRelationshipEditor();
+//        metadataEditors.add(relationshipEditor);
+        crossProductEditor = new OBOTermCrossProductEditorImpl();
+//        metadataEditors.add(crossProductEditor);
 
 
         
@@ -59,7 +60,7 @@ public class OBOTermMetadataView extends FlowPanel {
         OBOTermEditorGroup metadataGroup = new OBOTermEditorGroup(metadataEditors);
         editorGroups.add(metadataGroup);
         
-        editorGroups.add(synonymListEditor);
+//        editorGroups.add(synonymListEditor);
         view = new OBOTermEditorView(editorGroups);
         add(view);
     }
@@ -91,7 +92,7 @@ public class OBOTermMetadataView extends FlowPanel {
                 }
 
                 public void onSuccess(OBOTermRelationships result) {
-                    relationshipEditor.setValue(result);
+                    relationshipEditor.setValue(new ArrayList<OBORelationship>(result.getRelationships()));
                     view.rebuild();
                 }
             });
@@ -110,7 +111,7 @@ public class OBOTermMetadataView extends FlowPanel {
                 }
 
                 public void onSuccess(Collection<OBOTermSynonym> result) {
-                    synonymListEditor.setValues(new ArrayList<OBOTermSynonym>(result));
+                    synonymListEditor.setValue(new ArrayList<OBOTermSynonym>(result));
                     view.rebuild();
                 }
             });
@@ -126,19 +127,19 @@ public class OBOTermMetadataView extends FlowPanel {
 
     public void commit(ProjectId projectId, OWLEntity subject) {
         if(idEditor.isDirty()) {
-            service.setTermId(projectId, subject, idEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
+//            service.setTermId(projectId, subject, idEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
         if(definitionEditor.isDirty()) {
-            service.setDefinition(projectId, subject, definitionEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
+//            service.setDefinition(projectId, subject, definitionEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
         if(relationshipEditor.isDirty()) {
-            service.setRelationships(projectId, (OWLClass) subject, relationshipEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
+//            service.setRelationships(projectId, (OWLClass) subject, relationshipEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
         if(crossProductEditor.isDirty()) {
-            service.setCrossProduct(projectId, (OWLClass) subject, crossProductEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
+//            service.setCrossProduct(projectId, (OWLClass) subject, crossProductEditor.getValue(), new OBOTermEditorApplyChangesAsyncCallback());
         }
-        if(synonymListEditor.isDirty()) {
-            service.setSynonyms(projectId, subject, synonymListEditor.getValues(), new OBOTermEditorApplyChangesAsyncCallback());
+        if(synonymListEditor.isDirty() || synonymListEditor.getValue().isPresent()) {
+            service.setSynonyms(projectId, subject, synonymListEditor.getValue().get(), new OBOTermEditorApplyChangesAsyncCallback());
         }
     }
 }

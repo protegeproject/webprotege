@@ -6,7 +6,7 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermDefinition;
+import edu.stanford.bmir.protege.web.shared.obo.OBOTermDefinition;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Arrays;
@@ -25,8 +25,8 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
 
     public OBOTermDefinitionPortlet(Project project) {
         super(project);
-        OBOTermEditorView editorView = new OBOTermEditorView(Arrays.asList(new OBOTermEditorGroup(Arrays.<OBOTermEditor>asList(editor))));
-        add(editorView);
+        editor = new OBOTermDefinitionEditorImpl();
+        add(editor.getWidget());
         setHeight("200px");
         setAutoScroll(false);
     }
@@ -43,7 +43,10 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void commitChangesForEntity(OWLEntity entity) {
-        getService().setDefinition(getProjectId(), entity, editor.getValue(), new AsyncCallback<Void>() {
+        if(!editor.getValue().isPresent()) {
+            return;
+        }
+        getService().setDefinition(getProjectId(), entity, editor.getValue().get(), new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
                 if(caught instanceof NotSignedInException) {
                     MessageBox.alert("Your changes to the term definition have not been saved.  You must be signed in to make changes.");
@@ -93,7 +96,7 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
 
     @Override
     public void initialize() {
-        editor = new OBOTermDefinitionEditor();
+
     }
 
     public Collection<EntityData> getSelection() {

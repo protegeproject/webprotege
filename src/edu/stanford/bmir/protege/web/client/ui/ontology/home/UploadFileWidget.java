@@ -21,19 +21,12 @@ public class UploadFileWidget extends NewProjectInfoWidget {
 
     private final FileUpload fileUpload;
 
-    public UploadFileWidget(final Refreshable... refreshables) {
+    public UploadFileWidget() {
         setPostURL(SUBMIT_FILE_URL);
         fileUpload = new FileUpload();
         fileUpload.setName("file");
         addWidget(FILE_NAME_FIELD_LABEL, fileUpload);
         fileUpload.setWidth(FIELD_WIDTH);
-        addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-            public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                for(Refreshable refreshable : refreshables) {
-                    refreshable.refresh();
-                }
-            }
-        });
         addDialogValidator(new FileNameValidator());
     }
     

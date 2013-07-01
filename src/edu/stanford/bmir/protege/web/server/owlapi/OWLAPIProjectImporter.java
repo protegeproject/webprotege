@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 
+import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;

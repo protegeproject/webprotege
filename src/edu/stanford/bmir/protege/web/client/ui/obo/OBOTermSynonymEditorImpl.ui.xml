@@ -1,0 +1,47 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text"
+             xmlns:obo="urn:import:edu.stanford.bmir.protege.web.client.ui.obo">
+    <ui:style>
+        .synonym-style {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+        .synonym-name-style {
+            font-weight: bold;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <table cellpadding="0" cellspacing="0">
+            <col width="30px"/>
+            <col width="100%"/>
+            <tr>
+                <td>
+                    <g:ListBox ui:field="synonymTypeField" visibleItemCount="1" addStyleNames="{style.synonym-style}"/>
+                </td>
+                <td>
+                    <text:PlaceholderTextBox ui:field="synonymField" placeholder="Synonym" width="100%" addStyleNames="{style.synonym-style} {style.synonym-name-style}"/>
+                </td>
+            </tr>
+            <tr>
+                <td/>
+                <td>
+                    <table style="padding-left: 10px;" cellpadding="0" cellspacing="0">
+                        <col width="15px"/>
+                        <col width="100%"/>
+                        <tr>
+                            <td valign="top">
+                                <g:Label text="XRefs" addStyleNames="web-protege-form-label {style.synonym-style}"/>
+                            </td>
+                            <td>
+                                <obo:XRefListEditor ui:field="xrefListField" addStyleNames="{style.synonym-style}"/>
+                            </td>
+                        </tr>
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -2,7 +2,10 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.obo.WebProtegeOBOFormatParserFactory;
+import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -31,6 +34,7 @@ import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProv
 import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
 import org.protege.owlapi.model.ProtegeOWLOntologyManager;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentParserFactory;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentStorer;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLParseException;
@@ -66,11 +70,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class OWLAPIProject implements HasDispose {
 
 
-    static {
-        OWLParserFactoryRegistry.getInstance().registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
-    }
+
 
     public static final EventLifeTime PROJECT_EVENT_LIFE_TIME = EventLifeTime.get(60, TimeUnit.SECONDS);
+
+    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(OWLAPIProject.class);
 
     private OWLAPIProjectDocumentStore documentStore;
 
@@ -139,7 +143,7 @@ public class OWLAPIProject implements HasDispose {
     private OWLAPIProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
         this.documentStore = documentStore;
         this.projectEventManager = EventManager.create(PROJECT_EVENT_LIFE_TIME);
-        final boolean useCachingInDataFactory = false;
+        final boolean useCachingInDataFactory = true;
         final boolean useCompressionInDataFactory = false;
         OWLDataFactory df = new OWLDataFactoryImpl(useCachingInDataFactory, useCompressionInDataFactory);
 
@@ -467,7 +471,7 @@ public class OWLAPIProject implements HasDispose {
                         changesToRename.add(change);
                         IRI currentIRI = entity.getIRI();
                         if (!iriRenameMap.containsKey(currentIRI)) {
-                            String shortName = currentIRI.getFragment();
+                            String shortName = DataFactory.getFreshEntityShortName(entity);
                             OWLEntityCreator<?> creator = getEntityCreator(userId, shortName, entity.getEntityType());
                             freshEntityChanges.addAll(creator.getChanges());
                             IRI replacementIRI = creator.getEntity().getIRI();
@@ -479,9 +483,10 @@ public class OWLAPIProject implements HasDispose {
 
 
             List<OWLOntologyChange> allChangesIncludingRenames = new ArrayList<OWLOntologyChange>();
+            final OWLObjectDuplicator duplicator = new OWLObjectDuplicator(manager.getOWLDataFactory(), iriRenameMap);
             for (OWLOntologyChange change : changes) {
                 if (changesToRename.contains(change)) {
-                    OWLOntologyChange replacementChange = getRenamedChange(change, iriRenameMap);
+                    OWLOntologyChange replacementChange = getRenamedChange(change, duplicator);
                     allChangesIncludingRenames.add(replacementChange);
                 }
                 else {
@@ -524,20 +529,22 @@ public class OWLAPIProject implements HasDispose {
                 projectChangeWriteLock.unlock();
             }
 
-            WebProtegeLoggerManager.get(OWLAPIProject.class).info("%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
+            LOGGER.info("%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
 
-            List<ProjectEvent<?>> highLevelEvents = new ArrayList<ProjectEvent<?>>();
-            HighLevelEventGenerator hle = new HighLevelEventGenerator(this, userId, revisionNumber);
+            if (!(changeListGenerator instanceof SilentChangeListGenerator)) {
+                List<ProjectEvent<?>> highLevelEvents = new ArrayList<ProjectEvent<?>>();
+                HighLevelEventGenerator hle = new HighLevelEventGenerator(this, userId, revisionNumber);
 
-            highLevelEvents.addAll(hle.getHighLevelEvents(appliedChanges, revisionNumber));
+                highLevelEvents.addAll(hle.getHighLevelEvents(appliedChanges, revisionNumber));
 
 
-            for(HierarchyChangeComputer<?> computer : computers) {
-                highLevelEvents.addAll(computer.get(appliedChanges));
+                for(HierarchyChangeComputer<?> computer : computers) {
+                    highLevelEvents.addAll(computer.get(appliedChanges));
+                }
+
+
+                projectEventManager.postEvents(highLevelEvents);
             }
-
-
-            projectEventManager.postEvents(highLevelEvents);
         }
         finally {
             changeProcesssingLock.unlock();
@@ -668,15 +675,14 @@ public class OWLAPIProject implements HasDispose {
      * Renamings
      * are specified by a rename map.
      * @param change The change to copy.
-     * @param renameMap The rename map which specifies the IRIs to rename.
+     * @param duplicator A duplicator used to rename IRIs
      * @return The ontology change with the renamings.
      */
-    private OWLOntologyChange getRenamedChange(OWLOntologyChange change, final Map<IRI, IRI> renameMap) {
+    private OWLOntologyChange getRenamedChange(OWLOntologyChange change, final OWLObjectDuplicator duplicator) {
         return change.accept(new OWLOntologyChangeVisitorAdapterEx<OWLOntologyChange>() {
 
             @SuppressWarnings("unchecked")
             private <T extends OWLObject> T duplicate(T ax) {
-                OWLObjectDuplicator duplicator = new OWLObjectDuplicator(delegateManager.getOWLDataFactory(), renameMap);
                 OWLObject object = duplicator.duplicateObject(ax);
                 return (T) object;
             }

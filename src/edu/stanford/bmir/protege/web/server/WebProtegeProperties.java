@@ -278,6 +278,10 @@ public class WebProtegeProperties implements Serializable {
         return getOptionalString(EMAIL_HOST);
     }
 
+    public Optional<String> getApplicationHostName() {
+        return getOptionalString(APPLICATION_HOST);
+    }
+
     public  Optional<String> getEmailPort() {
         return getOptionalString(EMAIL_PORT);
     }

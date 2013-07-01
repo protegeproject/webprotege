@@ -26,6 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class EventManager<E extends SerializableEvent<?>> implements HasDispose, HasPostEvents<E> {
 
 
+    private static final int EVENT_LIST_SIZE_LIMIT = 200;
+
     private final ReadWriteLock LOCK = new ReentrantReadWriteLock();
 
     private final Lock READ_LOCK = LOCK.readLock();
@@ -91,6 +93,10 @@ public class EventManager<E extends SerializableEvent<?>> implements HasDispose,
      * @throws NullPointerException if {@code events} is {@code null}.
      */
     public EventTag postEvents(List<E> events) {
+        if(events.size() > EVENT_LIST_SIZE_LIMIT) {
+            // Just don't bother
+            return currentTag;
+        }
         try {
             WRITE_LOCK.lock();
             currentTag = currentTag.next();

@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
 import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
-import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;

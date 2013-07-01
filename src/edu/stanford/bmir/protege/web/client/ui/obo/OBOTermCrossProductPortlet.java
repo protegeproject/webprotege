@@ -6,7 +6,7 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermCrossProduct;
+import edu.stanford.bmir.protege.web.shared.obo.OBOTermCrossProduct;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -30,9 +30,8 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     @Override
     public void initialize() {
-        editor = new OBOTermCrossProductEditor(getProjectId());
-        OBOTermEditorView view = new OBOTermEditorView(editor);
-        add(view);
+        editor = new OBOTermCrossProductEditorImpl();
+        add(editor.getWidget());
     }
 
     @Override
@@ -69,7 +68,10 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
         if(!(entity.isOWLClass())) {
             return;
         }
-        OBOTermCrossProduct crossProduct = editor.getValue();
+        if(!editor.getValue().isPresent()) {
+            return;
+        }
+        OBOTermCrossProduct crossProduct = editor.getValue().get();
         getService().setCrossProduct(getProjectId(), (OWLClass) entity, crossProduct, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
                 if(caught instanceof NotSignedInException) {

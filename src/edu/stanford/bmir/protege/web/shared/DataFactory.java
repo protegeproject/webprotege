@@ -97,9 +97,18 @@ public class DataFactory {
         return getOWLEntity(entityType, getIRI(iri));
     }
 
+    public static IRI getFreshOWLEntityIRI(String shortName) {
+        String iri = getFreshIRIString(shortName);
+        return IRI.create(iri);
+    }
+
     public static <T extends OWLEntity> T getFreshOWLEntity(EntityType<T> entityType, String shortName) {
-        String iri = FRESH_ENTITY_SCHEME + ":entity#" + shortName;
+        String iri = getFreshIRIString(shortName);
         return getOWLEntity(entityType, iri);
+    }
+
+    private static String getFreshIRIString(String shortName) {
+        return FRESH_ENTITY_SCHEME + ":entity#" + shortName;
     }
 
     public static boolean isFreshEntity(OWLEntity entity) {
@@ -107,6 +116,19 @@ public class DataFactory {
         String scheme = iri.getScheme();
         return scheme != null && FRESH_ENTITY_SCHEME.equalsIgnoreCase(scheme);
     }
+
+    public static String getFreshEntityShortName(OWLEntity entity) {
+        String iri = entity.getIRI().toString();
+        if(!iri.startsWith(FRESH_ENTITY_SCHEME)) {
+            throw new RuntimeException(entity.toStringID() + " is not a fresh entity");
+        }
+        int firstHashIndex = iri.indexOf('#');
+        if(firstHashIndex == -1) {
+            throw new RuntimeException("Malformed fresh entity: Could not find #");
+        }
+        return iri.substring(firstHashIndex + 1);
+    }
+
 
 
 

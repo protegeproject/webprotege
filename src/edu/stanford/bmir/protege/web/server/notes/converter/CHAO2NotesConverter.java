@@ -6,16 +6,13 @@ import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
-import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.protege.notesapi.NotesManager;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentParserFactory;
 import org.semanticweb.owlapi.io.OWLParserFactoryRegistry;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.AutoIRIMapper;
 
 import java.io.File;
 import java.text.ParseException;
@@ -370,9 +367,9 @@ public class CHAO2NotesConverter {
         OWLParserFactoryRegistry.getInstance().registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
         File file = new File("/Users/matthewhorridge/Desktop/oplchao/opl-chao.owl");
         File domainOntologyDocument = new File("/Users/matthewhorridge/Desktop/oplchao/opl.owl");
-        OWLOntologyManager domainMan = OWLManager.createOWLOntologyManager();
+        OWLOntologyManager domainMan = WebProtegeOWLManager.createOWLOntologyManager();
         OWLOntology domainOnt = domainMan.loadOntologyFromOntologyDocument(domainOntologyDocument);
-        OWLOntologyManager chaoMan = OWLManager.createOWLOntologyManager();
+        OWLOntologyManager chaoMan = WebProtegeOWLManager.createOWLOntologyManager();
         OWLOntology chaoOnt = chaoMan.loadOntologyFromOntologyDocument(file);
 
         CHAO2NotesConverter converter = new CHAO2NotesConverter(domainOnt, chaoOnt, "http://www.owl-ontologies.com/Ontology1367000748.owl");

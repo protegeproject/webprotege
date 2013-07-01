@@ -8,9 +8,12 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
+import edu.stanford.bmir.protege.web.client.ui.library.recaptcha.RecaptchaWidget;
+import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationServiceProvider;
+import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationWidget;
+import edu.stanford.bmir.protege.web.client.ui.verification.NullHumanVerificationWidget;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
-import edu.stanford.bmir.protege.web.client.ui.library.recaptcha.RecaptchaWidget;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 
@@ -38,7 +41,7 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
 
     private final TextBox userNameField;
 
-    private final RecaptchaWidget recaptureWidget;
+    private final HumanVerificationWidget verificationWidget;
 
 
     public WebProtegeSignupDialogForm() {
@@ -107,8 +110,9 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
         addWidget("Confirm Password", confirmPasswordField);
 
         addVerticalSpacer();
-        recaptureWidget = new RecaptchaWidget();
-        addWidget("Verification", recaptureWidget);
+//        verificationWidget = new NullHumanVerificationWidget();
+        verificationWidget = new RecaptchaWidget();
+        addWidget("", verificationWidget.asWidget());
     }
 
 
@@ -146,14 +150,11 @@ public class WebProtegeSignupDialogForm extends WebProtegeDialogForm implements 
 
     public SignupInfo getData() {
         EmailAddress emailAddress = getEmailAddress();
-        String challenge = recaptureWidget.getChallenge();
-        String response = recaptureWidget.getResponse();
-        return new SignupInfo(emailAddress, getUserName(), getPassword(), challenge, response);
+        HumanVerificationServiceProvider verificationServiceProvider = verificationWidget.getVerificationServiceProvider();
+
+        return new SignupInfo(emailAddress, getUserName(), getPassword(), verificationServiceProvider);
     }
 
-    public RecaptchaWidget getRecaptureWidget() {
-        return recaptureWidget;
-    }
 
     public WebProtegeDialogValidator getValidator() {
         return this;

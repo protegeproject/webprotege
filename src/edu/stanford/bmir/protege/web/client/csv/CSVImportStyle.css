@@ -1,0 +1,41 @@
+.displayNameColumn {
+    background: #E0FFE0;
+}
+
+.highlightedColumn {
+    background: #d4edfb;
+}
+
+.importedColumn {
+    /*background: #E0FFE0;*/
+}
+
+.classIcon {
+    padding-left: 22px;
+    background-image: url("images/tree/class.png");
+    background-position: 2px 1px;
+    background-repeat: no-repeat;
+}
+
+.namedIndividualIcon {
+    padding-left: 22px;
+    background-image: url("images/tree/individual.png");
+    background-position: 2px 1px;
+    background-repeat: no-repeat;
+}
+
+.numberIcon {
+    padding-left: 22px;
+    background-image: url("images/tree/number.png");
+    background-position: 2px 1px;
+    background-repeat: no-repeat;
+}
+
+.literalIcon {
+    padding-left: 22px;
+    background-image: url("images/tree/literal.png");
+    background-position: 2px 1px;
+    background-repeat: no-repeat;
+}
+
+

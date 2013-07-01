@@ -1,0 +1,15 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.ui.frame">
+    <ui:style>
+        .property-editor-style {
+            display: inline-block;
+        }
+        .filler-type-style {
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <frame:DefaultPrimitiveDataEditor ui:field="propertyField" width="200px" addStyleNames="{style.property-editor-style}" placeholder="Enter property name"/>
+        <g:ListBox visibleItemCount="1" ui:field="relationTypeField" width="200px" addStyleNames="{style.filler-type-style}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

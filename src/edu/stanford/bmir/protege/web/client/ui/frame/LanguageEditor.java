@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
-import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 
 /**
  * Author: Matthew Horridge<br>

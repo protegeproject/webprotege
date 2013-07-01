@@ -1,0 +1,15 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .value-list-editor {
+            border-collapse: collapse;
+        }
+        .value-list-editor td {
+            padding-bottom: 1px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+        <g:FlexTable ui:field="tableField" width="100%" addStyleNames="{style.value-list-editor}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -5,7 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOXRef;
+import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
@@ -35,7 +35,10 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void commitChangesForEntity(OWLEntity entity) {
-        getService().setXRefs(getProjectId(), entity, editor.getValues(), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term XRefs have not been applied"));
+        if(!editor.getValue().isPresent()) {
+            return;
+        }
+        getService().setXRefs(getProjectId(), entity, editor.getValue().get(), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term XRefs have not been applied"));
     }
 
     @Override
@@ -47,14 +50,14 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
             }
 
             public void onSuccess(List<OBOXRef> result) {
-                editor.setValues(result);
+                editor.setValue(result);
             }
         });
     }
 
     @Override
     protected void clearDisplay() {
-        editor.clearValues();
+        editor.clearValue();
     }
 
     @Override
@@ -71,8 +74,8 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
 
     @Override
     public void initialize() {
-        editor = new XRefListEditor(XRefEditorLayout.HORIZONTAL);
-        add(new OBOTermEditorView(editor));
+        editor = new XRefListEditor();
+        add(editor);
     }
 
     public Collection<EntityData> getSelection() {

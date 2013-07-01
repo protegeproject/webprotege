@@ -4,12 +4,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermRelationships;
+import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
+import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -36,8 +36,8 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
         if(!(entity instanceof OWLClass)) {
             return;
         }
-        OBOTermRelationships relationships = editor.getValue();
-        getService().setRelationships(getProjectId(), (OWLClass) entity, relationships, new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term relationships have not been applied"));
+        List<OBORelationship> relationships = editor.getValue().or(Collections.<OBORelationship>emptyList());
+        getService().setRelationships(getProjectId(), (OWLClass) entity, new OBOTermRelationships(new HashSet<OBORelationship>(relationships)), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term relationships have not been applied"));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
             }
 
             public void onSuccess(OBOTermRelationships result) {
-                editor.setValue(result);
+                editor.setValue(new ArrayList<OBORelationship>(result.getRelationships()));
             }
         });
     }
@@ -76,9 +76,8 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
 
     @Override
     public void initialize() {
-        editor = new OBOTermRelationshipEditor(getProjectId());
-        OBOTermEditorView view = new OBOTermEditorView(editor);
-        add(view);
+        editor = new OBOTermRelationshipEditor();
+        add(editor.getWidget());
     }
     
 

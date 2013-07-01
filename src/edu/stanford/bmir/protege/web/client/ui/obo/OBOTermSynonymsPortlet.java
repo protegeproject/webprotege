@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.obo.OBOTermSynonym;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueList;
+import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermSynonymListEditor editor;
     
-    private OBOTermEditorView editorView;
+//    private OBOTermEditorView editorView;
 
     public OBOTermSynonymsPortlet(Project project) {
         super(project);
@@ -29,8 +31,8 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void clearDisplay() {
-        editor.setValues(Collections.<OBOTermSynonym>emptyList());
-        editorView.rebuild();
+        editor.clearValue();
+//        editorView.rebuild();
     }
 
     @Override
@@ -40,8 +42,7 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
             }
 
             public void onSuccess(Collection<OBOTermSynonym> result) {
-                editor.setValues(new ArrayList<OBOTermSynonym>(result));
-                editorView.rebuild();
+                editor.setValue(new ArrayList<OBOTermSynonym>(result));
             }
         });
     }
@@ -53,8 +54,11 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void commitChangesForEntity(OWLEntity entity) {
-        List<OBOTermSynonym> synonyms = editor.getValues();
-        getService().setSynonyms(getProjectId(), entity, synonyms, new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term synonyms have not been applied."));
+        Optional<List<OBOTermSynonym>> synonyms = editor.getValue();
+        if(!synonyms.isPresent()) {
+            return;
+        }
+        getService().setSynonyms(getProjectId(), entity, synonyms.get(), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term synonyms have not been applied."));
     }
 
     @Override
@@ -74,8 +78,8 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     @Override
     public void initialize() {
         editor = new OBOTermSynonymListEditor();
-        editorView = new OBOTermEditorView(editor);
-        add(editorView);
+//        editorView = new OBOTermEditorView(editor);
+        add(editor);
     }
 
 //    private void addAddButton() {

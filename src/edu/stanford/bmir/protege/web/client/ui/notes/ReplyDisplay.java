@@ -5,7 +5,7 @@ import com.google.gwt.user.client.ui.HasVisibility;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasEditingCancelledHandlers;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasEditingFinishedHandlers;
-import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 
 /**

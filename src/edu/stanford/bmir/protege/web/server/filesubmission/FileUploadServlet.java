@@ -3,12 +3,10 @@ package edu.stanford.bmir.protege.web.server.filesubmission;
 import edu.stanford.bmir.protege.web.client.rpc.data.FileUploadResponseAttributes;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.semanticweb.owlapi.io.FileDocumentSource;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.io.UnparsableOntologyException;
 import org.semanticweb.owlapi.model.*;
@@ -30,8 +28,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/01/2012
  * <p>
- * A servlet for uploading files to web protege.  The servlet as a very weak form of security in that it only
- * accepts files from registered users.
+ * A servlet for uploading files to web protege.
  * </p>
  * <p>
  *     If the upload succeeds then the server returns an HTTP 201 response (indicating that a new resource was created
@@ -77,15 +74,15 @@ public class FileUploadServlet extends HttpServlet {
                         LOGGER.info("Created server side file: " + uploadedFile.getAbsolutePath());
                         item.write(uploadedFile);
                         resp.setStatus(HttpServletResponse.SC_CREATED);
-                        try {
-                            processOntology(uploadedFile);
+//                        try {
+//                            processOntology(uploadedFile);
                             LOGGER.info("Sending response to client");
                             sendSuccessMessage(resp, uploadedFile.getName());
-                        }
-                        catch (OWLOntologyCreationException e) {
-                            LOGGER.info("Caught OWLOntologyCreationException %s", e.toString());
-                            sendErrorMessage(resp, e);
-                        }
+//                        }
+//                        catch (OWLOntologyCreationException e) {
+//                            LOGGER.info("Caught OWLOntologyCreationException %s", e.toString());
+//                            sendErrorMessage(resp, e);
+//                        }
                         return;
                     }
                 }
@@ -182,13 +179,13 @@ public class FileUploadServlet extends HttpServlet {
 
     
     
-    private void processOntology(File ontologyDocument) throws OWLOntologyCreationException {
-        LOGGER.info("Parsing uploaded file ontology...");
-        OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
-        OWLOntologyLoaderConfiguration configuration = new OWLOntologyLoaderConfiguration().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
-        manager.loadOntologyFromOntologyDocument(new FileDocumentSource(ontologyDocument), configuration);
-        LOGGER.info("    .... parsed");
-    }
+//    private void processOntology(File ontologyDocument) throws OWLOntologyCreationException {
+//        LOGGER.info("Parsing uploaded file ontology...");
+//        OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
+//        OWLOntologyLoaderConfiguration configuration = new OWLOntologyLoaderConfiguration().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
+//        manager.loadOntologyFromOntologyDocument(new FileDocumentSource(ontologyDocument), configuration);
+//        LOGGER.info("    .... parsed");
+//    }
     
     
     private class Pair {

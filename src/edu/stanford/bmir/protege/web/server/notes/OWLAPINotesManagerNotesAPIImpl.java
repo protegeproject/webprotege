@@ -7,17 +7,17 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
-import edu.stanford.bmir.protege.web.server.owlapi.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.notes.NoteType;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.protege.notesapi.NotesException;
 import org.protege.notesapi.NotesManager;
 import org.protege.notesapi.notes.*;
+import org.protege.notesapi.notes.impl.DefaultComment;
 import org.protege.notesapi.oc.impl.DefaultOntologyComponent;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentFormat;
@@ -107,7 +107,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             LOGGER.info("Importing legacy notes data");
             try {
                 final BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(legacy));
-                OWLOntology legacyNotesOntology = OWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(inputStream);
+                OWLOntology legacyNotesOntology = WebProtegeOWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(inputStream);
                 String base = legacyNotesOntology.getOntologyID().getOntologyIRI().toString();
                 LOGGER.info("Using base obtained from legacy notes ontology: " + base);
                 CHAO2NotesConverter converter = new CHAO2NotesConverter(project.getRootOntology(), legacyNotesOntology, base);
@@ -221,8 +221,8 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     }
     
     private AnnotatableThing getAnnotatableThingForObjectId(NoteId noteId) {
-        OWLEntity entity = project.getDataFactory().getOWLNamedIndividual(IRI.create(noteId.getLexicalForm()));
-        return getAnnotatableThing(entity);
+        OWLNamedIndividual entity = project.getDataFactory().getOWLNamedIndividual(IRI.create(noteId.getLexicalForm()));
+        return new DefaultComment(entity, notesOntology);
     }
 
 
@@ -318,7 +318,9 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         AnnotatableThing annotatableThing = getAnnotatableThing(targetEntity);
         Set<Note> result = new HashSet<Note>();
         for(Annotation annotation : annotatableThing.getAssociatedAnnotations()) {
-            getAllNotesForAnnotation(annotation, Optional.<NoteId>absent(), result);
+            if (annotation != null) {
+                getAllNotesForAnnotation(annotation, Optional.<NoteId>absent(), result);
+            }
         }
         return new DiscussionThread(result);
     }

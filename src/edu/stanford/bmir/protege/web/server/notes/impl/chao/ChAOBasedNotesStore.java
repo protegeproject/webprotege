@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.notes.impl.chao;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.notes.api.NoteStoreException;
 import edu.stanford.bmir.protege.web.server.notes.impl.NoteStoreIndex;
+import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 import edu.stanford.bmir.protege.web.shared.notes.NoteType;
@@ -494,7 +495,7 @@ public class ChAOBasedNotesStore { // implements MutableNoteStore {
 
 
     public static void main(String[] args) throws Exception {
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+        OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
         OWLOntology ont = manager.loadOntologyFromOntologyDocument(IRI.create("file:/Users/matthewhorridge/Desktop/2013.04.26.OPL_annotation.owl"));
         ChAOBasedNotesStore ns = new ChAOBasedNotesStore(ont, ont);
         Set<Note> notes = ns.parseNotesFromOntology();

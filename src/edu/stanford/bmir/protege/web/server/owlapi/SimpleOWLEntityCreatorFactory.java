@@ -2,10 +2,17 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.server.IdUtil;
+import org.apache.commons.httpclient.util.URIUtil;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
+import org.semanticweb.owlapi.vocab.Namespaces;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,15 +22,56 @@ import java.util.List;
  */
 public class SimpleOWLEntityCreatorFactory extends OWLEntityCreatorFactory {
 
-    
+    private static Map<String, String> WELL_KNOWN_PREFIXES;
+
+    static {
+        // This is thread safe - hash maps are for multiple readers
+        WELL_KNOWN_PREFIXES = new HashMap<String, String>();
+        WELL_KNOWN_PREFIXES.put("owl", Namespaces.OWL.toString());
+        WELL_KNOWN_PREFIXES.put("rdf", Namespaces.RDF.toString());
+        WELL_KNOWN_PREFIXES.put("rdfs", Namespaces.RDFS.toString());
+        WELL_KNOWN_PREFIXES.put("skos", Namespaces.SKOS.toString());
+        WELL_KNOWN_PREFIXES.put("dc", DublinCoreVocabulary.NAME_SPACE);
+        WELL_KNOWN_PREFIXES.put("dbpedia", "http://dbpedia.org/resource/");
+        WELL_KNOWN_PREFIXES.put("dbp", "http://dbpedia.org/property/");
+        WELL_KNOWN_PREFIXES.put("dbo", "http://dbpedia.org/ontology/");
+        WELL_KNOWN_PREFIXES.put("foaf", "http://xmlns.com/foaf/0.1/");
+        WELL_KNOWN_PREFIXES.put("geo", "http://www.w3.org/2003/01/geo/wgs84_pos#");
+        WELL_KNOWN_PREFIXES.put("vcard", "http://www.w3.org/2006/vcard/ns#");
+        WELL_KNOWN_PREFIXES.put("yago", "http://dbpedia.org/class/yago/");
+        WELL_KNOWN_PREFIXES.put("sc", "http://purl.org/science/owl/sciencecommons/");
+        WELL_KNOWN_PREFIXES.put("fb", "http://rdf.freebase.com/ns/");
+        WELL_KNOWN_PREFIXES.put("geonames", "http://www.geonames.org/ontology#");
+        WELL_KNOWN_PREFIXES.put("sc", "http://rdfs.org/sioc/ns#");
+        WELL_KNOWN_PREFIXES.put("gr", "http://purl.org/goodrelations/v1#");
+        WELL_KNOWN_PREFIXES.put("dcterms", "http://purl.org/dc/terms/");
+        WELL_KNOWN_PREFIXES.put("cc", "http://creativecommons.org/ns#");
+    }
     
     @Override
     public <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(OWLAPIProject project, UserId userId, String shortName, EntityType<E> entityType) {
         OWLOntology rootOntology = project.getRootOntology();
-        OWLOntologyID id = rootOntology.getOntologyID();
-        String base = getDefaultIRIBase(id, entityType);
-        String fragment = createFragment(base, rootOntology);
-        IRI entityIRI = IRI.create(base + fragment);
+        IRI entityIRI = null;
+        if(isAbsoluteWebIRI(shortName)) {
+            entityIRI = IRI.create(shortName);
+        }
+
+        int colonIndex = shortName.indexOf(":");
+        if(colonIndex != -1) {
+            String prefixName = shortName.substring(0, colonIndex);
+            String prefix = WELL_KNOWN_PREFIXES.get(prefixName);
+            if(prefix != null) {
+                entityIRI = IRI.create(prefix, shortName.substring(colonIndex + 1));
+            }
+        }
+        if(entityIRI == null) {
+            OWLOntologyID id = rootOntology.getOntologyID();
+            String base = getDefaultIRIBase(id, entityType);
+            String fragment = createFragment(base, rootOntology);
+            entityIRI = IRI.create(base + fragment);
+
+        }
+
         OWLDataFactory dataFactory = project.getDataFactory();
         E entity = dataFactory.getOWLEntity(entityType, entityIRI);
         OWLDeclarationAxiom declarationAxiom = dataFactory.getOWLDeclarationAxiom(entity);
@@ -67,5 +115,9 @@ public class SimpleOWLEntityCreatorFactory extends OWLEntityCreatorFactory {
                 return frag;
             }
         }
+    }
+
+    private boolean isAbsoluteWebIRI(String shortName) {
+        return !shortName.contains(" ") && shortName.startsWith("http:");
     }
 }

@@ -3,17 +3,17 @@ package edu.stanford.bmir.protege.web.server;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.client.rpc.data.obo.*;
+import edu.stanford.bmir.protege.web.shared.obo.*;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.coode.owlapi.obo.parser.IDSpaceManager;
-import org.coode.owlapi.obo.parser.OBOIdType;
 import org.coode.owlapi.obo.parser.OBOPrefix;
 import org.coode.owlapi.obo.parser.OBOVocabulary;
+import org.obolibrary.obo2owl.Obo2OWLConstants;
+import org.obolibrary.oboformat.parser.OBOFormatConstants;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
@@ -32,8 +32,8 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     public synchronized Set<OBONamespace> getNamespaces(ProjectId projectId) {
 //        if (cache == null) {
-            OWLAPIProject project = getProject(projectId);
-            OBONamespaceCache cache = OBONamespaceCache.createCache(project);
+        OWLAPIProject project = getProject(projectId);
+        OBONamespaceCache cache = OBONamespaceCache.createCache(project);
 //        }
         return cache.getNamespaces();
     }
@@ -78,13 +78,23 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         OWLAPIProject project = getProject(projectId);
         IRI subject = term.getIRI();
         List<OBOXRef> xrefs = new ArrayList<OBOXRef>();
-        for(OWLAnnotationAssertionAxiom ax : project.getRootOntology().getAnnotationAssertionAxioms(subject)) {
-            if(ax.getProperty().getIRI().equals(OBOVocabulary.XREF.getIRI())) {
-                OBOXRef xref = toOBOXRef(ax.getAnnotation());
+        for (OWLAnnotationAssertionAxiom ax : project.getRootOntology().getAnnotationAssertionAxioms(subject)) {
+            final OWLAnnotationProperty property = ax.getProperty();
+            if (isXRefProperty(property)) {
+                OBOXRef xref = convertAnnotationToXRef(ax.getAnnotation(), ax.getAnnotations());
                 xrefs.add(xref);
             }
         }
         return xrefs;
+    }
+
+    private boolean isXRefProperty(OWLAnnotationProperty property) {
+        IRI iri = getXRefPropertyIRI();
+        return property.getIRI().equals(iri);
+    }
+
+    private IRI getXRefPropertyIRI() {
+        return getIRI(OBOFormatConstants.OboFormatTag.TAG_XREF);
     }
 
     public void setXRefs(ProjectId projectId, OWLEntity term, List<OBOXRef> xrefs) throws NotSignedInException {
@@ -94,17 +104,22 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
         OWLAPIProject project = getProject(projectId);
         OWLOntology rootOntology = project.getRootOntology();
-        for(OWLAnnotation annotation : annotations) {
-            OWLDataFactory df = project.getDataFactory();
-            changes.add(new AddAxiom(rootOntology, df.getOWLAnnotationAssertionAxiom(subject, annotation)));
-        }
-        for(OWLAnnotationAssertionAxiom ax : rootOntology.getAnnotationAssertionAxioms(subject)) {
-            if(ax.getProperty().getIRI().equals(OBOVocabulary.XREF.getIRI())) {
+
+        // Remove OLD
+        for (OWLAnnotationAssertionAxiom ax : rootOntology.getAnnotationAssertionAxioms(subject)) {
+            if (isXRefProperty(ax.getProperty())) {
                 changes.add(new RemoveAxiom(rootOntology, ax));
             }
         }
+
+        // Add NEW
+        for (OWLAnnotation annotation : annotations) {
+            OWLDataFactory df = project.getDataFactory();
+            changes.add(new AddAxiom(rootOntology, df.getOWLAnnotationAssertionAxiom(subject, annotation)));
+        }
+
         project.applyChanges(getUserInSessionAndEnsureSignedIn(), changes, "Set XRefs");
-        
+
     }
 
     private String getStringAnnotationValue(ProjectId projectId, org.semanticweb.owlapi.model.IRI annotationSubject, org.semanticweb.owlapi.model.IRI annotationPropertyIRI, String defaultValue) {
@@ -220,12 +235,13 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
     private boolean isOBODefinitionProperty(OWLAnnotationProperty property) {
-        IRI iri = property.getIRI();
-        if(iri.equals(OBOVocabulary.DEF.getIRI())) {
+        IRI propertyIRI = property.getIRI();
+        IRI defIRI = getIRI(OBOFormatConstants.OboFormatTag.TAG_DEF);
+        if (propertyIRI.equals(defIRI)) {
             return true;
         }
-        String fragment = iri.getFragment();
-        if(fragment == null) {
+        String fragment = propertyIRI.getFragment();
+        if (fragment == null) {
             return false;
         }
         return fragment.endsWith(IAOVocabulary.DEFINITION.getSuffix());
@@ -238,14 +254,15 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         OWLAPIProject project = getProject(projectId);
         IRI subject = term.getIRI();
         OWLDataFactory df = project.getDataFactory();
-        OWLAnnotationProperty defAnnotationProperty = df.getOWLAnnotationProperty(OBOVocabulary.DEF.getIRI());
+        final IRI defIRI = getIRI(OBOFormatConstants.OboFormatTag.TAG_DEF);
+        OWLAnnotationProperty defAnnotationProperty = df.getOWLAnnotationProperty(defIRI);
         OWLLiteral defLiteral = df.getOWLLiteral(definition.getDefinition());
         OWLAnnotationAssertionAxiom definitionAssertion = df.getOWLAnnotationAssertionAxiom(defAnnotationProperty, subject, defLiteral, xrefAnnotations);
 
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
         OWLOntology ont = project.getRootOntology();
         for (OWLAnnotationAssertionAxiom existingAx : ont.getAnnotationAssertionAxioms(subject)) {
-            if (existingAx.getProperty().getIRI().equals(OBOVocabulary.DEF.getIRI())) {
+            if (existingAx.getProperty().getIRI().equals(defIRI)) {
                 changes.add(new RemoveAxiom(ont, existingAx));
                 Set<OWLAnnotation> nonXRefAnnotations = getAxiomAnnotationsExcludingXRefs(existingAx);
                 OWLAxiom fullyAnnotatedDefinitionAssertion = definitionAssertion.getAnnotatedAxiom(nonXRefAnnotations);
@@ -263,7 +280,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     private Set<OWLAnnotation> getAxiomAnnotationsExcludingXRefs(OWLAnnotationAssertionAxiom existingAx) {
         Set<OWLAnnotation> annotationsToCopy = new HashSet<OWLAnnotation>();
         for (OWLAnnotation existingAnnotation : existingAx.getAnnotations()) {
-            if (!existingAnnotation.getProperty().getIRI().equals(OBOVocabulary.XREF.getIRI())) {
+            if (!isXRefProperty(existingAnnotation.getProperty())) {
                 annotationsToCopy.add(existingAnnotation);
             }
         }
@@ -284,32 +301,29 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     private String escapeSpaces(String s) {
         return s.replace(" ", "%20");
     }
-    
-    
+
+
     private OWLAnnotation convertXRefToAnnotation(ProjectId projectId, OBOXRef xref) {
         OWLAPIProject project = getProject(projectId);
         OWLDataFactory df = project.getDataFactory();
-        OWLAnnotationProperty xrefAnnotationProperty = df.getOWLAnnotationProperty(OBOVocabulary.XREF.getIRI());
+        OWLAnnotationProperty xrefAnnotationProperty = df.getOWLAnnotationProperty(getXRefPropertyIRI());
         String oboId = xref.toOBOId();
-        String escapedId = escapeSpaces(oboId);
-        OBOIdType type = OBOIdType.getIdType(escapedId);
-        org.semanticweb.owlapi.model.IRI xrefIRIValue = type.getIRIFromOBOId(project.getRootOntology().getOntologyID(), new IDSpaceManager(), escapedId);
         Set<OWLAnnotation> descriptionAnnotations;
         if (xref.getDescription().isEmpty()) {
             descriptionAnnotations = Collections.emptySet();
         }
         else {
-            OWLAnnotation descriptionAnnotation = df.getOWLAnnotation(df.getRDFSComment(), df.getOWLLiteral(xref.getDescription()));
+            OWLAnnotation descriptionAnnotation = df.getOWLAnnotation(df.getRDFSLabel(), df.getOWLLiteral(xref.getDescription()));
             descriptionAnnotations = Collections.singleton(descriptionAnnotation);
         }
-        return df.getOWLAnnotation(xrefAnnotationProperty, xrefIRIValue, descriptionAnnotations);
+        return df.getOWLAnnotation(xrefAnnotationProperty, df.getOWLLiteral(oboId), descriptionAnnotations);
     }
 
     private List<OBOXRef> getXRefs(OWLAnnotationAssertionAxiom annotationAssertion) {
         List<OBOXRef> result = new ArrayList<OBOXRef>();
         for (OWLAnnotation annotation : annotationAssertion.getAnnotations()) {
-            if (annotation.getProperty().getIRI().equals(OBOVocabulary.XREF.getIRI())) {
-                OBOXRef oboxRef = toOBOXRef(annotation);
+            if (isXRefProperty(annotation.getProperty())) {
+                OBOXRef oboxRef = convertAnnotationToXRef(annotation, annotation.getAnnotations());
                 if (oboxRef != null) {
                     result.add(oboxRef);
                 }
@@ -318,13 +332,14 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         return result;
     }
 
-    private OBOXRef toOBOXRef(final OWLAnnotation annotation) {
+    private OBOXRef convertAnnotationToXRef(final OWLAnnotation annotation, final Set<OWLAnnotation> annoAnnos) {
+
 
         return annotation.getValue().accept(new OWLAnnotationValueVisitorEx<OBOXRef>() {
             public OBOXRef visit(org.semanticweb.owlapi.model.IRI iri) {
                 String description = "";
-                for (OWLAnnotation anno : annotation.getAnnotations()) {
-                    if (anno.getProperty().isComment()) {
+                for (OWLAnnotation anno : annoAnnos) {
+                    if (anno.getProperty().isLabel()) {
                         description = anno.getValue().accept(new OWLAnnotationValueVisitorEx<String>() {
                             public String visit(org.semanticweb.owlapi.model.IRI iri) {
                                 return iri.toString();
@@ -341,24 +356,42 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
                         break;
                     }
                 }
-                return toOBOXRef(iri, description);
+                return toOBOXRef(iri.toString(), description);
             }
 
             public OBOXRef visit(OWLAnonymousIndividual individual) {
-                return null;
+                return toOBOXRef(individual.getID().getID(), "");
             }
 
             public OBOXRef visit(OWLLiteral literal) {
-                return null;
+                String description = "";
+                for (OWLAnnotation anno : annoAnnos) {
+                    if (anno.getProperty().isLabel()) {
+                        description = anno.getValue().accept(new OWLAnnotationValueVisitorEx<String>() {
+                            public String visit(org.semanticweb.owlapi.model.IRI iri) {
+                                return iri.toString();
+                            }
+
+                            public String visit(OWLAnonymousIndividual individual) {
+                                return individual.toString();
+                            }
+
+                            public String visit(OWLLiteral literal) {
+                                return literal.getLiteral();
+                            }
+                        });
+                        break;
+                    }
+                }
+                return toOBOXRef(literal.getLiteral(), description);
             }
         });
     }
 
     private static Pattern SEPARATOR_PATTERN = Pattern.compile("([^#_|_]+)(#_|_)(.+)");
 
-    private OBOXRef toOBOXRef(org.semanticweb.owlapi.model.IRI xrefValue, String description) {
+    private OBOXRef toOBOXRef(String value, String description) {
         // Need to peel apart the ID
-        String value = xrefValue.toString();
         if (value.startsWith(OBOPrefix.OBO.getPrefix())) {
             String localValue = value.substring(OBOPrefix.OBO.getPrefix().length());
             Matcher matcher = SEPARATOR_PATTERN.matcher(localValue);
@@ -368,21 +401,25 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
                 return new OBOXRef(dbname, dbid, description);
             }
             else {
-                return null;
+                return new OBOXRef("", value, description);
             }
         }
         else {
-            return null;
+            final int nameIdSeparatorIndex = value.indexOf(':');
+            if (nameIdSeparatorIndex != -1) {
+                return new OBOXRef(value.substring(0, nameIdSeparatorIndex), value.substring(nameIdSeparatorIndex + 1), description);
+            }
+            return new OBOXRef("", value, description);
         }
     }
-    
+
     private String unescapeSpaces(String s) {
-        if(s == null) {
+        if (s == null) {
             return "";
         }
         return s.replace("%20", " ");
-    } 
-    
+    }
+
 
     private String toOBOId(org.semanticweb.owlapi.model.IRI iri) {
         String value = iri.toString();
@@ -435,6 +472,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
                     OBOTermSynonym termSynonym = new OBOTermSynonym(getXRefs(ax), getStringValue(ax), synonymScope);
                     result.add(termSynonym);
                 }
+
             }
         }
 
@@ -447,6 +485,13 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         OWLOntology rootOntology = project.getRootOntology();
         OWLDataFactory df = project.getDataFactory();
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+
+        for (OWLAnnotationAssertionAxiom ax : project.getRootOntology().getAnnotationAssertionAxioms(subject)) {
+            if (getSynonymScope(ax) != null) {
+                changes.add(new RemoveAxiom(rootOntology, ax));
+            }
+        }
+
         for (OBOTermSynonym synonym : synonyms) {
             OWLAnnotationProperty synonymProperty = getSynonymAnnoationProperty(df, synonym.getScope());
             OWLLiteral synonymNameLiteral = df.getOWLLiteral(synonym.getName());
@@ -455,24 +500,20 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
             changes.add(new AddAxiom(rootOntology, synonymAnnotationAssertion));
         }
 
-        for (OWLAnnotationAssertionAxiom ax : project.getRootOntology().getAnnotationAssertionAxioms(subject)) {
-            if (getSynonymScope(ax) != null) {
-                changes.add(new RemoveAxiom(rootOntology, ax));
-            }
-        }
+
         project.applyChanges(getUserInSessionAndEnsureSignedIn(), changes, "Set synonym");
     }
 
     public OWLAnnotationProperty getSynonymAnnoationProperty(OWLDataFactory df, OBOTermSynonymScope scope) {
         switch (scope) {
             case EXACT:
-                return df.getOWLAnnotationProperty(OBOVocabulary.EXACT_SYNONYM.getIRI());
+                return df.getOWLAnnotationProperty(getIRI(OBOFormatConstants.OboFormatTag.TAG_EXACT));
             case NARROWER:
-                return df.getOWLAnnotationProperty(OBOVocabulary.NARROW_SYNONYM.getIRI());
+                return df.getOWLAnnotationProperty(getIRI(OBOFormatConstants.OboFormatTag.TAG_NARROW));
             case BROADER:
-                return df.getOWLAnnotationProperty(OBOVocabulary.BROAD_SYNONYM.getIRI());
+                return df.getOWLAnnotationProperty(getIRI(OBOFormatConstants.OboFormatTag.TAG_BROAD));
             case RELATED:
-                return df.getOWLAnnotationProperty(OBOVocabulary.RELATED_SYNONYM.getIRI());
+                return df.getOWLAnnotationProperty(getIRI(OBOFormatConstants.OboFormatTag.TAG_RELATED));
             default:
                 throw new RuntimeException("Unknown synonym scope: " + scope);
         }
@@ -480,23 +521,51 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
 
     public OBOTermSynonymScope getSynonymScope(OWLAnnotationAssertionAxiom ax) {
-        org.semanticweb.owlapi.model.IRI iri = ax.getProperty().getIRI();
-        if (iri.equals(OBOVocabulary.EXACT_SYNONYM.getIRI())) {
+        IRI iri = ax.getProperty().getIRI();
+
+        if (isExactSynonymIRI(iri)) {
             return OBOTermSynonymScope.EXACT;
         }
-        else if (iri.equals(OBOVocabulary.RELATED_SYNONYM.getIRI())) {
+        else if (isRelatedSynonymIRI(iri)) {
             return OBOTermSynonymScope.RELATED;
         }
-        else if (iri.equals(OBOVocabulary.NARROW_SYNONYM.getIRI())) {
+        else if (isNarrowSynonymIRI(iri)) {
             return OBOTermSynonymScope.NARROWER;
         }
-        else if (iri.equals(OBOVocabulary.BROAD_SYNONYM.getIRI())) {
+        else if (isBroadSynonymIRI(iri)) {
             return OBOTermSynonymScope.BROADER;
         }
         else {
             return null;
         }
 
+    }
+
+    private boolean isBroadSynonymIRI(IRI iri) {
+        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_BROAD);
+    }
+
+    private boolean isNarrowSynonymIRI(IRI iri) {
+        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_NARROW);
+    }
+
+    private boolean isRelatedSynonymIRI(IRI iri) {
+        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_RELATED);
+    }
+
+    private boolean isExactSynonymIRI(IRI iri) {
+        return isOBOIRI(iri, OBOFormatConstants.OboFormatTag.TAG_EXACT);
+    }
+
+    private boolean isOBOIRI(IRI iriToCheck, OBOFormatConstants.OboFormatTag tag) {
+        final Obo2OWLConstants.Obo2OWLVocabulary obo2OWLVocab = Obo2OWLConstants.getVocabularyObj(tag.getTag());
+        return obo2OWLVocab != null && obo2OWLVocab.getIRI().equals(iriToCheck);
+    }
+
+    private IRI getIRI(OBOFormatConstants.OboFormatTag tag) {
+        return Obo2OWLConstants.getVocabularyObj(tag.getTag()).getIRI();
+
+//        return Obo2OWLConstants.getVocabularyObj(vocabulary.getName()).getIRI();
     }
 
     public OBOTermRelationships getRelationships(ProjectId projectId, OWLClass term) {
@@ -642,13 +711,15 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
      * Gets an equivalent classes axiom that corresponds to an OBO Cross Product.  An equivalent classes axiom AX
      * corresponds to a cross product for a class C if AX contains C as an operand, and AX contains one other class
      * which is either an ObjectSomeValuesFrom restriction, or an intersection of ObjectSomeValuesFrom restrictions
-     * plus an optional named class.  i.e.   AX = EquivalentClasses(C ObjectIntersectionOf(A ObjectSomeValuesFrom(..)...
+     * plus an optional named class.  i.e.   AX = EquivalentClasses(C ObjectIntersectionOf(A
+     * ObjectSomeValuesFrom(..)...
      * ObjectSomeValuesFrom(..))
      * @param ontology The ontology in which to search
      * @param cls The subject of the cross product
      * @return An {@link OWLEquivalentClassesAxiom} that corresponds to a cross product for the class, or
-     * <code>null</code> if the ontology doesn't contain an equivalent classes axiom that corresponds to a cross
-     * product.
+     *         <code>null</code> if the ontology doesn't contain an equivalent classes axiom that corresponds to a
+     *         cross
+     *         product.
      */
     public OWLEquivalentClassesAxiom getCrossProductEquivalentClassesAxiom(OWLOntology ontology, OWLClass cls) {
         Set<OWLEquivalentClassesAxiom> candidates = new TreeSet<OWLEquivalentClassesAxiom>();
@@ -691,7 +762,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
 
     public void setCrossProduct(ProjectId projectId, OWLClass term, OBOTermCrossProduct crossProduct) throws NotSignedInException {
-        if(crossProduct == null) {
+        if (crossProduct == null) {
             throw new RuntimeException("crossProduct must not be null");
         }
 
@@ -717,7 +788,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
         OWLOntology rootOntology = project.getRootOntology();
         OWLEquivalentClassesAxiom existingXPAxiom = getCrossProductEquivalentClassesAxiom(rootOntology, owlClass);
-        
+
         UserId userId = getUserInSessionAndEnsureSignedIn();
         List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
         changes.add(new AddAxiom(rootOntology, newXPAxiom));
@@ -725,7 +796,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
             changes.add(new RemoveAxiom(rootOntology, existingXPAxiom));
         }
         project.applyChanges(userId, changes, "Set cross product values");
-        
+
     }
 
     private OWLClass toOWLClass(OWLDataFactory dataFactory, OWLClass cls) {

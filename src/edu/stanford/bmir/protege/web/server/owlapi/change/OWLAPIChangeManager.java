@@ -4,11 +4,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
-import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
 import edu.stanford.bmir.protege.web.shared.watches.HierarchyBranchWatch;
@@ -56,6 +52,9 @@ public class OWLAPIChangeManager {
     private List<Revision> revisions = new ArrayList<Revision>();
 
 
+//    private ListMultimap<OWLEntity, Revision> entity2Revisions = ArrayListMultimap.create();
+
+
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     private final Lock readLock = readWriteLock.readLock();
@@ -98,8 +97,8 @@ public class OWLAPIChangeManager {
                     final UserId userId = UserId.getUserId(userName);
                     final List<OWLOntologyChangeRecord> changeRecords = list.getChangeRecords();
 
-                    Revision chgList = new Revision(userId, revisionNumber, changeRecords, list.getTimestamp(), description, type);
-                    revisions.add(chgList);
+                    Revision revision = new Revision(userId, revisionNumber, changeRecords, list.getTimestamp(), description, type);
+                    addRevision(revision);
                 }
             }, SkipSetting.SKIP_NONE);
             inputStream.close();
@@ -120,6 +119,37 @@ public class OWLAPIChangeManager {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Adds a revision and performs the associated indexing.
+     * @param revision The revision to be added.  Not {@code null}.
+     */
+    private void addRevision(Revision revision) {
+        try {
+            writeLock.lock();
+            revisions.add(revision);
+//            indexRevision(revision);
+        }
+        finally {
+            writeLock.unlock();
+        }
+    }
+
+//    /**
+//     * Performs indexing of a revision (against its signature etc.).
+//     * @param revision The revision.
+//     */
+//    private void indexRevision(Revision revision) {
+//        try {
+//            writeLock.lock();
+//            for(OWLEntity entity : revision.getEntities(project)) {
+//                entity2Revisions.put(entity, revision);
+//            }
+//        }
+//        finally {
+//            writeLock.unlock();
+//        }
+//    }
 
     private void persistBaseline() {
         try {
@@ -201,7 +231,8 @@ public class OWLAPIChangeManager {
                 records.add(change.getChangeRecord());
             }
             final Revision revision = new Revision(userId, revisionNumber, records, timestamp, highlevelDescription, revisionType);
-            revisions.add(revision);
+            addRevision(revision);
+
             persistChanges(timestamp, revisionNumber, revisionType, userId, changes, highlevelDescription, immediately);
 //            fireProjectChangedEvent(userId, changes, revisionNumber, timestamp, revision);
 
@@ -210,6 +241,7 @@ public class OWLAPIChangeManager {
             writeLock.unlock();
         }
     }
+
 
 //    private void fireProjectChangedEvent(UserId userId, List<? extends OWLOntologyChange> changes, RevisionNumber revisionNumber, long timestamp, Revision revision) {
 //        Set<OWLEntityData> changedEntitiesData = new HashSet<OWLEntityData>();
@@ -366,7 +398,12 @@ public class OWLAPIChangeManager {
                 directWatches.add(((EntityFrameWatch) watch).getEntity());
             }
         }
+        if (superEntities.isEmpty() || directWatches.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         List<ChangeData> result = new ArrayList<ChangeData>();
+
         List<Revision> revisionsCopy = getRevisionsCopy();
         for (Revision revision : revisionsCopy) {
             if (revision.getRevisionType() != RevisionType.BASELINE) {
@@ -549,6 +586,8 @@ public class OWLAPIChangeManager {
 
     private static class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<Revision> {
 
+        private static final int DESCRIPTION_MAX_CHANGE_COUNT = 20;
+
         private UserId userId;
 
         private RevisionNumber revision;
@@ -560,6 +599,8 @@ public class OWLAPIChangeManager {
         private String highLevelDescription;
 
         private RevisionType revisionType;
+
+        private Set<OWLEntity> cachedEntities = null;
 
         private Revision(UserId userId, RevisionNumber revision, List<OWLOntologyChangeRecord> changes, long timestamp, String highLevelDescription, RevisionType revisionType) {
             this.changes.addAll(changes);
@@ -594,7 +635,15 @@ public class OWLAPIChangeManager {
         }
 
         public Set<OWLEntity> getEntities(OWLAPIProject project) {
+            if (cachedEntities == null) {
+                cachedEntities = getEntitiesInternal(project);
+            }
+            return cachedEntities;
+        }
+
+        private Set<OWLEntity> getEntitiesInternal(OWLAPIProject project) {
             Set<OWLEntity> result = new HashSet<OWLEntity>();
+            Set<IRI> iris = new HashSet<IRI>();
             for (OWLOntologyChangeRecord change : changes) {
                 if (change.getData() instanceof AxiomChangeData) {
                     OWLAxiom ax = ((AxiomChangeData) change.getData()).getAxiom();
@@ -604,9 +653,12 @@ public class OWLAPIChangeManager {
                         result.add((OWLEntity) object);
                     }
                     else if (object instanceof IRI) {
-                        result.addAll(project.getRootOntology().getEntitiesInSignature((IRI) object));
+                        iris.add((IRI) object);
                     }
                 }
+            }
+            for (IRI iri : iris) {
+                result.addAll(project.getRootOntology().getEntitiesInSignature(iri));
             }
             return result;
         }
@@ -640,6 +692,7 @@ public class OWLAPIChangeManager {
             sb.append("<div style=\"width: 100%;\">");
             sb.append("<div><b>Details:</b></div>");
             sb.append("<div style=\"margin-left: 20px\">");
+            int counter = 0;
             for (final OWLOntologyChangeRecord changeRecord : changes) {
                 if (changeRecord.getData() instanceof AxiomChangeData) {
                     AxiomChangeData info = (AxiomChangeData) changeRecord.getData();
@@ -682,12 +735,21 @@ public class OWLAPIChangeManager {
                         sb.append("</div>");
 
                     }
+                    if(counter == DESCRIPTION_MAX_CHANGE_COUNT && changes.size() > DESCRIPTION_MAX_CHANGE_COUNT) {
+                        sb.append("<div>");
+                        sb.append(" + ");
+                        sb.append(changes.size() - DESCRIPTION_MAX_CHANGE_COUNT);
+                        sb.append(" more");
+                        sb.append("</div>");
+                        break;
+                    }
+                    counter++;
                 }
-
-
             }
+
             sb.append("</div>");
             sb.append("</div>");
+
             return sb.toString();
         }
 

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
-import edu.stanford.bmir.protege.web.client.ui.library.common.ValueEditor;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 
 /**

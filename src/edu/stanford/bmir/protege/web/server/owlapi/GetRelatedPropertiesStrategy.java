@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
+import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -28,7 +29,7 @@ public class GetRelatedPropertiesStrategy extends OntologyServiceStrategy<List<T
         
         RenderingManager rm = getProject().getRenderingManager();
         for(OWLEntity entity : rm.getEntities(className)) {
-            TripleMapperSelector selector = new TripleMapperSelector(getProject(), AnnotationsTreatment.EXCLUDE_ANNOTATIONS, NonAnnotationTreatment.INCLUDE_NON_ANNOTATIONS);
+            TripleMapperSelector selector = new TripleMapperSelector(getProject(), AnnotationsTreatment.INCLUDE_ANNOTATIONS, NonAnnotationTreatment.INCLUDE_NON_ANNOTATIONS);
             TripleMapper<?> mapper = selector.getMapper(entity);
             result.addAll(mapper.getTriples());
         }

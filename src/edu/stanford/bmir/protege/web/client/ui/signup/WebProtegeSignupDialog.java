@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.signup;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.RecaptchaService;
-import edu.stanford.bmir.protege.web.client.rpc.RecaptchaServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.ui.verification.*;
 import edu.stanford.bmir.protege.web.shared.user.UserEmailAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -31,23 +29,26 @@ public class WebProtegeSignupDialog extends WebProtegeDialog<SignupInfo> {
                 doSignup(data, closer);
             }
         });
+        setDialogButtonHandler(DialogButton.CANCEL, new WebProtegeDialogButtonHandler<SignupInfo>() {
+            @Override
+            public void handleHide(SignupInfo data, WebProtegeDialogCloser closer) {
+                closer.hide();
+            }
+        });
     }
 
 
     private void doSignup(final SignupInfo data, final WebProtegeDialogCloser closer) {
-        RecaptchaServiceAsync serviceAsync = GWT.create(RecaptchaService.class);
-        serviceAsync.isSuccessful(data.getVerificationChallenge(), data.getVerificationResponse(), new AsyncCallback<Boolean>() {
-            public void onFailure(Throwable caught) {
-                Window.alert("The verification text is incorrect.  Please try again.");
+        HumanVerificationServiceProvider verificationServiceProvider = data.getVerificationServiceProvider();
+        verificationServiceProvider.runVerification(new HumanVerificationHandler() {
+            @Override
+            public void handleVerificationSuccess() {
+                handleSuccess(data, closer);
             }
 
-            public void onSuccess(Boolean result) {
-                if(result) {
-                    handleSuccess(data, closer);
-                }
-                else {
-                    Window.alert("The verification text is incorrect.  Please try again.");
-                }
+            @Override
+            public void handleVerificationFailure(String errorMessage) {
+                Window.alert(errorMessage);
             }
         });
     }

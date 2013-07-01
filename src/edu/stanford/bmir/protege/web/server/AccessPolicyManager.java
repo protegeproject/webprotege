@@ -768,9 +768,15 @@ public class AccessPolicyManager {
     String getInvitationURL(String invitationBaseURL, String invitationId, String randomNo) {
 
         String result = invitationBaseURL;
-        if(result.contains("?") && !result.endsWith("&")) {
-            result += "&";
+        if(result.contains("?")) {
+            if (!result.endsWith("&")) {
+                result += "&";
+            }
         }
+        else {
+            result += "?";
+        }
+
         result = result + InvitationConstants.INVITATION_URL_PARAMETER_IS_INVITATION + "=true";
 
         result = result + "&" + InvitationConstants.INVITATION_URL_PARAMETER_INVITATION_ID + "=" + invitationId;

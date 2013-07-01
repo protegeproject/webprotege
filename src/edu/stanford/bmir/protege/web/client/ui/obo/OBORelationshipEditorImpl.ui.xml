@@ -1,0 +1,27 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.ui.frame">
+    <ui:style>
+        .relationship-editor {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+    </ui:style>
+    <g:HTMLPanel>
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <colgroup>
+                <col width="40%"/>
+                <col width="60%"/>
+            </colgroup>
+            <tr>
+                <td valign="top">
+                    <frame:DefaultPrimitiveDataEditor ui:field="propertyField" placeholder="Enter property name" mode="SINGLE_LINE" objectPropertiesAllowed="true" addStyleNames="{style.relationship-editor}"/>
+                </td>
+                <td valign="top" style="padding-left: 1px;">
+                    <frame:DefaultPrimitiveDataEditor ui:field="valueField" placeholder="Enter class name" mode="SINGLE_LINE" classesAllowed="true" addStyleNames="{style.relationship-editor}"/>
+                </td>
+            </tr>
+        </table>
+    </g:HTMLPanel>
+</ui:UiBinder>
