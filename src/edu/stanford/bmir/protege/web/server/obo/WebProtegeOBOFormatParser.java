@@ -46,11 +46,9 @@ public class WebProtegeOBOFormatParser extends AbstractOWLParser {
                 man.applyChange(new AddOntologyAnnotation(ont, annotation));
             }
             man.addAxioms(ont, tempOnt.getAxioms());
-            System.out.println("PARSED WITH WEBPROTEGE OBOFORMAT PARSER");
             return new OBOOntologyFormat();
         }
         catch (OBOFormatParserException e) {
-            System.out.println("FAILED! TO PARSE WITH WEBPROTEGE OBOFORMAT PARSER: " + e.getMessage());
             throw new OWLParserException(e.getMessage(), e.getLineNo(), 0);
         }
         catch (OWLOntologyCreationException e) {
