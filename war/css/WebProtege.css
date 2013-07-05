@@ -728,7 +728,6 @@ GWT popup list
 
 
 
-
 /*Scrollbar for vertical menues*/
 ul.x-menu-list {
     height: expression( this.scrollHeight > 350 ? "350px" : "auto" ); /* sets max-height for IE */
