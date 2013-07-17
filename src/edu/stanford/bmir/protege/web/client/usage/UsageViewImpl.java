@@ -78,7 +78,7 @@ public class UsageViewImpl extends Composite implements UsageView {
         });
 
 
-        dataGrid = new DataGrid<UsageReference>(Integer.MAX_VALUE, ProjectListResources.INSTANCE);
+        dataGrid = new DataGrid<UsageReference>(Integer.MAX_VALUE, CSVGridResources.INSTANCE);
 
         dataGrid.addColumn(new EntityColumn(), "Entity");
         dataGrid.addColumn(new EntityTypeColumn(), "Type");
