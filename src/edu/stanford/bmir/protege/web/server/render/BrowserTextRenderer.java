@@ -237,20 +237,30 @@ public class BrowserTextRenderer {
             }
         }
 
-        private void renderCollection(Collection<? extends OWLObject> collection, ManchesterOWLSyntax separator, boolean bracket) {
-            stringBuilder.append("<div style=\"display: inline-block; vertical-align: top;\">");
+        private void renderCollection(Collection<? extends OWLObject> collection, ManchesterOWLSyntax separator, boolean bracket, boolean prettyPrint) {
+            if (prettyPrint) {
+                stringBuilder.append("<div style=\"display: inline-block; vertical-align: top;\">");
+            }
             if (bracket) {
                 renderOpenBracket();
             }
-            stringBuilder.append("<div class=\"exp-block\">");
+            if (prettyPrint) {
+                stringBuilder.append("<div class=\"exp-block\">");
+            }
             Iterator<? extends OWLObject> it = collection.iterator();
             if(it.hasNext()) {
                 OWLObject firstObject = it.next();
-                stringBuilder.append("<div>");
-                firstObject.accept(this);
-                stringBuilder.append("</div>");
-                while(it.hasNext()) {
+                if (prettyPrint) {
                     stringBuilder.append("<div>");
+                }
+                firstObject.accept(this);
+                if (prettyPrint) {
+                    stringBuilder.append("</div>");
+                }
+                while(it.hasNext()) {
+                    if (prettyPrint) {
+                        stringBuilder.append("<div>");
+                    }
                     renderSpace();
                     renderKeyword(separator);
                     renderSpace();
@@ -259,11 +269,15 @@ public class BrowserTextRenderer {
                     if(!it.hasNext()) {
                         renderCloseBracket();
                     }
-                    stringBuilder.append("</div>");
+                    if (prettyPrint) {
+                        stringBuilder.append("</div>");
+                    }
                 }
             }
-            stringBuilder.append("</div>");
-            stringBuilder.append("</div>");
+            if (prettyPrint) {
+                stringBuilder.append("</div>");
+                stringBuilder.append("</div>");
+            }
         }
 
         private void renderNaryCollection(ManchesterOWLSyntax sectionKeyword, Collection<? extends OWLObject> elements, ManchesterOWLSyntax binaryKeyword) {
@@ -570,7 +584,8 @@ public class BrowserTextRenderer {
 
         @Override
         public void visit(OWLObjectIntersectionOf ce) {
-            renderCollection(ce.getOperands(), AND, true);
+            boolean wrap = shouldWrapOperands(ce);
+            renderCollection(ce.getOperands(), AND, true, wrap);
         }
 
         private void renderCloseBracket() {
@@ -588,7 +603,18 @@ public class BrowserTextRenderer {
 
         @Override
         public void visit(OWLObjectUnionOf ce) {
-            renderCollection(ce.getOperands(), OR, true);
+            boolean wrap = shouldWrapOperands(ce);
+            renderCollection(ce.getOperands(), OR, true, wrap);
+        }
+
+        private boolean shouldWrapOperands(OWLNaryBooleanClassExpression ce) {
+            boolean wrap = false;
+            for(OWLClassExpression op : ce.getOperands()) {
+                if(op.isAnonymous()) {
+                    wrap = true;
+                }
+            }
+            return wrap;
         }
 
         @Override
@@ -762,12 +788,12 @@ public class BrowserTextRenderer {
 
         @Override
         public void visit(OWLDataIntersectionOf node) {
-            renderCollection(node.getOperands(), AND, false);
+            renderCollection(node.getOperands(), AND, false, false);
         }
 
         @Override
         public void visit(OWLDataUnionOf node) {
-            renderCollection(node.getOperands(), OR, false);
+            renderCollection(node.getOperands(), OR, false, false);
         }
 
         @Override
