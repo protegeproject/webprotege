@@ -552,6 +552,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         }
         if(changed) {
             setDirty(true, EventStrategy.FIRE_EVENTS);
+            ValueChangeEvent.fire(this, getValue());
         }
     }
 

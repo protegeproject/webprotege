@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsAction;
+import edu.stanford.bmir.protege.web.server.comparator.OntologyAnnotationsComparator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -10,8 +11,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -34,7 +34,10 @@ public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActio
 
     @Override
     protected GetObjectResult<Set<OWLAnnotation>> execute(GetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        return new GetObjectResult<Set<OWLAnnotation>>(new HashSet<OWLAnnotation>(project.getRootOntology().getAnnotations()));
+
+        List<OWLAnnotation> result = new ArrayList<OWLAnnotation>(project.getRootOntology().getAnnotations());
+        Collections.sort(result, new OntologyAnnotationsComparator(project));
+        return new GetObjectResult<Set<OWLAnnotation>>(new LinkedHashSet<OWLAnnotation>(result));
     }
 
 }

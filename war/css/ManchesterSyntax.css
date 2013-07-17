@@ -27,3 +27,58 @@
 .CodeMirror pre {
     line-height: 16px;
 }
+
+.axiom-kw {
+    font-weight: bold;
+    color: #0A5EA8;
+}
+
+
+.section-kw {
+    font-weight: bold;
+    color: #0A5EA8;
+}
+
+.quantifier-kw {
+    font-weight: bold;
+    color: #B200B2;
+}
+
+.connective-kw {
+    font-weight: bold;
+    color: #00B2B2;
+}
+
+.deprecated {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.highlight {
+    font-weight: bold;
+    background: #FFEB7F;
+}
+
+.iri {
+    color: #0000ff;
+    text-decoration: underline;
+}
+
+.literal {
+    color: #a0522d;
+}
+
+.l-par {
+    padding-right: 2px;
+    color: #a9a9a9;
+}
+
+.r-par {
+    padding-left: 2px;
+    color: #a9a9a9;
+}
+
+.exp-block {
+    display: inline-block;
+    vertical-align: top;
+}

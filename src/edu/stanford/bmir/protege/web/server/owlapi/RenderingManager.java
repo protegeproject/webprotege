@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.server.render.BrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
@@ -711,11 +713,33 @@ public class RenderingManager implements BrowserTextProvider  {
 
 
     public String getHTMLBrowserText(OWLObject object) {
-        String browserText = getBrowserText(object);
-        String cleanedBrowserText = browserText.replaceAll("\\s+", " ");
-        BrowserText2HTML browserText2HTML = new BrowserText2HTML();
-        return browserText2HTML.getHTML(cleanedBrowserText);
+        return getHTMLBrowserText(object, new BrowserTextRenderer.HighlightChecker() {
+            @Override
+            public boolean isHighlighted(OWLEntity entity) {
+                return false;
+            }
+        });
     }
+
+    public String getHTMLBrowserText(OWLObject object, final Set<String> highlightedPhrases) {
+        return getHTMLBrowserText(object, new BrowserTextRenderer.HighlightChecker() {
+            @Override
+            public boolean isHighlighted(OWLEntity entity) {
+                return highlightedPhrases.contains(getShortForm(entity));
+            }
+        });
+    }
+
+    public String getHTMLBrowserText(OWLObject object, BrowserTextRenderer.HighlightChecker highlightChecker) {
+        BrowserTextRenderer renderer = new BrowserTextRenderer(project);
+        return renderer.render(object, highlightChecker, new BrowserTextRenderer.DeprecatedChecker() {
+            @Override
+            public boolean isDeprecated(OWLEntity entity) {
+                return project.isDeprecated(entity);
+            }
+        });
+    }
+
 
     /**
      * Selects a single entity from a set of entities.  The selection procedure works by sorting the entities in the

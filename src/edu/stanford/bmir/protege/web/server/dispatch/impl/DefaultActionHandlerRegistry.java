@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.notes.AddNoteToEntityActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddReplyToNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.DeleteNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
+import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridAction;
@@ -27,6 +28,7 @@ import edu.stanford.bmir.protege.web.shared.notes.SetNoteStatusAction;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
 import edu.stanford.bmir.protege.web.shared.project.MoveProjectsToTrashAction;
 import edu.stanford.bmir.protege.web.shared.project.RemoveProjectsFromTrashAction;
+import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
 import edu.stanford.bmir.protege.web.shared.watches.AddWatchAction;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesAction;
 
@@ -104,6 +106,9 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         // CSV
         register(new GetCSVGridActionHandler(), GetCSVGridAction.class);
         register(new ImportCSVFileActionHandler(), ImportCSVFileAction.class);
+
+        // Usage
+        register(new GetUsageActionHandler(), GetUsageAction.class);
     }
 
 

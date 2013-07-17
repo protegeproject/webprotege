@@ -414,38 +414,54 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
 
             @Override
             public String visit(OWLClassData data) throws RuntimeException {
-                editor.setTitle(entityData.getBrowserText() + " is an owl:Class");
+                setTooltip(data, "owl:Class");
                 return "class-icon-inset";
             }
 
             @Override
             public String visit(OWLObjectPropertyData data) throws RuntimeException {
-                editor.setTitle(entityData.getBrowserText() + " is an owl:ObjectProperty");
+                setTooltip(data, "owl:ObjectProperty");
                 return "object-property-icon-inset";
             }
 
             @Override
             public String visit(OWLDataPropertyData data) throws RuntimeException {
-                editor.setTitle(entityData.getBrowserText() + " is an owl:DataProperty");
+                setTooltip(data, "owl:DataProperty");
                 return "data-property-icon-inset";
             }
 
             @Override
             public String visit(OWLAnnotationPropertyData data) throws RuntimeException {
-                editor.setTitle(entityData.getBrowserText() + " is an owl:AnnotationProperty");
+                setTooltip(data, "owl:AnnotationProperty");
                 return "annotation-property-icon-inset";
             }
 
             @Override
             public String visit(OWLNamedIndividualData data) throws RuntimeException {
-                editor.setTitle(entityData.getBrowserText() + " is an owl:NamedIndividual");
+                setTooltip(data, "owl:NamedIndividual");
                 return "individual-icon-inset";
             }
 
             @Override
             public String visit(OWLDatatypeData data) throws RuntimeException {
-                editor.setTitle(entityData.getBrowserText() + " is an owl:Datatype");
+                setTooltip(data, "owl:Datatype");
                 return "datatype-icon-inset";
+            }
+
+            private void setTooltip(OWLEntityData data, String typeName) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("\"");
+                sb.append(entityData.getBrowserText());
+                sb.append("\" is an ");
+                sb.append(typeName);
+                if(!DataFactory.isFreshEntity(data.getEntity())) {
+                    sb.append("\n");
+                    sb.append("<");
+                    IRI iri = data.getEntity().getIRI();
+                    sb.append(iri);
+                    sb.append(">");
+                }
+                editor.setTitle(sb.toString());
             }
 
             @Override

@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceStrat
 import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceSubClassStrategy;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetric;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricValue;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
@@ -305,23 +306,42 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     public List<Triple> getEntityTriples(String projectName, List<String> entities, List<String> properties, List<String> reifiedProps) {
-        // Not sure what this reified properties thing is.  Ignoring it here.
-        return getEntityTriples(projectName, entities, properties);
+        // First get the direct values
+        List<Triple> directValues = getEntityTriples(projectName, entities, properties);
+        // Add in the reified stuff
+        List<Triple> reifiedValues = new ArrayList<Triple>();
+        for(Triple triple : directValues) {
+            EntityData entityData = triple.getValue();
+            if(entityData.getValueType() == ValueType.Instance || entityData.getValueType() == ValueType.Cls) {
+                reifiedValues.addAll(getEntityTriples(projectName, Arrays.<String>asList(entityData.getName()), reifiedProps));
+            }
+        }
+        return reifiedValues;
     }
 
     public List<EntityPropertyValues> getEntityPropertyValues(String projectName, List<String> entities, List<String> properties, List<String> reifiedProps) {
+        // First get the direct values
+        List<Triple> directValues = getEntityTriples(projectName, entities, properties);
+        // Add in the reified stuff
+        List<Triple> reifiedValues = new ArrayList<Triple>();
         List<EntityPropertyValues> result = new ArrayList<EntityPropertyValues>();
-        for (String entityName : entities) {
-            EntityPropertyValues propertyValues = null;
-            List<String> singletonList = Arrays.asList(entityName);
-            for (Triple triple : getEntityTriples(projectName, singletonList, properties)) {
-                if (propertyValues == null) {
-                    propertyValues = new EntityPropertyValues(triple.getEntity());
+        for(Triple triple : directValues) {
+            EntityData entityData = triple.getValue();
+            if(entityData.getValueType() == ValueType.Instance || entityData.getValueType() == ValueType.Cls) {
+                final List<Triple> reifiedTriples = getEntityTriples(projectName, Arrays.<String>asList(entityData.getName()), reifiedProps);
+                if (!reifiedTriples.isEmpty()) {
+                    EntityPropertyValues reifiedSet = new EntityPropertyValues(entityData);
+                    for(Triple reifiedTriple : reifiedTriples) {
+                        reifiedSet.addPropertyValue(reifiedTriple.getProperty(), reifiedTriple.getValue());
+                    }
+                    result.add(reifiedSet);
                 }
-                propertyValues.addPropertyValue(triple.getProperty(), triple.getValue());
             }
+
         }
         return result;
+
+
     }
 
 
@@ -910,6 +930,10 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     public EntityData createInstanceValue(String projectName, String instName, String typeName, String subjectEntity, String propertyEntity, String user, String operationDescription) {
         OWLAPIProject project = getProject(projectName);
         UserId userId = getUserId(user);
+        if(instName == null) {
+            // Not surprisingly it can be
+            instName = "http://protege.stanford.edu/named-individuals/Individual-" + UUID.randomUUID().toString();
+        }
         applyChanges(new CreateInstanceValueChangeFactory(project, userId, operationDescription, instName, typeName, subjectEntity, propertyEntity));
         return getRenderingManager(projectName).getEntityData(instName, EntityType.NAMED_INDIVIDUAL);
     }

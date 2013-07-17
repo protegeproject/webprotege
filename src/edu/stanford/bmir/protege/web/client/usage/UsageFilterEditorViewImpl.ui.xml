@@ -1,0 +1,94 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:usage="urn:import:edu.stanford.bmir.protege.web.client.usage"
+             xmlns:checkbox="urn:import:edu.stanford.bmir.protege.web.client.ui.library.checkbox">
+    <ui:style>
+        .check-box-panel {
+            padding-top: 5px;
+            padding-left: 5px;
+            background: #ffffff;
+        }
+        .checkBox {
+            display: block;
+            padding-bottom: 3px;
+        }
+        .checkBox input {
+            width: 18px;
+            height: 18px;
+        }
+        .checkBox label {
+            padding-left: 5px;
+        }
+
+        .heading {
+            font-weight: bold;
+            font-size: 120%;
+            padding-bottom: 20px;
+        }
+        .column-heading {
+            font-weight: bold;
+        }
+        .main-panel {
+            padding: 10px;
+            background: #ffffff;
+        }
+        .select-link {
+            color: #0000ff;
+            text-decoration: underline;
+            font-size: 90%;
+            cursor: pointer;
+        }
+    </ui:style>
+    <g:HTMLPanel width="450px" height="650px" styleName="{style.main-panel}">
+        <div class="web-protege-laf">
+            <g:HTMLPanel addStyleNames="{style.check-box-panel}">
+                <div style="padding-left: 15px;">
+                    <g:CheckBox ui:field="showDefiningAxiomsCheckBox" text="Show defining axioms"
+                                addStyleNames="{style.checkBox}"/>
+                </div>
+
+            </g:HTMLPanel>
+            <g:HTMLPanel styleName="{style.check-box-panel}">
+                <div>
+                    <g:InlineLabel text="Show usage by entities of type" styleName="{style.column-heading}"/>   <g:Anchor text="Select All" ui:field="entityTypeSelectAll" addStyleNames="{style.select-link}"/> | <g:Anchor text="Select None" ui:field="entityTypeSelectNone" addStyleNames="{style.select-link}"/>
+                </div>
+                <div style="padding-left: 15px; padding-top: 5px;">
+                    <checkbox:EntityTypeGroupCheckBox addStyleNames="{style.checkBox}" entityTypeGroup="CLASS"/>
+                    <checkbox:EntityTypeGroupCheckBox addStyleNames="{style.checkBox}" entityTypeGroup="PROPERTY"/>
+                    <checkbox:EntityTypeGroupCheckBox addStyleNames="{style.checkBox}" entityTypeGroup="INDIVIDUAL"/>
+                    <checkbox:EntityTypeGroupCheckBox addStyleNames="{style.checkBox}" entityTypeGroup="DATATYPE"/>
+                </div>
+            </g:HTMLPanel>
+            <div style="height: 10px;"/>
+            <g:HTMLPanel styleName="{style.check-box-panel}" addStyleNames="{style.checkBox}">
+                <div>
+                    <g:InlineLabel text="Show usage in axioms of type" styleName="{style.column-heading}"/>   <g:Anchor text="Select All" ui:field="axiomTypeSelectAll" addStyleNames="{style.select-link}"/> | <g:Anchor text="Select None" ui:field="axiomTypeSelectNone" addStyleNames="{style.select-link}"/>
+                </div>
+                <div style="padding-left: 15px; padding-top: 5px;">
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="SUBCLASS_OF"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="EQUIVALENT_CLASSES"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="DISJOINT_CLASSES"/>
+                    <div style="height: 10px;"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="DOMAIN"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="RANGE"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="INVERSE_PROPERTIES"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="SUB_PROPERTY_OF"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="EQUIVALENT_PROPERTIES"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="PROPERTY_CHARACTERISTIC"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="DISJOINT_PROPERTIES"/>
+                    <div style="height: 10px;"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="CLASS_ASSERTION"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="PROPERTY_ASSERTION"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="NEGATIVE_PROPERTY_ASSERTION"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="SAME_INDIVIDUAL"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="DIFFERENT_INDIVIDUALS"/>
+                    <div style="height: 10px;"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="ANNOTATION_ASSERTION"/>
+                    <div style="height: 10px;"/>
+                    <checkbox:AxiomTypeGroupCheckBox addStyleNames="{style.checkBox}" axiomTypeGroup="OTHER"/>
+                </div>
+            </g:HTMLPanel>
+        </div>
+
+    </g:HTMLPanel>
+</ui:UiBinder>

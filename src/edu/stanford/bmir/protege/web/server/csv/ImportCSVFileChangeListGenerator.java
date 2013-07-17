@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.csv;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.GeneratedOntologyChanges;
@@ -45,20 +46,26 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
                     final String displayName = row.getColumnValue(displayNameIndex);
                     if (columnDescriptor.getColumnProperty().getEntityType() == EntityType.OBJECT_PROPERTY) {
                         final OWLObjectProperty property = (OWLObjectProperty) columnDescriptor.getColumnProperty();
-                        final OWLClassExpression superCls = getColumnValueAsClassExpression(project, value, property, columnType);
-                        changesBuilder.addAxiom(project.getRootOntology(), getAxiom(project, displayName, columnDescriptor, superCls));
+                        final Optional<OWLClassExpression> superCls = getColumnValueAsClassExpression(project, value, property, columnType);
+                        if (superCls.isPresent()) {
+                            changesBuilder.addAxiom(project.getRootOntology(), getAxiom(project, displayName, columnDescriptor, superCls.get()));
+                        }
                     }
                     else if (columnDescriptor.getColumnProperty().getEntityType() == EntityType.DATA_PROPERTY) {
                         final OWLDataProperty property = (OWLDataProperty) columnDescriptor.getColumnProperty();
-                        final OWLLiteral filler = getColumnValueAsLiteral(project, value, columnType);
-                        final OWLClassExpression superCls = project.getDataFactory().getOWLDataHasValue(property, filler);
-                        changesBuilder.addAxiom(project.getRootOntology(), getAxiom(project, displayName, columnDescriptor, superCls));
+                        final Optional<OWLLiteral> filler = getColumnValueAsLiteral(project, value, columnType);
+                        if (filler.isPresent()) {
+                            final OWLClassExpression superCls = project.getDataFactory().getOWLDataHasValue(property, filler.get());
+                            changesBuilder.addAxiom(project.getRootOntology(), getAxiom(project, displayName, columnDescriptor, superCls));
+                        }
                     }
                     else if (columnDescriptor.getColumnProperty().getEntityType() == EntityType.ANNOTATION_PROPERTY) {
                         OWLAnnotationProperty property = (OWLAnnotationProperty) columnDescriptor.getColumnProperty();
-                        final OWLAnnotationValue annotationValue = getColumnValueAsAnnotationValue(project, value, columnType);
-                        final IRI rowIRI = DataFactory.getFreshOWLEntityIRI(displayName);
-                        changesBuilder.addAxiom(project.getRootOntology(), project.getDataFactory().getOWLAnnotationAssertionAxiom(property, rowIRI, annotationValue));
+                        final Optional<? extends OWLAnnotationValue> annotationValue = getColumnValueAsAnnotationValue(project, value, columnType);
+                        if (annotationValue.isPresent()) {
+                            final IRI rowIRI = DataFactory.getFreshOWLEntityIRI(displayName);
+                            changesBuilder.addAxiom(project.getRootOntology(), project.getDataFactory().getOWLAnnotationAssertionAxiom(property, rowIRI, annotationValue.get()));
+                        }
                     }
                     OWLAxiom placementAxiom = getPlacementAxiom(project, displayName);
                     changesBuilder.addAxiom(project.getRootOntology(), placementAxiom);
@@ -80,7 +87,10 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
         return placementAxiom;
     }
 
-    private OWLClassExpression getColumnValueAsClassExpression(OWLAPIProject project, String value, OWLObjectProperty columnProperty, ColumnType columnType) {
+    private Optional<OWLClassExpression> getColumnValueAsClassExpression(OWLAPIProject project, String value, OWLObjectProperty columnProperty, ColumnType columnType) {
+        if(value.trim().isEmpty()) {
+            return Optional.absent();
+        }
         OWLClassExpression superCls;
         if (columnType == ColumnType.CLASS) {
             final OWLClass filler = DataFactory.getFreshOWLEntity(EntityType.CLASS, value);
@@ -93,16 +103,16 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
         else {
             throw new RuntimeException("Unrecognized ColumnType: " + columnType);
         }
-        return superCls;
+        return Optional.of(superCls);
     }
 
-    private OWLAnnotationValue getColumnValueAsAnnotationValue(OWLAPIProject project, String value, ColumnType columnType) {
-        OWLAnnotationValue annotationValue;
+    private Optional<? extends OWLAnnotationValue> getColumnValueAsAnnotationValue(OWLAPIProject project, String value, ColumnType columnType) {
+        Optional<? extends OWLAnnotationValue> annotationValue;
         if (columnType == ColumnType.CLASS) {
-            annotationValue = DataFactory.getFreshOWLEntityIRI(value);
+            annotationValue = Optional.of(DataFactory.getFreshOWLEntityIRI(value));
         }
         else if (columnType == ColumnType.NAMED_INDIVIDUAL) {
-            annotationValue = DataFactory.getFreshOWLEntityIRI(value);
+            annotationValue = Optional.of(DataFactory.getFreshOWLEntityIRI(value));
         }
         else {
             annotationValue = getColumnValueAsLiteral(project, value, columnType);
@@ -110,21 +120,26 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
         return annotationValue;
     }
 
-    private OWLLiteral getColumnValueAsLiteral(OWLAPIProject project, String value, ColumnType columnType) {
-        OWLLiteral filler;
-        if (columnType == ColumnType.DOUBLE) {
-            filler = project.getDataFactory().getOWLLiteral(Double.parseDouble(value));
+    private Optional<OWLLiteral> getColumnValueAsLiteral(OWLAPIProject project, String value, ColumnType columnType) {
+        try {
+            OWLLiteral filler;
+            if (columnType == ColumnType.DOUBLE) {
+                filler = project.getDataFactory().getOWLLiteral(Double.parseDouble(value));
+            }
+            else if (columnType == ColumnType.BOOLEAN) {
+                filler = project.getDataFactory().getOWLLiteral(Boolean.parseBoolean(value));
+            }
+            else if (columnType == ColumnType.INTEGER) {
+                filler = project.getDataFactory().getOWLLiteral(Integer.parseInt(value));
+            }
+            else {
+                filler = project.getDataFactory().getOWLLiteral(value);
+            }
+            return Optional.of(filler);
         }
-        else if (columnType == ColumnType.BOOLEAN) {
-            filler = project.getDataFactory().getOWLLiteral(Boolean.parseBoolean(value));
+        catch (NumberFormatException e) {
+            return Optional.absent();
         }
-        else if (columnType == ColumnType.INTEGER) {
-            filler = project.getDataFactory().getOWLLiteral(Integer.parseInt(value));
-        }
-        else {
-            filler = project.getDataFactory().getOWLLiteral(value);
-        }
-        return filler;
     }
 
 

@@ -573,3 +573,34 @@ select {
     font-weight: bold !important;
     background: #EFFFEF;
 }
+
+.gwt-MenuBar-vertical {
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+    /*background-clip: padding-box;*/
+    border: 1px solid #ACACAC;
+    border: 1px solid rgba(0, 0, 0, .333);
+    padding: 20px;
+}
+
+.gwt-MenuItem-selected {
+    color: #ffffff;
+    background: #0055AA;
+}
+
+.gwt-PopupPanel {
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+    -moz-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+    /*background-clip: padding-box;*/
+    border: 1px solid #ACACAC;
+    border: 1px solid rgba(0, 0, 0, .333);
+    /*padding: 20px;*/
+}

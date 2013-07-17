@@ -75,7 +75,7 @@
                 <col width="100px" align="right"/>
                 <tr>
                     <td align="right" valign="top">
-                        <g:Label text="Domains" addStyleNames="web-protege-form-label"/>
+                        <g:Label text="Domain" addStyleNames="web-protege-form-label"/>
                     </td>
                     <td valign="top">
                         <frame:PrimitiveDataListEditor ui:field="domains"/>
@@ -89,7 +89,7 @@
                 <col width="100px" align="right"/>
                 <tr>
                     <td align="right" valign="top">
-                        <g:Label text="Ranges" addStyleNames="web-protege-form-label"/>
+                        <g:Label text="Range" addStyleNames="web-protege-form-label"/>
                     </td>
                     <td valign="top">
                         <frame:PrimitiveDataListEditor ui:field="ranges"/>

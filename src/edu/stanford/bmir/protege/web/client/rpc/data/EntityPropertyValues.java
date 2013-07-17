@@ -18,12 +18,15 @@ public class EntityPropertyValues implements Serializable{
     private static final long serialVersionUID = -1379727454578048738L;
 
     private EntityData subject;
-    private Map<PropertyEntityData, List<EntityData>> prop2valuesMap = new LinkedHashMap<PropertyEntityData, List<EntityData>>();
+    private Map<PropertyEntityData, List<EntityData>> prop2valuesMap;
 
-    public EntityPropertyValues() { }
+    public EntityPropertyValues() {
+        prop2valuesMap = new LinkedHashMap<PropertyEntityData, List<EntityData>>();
+    }
 
     public EntityPropertyValues(EntityData subject) {
         this.subject = subject;
+        prop2valuesMap = new LinkedHashMap<PropertyEntityData, List<EntityData>>();
     }
 
     public void setSubject(EntityData subject) {

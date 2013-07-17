@@ -35,6 +35,8 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
         builtinPrefixes.put("xsd", Namespaces.XSD.toString());
         builtinPrefixes.put("skos", Namespaces.SKOS.toString());
         builtinPrefixes.put("dc", DublinCoreVocabulary.NAME_SPACE);
+        builtinPrefixes.put("foaf:", "http://xmlns.com/foaf/0.1/");
+        builtinPrefixes.put("dcterms:", "http://purl.org/dc/terms/");
 
 //        languages = new ArrayList<String>();
 //        // TODO: Configurable.
