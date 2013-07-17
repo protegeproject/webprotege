@@ -143,7 +143,7 @@ public class OWLAPIProject implements HasDispose {
     private OWLAPIProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
         this.documentStore = documentStore;
         this.projectEventManager = EventManager.create(PROJECT_EVENT_LIFE_TIME);
-        final boolean useCachingInDataFactory = true;
+        final boolean useCachingInDataFactory = false;
         final boolean useCompressionInDataFactory = false;
         OWLDataFactory df = new OWLDataFactoryImpl(useCachingInDataFactory, useCompressionInDataFactory);
 
