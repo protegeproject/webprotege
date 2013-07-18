@@ -48,6 +48,8 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
         List<IRI> annotationPropertyIRIs = new ArrayList<IRI>();
         annotationPropertyIRIs.add(SKOSVocabulary.PREFLABEL.getIRI());
         annotationPropertyIRIs.add(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+        annotationPropertyIRIs.add(IRI.create("http://bibframe.org/vocab/label"));
+        annotationPropertyIRIs.add(IRI.create("http://bibframe.org/vocab/title"));
         this.annotationPropertyIRIs = Collections.unmodifiableList(annotationPropertyIRIs);
     }
 
