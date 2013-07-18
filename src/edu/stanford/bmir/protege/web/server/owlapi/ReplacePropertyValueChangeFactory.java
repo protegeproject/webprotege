@@ -27,7 +27,6 @@ public class ReplacePropertyValueChangeFactory extends AbstractPropertyValueChan
         OWLAnnotationValue oldAnnotationValue = getAnnotationValue(oldEntityData);
         OWLAxiom axiomToRemove = getDataFactory().getOWLAnnotationAssertionAxiom(property, subject, oldAnnotationValue);
         OWLAxiom axiomToAdd = getDataFactory().getOWLAnnotationAssertionAxiom(property, subject, value, axiomToRemove.getAnnotations());
-
         createChanges(changeListToFill, axiomToRemove, axiomToAdd);
     }
 
@@ -59,8 +58,8 @@ public class ReplacePropertyValueChangeFactory extends AbstractPropertyValueChan
                 changes++;
             }
         }
-        if(changes == 0) {
-            changeListToFill.add(new AddAxiom(getRootOntology(), axiomToAdd));
-        }
+//        if(changes == 0) {
+//            changeListToFill.add(new AddAxiom(getRootOntology(), axiomToAdd));
+//        }
     }
 }
