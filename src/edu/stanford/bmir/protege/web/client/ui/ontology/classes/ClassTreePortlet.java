@@ -656,7 +656,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         createButton.addListener(new ButtonListenerAdapter() {
             @Override
             public void onClick(final Button button, final EventObject e) {
-                onCreateCls(e.isAltKey() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES);
+                onCreateCls(e.isShiftKey() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES);
             }
         });
         createButton.setDisabled(!hasWritePermission());
