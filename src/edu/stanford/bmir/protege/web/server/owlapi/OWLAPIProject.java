@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.obo.WebProtegeOBOFormatParserFactory;
@@ -43,6 +45,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.NonMappingOntologyIRIMapper;
 import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 import org.semanticweb.owlapi.util.OWLOntologyChangeVisitorAdapterEx;
+import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.EmptyInMemOWLOntologyFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -145,6 +148,7 @@ public class OWLAPIProject implements HasDispose {
         this.projectEventManager = EventManager.create(PROJECT_EVENT_LIFE_TIME);
         final boolean useCachingInDataFactory = false;
         final boolean useCompressionInDataFactory = false;
+
         OWLDataFactory df = new OWLDataFactoryImpl(useCachingInDataFactory, useCompressionInDataFactory);
 
         // The delegate - we use the concurrent ontology manager

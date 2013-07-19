@@ -7,9 +7,10 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
-import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -55,7 +56,7 @@ public class LoadWebProtegeProperties implements ConfigurationTask {
      */
     private static void overridePropertiesWithSystemProperties(Properties properties) {
         checkNotNull(properties);
-        for(WebProtegeProperties.PropertyName propertyName : WebProtegeProperties.PropertyName.values()) {
+        for(WebProtegePropertyName propertyName : WebProtegePropertyName.values()) {
             String systemPropertyName = SYSTEM_PROPERTY_PREFIX + propertyName.getPropertyName();
             String value = getSystemProperty(systemPropertyName);
             if(value != null) {

@@ -22,7 +22,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.client.ui.login.HashAlgorithm;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
@@ -308,7 +307,7 @@ public class OpenIdUtil {
     }
 
     public void getTimeoutAndCheckIfUserCreatedToAssocId() {
-        final Integer timeout = ClientApplicationPropertiesCache.getServerPollingTimeoutMinutes();
+        final Integer timeout = 5;//
         clearCreateUserToAssocIdCookies();
         checkIfUserCreatedToAssocOpenId(timeout);
     }
@@ -356,7 +355,7 @@ public class OpenIdUtil {
     }
 
     public void getTimeoutAndCheckIfAuthenToAssocId() {
-        final Integer timeout = ClientApplicationPropertiesCache.getServerPollingTimeoutMinutes();
+        final Integer timeout = 5;//
         clearAuthenToAssocIdCookies();
         checkIfUserAuthenToAssocOpenId(timeout);
     }

@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.server.EmailUtil;

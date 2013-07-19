@@ -37,25 +37,6 @@ public abstract class AbstractPropertyWidgetWithNotes extends AbstractPropertyWi
         if (value != null) {
             GWT.log("Editing notes on " + value + " ...", null);
 
-            final Window window = new Window() {
-                @Override
-                public void close() {
-                    AbstractPropertyWidgetWithNotes.this.refresh();
-                    super.close();
-                }
-            };
-            window.setTitle("Edit Notes");
-            window.setWidth(600);
-            window.setHeight(480);
-            window.setMinWidth(300);
-            window.setMinHeight(350);
-            window.setLayout(new FitLayout());
-            window.setPaddings(5);
-            window.setButtonAlign(Position.CENTER);
-
-            //window.setCloseAction(Window.HIDE);
-            window.setPlain(true);
-
             // TODO: THIS NEEDS FIXING
             NoteContentEditorDialog.showDialog(NoteContentEditorMode.NEW_TOPIC, new NoteContentEditorHandler() {
                 @Override
@@ -74,11 +55,6 @@ public abstract class AbstractPropertyWidgetWithNotes extends AbstractPropertyWi
                     }
                 }
             });
-//            NoteInputPanel nip = new NoteInputPanel(getProjectId(), message, true,
-//                    subject, text, new EntityData(value), window);
-//
-//            window.add(nip);
-            window.show();
         }
     }
 

@@ -5,14 +5,18 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.place.PlaceManager;
+import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
+import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesAction;
+import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesResult;
+import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -20,7 +24,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -47,6 +50,8 @@ public class Application {
     private final PlaceManager placeManager;
 
     private Optional<ProjectId> activeProject = Optional.absent();
+
+    private ClientApplicationProperties clientApplicationProperties;
 
     private Application() {
         placeManager = new PlaceManager();
@@ -180,16 +185,6 @@ public class Application {
     }
 
 
-    // It would be better if login were handled centrally
-
-//    public void doLogIn() {
-//        // We need to:
-//        //    initialize the user details (email etc.)
-//        //    initialize the permissions for open projects
-//
-//    }
-
-
     /**
      * Loads a project on the client side.
      * @param projectId The id of the project to be loaded.  Not {@code null}.
@@ -199,18 +194,6 @@ public class Application {
     public void loadProject(final ProjectId projectId, final AsyncCallback<Project> callback) {
         checkNotNull(callback);
         ProjectManager.get().loadProject(projectId, callback);
-
-//        OntologyServiceManager.getInstance().loadProject(projectId, new AsyncCallback<Integer>() {
-//            @Override
-//            public void onFailure(Throwable caught) {
-//                callback.onFailure(caught);
-//            }
-//
-//            @Override
-//            public void onSuccess(Integer result) {
-//
-//            }
-//        });
     }
 
     public void closeProject(ProjectId projectId, AsyncCallback<ProjectId> callback) {
@@ -293,6 +276,78 @@ public class Application {
         userManager.clearSessionProperty(checkNotNull(propertyName));
     }
 
+    /**
+     * Gets a client application property. Note:  Client application property values
+     * are immutable.  The properties and their values are determined on the server at startup.
+     * @param propertyName The name of the property.  Not {@code null}.
+     * @return The optional value of the property.  Not {@code null}.
+     * @throws NullPointerException if {@code propertyName} is {@code null}.
+     */
+    public Optional<String> getClientApplicationProperty(WebProtegePropertyName propertyName) {
+        return clientApplicationProperties.getPropertyValue(propertyName);
+    }
+
+    /**
+     * Gets a client application property value. Note:  Client application property values
+     * are immutable.  The properties and their values are determined on the server at startup.
+     * @param protegePropertyName The property name.  Not {@code null}.
+     * @param defaultValue The value that should be returned if the specified application is not present.  May be {@code null}.
+     * @return The value of the property if present, or the default value.  If the value of the property is present then
+     * a non-{@code null} value will be returned.  If the value of the property is not present then whether or not
+     * a {@code null} value is returned depeneds upon the default value.
+     */
+    public String getClientApplicationProperty(WebProtegePropertyName protegePropertyName, String defaultValue) {
+        Optional<String> value = getClientApplicationProperty(protegePropertyName);
+        if(value.isPresent()) {
+            return value.get();
+        }
+        else {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Gets the specified client application property value as a boolean.  Note:  Client application property values
+     * are immutable.  The properties and their values are determined on the server at startup.
+     * @param propertyName The property name.  Not {@code null}.
+     * @param defaultValue A default value for the property in case it does not exist or the property value cannot be
+     * parsed into a boolean.
+     * @return The property value.  Not {@code null}.  If the property does not exist then the value of {@code false}
+     * will be returned.
+     */
+    public boolean getClientApplicationProperty(WebProtegePropertyName propertyName, boolean defaultValue) {
+        Optional<String> propertyValue = getClientApplicationProperty(propertyName);
+        try {
+            return Boolean.parseBoolean(propertyValue.or(Boolean.toString(defaultValue)));
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Gets the specified client application property value as an integer.  Note:  Client application property values
+     * are immutable.  The properties and their values are determined on the server at startup.
+     * @param propertyName The property name.  Not {@code null}.
+     * @param defaultValue A default value for the property incase it does not exist or the property value cannot be
+     * parsed into an integer.
+     * @return The property value.  Not {@code null}.
+     */
+    public int getClientApplicationProperty(WebProtegePropertyName propertyName, int defaultValue) {
+        Optional<String> propertyValue = getClientApplicationProperty(propertyName);
+        if(!propertyValue.isPresent()) {
+            return defaultValue;
+        }
+        else {
+            try {
+                return Integer.parseInt(propertyValue.get());
+            }
+            catch (NumberFormatException e) {
+                com.google.gwt.core.shared.GWT.log("NumberFormatException while parsing " + propertyValue.get() + " as an integer.");
+                return defaultValue;
+            }
+        }
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -312,12 +367,15 @@ public class Application {
 
         @Override
         public void run(final ApplicationInitManager.ApplicationInitTaskCallback taskFinishedCallback) {
-            ClientApplicationPropertiesCache.initialize(new AsyncCallback<Map<String, String>>() {
+            DispatchServiceManager.get().execute(new GetClientApplicationPropertiesAction(), new AsyncCallback<GetClientApplicationPropertiesResult>() {
+                @Override
                 public void onFailure(Throwable caught) {
                     taskFinishedCallback.taskFailed(caught);
                 }
 
-                public void onSuccess(Map<String, String> result) {
+                @Override
+                public void onSuccess(GetClientApplicationPropertiesResult result) {
+                    clientApplicationProperties = result.getClientApplicationProperties();
                     taskFinishedCallback.taskComplete();
                 }
             });

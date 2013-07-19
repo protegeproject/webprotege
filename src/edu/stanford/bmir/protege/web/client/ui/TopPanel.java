@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -10,7 +9,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
@@ -24,6 +22,7 @@ import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
+import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.editprofile.EditProfileUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
@@ -33,9 +32,6 @@ import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfiguratio
 import edu.stanford.bmir.protege.web.client.ui.res.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.client.ui.signup.WebProtegeSignupDialog;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionName;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -343,7 +339,7 @@ public class TopPanel extends Panel {
         MenuItem changePassword = new MenuItem("Change Password", new Command() {
             public void execute() {
                 final LoginUtil loginUtil = new LoginUtil();
-                Boolean isLoginWithHttps = ClientApplicationPropertiesCache.getLoginWithHttps();
+                Boolean isLoginWithHttps = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_ENABLED, false);
                 if (isLoginWithHttps) {
                     changePasswordWithHttps(loginUtil);
                 }
@@ -387,9 +383,9 @@ public class TopPanel extends Panel {
         final LoginUtil loginUtil = new LoginUtil();
         UserId userId = Application.get().getUserId();
         if (userId.isGuest()) {
-            Boolean isLoginWithHttps = ClientApplicationPropertiesCache.getLoginWithHttps();
+            Boolean isLoginWithHttps = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_ENABLED, false);
             if (isLoginWithHttps) {
-                String httpsPort = ClientApplicationPropertiesCache.getApplicationHttpsPort();
+                String httpsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
                 String authenUrl = loginUtil.getAuthenticateWindowUrl(AuthenticationConstants.AUTHEN_TYPE_LOGIN, httpsPort);
                 authenUrl = authenUrl + "&" + AuthenticationConstants.PROTOCOL + "=" + com.google.gwt.user.client.Window.Location.getProtocol();
                 authenUrl = authenUrl + "&" + AuthenticationConstants.DOMAIN_NAME_AND_PORT + "=" + com.google.gwt.user.client.Window.Location.getHost();
@@ -423,7 +419,7 @@ public class TopPanel extends Panel {
      * @param loginUtil
      */
     private void changePasswordWithHttps(final LoginUtil loginUtil) {
-        String httsPort = ClientApplicationPropertiesCache.getApplicationHttpsPort();
+        String httsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
         Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
         notifyIfPasswordChanged();
         String authUrl = loginUtil.getAuthenticateWindowUrl(AuthenticationConstants.AUTHEN_TYPE_CHANGE_PASSWORD, httsPort);
@@ -432,7 +428,7 @@ public class TopPanel extends Panel {
     }
 
     protected void notifyIfPasswordChanged() {
-        final Integer timeout = ClientApplicationPropertiesCache.getServerPollingTimeoutMinutes();
+        final Integer timeout = 5; // minutes
         final long initTime = System.currentTimeMillis();
         final Timer checkSessionTimer = new Timer() {
             @Override
@@ -489,7 +485,7 @@ public class TopPanel extends Panel {
      * @param loginUtil
      */
     private void createUserViaHttps(final LoginUtil loginUtil) {
-        String httsPort = ClientApplicationPropertiesCache.getApplicationHttpsPort();
+        String httsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
         notifyIfPasswordChanged();
         String authUrl = loginUtil.getAuthenticateWindowUrl(AuthenticationConstants.AUTHEN_TYPE_CREATE_USER, httsPort);
         loginUtil.openNewWindow(authUrl, "440", "295", "0");

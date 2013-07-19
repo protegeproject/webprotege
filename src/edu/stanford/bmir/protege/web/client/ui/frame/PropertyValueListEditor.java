@@ -580,12 +580,14 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                 public Object visit(OWLAnnotationPropertyData data) throws RuntimeException {
                     primitiveTypes.add(PrimitiveType.LITERAL);
                     primitiveTypes.add(PrimitiveType.IRI);
-//                    primitiveTypes.add(PrimitiveType.CLASS);
-//                    primitiveTypes.add(PrimitiveType.OBJECT_PROPERTY);
-//                    primitiveTypes.add(PrimitiveType.DATA_PROPERTY);
-//                    primitiveTypes.add(PrimitiveType.ANNOTATION_PROPERTY);
-//                    primitiveTypes.add(PrimitiveType.NAMED_INDIVIDUAL);
-//                    primitiveTypes.add(PrimitiveType.DATA_TYPE);
+//                    if (!data.getEntity().isLabel()) {
+//                        primitiveTypes.add(PrimitiveType.CLASS);
+//                        primitiveTypes.add(PrimitiveType.OBJECT_PROPERTY);
+//                        primitiveTypes.add(PrimitiveType.DATA_PROPERTY);
+//                        primitiveTypes.add(PrimitiveType.ANNOTATION_PROPERTY);
+//                        primitiveTypes.add(PrimitiveType.NAMED_INDIVIDUAL);
+//                        primitiveTypes.add(PrimitiveType.DATA_TYPE);
+//                    }
                     return null;
                 }
             });

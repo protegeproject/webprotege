@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
+import edu.stanford.bmir.protege.web.shared.dispatch.InvocationExceptionTolerantAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
@@ -115,13 +116,17 @@ public class DispatchServiceManager {
             return Optional.absent();
         }
         else if(throwable instanceof InvocationException) {
-            displayAlert("There was a problem communicating with the server and the operation could not be completed.  Please check your network connection and try again.");
+            if(action instanceof InvocationExceptionTolerantAction) {
+                Optional<String> errorMessage = ((InvocationExceptionTolerantAction) action).handleInvocationException((InvocationException) throwable);
+                if(errorMessage.isPresent()) {
+                    displayAlert(errorMessage.get());
+                }
+            }
+            else {
+                displayAlert("There was a problem communicating with the server and the operation could not be completed.  Please check your network connection and try again.");
+            }
             return Optional.absent();
         }
-//        else if(throwable instanceof UnexpectedException) {
-//            displayAlert("An unexpected error occurred: " + throwable.getMessage());
-//            return Optional.absent();
-//        }
         else if(throwable instanceof UmbrellaException) {
             for(Throwable cause : ((UmbrellaException) throwable).getCauses()) {
                 if(cause instanceof PermissionDeniedException) {

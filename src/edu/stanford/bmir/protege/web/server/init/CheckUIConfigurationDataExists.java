@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.UIConfigurationManager;
 import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
-import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
 import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletContext;

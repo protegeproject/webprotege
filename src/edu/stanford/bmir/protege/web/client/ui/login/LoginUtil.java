@@ -25,9 +25,9 @@ import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdIconPanel;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
@@ -122,7 +122,7 @@ public class LoginUtil {
         loginAndForgot.add(forgotPasswordLink);
         loginTable.setWidget(4, 1, loginAndForgot);
         loginTable.getFlexCellFormatter().setAlignment(4, 1, HasAlignment.ALIGN_CENTER, HasAlignment.ALIGN_MIDDLE);
-        if (ClientApplicationPropertiesCache.getWebProtegeAuthenticateWithOpenId()) {
+        if (Application.get().getClientApplicationProperty(WebProtegePropertyName.OPEN_ID_ENABLED, false)) {
             win.setHeight(320);
             loginTable.getFlexCellFormatter().setColSpan(5, 0, 2);
             loginTable.setWidget(5, 0, openIdlabel);
@@ -264,7 +264,7 @@ public class LoginUtil {
 
 
     public void getTimeoutAndCheckUserLoggedInMethod(final LoginUtil loginUtil, final String randomNumber) {
-        final Integer timeout = ClientApplicationPropertiesCache.getServerPollingTimeoutMinutes();
+        final Integer timeout = 5;//
         loginUtil.checkUserLoggedInMethod("" + randomNumber, timeout);
     }
 
@@ -997,7 +997,7 @@ public class LoginUtil {
 
             public void execute(final String btnID) {
 
-                final Boolean isLoginWithHttps = ClientApplicationPropertiesCache.getLoginWithHttps();
+                final Boolean isLoginWithHttps = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_ENABLED, false);;
                 if (btnID.equalsIgnoreCase("yes")) {
                     if (isLoginWithHttps) {
                         associateCurrentWebProtegeAccount();
@@ -1257,7 +1257,7 @@ public class LoginUtil {
      *
      */
     private void associateCurrentWebProtegeAccount() {
-        final String httsPort = ClientApplicationPropertiesCache.getApplicationHttpsPort();
+        final String httsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
         OpenIdServiceManager.getInstance().clearAuthUserToAssocOpenIdSessData(new AsyncCallback<Void>() {
 
             public void onSuccess(Void result) {
@@ -1281,7 +1281,7 @@ public class LoginUtil {
      *
      */
     private void createAndAssociateWebProtegeAccount() {
-        final String httsPort = ClientApplicationPropertiesCache.getApplicationHttpsPort();
+        final String httsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
         OpenIdServiceManager.getInstance().clearCreateUserToAssocOpenIdSessData(new AsyncCallback<Void>() {
 
             public void onSuccess(Void result) {

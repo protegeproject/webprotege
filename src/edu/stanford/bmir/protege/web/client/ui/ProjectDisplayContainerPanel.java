@@ -165,7 +165,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         };
 
         myWebProTab = new MyWebProtegeTab(loadProjectRequestHandler);
-        myWebProTab.setTitle(myWebProTab.getLabel());
+//        myWebProTab.setTitle(myWebProTab.getLabel());
         add(myWebProTab);
 
 

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+
 public class EmailConstants {
 
     public static final String FORGOT_PASSWORD_SUBJECT = "Password reset for " + WebProtegeProperties.get().getApplicationName();

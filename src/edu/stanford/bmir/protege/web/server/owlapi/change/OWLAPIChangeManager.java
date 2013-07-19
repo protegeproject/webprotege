@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
@@ -72,9 +74,9 @@ public class OWLAPIChangeManager {
      * Only called from the constructor of this class
      */
     private void read() {
-
         revisions.clear();
         try {
+            LOGGER.info("Reading changes");
             File changeHistoryFile = getChangeHistoryFile();
             if (!changeHistoryFile.exists()) {
                 // Create it with the baseline?
@@ -83,19 +85,23 @@ public class OWLAPIChangeManager {
             long t0 = System.currentTimeMillis();
             BinaryOWLOntologyChangeLog changeLog = new BinaryOWLOntologyChangeLog();
             final BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(changeHistoryFile));
+            final Interner<OWLAxiom> axiomInterner = getAxiomInterner();
+            final Interner<String> metadataInterner = Interners.newStrongInterner();
+            final Interner<OWLOntologyID> ontologyIDInterner = Interners.newStrongInterner();
             changeLog.readChanges(inputStream, project.getDataFactory(), new BinaryOWLChangeLogHandler() {
                 public void handleChangesRead(OntologyChangeRecordList list, SkipSetting skipSetting, long l) {
+
                     BinaryOWLMetadata metadata = list.getMetadata();
-                    String userName = metadata.getStringAttribute(USERNAME_METADATA_ATTRIBUTE, "");
+                    String userName = metadataInterner.intern(metadata.getStringAttribute(USERNAME_METADATA_ATTRIBUTE, ""));
                     Long revisionNumberValue = metadata.getLongAttribute(REVISION_META_DATA_ATTRIBUTE, 0l);
                     RevisionNumber revisionNumber = RevisionNumber.getRevisionNumber(revisionNumberValue);
 
-                    String description = metadata.getStringAttribute(DESCRIPTION_META_DATA_ATTRIBUTE, "");
+                    String description = metadataInterner.intern(metadata.getStringAttribute(DESCRIPTION_META_DATA_ATTRIBUTE, ""));
 
                     RevisionType type = RevisionType.valueOf(metadata.getStringAttribute(REVISION_TYPE_META_DATA_ATTRIBUTE, RevisionType.EDIT.name()));
 
                     final UserId userId = UserId.getUserId(userName);
-                    final List<OWLOntologyChangeRecord> changeRecords = list.getChangeRecords();
+                    final List<OWLOntologyChangeRecord> changeRecords = internChangeRecords(list, axiomInterner, ontologyIDInterner);
 
                     Revision revision = new Revision(userId, revisionNumber, changeRecords, list.getTimestamp(), description, type);
                     addRevision(revision);
@@ -104,6 +110,7 @@ public class OWLAPIChangeManager {
             inputStream.close();
             long t1 = System.currentTimeMillis();
             LOGGER.info("Loaded " + revisions.size() + " changes in " + (t1 - t0));
+
         }
         catch (BinaryOWLParseException e) {
             handleCorruptChangeLog(e);
@@ -118,7 +125,84 @@ public class OWLAPIChangeManager {
         catch (IOException e) {
             e.printStackTrace();
         }
+
     }
+
+
+    /**
+     * Gets an axiom interner that will ensure the same copies of axioms that are used between project ontologies
+     * and the change manager.
+     * @return The interner.  This should be disposed of as soon as possible.
+     */
+    private Interner<OWLAxiom> getAxiomInterner() {
+        final Interner<OWLAxiom> axiomInterner = Interners.newStrongInterner();
+        for (AxiomType<?> axiomType : AxiomType.AXIOM_TYPES) {
+            for(OWLAxiom ax : project.getRootOntology().getAxioms(axiomType)) {
+                axiomInterner.intern(ax);
+            }
+        }
+        return axiomInterner;
+    }
+
+    private List<OWLOntologyChangeRecord> internChangeRecords(OntologyChangeRecordList list, final Interner<OWLAxiom> axiomInterner, Interner<OWLOntologyID> ontologyIDInterner) {
+        LOGGER.info("Interning change records");
+
+
+        List<OWLOntologyChangeRecord> result = new ArrayList<OWLOntologyChangeRecord>();
+        List<OWLOntologyChangeRecord> records = list.getChangeRecords();
+
+        for(OWLOntologyChangeRecord record : records) {
+            OWLOntologyID id = record.getOntologyID();
+            OWLOntologyChangeData changeData = record.getData();
+            OWLOntologyChangeData internedData = changeData.accept(new OWLOntologyChangeDataVisitor<OWLOntologyChangeData, RuntimeException>() {
+                @Override
+                public OWLOntologyChangeData visit(AddAxiomData data) throws RuntimeException {
+                    final OWLAxiom ax = axiomInterner.intern(data.getAxiom());
+                    if (ax != null) {
+                        return new AddAxiomData(ax);
+                    }
+                    else {
+                        return data;
+                    }
+                }
+
+                @Override
+                public OWLOntologyChangeData visit(RemoveAxiomData data) throws RuntimeException {
+                    return data;
+                }
+
+                @Override
+                public OWLOntologyChangeData visit(AddOntologyAnnotationData data) throws RuntimeException {
+                    return data;
+                }
+
+                @Override
+                public OWLOntologyChangeData visit(RemoveOntologyAnnotationData data) throws RuntimeException {
+                    return data;
+                }
+
+                @Override
+                public OWLOntologyChangeData visit(SetOntologyIDData data) throws RuntimeException {
+                    return data;
+                }
+
+                @Override
+                public OWLOntologyChangeData visit(AddImportData data) throws RuntimeException {
+                    return data;
+                }
+
+                @Override
+                public OWLOntologyChangeData visit(RemoveImportData data) throws RuntimeException {
+                    return data;
+                }
+            });
+            OWLOntologyChangeRecord rec = new OWLOntologyChangeRecord(id, internedData);
+            result.add(rec);
+
+        }
+        return result;
+    }
+
 
     /**
      * Adds a revision and performs the associated indexing.
@@ -316,8 +400,7 @@ public class OWLAPIChangeManager {
             OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
             for (int index = 0; index < revisionIndex + 1; index++) {
                 Revision rev = revisions.get(index);
-                List<OWLOntologyChangeRecord> changeRecords = rev.getChanges();
-                for (OWLOntologyChangeRecord changeRecord : changeRecords) {
+                for (OWLOntologyChangeRecord changeRecord : rev) {
                     OWLOntologyID ontologyID = changeRecord.getOntologyID();
                     if (!manager.contains(ontologyID)) {
                         manager.createOntology(ontologyID);
@@ -370,10 +453,10 @@ public class OWLAPIChangeManager {
             return -1;
         }
         Revision lastRevision = revisions.get(revisions.size() - 1);
-        if (timestamp > lastRevision.timestamp) {
+        if (timestamp > lastRevision.getTimestamp()) {
             return -revisions.size();
         }
-        return Collections.binarySearch(revisions, Revision.createEmptyRevisionWithTimestamp(timestamp), new RevisionTimeStampComparator());
+        return Collections.binarySearch(revisions, Revision.createEmptyRevisionWithTimestamp(timestamp), new Revision.RevisionTimeStampComparator());
     }
 
     private int getRevisionFloorIndexForTimestamp(long timestamp) {
@@ -580,230 +663,7 @@ public class OWLAPIChangeManager {
     }
 
     private RevisionSummary getRevisionSummaryFromRevision(Revision revision) {
-        return new RevisionSummary(revision.getRevisionNumber(), revision.getUserId(), revision.getTimestamp(), revision.getChanges().size());
+        return new RevisionSummary(revision.getRevisionNumber(), revision.getUserId(), revision.getTimestamp(), revision.getSize());
     }
-
-
-    private static class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<Revision> {
-
-        private static final int DESCRIPTION_MAX_CHANGE_COUNT = 20;
-
-        private UserId userId;
-
-        private RevisionNumber revision;
-
-        private long timestamp;
-
-        private List<OWLOntologyChangeRecord> changes = new ArrayList<OWLOntologyChangeRecord>();
-
-        private String highLevelDescription;
-
-        private RevisionType revisionType;
-
-        private Set<OWLEntity> cachedEntities = null;
-
-        private Revision(UserId userId, RevisionNumber revision, List<OWLOntologyChangeRecord> changes, long timestamp, String highLevelDescription, RevisionType revisionType) {
-            this.changes.addAll(changes);
-            this.userId = userId;
-            this.revision = revision;
-            this.timestamp = timestamp;
-            this.highLevelDescription = highLevelDescription;
-            this.revisionType = revisionType;
-        }
-
-        private Revision(RevisionNumber revision) {
-            this.userId = UserId.getGuest();
-            this.revision = revision;
-            this.timestamp = 0;
-            this.changes = Collections.emptyList();
-            this.highLevelDescription = "";
-            this.revisionType = RevisionType.EDIT;
-        }
-
-        public int getSize() {
-            return changes.size();
-        }
-
-        public static Revision createEmptyRevisionWithRevisionNumber(RevisionNumber revision) {
-            return new Revision(revision);
-        }
-
-        public static Revision createEmptyRevisionWithTimestamp(long timestamp) {
-            Revision revision = new Revision(RevisionNumber.getRevisionNumber(0));
-            revision.timestamp = timestamp;
-            return revision;
-        }
-
-        public Set<OWLEntity> getEntities(OWLAPIProject project) {
-            if (cachedEntities == null) {
-                cachedEntities = getEntitiesInternal(project);
-            }
-            return cachedEntities;
-        }
-
-        private Set<OWLEntity> getEntitiesInternal(OWLAPIProject project) {
-            Set<OWLEntity> result = new HashSet<OWLEntity>();
-            Set<IRI> iris = new HashSet<IRI>();
-            for (OWLOntologyChangeRecord change : changes) {
-                if (change.getData() instanceof AxiomChangeData) {
-                    OWLAxiom ax = ((AxiomChangeData) change.getData()).getAxiom();
-                    AxiomSubjectProvider axiomSubjectProvider = new AxiomSubjectProvider();
-                    OWLObject object = axiomSubjectProvider.getSubject(ax);
-                    if (object instanceof OWLEntity) {
-                        result.add((OWLEntity) object);
-                    }
-                    else if (object instanceof IRI) {
-                        iris.add((IRI) object);
-                    }
-                }
-            }
-            for (IRI iri : iris) {
-                result.addAll(project.getRootOntology().getEntitiesInSignature(iri));
-            }
-            return result;
-        }
-
-
-        public long getTimestamp() {
-            return timestamp;
-        }
-
-        public UserId getUserId() {
-            return userId;
-        }
-
-        public RevisionNumber getRevisionNumber() {
-            return revision;
-        }
-
-        public RevisionType getRevisionType() {
-            return revisionType;
-        }
-
-        public int compareTo(Revision o) {
-            return this.revision.compareTo(o.revision);
-        }
-
-        public String getHighLevelDescription(final OWLAPIProject project, OWLEntity entity) {
-            StringBuilder sb = new StringBuilder();
-            if (highLevelDescription != null) {
-                sb.append(highLevelDescription);
-            }
-            sb.append("<div style=\"width: 100%;\">");
-            sb.append("<div><b>Details:</b></div>");
-            sb.append("<div style=\"margin-left: 20px\">");
-            int counter = 0;
-            for (final OWLOntologyChangeRecord changeRecord : changes) {
-                if (changeRecord.getData() instanceof AxiomChangeData) {
-                    AxiomChangeData info = (AxiomChangeData) changeRecord.getData();
-                    OWLAxiom axiom = info.getAxiom();
-                    if (entity == null || isEntitySubjectOfChange(entity, info)) {
-                        sb.append("<div style=\"overflow: hidden;\">");
-                        String ren = changeRecord.getData().accept(new OWLOntologyChangeDataVisitor<String, RuntimeException>() {
-
-                            public String visit(AddAxiomData addAxiom) {
-                                final RenderingManager rm = project.getRenderingManager();
-                                return "<b>Added: </b> " + rm.getBrowserText(addAxiom.getAxiom());
-                            }
-
-                            public String visit(RemoveAxiomData removeAxiom) {
-                                final RenderingManager rm = project.getRenderingManager();
-                                return new StringBuilder().append("<b>Removed: </b> ").append(rm.getBrowserText(removeAxiom.getAxiom())).toString();
-                            }
-
-                            public String visit(SetOntologyIDData setOntologyID) {
-                                return new StringBuilder().append("Changed ontology id from ").append(changeRecord.getOntologyID()).append(" to ").append(setOntologyID.getNewId()).toString();
-                            }
-
-                            public String visit(AddImportData addImport) {
-                                return new StringBuilder().append("Added import: ").append(addImport.getDeclaration().getIRI().toQuotedString()).toString();
-                            }
-
-                            public String visit(RemoveImportData removeImport) {
-                                return new StringBuilder().append("Removed import: ").append(removeImport.getDeclaration().getIRI().toQuotedString()).toString();
-                            }
-
-                            public String visit(AddOntologyAnnotationData addOntologyAnnotation) {
-                                return new StringBuilder().append("Added annotation to ontology: ").append(project.getRenderingManager().getBrowserText(addOntologyAnnotation.getAnnotation())).toString();
-                            }
-
-                            public String visit(RemoveOntologyAnnotationData removeOntologyAnnotation) {
-                                return new StringBuilder().append("Removed annotation from ontology: ").append(project.getRenderingManager().getBrowserText(removeOntologyAnnotation.getAnnotation())).toString();
-                            }
-                        });
-                        sb.append(ren);
-                        sb.append("</div>");
-
-                    }
-                    if(counter == DESCRIPTION_MAX_CHANGE_COUNT && changes.size() > DESCRIPTION_MAX_CHANGE_COUNT) {
-                        sb.append("<div>");
-                        sb.append(" + ");
-                        sb.append(changes.size() - DESCRIPTION_MAX_CHANGE_COUNT);
-                        sb.append(" more");
-                        sb.append("</div>");
-                        break;
-                    }
-                    counter++;
-                }
-            }
-
-            sb.append("</div>");
-            sb.append("</div>");
-
-            return sb.toString();
-        }
-
-        private boolean isEntitySubjectOfChange(OWLEntity entity, AxiomChangeData change) {
-            OWLObject changeSubject = getChangeSubject(change);
-            return entity.equals(changeSubject) || entity.getIRI().equals(changeSubject);
-        }
-
-        private OWLObject getChangeSubject(AxiomChangeData change) {
-            AxiomSubjectProvider subjectProvider = new AxiomSubjectProvider();
-
-            return subjectProvider.getSubject(change.getAxiom());
-        }
-
-        public String getHighLevelDescription(final OWLAPIProject project) {
-            return getHighLevelDescription(project, null);
-        }
-
-        public List<OWLOntologyChangeRecord> getChanges() {
-            return changes;
-        }
-
-        public Iterator<OWLOntologyChangeRecord> iterator() {
-            return changes.iterator();
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(highLevelDescription);
-            sb.append("\n");
-            for (OWLOntologyChangeRecord change : changes) {
-                sb.append(change);
-                sb.append("\n");
-            }
-            return sb.toString();
-        }
-    }
-
-
-    private class RevisionTimeStampComparator implements Comparator<Revision> {
-
-        public int compare(Revision o1, Revision o2) {
-            if (o1.timestamp < o2.timestamp) {
-                return -1;
-            }
-            else if (o1.timestamp == o2.timestamp) {
-                return 0;
-            }
-            else {
-                return 1;
-            }
-        }
-    }
-
 
 }

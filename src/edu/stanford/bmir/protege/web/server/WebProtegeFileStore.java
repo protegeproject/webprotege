@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+
 import java.io.File;
 
 /**

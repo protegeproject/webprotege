@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

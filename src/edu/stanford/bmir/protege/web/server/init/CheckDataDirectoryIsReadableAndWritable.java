@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 
 import javax.servlet.ServletContext;
 import java.io.*;

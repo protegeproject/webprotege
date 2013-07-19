@@ -7,10 +7,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.ApplicationPropertiesServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 
@@ -29,15 +27,16 @@ public class Authenticate implements EntryPoint {
     }
 
     private void initializeClientApplicationPropertiesCache() {
-        ClientApplicationPropertiesCache.initialize(new AsyncCallback<Map<String, String>>(){
-            public void onFailure(Throwable caught) {
-                checkAuthenType();
-            }
 
-            public void onSuccess(Map<String, String> result) {
-                checkAuthenType();
-            }
-        });
+//        ClientApplicationPropertiesCache.initialize(new AsyncCallback<Map<String, String>>(){
+//            public void onFailure(Throwable caught) {
+//                checkAuthenType();
+//            }
+//
+//            public void onSuccess(Map<String, String> result) {
+//                checkAuthenType();
+//            }
+//        });
     }
 
     private void checkAuthenType() {
@@ -88,7 +87,6 @@ public class Authenticate implements EntryPoint {
      */
     protected void initServletMagagers() {
         AuthenticateServiceManager.getInstance();
-        ApplicationPropertiesServiceManager.getInstance();
     }
 
     native public void closeWindow()/*-{

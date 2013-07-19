@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
+import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
@@ -15,6 +16,7 @@ import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
+import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridAction;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -50,6 +52,8 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
     private Map<Class<?>, ActionHandler<?, ?>> registry = new HashMap<Class<?>, ActionHandler<?, ?>>();
 
     public DefaultActionHandlerRegistry() {
+
+        register(new GetClientApplicationPropertiesActionHandler(), GetClientApplicationPropertiesAction.class);
 
         register(new GetAvailableProjectsHandler(), GetAvailableProjectsAction.class);
         register(new LoadProjectActionHandler(), LoadProjectAction.class);

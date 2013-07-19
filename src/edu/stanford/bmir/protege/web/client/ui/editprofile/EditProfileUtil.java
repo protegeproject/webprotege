@@ -21,8 +21,8 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
+import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.client.ui.ClientApplicationPropertiesCache;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
@@ -204,7 +204,7 @@ public class EditProfileUtil {
      * @param changePasswordHTML
      */
     protected void addChangePasswordHTMLClickHandler(final HTML changePasswordHTML) {
-        Boolean isLoginWithHttps = ClientApplicationPropertiesCache.getLoginWithHttps();
+        Boolean isLoginWithHttps = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_ENABLED, false);
         if (isLoginWithHttps) {
             changePasswordHTML.addClickHandler(changePasswordWithHTTPSClickHandler);
         } else {
@@ -320,7 +320,7 @@ public class EditProfileUtil {
         public void onClick(Button button, EventObject e) {
             boolean isEmailValid = false;
             isEmailValid = isValidEmail(userEmailTextBox.getText().trim());
-            if (userEmailTextBox.getText().trim().equals("") || isEmailValid) {
+            if (userEmailTextBox.getText().trim().isEmpty() || isEmailValid) {
                 win.getEl().mask("Saving email ...");
                 final EditProfileHandler callback = new EditProfileHandler(win);
                 final String userName = userNameTextBox.getText().trim();
@@ -341,7 +341,7 @@ public class EditProfileUtil {
 
         public void onClick(ClickEvent event) {
             final LoginUtil loginUtil = new LoginUtil();
-            String httpsPort = ClientApplicationPropertiesCache.getApplicationHttpsPort();
+            String httpsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
             Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
             notifyIfPasswordChanged();
             String authUrl = loginUtil.getAuthenticateWindowUrl(
@@ -364,7 +364,7 @@ public class EditProfileUtil {
     }
 
     protected void notifyIfPasswordChanged() {
-        final Integer timeout = ClientApplicationPropertiesCache.getServerPollingTimeoutMinutes();
+        final Integer timeout = 5;//
         final long initTime = System.currentTimeMillis();
         final Timer checkSessionTimer = new Timer() {
             @Override
