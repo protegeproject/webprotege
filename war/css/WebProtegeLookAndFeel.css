@@ -604,3 +604,14 @@ select {
     border: 1px solid rgba(0, 0, 0, .333);
     /*padding: 20px;*/
 }
+
+.glass {
+    background: #808080;
+    opacity: 0.5;
+}
+
+.progress-popup {
+    -webkit-box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+    -moz-box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+}

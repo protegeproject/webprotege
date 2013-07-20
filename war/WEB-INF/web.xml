@@ -97,10 +97,6 @@
 		<servlet-class>edu.stanford.bmir.protege.web.server.AuthenticateServiceImpl</servlet-class>
 	</servlet>
 
-	<servlet>
-		<servlet-name>ApplicationPropertiesServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.ApplicationPropertiesServiceImpl</servlet-class>
-	</servlet>
 
 	<servlet>
 		<servlet-name>ProjectManagerService</servlet-name>
@@ -218,18 +214,6 @@
 	<servlet-mapping>
 		<servlet-name>AuthenticateServiceImpl</servlet-name>
 		<url-pattern>/authenticate/authenticate/authen</url-pattern>
-	</servlet-mapping>
-
-	<!-- there are two mappings for the application properties service, one 
-		for normal operation, and the other for https mode -->
-	<servlet-mapping>
-		<servlet-name>ApplicationPropertiesServiceImpl</servlet-name>
-		<url-pattern>/webprotege/applicationProperties</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>ApplicationPropertiesServiceImpl</servlet-name>
-		<url-pattern>/authenticate/applicationProperties</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
