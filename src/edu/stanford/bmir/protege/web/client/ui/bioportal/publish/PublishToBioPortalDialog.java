@@ -31,7 +31,7 @@ public class PublishToBioPortalDialog extends WebProtegeDialog<PublishToBioPorta
             public void handleHide(PublishToBioPortalInfo data, WebProtegeDialogCloser closer) {
                 try {
                     handleUpload(details, userDetails, data, closer);
-                    UIUtil.showLoadProgessBar("Publishing ontology to BioPortal", "Publishing");
+                    UIUtil.showLoadProgessBar("Publishing ontology to BioPortal", "Please wait");
                 }
                 catch (IOException e) {
                     e.printStackTrace();

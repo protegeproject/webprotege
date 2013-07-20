@@ -1012,7 +1012,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 csvImportDialog.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CSVImportDescriptor>() {
                     @Override
                     public void handleHide(CSVImportDescriptor data, WebProtegeDialogCloser closer) {
-                        UIUtil.showLoadProgessBar("Importing CSV file", "Importing...");
+                        UIUtil.showLoadProgessBar("Importing CSV file", "Please wait");
                         DispatchServiceManager.get().execute(new ImportCSVFileAction(getProjectId(), fileDocumentId, getSelectedClass(), data), new AsyncCallback<ImportCSVFileResult>() {
                             @Override
                             public void onFailure(Throwable caught) {

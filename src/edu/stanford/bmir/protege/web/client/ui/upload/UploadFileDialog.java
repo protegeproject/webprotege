@@ -21,7 +21,7 @@ public class UploadFileDialog extends WebProtegeDialog<String> {
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<String>() {
             @Override
             public void handleHide(String data, final WebProtegeDialogCloser closer) {
-                UIUtil.showLoadProgessBar("Uploading", "Uploading file...");
+                UIUtil.showLoadProgessBar("Uploading", "Uploading file");
                 getController().addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
                     public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
                         UIUtil.hideLoadProgessBar();

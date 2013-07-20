@@ -179,7 +179,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             return;
         }
         else {
-            UIUtil.showLoadProgessBar("Loading project", "Loading...");
+            UIUtil.showLoadProgessBar("Loading project", "Please wait");
             Application.get().loadProject(projectId, new LoadProjectHandler(projectId));
         }
 

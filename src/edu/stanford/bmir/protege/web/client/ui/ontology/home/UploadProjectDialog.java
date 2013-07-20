@@ -35,13 +35,13 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class UploadProjectDialog extends WebProtegeDialog<UploadFileInfo> {
 
-    public static final String PROGRESS_DIALOG_TITLE = "Uploading";
+    public static final String PROGRESS_DIALOG_TITLE = "Uploading project";
 
     public UploadProjectDialog() {
         super(new UploadProjectDialogController());
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<UploadFileInfo>() {
             public void handleHide(final UploadFileInfo data, final WebProtegeDialogCloser closer) {
-                UIUtil.showLoadProgessBar(PROGRESS_DIALOG_TITLE, "Uploading file...");
+                UIUtil.showLoadProgessBar(PROGRESS_DIALOG_TITLE, "Uploading file");
                 data.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
                     public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
                         UIUtil.hideLoadProgessBar();
@@ -77,7 +77,7 @@ public class UploadProjectDialog extends WebProtegeDialog<UploadFileInfo> {
     }
 
     private void createProjectFromUpload(UploadFileInfo data, FileUploadResponse result) {
-        UIUtil.showLoadProgessBar(PROGRESS_DIALOG_TITLE, "Creating project...");
+        UIUtil.showLoadProgessBar(PROGRESS_DIALOG_TITLE, "Creating project");
         ProjectManagerServiceAsync projectManagerService = GWT.create(ProjectManagerService.class);
         UserId userId = Application.get().getUserId();
         DocumentId documentId = result.getDocumentId();

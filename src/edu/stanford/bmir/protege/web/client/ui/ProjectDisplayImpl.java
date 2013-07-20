@@ -142,7 +142,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     private void getProjectConfiguration() {
-        UIUtil.showLoadProgessBar("Loading UI configuration", "Loading");
+        UIUtil.showLoadProgessBar("Loading Project", "Loading user interface configuration");
         ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(projectId, Application.get().getUserId(), new GetProjectConfigurationHandler());
     }
 

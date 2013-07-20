@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.GenericConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
+import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -39,27 +40,29 @@ public class UIUtil {
     private static String[] noteTypes = new String[]{"Comment"};   //default value
 
     public static void showLoadProgessBar(final String message, final String barMessage) {
-        MessageBox.show(new MessageBoxConfig() {
-            {
-                setMsg(message);
-                setProgressText(barMessage);
-                setDefaultTextHeight(30);
-                setWidth(300);
-                setWait(true);
-                setClosable(true);
-                setTitle("Dialog");
-                setWaitConfig(new WaitConfig() {
-                    {
-                        setInterval(200);
-                    }
-                });
-                //setAnimEl(button.getId());
-            }
-        });
+//        MessageBox.show(new MessageBoxConfig() {
+//            {
+//                setMsg(message);
+//                setProgressText(barMessage);
+//                setDefaultTextHeight(30);
+//                setWidth(300);
+//                setWait(true);
+//                setClosable(true);
+//                setTitle("Dialog");
+//                setWaitConfig(new WaitConfig() {
+//                    {
+//                        setInterval(200);
+//                    }
+//                });
+//                //setAnimEl(button.getId());
+//            }
+//        });
+        ProgressMonitor.get().showProgressMonitor(message, barMessage);
     }
 
     public static void hideLoadProgessBar() {
-        MessageBox.hide();
+//        MessageBox.hide();
+        ProgressMonitor.get().hideProgressMonitor();
     }
 
     public static void mask(final ExtElement el, final String message, final boolean animate, int delayInMilliSeconds) {
