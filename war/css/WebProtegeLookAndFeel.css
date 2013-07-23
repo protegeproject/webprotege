@@ -610,6 +610,12 @@ select {
     opacity: 0.5;
 }
 
+.glass-popup-shadow {
+    -webkit-box-shadow: 0 10px 30px rgba(0, 0, 0, .5) !important;
+    -moz-box-shadow: 0 10px 30px rgba(0, 0, 0, .5) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .5) !important;
+}
+
 .progress-popup {
     -webkit-box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
     -moz-box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
