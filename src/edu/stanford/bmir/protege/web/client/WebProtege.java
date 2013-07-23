@@ -16,6 +16,7 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
 import edu.stanford.bmir.protege.web.client.ui.TopPanel;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InvitationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InviteUserUtil;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
@@ -124,6 +125,7 @@ public class WebProtege implements EntryPoint {
         if (appName.isPresent()) {
             Window.setTitle(appName.get());
         }
+
     }
 
 }

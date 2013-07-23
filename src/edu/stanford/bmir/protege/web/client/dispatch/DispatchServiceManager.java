@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.UmbrellaException;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -148,6 +149,6 @@ public class DispatchServiceManager {
     }
 
     private void displayAlert(String alert) {
-        Window.alert(alert);
+        MessageBox.showAlert(alert);
     }
 }

@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -89,8 +90,7 @@ public class PropertyValueUtil {
         @Override
         public void handleFailure(Throwable caught) {
             GWT.log("Error at removing value for " + getProperty() + " and " + getSubject(), caught);
-            Window.alert("There was an error at removing the property value for " + getProperty() + " and "
-                    + getSubject() + ".");
+            MessageBox.showAlert("There was an error at removing the property value for " + getProperty() + " and " + getSubject() + ".");
             if (asyncCallback != null) {
                 asyncCallback.onFailure(caught);
             }

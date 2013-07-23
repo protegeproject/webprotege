@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.checkbox.AxiomTypeGroupCh
 import edu.stanford.bmir.protege.web.client.ui.library.checkbox.EntityTypeGroupCheckBox;
 import edu.stanford.bmir.protege.web.shared.usage.UsageFilter;
 import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -123,12 +124,28 @@ public class UsageFilterEditorViewImpl extends Composite implements UsageFilterE
 
     @Override
     public UsageFilter getUsageFilter() {
+        Set<AxiomType<?>> axiomTypes = getAxiomTypes();
+        Set<EntityType<?>> entityTypes = getEntityTypes();
+        return new UsageFilter(showDefiningAxiomsCheckBox.getValue(), entityTypes, axiomTypes);
+    }
+
+    private Set<EntityType<?>> getEntityTypes() {
+        Set<EntityType<?>> entityTypes = new HashSet<EntityType<?>>();
+        for(EntityTypeGroupCheckBox checkBox : entityGroupCheckBoxes) {
+            if (checkBox.getValue()) {
+                entityTypes.addAll(checkBox.getEntityTypeGroup().get().getEntityTypes());
+            }
+        }
+        return entityTypes;
+    }
+
+    private Set<AxiomType<?>> getAxiomTypes() {
         Set<AxiomType<?>> axiomTypes = new HashSet<AxiomType<?>>();
         for(AxiomTypeGroupCheckBox checkBox : axiomGroupCheckBoxes) {
             if(checkBox.getValue()) {
                 axiomTypes.addAll(checkBox.getAxiomTypeGroup().get().getAxiomTypes());
             }
         }
-        return new UsageFilter(showDefiningAxiomsCheckBox.getValue(), axiomTypes);
+        return axiomTypes;
     }
 }

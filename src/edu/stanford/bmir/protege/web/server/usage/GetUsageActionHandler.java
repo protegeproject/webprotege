@@ -96,7 +96,7 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
             if (counter <= action.getPageSize()) {
                 final Set<UsageReference> refs = reference.accept(visitor);
                 for (UsageReference ref : refs) {
-                    if (usageFilter.isShowDefiningAxioms() || (!ref.getAxiomSubject().isPresent() || !action.getSubject().equals(ref.getAxiomSubject().get()))) {
+                    if (isIncludedBySubject(usageFilter, action, ref)) {
                         if (counter <= action.getPageSize()) {
                             result.addAll(refs);
                         }
@@ -106,6 +106,20 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
 
         }
         return counter;
+    }
+
+    private boolean isIncludedBySubject(UsageFilter usageFilter, GetUsageAction action, UsageReference ref) {
+        if(!ref.getAxiomSubject().isPresent()) {
+            return true;
+        }
+        final OWLEntity axiomSubject = ref.getAxiomSubject().get();
+        if(!usageFilter.isIncluded(axiomSubject.getEntityType())) {
+            return false;
+        }
+        if(!usageFilter.isShowDefiningAxioms()) {
+            return !action.getSubject().equals(axiomSubject);
+        }
+        return true;
     }
 
 

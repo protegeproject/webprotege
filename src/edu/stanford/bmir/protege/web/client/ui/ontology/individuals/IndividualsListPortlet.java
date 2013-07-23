@@ -2,12 +2,14 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.individuals;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.*;
 import com.gwtext.client.data.event.StoreListener;
-import com.gwtext.client.widgets.*;
+import com.gwtext.client.widgets.Button;
+import com.gwtext.client.widgets.Toolbar;
+import com.gwtext.client.widgets.ToolbarButton;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
@@ -29,6 +31,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
@@ -265,7 +269,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
         watchButton.setDisabled(Application.get().isGuestUser());
         toolbar.addButton(watchButton);
 
-        Component searchField = createSearchField();
+        Widget searchField = createSearchField();
         if (searchField != null) {
             toolbar.addFill();
             toolbar.addSeparator();
@@ -309,19 +313,21 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
     protected void onDeleteIndividual() {
         final Record selRecord = individualsGrid.getSelectionModel().getSelected();
         if (selRecord == null) {
-            Window.alert("Please select first an individual to delete.");
+            MessageBox.showAlert("No individual selected", "Please select an individual to delete.");
             return;
         }
 
         final EntityData currentSelection = (EntityData) selRecord.getAsObject("individuals");
         final String indName = currentSelection.getName();
 
-        MessageBox.confirm("Confirm", "Are you sure you want to delete individual <br> " + indName + " ?",
-                new MessageBox.ConfirmCallback() {
-            public void execute(String btnID) {
-                if (btnID.equals("yes")) {
-                    deleteIndividual(currentSelection, selRecord);
-                }
+        MessageBox.showYesNoConfirmBox("Delete individual?", "Are you sure you want to delete " + indName + "?", new YesNoHandler() {
+            @Override
+            public void handleYes() {
+                deleteIndividual(currentSelection, selRecord);
+            }
+
+            @Override
+            public void handleNo() {
             }
         });
     }
@@ -359,7 +365,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
         return "Created new individual " + (individualName == null ? "" : individualName) + " of type " + (typeEntity == null ? " root concept" : typeEntity.getBrowserText()) ;
     }
 
-    protected Component createSearchField() {
+    protected Widget createSearchField() {
         final TextField searchField = new TextField("Search: ", "search");
         searchField.setAutoWidth(true);
         searchField.setEmptyText("Type search string");
@@ -484,8 +490,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
         @Override
         public void handleFailure(Throwable caught) {
             GWT.log("Error at creating individual", caught);
-            MessageBox.alert("Error", "There was an error at creating the individual.<br />" +
-            		"Please try again later.");
+            MessageBox.showErrorMessage("Individual not deleted", caught);
             reload();
         }
 
@@ -509,8 +514,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
         @Override
         public void handleFailure(Throwable caught) {
             GWT.log("Error at deleting individual", caught);
-            MessageBox.alert("Error", "There was an error at deleting the individual.<br />" +
-                "Please try again later.");
+            MessageBox.showErrorMessage("Individual not deleted", caught);
             reload();
         }
 

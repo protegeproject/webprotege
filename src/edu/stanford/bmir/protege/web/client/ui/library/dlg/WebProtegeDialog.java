@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +179,7 @@ public class WebProtegeDialog<D> extends DialogBox {
     }
 
     private void displayContentsInvalidMessage(String message) {
-        Window.alert(message);
+        MessageBox.showAlert(message);
     }
 
     private void hideWithDefaultButton() {

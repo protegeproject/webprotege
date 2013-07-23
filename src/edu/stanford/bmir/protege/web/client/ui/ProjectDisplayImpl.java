@@ -8,7 +8,6 @@ import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Element;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.*;
-import com.gwtext.client.widgets.MessageBox.ConfirmCallback;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
@@ -32,6 +31,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfigu
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
@@ -285,11 +286,14 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         ToolbarButton saveConfigButton = new ToolbarButton(null,  new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
-                MessageBox.confirm("Save project layout?", "Save the current project layout for future sessions?", new ConfirmCallback() {
-                    public void execute(String btnID) {
-                        if (btnID.equalsIgnoreCase("yes")) {
-                            saveProjectConfiguration();
-                        }
+                MessageBox.showYesNoConfirmBox("Save project layout?", "Save the current project layout for future sessions?", new YesNoHandler() {
+                    @Override
+                    public void handleYes() {
+                        saveProjectConfiguration();
+                    }
+
+                    @Override
+                    public void handleNo() {
                     }
                 });
             }
@@ -347,7 +351,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     protected void saveProjectConfiguration() {
         if (Application.get().getUserId().isGuest()) {
-            MessageBox.alert("Not logged in", "To save the layout, you need to login first.");
+            MessageBox.showAlert("You are not signed in", "To save the layout, you need to sign in first.");
             return;
         }
         ProjectLayoutConfiguration config = getProject().getProjectLayoutConfiguration();
@@ -370,12 +374,12 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         @Override
         public void handleFailure(Throwable caught) {
             GWT.log("Error in saving configurations (UI Layout)", caught);
-            MessageBox.alert("There were problems at saving the project layout. Please try again later.");
+            MessageBox.showAlert("Error saving project layout", "There were problems at saving the project layout. Please try again later.");
         }
 
         @Override
         public void handleSuccess(Void result) {
-            MessageBox.alert("Project layout saved successfully. This layout will be used the next time you log in.");
+            MessageBox.showAlert("Project layout saved", "Project layout saved successfully. This layout will be used the next time you log in.");
         }
     }
 
@@ -538,7 +542,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         public void handleFailure(Throwable caught) {
             GWT.log("There were errors at loading project configuration for " + projectId, caught);
             UIUtil.hideLoadProgessBar();
-            com.google.gwt.user.client.Window.alert("Could not load the project configuration for this project" + " Message: " + caught.getMessage());
+            MessageBox.showAlert("Could not load the project configuration for this project" + " Message: " + caught.getMessage());
         }
 
         @Override

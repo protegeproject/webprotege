@@ -11,7 +11,6 @@ import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.Container;
-import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
@@ -24,6 +23,7 @@ import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.ConditionItem;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
@@ -207,9 +207,8 @@ public class RestrictionsPortlet extends AbstractOWLEntityPortlet{
             @Override
             public void onClick(Button button, EventObject e) {
                 if (!conditionEditor.isValid()) {
-                    MessageBox.alert("Expression not valid", "The class expression is not valid.<br />" +
+                    MessageBox.showAlert("Expression not valid", "The class expression is not valid.  " +
                     		"Please edit the class expression or cancel the edit.");
-                    return;
                 } else {
                     onConditionChanged();
                     window.hide();
@@ -348,7 +347,7 @@ public class RestrictionsPortlet extends AbstractOWLEntityPortlet{
 
         @Override
         public void handleFailure(Throwable caught) {
-            com.google.gwt.user.client.Window.alert("There was an error at deleting the class condition. Please try again later.");
+            MessageBox.showErrorMessage("Delete failed", caught);
         }
 
         @Override
@@ -368,7 +367,7 @@ public class RestrictionsPortlet extends AbstractOWLEntityPortlet{
 
         @Override
         public void handleFailure(Throwable caught) {
-            MessageBox.alert("Error", "There was an error at setting the class condition. Please try again.");
+            MessageBox.showErrorMessage("Edit failed", caught);
         }
 
         @Override
@@ -382,7 +381,7 @@ public class RestrictionsPortlet extends AbstractOWLEntityPortlet{
 
         @Override
         public void handleFailure(Throwable caught) {
-            MessageBox.alert("Error", "There was an error at adding the new class condition. Please try again.");
+            MessageBox.showErrorMessage("Edit failed", caught);
         }
 
         @Override

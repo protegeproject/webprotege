@@ -1,22 +1,17 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.client.ui.library.common.Refreshable;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEvent;
 import edu.stanford.bmir.protege.web.client.ui.upload.FileUploadResponse;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
@@ -73,7 +68,7 @@ public class UploadProjectDialog extends WebProtegeDialog<UploadFileInfo> {
     }
 
     private void displayProjectUploadError(FileUploadResponse result) {
-        MessageBox.alert("Upload failed", result.getUploadRejectedMessage());
+        MessageBox.showAlert("Upload failed", result.getUploadRejectedMessage());
     }
 
     private void createProjectFromUpload(UploadFileInfo data, FileUploadResponse result) {
@@ -95,7 +90,7 @@ public class UploadProjectDialog extends WebProtegeDialog<UploadFileInfo> {
 
             public void onSuccess(ProjectDetails result) {
                 UIUtil.hideLoadProgessBar();
-                MessageBox.alert("Ontology imported", "Ontology successfully uploaded.");
+                MessageBox.showMessage("Project uploaded", "Your ontology was uploaded and the project was successfully created.");
                 EventBusManager.getManager().postEvent(new ProjectCreatedEvent(result));
             }
         });
@@ -103,20 +98,20 @@ public class UploadProjectDialog extends WebProtegeDialog<UploadFileInfo> {
 
         private void handleCreateProjectFailure(Throwable caught) {
             if(caught instanceof NotSignedInException) {
-                MessageBox.alert("You must be signed in to create new projects");
+                MessageBox.showAlert("You must be signed in to create new projects.", "Please sign in.");
             }
             else if(caught instanceof ProjectAlreadyRegisteredException) {
                 ProjectAlreadyRegisteredException ex = (ProjectAlreadyRegisteredException) caught;
                 String projectName = ex.getProjectId().getId();
-                MessageBox.alert("The project name " + projectName + " is already taken.  Please try a different name.");
+                MessageBox.showMessage("The project name " + projectName + " is already taken.  Please try a different name.");
             }
             else if(caught instanceof ProjectDocumentExistsException) {
                 ProjectDocumentExistsException ex = (ProjectDocumentExistsException) caught;
                 String projectName = ex.getProjectId().getId();
-                MessageBox.alert("There is already a non-empty project on the server which is named " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
+                MessageBox.showAlert("Project already exists", "There is already a non-empty project on the server which is named " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
             }
             else {
-                MessageBox.alert(caught.getMessage());
+                MessageBox.showAlert(caught.getMessage());
             }
         }
 

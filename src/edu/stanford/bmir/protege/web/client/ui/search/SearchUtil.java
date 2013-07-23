@@ -20,10 +20,15 @@ import java.util.Collection;
 public class SearchUtil {
 
     private ProjectId projectId;
+
     private Selectable selectable;
+
     private ValueType searchedValueType;
+
     private SearchGridPanel searchGrid;
+
     private AsyncCallback<Boolean> asyncCallback;
+
     private Component busyComponent;
 
     public SearchUtil(ProjectId projectId, Selectable selectable) {
@@ -37,8 +42,7 @@ public class SearchUtil {
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         searchGrid = new SearchGridPanel(asyncCallback) {
             @Override
             protected void onEntityDblClick() {
@@ -74,7 +78,7 @@ public class SearchUtil {
         Button showInTreeButton = new Button("Select in tree", new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
-            	doSelect(searchGrid.getSelection());
+                doSelect(searchGrid.getSelection());
             }
         });
 
@@ -91,20 +95,21 @@ public class SearchUtil {
         panel.addButton(closeButton);
 
         window.add(panel);
-        
+
         searchGrid.getProxy().setValueType(getSearchedValueType());
         searchGrid.setSearchFieldText(searchText);
 
         if (searchText == null || searchText.trim().length() == 0) {
             searchGrid.getStore().removeAll();
-        } else {
+        }
+        else {
             searchGrid.reload(projectId, searchText, searchedValueType);
         }
 
         window.show();
     }
 
-	private void doSelect(final EntityData selection) {
+    private void doSelect(final EntityData selection) {
         if (selection == null) {
             return;
         }
@@ -113,13 +118,13 @@ public class SearchUtil {
             selectionCollection.add(selection);
             selectable.setSelection(selectionCollection);
         }
-	}
+    }
 
-	public SearchGridPanel getSearchGridPanel() {
-	    return searchGrid;
-	}
+    public SearchGridPanel getSearchGridPanel() {
+        return searchGrid;
+    }
 
-	public void setBusyComponent(Component busyComponent) {
+    public void setBusyComponent(Component busyComponent) {
         this.busyComponent = busyComponent;
         searchGrid.setBusyComponent(busyComponent);
     }

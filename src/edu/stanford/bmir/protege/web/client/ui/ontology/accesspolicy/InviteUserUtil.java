@@ -8,7 +8,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.core.EventObject;
-import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
@@ -17,6 +16,7 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.rpc.AccessPolicyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.AccessPolicyUserData;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.login.HashAlgorithm;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.domain.Invitation;
@@ -64,7 +64,7 @@ public class InviteUserUtil {
                 if(invitationList.size()!=0){
                     createTemporaryAccountsOnServer(invitationList);
                 }else {
-                    MessageBox.alert("Enter correct invitees details.");
+                    MessageBox.showAlert("Enter correct invitees details.");
                 }
 
             }
@@ -84,14 +84,14 @@ public class InviteUserUtil {
 
                     public void onSuccess(Void result) {
                         invitationWindow.getEl().unmask();
-                        MessageBox.alert("Invitation send successfully.");
+                        MessageBox.showAlert("Invitation send successfully.");
                         invitationWindow.close();
                     }
 
                     public void onFailure(Throwable caught) {
                         invitationWindow.getEl().unmask();
                         GWT.log("Error on creating temporary account on server", caught);
-                        com.google.gwt.user.client.Window.alert("failure createTemporaryAccountsOnServer");//TODO remove this
+                        MessageBox.showAlert("failure createTemporaryAccountsOnServer");//TODO remove this
 
                     }
                 });
@@ -264,7 +264,7 @@ public class InviteUserUtil {
                 if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
                     if (newUserEmailID.getText().trim().equals("") || newUserPassword.getText().trim().equals("")
                             || confirmPassword.getText().trim().equals("")) {
-                        MessageBox.alert("User ID and Password both are required.");
+                        MessageBox.showAlert("User ID and Password both are required.");
                     } else {
 
                         updateInvitationTemporaryAccount(newUserID.getText(), newUserPassword, confirmPassword,
@@ -280,7 +280,7 @@ public class InviteUserUtil {
             public void onClick(com.gwtext.client.widgets.Button button, EventObject e) {
                 if (newUserEmailID.getText().trim().equals("") || newUserPassword.getText().trim().equals("")
                         || confirmPassword.getText().trim().equals("")) {
-                    MessageBox.alert("User ID and Password both are required.");
+                    MessageBox.showAlert("User ID and Password both are required.");
                 } else {
 
                     updateInvitationTemporaryAccount(newUserID.getText(), newUserPassword, confirmPassword,
@@ -334,11 +334,11 @@ public class InviteUserUtil {
                 }
 
                 public void onFailure(Throwable caught) {
-                    MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
+                    MessageBox.showAlert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
                 }
             });
         } else {
-            MessageBox.alert("Passwords dont match. Please try again.");
+            MessageBox.showAlert("Passwords dont match. Please try again.");
             newUserPasswordField.setValue("");
             newUserPassword2Field.setValue("");
         }
@@ -363,17 +363,17 @@ public class InviteUserUtil {
 
 //                GlobalSettings.get().getGlobalSession().setUserName(
 //                        userData.getName());
-                MessageBox.alert("New user created successfully");
+                MessageBox.showAlert("New user created successfully");
                 throw new RuntimeException("TODO: Uncomment setUserName.");
             } else {
-                MessageBox.alert("New user registration could not be completed. Please try again.");
+                MessageBox.showAlert("New user registration could not be completed. Please try again.");
             }
         }
 
         public void onFailure(Throwable caught) {
             GWT.log("Error at registering new user", caught);
             win.getEl().unmask();
-            MessageBox.alert("There was an error at creating the new user. Please try again later.");
+            MessageBox.showAlert("There was an error at creating the new user. Please try again later.");
         }
     }
 
@@ -421,29 +421,27 @@ public class InviteUserUtil {
                                     if (isTemporary) {
                                         checkInvitationExpiration(invitationId);
                                     } else {
-                                        MessageBox
-                                                .alert("Cannot create a user account for email address: "
+                                        MessageBox.showAlert("Cannot create a user account for email address "
                                                         + invitationId
-                                                        + ". The account already exists. Please contact the administrator for more information.");
+                                                        ,"The account already exists. Please contact the administrator for more information.");
                                     }
 
                                 }
 
                                 public void onFailure(Throwable caught) {
-                                    MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
+                                    MessageBox.showAlert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
 
                                 }
                             });
 
                 } else {
-                    MessageBox
-                            .alert("This email invitation seems to be invalid. Please contact the administrator for more information.");
+                    MessageBox.showAlert("This email invitation seems to be invalid. Please contact the administrator for more information.");
                 }
 
             }
 
             public void onFailure(Throwable caught) {
-                MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
+                MessageBox.showAlert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
 
             }
         });
@@ -465,14 +463,13 @@ public class InviteUserUtil {
                     InviteUserUtil iUserUtil = new InviteUserUtil();
                     iUserUtil.updateInvitationAccount(invitationId);
                 } else {
-                    MessageBox
-                            .alert("This email invitation has expired. Please contact the administrator for more information.");
+                    MessageBox.showAlert("This email invitation has expired. Please contact the administrator for more information.");
                 }
 
             }
 
             public void onFailure(Throwable caught) {
-                MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
+                MessageBox.showAlert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
 
             }
         });

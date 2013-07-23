@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.verification.*;
 import edu.stanford.bmir.protege.web.shared.user.UserEmailAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
@@ -48,7 +49,7 @@ public class WebProtegeSignupDialog extends WebProtegeDialog<SignupInfo> {
 
             @Override
             public void handleVerificationFailure(String errorMessage) {
-                Window.alert(errorMessage);
+                MessageBox.showAlert(errorMessage);
             }
         });
     }
@@ -58,7 +59,7 @@ public class WebProtegeSignupDialog extends WebProtegeDialog<SignupInfo> {
         final AdminServiceManager adminServiceManager = AdminServiceManager.getInstance();
         adminServiceManager.getNewSalt(new AsyncCallback<String>() {
             public void onFailure(Throwable caught) {
-                Window.alert("There was a problem registering the specified user account. Please contact admin. (Problem " + caught.getMessage() + ")");
+                MessageBox.showAlert("Error", "There was a problem registering the specified user account. Please contact admin. (Problem " + caught.getMessage() + ")");
             }
 
             public void onSuccess(String salt) {
@@ -70,19 +71,19 @@ public class WebProtegeSignupDialog extends WebProtegeDialog<SignupInfo> {
                     public void onFailure(Throwable caught) {
                         if(caught instanceof UserNameAlreadyExistsException) {
                             String username = ((UserNameAlreadyExistsException) caught).getUsername();
-                            Window.alert("A user named " + username + " is already registered.  Please choose another name.");
+                            MessageBox.showAlert("User name already taken", "A user named " + username + " is already registered.  Please choose another name.");
                         }
                         else if(caught instanceof UserEmailAlreadyExistsException) {
                             String email = ((UserEmailAlreadyExistsException) caught).getEmailAddress();
-                            Window.alert("The email address " + email + " is already taken.  Please choose a different email address.");
+                            MessageBox.showAlert("Email address already taken", "The email address " + email + " is already taken.  Please choose a different email address.");
                         }
                         else {
-                            Window.alert("There was a problem registering the specified user account.  Please contact administrator.");
+                            MessageBox.showAlert("Error registering account", "There was a problem registering the specified user account.  Please contact administrator.");
                         }
                     }
 
                     public void onSuccess(UserData result) {
-                        Window.alert("You have successfully registered.  Please log in using the button/link on the top right.");
+                        MessageBox.showMessage("Registration complete", "You have successfully registered.  Please log in using the button/link on the top right.");
                         dialogCloser.hide();
                     }
                 });

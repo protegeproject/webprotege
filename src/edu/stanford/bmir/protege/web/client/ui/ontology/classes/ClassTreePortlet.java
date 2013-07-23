@@ -17,8 +17,6 @@ import com.gwtext.client.dd.DragDrop;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.CycleButton;
-import com.gwtext.client.widgets.MessageBox;
-import com.gwtext.client.widgets.MessageBoxConfig;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.Tool;
 import com.gwtext.client.widgets.Toolbar;
@@ -53,6 +51,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.DiscussionThreadDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
@@ -479,23 +479,11 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 //    }
 
     private void showInternalID(EntityData entity) {
-        String classDisplayName = entity.getBrowserText();
         String className = entity.getName();
-        String message = "The internal ID of the class ";
-        message += "<BR>&nbsp;&nbsp;&nbsp;&nbsp;<I>" + classDisplayName + "</I>";
-        message += "<BR>is:";
-        message += "<BR>&nbsp;&nbsp;&nbsp;&nbsp;<B>" + className + "</B>";
-        MessageBox.alert("Internal ID", message);
+        MessageBox.showMessage(entity.getBrowserText() + " Internal Id", className);
     }
 
     private void showDirectLink(EntityData entity) {
-        MessageBoxConfig mbConfig = new MessageBoxConfig();
-        mbConfig.setTitle("Direct link");
-        mbConfig.setMinWidth(300);
-        mbConfig.setWidth(600);
-        mbConfig.setMaxWidth(800);
-        mbConfig.setMsg("If you wish to link to this class from a different application, first select the URL below, then copy and paste it into your application.<BR>");
-        mbConfig.setPrompt(true);
 
         String url = "";
         try {
@@ -526,9 +514,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             e.printStackTrace();
         }
 
-        mbConfig.setValue(url);
-        mbConfig.setButtons(MessageBox.OK);
-        MessageBox.show(mbConfig);
+        MessageBox.showMessage("Direct link to " + entity.getBrowserText(), url);
 
     }
 
@@ -802,13 +788,10 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     protected AsyncCallback<Boolean> getSearchAsyncCallback() {
         return new AsyncCallback<Boolean>() {
             public void onFailure(Throwable caught) {
-                MessageBox.alert("Error.", "There were problems at search, please try again later.");
+                MessageBox.showAlert("Search error", "An error occurred during the search. Please try again.");
             }
 
             public void onSuccess(Boolean result) {
-                if (!result) {
-                    MessageBox.alert("No results", "No results were found. Please try a different query. <br />" + "<BR>" + "<B>Hint:</B> You may use wildcards (*) in your search query. <br />" + "&nbsp;&nbsp;&nbsp;&nbsp;(Wildcards are automatically added before and after query strings that&nbsp;&nbsp;&nbsp;&nbsp;<br />" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;have at least 3 characters AND do not already start or end with a wildcard.)&nbsp;&nbsp;&nbsp;&nbsp;");
-                }
             }
         };
     }
@@ -1016,13 +999,13 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                         DispatchServiceManager.get().execute(new ImportCSVFileAction(getProjectId(), fileDocumentId, getSelectedClass(), data), new AsyncCallback<ImportCSVFileResult>() {
                             @Override
                             public void onFailure(Throwable caught) {
-                                MessageBox.alert("Import failed", "There was a problem importing the csv file");
+                                MessageBox.showAlert("Import failed", "There was a problem importing the csv file");
                                 GWT.log("Problem importing CSV file", caught);
                             }
 
                             @Override
                             public void onSuccess(ImportCSVFileResult result) {
-                                MessageBox.alert("Import success", result.getRowCount() + " rows were imported");
+                                MessageBox.showAlert("CSV import succeeded", result.getRowCount() + " rows were imported");
                             }
                         });
                         UIUtil.hideLoadProgessBar();
@@ -1035,7 +1018,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             @Override
             public void handleFileUploadFailed(String errorMessage) {
                 UIUtil.hideLoadProgessBar();
-                MessageBox.alert("There was a problem uploading the CSV file.  Details: " + errorMessage);
+                MessageBox.showAlert("Error uploading CSV file", errorMessage);
             }
         });
         d.setVisible(true);
@@ -1106,18 +1089,21 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     protected void onDeleteCls() {
         final EntityData currentSelection = getSingleSelection();
         if (currentSelection == null) {
-            Window.alert("Please select first a class to delete.");
+            MessageBox.showAlert("No class selected", "Please select a class to delete.");
             return;
         }
 
         final String displayName = currentSelection.getBrowserText();
         final String clsName = currentSelection.getName();
 
-        MessageBox.confirm("Confirm", "Are you sure you want to delete class <br> " + displayName + " ?", new MessageBox.ConfirmCallback() {
-            public void execute(final String btnID) {
-                if (btnID.equals("yes")) {
-                    deleteCls(clsName);
-                }
+        MessageBox.showYesNoConfirmBox("Delete class?", "Are you sure you want to delete class \"" + displayName + "\"?", new YesNoHandler() {
+            @Override
+            public void handleYes() {
+                deleteCls(clsName);
+            }
+
+            @Override
+            public void handleNo() {
             }
         });
     }
@@ -1794,7 +1780,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         @Override
         public void handleFailure(final Throwable caught) {
             GWT.log("Error at creating class", caught);
-            MessageBox.alert("There were errors at creating class.<br>" + " Message: " + caught.getMessage());
+            MessageBox.showErrorMessage("Class not created", caught);
         }
 
         @Override
@@ -1811,7 +1797,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         @Override
         public void handleFailure(final Throwable caught) {
             GWT.log("Error at deleting class", caught);
-            MessageBox.alert("There were errors at deleting class.<br>" + " Message: " + caught.getMessage());
+            MessageBox.showErrorMessage("Class not deleted", caught);
         }
 
         @Override
@@ -1838,7 +1824,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         @Override
         public void handleFailure(final Throwable caught) {
             GWT.log("Error at moving class", caught);
-            MessageBox.alert("There were errors at moving class.<br>" + " Message: " + caught.getMessage());
+            MessageBox.showErrorMessage("Class not moved", caught);
             // TODO: refresh oldParent and newParent
         }
 
@@ -1850,12 +1836,14 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             }
             else {
                 GWT.log("Cycle warning after moving class " + clsName + ": " + result, null);
+
+
                 String warningMsg = "<B>WARNING! There is a cycle in the hierarchy: </B><BR><BR>";
                 for (EntityData p : result) {
                     warningMsg += "&nbsp;&nbsp;&nbsp;&nbsp;" + p.getBrowserText() + "<BR>";
                 }
                 warningMsg += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...";
-                MessageBox.alert("Warning", "Class moved successfully.<BR>" +
+                MessageBox.showAlert("Cycles introduced during class move", "Class moved successfully.<BR>" +
                         "<BR>" +
                         warningMsg);
             }
@@ -1867,12 +1855,12 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
         @Override
         public void handleFailure(final Throwable caught) {
-            MessageBox.alert("Class rename failed.<br>" + "Message: " + caught.getMessage());
+            MessageBox.showErrorMessage("Class not renamed", caught);
         }
 
         @Override
         public void handleSuccess(final EntityData result) {
-            GWT.log("Rename succeded!", null);
+            GWT.log("Rename succeded", null);
         }
     }
 

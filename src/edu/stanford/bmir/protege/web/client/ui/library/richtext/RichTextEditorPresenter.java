@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.richtext;
 
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
 
 /**
@@ -54,7 +54,7 @@ public class RichTextEditorPresenter {
 
             @Override
             public void handleCreateLink() {
-                InputBoxDialog.showDialog("Enter link URL", new InputBoxHandler() {
+                InputBox.showDialog("Enter link URL", new InputBoxHandler() {
                     @Override
                     public void handleAcceptInput(String input) {
                         editorView.createLink(input);

@@ -1,13 +1,13 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import edu.stanford.bmir.protege.web.client.rpc.RevisionManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.RevisionManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionSummary;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
@@ -62,7 +62,7 @@ public class RevisionsListViewPresenter implements HasDispose {
     public void reload() {
         revisionManagerService.getRevisionSummaries(projectId, new AsyncCallback<List<RevisionSummary>>() {
             public void onFailure(Throwable caught) {
-                Window.alert("There was a problem getting the revisions for this project.  Error: " + caught.getMessage());
+                MessageBox.showErrorMessage("An error occurred retrieving revision information", caught);
                 setListData(Collections.<RevisionSummary>emptyList());
             }
 
