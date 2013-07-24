@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
+import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxOntologyFormat;
 import org.coode.owlapi.turtle.TurtleOntologyFormat;
 import org.semanticweb.owlapi.io.OWLFunctionalSyntaxOntologyFormat;
@@ -15,27 +16,24 @@ import org.semanticweb.owlapi.model.OWLOntologyFormat;
  */
 public enum DownloadFormat {
 
-    RDF_XML(new RDFXMLOntologyFormat(), "application/rdf+xml", "rdf"),
+    RDF_XML(new RDFXMLOntologyFormat(), "application/rdf+xml", DownloadFormatExtension.rdf),
 
-    RDF_TURLE(new TurtleOntologyFormat(), "text/turtle", "ttl"),
+    RDF_TURLE(new TurtleOntologyFormat(), "text/turtle", DownloadFormatExtension.ttl),
 
-    OWL_XML(new OWLXMLOntologyFormat(), "application/owl+xml", "owx"),
+    OWL_XML(new OWLXMLOntologyFormat(), "application/owl+xml", DownloadFormatExtension.owx),
 
-    MANCHESTER(new ManchesterOWLSyntaxOntologyFormat(), "text/owl-manchester", "omn"),
+    MANCHESTER(new ManchesterOWLSyntaxOntologyFormat(), "text/owl-manchester", DownloadFormatExtension.omn),
 
-    FUNCTIONAL_SYNTAX(new OWLFunctionalSyntaxOntologyFormat(), "text/owl-functional", "ofn");
+    FUNCTIONAL_SYNTAX(new OWLFunctionalSyntaxOntologyFormat(), "text/owl-functional", DownloadFormatExtension.ofn);
 
-
-    private String parameterValue;
 
     private OWLOntologyFormat ontologyFormat;
 
     private String mimeType;
 
-    private String extension;
+    private DownloadFormatExtension extension;
 
-    private DownloadFormat(OWLOntologyFormat ontologyFormat, String mimeType, String extension) {
-        this.parameterValue = extension;
+    private DownloadFormat(OWLOntologyFormat ontologyFormat, String mimeType, DownloadFormatExtension extension) {
         this.ontologyFormat = ontologyFormat;
         this.mimeType = mimeType;
         this.extension = extension;
@@ -43,7 +41,7 @@ public enum DownloadFormat {
 
 
     public String getParameterValue() {
-        return parameterValue;
+        return extension.getExtension();
     }
 
     public OWLOntologyFormat getOntologyFormat() {
@@ -55,7 +53,7 @@ public enum DownloadFormat {
     }
 
     public String getExtension() {
-        return extension;
+        return extension.getExtension();
     }
 
 

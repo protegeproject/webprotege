@@ -36,6 +36,7 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
 
     public UsagePortlet(Project project, boolean initialize) {
         super(project, initialize);
+        setHeight(500);
     }
 
 
