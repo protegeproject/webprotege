@@ -387,9 +387,12 @@ public class OWLAPIProjectDocumentStore {
                     getProjectDownloadCacheLock(projectId).writeLock().lock();
                     File cachedFilesDirectory = projectFileStore.getDownloadCacheDirectory();
                     if (cachedFilesDirectory.exists()) {
-                        for (File cachedFile : cachedFilesDirectory.listFiles()) {
-                            if (!cachedFile.isHidden()) {
-                                cachedFile.delete();
+                        final File[] files = cachedFilesDirectory.listFiles();
+                        if (files != null) {
+                            for (File cachedFile : files) {
+                                if (!cachedFile.isHidden()) {
+                                    cachedFile.delete();
+                                }
                             }
                         }
                     }
