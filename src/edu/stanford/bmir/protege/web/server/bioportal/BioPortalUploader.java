@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalUserId;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
+import edu.stanford.bmir.protege.web.server.filedownload.DownloadFormat;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.apache.http.HttpEntity;
@@ -48,7 +49,7 @@ public class BioPortalUploader {
         OWLAPIProjectDocumentStore store = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
         File ontologyDocument = File.createTempFile("BioPortalOntology", ".zip");
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(ontologyDocument));
-        store.exportProjectRevision(revisionNumber, bos, new RDFXMLOntologyFormat());
+        store.exportProjectRevision(revisionNumber, bos, DownloadFormat.getDefaultFormat());
         bos.close();
         return ontologyDocument;
     }

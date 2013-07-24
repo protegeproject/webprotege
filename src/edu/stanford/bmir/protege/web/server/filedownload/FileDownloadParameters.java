@@ -2,6 +2,11 @@ package edu.stanford.bmir.protege.web.server.filedownload;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxOntologyFormat;
+import org.coode.owlapi.turtle.TurtleOntologyFormat;
+import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
+import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
+import org.semanticweb.owlapi.model.OWLOntologyFormat;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,6 +67,18 @@ public class FileDownloadParameters {
         }
     }
 
+    /**
+     * Gets the requested format
+     * @return The ontology format.  Not {@code null}.
+     */
+    public DownloadFormat getFormat() {
+        String format = getRawFormatParameter();
+        return DownloadFormat.getDownloadFormatFromParameterName(format);
+    }
+
+    private String getRawFormatParameter() {
+        return request.getParameter(FileDownloadConstants.FORMAT);
+    }
 
     private String getRawRevisionParameter() {
         return request.getParameter(FileDownloadConstants.REVISION);

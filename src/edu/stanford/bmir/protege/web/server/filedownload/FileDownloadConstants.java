@@ -11,4 +11,6 @@ public class FileDownloadConstants {
     public static final String PROJECT_NAME_PARAMETER = "ontology";
     
     public static final String REVISION = "revision";
+
+    public static final String FORMAT = "format";
 }

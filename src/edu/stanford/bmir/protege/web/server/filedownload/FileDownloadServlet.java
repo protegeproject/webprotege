@@ -28,7 +28,8 @@ public class FileDownloadServlet extends HttpServlet {
         if(downloadParameters.isProjectDownload()) {
             ProjectId projectId = downloadParameters.getProjectId();
             RevisionNumber revisionNumber = downloadParameters.getRequestedRevision();
-            OWLAPIProjectDownloader downloader = new OWLAPIProjectDownloader(projectId, revisionNumber);
+            DownloadFormat format = downloadParameters.getFormat();
+            OWLAPIProjectDownloader downloader = new OWLAPIProjectDownloader(projectId, revisionNumber, format);
             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(resp.getOutputStream());
             downloader.writeProject(resp, bufferedOutputStream);
             bufferedOutputStream.flush();

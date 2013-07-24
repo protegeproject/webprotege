@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
+import org.semanticweb.owlapi.model.OWLOntologyFormat;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,15 +28,18 @@ public class OWLAPIProjectDownloader {
 
     private RevisionNumber revision;
 
+    private DownloadFormat format;
 
     /**
      * Creates a project downloader that downloads the specified revision of the specified project.
      * @param projectId The project to be downloaded.  Not <code>null</code>.
      * @param revision The revision of the project to be downloaded.
+     * @param format The format which the project should be downloaded in.
      */
-    public OWLAPIProjectDownloader(ProjectId projectId, RevisionNumber revision) {
+    public OWLAPIProjectDownloader(ProjectId projectId, RevisionNumber revision, DownloadFormat format) {
         this.projectId = projectId;
         this.revision = revision;
+        this.format = format;
     }
     
     public void writeProject(HttpServletResponse response, OutputStream outputStream) throws IOException {
@@ -44,10 +48,10 @@ public class OWLAPIProjectDownloader {
             setFileType(response);
             setFileName(response);
             if(revision.isHead()) {
-                documentStore.exportProject(outputStream, new RDFXMLOntologyFormat());
+                documentStore.exportProject(outputStream, format);
             }
             else {
-                documentStore.exportProjectRevision(revision, outputStream, new RDFXMLOntologyFormat());
+                documentStore.exportProjectRevision(revision, outputStream, format);
             }
 
         }
@@ -71,7 +75,7 @@ public class OWLAPIProjectDownloader {
             revisionNumber = "-REVISION-" + Long.toString(revision.getValue());
         }
         String displayName = OWLAPIProjectMetadataManager.getManager().getDisplayName(projectId);
-        String fileName = displayName.replaceAll("\\s+", "-") + revisionNumber + "-ontologies.zip";
+        String fileName = displayName.replaceAll("\\s+", "-") + revisionNumber + "-ontologies." + format.getExtension() + ".zip";
         fileName = fileName.toLowerCase();
         response.setHeader(CONTENT_DISPOSITION_HEADER_FIELD, "attachment; filename=\"" + fileName + "\"");
     }

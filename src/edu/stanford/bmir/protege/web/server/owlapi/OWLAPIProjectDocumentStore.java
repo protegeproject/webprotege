@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
+import edu.stanford.bmir.protege.web.server.filedownload.DownloadFormat;
 import edu.stanford.bmir.protege.web.server.filesubmission.FileUploadConstants;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
@@ -148,14 +149,14 @@ public class OWLAPIProjectDocumentStore {
 
 
 
-    public void exportProject(OutputStream outputStream, OWLOntologyFormat format) throws IOException, OWLOntologyStorageException {
+    public void exportProject(OutputStream outputStream, DownloadFormat format) throws IOException, OWLOntologyStorageException {
         // Does it already exist in the download cache?
         createDownloadCacheIfNecessary(format);
         // Feed cached file to caller
         try {
             getProjectDownloadCacheLock(projectId).readLock().lock();
             byte[] buffer = new byte[4096];
-            File downloadCache = getDownloadCacheFile(format.toString());
+            File downloadCache = getDownloadCacheFile(format);
             InputStream is = new BufferedInputStream(new FileInputStream(downloadCache));
             int read;
             while ((read = is.read(buffer)) != -1) {
@@ -169,7 +170,7 @@ public class OWLAPIProjectDocumentStore {
         }
     }
 
-    public void exportProjectRevision(RevisionNumber revisionNumber, OutputStream outputStream, OWLOntologyFormat format) throws IOException, OWLOntologyStorageException {
+    public void exportProjectRevision(RevisionNumber revisionNumber, OutputStream outputStream, DownloadFormat format) throws IOException, OWLOntologyStorageException {
         checkNotNull(revisionNumber);
         checkNotNull(outputStream);
         checkNotNull(format);
@@ -411,12 +412,11 @@ public class OWLAPIProjectDocumentStore {
 
 
 
-    private void createDownloadCacheIfNecessary(OWLOntologyFormat format) throws IOException, OWLOntologyStorageException {
+    private void createDownloadCacheIfNecessary(DownloadFormat format) throws IOException, OWLOntologyStorageException {
         try {
             getProjectDownloadCacheLock(projectId).writeLock().lock();
             File downloadCacheDirectory = projectFileStore.getDownloadCacheDirectory();
-            String formatName = format.toString();
-            File cachedFile = getDownloadCacheFile(formatName);
+            File cachedFile = getDownloadCacheFile(format);
             if (!cachedFile.exists()) {
                 downloadCacheDirectory.mkdirs();
                 // Create
@@ -451,22 +451,22 @@ public class OWLAPIProjectDocumentStore {
 
 
 
-    private void saveImportsClosureToStream(OWLOntology rootOntology, OWLOntologyFormat format, OutputStream outputStream, RevisionNumber revisionNumber) throws IOException, OWLOntologyStorageException {
+    private void saveImportsClosureToStream(OWLOntology rootOntology, DownloadFormat format, OutputStream outputStream, RevisionNumber revisionNumber) throws IOException, OWLOntologyStorageException {
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
         String projectDisplayName = OWLAPIProjectMetadataManager.getManager().getDisplayName(projectId);
         String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies";
         baseFolder = baseFolder.toLowerCase();
         baseFolder = baseFolder + "-REVISION-" + revisionNumber.getValue();
-        ZipEntry rootOntologyEntry = new ZipEntry(baseFolder + "/root-ontology.owl");
+        ZipEntry rootOntologyEntry = new ZipEntry(baseFolder + "/root-ontology." + format.getExtension());
         zipOutputStream.putNextEntry(rootOntologyEntry);
-        rootOntology.getOWLOntologyManager().saveOntology(rootOntology, format, zipOutputStream);
+        rootOntology.getOWLOntologyManager().saveOntology(rootOntology, format.getOntologyFormat(), zipOutputStream);
         zipOutputStream.closeEntry();
         int importCount = 0;
         for (OWLOntology ontology : rootOntology.getImports()) {
             importCount++;
-            ZipEntry zipEntry = new ZipEntry(baseFolder + "/imported-ontology-" + importCount + ".owl");
+            ZipEntry zipEntry = new ZipEntry(baseFolder + "/imported-ontology-" + importCount + "." + format.getExtension());
             zipOutputStream.putNextEntry(zipEntry);
-            ontology.getOWLOntologyManager().saveOntology(ontology, format, zipOutputStream);
+            ontology.getOWLOntologyManager().saveOntology(ontology, format.getOntologyFormat(), zipOutputStream);
             zipOutputStream.closeEntry();
         }
         zipOutputStream.finish();
@@ -474,10 +474,9 @@ public class OWLAPIProjectDocumentStore {
     }
 
 
-    private File getDownloadCacheFile(String formatName) {
+    private File getDownloadCacheFile(DownloadFormat format) {
         File downloadCacheDirectory = projectFileStore.getDownloadCacheDirectory();
-        String escapedFileName = formatName.replaceAll("\\/|\\\\", "-");
-        return new File(downloadCacheDirectory, "download-" + escapedFileName + ".zip");
+        return new File(downloadCacheDirectory, "download." + format.getExtension() + ".zip");
     }
 
 

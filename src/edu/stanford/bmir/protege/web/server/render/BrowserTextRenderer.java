@@ -748,13 +748,14 @@ public class BrowserTextRenderer {
                         stringBuilder.append("<span style=\"color: gray;\">");
                         stringBuilder.append(" [language: ");
                         stringBuilder.append(node.getLang());
-                        stringBuilder.append("]");
-                        stringBuilder.append("</span>");
+                        stringBuilder.append("]</span>");
                     }
                 }
-                else {
-                    stringBuilder.append("^^");
+                else if(!node.getDatatype().isString()) {
+                    stringBuilder.append("<span style=\"color: gray;\">");
+                    stringBuilder.append(" [datatype: ");
                     node.getDatatype().accept(this);
+                    stringBuilder.append("]</span>");
                 }
             }
         }
