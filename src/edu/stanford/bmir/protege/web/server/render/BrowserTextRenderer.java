@@ -88,6 +88,7 @@ public class BrowserTextRenderer {
             this.deprecatedChecker = deprecatedChecker;
         }
 
+
         private void renderEntity(OWLEntity entity) {
             String shortForm = sfp.getShortForm(entity);
             if (shortForm.contains(" ")) {
@@ -256,6 +257,10 @@ public class BrowserTextRenderer {
                 firstObject.accept(this);
                 if (prettyPrint) {
                     stringBuilder.append("</div>");
+                }
+                // Could be just one thing
+                if(!it.hasNext() && bracket) {
+                    renderCloseBracket();
                 }
                 while(it.hasNext()) {
                     if (prettyPrint) {
@@ -585,7 +590,7 @@ public class BrowserTextRenderer {
         @Override
         public void visit(OWLObjectIntersectionOf ce) {
             boolean wrap = shouldWrapOperands(ce);
-            renderCollection(ce.getOperands(), AND, true, wrap);
+            renderCollection(ce.getOperands(), AND, ce.getOperands().size() > 1, wrap);
         }
 
         private void renderCloseBracket() {
@@ -604,7 +609,7 @@ public class BrowserTextRenderer {
         @Override
         public void visit(OWLObjectUnionOf ce) {
             boolean wrap = shouldWrapOperands(ce);
-            renderCollection(ce.getOperands(), OR, true, wrap);
+            renderCollection(ce.getOperands(), OR, ce.getOperands().size() > 1, wrap);
         }
 
         private boolean shouldWrapOperands(OWLNaryBooleanClassExpression ce) {
@@ -789,12 +794,12 @@ public class BrowserTextRenderer {
 
         @Override
         public void visit(OWLDataIntersectionOf node) {
-            renderCollection(node.getOperands(), AND, false, false);
+            renderCollection(node.getOperands(), AND, node.getOperands().size() > 1, false);
         }
 
         @Override
         public void visit(OWLDataUnionOf node) {
-            renderCollection(node.getOperands(), OR, false, false);
+            renderCollection(node.getOperands(), OR, node.getOperands().size() > 1, false);
         }
 
         @Override
