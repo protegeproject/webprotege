@@ -454,7 +454,7 @@ public class OWLAPIProjectDocumentStore {
     private void saveImportsClosureToStream(OWLOntology rootOntology, DownloadFormat format, OutputStream outputStream, RevisionNumber revisionNumber) throws IOException, OWLOntologyStorageException {
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
         String projectDisplayName = OWLAPIProjectMetadataManager.getManager().getDisplayName(projectId);
-        String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies";
+        String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies-" + format.getExtension();
         baseFolder = baseFolder.toLowerCase();
         baseFolder = baseFolder + "-REVISION-" + revisionNumber.getValue();
         ZipEntry rootOntologyEntry = new ZipEntry(baseFolder + "/root-ontology." + format.getExtension());
