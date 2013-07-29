@@ -24,6 +24,15 @@ public class SimpleOWLEntityCreatorFactory extends OWLEntityCreatorFactory {
 
     private static Map<String, String> WELL_KNOWN_PREFIXES;
 
+    /**
+     * A start char for local names.  Some UUIDs might start with a number.  Unfortunately, NCNames (non-colonised names)
+     * in XML cannot start with numbers.  For everything apart from properties this is o.k. but for properties it means
+     * that it might not be possible to save an ontology in RDF/XML.  We therefore prefix each local name with a valid
+     * NCName start char - "N".  The character N was chosen so as not to encode the type into the name.  I initially
+     * considered C for classes, P properties etc. however with punning this would get ugly.
+     */
+    private static final String START_CHAR = "N";
+
     static {
         // This is thread safe - hash maps are for multiple readers
         WELL_KNOWN_PREFIXES = new HashMap<String, String>();
@@ -108,6 +117,7 @@ public class SimpleOWLEntityCreatorFactory extends OWLEntityCreatorFactory {
         while (true) {
             String frag = IdUtil.getBase62UUID();
             StringBuilder sb = new StringBuilder();
+            sb.append(START_CHAR);
             sb.append(base);
             sb.append(frag);
             IRI iri = IRI.create(sb.toString());
