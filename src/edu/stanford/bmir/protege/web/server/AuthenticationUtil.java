@@ -11,6 +11,8 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Class contains methods to authenticate user securely with Hashing using MD5
  *
@@ -23,24 +25,28 @@ public class AuthenticationUtil {
         if (storedHashedPswd == null) {
             return false;
         }
-
         AuthenticationUtil authenticatinUtil = new AuthenticationUtil();
         String challengedStoredPass = authenticatinUtil.makeDigestAddChallenge(storedHashedPswd, challenge);
         return response.equals(challengedStoredPass);
     }
 
-    public String makeDigestAddChallenge(String hashedSaltedPassword, String challenge) {
+    private String makeDigestAddChallenge(String hashedSaltedPassword, String challenge) {
+        checkNotNull(hashedSaltedPassword, "hashedSaltedPassword must not be null");
+        checkNotNull(challenge, "challenge must not be null");
+        MessageDigest messageDigest = getMessageDigest();
+        messageDigest.update(challenge.getBytes());
+        messageDigest.update(hashedSaltedPassword.getBytes());
+        return encodeBytes(messageDigest.digest());
+    }
+
+    private MessageDigest getMessageDigest() {
         MessageDigest messageDigest;
         try {
             messageDigest = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-
             throw new RuntimeException("Did not have MD5 algorithm");
         }
-        messageDigest.update(challenge.getBytes());
-        messageDigest.update(hashedSaltedPassword.getBytes());
-        String digest = encodeBytes(messageDigest.digest());
-        return digest;
+        return messageDigest;
     }
 
     private String encodeBytes(byte[] bytes) {
@@ -59,23 +65,6 @@ public class AuthenticationUtil {
         fillInEmail(userData);
         return userData;
     }
-
-//    public static void fillInGoups(UserData userData, UserId userId) {
-//        User user = MetaProjectManager.getManager().getMetaProject().getUser(userId.getUserName());
-//        if (user == null) {
-//            return;
-//        }
-////        fillInGoups(userData, user);
-//    }
-
-//    public static void fillInGoups(UserData userData, User user) {
-//        Set<Group> groups = user.getGroups();
-//        Collection<String> groupNames = new HashSet<String>();
-//        for (Group group : groups) {
-//            groupNames.add(group.getName());
-//        }
-//        userData.setGroups(groupNames);
-//    }
 
     public static void fillInEmail(UserData userData) {
         final UserId userId = userData.getUserId();

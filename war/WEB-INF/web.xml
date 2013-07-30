@@ -124,11 +124,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>EntityIdGeneratorSettingsService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.EntityIdGeneratorSettingsServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>BioPortalAPIService</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.BioPortalAPIServiceImpl</servlet-class>
 	</servlet>
@@ -249,11 +244,6 @@
 	<servlet-mapping>
 		<servlet-name>RevisionManager</servlet-name>
 		<url-pattern>/webprotege/revisionmanager</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>EntityIdGeneratorSettingsService</servlet-name>
-		<url-pattern>/webprotege/entityidgeneratorsettings</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
