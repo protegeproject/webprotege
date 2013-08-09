@@ -13,6 +13,8 @@ import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -30,8 +32,6 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
 
     private long timestamp;
 
-//    private List<OWLOntologyChangeRecord> changes = new ArrayList<OWLOntologyChangeRecord>();
-
     private OWLOntologyChangeRecordList changes;
 
     private String highLevelDescription;
@@ -41,20 +41,18 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
     private Set<OWLEntity> cachedEntities = null;
 
     public Revision(UserId userId, RevisionNumber revision, List<OWLOntologyChangeRecord> changes, long timestamp, String highLevelDescription, RevisionType revisionType) {
-//        this.changes.addAll(changes);
-        this.changes = new OWLOntologyChangeRecordList(changes);
-        this.userId = userId;
-        this.revision = revision;
+        this.changes = checkNotNull(new OWLOntologyChangeRecordList(changes));
+        this.userId = checkNotNull(userId);
+        this.revision = checkNotNull(revision);
         this.timestamp = timestamp;
-        this.highLevelDescription = highLevelDescription;
-        this.revisionType = revisionType;
+        this.highLevelDescription = checkNotNull(highLevelDescription);
+        this.revisionType = checkNotNull(revisionType);
     }
 
     public Revision(RevisionNumber revision) {
         this.userId = UserId.getGuest();
         this.revision = revision;
         this.timestamp = 0;
-//        this.changes = Collections.emptyList();
         this.changes = new OWLOntologyChangeRecordList();
         this.highLevelDescription = "";
         this.revisionType = RevisionType.EDIT;

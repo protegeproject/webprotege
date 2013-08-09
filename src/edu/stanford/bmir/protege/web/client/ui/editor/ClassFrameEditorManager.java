@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateClassFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.*;
@@ -33,7 +32,6 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityDataConte
             PropertyValueListEditor propertiesEditor = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getLogicalPropertiesGrammar());
             editor = new ClassFrameEditor(projectId, annotationsEditor, propertiesEditor);
         }
-        GWT.log("Returning class frame editor: " + editor);
         return editor;
     }
 

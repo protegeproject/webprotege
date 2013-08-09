@@ -28,10 +28,10 @@ public class SimpleOWLEntityCreatorFactory extends OWLEntityCreatorFactory {
      * A start char for local names.  Some UUIDs might start with a number.  Unfortunately, NCNames (non-colonised names)
      * in XML cannot start with numbers.  For everything apart from properties this is o.k. but for properties it means
      * that it might not be possible to save an ontology in RDF/XML.  We therefore prefix each local name with a valid
-     * NCName start char - "N".  The character N was chosen so as not to encode the type into the name.  I initially
+     * NCName start char - "T".  The character "T" was chosen so as not to encode the type into the name.  I initially
      * considered C for classes, P properties etc. however with punning this would get ugly.
      */
-    private static final String START_CHAR = "N";
+    private static final String START_CHAR = "T";
 
     static {
         // This is thread safe - hash maps are for multiple readers
@@ -76,7 +76,7 @@ public class SimpleOWLEntityCreatorFactory extends OWLEntityCreatorFactory {
         if(entityIRI == null) {
             OWLOntologyID id = rootOntology.getOntologyID();
             String base = getDefaultIRIBase(id, entityType);
-            String fragment = createFragment(base, rootOntology);
+            String fragment = createFragment(base, rootOntology, entityType);
             entityIRI = IRI.create(base + fragment);
 
         }
@@ -113,19 +113,23 @@ public class SimpleOWLEntityCreatorFactory extends OWLEntityCreatorFactory {
         return new OWLEntityCreator<E>(entity, changes);
     }
 
-    private String createFragment(String base, OWLOntology ontology) {
+    private String createFragment(String base, OWLOntology ontology, EntityType<?> entityType) {
         while (true) {
-            String frag = IdUtil.getBase62UUID();
+            String base62Fragment = IdUtil.getBase62UUID();
             StringBuilder sb = new StringBuilder();
-            sb.append(START_CHAR);
             sb.append(base);
-            sb.append(frag);
+            sb.append(START_CHAR);
+            sb.append(base62Fragment);
             IRI iri = IRI.create(sb.toString());
             if(!ontology.containsEntityInSignature(iri)) {
-                return frag;
+                StringBuilder fragBuilder = new StringBuilder();
+
+                fragBuilder.append(base62Fragment);
+                return fragBuilder.toString();
             }
         }
     }
+
 
     private boolean isAbsoluteWebIRI(String shortName) {
         return !shortName.contains(" ") && shortName.startsWith("http:");

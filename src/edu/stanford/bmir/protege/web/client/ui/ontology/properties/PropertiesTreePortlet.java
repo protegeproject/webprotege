@@ -24,6 +24,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
+import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
@@ -347,13 +348,10 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             MessageBox.alert("Please select a property in the tree first");
             return;
         }
-        CreateEntityDialog createEntityDialog = new CreateEntityDialog(selectedEntityType.get());
-        createEntityDialog.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CreateEntityInfo>() {
+        CreateEntityDialog createEntityDialog = new CreateEntityDialog(selectedEntityType.get(), new CreateEntityDialogController.CreateEntityHandler() {
             @Override
-            public void handleHide(CreateEntityInfo data, WebProtegeDialogCloser closer) {
-                handleCreateProperty(data);
-                closer.hide();
-
+            public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
+                handleCreateProperty(createEntityInfo);
             }
         });
         createEntityDialog.setVisible(true);

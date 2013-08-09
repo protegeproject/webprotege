@@ -3,9 +3,15 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.entity;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLClass;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,12 +23,20 @@ public class CreateEntityDialogController extends WebProtegeOKCancelDialogContro
 
     private final CreateEntityForm form;
 
-    public CreateEntityDialogController(EntityType<?> type) {
+    public CreateEntityDialogController(EntityType<?> type, final CreateEntityHandler handler) {
         super("Create " + type.getName());
         form = new CreateEntityForm(type);
         for(WebProtegeDialogValidator validator : form.getDialogValidators()) {
             addDialogValidator(validator);
         }
+        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CreateEntityInfo>() {
+            @Override
+            public void handleHide(CreateEntityInfo data, WebProtegeDialogCloser closer) {
+                handler.handleCreateEntity(data);
+                closer.hide();
+
+            }
+        });
     }
 
     @Override
@@ -38,5 +52,11 @@ public class CreateEntityDialogController extends WebProtegeOKCancelDialogContro
     @Override
     public CreateEntityInfo getData() {
         return new CreateEntityInfo(form.getEntityBrowserText());
+    }
+
+
+    public static interface CreateEntityHandler {
+
+        void handleCreateEntity(CreateEntityInfo createEntityInfo);
     }
 }

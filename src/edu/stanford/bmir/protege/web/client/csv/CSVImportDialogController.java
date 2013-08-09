@@ -1,16 +1,21 @@
 package edu.stanford.bmir.protege.web.client.csv;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
-import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
-import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
-import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridAction;
-import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridResult;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.csv.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLClass;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,11 +29,17 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
 
     private CSVImportViewImpl csvImportView;
 
+    private ProjectId projectId;
+
     private DocumentId csvDocumentId;
 
-    public CSVImportDialogController(DocumentId documentId) {
+    private OWLClass importRoot;
+
+    public CSVImportDialogController(ProjectId projId, DocumentId documentId, OWLClass importRootClass) {
         super("Import CSV File");
+        this.projectId = projId;
         this.csvDocumentId = documentId;
+        this.importRoot = importRootClass;
         csvImportView = new CSVImportViewImpl();
 
         DispatchServiceManager.get().execute(new GetCSVGridAction(documentId, ROW_LIMIT), new AsyncCallback<GetCSVGridResult>() {
@@ -39,6 +50,27 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
             @Override
             public void onSuccess(GetCSVGridResult result) {
                 csvImportView.setCSVGrid(result.getCSVGrid());
+            }
+        });
+
+        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CSVImportDescriptor>() {
+            @Override
+            public void handleHide(CSVImportDescriptor data, WebProtegeDialogCloser closer) {
+                UIUtil.showLoadProgessBar("Importing CSV file", "Please wait");
+                DispatchServiceManager.get().execute(new ImportCSVFileAction(projectId, csvDocumentId, importRoot, data), new AsyncCallback<ImportCSVFileResult>() {
+                    @Override
+                    public void onFailure(Throwable caught) {
+                        MessageBox.showAlert("Import failed", "There was a problem importing the csv file");
+                        GWT.log("Problem importing CSV file", caught);
+                    }
+
+                    @Override
+                    public void onSuccess(ImportCSVFileResult result) {
+                        MessageBox.showAlert("CSV import succeeded", result.getRowCount() + " rows were imported");
+                    }
+                });
+                UIUtil.hideLoadProgessBar();
+                closer.hide();
             }
         });
     }

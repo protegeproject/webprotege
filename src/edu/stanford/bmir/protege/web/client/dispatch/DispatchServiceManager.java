@@ -50,7 +50,7 @@ public class DispatchServiceManager {
 
     @SuppressWarnings("unchecked")
     public <A extends Action<R>, R extends Result> void execute(A action, final AsyncCallback<R> callback) {
-        GWT.log("Making request to server: " + requestCount);
+        GWT.log("Making request to server: " + requestCount + " [" + action.getClass().getName() + "]");
         requestCount++;
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
     }
@@ -96,7 +96,6 @@ public class DispatchServiceManager {
 
     private void dispatchEvents(Object result) {
         if(result instanceof HasEventList<?>) {
-            GWT.log("Result has returned events.  Dispatching events");
             EventList<? extends SerializableEvent<?>> eventList = ((HasEventList<? extends SerializableEvent<?>>) result).getEventList();
 
             List<? extends SerializableEvent<?>> events = eventList.getEvents();

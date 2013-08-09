@@ -20,22 +20,38 @@ public abstract class WebProtegeDialogController<D> implements HasInitialFocusab
 
     private String title;
     
-    private List<DialogButton> buttons;
+    private final List<DialogButton> buttons;
     
     private DialogButton defaultButton;
 
     private DialogButton escapeButton;
 
-    private List<WebProtegeDialogValidator> dialogValidators = new ArrayList<WebProtegeDialogValidator>();
+    private final List<WebProtegeDialogValidator> dialogValidators = new ArrayList<WebProtegeDialogValidator>();
+
+    private final List<WebProtegeDialogButtonHandler<D>> buttonHandlers = new ArrayList<WebProtegeDialogButtonHandler<D>>();
 
     protected WebProtegeDialogController(String title, List<DialogButton> buttons, DialogButton defaultButton, DialogButton escapeButton) {
         this.title = title;
         this.buttons = new ArrayList<DialogButton>(buttons);
         this.defaultButton = defaultButton;
         this.escapeButton = escapeButton;
+        initialiseHandlerList();
+    }
+
+    private void initialiseHandlerList() {
+        for (DialogButton button : DialogButton.values()) {
+            buttonHandlers.add(new DefaultWebProtegeDialogButtonHandler<D>());
+        }
+    }
+
+    public void setDialogButtonHandler(DialogButton button, WebProtegeDialogButtonHandler<D> buttonHandler) {
+        buttonHandlers.set(button.ordinal(), buttonHandler);
     }
 
 
+    public List<WebProtegeDialogButtonHandler<D>> getButtonHandlers() {
+        return new ArrayList<WebProtegeDialogButtonHandler<D>>(buttonHandlers);
+    }
 
     /**
      * Gets the dialog title. This is shown in the title bar of the dialog.

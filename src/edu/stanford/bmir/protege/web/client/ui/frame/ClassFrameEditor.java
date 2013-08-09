@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrameType;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -61,6 +62,8 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
     private boolean editable = true;
 
+    private boolean lastEnabled = enabled;
+
     private boolean dirty;
 
     interface ClassFrameEditor2UiBinder extends UiBinder<HTMLPanel, ClassFrameEditor> {
@@ -93,6 +96,20 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
 
+        updatePropertiesEnabled();
+
+    }
+
+    private void updatePropertiesEnabled() {
+        if(lastClassFrame == null) {
+            return;
+        }
+        if(lastClassFrame.getFrame().getClassFrameType() == ClassFrameType.ASSERTED) {
+            properties.setEnabled(enabled);
+        }
+        else {
+            properties.setEnabled(false);
+        }
     }
 
     /**
@@ -110,12 +127,17 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
      */
     @Override
     public void setEnabled(boolean enabled) {
+        lastEnabled = enabled;
+        setEnabledInternal(enabled);
+    }
+
+    private void setEnabledInternal(boolean enabled) {
         this.enabled = enabled;
         displayNameField.setEnabled(enabled);
         iriField.setEnabled(false);
         annotations.setEnabled(enabled);
         properties.setEnabled(enabled);
-
+        updatePropertiesEnabled();
     }
 
     /**

@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.server.obo.WebProtegeOBOFormatParserFactory
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxParserFactory;
 import org.coode.owlapi.owlxmlparser.OWLXMLParserFactory;
 import org.coode.owlapi.rdfxml.parser.RDFXMLParserFactory;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentParserFactory;
+import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentParserFactory;
 import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
 import org.semanticweb.owlapi.io.OWLParser;
 import org.semanticweb.owlapi.io.OWLParserFactory;

@@ -226,11 +226,6 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         return !getDisplayName().isEmpty() && annotations.isWellFormed() && domains.isWellFormed() && ranges.isWellFormed();
     }
 
-    @Override
-    public Widget getWidget() {
-        return this;
-    }
-
     /**
      * Determines if this object is dirty.
      * @return {@code true} if the object is dirty, otherwise {@code false}.

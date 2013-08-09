@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.ui;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.gwtext.client.widgets.Component;
@@ -44,8 +46,6 @@ public class ProjectDisplayContainerPanel extends TabPanel {
     public ProjectDisplayContainerPanel() {
         super();
         buildUI();
-
-//        myWebProTab.setDownloadProjectRequestHandler(new DownloadProjectRequestHandlerImpl());
 
         displayCurrentPlace();
 
@@ -167,6 +167,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         myWebProTab = new MyWebProtegeTab(loadProjectRequestHandler);
 //        myWebProTab.setTitle(myWebProTab.getLabel());
         add(myWebProTab);
+
 
 
     }

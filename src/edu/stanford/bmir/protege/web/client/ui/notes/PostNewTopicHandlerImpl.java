@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorDialog;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityResult;
@@ -35,17 +36,15 @@ public class PostNewTopicHandlerImpl implements PostNewTopicHandler {
         if(!entity.isPresent()) {
             return;
         }
-        NoteContentEditorDialog dlg = new NoteContentEditorDialog();
-        dlg.setMode(NoteContentEditorMode.NEW_TOPIC);
-        dlg.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Optional<NoteContent>>() {
+        NoteContentEditorDialog dlg = new NoteContentEditorDialog(new NoteContentEditorHandler() {
             @Override
-            public void handleHide(Optional<NoteContent> data, WebProtegeDialogCloser closer) {
-                if (data.isPresent()) {
-                    doPost(data.get());
+            public void handleAccept(Optional<NoteContent> noteContent) {
+                if(noteContent.isPresent()) {
+                    doPost(noteContent.get());
                 }
-                closer.hide();
             }
         });
+        dlg.setMode(NoteContentEditorMode.NEW_TOPIC);
         dlg.setVisible(true);
     }
 
@@ -65,4 +64,9 @@ public class PostNewTopicHandlerImpl implements PostNewTopicHandler {
             }
         });
     }
+
+
+
+
+
 }

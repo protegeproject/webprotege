@@ -62,6 +62,9 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
                 handleValueEditorDirtyChanged(event);
             }
         };
+        tableField.setBorderWidth(0);
+        tableField.setCellPadding(0);
+        tableField.setCellSpacing(0);
         ensureBlank();
     }
 
@@ -99,13 +102,10 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
 
     @Override
     public Optional<List<O>> getValue() {
-        if(!isWellFormed()) {
-            return Optional.absent();
-        }
         List<O> editedValues = new ArrayList<O>();
         for(ValueEditor<O> editor : currentEditors) {
             Optional<O> value = editor.getValue();
-            if(value.isPresent()) {
+            if(value.isPresent() && editor.isWellFormed()) {
                 editedValues.add(value.get());
             }
         }
@@ -161,7 +161,7 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
         final ValueEditor<O> editor = getFreshValueEditor();
         currentEditors.add(editor);
         final int rowCount = tableField.getRowCount();
-        tableField.setWidget(rowCount, 0, editor.getWidget());
+        tableField.setWidget(rowCount, 0, editor.asWidget());
         final DeleteButton deleteButton = new DeleteButton();
         deleteButton.addClickHandler(new ClickHandler() {
             @Override

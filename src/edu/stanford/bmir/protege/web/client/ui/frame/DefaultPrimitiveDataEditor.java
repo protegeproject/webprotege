@@ -86,6 +86,7 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
 
     private boolean dirty = false;
 
+    private boolean enabled;
 
 
 
@@ -137,12 +138,6 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
 
     public void setSuggestMode(PrimitiveDataEditorSuggestOracleMode mode) {
         entitySuggestOracle.setMode(mode);
-    }
-
-
-    @Override
-    public Widget getWidget() {
-        return this;
     }
 
     private void handleEdit() {
@@ -248,7 +243,7 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
      */
     @Override
     public boolean isEnabled() {
-        return editor.isEnabled();
+        return enabled;
     }
 
     /**
@@ -258,6 +253,7 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
      */
     @Override
     public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
         editor.setEnabled(enabled);
         languageEditor.setEnabled(enabled);
     }

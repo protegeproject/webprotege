@@ -47,7 +47,7 @@ public abstract class AbstractObjectEditorPortlet<T extends Serializable> extend
         super(project);
         this.editor = factory.getEditor(getProjectId());
         this.updateStrategy = factory.getUpdateStrategy(getProjectId());
-        add(new ScrollPanel(editor.getWidget()));
+        add(new ScrollPanel(editor.asWidget()));
         editor.addValueChangeHandler(new ValueChangeHandler<Optional<T>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<T>> event) {

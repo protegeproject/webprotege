@@ -188,7 +188,7 @@ public class EditorPresenter implements HasDispose {
                             commitCurrentValue(editorState.get());
                         }
                     });
-                    final Widget editorWidget = editorView.getWidget();
+                    final Widget editorWidget = editorView.asWidget();
 
                     if(editorWidget instanceof HasEnabled) {
                         Optional<Project> project = ProjectManager.get().getProject(editorCtx.getProjectId());

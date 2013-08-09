@@ -5,15 +5,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorDialog;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
-import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteAction;
-import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteResult;
-import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
-import edu.stanford.bmir.protege.web.shared.notes.NoteId;
+import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,20 +30,17 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
 
     @Override
     public void handleReplyToNote() {
-        NoteContentEditorDialog dlg = new NoteContentEditorDialog();
-        dlg.setMode(NoteContentEditorMode.REPLY);
-        dlg.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Optional<NoteContent>>() {
+        NoteContentEditorDialog dlg = new NoteContentEditorDialog(new NoteContentEditorHandler() {
             @Override
-            public void handleHide(Optional<NoteContent> data, WebProtegeDialogCloser closer) {
-                if (data.isPresent()) {
-                    doReply(data.get());
+            public void handleAccept(Optional<NoteContent> noteContent) {
+                if (noteContent.isPresent()) {
+                    doReply(noteContent.get());
                 }
-                closer.hide();
             }
         });
+        dlg.setMode(NoteContentEditorMode.REPLY);
         dlg.setVisible(true);
     }
-
 
     private void doReply(NoteContent content) {
         ProjectId projectId = Application.get().getActiveProject().get();
@@ -64,5 +56,7 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
             }
         });
     }
+
+
 
 }

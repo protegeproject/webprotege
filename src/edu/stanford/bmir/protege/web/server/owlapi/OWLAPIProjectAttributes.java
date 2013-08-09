@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import org.semanticweb.owlapi.binaryowl.BinaryOWLMetadata;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLParseException;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLVersion;
-import org.semanticweb.owlapi.binaryowl.stream.BinaryOWLInputStream;
-import org.semanticweb.owlapi.binaryowl.stream.BinaryOWLOutputStream;
+import org.semanticweb.binaryowl.BinaryOWLMetadata;
+import org.semanticweb.binaryowl.BinaryOWLParseException;
+import org.semanticweb.binaryowl.BinaryOWLVersion;
+import org.semanticweb.binaryowl.stream.BinaryOWLInputStream;
+import org.semanticweb.binaryowl.stream.BinaryOWLOutputStream;
 import org.semanticweb.owlapi.model.OWLObject;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 

@@ -34,7 +34,7 @@ public class OntologyIdPortlet extends AbstractEntityPortlet {
     @Override
     public void initialize() {
         editor = new OntologyIdViewImpl();
-        add(editor.getWidget());
+        add(editor.asWidget());
         setTitle("Ontology Id");
         editor.setEnabled(false);
     }

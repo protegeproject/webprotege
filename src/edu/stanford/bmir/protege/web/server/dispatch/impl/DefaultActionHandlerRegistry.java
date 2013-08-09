@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerNotFoundExcept
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
+import edu.stanford.bmir.protege.web.server.irigen.GetIRIGeneratorSettingsActionHandler;
+import edu.stanford.bmir.protege.web.server.irigen.SetIRIGeneratorSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddNoteToEntityActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddReplyToNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.DeleteNoteActionHandler;
@@ -23,6 +25,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.frame.*;
+import edu.stanford.bmir.protege.web.shared.irigen.action.GetIRIGeneratorSettingsAction;
+import edu.stanford.bmir.protege.web.shared.irigen.action.SetIRIGeneratorSettingsAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteAction;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteAction;
@@ -77,6 +81,7 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         
         register(new GetRootOntologyIdActionHandler(), GetRootOntologyIdAction.class);
         register(new GetOntologyAnnotationsActionHandler(), GetOntologyAnnotationsAction.class);
+        register(new SetOntologyAnnotationsActionHandler(), SetOntologyAnnotationsAction.class);
         register(new GetEntityAnnotationsActionHandler(), GetEntityAnnotationsAction.class);
 
         register(new DeleteEntityActionHandler(), DeleteEntityAction.class);

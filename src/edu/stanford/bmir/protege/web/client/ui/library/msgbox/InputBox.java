@@ -22,34 +22,30 @@ public class InputBox extends WebProtegeDialog<String> {
     };
 
     public static void showDialog(String title, InputBoxHandler handler) {
-        InputBox dlg = new InputBox(title);
-        dlg.setInputBoxHandler(handler);
+        InputBox dlg = new InputBox(title, handler);
         dlg.setVisible(true);
     }
 
-    public InputBox(String title) {
-        super(new InputBoxController(title));
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<String>() {
-            @Override
-            public void handleHide(String data, WebProtegeDialogCloser closer) {
-                inputBoxHandler.handleAcceptInput(data);
-                closer.hide();
-            }
-        });
+    public InputBox(String title, InputBoxHandler handler) {
+        super(new InputBoxController(title, handler));
     }
-
-    public void setInputBoxHandler(InputBoxHandler inputBoxHandler) {
-        this.inputBoxHandler = inputBoxHandler;
-    }
-
-
 
     private static class InputBoxController extends WebProtegeOKCancelDialogController<String> {
 
         private InputBoxView view = new InputBoxViewImpl();
 
-        private InputBoxController(String title) {
+        private InputBoxHandler inputBoxHandler;
+
+        private InputBoxController(String title, InputBoxHandler handler) {
             super(title);
+            this.inputBoxHandler = handler;
+            setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<String>() {
+                @Override
+                public void handleHide(String data, WebProtegeDialogCloser closer) {
+                    inputBoxHandler.handleAcceptInput(data);
+                    closer.hide();
+                }
+            });
         }
 
         @Override

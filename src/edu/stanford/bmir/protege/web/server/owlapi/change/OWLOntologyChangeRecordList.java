@@ -19,9 +19,6 @@ import java.util.List;
  */
 public class OWLOntologyChangeRecordList implements Iterable<OWLOntologyChangeRecord> {
 
-    private OWLOntologyID ontologyID = null;
-
-    private List<OWLAxiom> axioms;
 
     private List<OWLOntologyChangeRecord> changeRecordList = null;
 
@@ -32,68 +29,20 @@ public class OWLOntologyChangeRecordList implements Iterable<OWLOntologyChangeRe
     }
 
     public OWLOntologyChangeRecordList(List<OWLOntologyChangeRecord> list) {
-        this.size = list.size();
-        for(OWLOntologyChangeRecord record : list) {
-            OWLOntologyID ontologyID = record.getOntologyID();
-            if(this.ontologyID == null) {
-                this.ontologyID = ontologyID;
-            }
-            else if(!this.ontologyID.equals(ontologyID)) {
-                // Not all same
-                changeRecordList = list;
-                break;
-            }
-            OWLOntologyChangeData changeData = record.getData();
-            if(changeData instanceof AddAxiomData) {
-                OWLAxiom axiom = ((AddAxiomData) changeData).getAxiom();
-                if(axioms == null) {
-                    axioms = new ArrayList<OWLAxiom>(list.size());
-                }
-                axioms.add(axiom);
-            }
-            else {
-                changeRecordList = list;
-                axioms = null;
-                break;
-            }
-        }
+        changeRecordList = new ArrayList<OWLOntologyChangeRecord>(list);
     }
 
 
     public int size() {
-        return size;
+        return changeRecordList.size();
     }
 
     public boolean isEmpty() {
-        return size != 0;
+        return changeRecordList.isEmpty();
     }
 
     public Iterator<OWLOntologyChangeRecord> iterator() {
-        if (axioms != null) {
-            return new Iterator<OWLOntologyChangeRecord>() {
-
-                private Iterator<OWLAxiom> delegate = axioms.iterator();
-
-                @Override
-                public boolean hasNext() {
-                    return false;
-                }
-
-                @Override
-                public OWLOntologyChangeRecord next() {
-                    OWLAxiom axiom = delegate.next();
-                    return new OWLOntologyChangeRecord(ontologyID, new AddAxiomData(axiom));
-                }
-
-                @Override
-                public void remove() {
-                    throw new UnsupportedOperationException();
-                }
-            };
-        }
-        else {
-            return changeRecordList.iterator();
-        }
+        return changeRecordList.iterator();
     }
 
 }

@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceStrat
 import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceSubClassStrategy;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetric;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricValue;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;

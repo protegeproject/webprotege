@@ -98,7 +98,6 @@ public class WebProtege implements EntryPoint {
         splittingPanel.add(new TopPanel(), new AnchorLayoutData("100% 50px"));
 
         final ProjectDisplayContainerPanel projectDisplayContainerPanel = new ProjectDisplayContainerPanel();
-        projectDisplayContainerPanel.setId("ontologycontainer");
 
         splittingPanel.add(projectDisplayContainerPanel, new AnchorLayoutData("100% 90%"));
 

@@ -34,6 +34,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogClose
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
+import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
@@ -345,16 +346,13 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
     }
 
     protected void onCreateIndividual() {
-        CreateEntityDialog dlg = new CreateEntityDialog(EntityType.NAMED_INDIVIDUAL);
-        dlg.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CreateEntityInfo>() {
+        CreateEntityDialog dlg = new CreateEntityDialog(EntityType.NAMED_INDIVIDUAL, new CreateEntityDialogController.CreateEntityHandler() {
             @Override
-            public void handleHide(CreateEntityInfo data, WebProtegeDialogCloser closer) {
-                final Set<String> browserTexts = data.getBrowserTexts();
+            public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
+                final Set<String> browserTexts = createEntityInfo.getBrowserTexts();
                 for(String browserText : browserTexts) {
                     OntologyServiceManager.getInstance().createInstance(getProjectId(), browserText, _currentEntity == null ? null : _currentEntity.getName(), getUserId(), "Created individual", new CreateIndividualHandler());
                 }
-                closer.hide();
-
             }
         });
         dlg.setVisible(true);

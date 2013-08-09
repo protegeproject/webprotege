@@ -48,7 +48,7 @@ public class DiscussionThreadEditor implements DiscussionThreadDisplay {
     }
 
     @Override
-    public Widget getWidget() {
+    public Widget asWidget() {
         return widget;
     }
 

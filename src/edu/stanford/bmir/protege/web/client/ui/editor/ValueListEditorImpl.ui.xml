@@ -3,6 +3,7 @@
     <ui:style>
         .value-list-editor {
             border-collapse: collapse;
+            border: 0px;
         }
         .value-list-editor td {
             padding-bottom: 1px;

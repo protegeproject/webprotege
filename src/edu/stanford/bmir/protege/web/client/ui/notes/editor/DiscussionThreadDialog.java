@@ -50,7 +50,7 @@ public class DiscussionThreadDialog extends WebProtegeDialog<Void> {
         Widget widget = presenter.getWidget();
         widget.setSize(WIDTH_PX, HEIGHT_PX);
         DiscussionThreadDialog dlg = new DiscussionThreadDialog("Discussions", widget);
-        dlg.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Void>() {
+        dlg.getController().setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Void>() {
             @Override
             public void handleHide(Void data, WebProtegeDialogCloser closer) {
                 presenter.dispose();

@@ -13,7 +13,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/02/2013
  */
-public class FixedChangeListGenerator implements ChangeListGenerator<Object> {
+public class FixedChangeListGenerator<O> implements ChangeListGenerator<O> {
 
     private List<OWLOntologyChange> fixedChangeList;
 
@@ -22,14 +22,14 @@ public class FixedChangeListGenerator implements ChangeListGenerator<Object> {
     }
 
     @Override
-    public GeneratedOntologyChanges<Object> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
-        GeneratedOntologyChanges.Builder<Object> builder = new GeneratedOntologyChanges.Builder<Object>();
+    public GeneratedOntologyChanges<O> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+        GeneratedOntologyChanges.Builder<O> builder = new GeneratedOntologyChanges.Builder<O>();
         builder.addAll(fixedChangeList);
         return builder.build();
     }
 
     @Override
-    public Object getRenamedResult(Object result, RenameMap renameMap) {
+    public O getRenamedResult(O result, RenameMap renameMap) {
         return result;
     }
 }

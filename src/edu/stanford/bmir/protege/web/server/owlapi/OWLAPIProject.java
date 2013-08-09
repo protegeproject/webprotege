@@ -2,12 +2,12 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 
 import com.google.common.base.Optional;
-import com.google.common.collect.Interner;
-import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import edu.stanford.bmir.protege.web.server.obo.WebProtegeOBOFormatParserFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.shared.irigen.HasIRIGeneratorSettings;
+import edu.stanford.bmir.protege.web.shared.irigen.IRIGeneratorSettings;
+import edu.stanford.bmir.protege.web.shared.irigen.uuid.UUIDSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -36,16 +36,13 @@ import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProv
 import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
 import org.protege.owlapi.model.ProtegeOWLOntologyManager;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentParserFactory;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentStorer;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLParseException;
+import org.semanticweb.binaryowl.BinaryOWLParseException;
+import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
 import org.semanticweb.owlapi.io.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.NonMappingOntologyIRIMapper;
 import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 import org.semanticweb.owlapi.util.OWLOntologyChangeVisitorAdapterEx;
-import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.EmptyInMemOWLOntologyFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -70,7 +67,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/03/2012
  */
-public class OWLAPIProject implements HasDispose {
+public class OWLAPIProject implements HasDispose, HasIRIGeneratorSettings {
 
 
 
@@ -360,6 +357,17 @@ public class OWLAPIProject implements HasDispose {
     public OWLAPIEntityEditorKit getOWLEntityEditorKit() {
         return entityEditorKit;
     }
+
+    private IRIGeneratorSettings generatorSettings  = new IRIGeneratorSettings("http://stuff.com!#", new UUIDSuffixSettings(Optional.of("de")));
+
+    public IRIGeneratorSettings getIRIGeneratorSettings() {
+        return generatorSettings;
+    }
+
+    public void setIRIGeneratorSettings(IRIGeneratorSettings settings) {
+        this.generatorSettings = settings;
+    }
+
 
     public OWLOntology getRootOntology() {
         return ontology;
@@ -740,6 +748,7 @@ public class OWLAPIProject implements HasDispose {
     private ProjectPermissionsManager getPermissionsManager() {
         return permissionsManager;
     }
+
 
 
     private class DummyPermissionsManager implements ProjectPermissionsManager {

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrameType;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.*;
 
@@ -43,6 +44,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     private ClassFrame translateToClassFrame(OWLClass subject, OWLOntology rootOntology, final OWLAPIProject project) {
         ClassFrame.Builder builder = new ClassFrame.Builder(subject);
         final Set<OWLAxiom> relevantAxioms = new HashSet<OWLAxiom>();
+
         for(OWLOntology ont : rootOntology.getImportsClosure()) {
             for(OWLSubClassOfAxiom subClassOfAxiom : ont.getSubClassAxiomsForSubClass(subject)) {
                 if(!subClassOfAxiom.getSuperClass().isAnonymous()) {
@@ -52,12 +54,34 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                     relevantAxioms.add(subClassOfAxiom);
                 }
             }
+            // TODO: Needs some more thought
+//            if (relevantAxioms.isEmpty()) {
+//                for(OWLEquivalentClassesAxiom equivalentClassesAxiom : rootOntology.getEquivalentClassesAxioms(subject)) {
+//                    for(OWLSubClassOfAxiom sca : equivalentClassesAxiom.asOWLSubClassOfAxioms()) {
+//                        Set<OWLClassExpression> supers = sca.getSuperClass().asConjunctSet();
+//                        for(OWLClassExpression sup : supers) {
+//                            if (sca.getSubClass().equals(subject) && sup.isAnonymous()) {
+//                                relevantAxioms.add(project.getDataFactory().getOWLSubClassOfAxiom(sca.getSubClass(), sup));
+//                            }
+//                        }
+//                    }
+//                }
+//                if(!relevantAxioms.isEmpty()) {
+//                    builder.setClassFrameType(ClassFrameType.DERIVED);
+//                }
+//            }
+//            else {
+                builder.setClassFrameType(ClassFrameType.ASSERTED);
+//            }
             relevantAxioms.addAll(ont.getAnnotationAssertionAxioms(subject.getIRI()));
         }
         List<PropertyValue> propertyValues = new ArrayList<PropertyValue>();
         for(OWLAxiom axiom : relevantAxioms) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
             propertyValues.addAll(translator.getPropertyValues(subject, axiom, rootOntology));
+        }
+        if(propertyValues.isEmpty()) {
+            builder.setClassFrameType(ClassFrameType.ASSERTED);
         }
         Collections.sort(propertyValues, new PropertyValueComparator(project));
         builder.addPropertyValues(propertyValues);

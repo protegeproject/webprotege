@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.itemarea;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.UserProfileManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.UserProfileManagerServiceManager;
@@ -20,10 +21,15 @@ public class UserIdSuggestOracle implements ItemProvider<UserId> {
 
     private List<UserId> data = Arrays.asList(UserId.getUserId("Matthew Horridge"), UserId.getUserId("Timothy Redmond"), UserId.getUserId("Martin O'Connor"));
 
+    public UserIdSuggestOracle() {
+        this(Collections.<UserId>emptyList());
+    }
+
     public UserIdSuggestOracle(final List<UserId> exclude) {
         UserProfileManagerServiceAsync service = UserProfileManagerServiceManager.getService();
         service.getUserIds(new AsyncCallback<List<UserId>>() {
             public void onFailure(Throwable caught) {
+                GWT.log("Failed to get user ids: " + caught.getMessage());
             }
 
             public void onSuccess(List<UserId> result) {

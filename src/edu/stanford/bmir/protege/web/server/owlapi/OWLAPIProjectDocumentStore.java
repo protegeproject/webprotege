@@ -15,8 +15,13 @@ import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.binaryowl.*;
-import org.semanticweb.owlapi.binaryowl.change.OntologyChangeDataList;
+import org.semanticweb.binaryowl.BinaryOWLMetadata;
+import org.semanticweb.binaryowl.BinaryOWLOntologyDocumentHandlerAdapter;
+import org.semanticweb.binaryowl.BinaryOWLOntologyDocumentSerializer;
+import org.semanticweb.binaryowl.BinaryOWLParseException;
+import org.semanticweb.binaryowl.change.OntologyChangeDataList;
+import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentFormat;
+import org.semanticweb.binaryowl.owlapi.OWLOntologyWrapper;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.change.SetOntologyIDData;
@@ -333,7 +338,7 @@ public class OWLAPIProjectDocumentStore {
                     final File file = new File(projectFileStore.getImportsCacheDataDirectory(), UUID.randomUUID() + ".binary");
                     os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
                     BinaryOWLOntologyDocumentSerializer serializer = new BinaryOWLOntologyDocumentSerializer();
-                    serializer.write(ont, os);
+                    serializer.write(new OWLOntologyWrapper(ont), os);
                     LOGGER.info("Cached imported ontology: " + ont.getOntologyID() + " in " + file.getName());
                 }
                 catch (IOException e) {

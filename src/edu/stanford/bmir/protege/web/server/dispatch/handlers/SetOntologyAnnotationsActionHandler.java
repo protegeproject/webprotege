@@ -1,0 +1,75 @@
+package edu.stanford.bmir.protege.web.server.dispatch.handlers;
+
+import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsResult;
+import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.events.EventList;
+import org.semanticweb.owlapi.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Author: Matthew Horridge<br>
+ * Stanford University<br>
+ * Bio-Medical Informatics Research Group<br>
+ * Date: 01/08/2013
+ */
+public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHandler<Set<OWLAnnotation>, SetOntologyAnnotationsAction, SetOntologyAnnotationsResult> {
+
+    private static final UserHasProjectWritePermissionValidator<SetOntologyAnnotationsAction, SetOntologyAnnotationsResult> VALIDATOR = new UserHasProjectWritePermissionValidator<SetOntologyAnnotationsAction, SetOntologyAnnotationsResult>();
+
+    @Override
+    public Class<SetOntologyAnnotationsAction> getActionClass() {
+        return SetOntologyAnnotationsAction.class;
+    }
+
+    @Override
+    protected ChangeListGenerator<Set<OWLAnnotation>> getChangeListGenerator(SetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+        final Set<OWLAnnotation> fromAnnotations = action.getFromAnnotations();
+        final Set<OWLAnnotation> toAnnotations = action.getToAnnotations();
+
+        List<OWLOntologyChange> changeList = new ArrayList<OWLOntologyChange>();
+
+        for(OWLAnnotation annotation : fromAnnotations) {
+            if(!toAnnotations.contains(annotation)) {
+                changeList.add(new RemoveOntologyAnnotation(project.getRootOntology(), annotation));
+            }
+        }
+        for(OWLAnnotation annotation : toAnnotations) {
+            if(!fromAnnotations.contains(annotation)) {
+                changeList.add(new AddOntologyAnnotation(project.getRootOntology(), annotation));
+            }
+        }
+        return new FixedChangeListGenerator<Set<OWLAnnotation>>(changeList) {
+            @Override
+            public Set<OWLAnnotation> getRenamedResult(Set<OWLAnnotation> result, RenameMap renameMap) {
+                return super.getRenamedResult(result, renameMap);
+            }
+        };
+    }
+
+    @Override
+    protected ChangeDescriptionGenerator<Set<OWLAnnotation>> getChangeDescription(SetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+        return new FixedMessageChangeDescriptionGenerator<Set<OWLAnnotation>>("Edited ontology annotations");
+    }
+
+    @Override
+    protected SetOntologyAnnotationsResult createActionResult(ChangeApplicationResult<Set<OWLAnnotation>> changeApplicationResult, SetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
+        return new SetOntologyAnnotationsResult(project.getRootOntology().getAnnotations(), eventList);
+    }
+
+    @Override
+    protected RequestValidator<SetOntologyAnnotationsAction> getAdditionalRequestValidator(SetOntologyAnnotationsAction action, RequestContext requestContext) {
+        return NullValidator.get();
+    }
+}

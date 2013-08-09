@@ -28,58 +28,9 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsExcepti
  */
 public class NewProjectDialog extends WebProtegeDialog<NewProjectInfo> {
     
-    private Refreshable [] refreshables;
-
-    public NewProjectDialog(final Refreshable ... refreshables) {
+    public NewProjectDialog() {
         super(new NewProjectDialogController());
-        this.refreshables = refreshables;
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<NewProjectInfo>() {
-            public void handleHide(NewProjectInfo data, WebProtegeDialogCloser closer) {
-                handleCreateNewProject(data);
-                closer.hide();
-            }
-        });
     }
 
-    private void handleCreateNewProject(NewProjectInfo data) {
-        UserId userId = Application.get().getUserId();
-        if(userId.isGuest()) {
-            throw new RuntimeException("User is guest.  Guest users are not allowed to create projects.");
-        }
-        NewProjectSettings newProjectSettings = new NewProjectSettings(userId, data.getProjectName(), data.getProjectDescription(), data.getProjectType());
-        ProjectManagerServiceAsync projectManagerService = GWT.create(ProjectManagerService.class);
-        projectManagerService.createNewProject(newProjectSettings, new AsyncCallback<ProjectDetails>() {
-            public void onFailure(Throwable caught) {
-                handleCreateProjectFailure(caught);
-            }
-
-            public void onSuccess(ProjectDetails result) {
-                handleCreateProjectSuccess(result);
-            }
-        });
-    }
-
-    private void handleCreateProjectFailure(Throwable caught) {
-        if(caught instanceof NotSignedInException) {
-            MessageBox.alert("You must be signed in to create new projects");
-        }
-        else if(caught instanceof ProjectAlreadyRegisteredException) {
-            ProjectAlreadyRegisteredException ex = (ProjectAlreadyRegisteredException) caught;
-            String projectName = ex.getProjectId().getId();
-            MessageBox.alert("The project name " + projectName + " is already registered.  Please try a different name.");
-        }
-        else if(caught instanceof ProjectDocumentExistsException) {
-            ProjectDocumentExistsException ex = (ProjectDocumentExistsException) caught;
-            String projectName = ex.getProjectId().getId();
-            MessageBox.alert("There is already a non-empty project on the server with the id " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
-        }
-        else {
-            MessageBox.alert(caught.getMessage());
-        }
-    }
-
-    private void handleCreateProjectSuccess(ProjectDetails projectDetails) {
-        EventBusManager.getManager().postEvent(new ProjectCreatedEvent(projectDetails));
-    }
 
 }

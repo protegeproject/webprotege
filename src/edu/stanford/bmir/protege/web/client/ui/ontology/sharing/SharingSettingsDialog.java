@@ -22,23 +22,7 @@ public class SharingSettingsDialog extends WebProtegeDialog<ProjectSharingSettin
 
     public SharingSettingsDialog(final ProjectId projectId) {
         super(new SharingSettingsDialogController(projectId));
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectSharingSettings>() {
-            public void handleHide(ProjectSharingSettings data, WebProtegeDialogCloser closer) {
-                updateSharingSettingsOnServer(data);
-                closer.hide();
-            }
-        });
+
     }
 
-    private void updateSharingSettingsOnServer(final ProjectSharingSettings sharingSettings) {
-        SharingSettingsServiceAsync service = SharingSettingsServiceManager.getService();
-        service.updateSharingSettings(sharingSettings, new AsyncCallback<Void>() {
-            public void onFailure(Throwable caught) {
-            }
-
-            public void onSuccess(Void result) {
-                EventBusManager.getManager().postEvent(new PermissionsChangedEvent(sharingSettings.getProjectId()));
-            }
-        });
-    }
 }

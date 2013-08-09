@@ -30,17 +30,20 @@ public class WebProtegeDialog<D> extends DialogBox {
      */
     private static final int DEFAULT_WIDGET_FOCUS_DELAY = 100;
 
+    private static final String WEB_PROTEGE_LAF = "web-protege-laf";
+
+    private static final String WEB_PROTEGE_DIALOG_MAIN_PANEL = "web-protege-dialog-main-panel";
+
+    private static final String WEB_PROTEGE_DIALOG_BUTTON_BAR = "web-protege-dialog-button-bar";
+
+    private static final String WEB_PROTEGE_DIALOG_BUTTON = "web-protege-dialog-button";
+
     private WebProtegeDialogController<D> controller;
-
-//    private List<List<WebProtegeDialogHandler<D>>> buttonHandlers = new ArrayList<List<WebProtegeDialogHandler<D>>>();
-
-    private List<WebProtegeDialogButtonHandler<D>> buttonHandlers = new ArrayList<WebProtegeDialogButtonHandler<D>>();
 
     public WebProtegeDialog(WebProtegeDialogController<D> controller) {
         super(AUTO_HIDE, MODAL);
         this.controller = controller;
 
-//        setAnimationEnabled(true);
         setGlassEnabled(true);
 
 
@@ -49,8 +52,8 @@ public class WebProtegeDialog<D> extends DialogBox {
 
         FlowPanel mainPanel = new FlowPanel();
         setWidget(mainPanel);
-        addStyleName("web-protege-laf");
-        mainPanel.addStyleName("web-protege-dialog-main-panel");
+        addStyleName(WEB_PROTEGE_LAF);
+        mainPanel.addStyleName(WEB_PROTEGE_DIALOG_MAIN_PANEL);
 
         Widget contentWidget = controller.getWidget();
         SimplePanel contentWidgetWrapper = new SimplePanel();
@@ -60,8 +63,6 @@ public class WebProtegeDialog<D> extends DialogBox {
         Widget buttonBar = createButtonBar();
 
         mainPanel.add(buttonBar);
-
-        initialiseHandlerList();
 
         attachAcceleratorKeyHandlers(contentWidget);
 
@@ -81,12 +82,12 @@ public class WebProtegeDialog<D> extends DialogBox {
 
     private Widget createButtonBar() {
         FlowPanel buttonBar = new FlowPanel();
-        buttonBar.setStyleName("web-protege-dialog-button-bar");
+        buttonBar.setStyleName(WEB_PROTEGE_DIALOG_BUTTON_BAR);
         for (DialogButton dlgButton : controller.getButtons()) {
             Button button = dlgButton.createButton();
             button.addClickHandler(new WebProtegeDialogButtonClickHandler(dlgButton));
             buttonBar.add(button);
-            button.addStyleName("web-protege-dialog-button");
+            button.addStyleName(WEB_PROTEGE_DIALOG_BUTTON);
             button.setWidth("70px");
         }
         SimplePanel buttonBarWrapper = new SimplePanel();
@@ -94,11 +95,7 @@ public class WebProtegeDialog<D> extends DialogBox {
         return buttonBarWrapper;
     }
 
-    private void initialiseHandlerList() {
-        for (DialogButton button : DialogButton.values()) {
-            buttonHandlers.add(new DefaultWebProtegeDialogButtonHandler<D>());
-        }
-    }
+
 
     private void attachAcceleratorKeyHandlers(Widget widget) {
         GWT.log(widget.toString());
@@ -133,9 +130,6 @@ public class WebProtegeDialog<D> extends DialogBox {
     }
 
 
-    public void setDialogButtonHandler(DialogButton button, WebProtegeDialogButtonHandler<D> buttonHandler) {
-        buttonHandlers.set(button.ordinal(), buttonHandler);
-    }
 
     @Override
     public void show() {
@@ -170,7 +164,7 @@ public class WebProtegeDialog<D> extends DialogBox {
                 }
             }
         }
-        WebProtegeDialogButtonHandler<D> buttonHandler = buttonHandlers.get(button.ordinal());
+        WebProtegeDialogButtonHandler<D> buttonHandler = controller.getButtonHandlers().get(button.ordinal());
         buttonHandler.handleHide(controller.getData(), new WebProtegeDialogCloser() {
             public void hide() {
                 WebProtegeDialog.this.hide();

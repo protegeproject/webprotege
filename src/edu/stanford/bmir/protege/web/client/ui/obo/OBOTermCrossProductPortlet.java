@@ -31,7 +31,7 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
     @Override
     public void initialize() {
         editor = new OBOTermCrossProductEditorImpl();
-        add(editor.getWidget());
+        add(editor.asWidget());
     }
 
     @Override

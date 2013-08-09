@@ -48,6 +48,8 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
     public static final int LANG_COLUMN = 2;
 
+    private static final int MAX_POOL_SIZE = 100;
+
     private PropertyValueGridGrammar grammar;
 
     public static final int PROPERTY_COLUMN = 0;
@@ -88,11 +90,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         add(table);
     }
 
-
-    @Override
-    public Widget getWidget() {
-        return this;
-    }
 
     /**
      * Returns true if the widget is enabled, false if not.
@@ -161,7 +158,11 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             Element nextSibling = tableElement.getNextSiblingElement();
             tableElement.removeFromParent();
             long t0 = new Date().getTime();
+
+            recyclePrimitiveDataEditors();
+            recycleDeleteButtons();
             table.removeAllRows();
+
             for (PropertyValue propertyValue : propertyValueList.getPropertyValues()) {
                 addRelationship(propertyValue, provider);
             }
@@ -378,9 +379,53 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
     private List<DefaultPrimitiveDataEditor> pool = new ArrayList<DefaultPrimitiveDataEditor>();
 
+
+
+    private void recyclePrimitiveDataEditors() {
+        for(int row = 0; row < table.getRowCount(); row++) {
+            DefaultPrimitiveDataEditor propertyEditor = (DefaultPrimitiveDataEditor) table.getWidget(row, PROPERTY_COLUMN);
+            DefaultPrimitiveDataEditor fillerEditor = (DefaultPrimitiveDataEditor) table.getWidget(row, FILLER_COLUMN);
+            recycle(propertyEditor);
+            recycle(fillerEditor);
+        }
+    }
+
+    private void recycleDeleteButtons() {
+        for(int row = 0; row < table.getRowCount(); row++) {
+            DeleteButton deleteButton = (DeleteButton) table.getWidget(row, DELETE_BUTTON_COL);
+            if(deleteButton != null) {
+                recycle(deleteButton);
+            }
+        }
+    }
+
+
+
+    private void recycle(DefaultPrimitiveDataEditor editor) {
+        if(pool.size() == MAX_POOL_SIZE) {
+            return;
+        }
+        pool.add(editor);
+    }
+
+    private List<DeleteButton> deleteButtonPool = new ArrayList<DeleteButton>();
+
+    private void recycle(DeleteButton deleteButton) {
+        if(deleteButtonPool.size() == MAX_POOL_SIZE) {
+            return;
+        }
+        deleteButtonPool.add(deleteButton);
+    }
+
     private DefaultPrimitiveDataEditor createPrimitiveEditor() {
-        DefaultPrimitiveDataEditor editor = new DefaultPrimitiveDataEditor(projectId);
-        editor.setFreshEntitiesHandler(freshEntitiesHandler);
+        DefaultPrimitiveDataEditor editor;
+        if(!pool.isEmpty()) {
+            editor = pool.remove(0);
+        }
+        else {
+            editor = new DefaultPrimitiveDataEditor(projectId);
+            editor.setFreshEntitiesHandler(freshEntitiesHandler);
+        }
         editor.setEnabled(enabled);
         return editor;
     }
@@ -525,7 +570,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 //    }
 
     private HandlerRegistration addDeleteButton(final int rowCount) {
-        final DeleteButton deleteButton = new DeleteButton();
+        final DeleteButton deleteButton = createDeleteButton();
         HandlerRegistration result = deleteButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -534,6 +579,13 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         });
         table.setWidget(rowCount, DELETE_BUTTON_COL, deleteButton);
         return result;
+    }
+
+    private DeleteButton createDeleteButton() {
+        if(!deleteButtonPool.isEmpty()) {
+            return deleteButtonPool.remove(0);
+        }
+        return new DeleteButton();
     }
 
     private void deleteRow(Widget deleteButton) {
@@ -625,7 +677,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             String lang = ((OWLLiteralData) fillerData.get()).getLiteral().getLang();
             languageEditor.setValue(lang);
         }
-        table.setWidget(rowCount, FILLER_COLUMN + 1, languageEditor.getWidget());
+        table.setWidget(rowCount, FILLER_COLUMN + 1, languageEditor.asWidget());
     }
 
     private void ensureBlankRow() {

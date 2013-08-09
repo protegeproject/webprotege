@@ -66,21 +66,21 @@ public class MessageBox {
                 return RETURN;
             }
         };
-        WebProtegeDialog<Void> dlg = createDialog(controller);
-        dlg.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Void>() {
+        controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Void>() {
             @Override
             public void handleHide(Void data, WebProtegeDialogCloser closer) {
                 closer.hide();
                 handler.handleOK();
             }
         });
-        dlg.setDialogButtonHandler(DialogButton.CANCEL, new WebProtegeDialogButtonHandler<Void>() {
+        controller.setDialogButtonHandler(DialogButton.CANCEL, new WebProtegeDialogButtonHandler<Void>() {
             @Override
             public void handleHide(Void data, WebProtegeDialogCloser closer) {
                 closer.hide();
                 handler.handleCancel();
             }
         });
+        WebProtegeDialog<Void> dlg = createDialog(controller);
         dlg.setVisible(true);
     }
 
@@ -102,15 +102,14 @@ public class MessageBox {
                 return RETURN;
             }
         };
-        WebProtegeDialog<Void> dlg = createDialog(controller);
-        dlg.setDialogButtonHandler(DialogButton.YES, new WebProtegeDialogButtonHandler<Void>() {
+        controller.setDialogButtonHandler(DialogButton.YES, new WebProtegeDialogButtonHandler<Void>() {
             @Override
             public void handleHide(Void data, WebProtegeDialogCloser closer) {
                 closer.hide();
                 handler.handleYes();
             }
         });
-        dlg.setDialogButtonHandler(DialogButton.NO, new WebProtegeDialogButtonHandler<Void>() {
+        controller.setDialogButtonHandler(DialogButton.NO, new WebProtegeDialogButtonHandler<Void>() {
             @Override
             public void handleHide(Void data, WebProtegeDialogCloser closer) {
                 closer.hide();
@@ -118,6 +117,7 @@ public class MessageBox {
 
             }
         });
+        WebProtegeDialog<Void> dlg = createDialog(controller);
         dlg.setVisible(true);
 
     }

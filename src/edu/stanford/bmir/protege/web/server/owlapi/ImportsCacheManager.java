@@ -4,11 +4,12 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.project.ImportedOntologyMetadata;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLMetadata;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentHandlerAdapter;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLOntologyDocumentSerializer;
-import org.semanticweb.owlapi.binaryowl.BinaryOWLParseException;
-import org.semanticweb.owlapi.binaryowl.change.OntologyChangeDataList;
+import org.semanticweb.binaryowl.BinaryOWLMetadata;
+import org.semanticweb.binaryowl.BinaryOWLOntologyDocumentHandlerAdapter;
+import org.semanticweb.binaryowl.BinaryOWLOntologyDocumentSerializer;
+import org.semanticweb.binaryowl.BinaryOWLParseException;
+import org.semanticweb.binaryowl.change.OntologyChangeDataList;
+import org.semanticweb.binaryowl.owlapi.OWLOntologyWrapper;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.SetOntologyIDData;
 import org.semanticweb.owlapi.model.*;
@@ -111,7 +112,7 @@ public class ImportsCacheManager {
                 BinaryOWLOntologyDocumentSerializer serializer = new BinaryOWLOntologyDocumentSerializer();
                 final File file = getFreshImportCacheFile();
                 os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-                serializer.write(ont, os, metadata);
+                serializer.write(new OWLOntologyWrapper(ont), os, metadata);
 
                 ontologyIDs.add(ont.getOntologyID());
                 metadataMap.put(ont.getOntologyID(), value);

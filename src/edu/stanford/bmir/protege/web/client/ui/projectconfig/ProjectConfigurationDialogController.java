@@ -8,6 +8,9 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -32,6 +35,22 @@ public class ProjectConfigurationDialogController extends WebProtegeOKCancelDial
         dialogForm = new ProjectConfigurationForm(projectId);
         projectManagerService = GWT.create(ProjectManagerService.class);
         dataToForm(projectId);
+
+        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectConfigurationInfo>() {
+            public void handleHide(ProjectConfigurationInfo data, final WebProtegeDialogCloser closer) {
+
+                ProjectManagerServiceAsync pms = GWT.create(ProjectManagerService.class);
+                pms.setProjectConfiguration(data, new AsyncCallback<Void>() {
+                    public void onFailure(Throwable caught) {
+                    }
+
+                    public void onSuccess(Void result) {
+                        closer.hide();
+                    }
+                });
+            }
+        });
+
     }
 
     

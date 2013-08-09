@@ -20,20 +20,5 @@ public class ProjectConfigurationDialog extends WebProtegeDialog<ProjectConfigur
 
     public ProjectConfigurationDialog(ProjectId projectId) {
         super(new ProjectConfigurationDialogController(projectId));
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectConfigurationInfo>() {
-            public void handleHide(ProjectConfigurationInfo data, final WebProtegeDialogCloser closer) {
-
-                ProjectManagerServiceAsync pms = GWT.create(ProjectManagerService.class);
-                pms.setProjectConfiguration(data, new AsyncCallback<Void>() {
-                    public void onFailure(Throwable caught) {
-                    }
-
-                    public void onSuccess(Void result) {
-                        closer.hide();
-                    }
-                });
-            }
-        });
-
     }
 }

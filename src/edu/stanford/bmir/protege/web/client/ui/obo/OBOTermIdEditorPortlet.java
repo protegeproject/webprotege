@@ -33,7 +33,7 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
     @Override
     public void initialize() {
         editor = new OBOTermIdEditorImpl();
-        add(editor.getWidget());
+        add(editor.asWidget());
         getService().getNamespaces(getProjectId(), new AsyncCallback<Set<OBONamespace>>() {
             public void onFailure(Throwable caught) {
                 MessageBox.alert(caught.getMessage());

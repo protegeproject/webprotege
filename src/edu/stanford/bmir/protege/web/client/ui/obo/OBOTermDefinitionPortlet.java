@@ -26,7 +26,7 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
     public OBOTermDefinitionPortlet(Project project) {
         super(project);
         editor = new OBOTermDefinitionEditorImpl();
-        add(editor.getWidget());
+        add(editor.asWidget());
         setHeight("200px");
         setAutoScroll(false);
     }

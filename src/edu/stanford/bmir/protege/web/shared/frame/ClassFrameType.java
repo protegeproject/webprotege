@@ -8,8 +8,8 @@ package edu.stanford.bmir.protege.web.shared.frame;
  */
 public enum ClassFrameType {
 
-    SUB_CLASS_OF,
+    ASSERTED,
 
-    EQUIVALENT_TO
+    DERIVED
 
 }

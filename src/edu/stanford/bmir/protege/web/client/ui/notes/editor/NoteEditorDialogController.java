@@ -1,10 +1,18 @@
 package edu.stanford.bmir.protege.web.client.ui.notes.editor;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
-import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
+import edu.stanford.bmir.protege.web.shared.notes.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,18 +24,52 @@ public class NoteEditorDialogController extends WebProtegeOKCancelDialogControll
 
     private NoteContentEditorView view;
 
-    public NoteEditorDialogController() {
+    public NoteEditorDialogController(final NoteContentEditorHandler handler) {
         super("Edit Note");
         this.view = new NoteContentEditorViewImpl();
+        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Optional<NoteContent>>() {
+            @Override
+            public void handleHide(Optional<NoteContent> data, WebProtegeDialogCloser closer) {
+                if (data.isPresent()) {
+                    handler.handleAccept(data);
+                }
+                closer.hide();
+            }
+        });
     }
+
+//    private void doPost(NoteContent content) {
+//        ProjectId projectId = Application.get().getActiveProject().get();
+//        DispatchServiceManager.get().execute(new AddNoteToEntityAction(projectId, entity.get(), content), new AsyncCallback<AddNoteToEntityResult>() {
+//            @Override
+//            public void onFailure(Throwable caught) {
+//                GWT.log("Post failed", caught);
+//            }
+//
+//            @Override
+//            public void onSuccess(AddNoteToEntityResult result) {
+//                GWT.log("Posted o.k. " + result);
+//            }
+//        });
+//    }
+//
+//    private void doReply(NoteContent content) {
+//        ProjectId projectId = Application.get().getActiveProject().get();
+//        DispatchServiceManager.get().execute(new AddReplyToNoteAction(projectId, noteId, content), new AsyncCallback<AddReplyToNoteResult>() {
+//            @Override
+//            public void onFailure(Throwable caught) {
+//                GWT.log("Reply failed", caught);
+//            }
+//
+//            @Override
+//            public void onSuccess(AddReplyToNoteResult result) {
+//                GWT.log("Replied o.k. " + result);
+//            }
+//        });
+//    }
 
     public void setMode(NoteContentEditorMode mode) {
         view.setMode(mode);
-    }
-
-    @Override
-    public Widget getWidget() {
-        return view.getWidget();
     }
 
     @Override
@@ -38,5 +80,10 @@ public class NoteEditorDialogController extends WebProtegeOKCancelDialogControll
     @Override
     public Optional<NoteContent> getData() {
         return view.getValue();
+    }
+
+    @Override
+    public Widget getWidget() {
+        return view.asWidget();
     }
 }

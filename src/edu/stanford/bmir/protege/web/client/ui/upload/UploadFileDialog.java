@@ -13,36 +13,8 @@ import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
  */
 public class UploadFileDialog extends WebProtegeDialog<String> {
 
-    private UploadFileResultHandler resultHandler;
-
     public UploadFileDialog(final String title, UploadFileResultHandler handler) {
-        super(new UploadFileDialogController(title));
-        this.resultHandler = handler;
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<String>() {
-            @Override
-            public void handleHide(String data, final WebProtegeDialogCloser closer) {
-                UIUtil.showLoadProgessBar("Uploading", "Uploading file");
-                getController().addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
-                    public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                        UIUtil.hideLoadProgessBar();
-                        GWT.log("Submittion of file is complete");
-                        FileUploadResponse result = new FileUploadResponse(event.getResults());
-                        if(result.wasUploadAccepted()) {
-                            GWT.log("Successful upload");
-                            resultHandler.handleFileUploaded(result.getDocumentId());
-
-                        }
-                        else {
-                            GWT.log("Upload rejected: " + result.getUploadRejectedMessage());
-                            resultHandler.handleFileUploadFailed(result.getUploadRejectedMessage());
-                        }
-                        closer.hide();
-
-                    }
-                });
-                getController().submit();
-            }
-        });
+        super(new UploadFileDialogController(title, handler));
     }
 
     @Override

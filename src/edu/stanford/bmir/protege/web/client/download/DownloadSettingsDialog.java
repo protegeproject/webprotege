@@ -35,8 +35,7 @@ public class DownloadSettingsDialog {
                 return view.getDownloadFormatExtension();
             }
         };
-        WebProtegeDialog<DownloadFormatExtension> dlg = new WebProtegeDialog<DownloadFormatExtension>(controller);
-        dlg.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<DownloadFormatExtension>() {
+        controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<DownloadFormatExtension>() {
             @Override
             public void handleHide(DownloadFormatExtension data, WebProtegeDialogCloser closer) {
                 closer.hide();
@@ -44,6 +43,7 @@ public class DownloadSettingsDialog {
                 handler.handleDownload(data);
             }
         });
+        WebProtegeDialog<DownloadFormatExtension> dlg = new WebProtegeDialog<DownloadFormatExtension>(controller);
         dlg.show();
     }
 }

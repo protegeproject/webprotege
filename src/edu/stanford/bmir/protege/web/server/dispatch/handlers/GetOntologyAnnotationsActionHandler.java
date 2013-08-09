@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
+import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.server.comparator.OntologyAnnotationsComparator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
@@ -8,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
@@ -19,7 +21,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/02/2013
  */
-public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetOntologyAnnotationsAction, GetObjectResult<Set<OWLAnnotation>>> {
+public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetOntologyAnnotationsAction, RenderableGetObjectResult<Set<OWLAnnotation>>> {
 
 
     @Override
@@ -33,11 +35,11 @@ public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActio
     }
 
     @Override
-    protected GetObjectResult<Set<OWLAnnotation>> execute(GetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected RenderableGetObjectResult<Set<OWLAnnotation>> execute(GetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
 
         List<OWLAnnotation> result = new ArrayList<OWLAnnotation>(project.getRootOntology().getAnnotations());
         Collections.sort(result, new OntologyAnnotationsComparator(project));
-        return new GetObjectResult<Set<OWLAnnotation>>(new LinkedHashSet<OWLAnnotation>(result));
+        return new RenderableGetObjectResult<Set<OWLAnnotation>>(new LinkedHashSet<OWLAnnotation>(result), BrowserTextMap.build(project.getRenderingManager(), result));
     }
 
 }
