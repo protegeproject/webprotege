@@ -6,8 +6,6 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.irigen.HasIRIGeneratorSettings;
-import edu.stanford.bmir.protege.web.shared.irigen.IRIGeneratorSettings;
-import edu.stanford.bmir.protege.web.shared.irigen.uuid.UUIDSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -67,7 +65,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/03/2012
  */
-public class OWLAPIProject implements HasDispose, HasIRIGeneratorSettings {
+public class OWLAPIProject implements HasDispose {
 
 
 
@@ -357,17 +355,6 @@ public class OWLAPIProject implements HasDispose, HasIRIGeneratorSettings {
     public OWLAPIEntityEditorKit getOWLEntityEditorKit() {
         return entityEditorKit;
     }
-
-    private IRIGeneratorSettings generatorSettings  = new IRIGeneratorSettings("http://stuff.com!#", new UUIDSuffixSettings(Optional.of("de")));
-
-    public IRIGeneratorSettings getIRIGeneratorSettings() {
-        return generatorSettings;
-    }
-
-    public void setIRIGeneratorSettings(IRIGeneratorSettings settings) {
-        this.generatorSettings = settings;
-    }
-
 
     public OWLOntology getRootOntology() {
         return ontology;

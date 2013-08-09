@@ -30,7 +30,7 @@ public class GetIRIGeneratorSettingsActionHandler extends AbstractHasProjectActi
 
     @Override
     protected GetIRIGeneratorSettingsResult execute(GetIRIGeneratorSettingsAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        IRIGeneratorSettings settings = project.getIRIGeneratorSettings();
-        return new GetIRIGeneratorSettingsResult(settings);
+//        IRIGeneratorSettings settings = project.getIRIGeneratorSettings();
+        return new GetIRIGeneratorSettingsResult(null);
     }
 }
