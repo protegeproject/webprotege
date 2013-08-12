@@ -3,3 +3,5 @@ local.properties
 .idea/
 *.iml
 .DS_Store
+.svn/
+webprotege.properties
