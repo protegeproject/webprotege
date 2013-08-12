@@ -24,34 +24,8 @@ public abstract class OWLEntityCreatorFactory {
     }
     
     public static String getDefaultIRIBase(OWLOntologyID id, EntityType entityType) {
-//        if(id.isAnonymous()) {
         StringBuilder sb = new StringBuilder();
         sb.append(DEFAULT_BASE);
-//        sb.append(getEntityTypePathElementName(entityType));
-//        sb.append("/");
         return sb.toString();
     }
-
-//    private static String getEntityTypePathElementName(EntityType entityType) {
-//        if(entityType == EntityType.CLASS) {
-//            return "classes";
-//        }
-//        else if(entityType == EntityType.OBJECT_PROPERTY) {
-//            return "object_properties";
-//        }
-//        else if(entityType == EntityType.DATA_PROPERTY) {
-//            return "data_properties";
-//        }
-//        else if(entityType == EntityType.ANNOTATION_PROPERTY) {
-//            return "annotation_properties";
-//        }
-//        else if(entityType == EntityType.NAMED_INDIVIDUAL) {
-//            return "named_individuals";
-//        }
-//        else if(entityType == EntityType.DATATYPE) {
-//            return "datatypes";
-//        }
-//        throw new RuntimeException("Handling for entity type missing: " + entityType);
-//    }
-
 }
