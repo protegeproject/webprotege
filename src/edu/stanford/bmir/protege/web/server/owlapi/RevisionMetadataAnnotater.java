@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionSummary;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
@@ -49,7 +50,15 @@ public class RevisionMetadataAnnotater {
     private OWLAnnotation getCommentAnnotation() {
         OWLAPIProject project = getProject();
         OWLDataFactory df = project.getDataFactory();
-        return df.getOWLAnnotation(df.getRDFSComment(), df.getOWLLiteral("This ontology was generated from an ontology revision in webprotege. See http://webprotege-beta.stanford.edu"));
+        StringBuilder sb = new StringBuilder();
+        sb.append("This ontology was generated from an ontology revision in ");
+        sb.append(WebProtegeProperties.get().getApplicationName());
+        final String host = WebProtegeProperties.get().getApplicationHostName().or("");
+        if (!host.isEmpty()) {
+            sb.append(" http://");
+            sb.append(host);
+        }
+        return df.getOWLAnnotation(df.getRDFSComment(), df.getOWLLiteral(sb.toString()));
     }
 
 
