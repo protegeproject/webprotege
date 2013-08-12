@@ -2,3 +2,5 @@ build/
 local.properties
 .idea/
 *.iml
+.svn/
+.DS_Store	
