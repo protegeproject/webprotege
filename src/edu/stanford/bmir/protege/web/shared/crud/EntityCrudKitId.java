@@ -50,5 +50,21 @@ public class EntityCrudKitId implements Serializable, HasLexicalForm {
         return lexicalForm;
     }
 
-    
+    @Override
+    public int hashCode() {
+        return "EntityCrudKitId".hashCode() + lexicalForm.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) {
+            return true;
+        }
+        if(!(obj instanceof EntityCrudKitId)) {
+            return false;
+        }
+        EntityCrudKitId other = (EntityCrudKitId) obj;
+        return this.lexicalForm.equals(other.lexicalForm);
+    }
+
 }
