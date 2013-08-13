@@ -123,7 +123,7 @@ public class SimpleOWLEntityCreatorFactory extends OWLEntityCreatorFactory {
             IRI iri = IRI.create(sb.toString());
             if(!ontology.containsEntityInSignature(iri)) {
                 StringBuilder fragBuilder = new StringBuilder();
-
+                fragBuilder.append(START_CHAR);
                 fragBuilder.append(base62Fragment);
                 return fragBuilder.toString();
             }
