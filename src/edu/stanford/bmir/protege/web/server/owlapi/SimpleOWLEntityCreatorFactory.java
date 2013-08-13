@@ -28,10 +28,10 @@ public class SimpleOWLEntityCreatorFactory extends OWLEntityCreatorFactory {
      * A start char for local names.  Some UUIDs might start with a number.  Unfortunately, NCNames (non-colonised names)
      * in XML cannot start with numbers.  For everything apart from properties this is o.k. but for properties it means
      * that it might not be possible to save an ontology in RDF/XML.  We therefore prefix each local name with a valid
-     * NCName start char - "T".  The character "T" was chosen so as not to encode the type into the name.  I initially
+     * NCName start char - "R".  The character "R" was chosen so as not to encode the type into the name.  I initially
      * considered C for classes, P properties etc. however with punning this would get ugly.
      */
-    private static final String START_CHAR = "T";
+    private static final String START_CHAR = "R";
 
     static {
         // This is thread safe - hash maps are for multiple readers
