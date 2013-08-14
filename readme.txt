@@ -1,5 +1,5 @@
 Dependencies
-------------
+-------------
 
 1)  Google Web Toolkit (GWT)
     URL: http://code.google.com/webtoolkit/
