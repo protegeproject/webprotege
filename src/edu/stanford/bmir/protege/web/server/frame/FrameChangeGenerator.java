@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.GeneratedOntologyChanges;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
@@ -74,8 +74,8 @@ public final class FrameChangeGenerator<F extends Frame<S>, S extends OWLEntity>
     }
 
     @Override
-    public GeneratedOntologyChanges<S> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
-        GeneratedOntologyChanges.Builder<S> b = new GeneratedOntologyChanges.Builder<S>();
+    public OntologyChangeList<S> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+        OntologyChangeList.Builder<S> b = new OntologyChangeList.Builder<S>();
         b.addAll(createChanges(project.getRootOntology(), project));
         return b.build(to.getSubject());
     }

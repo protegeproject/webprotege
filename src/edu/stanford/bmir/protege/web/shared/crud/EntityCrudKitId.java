@@ -67,4 +67,14 @@ public class EntityCrudKitId implements Serializable, HasLexicalForm {
         return this.lexicalForm.equals(other.lexicalForm);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("EntityCrudKitId");
+        sb.append("(");
+        sb.append(lexicalForm);
+        sb.append(")");
+        return sb.toString();
+    }
+
 }

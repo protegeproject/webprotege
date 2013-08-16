@@ -28,6 +28,10 @@ public class EntityShortForm implements Serializable {
         return new EntityShortForm(shortForm);
     }
 
+    public String getShortForm() {
+        return shortForm;
+    }
+
     @Override
     public int hashCode() {
         return "EntityShortForm".hashCode() + shortForm.hashCode();

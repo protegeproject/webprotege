@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.shared.irigen.IRIGeneratorSettings;
-import edu.stanford.bmir.protege.web.shared.irigen.uuid.UUIDSuffixSettings;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
@@ -27,10 +26,6 @@ public class DefaultEntityEditorKit extends OWLAPIEntityEditorKit {
         super(project);
     }
 
-//    @Override
-    public IRIGeneratorSettings getIRIGeneratorSettings() {
-        return new IRIGeneratorSettings("http://webprotege.stanford.edu/", new UUIDSuffixSettings());
-    }
 
     @Override
     public boolean isBrowserTextEditable(OWLEntity entity) {

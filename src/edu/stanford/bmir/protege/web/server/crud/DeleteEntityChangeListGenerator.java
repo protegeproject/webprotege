@@ -1,5 +1,8 @@
-package edu.stanford.bmir.protege.web.server.change;
+package edu.stanford.bmir.protege.web.server.crud;
 
+import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
+import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -23,8 +26,8 @@ public class DeleteEntityChangeListGenerator implements ChangeListGenerator<OWLE
     }
 
     @Override
-    public GeneratedOntologyChanges<OWLEntity> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
-        GeneratedOntologyChanges.Builder<OWLEntity> builder = new GeneratedOntologyChanges.Builder<OWLEntity>();
+    public OntologyChangeList<OWLEntity> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+        OntologyChangeList.Builder<OWLEntity> builder = new OntologyChangeList.Builder<OWLEntity>();
         OWLEntityRemover remover = new OWLEntityRemover(project.getRootOntology().getOWLOntologyManager(), project.getRootOntology().getImportsClosure());
         entity.accept(remover);
         List<OWLOntologyChange> changeList = remover.getChanges();

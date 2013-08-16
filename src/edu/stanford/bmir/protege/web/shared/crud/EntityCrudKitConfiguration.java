@@ -12,21 +12,21 @@ import java.util.List;
  */
 public class EntityCrudKitConfiguration implements Serializable {
 
-    private EntityCrudKitManager currentKit;
+    private EntityCrudKitEditorKit currentKit;
 
-    private List<EntityCrudKitManager> availableKits;
+    private List<EntityCrudKitEditorKit> availableKits;
 
-    public EntityCrudKitConfiguration(EntityCrudKitManager currentKit, List<EntityCrudKitManager> availableKits) {
+    public EntityCrudKitConfiguration(EntityCrudKitEditorKit currentKit, List<EntityCrudKitEditorKit> availableKits) {
         this.currentKit = currentKit;
         this.availableKits = availableKits;
     }
 
-    public EntityCrudKitManager getCurrentKit() {
+    public EntityCrudKitEditorKit getCurrentKit() {
         return currentKit;
     }
 
-    public List<EntityCrudKitManager> getAvailableKits() {
-        return new ArrayList<EntityCrudKitManager>(availableKits);
+    public List<EntityCrudKitEditorKit> getAvailableKits() {
+        return new ArrayList<EntityCrudKitEditorKit>(availableKits);
     }
 
 }

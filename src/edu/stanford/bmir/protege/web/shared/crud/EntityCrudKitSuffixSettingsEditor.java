@@ -8,6 +8,6 @@ import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/08/2013
  */
-public interface EntityCrudKitSettingsEditor extends ValueEditor<EntityCrudKitSettings> {
+public interface EntityCrudKitSuffixSettingsEditor<S extends EntityCrudKitSuffixSettings> extends ValueEditor<S> {
 
 }

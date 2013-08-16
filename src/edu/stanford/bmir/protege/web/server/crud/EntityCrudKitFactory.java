@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitDescriptor;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitManager;
-import edu.stanford.bmir.protege.web.shared.crud.HasKitId;
+import edu.stanford.bmir.protege.web.shared.crud.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,13 +8,9 @@ import edu.stanford.bmir.protege.web.shared.crud.HasKitId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/08/2013
  */
-public interface EntityCrudKitFactory extends HasKitId {
+public interface EntityCrudKitFactory<K extends EntityCrudKit, S extends EntityCrudKitSuffixSettings> extends HasKitId {
 
-    EntityCrudKitDescriptor getDescriptor();
+    K createEntityCrudKit();
 
-    EntityCrudKit createEntityCrudKit();
-
-    EntityCrudKit createEntityCrudKit(EntityCrudKitDescriptor descriptor);
-
-    EntityCrudKitManager createSettingsManager();
+    K createEntityCrudKit(EntityCrudKitPrefixSettings prefixSettings, S settings);
 }

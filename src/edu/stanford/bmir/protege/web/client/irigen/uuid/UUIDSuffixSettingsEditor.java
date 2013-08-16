@@ -2,14 +2,16 @@ package edu.stanford.bmir.protege.web.client.irigen.uuid;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
-import edu.stanford.bmir.protege.web.shared.irigen.SuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.irigen.SuffixSettingsId;
-import edu.stanford.bmir.protege.web.shared.irigen.uuid.UUIDSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.shared.crud.UUIDSuffixSettings;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,7 +19,7 @@ import edu.stanford.bmir.protege.web.shared.irigen.uuid.UUIDSuffixSettings;
  * Bio-Medical Informatics Research Group<br>
  * Date: 30/07/2013
  */
-public class UUIDSuffixSettingsEditor extends Composite implements SuffixSettingsEditor<UUIDSuffixSettings> {
+public class UUIDSuffixSettingsEditor extends Composite implements EntityCrudKitSuffixSettingsEditor<UUIDSuffixSettings> {
 
     interface UUIDSuffixSettingsEditorUiBinder extends UiBinder<HTMLPanel, UUIDSuffixSettingsEditor> {
 
@@ -25,8 +27,8 @@ public class UUIDSuffixSettingsEditor extends Composite implements SuffixSetting
 
     private static UUIDSuffixSettingsEditorUiBinder ourUiBinder = GWT.create(UUIDSuffixSettingsEditorUiBinder.class);
 
-    @UiField
-    protected HasText labelLangEditor;
+//    @UiField
+//    protected HasText labelLangEditor;
 
     public UUIDSuffixSettingsEditor() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
@@ -34,27 +36,38 @@ public class UUIDSuffixSettingsEditor extends Composite implements SuffixSetting
     }
 
     @Override
-    public SuffixSettingsId getSupportedSuffixSettingsId() {
-        return UUIDSuffixSettings.Id;
+    public boolean isWellFormed() {
+        return false;
     }
 
     @Override
-    public void setSettings(UUIDSuffixSettings settings) {
-        labelLangEditor.setText(settings.getLabelLang().or(""));
+    public void setValue(UUIDSuffixSettings object) {
+
     }
 
     @Override
-    public UUIDSuffixSettings getSettings() {
-        return new UUIDSuffixSettings(getLabelLang());
+    public void clearValue() {
+
     }
 
-    private Optional<String> getLabelLang() {
-        String labelLangText = getLabelLangText();
-        return labelLangText.isEmpty() ? Optional.<String>absent() : Optional.of(labelLangText);
+    @Override
+    public Optional<UUIDSuffixSettings> getValue() {
+        return Optional.of(new UUIDSuffixSettings());
     }
 
-    private String getLabelLangText() {
-        return labelLangEditor.getText().trim();
+    @Override
+    public boolean isDirty() {
+        return false;
+    }
+
+    @Override
+    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
+        return null;
+    }
+
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<UUIDSuffixSettings>> handler) {
+        return null;
     }
 
 

@@ -5,7 +5,7 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
-import edu.stanford.bmir.protege.web.shared.irigen.HasIRIGeneratorSettings;
+import edu.stanford.bmir.protege.web.shared.HasDataFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -65,7 +65,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/03/2012
  */
-public class OWLAPIProject implements HasDispose {
+public class OWLAPIProject implements HasDispose, HasDataFactory {
 
 
 
@@ -377,6 +377,7 @@ public class OWLAPIProject implements HasDispose {
     }
 
     private OWLEntityCreator<?> getEntityCreator(UserId userId, String shortName, EntityType<?> entityType) {
+        // TODO: SWAP
         Optional<OWLEntity> entity = getEntityOfTypeIfPresent(entityType, shortName);
         if (!entity.isPresent()) {
             return entityEditorKit.getEntityCreatorFactory().getEntityCreator(this, userId, shortName, entityType);
@@ -450,7 +451,7 @@ public class OWLAPIProject implements HasDispose {
             changeProcesssingLock.lock();
 
             final ChangeGenerationContext context = new ChangeGenerationContext(userId);
-            GeneratedOntologyChanges<R> gen = changeListGenerator.generateChanges(this, context);
+            OntologyChangeList<R> gen = changeListGenerator.generateChanges(this, context);
 
             // We have our changes
 

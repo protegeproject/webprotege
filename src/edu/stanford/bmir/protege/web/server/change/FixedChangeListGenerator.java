@@ -22,8 +22,8 @@ public class FixedChangeListGenerator<O> implements ChangeListGenerator<O> {
     }
 
     @Override
-    public GeneratedOntologyChanges<O> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
-        GeneratedOntologyChanges.Builder<O> builder = new GeneratedOntologyChanges.Builder<O>();
+    public OntologyChangeList<O> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+        OntologyChangeList.Builder<O> builder = new OntologyChangeList.Builder<O>();
         builder.addAll(fixedChangeList);
         return builder.build();
     }
