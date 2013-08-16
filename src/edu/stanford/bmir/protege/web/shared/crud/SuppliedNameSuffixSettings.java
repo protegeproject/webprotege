@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
+import com.google.common.base.Objects;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -32,5 +34,11 @@ public class SuppliedNameSuffixSettings extends EntityCrudKitSuffixSettings {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("SuppliedNameSuffixSettings")
+                .toString();
     }
 }
