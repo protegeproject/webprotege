@@ -4,8 +4,8 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.OKCancelHandler;
-import edu.stanford.bmir.protege.web.shared.irigen.IRIGeneratorSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,18 +13,18 @@ import edu.stanford.bmir.protege.web.shared.irigen.IRIGeneratorSettings;
  * Bio-Medical Informatics Research Group<br>
  * Date: 31/07/2013
  */
-public class IRIGeneratorSettingsDialogController extends WebProtegeOKCancelDialogController<IRIGeneratorSettings> {
+public class EntityCrudKitSettingsDialogController extends WebProtegeOKCancelDialogController<EntityCrudKitSettings> {
 
     private static final String TITLE = "New Entity Settings";
 
-    final IRIGeneratorSettingsEditor editor = new IRIGeneratorSettingsEditorImpl();
+    final EntityCrudKitSettingsEditor editor = new EntityCrudKitSettingsEditorImpl();
 
-    public IRIGeneratorSettingsDialogController() {
+    public EntityCrudKitSettingsDialogController() {
         super(TITLE);
 
     }
 
-    public IRIGeneratorSettingsEditor getEditor() {
+    public EntityCrudKitSettingsEditor getEditor() {
         return editor;
     }
 
@@ -39,7 +39,7 @@ public class IRIGeneratorSettingsDialogController extends WebProtegeOKCancelDial
     }
 
     @Override
-    public IRIGeneratorSettings getData() {
+    public EntityCrudKitSettings getData() {
         return editor.getValue().get();
     }
 }

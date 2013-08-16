@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.csv;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.GeneratedOntologyChanges;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.change.SilentChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
@@ -35,8 +35,8 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
     }
 
     @Override
-    public GeneratedOntologyChanges<Integer> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
-        GeneratedOntologyChanges.Builder<Integer> changesBuilder = new GeneratedOntologyChanges.Builder<Integer>();
+    public OntologyChangeList<Integer> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+        OntologyChangeList.Builder<Integer> changesBuilder = new OntologyChangeList.Builder<Integer>();
         for (CSVRow row : csvGrid.getRows()) {
             for (CSVColumnDescriptor columnDescriptor : descriptor.getColumnDescriptors()) {
                 if (columnDescriptor.getColumnIndex() < row.size()) {

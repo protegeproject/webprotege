@@ -2,34 +2,35 @@ package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasResult;
-import org.semanticweb.owlapi.model.AddAxiom;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/02/2013
+ * <p>
+ *     A list of ontology changes plus an optional result of applying the changes.
+ * </p>
  */
-public class GeneratedOntologyChanges<R> implements HasResult<Optional<R>> {
+public class OntologyChangeList<R> implements HasResult<Optional<R>> {
 
     private Optional<R> result;
 
     private List<OWLOntologyChange> changes;
 
     /**
-     * Constructs a {@link GeneratedOntologyChanges} object which bundles together a list of ontology changes with
+     * Constructs a {@link OntologyChangeList} object which bundles together a list of ontology changes with
      * a main result.
      * @param changes The list of ontology changes.  Not {@code null}.
      * @param result The main result. Not {@code null}.
      */
-    private GeneratedOntologyChanges(List<OWLOntologyChange> changes, Optional<R> result) {
+    private OntologyChangeList(List<OWLOntologyChange> changes, Optional<R> result) {
         this.result = result;
         this.changes = new ArrayList<OWLOntologyChange>(changes);
     }
@@ -51,8 +52,12 @@ public class GeneratedOntologyChanges<R> implements HasResult<Optional<R>> {
         return result;
     }
 
+    public static <R> Builder<R> builder() {
+        return new Builder<R>();
+    }
+
     /**
-     * A builder for building a {@link GeneratedOntologyChanges} object.
+     * A builder for building a {@link OntologyChangeList} object.
      * @param <R> The type of result.
      */
     public static class Builder<R> {
@@ -66,25 +71,45 @@ public class GeneratedOntologyChanges<R> implements HasResult<Optional<R>> {
             changes.add(change);
         }
 
+        public boolean isEmpty() {
+            return changes.isEmpty();
+        }
+
         public void addAxiom(OWLOntology ontology, OWLAxiom axiom) {
             changes.add(new AddAxiom(ontology, axiom));
+        }
+
+        public void addAxioms(OWLOntology ontology, Set<? extends OWLAxiom> axioms) {
+            for(OWLAxiom axiom : axioms) {
+                addAxiom(ontology, axiom);
+            }
+        }
+
+        public void removeAxiom(OWLOntology ontology, OWLAxiom axiom) {
+            changes.add(new RemoveAxiom(ontology, axiom));
+        }
+
+        public void removeAxioms(OWLOntology ontology, Set<? extends OWLAxiom> axioms) {
+            for(OWLAxiom axiom : axioms) {
+                removeAxiom(ontology, axiom);
+            }
         }
 
         public void addAll(List<OWLOntologyChange> changes) {
             this.changes.addAll(changes);
         }
 
-        public GeneratedOntologyChanges<R> build(R subject) {
+        public OntologyChangeList<R> build(R subject) {
             return build(Optional.of(subject));
         }
 
-        public GeneratedOntologyChanges<R> build() {
+        public OntologyChangeList<R> build() {
             return build(Optional.<R>absent());
         }
 
 
-        private GeneratedOntologyChanges<R> build(Optional<R> subject) {
-            return new GeneratedOntologyChanges<R>(changes, subject);
+        private OntologyChangeList<R> build(Optional<R> subject) {
+            return new OntologyChangeList<R>(changes, subject);
         }
 
 

@@ -2,7 +2,8 @@ package edu.stanford.bmir.protege.web.client.irigen;
 
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
-import edu.stanford.bmir.protege.web.shared.irigen.IRIGeneratorSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,7 +11,7 @@ import edu.stanford.bmir.protege.web.shared.irigen.IRIGeneratorSettings;
  * Bio-Medical Informatics Research Group<br>
  * Date: 30/07/2013
  */
-public interface IRIGeneratorSettingsEditor extends ValueEditor<IRIGeneratorSettings>, HasInitialFocusable {
+public interface EntityCrudKitSettingsEditor extends ValueEditor<EntityCrudKitSettings>, HasInitialFocusable {
 
 
 }

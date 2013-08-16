@@ -28,10 +28,10 @@ public class CreateClassChangeGenerator implements ChangeListGenerator<OWLClass>
     }
 
     @Override
-    public GeneratedOntologyChanges<OWLClass> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+    public OntologyChangeList<OWLClass> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
         OWLClass freshClass = DataFactory.getFreshOWLEntity(EntityType.CLASS, browserText);
 
-        GeneratedOntologyChanges.Builder<OWLClass> builder = new GeneratedOntologyChanges.Builder<OWLClass>();
+        OntologyChangeList.Builder<OWLClass> builder = new OntologyChangeList.Builder<OWLClass>();
 
         builder.add(new AddAxiom(project.getRootOntology(), DataFactory.get().getOWLDeclarationAxiom(freshClass)));
         builder.add(new AddAxiom(project.getRootOntology(), DataFactory.get().getOWLSubClassOfAxiom(freshClass, superClass)));

@@ -47,7 +47,7 @@ public class AbstractObjectEditorManager<T extends Serializable> extends FlowPan
 //    private EventDispatcher eventDispatcher;
 //
 //    public AbstractObjectEditorManager(ProjectId projectId, EditorConfigurationFactory<T> factory) {
-//        this.editor = factory.getEditor(projectId);
+//        this.editor = factory.getSuffixSettingsEditor(projectId);
 //        this.updateStrategy = factory.getUpdateStrategy(projectId);
 //        this.updateObjectRequestFactory = factory.getUpdateObjectRequestFactory(projectId);
 //        this.getObjectRequestFactory = factory.getGetObjectRequestFactory(projectId);

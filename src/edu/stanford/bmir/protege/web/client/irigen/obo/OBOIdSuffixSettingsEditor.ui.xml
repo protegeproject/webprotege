@@ -63,19 +63,19 @@
         </table>
 
         <div style="height: 10px;"/>
-        <table>
-            <colgroup>
-                <col width="100px"/>
-            </colgroup>
-            <tr>
-                <td>
-                    <g:Label text="Language" addStyleNames="web-protege-form-label"/>
-                </td>
-                <td>
-                    <text:PlaceholderTextBox ui:field="labelLangEditor" visibleLength="8" placeholder="e.g. en"/><g:InlineLabel text=" (optional)" addStyleNames="{style.optional-style}"/>
-                </td>
-            </tr>
-        </table>
+        <!--<table>-->
+            <!--<colgroup>-->
+                <!--<col width="100px"/>-->
+            <!--</colgroup>-->
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--<g:Label text="Language" addStyleNames="web-protege-form-label"/>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<text:PlaceholderTextBox ui:field="labelLangEditor" visibleLength="8" placeholder="e.g. en"/><g:InlineLabel text=" (optional)" addStyleNames="{style.optional-style}"/>-->
+                <!--</td>-->
+            <!--</tr>-->
+        <!--</table>-->
 
     </g:HTMLPanel>
 </ui:UiBinder>
