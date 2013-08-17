@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
 
+import com.google.common.base.Objects;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -23,4 +25,9 @@ public class UUIDSuffixSettings extends EntityCrudKitSuffixSettings {
         return UUIDSuffixDescriptor.get().getKitId();
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("UUIDSuffixSettings")
+                .toString();
+    }
 }
