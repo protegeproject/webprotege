@@ -26,8 +26,18 @@ public class UUIDSuffixSettings extends EntityCrudKitSuffixSettings {
     }
 
     @Override
+    public int hashCode() {
+        return "UUIDSuffixSettings".hashCode();
+    }
+
+    public boolean equals(Object o) {
+        return o == this || o instanceof UUIDSuffixSettings;
+    }
+
+    @Override
     public String toString() {
         return Objects.toStringHelper("UUIDSuffixSettings")
                 .toString();
     }
+
 }
