@@ -14,12 +14,23 @@ public class SuppliedNameSuffixSettings extends EntityCrudKitSuffixSettings {
 
     private static final EntityCrudKitId ID = EntityCrudKitId.get("ShortFormSuffix");
 
+    private WhiteSpaceTreatment whiteSpaceTreatment;
+
     public SuppliedNameSuffixSettings() {
+        this(WhiteSpaceTreatment.TRANSFORM_TO_CAMEL_CASE);
+    }
+
+    public SuppliedNameSuffixSettings(WhiteSpaceTreatment whiteSpaceTreatment) {
+        this.whiteSpaceTreatment = whiteSpaceTreatment;
     }
 
     @Override
     public EntityCrudKitId getKitId() {
         return ID;
+    }
+
+    public WhiteSpaceTreatment getWhiteSpaceTreatment() {
+        return whiteSpaceTreatment;
     }
 
     @Override
