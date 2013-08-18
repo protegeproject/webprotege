@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.irigen;
+package edu.stanford.bmir.protege.web.client.crud;
 
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;

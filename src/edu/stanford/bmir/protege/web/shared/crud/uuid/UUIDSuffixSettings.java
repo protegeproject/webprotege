@@ -1,7 +1,9 @@
-package edu.stanford.bmir.protege.web.shared.crud;
+package edu.stanford.bmir.protege.web.shared.crud.uuid;
 
 
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 
 /**
  * Author: Matthew Horridge<br>

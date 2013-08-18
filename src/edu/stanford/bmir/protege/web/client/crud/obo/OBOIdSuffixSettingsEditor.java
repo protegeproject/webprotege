@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.irigen.obo;
+package edu.stanford.bmir.protege.web.client.crud.obo;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
@@ -12,8 +12,7 @@ import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.crud.OBOIdSuffixDescriptor;
-import edu.stanford.bmir.protege.web.shared.crud.OBOIdSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.irigen.obo.UserIdRange;
 
 import java.util.Collections;
