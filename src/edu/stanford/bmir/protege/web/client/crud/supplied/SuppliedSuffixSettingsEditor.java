@@ -6,12 +6,15 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 
 /**
  * Author: Matthew Horridge<br>
@@ -27,11 +30,15 @@ public class SuppliedSuffixSettingsEditor extends Composite implements EntityCru
 
     private static SuffixGeneratorSettingsEditorUiBinder ourUiBinder = GWT.create(SuffixGeneratorSettingsEditorUiBinder.class);
 
-    private SuppliedNameSuffixSettings settings;
+    @UiField
+    protected ListBox whiteSpaceTreatmentListBox;
 
     public SuppliedSuffixSettingsEditor() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
+        for(WhiteSpaceTreatment whiteSpaceTreatment : WhiteSpaceTreatment.values()) {
+            whiteSpaceTreatmentListBox.addItem(whiteSpaceTreatment.getDisplayName());
+        }
     }
 
 
@@ -40,9 +47,22 @@ public class SuppliedSuffixSettingsEditor extends Composite implements EntityCru
         return true;
     }
 
+    public WhiteSpaceTreatment getWhiteSpaceTreatment() {
+        int selIndex = whiteSpaceTreatmentListBox.getSelectedIndex();
+        int whiteSpaceTreatmentIndex;
+        if(selIndex == 0) {
+            whiteSpaceTreatmentIndex = 0;
+        }
+        else {
+            whiteSpaceTreatmentIndex = selIndex;
+        }
+        return WhiteSpaceTreatment.values()[whiteSpaceTreatmentIndex];
+    }
+
     @Override
     public void setValue(SuppliedNameSuffixSettings object) {
-
+        int whiteSpaceTreatmentIndex = object.getWhiteSpaceTreatment().ordinal();
+        whiteSpaceTreatmentListBox.setSelectedIndex(whiteSpaceTreatmentIndex);
     }
 
     @Override
@@ -52,7 +72,7 @@ public class SuppliedSuffixSettingsEditor extends Composite implements EntityCru
 
     @Override
     public Optional<SuppliedNameSuffixSettings> getValue() {
-        return Optional.of(new SuppliedNameSuffixSettings());
+        return Optional.of(new SuppliedNameSuffixSettings(getWhiteSpaceTreatment()));
     }
 
     @Override
