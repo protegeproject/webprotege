@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.irigen.obo;
+package edu.stanford.bmir.protege.web.client.crud.obo;
 
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.irigen.obo.UserIdRange;

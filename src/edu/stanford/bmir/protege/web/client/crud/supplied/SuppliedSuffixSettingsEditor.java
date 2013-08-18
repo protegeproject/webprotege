@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.irigen.supplied;
+package edu.stanford.bmir.protege.web.client.crud.supplied;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.crud.SuppliedNameSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 
 /**
  * Author: Matthew Horridge<br>

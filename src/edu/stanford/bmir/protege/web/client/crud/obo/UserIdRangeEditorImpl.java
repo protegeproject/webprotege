@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.irigen.obo;
+package edu.stanford.bmir.protege.web.client.crud.obo;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;

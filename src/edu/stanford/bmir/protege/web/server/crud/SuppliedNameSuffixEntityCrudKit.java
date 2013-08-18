@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.crud;
 
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.shared.crud.*;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixDescriptor;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
 

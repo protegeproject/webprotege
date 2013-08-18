@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
 
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixDescriptor;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;

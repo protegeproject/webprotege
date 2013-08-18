@@ -1,6 +1,7 @@
-package edu.stanford.bmir.protege.web.shared.crud;
+package edu.stanford.bmir.protege.web.shared.crud.uuid;
 
-import edu.stanford.bmir.protege.web.client.irigen.uuid.UUIDSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.client.crud.uuid.UUIDSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.shared.crud.*;
 
 /**
  * Author: Matthew Horridge<br>

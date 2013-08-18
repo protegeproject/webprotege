@@ -1,6 +1,7 @@
-package edu.stanford.bmir.protege.web.shared.crud;
+package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
-import edu.stanford.bmir.protege.web.client.irigen.obo.OBOIdSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.client.crud.obo.OBOIdSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.shared.crud.*;
 
 /**
  * Author: Matthew Horridge<br>

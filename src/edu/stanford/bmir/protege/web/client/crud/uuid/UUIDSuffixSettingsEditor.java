@@ -1,17 +1,15 @@
-package edu.stanford.bmir.protege.web.client.irigen.uuid;
+package edu.stanford.bmir.protege.web.client.crud.uuid;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasText;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.crud.UUIDSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,9 +24,6 @@ public class UUIDSuffixSettingsEditor extends Composite implements EntityCrudKit
     }
 
     private static UUIDSuffixSettingsEditorUiBinder ourUiBinder = GWT.create(UUIDSuffixSettingsEditorUiBinder.class);
-
-//    @UiField
-//    protected HasText labelLangEditor;
 
     public UUIDSuffixSettingsEditor() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
