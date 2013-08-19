@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasLexicalForm;
 
 import java.io.Serializable;
@@ -11,8 +12,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/08/2013
+ * <p>
+ *     Provides an identifier for an {@link EntityCrudKit} and its associated paraphernalia.
+ * </p>
  */
-public class EntityCrudKitId implements Serializable, HasLexicalForm {
+public final class EntityCrudKitId implements Serializable, HasLexicalForm {
 
     private String lexicalForm;
 
@@ -69,12 +73,7 @@ public class EntityCrudKitId implements Serializable, HasLexicalForm {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("EntityCrudKitId");
-        sb.append("(");
-        sb.append(lexicalForm);
-        sb.append(")");
-        return sb.toString();
+        return Objects.toStringHelper("EntityCrudKitId").addValue(lexicalForm).toString();
     }
 
 }
