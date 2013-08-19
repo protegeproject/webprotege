@@ -43,7 +43,7 @@ public class EntityCrudKitDescriptorManagerGenerator extends Generator {
             composerFactory.addImplementedInterface(cls.getQualifiedSourceName());
             SourceWriter sourceWriter = composerFactory.createSourceWriter(context, pw);
 
-            sourceWriter.println("java.util.List<EntityCrudKitDescriptor> descriptors = new java.util.ArrayList<EntityCrudKitDescriptor>();");
+            sourceWriter.println("java.util.List<EntityCrudKit> descriptors = new java.util.ArrayList<EntityCrudKit>();");
             sourceWriter.println();
             sourceWriter.println("public %s() {", generatedClassName);
             sourceWriter.indent();
@@ -63,7 +63,7 @@ public class EntityCrudKitDescriptorManagerGenerator extends Generator {
 
             sourceWriter.println();
             sourceWriter.println();
-            sourceWriter.println("public List<EntityCrudKitDescriptor> getDescriptors() {");
+            sourceWriter.println("public List<EntityCrudKit> getDescriptors() {");
             sourceWriter.indent();
             sourceWriter.println("return descriptors;");
             sourceWriter.outdent();

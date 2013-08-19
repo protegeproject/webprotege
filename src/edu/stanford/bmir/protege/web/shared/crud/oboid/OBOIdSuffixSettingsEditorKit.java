@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
 import edu.stanford.bmir.protege.web.client.crud.obo.OBOIdSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitDescriptor;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitEditorKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
 
@@ -14,8 +14,8 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEdit
 public class OBOIdSuffixSettingsEditorKit implements EntityCrudKitEditorKit {
 
     @Override
-    public EntityCrudKitDescriptor getDescriptor() {
-        return OBOIdSuffixDescriptor.get();
+    public EntityCrudKit getDescriptor() {
+        return OBOIdSuffixKit.get();
     }
 
     @Override

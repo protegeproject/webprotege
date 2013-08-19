@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
+import edu.stanford.bmir.protege.web.shared.HasDisplayName;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -8,11 +10,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/08/2013
  * <p>
- *     Describes an {@link edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler} in terms of its id, display name (for
- *     use in the UI, and default settings).
+ *     An {@code EntityCrudKit} is used by the system when creating and updating entities.  Each kit provides a human
+ *     readable name, an editor for viewing and altering settings for the kit and a back end implementation that actually
+ *     generates the ontology changes required to enact high level changes such as "creating" a fresh entity, or updating
+ *     the display name.
  * </p>
  */
-public abstract class EntityCrudKitDescriptor implements HasKitId {
+public abstract class EntityCrudKit implements HasKitId, HasDisplayName {
 
     private EntityCrudKitId kitId;
 
@@ -24,19 +28,33 @@ public abstract class EntityCrudKitDescriptor implements HasKitId {
      * @param displayName The display name for the kit.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public EntityCrudKitDescriptor(EntityCrudKitId kitId, String displayName) {
+    public EntityCrudKit(EntityCrudKitId kitId, String displayName) {
         this.kitId = checkNotNull(kitId);
         this.displayName = checkNotNull(displayName);
     }
 
+    /**
+     * Gets the id for this kit.
+     * @return The id.  Not {@code null}.
+     */
+    @Override
     public EntityCrudKitId getKitId() {
         return kitId;
     }
 
+    /**
+     * Gets the human readable display name for this kit.
+     * @return The name.  Not {@code null}.
+     */
+    @Override
     public String getDisplayName() {
         return displayName;
     }
 
+    /**
+     * Gets an editor for viewing and altering the suffix settings.
+     * @return An editor.  Not {@code null}.
+     */
     public abstract EntityCrudKitSuffixSettingsEditor<?> getSuffixSettingsEditor();
 
     public abstract EntityCrudKitPrefixSettings getDefaultPrefixSettings();
@@ -47,7 +65,7 @@ public abstract class EntityCrudKitDescriptor implements HasKitId {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("EntityCrudKitDescriptor");
+        sb.append("EntityCrudKit");
         sb.append("(");
         sb.append(getKitId());
         sb.append(" DisplayName(");

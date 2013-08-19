@@ -27,7 +27,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
 
 //    private final List<EntityCrudKitSuffixSettingsEditor<?>> editorKit
 
-    private final List<EntityCrudKitDescriptor> descriptors;
+    private final List<EntityCrudKit> descriptors;
 
     interface EntityCrudKitSettingsEditorImplUiBinder extends UiBinder<HTMLPanel, EntityCrudKitSettingsEditorImpl> {
 
@@ -57,7 +57,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         initWidget(rootElement);
         EntityCrudKitDescriptorManager descriptorManager = GWT.create(EntityCrudKitDescriptorManager.class);
         descriptors = descriptorManager.getDescriptors();
-        for (EntityCrudKitDescriptor descriptor : descriptors) {
+        for (EntityCrudKit descriptor : descriptors) {
             schemeSelectorListBox.addItem(descriptor.getDisplayName());
             touchedEditors.add(Optional.<EntityCrudKitSuffixSettingsEditor>absent());
         }
@@ -91,7 +91,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         }
         Optional<EntityCrudKitSuffixSettingsEditor> touchedEditor = touchedEditors.get(selIndex);
         EntityCrudKitSuffixSettingsEditor editor;
-        final EntityCrudKitDescriptor descriptor = descriptors.get(selIndex);
+        final EntityCrudKit descriptor = descriptors.get(selIndex);
         if (touchedEditor.isPresent()) {
             editor = touchedEditor.get();
         }
@@ -260,7 +260,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
 
     public int getDescriptorIndex(EntityCrudKitId id) {
         for (int index = 0; index < descriptors.size(); index++) {
-            EntityCrudKitDescriptor descriptor = descriptors.get(index);
+            EntityCrudKit descriptor = descriptors.get(index);
             if (descriptor.getKitId().equals(id)) {
                 return index;
             }

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import edu.stanford.bmir.protege.web.shared.crud.*;
-import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixDescriptor;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 
 /**
@@ -14,7 +14,7 @@ public class SuppliedNameSuffixCrudKitFactory implements EntityCrudKitFactory<Su
 
     @Override
     public EntityCrudKitId getKitId() {
-        return SuppliedNameSuffixDescriptor.get().getKitId();
+        return SuppliedNameSuffixKit.get().getKitId();
     }
 
     @Override

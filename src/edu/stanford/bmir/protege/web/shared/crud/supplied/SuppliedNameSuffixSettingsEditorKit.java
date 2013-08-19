@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.crud.supplied;
 
 import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedSuffixSettingsEditor;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitDescriptor;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitEditorKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
 
@@ -14,8 +14,8 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEdit
 public class SuppliedNameSuffixSettingsEditorKit implements EntityCrudKitEditorKit {
 
     @Override
-    public EntityCrudKitDescriptor getDescriptor() {
-        return SuppliedNameSuffixDescriptor.get();
+    public EntityCrudKit getDescriptor() {
+        return SuppliedNameSuffixKit.get();
     }
 
     @Override

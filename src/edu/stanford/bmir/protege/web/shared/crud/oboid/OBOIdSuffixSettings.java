@@ -49,7 +49,7 @@ public class OBOIdSuffixSettings extends EntityCrudKitSuffixSettings {
 
     @Override
     public EntityCrudKitId getKitId() {
-        return OBOIdSuffixDescriptor.get().getKitId();
+        return OBOIdSuffixKit.get().getKitId();
     }
 
     public int getTotalDigits() {

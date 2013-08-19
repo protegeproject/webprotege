@@ -10,16 +10,16 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
  * Date: 14/08/2013
  */
 @EntityCrudKitPlugin
-public class OBOIdSuffixDescriptor extends EntityCrudKitDescriptor {
+public class OBOIdSuffixKit extends EntityCrudKit {
 
-    private static final OBOIdSuffixDescriptor INSTANCE = new OBOIdSuffixDescriptor();
+    private static final OBOIdSuffixKit INSTANCE = new OBOIdSuffixKit();
 
 
-    private OBOIdSuffixDescriptor() {
+    private OBOIdSuffixKit() {
         super(EntityCrudKitId.get("OBO"), "Auto-generated  OBO Style Id");
     }
 
-    public static OBOIdSuffixDescriptor get() {
+    public static OBOIdSuffixKit get() {
         return INSTANCE;
     }
 

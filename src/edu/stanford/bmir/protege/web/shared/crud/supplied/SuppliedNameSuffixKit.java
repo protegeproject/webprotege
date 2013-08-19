@@ -10,17 +10,17 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
  * Date: 14/08/2013
  */
 @EntityCrudKitPlugin
-public class SuppliedNameSuffixDescriptor extends EntityCrudKitDescriptor {
+public class SuppliedNameSuffixKit extends EntityCrudKit {
 
     private static final EntityCrudKitId ID = EntityCrudKitId.get("SuppliedNameSuffix");
 
-    private static final SuppliedNameSuffixDescriptor INSTANCE = new SuppliedNameSuffixDescriptor();
+    private static final SuppliedNameSuffixKit INSTANCE = new SuppliedNameSuffixKit();
 
-    private SuppliedNameSuffixDescriptor() {
+    private SuppliedNameSuffixKit() {
         super(ID, "Supplied name");
     }
 
-    public static SuppliedNameSuffixDescriptor get() {
+    public static SuppliedNameSuffixKit get() {
         return INSTANCE;
     }
 

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import edu.stanford.bmir.protege.web.shared.crud.*;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixDescriptor;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 
 /**
@@ -14,7 +14,7 @@ public class UUIDEntityCrudKitFactory implements EntityCrudKitFactory<UUIDEntity
 
     @Override
     public EntityCrudKitId getKitId() {
-        return UUIDSuffixDescriptor.get().getKitId();
+        return UUIDSuffixKit.get().getKitId();
     }
 
     @Override
