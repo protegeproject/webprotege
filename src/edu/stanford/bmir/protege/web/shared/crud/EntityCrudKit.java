@@ -53,6 +53,7 @@ public abstract class EntityCrudKit implements HasKitId, HasDisplayName {
 
     /**
      * Gets an editor for viewing and altering the suffix settings.
+     * This method may only be called on the client side.
      * @return An editor.  Not {@code null}.
      */
     public abstract EntityCrudKitSuffixSettingsEditor<?> getSuffixSettingsEditor();
