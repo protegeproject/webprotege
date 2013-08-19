@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
 import edu.stanford.bmir.protege.web.client.crud.obo.OBOIdSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 
 /**
@@ -9,7 +11,6 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-@EntityCrudKitPlugin
 public class OBOIdSuffixKit extends EntityCrudKit {
 
     private static final OBOIdSuffixKit INSTANCE = new OBOIdSuffixKit();
@@ -37,4 +38,5 @@ public class OBOIdSuffixKit extends EntityCrudKit {
     public EntityCrudKitSuffixSettings getDefaultSuffixSettings() {
         return new OBOIdSuffixSettings();
     }
+
 }

@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.crud.supplied;
 
 import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 
 /**
@@ -9,8 +11,7 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-@EntityCrudKitPlugin
-public class SuppliedNameSuffixKit extends EntityCrudKit {
+public class SuppliedNameSuffixKit extends EntityCrudKit<SuppliedNameSuffixSettings> {
 
     private static final EntityCrudKitId ID = EntityCrudKitId.get("SuppliedNameSuffix");
 
@@ -25,7 +26,7 @@ public class SuppliedNameSuffixKit extends EntityCrudKit {
     }
 
     @Override
-    public EntityCrudKitSuffixSettingsEditor<?> getSuffixSettingsEditor() {
+    public EntityCrudKitSuffixSettingsEditor<SuppliedNameSuffixSettings> getSuffixSettingsEditor() {
         return new SuppliedSuffixSettingsEditor();
     }
 
@@ -35,7 +36,8 @@ public class SuppliedNameSuffixKit extends EntityCrudKit {
     }
 
     @Override
-    public EntityCrudKitSuffixSettings getDefaultSuffixSettings() {
+    public SuppliedNameSuffixSettings getDefaultSuffixSettings() {
         return new SuppliedNameSuffixSettings();
     }
+
 }
