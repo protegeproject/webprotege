@@ -23,9 +23,9 @@ public class CreateEntityChangeListGenerator<E extends OWLEntity> implements Cha
 
     private EntityCrudContext crudContext;
 
-    private EntityCrudKit crudKit;
+    private EntityCrudKitHandler crudKit;
 
-    public CreateEntityChangeListGenerator(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext crudContext, EntityCrudKit crudKit) {
+    public CreateEntityChangeListGenerator(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext crudContext, EntityCrudKitHandler crudKit) {
         this.entityType = entityType;
         this.shortForm = shortForm;
         this.crudContext = crudContext;

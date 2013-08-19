@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/08/2013
  */
-public class UUIDEntityCrudKitFactory implements EntityCrudKitFactory<UUIDEntityCrudKit, UUIDSuffixSettings> {
+public class UUIDEntityCrudKitFactory implements EntityCrudKitFactory<UUIDEntityCrudKitHandler, UUIDSuffixSettings> {
 
     @Override
     public EntityCrudKitId getKitId() {
@@ -18,13 +18,13 @@ public class UUIDEntityCrudKitFactory implements EntityCrudKitFactory<UUIDEntity
     }
 
     @Override
-    public UUIDEntityCrudKit createEntityCrudKit() {
-        return new UUIDEntityCrudKit();
+    public UUIDEntityCrudKitHandler createEntityCrudKit() {
+        return new UUIDEntityCrudKitHandler();
     }
 
     @Override
-    public UUIDEntityCrudKit createEntityCrudKit(EntityCrudKitPrefixSettings prefixSettings, UUIDSuffixSettings suffixSettings) {
-        return new UUIDEntityCrudKit(prefixSettings, suffixSettings);
+    public UUIDEntityCrudKitHandler createEntityCrudKit(EntityCrudKitPrefixSettings prefixSettings, UUIDSuffixSettings suffixSettings) {
+        return new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings);
     }
 
 }

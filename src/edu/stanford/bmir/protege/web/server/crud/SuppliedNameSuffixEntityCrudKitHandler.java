@@ -15,17 +15,17 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-public class SuppliedNameSuffixEntityCrudKit implements EntityCrudKit {
+public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHandler {
 
     private SuppliedNameSuffixSettings suffixSettings;
 
     private EntityCrudKitPrefixSettings prefixSettings;
 
-    public SuppliedNameSuffixEntityCrudKit() {
+    public SuppliedNameSuffixEntityCrudKitHandler() {
         this(new EntityCrudKitPrefixSettings(), new SuppliedNameSuffixSettings());
     }
 
-    public SuppliedNameSuffixEntityCrudKit(EntityCrudKitPrefixSettings prefixSettings, SuppliedNameSuffixSettings settings) {
+    public SuppliedNameSuffixEntityCrudKitHandler(EntityCrudKitPrefixSettings prefixSettings, SuppliedNameSuffixSettings settings) {
         this.prefixSettings = prefixSettings;
         this.suffixSettings = settings;
     }

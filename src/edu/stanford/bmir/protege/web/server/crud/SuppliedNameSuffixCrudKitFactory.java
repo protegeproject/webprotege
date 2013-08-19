@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSett
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-public class SuppliedNameSuffixCrudKitFactory implements EntityCrudKitFactory<SuppliedNameSuffixEntityCrudKit, SuppliedNameSuffixSettings> {
+public class SuppliedNameSuffixCrudKitFactory implements EntityCrudKitFactory<SuppliedNameSuffixEntityCrudKitHandler, SuppliedNameSuffixSettings> {
 
     @Override
     public EntityCrudKitId getKitId() {
@@ -18,13 +18,13 @@ public class SuppliedNameSuffixCrudKitFactory implements EntityCrudKitFactory<Su
     }
 
     @Override
-    public SuppliedNameSuffixEntityCrudKit createEntityCrudKit() {
-        return new SuppliedNameSuffixEntityCrudKit();
+    public SuppliedNameSuffixEntityCrudKitHandler createEntityCrudKit() {
+        return new SuppliedNameSuffixEntityCrudKitHandler();
     }
 
     @Override
-    public SuppliedNameSuffixEntityCrudKit createEntityCrudKit(EntityCrudKitPrefixSettings prefixSettings, SuppliedNameSuffixSettings settings) {
-        return new SuppliedNameSuffixEntityCrudKit(prefixSettings, settings);
+    public SuppliedNameSuffixEntityCrudKitHandler createEntityCrudKit(EntityCrudKitPrefixSettings prefixSettings, SuppliedNameSuffixSettings settings) {
+        return new SuppliedNameSuffixEntityCrudKitHandler(prefixSettings, settings);
     }
 
 }
