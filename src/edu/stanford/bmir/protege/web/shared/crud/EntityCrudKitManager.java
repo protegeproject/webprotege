@@ -8,7 +8,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-public interface EntityCrudKitDescriptorManager {
+public interface EntityCrudKitManager {
 
     List<EntityCrudKit> getDescriptors();
 }
