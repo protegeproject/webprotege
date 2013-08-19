@@ -52,6 +52,7 @@ public class SuppliedNameSuffixSettings extends EntityCrudKitSuffixSettings {
     @Override
     public String toString() {
         return Objects.toStringHelper("SuppliedNameSuffixSettings")
+                .add("whiteSpaceTreatment", whiteSpaceTreatment)
                 .toString();
     }
 }
