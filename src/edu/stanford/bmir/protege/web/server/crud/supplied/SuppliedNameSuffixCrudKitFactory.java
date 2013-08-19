@@ -1,5 +1,6 @@
-package edu.stanford.bmir.protege.web.server.crud;
+package edu.stanford.bmir.protege.web.server.crud.supplied;
 
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitFactory;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
