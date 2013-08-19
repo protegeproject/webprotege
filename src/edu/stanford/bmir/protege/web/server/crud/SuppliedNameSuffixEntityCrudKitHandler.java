@@ -15,7 +15,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHandler {
+public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHandler<SuppliedNameSuffixSettings> {
 
     private SuppliedNameSuffixSettings suffixSettings;
 
@@ -41,7 +41,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
     }
 
     @Override
-    public EntityCrudKitSuffixSettings getSuffixSettings() {
+    public SuppliedNameSuffixSettings getSuffixSettings() {
         return suffixSettings;
     }
 

@@ -14,11 +14,11 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/08/2013
  */
-public interface EntityCrudKitHandler extends HasKitId {
+public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings> extends HasKitId {
 
     EntityCrudKitPrefixSettings getPrefixSettings();
 
-    EntityCrudKitSuffixSettings getSuffixSettings();
+    S getSuffixSettings();
 
     <E extends OWLEntity> void create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder);
 
