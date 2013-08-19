@@ -14,7 +14,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/08/2013
  */
-public interface EntityCrudKit extends HasKitId {
+public interface EntityCrudKitHandler extends HasKitId {
 
     EntityCrudKitPrefixSettings getPrefixSettings();
 

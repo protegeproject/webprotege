@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/08/2013
  * <p>
- *     Describes an {@link edu.stanford.bmir.protege.web.server.crud.EntityCrudKit} in terms of its id, display name (for
+ *     Describes an {@link edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler} in terms of its id, display name (for
  *     use in the UI, and default settings).
  * </p>
  */

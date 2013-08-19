@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/08/2013
  */
-public interface EntityCrudKitFactory<K extends EntityCrudKit, S extends EntityCrudKitSuffixSettings> extends HasKitId {
+public interface EntityCrudKitFactory<K extends EntityCrudKitHandler, S extends EntityCrudKitSuffixSettings> extends HasKitId {
 
     K createEntityCrudKit();
 
