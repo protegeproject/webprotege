@@ -63,7 +63,7 @@ public class EntityCrudKitDescriptorManagerGenerator extends Generator {
 
             sourceWriter.println();
             sourceWriter.println();
-            sourceWriter.println("public List<EntityCrudKit> getDescriptors() {");
+            sourceWriter.println("public List<EntityCrudKit> getKits() {");
             sourceWriter.indent();
             sourceWriter.println("return descriptors;");
             sourceWriter.outdent();

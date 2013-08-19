@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface EntityCrudKitManager {
 
-    List<EntityCrudKit> getDescriptors();
+    List<EntityCrudKit> getKits();
 }
