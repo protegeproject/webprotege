@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
+import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitsActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
@@ -19,6 +20,7 @@ import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesAction;
+import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridAction;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -118,6 +120,10 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
 
         // Usage
         register(new GetUsageActionHandler(), GetUsageAction.class);
+
+
+        // TODO: Plugin
+        register(new GetEntityCrudKitsActionHandler(), GetEntityCrudKitsAction.class);
     }
 
 

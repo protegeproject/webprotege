@@ -55,8 +55,8 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
     public EntityCrudKitSettingsEditorImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
-        EntityCrudKitManager descriptorManager = GWT.create(EntityCrudKitManager.class);
-        descriptors = descriptorManager.getKits();
+        EntityCrudKitManager kitManager = EntityCrudKitManager.get();
+        descriptors = new ArrayList<EntityCrudKit>(kitManager.getKits());
         for (EntityCrudKit descriptor : descriptors) {
             schemeSelectorListBox.addItem(descriptor.getDisplayName());
             touchedEditors.add(Optional.<EntityCrudKitSuffixSettingsEditor>absent());

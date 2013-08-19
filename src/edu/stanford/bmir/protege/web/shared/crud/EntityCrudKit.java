@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.shared.crud;
 
 import edu.stanford.bmir.protege.web.shared.HasDisplayName;
 
+import java.io.Serializable;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -16,11 +18,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     the display name.
  * </p>
  */
-public abstract class EntityCrudKit implements HasKitId, HasDisplayName {
+public abstract class EntityCrudKit<S extends EntityCrudKitSuffixSettings> implements HasKitId, HasDisplayName, Serializable {
 
     private EntityCrudKitId kitId;
 
     private String displayName;
+
+    /**
+     * For serialization purposes only!
+     */
+    protected EntityCrudKit() {
+    }
 
     /**
      * Creates a descriptor for the specified information.
@@ -56,12 +64,11 @@ public abstract class EntityCrudKit implements HasKitId, HasDisplayName {
      * This method may only be called on the client side.
      * @return An editor.  Not {@code null}.
      */
-    public abstract EntityCrudKitSuffixSettingsEditor<?> getSuffixSettingsEditor();
+    public abstract EntityCrudKitSuffixSettingsEditor<S> getSuffixSettingsEditor();
 
     public abstract EntityCrudKitPrefixSettings getDefaultPrefixSettings();
 
-    public abstract EntityCrudKitSuffixSettings getDefaultSuffixSettings();
-
+    public abstract S getDefaultSuffixSettings();
 
     @Override
     public String toString() {

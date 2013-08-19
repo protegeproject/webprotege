@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.crud.uuid;
 
 import edu.stanford.bmir.protege.web.client.crud.uuid.UUIDSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 
 /**
@@ -9,7 +11,6 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/08/2013
  */
-@EntityCrudKitPlugin
 public final class UUIDSuffixKit extends EntityCrudKit {
 
     private static EntityCrudKitId ID = EntityCrudKitId.get("UUID");
