@@ -10,17 +10,17 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
  * Date: 13/08/2013
  */
 @EntityCrudKitPlugin
-public final class UUIDSuffixDescriptor extends EntityCrudKitDescriptor {
+public final class UUIDSuffixKit extends EntityCrudKit {
 
     private static EntityCrudKitId ID = EntityCrudKitId.get("UUID");
 
-    private static final UUIDSuffixDescriptor INSTANCE = new UUIDSuffixDescriptor();
+    private static final UUIDSuffixKit INSTANCE = new UUIDSuffixKit();
 
-    private UUIDSuffixDescriptor() {
+    private UUIDSuffixKit() {
         super(ID, "Auto-generated Universally Unique Id (UUID)");
     }
 
-    public static UUIDSuffixDescriptor get() {
+    public static UUIDSuffixKit get() {
         return INSTANCE;
     }
 

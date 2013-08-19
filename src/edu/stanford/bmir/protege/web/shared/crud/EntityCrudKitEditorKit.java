@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public interface EntityCrudKitEditorKit extends Serializable {
 
-    EntityCrudKitDescriptor getDescriptor();
+    EntityCrudKit getDescriptor();
 
     EntityCrudKitSuffixSettingsEditor getSuffixSettingsEditor();
 }
