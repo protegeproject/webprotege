@@ -12,7 +12,7 @@ import org.semanticweb.owlapi.model.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/08/2013
  */
-public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler {
+public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffixSettings> {
 
     /**
      * A start char for local names.  Some UUIDs might start with a number.  Unfortunately, NCNames (non-colonised names)
@@ -47,7 +47,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler {
     }
 
     @Override
-    public EntityCrudKitSuffixSettings getSuffixSettings() {
+    public UUIDSuffixSettings getSuffixSettings() {
         return suffixSettings;
     }
 
