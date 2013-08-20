@@ -250,8 +250,6 @@ public class OWLAPIProject implements HasDispose {
 
         notesManager = new OWLAPINotesManagerNotesAPIImpl(this);
 
-//        noteStore = new NoteStoreImpl(this.getProjectId());
-
 
         // MH: All of this is highly dodgy and not at all thread safe.  It is therefore BROKEN!  Needs fixing.
 
