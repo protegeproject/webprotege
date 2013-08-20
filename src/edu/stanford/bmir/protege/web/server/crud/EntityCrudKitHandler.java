@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
-import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
-import edu.stanford.bmir.protege.web.shared.crud.HasKitId;
+import edu.stanford.bmir.protege.web.shared.crud.*;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -20,7 +17,9 @@ public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings> ext
 
     S getSuffixSettings();
 
-    <E extends OWLEntity> void create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder);
+    EntityCrudKitSettings<S> getSettings();
+
+    <E extends OWLEntity> E create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder);
 
     <E extends OWLEntity> void update(E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder);
 

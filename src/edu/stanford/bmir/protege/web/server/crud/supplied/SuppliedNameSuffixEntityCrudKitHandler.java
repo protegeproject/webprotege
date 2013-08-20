@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
@@ -48,16 +49,24 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
     }
 
     @Override
-    public <E extends OWLEntity> void create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
+    public EntityCrudKitSettings<SuppliedNameSuffixSettings> getSettings() {
+        return new EntityCrudKitSettings<SuppliedNameSuffixSettings>(prefixSettings, suffixSettings);
+    }
+
+    @Override
+    public <E extends OWLEntity> E create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
         IRI iri = createEntityIRI(shortForm);
         final OWLDataFactory dataFactory = context.getDataFactory();
         E entity = dataFactory.getOWLEntity(entityType, iri);
         OWLDeclarationAxiom ax = dataFactory.getOWLDeclarationAxiom(entity);
         changeListBuilder.addAxiom(context.getTargetOntology(), ax);
+        return entity;
     }
 
     private IRI createEntityIRI(EntityShortForm shortForm) {
-        return IRI.create(prefixSettings.getIRIPrefix() + shortForm.getShortForm().replaceAll(" ", "%20"));
+        WhiteSpaceTreatment whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
+        String transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
+        return IRI.create(prefixSettings.getIRIPrefix() + transformedShortForm);
     }
 
     @Override

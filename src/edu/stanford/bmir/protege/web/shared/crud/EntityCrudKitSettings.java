@@ -10,16 +10,16 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-public class EntityCrudKitSettings implements Serializable {
+public class EntityCrudKitSettings<S extends EntityCrudKitSuffixSettings> implements Serializable {
 
     private EntityCrudKitPrefixSettings prefixSettings;
 
-    private EntityCrudKitSuffixSettings suffixSettings;
+    private S suffixSettings;
 
     private EntityCrudKitSettings() {
     }
 
-    public EntityCrudKitSettings(EntityCrudKitPrefixSettings prefixSettings, EntityCrudKitSuffixSettings suffixSettings) {
+    public EntityCrudKitSettings(EntityCrudKitPrefixSettings prefixSettings, S suffixSettings) {
         this.prefixSettings = prefixSettings;
         this.suffixSettings = suffixSettings;
     }
@@ -28,7 +28,7 @@ public class EntityCrudKitSettings implements Serializable {
         return prefixSettings;
     }
 
-    public EntityCrudKitSuffixSettings getSuffixSettings() {
+    public S getSuffixSettings() {
         return suffixSettings;
     }
 

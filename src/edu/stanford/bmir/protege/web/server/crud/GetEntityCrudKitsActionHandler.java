@@ -33,8 +33,7 @@ public class GetEntityCrudKitsActionHandler implements ActionHandler<GetEntityCr
     @Override
     public GetEntityCrudKitsResult execute(GetEntityCrudKitsAction action, ExecutionContext executionContext) {
         List<EntityCrudKit<?>> kits = new ArrayList<EntityCrudKit<?>>();
-        for(EntityCrudKitPlugin<?, ?> plugin : EntityCrudKitPluginManager.get().getPlugins()) {
-            EntityCrudKit kit = plugin.getEntityCrudKit();
+        for(EntityCrudKit<?> kit : EntityCrudKitRegistry.get().getKits()) {
             kits.add(kit);
         }
         return new GetEntityCrudKitsResult(kits);

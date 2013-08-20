@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import edu.stanford.bmir.protege.web.server.HasPlugins;
+import edu.stanford.bmir.protege.web.server.crud.obo.OBOIdSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.supplied.SuppliedNameSuffixEntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitPlugin;
 
@@ -28,6 +29,7 @@ public class EntityCrudKitPluginManager implements HasPlugins<EntityCrudKitPlugi
     public List<EntityCrudKitPlugin> getPlugins() {
         List<EntityCrudKitPlugin> plugins = new ArrayList<EntityCrudKitPlugin>();
         plugins.add(new UUIDEntityCrudKitPlugin());
+        plugins.add(new OBOIdSuffixEntityCrudKitPlugin());
         plugins.add(new SuppliedNameSuffixEntityCrudKitPlugin());
         return plugins;
     }

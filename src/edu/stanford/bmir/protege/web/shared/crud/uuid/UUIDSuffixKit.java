@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/08/2013
  */
-public final class UUIDSuffixKit extends EntityCrudKit {
+public final class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
 
     private static EntityCrudKitId ID = EntityCrudKitId.get("UUID");
 
@@ -26,7 +26,7 @@ public final class UUIDSuffixKit extends EntityCrudKit {
     }
 
     @Override
-    public EntityCrudKitSuffixSettingsEditor<?> getSuffixSettingsEditor() {
+    public EntityCrudKitSuffixSettingsEditor<UUIDSuffixSettings> getSuffixSettingsEditor() {
         return new UUIDSuffixSettingsEditor();
     }
 
@@ -36,7 +36,7 @@ public final class UUIDSuffixKit extends EntityCrudKit {
     }
 
     @Override
-    public EntityCrudKitSuffixSettings getDefaultSuffixSettings() {
+    public UUIDSuffixSettings getDefaultSuffixSettings() {
         return new UUIDSuffixSettings();
     }
 }

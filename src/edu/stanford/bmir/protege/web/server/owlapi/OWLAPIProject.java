@@ -2,10 +2,14 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
+import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -380,11 +384,26 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
         // TODO: SWAP
         Optional<OWLEntity> entity = getEntityOfTypeIfPresent(entityType, shortName);
         if (!entity.isPresent()) {
-            return entityEditorKit.getEntityCreatorFactory().getEntityCreator(this, userId, shortName, entityType);
+
+            OntologyChangeList.Builder builder = OntologyChangeList.builder();
+            OWLEntity ent = entityCrudKitHandler.create(entityType, EntityShortForm.get(shortName), new EntityCrudContext(getRootOntology(), getDataFactory()), builder);
+//            return entityEditorKit.getEntityCreatorFactory().getEntityCreator(this, userId, shortName, entityType);
+            return new OWLEntityCreator<OWLEntity>(ent, builder.build().getChanges());
         }
         else {
             return new OWLEntityCreator<OWLEntity>(entity.get(), Collections.<OWLOntologyChange>emptyList());
         }
+    }
+
+    private EntityCrudKitHandler<?> entityCrudKitHandler = new UUIDEntityCrudKitHandler();
+
+    public void setEntityCrudKitHandler(EntityCrudKitHandler<?> handler) {
+        this.entityCrudKitHandler = handler;
+        System.out.println("Setting entity crud kit handler: " + handler);
+    }
+
+    public EntityCrudKitHandler<?> getEntityCrudKitHandler() {
+        return entityCrudKitHandler;
     }
 
     private Optional<OWLEntity> getEntityOfTypeIfPresent(EntityType<? extends OWLEntity> entityType, String shortName) {

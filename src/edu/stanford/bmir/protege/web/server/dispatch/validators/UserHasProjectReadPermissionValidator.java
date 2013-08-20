@@ -21,6 +21,10 @@ import java.util.Collection;
  */
 public class UserHasProjectReadPermissionValidator<A extends Action<R> & HasProjectId, R extends Result> implements RequestValidator<A> {
 
+    public static <A extends Action<R> & HasProjectId, R extends Result> UserHasProjectReadPermissionValidator<A, R> get() {
+        return new UserHasProjectReadPermissionValidator<A, R>();
+    }
+
     @Override
     public RequestValidationResult validateAction(A action, RequestContext requestContext) {
         ProjectId projectId = action.getProjectId();
