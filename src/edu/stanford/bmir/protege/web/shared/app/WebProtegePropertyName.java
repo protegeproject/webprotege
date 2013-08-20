@@ -42,7 +42,7 @@ public enum WebProtegePropertyName {
     MONGO_DB_HOST("mongodb.host", PropertyValue.ofString("localhost"), ClientVisibility.HIDDEN),
 
     @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
-    MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27107), ClientVisibility.HIDDEN),
+    MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017), ClientVisibility.HIDDEN),
 
     @WebProtegePropertiesDocumentation(description = "The host name of the email smtp server", example = "smtp.gmail.com")
     EMAIL_HOST("email.host", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
