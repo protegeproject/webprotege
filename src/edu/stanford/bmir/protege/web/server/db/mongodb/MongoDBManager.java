@@ -141,11 +141,5 @@ public class MongoDBManager {
         return client.getDB("prj-" + projectId.getId());
     }
 
-    public <R, T extends Throwable> R runCommand(ProjectDBCommand<R, T> command) throws T {
-        DB db = getProjectDB(command.getProjectId());
-        R result = command.run(command.getProjectId(), db);
-        return result;
-    }
-
 
 }
