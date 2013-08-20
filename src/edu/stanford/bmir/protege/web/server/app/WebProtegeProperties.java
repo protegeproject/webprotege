@@ -158,7 +158,14 @@ public class WebProtegeProperties implements Serializable {
     public  Optional<String> getAdministratorEmail() {
         return getOptionalString(ADMIN_EMAIL);
     }
+    
+    public Optional<String> getDBPort() {
+        return getOptionalString(MONGO_DB_PORT);
+    }
 
+    public Optional<String> getDBHost() {
+        return getOptionalString(MONGO_DB_HOST);
+    }
 
     public  String getSslFactory() {
         return "javax.net.ssl.SSLSocketFactory";
