@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-public class OBOIdSuffixKit extends EntityCrudKit {
+public class OBOIdSuffixKit extends EntityCrudKit<OBOIdSuffixSettings> {
 
     private static final OBOIdSuffixKit INSTANCE = new OBOIdSuffixKit();
 
@@ -25,7 +25,7 @@ public class OBOIdSuffixKit extends EntityCrudKit {
     }
 
     @Override
-    public EntityCrudKitSuffixSettingsEditor<?> getSuffixSettingsEditor() {
+    public EntityCrudKitSuffixSettingsEditor<OBOIdSuffixSettings> getSuffixSettingsEditor() {
         return new OBOIdSuffixSettingsEditor();
     }
 
@@ -35,7 +35,7 @@ public class OBOIdSuffixKit extends EntityCrudKit {
     }
 
     @Override
-    public EntityCrudKitSuffixSettings getDefaultSuffixSettings() {
+    public OBOIdSuffixSettings getDefaultSuffixSettings() {
         return new OBOIdSuffixSettings();
     }
 

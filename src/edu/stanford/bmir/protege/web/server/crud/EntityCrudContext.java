@@ -13,12 +13,21 @@ import org.semanticweb.owlapi.model.OWLOntology;
  */
 public class EntityCrudContext implements HasDataFactory {
 
+    private OWLOntology targetOntology;
+
+    private OWLDataFactory dataFactory;
+
+    public EntityCrudContext(OWLOntology targetOntology, OWLDataFactory dataFactory) {
+        this.targetOntology = targetOntology;
+        this.dataFactory = dataFactory;
+    }
+
     public OWLOntology getTargetOntology() {
-        return null;
+        return targetOntology;
     }
 
     public OWLDataFactory getDataFactory() {
-        return null;
+        return dataFactory;
     }
 
     public Optional<String> getTargetLanguage() {

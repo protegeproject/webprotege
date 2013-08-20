@@ -54,6 +54,11 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
     @Override
+    public EntityCrudKitSettings<UUIDSuffixSettings> getSettings() {
+        return new EntityCrudKitSettings<UUIDSuffixSettings>(prefixSettings, suffixSettings);
+    }
+
+    @Override
     public <E extends OWLEntity> String getShortForm(E entity, EntityCrudContext context) {
         for(OWLOntology ontology : context.getTargetOntology().getImportsClosure()) {
             for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(entity.getIRI())) {
@@ -67,7 +72,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
     @Override
-    public <E extends OWLEntity> void create(EntityType<E> entityType, final EntityShortForm shortForm, final EntityCrudContext context, final OntologyChangeList.Builder<E> builder) {
+    public <E extends OWLEntity> E create(EntityType<E> entityType, final EntityShortForm shortForm, final EntityCrudContext context, final OntologyChangeList.Builder<E> builder) {
         OWLDataFactory dataFactory = context.getDataFactory();
         final OWLOntology targetOntology = context.getTargetOntology();
         final IRI iri = createIRI(prefixSettings.getIRIPrefix(), targetOntology);
@@ -76,6 +81,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
         final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, context);
         OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getRDFSLabel(), entity.getIRI(), labellingLiteral);
         builder.addAxiom(targetOntology, ax);
+        return entity;
     }
 
     @Override

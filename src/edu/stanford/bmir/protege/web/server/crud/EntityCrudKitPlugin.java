@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 
 /**
@@ -14,6 +15,8 @@ public interface EntityCrudKitPlugin<H extends EntityCrudKitHandler<S>, S extend
     EntityCrudKit<S> getEntityCrudKit();
 
     EntityCrudKitHandler<S> getEntityCrudKitHandler();
+
+    EntityCrudKitHandler<S> getEntityCrudKitHandler(EntityCrudKitSettings<S> settings);
 
     S getDefaultSettings();
 }

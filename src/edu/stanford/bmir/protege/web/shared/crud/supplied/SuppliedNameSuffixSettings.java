@@ -12,8 +12,6 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
  */
 public class SuppliedNameSuffixSettings extends EntityCrudKitSuffixSettings {
 
-    private static final EntityCrudKitId ID = EntityCrudKitId.get("ShortFormSuffix");
-
     private WhiteSpaceTreatment whiteSpaceTreatment;
 
     public SuppliedNameSuffixSettings() {
@@ -26,7 +24,7 @@ public class SuppliedNameSuffixSettings extends EntityCrudKitSuffixSettings {
 
     @Override
     public EntityCrudKitId getKitId() {
-        return ID;
+        return SuppliedNameSuffixKit.get().getKitId();
     }
 
     public WhiteSpaceTreatment getWhiteSpaceTreatment() {

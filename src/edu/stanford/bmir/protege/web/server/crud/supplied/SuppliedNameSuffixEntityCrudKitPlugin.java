@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.crud.supplied;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 
@@ -22,6 +23,11 @@ public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugi
     @Override
     public EntityCrudKitHandler<SuppliedNameSuffixSettings> getEntityCrudKitHandler() {
         return new SuppliedNameSuffixEntityCrudKitHandler();
+    }
+
+    @Override
+    public EntityCrudKitHandler<SuppliedNameSuffixSettings> getEntityCrudKitHandler(EntityCrudKitSettings<SuppliedNameSuffixSettings> settings) {
+        return new SuppliedNameSuffixEntityCrudKitHandler(settings.getPrefixSettings(), settings.getSuffixSettings());
     }
 
     @Override
