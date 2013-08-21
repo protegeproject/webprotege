@@ -26,6 +26,7 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.change.SetOntologyIDData;
 import org.semanticweb.owlapi.io.FileDocumentSource;
+import org.semanticweb.owlapi.io.StreamDocumentSource;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -526,7 +527,9 @@ public class OWLAPIProjectDocumentStore {
             if (uploadedFile.exists()) {
                 OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
                 InputStream inputStream = new BufferedInputStream(new FileInputStream(uploadedFile));
-                OWLOntology ontology = rootOntologyManager.loadOntologyFromOntologyDocument(inputStream);
+                StreamDocumentSource streamDocumentSource = new StreamDocumentSource(inputStream);
+                OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
+                OWLOntology ontology = rootOntologyManager.loadOntologyFromOntologyDocument(streamDocumentSource, loaderConfig);
                 inputStream.close();
                 OWLAPIProjectAttributes projectAttributes = createProjectAttributes(newProjectSettings, ontology);
                 rootOntologyManager.setOntologyFormat(ontology, new BinaryOWLOntologyDocumentFormat());
