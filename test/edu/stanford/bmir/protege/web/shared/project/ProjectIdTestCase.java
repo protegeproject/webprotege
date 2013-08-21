@@ -77,4 +77,9 @@ public class ProjectIdTestCase {
         String malformedId = "wrong";
         ProjectId.getFromNullable(malformedId);
     }
+
+    @Test(expected = NullPointerException.class)
+    public void getThrowsNullPointerForNullArgument() {
+        ProjectId.get(null);
+    }
 }
