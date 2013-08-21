@@ -1,9 +1,10 @@
-package edu.stanford.bmir.protege.web.shared.crud;
+package edu.stanford.bmir.protege.web.server.crud.persistence;
 
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Author: Matthew Horridge<br>
@@ -29,7 +30,7 @@ public class EntityCrudKitIdTestCase {
     public void equalsIsFalseWithDifferentLexicalForms() {
         EntityCrudKitId idA = EntityCrudKitId.get("A");
         EntityCrudKitId idB = EntityCrudKitId.get("B");
-        assertNotEquals(idA, idB);
+        assertFalse(idA.equals(idB));
     }
 
     @Test
