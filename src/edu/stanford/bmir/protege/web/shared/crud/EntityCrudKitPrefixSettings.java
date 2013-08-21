@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.crud;
 
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasIRIPrefix;
+import org.springframework.data.annotation.TypeAlias;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
+@TypeAlias("EntityCrudKitPrefixSettings")
 public final class EntityCrudKitPrefixSettings implements HasIRIPrefix, Serializable {
 
     private static final String DEFAULT_IRI_PREFIX = "http://webprotege.stanford.edu/";
