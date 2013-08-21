@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -23,8 +25,6 @@ public class OBOIdSuffixSettings extends EntityCrudKitSuffixSettings {
     private static final int DEFAULT_TOTAL_DIGITS = 7;
 
     private int totalDigits = DEFAULT_TOTAL_DIGITS;
-
-//    private static final String DEFAULT_IRI_PREFIX = "http://purl.obolibrary.org/obo/";
 
     private List<UserIdRange> userIdRanges = new ArrayList<UserIdRange>();
 
@@ -42,7 +42,7 @@ public class OBOIdSuffixSettings extends EntityCrudKitSuffixSettings {
 
     public OBOIdSuffixSettings(int totalDigits, List<UserIdRange> userIdRanges) {
         this.totalDigits = totalDigits;
-        this.userIdRanges.addAll(userIdRanges);
+        this.userIdRanges.addAll(checkNotNull(userIdRanges));
     }
 
 
