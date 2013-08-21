@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectAdminPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsResult;
@@ -24,16 +25,12 @@ public class SetEntityCrudKitSettingsActionHandler extends AbstractHasProjectAct
 
     @Override
     protected RequestValidator<SetEntityCrudKitSettingsAction> getAdditionalRequestValidator(SetEntityCrudKitSettingsAction action, RequestContext requestContext) {
-        // TODO: Should be owner?
-        return NullValidator.get();
+        return UserHasProjectAdminPermissionValidator.get();
     }
 
     @Override
     protected SetEntityCrudKitSettingsResult execute(SetEntityCrudKitSettingsAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        EntityCrudKitRegistry registry = EntityCrudKitRegistry.get();
-        EntityCrudKitHandler<?> handler = registry.getHandler(action.getSettings());
-        // TODO: Persist
-        project.setEntityCrudKitHandler(handler);
+        project.setEntityCrudKitSettings(action.getSettings());
         return new SetEntityCrudKitSettingsResult();
     }
 
