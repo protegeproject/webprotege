@@ -93,7 +93,7 @@ public class ProjectId implements Serializable {
     }
 
 
-    public static Optional<ProjectId> getFromNullable(String uuid) {
+    public static Optional<ProjectId> getFromNullable(String uuid) throws ProjectIdFormatException {
         if(uuid == null || uuid.isEmpty()) {
             return Optional.absent();
         }
