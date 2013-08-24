@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent"
+[
+            <!ENTITY downarrow "&#x25BE;">
+    ]
+>
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:HTMLPanel>
+
+        <g:Button ui:field="helpItem" addStyleNames="button-style">Help &downarrow;</g:Button>
+
+        <g:Button ui:field="userNameItem" addStyleNames="button-style">Sign In</g:Button>
+
+        <g:Button ui:field="signUpForAccountItem" addStyleNames="web-protege-button-red">Sign up for account</g:Button>
+
+    </g:HTMLPanel>
+</ui:UiBinder>

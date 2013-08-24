@@ -6,6 +6,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.Viewport;
@@ -13,15 +14,16 @@ import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
+import edu.stanford.bmir.protege.web.client.banner.BannerPresenter;
+import edu.stanford.bmir.protege.web.client.banner.BannerViewImpl;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
 import edu.stanford.bmir.protege.web.client.ui.TopPanel;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InvitationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InviteUserUtil;
+import edu.stanford.bmir.protege.web.client.workspace.WorkspaceViewImpl;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
-import java.util.Map;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
@@ -82,43 +84,47 @@ public class WebProtege implements EntryPoint {
     }
 
     protected void buildUI() {
-        Panel rootPanel = new Panel();
-        rootPanel.setId("rootpanel");
-        rootPanel.setLayout(new FitLayout());
-        rootPanel.setCls("white-bg");
-        rootPanel.setPaddings(2);
-
-        final Panel splittingPanel = new Panel();
-        splittingPanel.setId("splittingpanel");
-
-        splittingPanel.setLayout(new AnchorLayout());
-        splittingPanel.setBorder(false);
-        splittingPanel.setAutoScroll(false);
-
-        splittingPanel.add(new TopPanel(), new AnchorLayoutData("100% 50px"));
-
-        final ProjectDisplayContainerPanel projectDisplayContainerPanel = new ProjectDisplayContainerPanel();
-
-        splittingPanel.add(projectDisplayContainerPanel, new AnchorLayoutData("100% 90%"));
-
-        projectDisplayContainerPanel.addListener(new TabPanelListenerAdapter() {
-            @Override
-            public boolean doBeforeTabChange(TabPanel source, Panel newPanel, Panel oldPanel) {
-                GWT.log("Project tab changed");
-                return true;
-            }
-
-            @Override
-            public boolean doBeforeClose(Panel panel) {
-                GWT.log("Project tab close");
-                return true;
-            }
-        });
-
-        rootPanel.add(splittingPanel);
-        Viewport viewport = new Viewport(rootPanel);
-
-        rootPanel.doLayout();
+//
+//
+//        Panel rootPanel = new Panel();
+//        rootPanel.setId("rootpanel");
+//        rootPanel.setLayout(new FitLayout());
+//        rootPanel.setCls("white-bg");
+//        rootPanel.setPaddings(2);
+//
+//        final Panel splittingPanel = new Panel();
+//        splittingPanel.setId("splittingpanel");
+//
+//        splittingPanel.setLayout(new AnchorLayout());
+//        splittingPanel.setBorder(false);
+//        splittingPanel.setAutoScroll(false);
+//
+//        BannerPresenter bannerPresenter = new BannerPresenter();
+//        splittingPanel.add(bannerPresenter.getView().asWidget());
+//
+//        final ProjectDisplayContainerPanel projectDisplayContainerPanel = new ProjectDisplayContainerPanel();
+//
+//        splittingPanel.add(projectDisplayContainerPanel, new AnchorLayoutData("100% 90%"));
+//
+//        projectDisplayContainerPanel.addListener(new TabPanelListenerAdapter() {
+//            @Override
+//            public boolean doBeforeTabChange(TabPanel source, Panel newPanel, Panel oldPanel) {
+//                GWT.log("Project tab changed");
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean doBeforeClose(Panel panel) {
+//                GWT.log("Project tab close");
+//                return true;
+//            }
+//        });
+//
+//        rootPanel.add(splittingPanel);
+//        Viewport viewport = new Viewport(rootPanel);
+//
+//        rootPanel.doLayout();
+        RootPanel.get().add(new WorkspaceViewImpl());
 
         final Optional<String> appName = Application.get().getClientApplicationProperty(WebProtegePropertyName.APPLICATION_NAME);
         if (appName.isPresent()) {
