@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.library.progress;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 
 /**
  * Author: Matthew Horridge<br>
@@ -41,6 +43,19 @@ public class ProgressMonitor {
                 int x = (clientWidth - 400) / 2;
                 int y = (int)(0.3 * clientHeight) - offsetHeight;
                 popupPanel.setPopupPosition(x, y);
+            }
+        });
+//        scheduleCentering(popupPanel);
+    }
+
+    private static void scheduleCentering(final PopupPanel popupPanel) {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                int left = (Window.getClientWidth() - popupPanel.getOffsetWidth()) / 2;
+                int top = (Window.getClientHeight() - popupPanel.getOffsetHeight()) / 2;
+                popupPanel.setPopupPosition(left, top);
+                popupPanel.setVisible(true);
             }
         });
     }
