@@ -8,6 +8,7 @@
   
 <module rename-to="webprotege">
 
+
     <source path="client"/>
     <source path="shared"/>
 
@@ -30,6 +31,6 @@
         <!--<when-type-assignable class="edu.stanford.bmir.protege.web.client.ui.generated.PluginFactory"/>-->
     <!--</generate-with>-->
 
-	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/> 
+	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
 
 </module>
