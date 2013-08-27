@@ -649,4 +649,35 @@ select {
 
 .button-style:hover {
     color: #444444;
+    box-shadow: 0 0 2px 1px rgba(150, 150, 150, 0.20);
+    border-color: #a7a7a7;
+}
+
+.button-style:active {
+    color: #444444;
+    box-shadow: 0 0 4px 2px rgba(50, 50, 50, 0.2) inset;
+    border-color: #a7a7a7;
+}
+
+.button-style-red {
+    background: linear-gradient(#DD4545, #C80202) repeat scroll 0 0 #b72130;
+    border: 1px solid #b2151e;
+    border-radius: 3px 3px 3px 3px;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: "Helvetica Neue", Helvetica, Arial, Tahoma, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 1px;
+    padding: 5px 8px;
+}
+
+.button-style-red:hover {
+    box-shadow: 0 0 2px 1px rgba(150, 150, 150, 0.20);
+    border-color: #851418;
+}
+
+.button-style-red:active {
+    box-shadow: 0 0 4px 2px rgba(50, 50, 50, 0.2) inset;
+    border-color: #a7a7a7;
 }
