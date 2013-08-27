@@ -5,13 +5,27 @@
 >
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel>
 
-        <g:Button ui:field="helpItem" addStyleNames="button-style">Help &downarrow;</g:Button>
+    <ui:style>
+        .main {
+            margin-left: 10px;
+        }
+        .help-item {
+            margin-left: 10px;
+        }
+    </ui:style>
+
+
+
+    <g:HTMLPanel addStyleNames="{style.main}">
 
         <g:Button ui:field="userNameItem" addStyleNames="button-style">Sign In</g:Button>
 
-        <g:Button ui:field="signUpForAccountItem" addStyleNames="web-protege-button-red">Sign up for account</g:Button>
+
+        <g:Button ui:field="helpItem" addStyleNames="button-style {style.help-item}">Help &downarrow;</g:Button>
+
+
+        <g:Button ui:field="signUpForAccountItem" addStyleNames="button-style-red">Sign up for account</g:Button>
 
     </g:HTMLPanel>
 </ui:UiBinder>
