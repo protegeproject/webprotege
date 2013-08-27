@@ -2,10 +2,18 @@ package edu.stanford.bmir.protege.web.client.actionbar.project;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -14,6 +22,25 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Date: 23/08/2013
  */
 public class ProjectBarImpl extends Composite implements ProjectActionBar {
+
+    private ShowShareSettingsHandler showShareSettingsHandler = new ShowShareSettingsHandler() {
+        @Override
+        public void handleShowShareSettings() {
+        }
+    };
+
+    private ShowNewEntitySettingsHandler showNewEntitySettingsHandler = new ShowNewEntitySettingsHandler() {
+        @Override
+        public void handleShowNewEntitySettings() {
+        }
+    };
+
+    private ShowProjectDetailsHandler showProjectDetailsHandler = new ShowProjectDetailsHandler() {
+        @Override
+        public void handleShowProjectDetails() {
+        }
+    };
+
 
     interface ProjectBarImplUiBinder extends UiBinder<HTMLPanel, ProjectBarImpl> {
 
@@ -26,6 +53,37 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
         initWidget(rootElement);
     }
 
+    @UiField
+    protected ButtonBase shareProjectItem;
+
+    @UiField
+    protected ButtonBase projectSettingsItem;
+
+
+
+    @UiHandler("shareProjectItem")
+    protected void handleShareProjectItemClicked(ClickEvent clickEvent) {
+        showShareSettingsHandler.handleShowShareSettings();
+    }
+
+    @UiHandler("projectSettingsItem")
+    protected void handleProjectSettingsItemClicked(ClickEvent clickEvent) {
+        PopupMenu popupMenu = new PopupMenu();
+        popupMenu.addItem("Project details...", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                showProjectDetailsHandler.handleShowProjectDetails();
+            }
+        });
+
+        popupMenu.addItem("New entities settings...", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+            }
+        });
+        popupMenu.showRelativeTo(projectSettingsItem);
+    }
+
     @Override
     public void setProjectId(Optional<ProjectId> projectId) {
         setVisible(projectId.isPresent());
@@ -33,10 +91,12 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
 
     @Override
     public void setShowProjectDetailsHandler(ShowProjectDetailsHandler showProjectDetailsHandler) {
+        this.showProjectDetailsHandler = checkNotNull(showProjectDetailsHandler);
     }
 
     @Override
     public void setShowNewEntitySettingsHandler(ShowNewEntitySettingsHandler showNewEntitiesHandler) {
+        this.showNewEntitySettingsHandler = checkNotNull(showNewEntitiesHandler);
     }
 
     @Override
@@ -45,5 +105,6 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
 
     @Override
     public void setShowShareSettingsHandler(ShowShareSettingsHandler showShareSettingsHandler) {
+        this.showShareSettingsHandler = checkNotNull(showShareSettingsHandler);
     }
 }

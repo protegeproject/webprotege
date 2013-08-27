@@ -3,6 +3,9 @@ package edu.stanford.bmir.protege.web.client.banner;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.actionbar.application.*;
 import edu.stanford.bmir.protege.web.client.actionbar.project.ProjectActionBar;
+import edu.stanford.bmir.protege.web.client.actionbar.project.ShareSettingsHandlerImpl;
+import edu.stanford.bmir.protege.web.client.actionbar.project.ShowNewEntitySettingsHandlerImpl;
+import edu.stanford.bmir.protege.web.client.actionbar.project.ShowProjectDetailsHandlerImpl;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
@@ -25,6 +28,9 @@ public class BannerPresenter {
     public BannerPresenter() {
         final ProjectActionBar p = bannerView.getProjectActionBar();
         p.setProjectId(Application.get().getActiveProject());
+        p.setShowShareSettingsHandler(new ShareSettingsHandlerImpl());
+        p.setShowNewEntitySettingsHandler(new ShowNewEntitySettingsHandlerImpl());
+        p.setShowProjectDetailsHandler(new ShowProjectDetailsHandlerImpl());
 
         EventBusManager.getManager().registerHandler(ActiveProjectChangedEvent.TYPE, new ActiveProjectChangedHandler() {
             @Override
@@ -39,6 +45,8 @@ public class BannerPresenter {
         w.setSignOutRequestHandler(new SignOutRequestHandlerImpl());
         w.setSignUpForAccountHandler(new SignUpForAccountHandlerImpl());
         w.setChangePasswordHandler(new ChangePasswordHandlerImpl());
+
+
         EventBusManager.getManager().registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {
