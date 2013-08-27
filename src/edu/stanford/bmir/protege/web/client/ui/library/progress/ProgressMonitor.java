@@ -40,12 +40,12 @@ public class ProgressMonitor {
             public void setPosition(int offsetWidth, int offsetHeight) {
                 int clientWidth = Window.getClientWidth();
                 int clientHeight = Window.getClientHeight();
-                int x = (clientWidth - 400) / 2;
-                int y = (int)(0.3 * clientHeight) - offsetHeight;
+                int x = (clientWidth - offsetWidth) / 2;
+                int y = (clientHeight - offsetHeight) / 2;
                 popupPanel.setPopupPosition(x, y);
             }
         });
-//        scheduleCentering(popupPanel);
+        scheduleCentering(popupPanel);
     }
 
     private static void scheduleCentering(final PopupPanel popupPanel) {
