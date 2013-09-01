@@ -76,7 +76,7 @@ public class EditProfileUtil {
                 "&nbsp<b><span style='font-size:100%;text-decoration:underline;'>Click here to change your password</span></b>");
         changePasswordHTML.setStyleName("links-blue");
         //if else https
-        addChangePasswordHTMLClickHandler(changePasswordHTML);
+//        addChangePasswordHTMLClickHandler(changePasswordHTML);
 
         editProfileTable.setWidget(3, 1, changePasswordHTML);
 
@@ -200,17 +200,17 @@ public class EditProfileUtil {
         }
     }
 
-    /**
-     * @param changePasswordHTML
-     */
-    protected void addChangePasswordHTMLClickHandler(final HTML changePasswordHTML) {
-        Boolean isLoginWithHttps = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_ENABLED, false);
-        if (isLoginWithHttps) {
-            changePasswordHTML.addClickHandler(changePasswordWithHTTPSClickHandler);
-        } else {
-            addChangePasswordWithEncryptionHandler(changePasswordHTML, isLoginWithHttps);
-        }
-    }
+//    /**
+//     * @param changePasswordHTML
+//     */
+//    protected void addChangePasswordHTMLClickHandler(final HTML changePasswordHTML) {
+//        Boolean isLoginWithHttps = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_ENABLED, false);
+//        if (isLoginWithHttps) {
+//            changePasswordHTML.addClickHandler(changePasswordWithHTTPSClickHandler);
+//        } else {
+//            addChangePasswordWithEncryptionHandler(changePasswordHTML, isLoginWithHttps);
+//        }
+//    }
 
 
     /**
@@ -337,57 +337,57 @@ public class EditProfileUtil {
         }
     }
 
-    ClickHandler changePasswordWithHTTPSClickHandler = new ClickHandler() {
+//    ClickHandler changePasswordWithHTTPSClickHandler = new ClickHandler() {
+//
+//        public void onClick(ClickEvent event) {
+//            final LoginUtil loginUtil = new LoginUtil();
+//            String httpsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
+//            Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
+//            notifyIfPasswordChanged();
+//            String authUrl = loginUtil.getAuthenticateWindowUrl(
+//                    AuthenticationConstants.AUTHEN_TYPE_CHANGE_PASSWORD, httpsPort);
+//            authUrl = authUrl + "&" + AuthenticationConstants.USERNAME + "="
+//                    + Application.get().getUserId().getUserName();
+//            loginUtil.openNewWindow(authUrl, "440", "260", "0");
+//        }
+//    };
 
-        public void onClick(ClickEvent event) {
-            final LoginUtil loginUtil = new LoginUtil();
-            String httpsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
-            Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
-            notifyIfPasswordChanged();
-            String authUrl = loginUtil.getAuthenticateWindowUrl(
-                    AuthenticationConstants.AUTHEN_TYPE_CHANGE_PASSWORD, httpsPort);
-            authUrl = authUrl + "&" + AuthenticationConstants.USERNAME + "="
-                    + Application.get().getUserId().getUserName();
-            loginUtil.openNewWindow(authUrl, "440", "260", "0");
-        }
-    };
+//    protected void addChangePasswordWithEncryptionHandler(HTML changePasswordHTML, final boolean isLoginWithHttps) {
+//        changePasswordHTML.addClickHandler(new ClickHandler() {
+//
+//            public void onClick(ClickEvent event) {
+//                LoginUtil loginUtil = new LoginUtil();
+//                loginUtil.changePassword(Application.get().getUserId(), isLoginWithHttps);
+//
+//            }
+//        });
+//    }
 
-    protected void addChangePasswordWithEncryptionHandler(HTML changePasswordHTML, final boolean isLoginWithHttps) {
-        changePasswordHTML.addClickHandler(new ClickHandler() {
-
-            public void onClick(ClickEvent event) {
-                LoginUtil loginUtil = new LoginUtil();
-                loginUtil.changePassword(Application.get().getUserId(), isLoginWithHttps);
-
-            }
-        });
-    }
-
-    protected void notifyIfPasswordChanged() {
-        final Integer timeout = 5;//
-        final long initTime = System.currentTimeMillis();
-        final Timer checkSessionTimer = new Timer() {
-            @Override
-            public void run() {
-                final Timer timer = this;
-                long curTime = System.currentTimeMillis();
-                long maxTime = 1000 * 60 * timeout;
-                if (curTime - initTime > maxTime) {
-                    timer.cancel();
-                }
-                String passwordChangedCookie = Cookies
-                        .getCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
-                if (passwordChangedCookie != null) {
-                    timer.cancel();
-
-                    if (passwordChangedCookie.equalsIgnoreCase(AuthenticationConstants.CHANGE_PASSWORD_SUCCESS)) {
-                        MessageBox.alert("Password changed successfully");
-                    }
-                    Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
-                }
-            }
-        };
-        checkSessionTimer.scheduleRepeating(2000);
-    }
+//    protected void notifyIfPasswordChanged() {
+//        final Integer timeout = 5;//
+//        final long initTime = System.currentTimeMillis();
+//        final Timer checkSessionTimer = new Timer() {
+//            @Override
+//            public void run() {
+//                final Timer timer = this;
+//                long curTime = System.currentTimeMillis();
+//                long maxTime = 1000 * 60 * timeout;
+//                if (curTime - initTime > maxTime) {
+//                    timer.cancel();
+//                }
+//                String passwordChangedCookie = Cookies
+//                        .getCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
+//                if (passwordChangedCookie != null) {
+//                    timer.cancel();
+//
+//                    if (passwordChangedCookie.equalsIgnoreCase(AuthenticationConstants.CHANGE_PASSWORD_SUCCESS)) {
+//                        MessageBox.alert("Password changed successfully");
+//                    }
+//                    Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
+//                }
+//            }
+//        };
+//        checkSessionTimer.scheduleRepeating(2000);
+//    }
 
 }
