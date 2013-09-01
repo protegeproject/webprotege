@@ -4,6 +4,7 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordPresenter;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
@@ -20,48 +21,51 @@ public class ChangePasswordHandlerImpl implements ChangePasswordHandler {
 
     @Override
     public void handleChangePassword() {
-        final LoginUtil loginUtil = new LoginUtil();
-        Boolean isLoginWithHttps = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_ENABLED, false);
-        if (isLoginWithHttps) {
-            changePasswordWithHttps(loginUtil);
-        }
-        else {
-            loginUtil.changePassword(Application.get().getUserId(), isLoginWithHttps);
-        }
+        ChangePasswordPresenter changePasswordPresenter = new ChangePasswordPresenter(Application.get().getUserId());
+        changePasswordPresenter.changePassword();
+
+//        final LoginUtil loginUtil = new LoginUtil();
+//        Boolean isLoginWithHttps = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_ENABLED, false);
+//        if (isLoginWithHttps) {
+//            changePasswordWithHttps(loginUtil);
+//        }
+//        else {
+//            loginUtil.changePassword(Application.get().getUserId(), isLoginWithHttps);
+//        }
     }
 
-    private void changePasswordWithHttps(final LoginUtil loginUtil) {
-        String httsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
-        Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
-        notifyIfPasswordChanged();
-        String authUrl = loginUtil.getAuthenticateWindowUrl(AuthenticationConstants.AUTHEN_TYPE_CHANGE_PASSWORD, httsPort);
-        authUrl = authUrl + "&" + AuthenticationConstants.USERNAME + "=" + Application.get().getUserId().getUserName();
-        loginUtil.openNewWindow(authUrl, "440", "260", "0");
-    }
+//    private void changePasswordWithHttps(final LoginUtil loginUtil) {
+//        String httsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
+//        Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
+//        notifyIfPasswordChanged();
+//        String authUrl = loginUtil.getAuthenticateWindowUrl(AuthenticationConstants.AUTHEN_TYPE_CHANGE_PASSWORD, httsPort);
+//        authUrl = authUrl + "&" + AuthenticationConstants.USERNAME + "=" + Application.get().getUserId().getUserName();
+//        loginUtil.openNewWindow(authUrl, "440", "260", "0");
+//    }
 
-    protected void notifyIfPasswordChanged() {
-        final Integer timeout = 5; // minutes
-        final long initTime = System.currentTimeMillis();
-        final Timer checkSessionTimer = new Timer() {
-            @Override
-            public void run() {
-                final Timer timer = this;
-                long curTime = System.currentTimeMillis();
-                long maxTime = 1000 * 60 * timeout;
-                if (curTime - initTime > maxTime) {
-                    timer.cancel();
-                }
-                String passwordChangedCookie = Cookies.getCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
-                if (passwordChangedCookie != null) {
-                    timer.cancel();
-
-                    if (passwordChangedCookie.equalsIgnoreCase(AuthenticationConstants.CHANGE_PASSWORD_SUCCESS)) {
-                        MessageBox.alert("Password Changed successfully");
-                    }
-                    Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
-                }
-            }
-        };
-        checkSessionTimer.scheduleRepeating(2000);
-    }
+//    protected void notifyIfPasswordChanged() {
+//        final Integer timeout = 5; // minutes
+//        final long initTime = System.currentTimeMillis();
+//        final Timer checkSessionTimer = new Timer() {
+//            @Override
+//            public void run() {
+//                final Timer timer = this;
+//                long curTime = System.currentTimeMillis();
+//                long maxTime = 1000 * 60 * timeout;
+//                if (curTime - initTime > maxTime) {
+//                    timer.cancel();
+//                }
+//                String passwordChangedCookie = Cookies.getCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
+//                if (passwordChangedCookie != null) {
+//                    timer.cancel();
+//
+//                    if (passwordChangedCookie.equalsIgnoreCase(AuthenticationConstants.CHANGE_PASSWORD_SUCCESS)) {
+//                        MessageBox.alert("Password Changed successfully");
+//                    }
+//                    Cookies.removeCookie(AuthenticationConstants.CHANGE_PASSWORD_RESULT);
+//                }
+//            }
+//        };
+//        checkSessionTimer.scheduleRepeating(2000);
+//    }
 }
