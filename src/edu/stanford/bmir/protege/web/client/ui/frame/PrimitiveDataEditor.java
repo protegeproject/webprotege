@@ -24,62 +24,64 @@ import java.util.SortedSet;
  */
 public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<OWLPrimitiveData>, HasFocusHandlers, HasKeyUpHandlers, HasTextRendering, HasPlaceholder {
 
-    public  void setAllowedTypes(SortedSet<PrimitiveType> primitiveTypes);
+    LanguageEditor getLanguageEditor();
+    
+    void setAllowedTypes(SortedSet<PrimitiveType> primitiveTypes);
 
-    public  void setShowLinkForEntities(boolean showLinkForEntities);
+    void setShowLinkForEntities(boolean showLinkForEntities);
 
     /**
      * Sets the FreshEntitiesHandler for this editor.
      * @param handler The handler.  Not {@code null}.
      * @throws NullPointerException if {@code handler} is {@code null}.
      */
-    public  void setFreshEntitiesHandler(FreshEntitiesHandler handler);
+    void setFreshEntitiesHandler(FreshEntitiesHandler handler);
 
 
 
 
 
-    public  LanguageEditor getLanguageEditor();
 
-    public  void setMode(ExpandingTextBoxMode mode);
 
-    public  boolean isAnnotationPropertiesAllowed();
+    void setMode(ExpandingTextBoxMode mode);
 
-    public  void setAnnotationPropertiesAllowed(boolean annotationPropertiesAllowed);
+    boolean isAnnotationPropertiesAllowed();
 
-    public  boolean isDataPropertiesAllowed();
+    void setAnnotationPropertiesAllowed(boolean annotationPropertiesAllowed);
 
-    public  void setDataPropertiesAllowed(boolean dataPropertiesAllowed);
+    boolean isDataPropertiesAllowed();
 
-    public  boolean isObjectPropertiesAllowed();
+    void setDataPropertiesAllowed(boolean dataPropertiesAllowed);
 
-    public  void setObjectPropertiesAllowed(boolean objectPropertiesAllowed);
+    boolean isObjectPropertiesAllowed();
 
-    public  boolean isClassesAllowed();
+    void setObjectPropertiesAllowed(boolean objectPropertiesAllowed);
 
-    public  void setClassesAllowed(boolean classesAllowed);
+    boolean isClassesAllowed();
 
-    public  boolean isDatatypesAllowed();
+    void setClassesAllowed(boolean classesAllowed);
 
-    public  void setDatatypesAllowed(boolean datatypesAllowed);
+    boolean isDatatypesAllowed();
 
-    public  boolean isNamedIndividualsAllowed();
+    void setDatatypesAllowed(boolean datatypesAllowed);
 
-    public  void setNamedIndividualsAllowed(boolean namedIndividualsAllowed);
+    boolean isNamedIndividualsAllowed();
 
-    public  boolean isLiteralAllowed();
+    void setNamedIndividualsAllowed(boolean namedIndividualsAllowed);
 
-    public  void setLiteralAllowed(boolean literalAllowed);
+    boolean isLiteralAllowed();
 
-    public  boolean isIRIAllowed();
+    void setLiteralAllowed(boolean literalAllowed);
 
-    public  void setIRIAllowed(boolean iriAllowed);
+    boolean isIRIAllowed();
 
-    public  void setAllowedType(PrimitiveType type, boolean allowed);
+    void setIRIAllowed(boolean iriAllowed);
 
-    public  void coerceToEntityType(EntityType<?> type);
+    void setAllowedType(PrimitiveType type, boolean allowed);
 
-    public  void setSuggestMode(PrimitiveDataEditorSuggestOracleMode mode);
+    void coerceToEntityType(EntityType<?> type);
+
+    void setSuggestMode(PrimitiveDataEditorSuggestOracleMode mode);
 
 
 
