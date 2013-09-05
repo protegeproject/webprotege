@@ -10,5 +10,13 @@ import com.google.common.base.Optional;
  */
 public interface PrimitiveDataParser {
 
-    void parsePrimitiveData(String content, Optional<String> language, PrimitiveDataParsingContext context, PrimitiveDataParserCallback callback);
+    /**
+     * Parses the specified string into {@link edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData}.
+     * @param text The string to be parsed.  Not {@code null}.
+     * @param language The language tag.  Not {@code null}.
+     * @param context The parsing context.  Not {@code null}.
+     * @param callback The callback to be notified of the result.  Not {@code null}.
+     * @throws NullPointerException if any parameters are {@code null}.
+     */
+    void parsePrimitiveData(String text, Optional<String> language, PrimitiveDataParsingContext context, PrimitiveDataParserCallback callback);
 }

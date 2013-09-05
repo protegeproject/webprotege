@@ -40,9 +40,16 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
 
     @Override
     public void parsePrimitiveData(String content, Optional<String> lang, final PrimitiveDataParsingContext context, final PrimitiveDataParserCallback callback) {
-        final String trimmedContent = content.trim();
-        parsePrimitiveDataFromTrimmedContent(trimmedContent, lang, context, callback);
+        final String trimmedContent = checkNotNull(content).trim();
+        parsePrimitiveDataFromTrimmedContent(trimmedContent, checkNotNull(lang), checkNotNull(context), checkNotNull(callback));
     }
+
+
+    @Override
+    public OWLLiteral parseLiteral(String text, Optional<String> language) {
+        return DataFactory.parseLiteral(checkNotNull(text), checkNotNull(language));
+    }
+
 
 
     private void handleSuccess(OWLPrimitiveData parsedData, PrimitiveDataParserCallback parserCallback) {
@@ -152,11 +159,6 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
         return new OWLLiteralData(literal);
     }
 
-
-    @Override
-    public OWLLiteral parseLiteral(String text, Optional<String> language) {
-        return DataFactory.parseLiteral(checkNotNull(text), checkNotNull(language));
-    }
 
 
 
