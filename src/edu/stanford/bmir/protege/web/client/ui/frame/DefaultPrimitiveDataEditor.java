@@ -76,7 +76,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private Optional<OWLPrimitiveData> currentData = Optional.absent();
 
-    private boolean showLinkForEntities = true;
+    private EntityLinkMode entityLinkMode = EntityLinkMode.SHOW_LINKS_FOR_ENTITIES;
 
     private FreshEntitiesHandler freshEntitiesHandler = new NullFreshEntitiesHandler();
 
@@ -162,8 +162,13 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
     }
 
     @Override
-    public void setShowLinkForEntities(boolean showLinkForEntities) {
-        this.showLinkForEntities = showLinkForEntities;
+    public void setEntityLinkMode(EntityLinkMode entityLinkMode) {
+        this.entityLinkMode = entityLinkMode;
+    }
+
+    @Override
+    public void setShowLinksForEntities(boolean showLinksForEntities) {
+        setEntityLinkMode(showLinksForEntities ? EntityLinkMode.SHOW_LINKS_FOR_ENTITIES : EntityLinkMode.DO_NOT_SHOW_LINKS_FOR_ENTITIES);
     }
 
     private void handleAnchorClick(ClickEvent event) {

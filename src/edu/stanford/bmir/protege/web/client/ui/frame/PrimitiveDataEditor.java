@@ -41,10 +41,19 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
 
     /**
      * Specifies whether or not a link should be shown when the content of the editor is an entity.
-     * @param showLinkForEntities {@code true} if a link should be shown when the content of the editor is an entity,
-     *                                        otherwise {@code false}.
+     * @param entityLinkMode The mode for showing entity links.  Not {@code null}.
      */
-    void setShowLinkForEntities(boolean showLinkForEntities);
+    void setEntityLinkMode(EntityLinkMode entityLinkMode);
+
+    /**
+     * A setter than can be used with UIBinder for setting whether or not a link should be shown when the content
+     * of the editor is an entity.
+     * @param showLinksForEntities {@code true} if links should be shown (equivalent to setting the link mode
+     *                                         to {@link EntityLinkMode#SHOW_LINKS_FOR_ENTITIES}),
+     *                                         otherwise {@code false} (equivalent to setting the link mode to
+     *                                         {@link EntityLinkMode#DO_NOT_SHOW_LINKS_FOR_ENTITIES}).
+     */
+    void setShowLinksForEntities(boolean showLinksForEntities);
 
     /**
      * Sets the primitive types that this editor can edit.
