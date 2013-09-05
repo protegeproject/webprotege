@@ -1,6 +1,8 @@
-package edu.stanford.bmir.protege.web.client.ui.frame;
+package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.client.primitive.FreshEntitiesHandler;
+import edu.stanford.bmir.protege.web.client.primitive.FreshEntitiesPolicy;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 

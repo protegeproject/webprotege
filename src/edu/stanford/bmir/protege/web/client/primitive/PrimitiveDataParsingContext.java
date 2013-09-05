@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.frame;
+package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
@@ -69,7 +69,7 @@ public class PrimitiveDataParsingContext implements FreshEntitiesHandler {
 
     /**
      * Gets the policy supported by this handler.
-     * @return The {@link edu.stanford.bmir.protege.web.client.ui.frame.FreshEntitiesPolicy}.  Not {@code null}.
+     * @return The {@link FreshEntitiesPolicy}.  Not {@code null}.
      */
     @Override
     public FreshEntitiesPolicy getFreshEntitiesPolicy() {
