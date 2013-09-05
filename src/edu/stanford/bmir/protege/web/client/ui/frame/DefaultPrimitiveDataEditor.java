@@ -50,7 +50,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * {@link EntityLookupService} and has an option to allow the creation of new primitives.
  * </p>
  */
-public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements HasEnabled {
+public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDataEditor, HasEnabled {
 
    private static final EntityLookupServiceAsync LOOKUP_SERVICE_ASYNC = GWT.create(EntityLookupService.class);
 
@@ -89,10 +89,14 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
     private boolean enabled;
 
 
+    private FlowPanel baseWidget;
+
+
 
     public DefaultPrimitiveDataEditor(ProjectId projectId) {
         this.projectId = projectId;
         this.languageEditor = new DefaultLanguageEditor();
+        this.baseWidget = new FlowPanel();
         entitySuggestOracle = new PrimitiveDataEditorSuggestOracle(new EntitySuggestOracle(projectId, SUGGEST_LIMIT, EntityType.OBJECT_PROPERTY));
         TextBox textBox = new TextBox();
         textBox.setWidth("100%");
@@ -100,7 +104,8 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
 
         editor = new ExpandingTextBox();
         editor.addStyleName("web-protege-form-layout-editor-input");
-        add(editor);
+        baseWidget.add(editor);
+        initWidget(baseWidget);
 
 
         editor.setMode(ExpandingTextBoxMode.SINGLE_LINE);
@@ -265,11 +270,11 @@ public class DefaultPrimitiveDataEditor extends PrimitiveDataEditor implements H
 
     private void showErrorLabel() {
         setupErrorLabel();
-        add(errorLabel);
+        baseWidget.add(errorLabel);
     }
 
     private void hideErrorLabel() {
-        remove(errorLabel);
+        baseWidget.remove(errorLabel);
     }
 
 
