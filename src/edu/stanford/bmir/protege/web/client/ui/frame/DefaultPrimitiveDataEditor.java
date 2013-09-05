@@ -52,13 +52,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDataEditor, HasEnabled {
 
-   private static final EntityLookupServiceAsync LOOKUP_SERVICE_ASYNC = GWT.create(EntityLookupService.class);
-
+    private static final EntityLookupServiceAsync LOOKUP_SERVICE_ASYNC = GWT.create(EntityLookupService.class);
 
     public static final int SUGGEST_LIMIT = 20;
 
     public static final String ERROR_STYLE_NAME = "web-protege-error-label";
-
 
     private final ProjectId projectId;
 
@@ -70,9 +68,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private final LanguageEditor languageEditor;
 
-
     private final Set<PrimitiveType> allowedTypes = new LinkedHashSet<PrimitiveType>();
-
 
     private Optional<OWLPrimitiveData> currentData = Optional.absent();
 
@@ -88,10 +84,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private boolean enabled;
 
-
     private FlowPanel baseWidget;
-
-
 
     public DefaultPrimitiveDataEditor(ProjectId projectId) {
         this.projectId = projectId;
@@ -101,13 +94,10 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         TextBox textBox = new TextBox();
         textBox.setWidth("100%");
         textBox.setEnabled(false);
-
         editor = new ExpandingTextBox();
         editor.addStyleName("web-protege-form-layout-editor-input");
         baseWidget.add(editor);
         initWidget(baseWidget);
-
-
         editor.setMode(ExpandingTextBoxMode.SINGLE_LINE);
         editor.setOracle(entitySuggestOracle);
         editor.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
@@ -123,8 +113,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
                 handleEdit();
             }
         });
-
-
         languageEditor.addValueChangeHandler(new ValueChangeHandler<Optional<String>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<String>> event) {
@@ -177,7 +165,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         if (!currentData.isPresent()) {
             return;
         }
-
         EntityData entityData = currentData.get().accept(new OWLPrimitiveDataVisitorAdapter<EntityData, RuntimeException>() {
             @Override
             public EntityData visit(OWLClassData data) throws RuntimeException {
@@ -228,26 +215,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
                 return null;
             }
         });
-
-
-
-//        // TODO: Horrible HACK
-//        if (entityData != null) {
-//            Collection<EntityData> sel = new HashSet<EntityData>();
-//            sel.add(entityData);
-//            Widget parent = getParent();
-//            while(parent != null) {
-//                if(parent instanceof AbstractTab) {
-//                    ((AbstractTab) parent).setSelection(sel);
-//                    break;
-//                }
-//                parent = parent.getParent();
-//            }
-//            GWT.log("NAV to " + entityData);
-//        }
-//
-
-
     }
 
     /**
@@ -260,8 +227,9 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     /**
      * Sets whether this widget is enabled.
+     *
      * @param enabled <code>true</code> to enable the widget, <code>false</code>
-     * to disable it
+     *                to disable it
      */
     @Override
     public void setEnabled(boolean enabled) {
@@ -275,7 +243,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         return languageEditor;
     }
 
-
     private void showErrorLabel() {
         setupErrorLabel();
         baseWidget.add(errorLabel);
@@ -285,9 +252,8 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         baseWidget.remove(errorLabel);
     }
 
-
     private void reparsePrimitiveData() {
-        if(isCurrentDataRendered()) {
+        if (isCurrentDataRendered()) {
             return;
         }
         PrimitiveDataParsingContext context = new PrimitiveDataParsingContext(projectId, allowedTypes, freshEntitiesHandler);
@@ -312,27 +278,26 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
     }
 
     private boolean isCurrentDataRendered() {
-        if(!currentData.isPresent()) {
+        if (!currentData.isPresent()) {
             return getTrimmedText().isEmpty() && !languageEditor.getValue().isPresent();
         }
         OWLPrimitiveData data = currentData.get();
         String currentBrowserText = data.getBrowserText();
-        if(!currentBrowserText.equals(getTrimmedText())) {
+        if (!currentBrowserText.equals(getTrimmedText())) {
             return false;
         }
-        if(!isCurrentEntityTypeAllowed()) {
+        if (!isCurrentEntityTypeAllowed()) {
             return false;
         }
-        if(data instanceof OWLLiteralData) {
+        if (data instanceof OWLLiteralData) {
             final OWLLiteral literal = ((OWLLiteralData) data).getLiteral();
             Optional<String> lang;
-            if(literal.hasLang()) {
+            if (literal.hasLang()) {
                 lang = Optional.of(literal.getLang());
-            }
-            else {
+            } else {
                 lang = Optional.absent();
             }
-            if(!lang.equals(languageEditor.getValue())) {
+            if (!lang.equals(languageEditor.getValue())) {
                 return false;
             }
         }
@@ -344,62 +309,39 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         editor.setPlaceholder(placeholder);
     }
 
-//    @Override
-//    public void setDefaultPlaceholder() {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("Enter ");
-//        if (isClassesAllowed()) {
-//            sb.append("class name, ");
-//        }
-//        if (isObjectPropertiesAllowed()) {
-//            sb.append("object property name, ");
-//        }
-//
-//    }
-
     @Override
     public String getPlaceholder() {
         return editor.getPlaceholder();
     }
 
-
-
     private void updateDisplayForCurrentData() {
         setIconInsetStyleNameForEntityData();
         validateCurrentEntityTypeAgainstAllowedTypes();
-
-
-//        if (showLinkForEntities) {
-//            editor.setAnchorVisible(true);
-            if(isExternalIRI()) {
-                editor.setAnchorTitle("Open link in new window");
-                editor.setAnchorVisible(true);
-            }
-            else {
-//                editor.setAnchorTitle("Navigate to " + currentData.get().getBrowserText());
-                editor.setAnchorVisible(false);
-            }
-//        }
+        if (isExternalIRI()) {
+            editor.setAnchorTitle("Open link in new window");
+            editor.setAnchorVisible(true);
+        } else {
+            editor.setAnchorVisible(false);
+        }
     }
 
     private boolean isExternalIRI() {
-        if(!currentData.isPresent()) {
+        if (!currentData.isPresent()) {
             return false;
         }
         OWLPrimitiveData data = currentData.get();
-        if(!(data instanceof IRIData)) {
+        if (!(data instanceof IRIData)) {
             return false;
         }
         IRI iri = (IRI) data.getObject();
-        if(!iri.isAbsolute()) {
+        if (!iri.isAbsolute()) {
             return false;
         }
-        if(!"http".equalsIgnoreCase(iri.getScheme())) {
+        if (!"http".equalsIgnoreCase(iri.getScheme())) {
             return false;
         }
         return true;
     }
-
 
     private void setIconInsetStyleName(String name) {
         if (lastIconInsetStyleName != null) {
@@ -410,7 +352,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
     }
 
     private void setIconInsetStyleNameForEntityData() {
-        if(!currentData.isPresent()) {
+        if (!currentData.isPresent()) {
             clearIconInset();
             return;
         }
@@ -464,7 +406,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
                 sb.append(entityData.getBrowserText());
                 sb.append("\" is an ");
                 sb.append(typeName);
-                if(!DataFactory.isFreshEntity(data.getEntity())) {
+                if (!DataFactory.isFreshEntity(data.getEntity())) {
                     sb.append("\n");
                     sb.append("<");
                     IRI iri = data.getEntity().getIRI();
@@ -482,8 +424,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
                     OWL2Datatype owl2Datatype = datatype.getBuiltInDatatype();
                     if (owl2Datatype.isNumeric()) {
                         styleName = "numeric-literal-icon-inset";
-                    }
-                    else if (owl2Datatype.equals(OWL2Datatype.XSD_DATE_TIME)) {
+                    } else if (owl2Datatype.equals(OWL2Datatype.XSD_DATE_TIME)) {
                         styleName = "date-time-icon-inset";
                     }
                 }
@@ -496,8 +437,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
                 char c = datatypeName.charAt(0);
                 if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
                     tooltip.append(" is an ");
-                }
-                else {
+                } else {
                     tooltip.append(" is a ");
                 }
                 tooltip.append(datatypeName);
@@ -509,8 +449,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
             public String visit(IRIData data) throws RuntimeException {
                 if (data.isHTTPLink()) {
                     return "link-icon-inset";
-                }
-                else {
+                } else {
                     return "iri-icon-inset";
                 }
             }
@@ -518,32 +457,27 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         setIconInsetStyleName(styleName);
     }
 
-
     /**
      * Checks that the current entity type is one of the allowed types.
      */
     private void validateCurrentEntityTypeAgainstAllowedTypes() {
-        if(!currentData.isPresent()) {
+        if (!currentData.isPresent()) {
             hideErrorLabel();
             // Allowed to be empty
             return;
         }
-
-        if(isCurrentEntityTypeAllowed()) {
+        if (isCurrentEntityTypeAllowed()) {
             hideErrorLabel();
             return;
         }
-
         showErrorLabel();
-
     }
 
     private boolean isCurrentEntityTypeAllowed() {
         return !currentData.isPresent() || allowedTypes.contains(currentData.get().getType());
     }
 
-
-//
+    //
     private void clearIconInset() {
         setIconInsetStyleName("empty-icon-inset");
     }
@@ -552,9 +486,9 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         reparsePrimitiveData();
     }
 
-
     /**
      * Gets this object's text.
+     *
      * @return the object's text
      */
 //    @Override
@@ -564,6 +498,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     /**
      * Adds a {@link com.google.gwt.event.dom.client.FocusEvent} handler.
+     *
      * @param handler the focus handler
      * @return {@link com.google.gwt.event.shared.HandlerRegistration} used to remove this handler
      */
@@ -574,6 +509,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     /**
      * Adds a {@link com.google.gwt.event.dom.client.KeyUpEvent} handler.
+     *
      * @param handler the key up handler
      * @return {@link com.google.gwt.event.shared.HandlerRegistration} used to remove this handler
      */
@@ -581,7 +517,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
     public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
         return editor.addKeyUpHandler(handler);
     }
-
 
     private ProjectId getProjectId() {
         return projectId;
@@ -672,8 +607,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         boolean revalidate;
         if (allowed) {
             revalidate = allowedTypes.add(type);
-        }
-        else {
+        } else {
             revalidate = allowedTypes.remove(type);
         }
         if (revalidate) {
@@ -699,7 +633,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         }
         return types;
     }
-
 
     private void setupErrorLabel() {
         errorLabel.clear();
@@ -733,12 +666,11 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         setCurrentData(Optional.of(coercedData), EventStrategy.FIRE_EVENTS);
         updateDisplayForCurrentData();
     }
-
     ////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * Adds a {@link com.google.gwt.event.logical.shared.ValueChangeEvent} handler.
+     *
      * @param handler the handler
      * @return the registration for the event
      */
@@ -774,6 +706,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     /**
      * Determines if this object is dirty.
+     *
      * @return {@code true} if the object is dirty, otherwise {@code false}.
      */
     @Override
@@ -781,23 +714,21 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         return dirty;
     }
 
-
     private void setCurrentData(Optional<OWLPrimitiveData> nextCurrentData, EventStrategy eventStrategy) {
         checkNotNull(nextCurrentData);
         dirty = false;
-        if(currentData.equals(nextCurrentData)) {
+        if (currentData.equals(nextCurrentData)) {
             return;
         }
         currentData = nextCurrentData;
-        if(nextCurrentData.isPresent()) {
+        if (nextCurrentData.isPresent()) {
             OWLPrimitiveData data = nextCurrentData.get();
             editor.setText(data.getBrowserText());
-            if(data instanceof OWLLiteralData) {
+            if (data instanceof OWLLiteralData) {
                 String lang = ((OWLLiteralData) data).getLiteral().getLang();
                 languageEditor.setValue(lang);
             }
-        }
-        else {
+        } else {
             editor.setText("");
             languageEditor.setValue("");
         }
@@ -816,8 +747,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         this.allowedTypes.addAll(primitiveTypes);
         if (!allowedTypes.contains(PrimitiveType.LITERAL)) {
             setMode(ExpandingTextBoxMode.SINGLE_LINE);
-        }
-        else {
+        } else {
             setMode(ExpandingTextBoxMode.MULTI_LINE);
         }
         updateOracle();
