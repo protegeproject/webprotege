@@ -21,6 +21,8 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 import java.util.List;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -153,7 +155,7 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
 
     @Override
     public OWLLiteral parseLiteral(String text, Optional<String> language) {
-        return DataFactory.parseLiteral(text, language);
+        return DataFactory.parseLiteral(checkNotNull(text), checkNotNull(language));
     }
 
 
