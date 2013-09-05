@@ -141,8 +141,9 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         });
     }
 
+    @Override
     public void setSuggestMode(PrimitiveDataEditorSuggestOracleMode mode) {
-        entitySuggestOracle.setMode(mode);
+        entitySuggestOracle.setMode(checkNotNull(mode));
     }
 
     private void handleEdit() {
@@ -156,6 +157,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         this.freshEntitiesHandler = handler;
     }
 
+    @Override
     public void setMode(ExpandingTextBoxMode mode) {
         checkNotNull(mode);
         editor.setMode(mode);
@@ -268,6 +270,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         languageEditor.setEnabled(enabled);
     }
 
+    @Override
     public LanguageEditor getLanguageEditor() {
         return languageEditor;
     }
@@ -341,17 +344,18 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         editor.setPlaceholder(placeholder);
     }
 
-    public void setDefaultPlaceholder() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Enter ");
-        if (isClassesAllowed()) {
-            sb.append("class name, ");
-        }
-        if (isObjectPropertiesAllowed()) {
-            sb.append("object property name, ");
-        }
-
-    }
+//    @Override
+//    public void setDefaultPlaceholder() {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("Enter ");
+//        if (isClassesAllowed()) {
+//            sb.append("class name, ");
+//        }
+//        if (isObjectPropertiesAllowed()) {
+//            sb.append("object property name, ");
+//        }
+//
+//    }
 
     @Override
     public String getPlaceholder() {
@@ -544,7 +548,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         setIconInsetStyleName("empty-icon-inset");
     }
 
-    protected void handleLanguageChanged() {
+    private void handleLanguageChanged() {
         reparsePrimitiveData();
     }
 
@@ -578,74 +582,92 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         return editor.addKeyUpHandler(handler);
     }
 
-    public ProjectId getProjectId() {
+
+    private ProjectId getProjectId() {
         return projectId;
     }
 
+    @Override
     public boolean isAnnotationPropertiesAllowed() {
         return allowedTypes.contains(PrimitiveType.ANNOTATION_PROPERTY);
     }
 
+    @Override
     public void setAnnotationPropertiesAllowed(boolean annotationPropertiesAllowed) {
         setAllowedType(PrimitiveType.ANNOTATION_PROPERTY, annotationPropertiesAllowed);
     }
 
+    @Override
     public boolean isDataPropertiesAllowed() {
         return allowedTypes.contains(PrimitiveType.DATA_PROPERTY);
     }
 
+    @Override
     public void setDataPropertiesAllowed(boolean dataPropertiesAllowed) {
         setAllowedType(PrimitiveType.DATA_PROPERTY, dataPropertiesAllowed);
     }
 
+    @Override
     public boolean isObjectPropertiesAllowed() {
         return allowedTypes.contains(PrimitiveType.OBJECT_PROPERTY);
     }
 
+    @Override
     public void setObjectPropertiesAllowed(boolean objectPropertiesAllowed) {
         setAllowedType(PrimitiveType.OBJECT_PROPERTY, objectPropertiesAllowed);
     }
 
+    @Override
     public boolean isClassesAllowed() {
         return allowedTypes.contains(PrimitiveType.CLASS);
     }
 
+    @Override
     public void setClassesAllowed(boolean classesAllowed) {
         setAllowedType(PrimitiveType.CLASS, classesAllowed);
     }
 
+    @Override
     public boolean isDatatypesAllowed() {
         return allowedTypes.contains(PrimitiveType.DATA_TYPE);
     }
 
+    @Override
     public void setDatatypesAllowed(boolean datatypesAllowed) {
         setAllowedType(PrimitiveType.DATA_TYPE, datatypesAllowed);
     }
 
+    @Override
     public boolean isNamedIndividualsAllowed() {
         return allowedTypes.contains(PrimitiveType.NAMED_INDIVIDUAL);
     }
 
+    @Override
     public void setNamedIndividualsAllowed(boolean namedIndividualsAllowed) {
         setAllowedType(PrimitiveType.NAMED_INDIVIDUAL, namedIndividualsAllowed);
     }
 
+    @Override
     public boolean isLiteralAllowed() {
         return allowedTypes.contains(PrimitiveType.LITERAL);
     }
 
+    @Override
     public void setLiteralAllowed(boolean literalAllowed) {
         setAllowedType(PrimitiveType.LITERAL, literalAllowed);
     }
 
+    @Override
     public boolean isIRIAllowed() {
         return allowedTypes.contains(PrimitiveType.IRI);
     }
 
+    @Override
     public void setIRIAllowed(boolean iriAllowed) {
         setAllowedType(PrimitiveType.IRI, iriAllowed);
     }
 
+    @Override
     public void setAllowedType(PrimitiveType type, boolean allowed) {
         boolean revalidate;
         if (allowed) {
@@ -785,7 +807,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         }
     }
 
-        @Override
+    @Override
     public void setAllowedTypes(SortedSet<PrimitiveType> primitiveTypes) {
         if (primitiveTypes.equals(this.allowedTypes)) {
             return;
