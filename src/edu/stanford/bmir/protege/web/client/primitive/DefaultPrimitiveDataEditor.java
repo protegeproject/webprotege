@@ -518,10 +518,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         return editor.addKeyUpHandler(handler);
     }
 
-    private ProjectId getProjectId() {
-        return projectId;
-    }
-
     @Override
     public boolean isAnnotationPropertiesAllowed() {
         return allowedTypes.contains(PrimitiveType.ANNOTATION_PROPERTY);
