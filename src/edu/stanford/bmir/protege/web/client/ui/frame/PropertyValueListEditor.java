@@ -11,6 +11,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
 import edu.stanford.bmir.protege.web.client.rpc.GetRenderingCallback;
 import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
@@ -259,7 +260,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         propertyEditor.setFreshEntitiesHandler(new MutableFreshEntitiesHandler() {
             /**
              * Gets the policy supported by this handler.
-             * @return The {@link edu.stanford.bmir.protege.web.client.ui.frame.FreshEntitiesPolicy}.  Not {@code null}.
+             * @return The {@link edu.stanford.bmir.protege.web.client.primitive.FreshEntitiesPolicy}.  Not {@code null}.
              */
             @Override
             public FreshEntitiesPolicy getFreshEntitiesPolicy() {

@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.frame;
+package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;

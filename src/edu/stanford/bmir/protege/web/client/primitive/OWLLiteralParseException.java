@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.frame;
+package edu.stanford.bmir.protege.web.client.primitive;
 
 /**
  * Author: Matthew Horridge<br>
