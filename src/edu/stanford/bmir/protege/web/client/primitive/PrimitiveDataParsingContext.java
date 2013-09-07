@@ -15,7 +15,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/01/2013
  */
-public class PrimitiveDataParsingContext implements FreshEntitiesHandler {
+public class PrimitiveDataParsingContext implements FreshEntitiesHandler, EntityDataLookupContext {
 
     private ProjectId projectId;
 
