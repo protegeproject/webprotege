@@ -189,16 +189,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
     private void addRelationship(final PropertyValue propertyValue, HasEntityDataProvider provider) {
         final Optional<OWLEntityData> propRendering = provider.getEntityData(propertyValue.getProperty());
-//        OWLPropertyData propRendering = (OWLPropertyData) entityData.get();
         OWLPrimitiveData valueRendering = null;
-        // Special handling for annotation values that are IRIs but which correspond to entity IRIs
-//        if(propertyValue instanceof PropertyAnnotationValue) {
-//            final Optional<OWLEntity> valueAsEntity = ((PropertyAnnotationValue) propertyValue).getValueAsEntity();
-//            if(valueAsEntity.isPresent()) {
-//                valueRendering = provider.getEntityData(valueAsEntity.get());
-//            }
-//        }
-//        if (valueRendering == null) {
             if (propertyValue.getValue() instanceof OWLEntity) {
                 final Optional<OWLEntityData> propertyData = provider.getEntityData((OWLEntity) propertyValue.getValue());
                 valueRendering = propertyData.get();
@@ -212,7 +203,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             else {
                 return;
             }
-//        }
         addRow(propRendering.isPresent() ? Optional.<OWLPrimitiveData>of(propRendering.get()) : Optional.<OWLPrimitiveData>absent(), Optional.of(valueRendering));
     }
 
@@ -337,7 +327,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             addDeleteButton(row);
         }
 
-//        updateFillerEditor(row, propertyEditor, fillerEditor);
 
 
         propertyEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
@@ -559,27 +548,30 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
 
     private void removeLangEditor(int row) {
-        table.setWidget(row, LANG_COLUMN, new SimplePanel());
+        Widget langEditor = table.getWidget(row, LANG_COLUMN);
+        if(langEditor != null) {
+            langEditor.setVisible(false);
+        }
     }
 
     private boolean shouldShowDeleteButton(int row, PrimitiveDataEditor propertyEditor, PrimitiveDataEditor fillerEditor) {
         return propertyEditor.getValue().isPresent() || fillerEditor.getValue().isPresent();
     }
 
-//    private boolean shouldShowLangEditor(Optional<OWLPrimitiveData> propertyData, Optional<OWLPrimitiveData> fillerData) {
-//        return !propertyData.isPresent() && !fillerData.isPresent() || !(propertyData.get() instanceof OWLObjectPropertyData) && (fillerData.get() instanceof OWLLiteralData || !fillerData.isPresent() && grammar.getFillerTypes().contains(PrimitiveType.LITERAL));
-//    }
-
-    private HandlerRegistration addDeleteButton(final int rowCount) {
+    private void addDeleteButton(final int rowCount) {
+        Widget widget = table.getWidget(rowCount, DELETE_BUTTON_COL);
+        if(widget instanceof DeleteButton) {
+            widget.setVisible(true);
+            return;
+        }
         final DeleteButton deleteButton = createDeleteButton();
-        HandlerRegistration result = deleteButton.addClickHandler(new ClickHandler() {
+        deleteButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 deleteRow(deleteButton);
             }
         });
         table.setWidget(rowCount, DELETE_BUTTON_COL, deleteButton);
-        return result;
     }
 
     private DeleteButton createDeleteButton() {
@@ -633,14 +625,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                 public Object visit(OWLAnnotationPropertyData data) throws RuntimeException {
                     primitiveTypes.add(PrimitiveType.LITERAL);
                     primitiveTypes.add(PrimitiveType.IRI);
-//                    if (!data.getEntity().isLabel()) {
-//                        primitiveTypes.add(PrimitiveType.CLASS);
-//                        primitiveTypes.add(PrimitiveType.OBJECT_PROPERTY);
-//                        primitiveTypes.add(PrimitiveType.DATA_PROPERTY);
-//                        primitiveTypes.add(PrimitiveType.ANNOTATION_PROPERTY);
-//                        primitiveTypes.add(PrimitiveType.NAMED_INDIVIDUAL);
-//                        primitiveTypes.add(PrimitiveType.DATA_TYPE);
-//                    }
                     return null;
                 }
             });
@@ -651,15 +635,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                 propertyEditor.setSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
             }
             primitiveTypes.addAll(grammar.getFillerTypes());
-//            if (grammar.getFillerTypes().contains(PrimitiveType.CLASS)) {
-//                primitiveTypes.add(PrimitiveType.CLASS);
-//                primitiveTypes.add(PrimitiveType.NAMED_INDIVIDUAL);
-//            }
-//            if (grammar.getPropertyTypes().contains(PrimitiveType.DATA_PROPERTY)) {
-//                primitiveTypes.add(PrimitiveType.DATA_TYPE);
-//            }
-//            primitiveTypes.add(PrimitiveType.LITERAL);
-//            primitiveTypes.add(PrimitiveType.IRI);
         }
         if(primitiveTypes.isEmpty()) {
             GWT.log("WARNING: Allowed types is empty for " + propertyData.orNull());
@@ -674,11 +649,16 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     }
 
     private void addLangEditor(int rowCount, LanguageEditor languageEditor, Optional<OWLPrimitiveData> fillerData) {
+        Widget widget = table.getWidget(rowCount, LANG_COLUMN);
+        if(widget instanceof LanguageEditor) {
+            widget.setVisible(true);
+            return;
+        }
         if (fillerData.isPresent() && fillerData.get() instanceof OWLLiteralData) {
             String lang = ((OWLLiteralData) fillerData.get()).getLiteral().getLang();
             languageEditor.setValue(lang);
         }
-        table.setWidget(rowCount, FILLER_COLUMN + 1, languageEditor.asWidget());
+        table.setWidget(rowCount, LANG_COLUMN, languageEditor.asWidget());
     }
 
     private void ensureBlankRow() {
@@ -711,7 +691,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     }
 
 
-    ///////////////////////////////////////////
 
     @Override
     public void setValue(final PropertyValueList propertyValueList) {
