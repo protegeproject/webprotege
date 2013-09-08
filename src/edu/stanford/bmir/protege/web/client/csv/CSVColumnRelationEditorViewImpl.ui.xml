@@ -1,6 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.ui.frame">
+             xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.primitive">
     <ui:style>
         .property-editor-style {
             display: inline-block;
