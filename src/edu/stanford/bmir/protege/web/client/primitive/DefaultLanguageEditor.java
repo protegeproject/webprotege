@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -18,7 +19,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
  * Bio-Medical Informatics Research Group<br>
  * Date: 04/12/2012
  */
-public class DefaultLanguageEditor extends SimplePanel implements LanguageEditor, HasPlaceholder {
+public class DefaultLanguageEditor extends Composite implements LanguageEditor, HasPlaceholder {
 
     private SuggestBox suggestBox = new SuggestBox();
 
@@ -32,7 +33,7 @@ public class DefaultLanguageEditor extends SimplePanel implements LanguageEditor
                 setDirty(true, EventStrategy.FIRE_EVENTS);
             }
         });
-        setWidget(suggestBox);
+        initWidget(suggestBox);
     }
 
 
