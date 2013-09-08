@@ -329,7 +329,8 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
 
 
-        propertyEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
+
+        HandlerRegistration propHandlerReg = propertyEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
                 int row = getRowForWidget(PROPERTY_COLUMN, propertyEditor);
@@ -339,7 +340,9 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             }
         });
 
-        fillerEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
+        handlerRegistrations.put(propertyEditor, propHandlerReg);
+
+        HandlerRegistration fillerHandlerReg = fillerEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
                 int row = getRowForWidget(FILLER_COLUMN, fillerEditor);
@@ -348,6 +351,9 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                 }
             }
         });
+
+        handlerRegistrations.put(fillerEditor, fillerHandlerReg);
+
 
     }
 
@@ -369,7 +375,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
     private List<DefaultPrimitiveDataEditor> pool = new ArrayList<DefaultPrimitiveDataEditor>();
 
-
+    private Multimap<PrimitiveDataEditor, HandlerRegistration> handlerRegistrations = HashMultimap.create();
 
     private void recyclePrimitiveDataEditors() {
         for(int row = 0; row < table.getRowCount(); row++) {
@@ -395,6 +401,11 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         if(pool.size() == MAX_POOL_SIZE) {
             return;
         }
+
+        for(HandlerRegistration registration : handlerRegistrations.removeAll(editor)) {
+            registration.removeHandler();
+        }
+
         pool.add(editor);
     }
 
@@ -879,6 +890,12 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             this.propertyEditorReg = propertyEditorReg;
             this.fillerEditorReg = fillerEditorReg;
             this.deleteButtonReg = deleteButtonReg;
+        }
+
+        public void removeHandlers() {
+            propertyEditorReg.removeHandler();
+            fillerEditorReg.removeHandler();
+            deleteButtonReg.removeHandler();
         }
     }
 }
