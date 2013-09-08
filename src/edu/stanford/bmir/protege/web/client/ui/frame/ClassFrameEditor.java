@@ -231,6 +231,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     @UiHandler("annotations")
     protected void handleAnnotationsValueChanged(ValueChangeEvent<Optional<PropertyValueList>> evt) {
         if(isWellFormed()) {
+            GWT.log("Annotations changed!");
             ValueChangeEvent.fire(this, getValue());
         }
     }
