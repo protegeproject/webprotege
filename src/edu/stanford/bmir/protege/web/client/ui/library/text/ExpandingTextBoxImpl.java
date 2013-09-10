@@ -4,10 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.logical.shared.HasSelectionHandlers;
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.logical.shared.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -67,10 +64,9 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
     };
 
     public ExpandingTextBoxImpl() {
-        TextArea textArea = new TextArea();
+        final TextArea textArea = new TextArea();
         SuggestOracle proxyOracle = createProxySuggestOracle();
         this.suggestBox = new SuggestBox(proxyOracle, textArea);
-//        this.suggestBox.setAutoSelectEnabled(false);
 
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
@@ -92,8 +88,13 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
                     acceptKeyHandler.handleAcceptKey();
                 }
                 doPreElements(mode == ExpandingTextBoxMode.MULTI_LINE && event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !event.isControlKeyDown());
-
-
+            }
+        });
+        // Regain the focus after the suggest box closes (doesn't seem to happen by default here).
+        suggestBox.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+            @Override
+            public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
+                textArea.setFocus(true);
             }
         });
     }
@@ -200,8 +201,15 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
      * @return the registration for the event
      */
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
-        return suggestBox.addValueChangeHandler(handler);
+    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<String> handler) {
+        return suggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                if (!suggestBox.isSuggestionListShowing()) {
+                    handler.onValueChange(event);
+                }
+            }
+        });
     }
 
 

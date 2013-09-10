@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.frame;
+package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;

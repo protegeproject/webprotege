@@ -1,6 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.ui.frame'>
+             xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.primitive'
+             xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.ui.frame">
 
     <ui:style>
         .section-label {
@@ -56,7 +57,7 @@
                 </td>
                 <td valign="top">
                     <!--<g:TextBox ui:field="iriField" width="100%"/>-->
-                    <wp:PropertyValueListEditor ui:field="assertions"/>
+                    <frame:PropertyValueListEditor ui:field="assertions"/>
                 </td>
             </tr>
         </table>

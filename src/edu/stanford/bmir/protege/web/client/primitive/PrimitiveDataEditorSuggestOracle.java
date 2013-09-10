@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.frame;
+package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.SuggestOracle;
@@ -32,6 +32,7 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
         this.delegate = delegate;
         allowedPrimitiveTypes.add(EntityType.CLASS);
         allowedPrimitiveTypes.add(EntityType.NAMED_INDIVIDUAL);
+
     }
 
     public void setEntityTypes(Set<EntityType<?>> entityTypes) {
