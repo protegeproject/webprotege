@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.client.ui.generated;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet;
-import edu.stanford.bmir.protege.web.client.ui.frame.ClassFramePortlet;
-import edu.stanford.bmir.protege.web.client.ui.frame.NamedIndividualFramePortlet;
 import edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet;
 import edu.stanford.bmir.protege.web.client.ui.obo.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.OntologyAnnotationsPortlet;
