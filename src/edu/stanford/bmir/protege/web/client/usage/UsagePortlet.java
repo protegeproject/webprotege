@@ -28,15 +28,18 @@ import java.util.Collection;
  */
 public class UsagePortlet extends AbstractOWLEntityPortlet {
 
+    private static final int DEFAULT_HEIGHT = 250;
+
     private UsageView usageView;
 
     public UsagePortlet(Project project) {
         super(project);
+        setHeight(DEFAULT_HEIGHT);
     }
 
     public UsagePortlet(Project project, boolean initialize) {
         super(project, initialize);
-        setHeight(500);
+        setHeight(DEFAULT_HEIGHT);
     }
 
 
