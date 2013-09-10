@@ -9,6 +9,9 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/08/2013
+ * <p>
+ *     A pieces of user interface that provides a method of accessing various settings that are related to a project.
+ * </p>
  */
 public interface ProjectActionBar extends IsWidget {
 
