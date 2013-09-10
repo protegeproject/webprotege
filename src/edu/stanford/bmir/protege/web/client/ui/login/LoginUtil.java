@@ -309,81 +309,81 @@ public class LoginUtil {
 
     }
 
-    /**
-     * Method to create change password window.
-     */
-    public void changePassword(final UserId userName, boolean isLoginWithHttps) {
-        if (userName.isGuest()) {
-            throw new IllegalArgumentException("Cannot change the password of the guest user");
-        }
-
-        final Window win = new Window();
-
-        FormPanel passwordFormPanel = new FormPanel();
-
-        Label label = new Label("Welcome! Please enter your old password and new password:");
-        label.setStyleName("login-welcome-msg");
-
-        FlexTable changePassTable = new FlexTable();
-        changePassTable.setWidget(0, 0, label);
-        changePassTable.getFlexCellFormatter().setColSpan(0, 0, 2);
-        changePassTable.getFlexCellFormatter().setHeight(1, 0, "15px");
-        changePassTable.getFlexCellFormatter().setHeight(2, 0, "25px");
-        changePassTable.getFlexCellFormatter().setHeight(3, 0, "25px");
-        changePassTable.getFlexCellFormatter().setHeight(4, 0, "25px");
-        changePassTable.getFlexCellFormatter().setHeight(5, 0, "50px");
-        passwordFormPanel.add(changePassTable);
-
-        final PasswordTextBox oldPasswordField = new PasswordTextBox();
-        oldPasswordField.setWidth("250px");
-        Label oldPasswordLabel = new Label("Old Password:");
-        oldPasswordLabel.setStyleName("label");
-        changePassTable.setWidget(2, 0, oldPasswordLabel);
-        changePassTable.setWidget(2, 1, oldPasswordField);
-
-        final PasswordTextBox newPasswordField = new PasswordTextBox();
-        newPasswordField.setWidth("250px");
-        Label newPasswordLabel = new Label("New Password:");
-        newPasswordLabel.setStyleName("label");
-        changePassTable.setWidget(3, 0, newPasswordLabel);
-        changePassTable.setWidget(3, 1, newPasswordField);
-
-        final PasswordTextBox newConfirmPassword = new PasswordTextBox();
-        newConfirmPassword.setWidth("250px");
-        Label newConfPasLabel = new Label("Confirm Password:");
-        newConfPasLabel.setStyleName("label");
-        changePassTable.setWidget(4, 0, newConfPasLabel);
-        changePassTable.setWidget(4, 1, newConfirmPassword);
-
-        Button changePasswordButton = new Button("Change Password");
-
-        if (isLoginWithHttps) {
-            changePasswordButton.addListener(new ChangePasswordWithHttpsListener(win, newConfirmPassword, userName, oldPasswordField, newPasswordField));
-        }
-        else {
-            changePasswordButton.addListener(new ChangePasswordWithEncryptionListener(win, newConfirmPassword, userName, oldPasswordField, newPasswordField));
-        }
-
-        changePassTable.setWidget(5, 1, changePasswordButton);
-        changePassTable.getFlexCellFormatter().setAlignment(5, 1, HasAlignment.ALIGN_CENTER, HasAlignment.ALIGN_MIDDLE);
-
-        win.addListener(new PanelListenerAdapter() {
-            @Override
-            public void onAfterLayout(Container self) {
-                oldPasswordField.setFocus(true);
-            }
-        });
-
-        win.setTitle("Change Password");
-        win.setClosable(true);
-        win.setWidth(428);
-        win.setHeight(250);
-        win.setClosable(true);
-        win.setPaddings(7);
-        win.setCloseAction(Window.HIDE);
-        win.add(passwordFormPanel);
-        win.show();
-    }
+//    /**
+//     * Method to create change password window.
+//     */
+//    public void changePassword(final UserId userName, boolean isLoginWithHttps) {
+//        if (userName.isGuest()) {
+//            throw new IllegalArgumentException("Cannot change the password of the guest user");
+//        }
+//
+//        final Window win = new Window();
+//
+//        FormPanel passwordFormPanel = new FormPanel();
+//
+//        Label label = new Label("Welcome! Please enter your old password and new password:");
+//        label.setStyleName("login-welcome-msg");
+//
+//        FlexTable changePassTable = new FlexTable();
+//        changePassTable.setWidget(0, 0, label);
+//        changePassTable.getFlexCellFormatter().setColSpan(0, 0, 2);
+//        changePassTable.getFlexCellFormatter().setHeight(1, 0, "15px");
+//        changePassTable.getFlexCellFormatter().setHeight(2, 0, "25px");
+//        changePassTable.getFlexCellFormatter().setHeight(3, 0, "25px");
+//        changePassTable.getFlexCellFormatter().setHeight(4, 0, "25px");
+//        changePassTable.getFlexCellFormatter().setHeight(5, 0, "50px");
+//        passwordFormPanel.add(changePassTable);
+//
+//        final PasswordTextBox oldPasswordField = new PasswordTextBox();
+//        oldPasswordField.setWidth("250px");
+//        Label oldPasswordLabel = new Label("Old Password:");
+//        oldPasswordLabel.setStyleName("label");
+//        changePassTable.setWidget(2, 0, oldPasswordLabel);
+//        changePassTable.setWidget(2, 1, oldPasswordField);
+//
+//        final PasswordTextBox newPasswordField = new PasswordTextBox();
+//        newPasswordField.setWidth("250px");
+//        Label newPasswordLabel = new Label("New Password:");
+//        newPasswordLabel.setStyleName("label");
+//        changePassTable.setWidget(3, 0, newPasswordLabel);
+//        changePassTable.setWidget(3, 1, newPasswordField);
+//
+//        final PasswordTextBox newConfirmPassword = new PasswordTextBox();
+//        newConfirmPassword.setWidth("250px");
+//        Label newConfPasLabel = new Label("Confirm Password:");
+//        newConfPasLabel.setStyleName("label");
+//        changePassTable.setWidget(4, 0, newConfPasLabel);
+//        changePassTable.setWidget(4, 1, newConfirmPassword);
+//
+//        Button changePasswordButton = new Button("Change Password");
+//
+//        if (isLoginWithHttps) {
+//            changePasswordButton.addListener(new ChangePasswordWithHttpsListener(win, newConfirmPassword, userName, oldPasswordField, newPasswordField));
+//        }
+//        else {
+//            changePasswordButton.addListener(new ChangePasswordWithEncryptionListener(win, newConfirmPassword, userName, oldPasswordField, newPasswordField));
+//        }
+//
+//        changePassTable.setWidget(5, 1, changePasswordButton);
+//        changePassTable.getFlexCellFormatter().setAlignment(5, 1, HasAlignment.ALIGN_CENTER, HasAlignment.ALIGN_MIDDLE);
+//
+//        win.addListener(new PanelListenerAdapter() {
+//            @Override
+//            public void onAfterLayout(Container self) {
+//                oldPasswordField.setFocus(true);
+//            }
+//        });
+//
+//        win.setTitle("Change Password");
+//        win.setClosable(true);
+//        win.setWidth(428);
+//        win.setHeight(250);
+//        win.setClosable(true);
+//        win.setPaddings(7);
+//        win.setCloseAction(Window.HIDE);
+//        win.add(passwordFormPanel);
+//        win.show();
+//    }
 
 //    public void createNewUser(final boolean isLoginWithHttps) {
 //        final Window win = new Window();
@@ -754,140 +754,140 @@ public class LoginUtil {
         }
     }
 
-    private class ChangePasswordWithHttpsListener extends ButtonListenerAdapter {
+//    private class ChangePasswordWithHttpsListener extends ButtonListenerAdapter {
+//
+//        private final Window win;
+//
+//        private final PasswordTextBox newConfirmPassword;
+//
+//        private final UserId userName;
+//
+//        private final PasswordTextBox oldPasswordField;
+//
+//        private final PasswordTextBox newPasswordField;
+//
+//        protected ChangePasswordWithHttpsListener(Window win, PasswordTextBox newConfirmPassword, UserId userName, PasswordTextBox oldPasswordField, PasswordTextBox newPasswordField) {
+//            this.win = win;
+//            this.newConfirmPassword = newConfirmPassword;
+//            this.userName = userName;
+//            this.oldPasswordField = oldPasswordField;
+//            this.newPasswordField = newPasswordField;
+//        }
+//
+//        @Override
+//        public void onClick(Button button, EventObject e) {
+//            if (oldPasswordField.getText().trim().equals("") || newPasswordField.getText().trim().equals("") || newConfirmPassword.getText().trim().equals("")) {
+//                MessageBox.alert("Please enter both the old password and new password.");
+//            }
+//            else {
+//                changePassword();
+//            }
+//        }
+//
+//        /**
+//         *
+//         */
+//        protected void changePassword() {
+//            if (newPasswordField.getText().equals(newConfirmPassword.getText())) {
+//                win.getEl().mask("Changing password...");
+//                AuthenticateServiceManager.getInstance().validateUser(userName, oldPasswordField.getText(), new AbstractAsyncHandler<UserData>() {
+//                    @Override
+//                    public void handleFailure(Throwable caught) {
+//                        GWT.log("Error at login", caught);
+//                        win.getEl().unmask();
+//                        MessageBox.alert("Changing the password failed. Please try again");
+//                        clearChangePasswordFields(oldPasswordField, newPasswordField, newConfirmPassword);
+//                    }
+//
+//                    @Override
+//                    public void handleSuccess(UserData userData) {
+//                        win.getEl().unmask();
+//                        if (userData != null) {
+//                            AuthenticateServiceManager.getInstance().changePassword(userName, newPasswordField.getText(), new ChangePasswordHandler(win));
+//                        }
+//                        else {
+//                            MessageBox.alert("Invalid password. Please try again.");
+//                            clearChangePasswordFields(oldPasswordField, newPasswordField, newConfirmPassword);
+//                        }
+//
+//                    }
+//
+//                    private void clearChangePasswordFields(final PasswordTextBox oldPasswordField, final PasswordTextBox newPasswordField, final PasswordTextBox newConfirmPassword) {
+//                        oldPasswordField.setValue("");
+//                        newConfirmPassword.setValue("");
+//                        newPasswordField.setValue("");
+//                    }
+//
+//                });
+//            }
+//            else {
+//                MessageBox.alert("Passwords do not match. Please enter them again.");
+//            }
+//        }
+//    }
 
-        private final Window win;
-
-        private final PasswordTextBox newConfirmPassword;
-
-        private final UserId userName;
-
-        private final PasswordTextBox oldPasswordField;
-
-        private final PasswordTextBox newPasswordField;
-
-        protected ChangePasswordWithHttpsListener(Window win, PasswordTextBox newConfirmPassword, UserId userName, PasswordTextBox oldPasswordField, PasswordTextBox newPasswordField) {
-            this.win = win;
-            this.newConfirmPassword = newConfirmPassword;
-            this.userName = userName;
-            this.oldPasswordField = oldPasswordField;
-            this.newPasswordField = newPasswordField;
-        }
-
-        @Override
-        public void onClick(Button button, EventObject e) {
-            if (oldPasswordField.getText().trim().equals("") || newPasswordField.getText().trim().equals("") || newConfirmPassword.getText().trim().equals("")) {
-                MessageBox.alert("Please enter both the old password and new password.");
-            }
-            else {
-                changePassword();
-            }
-        }
-
-        /**
-         *
-         */
-        protected void changePassword() {
-            if (newPasswordField.getText().equals(newConfirmPassword.getText())) {
-                win.getEl().mask("Changing password...");
-                AuthenticateServiceManager.getInstance().validateUser(userName, oldPasswordField.getText(), new AbstractAsyncHandler<UserData>() {
-                    @Override
-                    public void handleFailure(Throwable caught) {
-                        GWT.log("Error at login", caught);
-                        win.getEl().unmask();
-                        MessageBox.alert("Changing the password failed. Please try again");
-                        clearChangePasswordFields(oldPasswordField, newPasswordField, newConfirmPassword);
-                    }
-
-                    @Override
-                    public void handleSuccess(UserData userData) {
-                        win.getEl().unmask();
-                        if (userData != null) {
-                            AuthenticateServiceManager.getInstance().changePassword(userName, newPasswordField.getText(), new ChangePasswordHandler(win));
-                        }
-                        else {
-                            MessageBox.alert("Invalid password. Please try again.");
-                            clearChangePasswordFields(oldPasswordField, newPasswordField, newConfirmPassword);
-                        }
-
-                    }
-
-                    private void clearChangePasswordFields(final PasswordTextBox oldPasswordField, final PasswordTextBox newPasswordField, final PasswordTextBox newConfirmPassword) {
-                        oldPasswordField.setValue("");
-                        newConfirmPassword.setValue("");
-                        newPasswordField.setValue("");
-                    }
-
-                });
-            }
-            else {
-                MessageBox.alert("Passwords do not match. Please enter them again.");
-            }
-        }
-    }
-
-    private class ChangePasswordWithEncryptionListener extends ButtonListenerAdapter {
-
-        private final Window win;
-
-        private final PasswordTextBox newConfirmPassword;
-
-        private final UserId userName;
-
-        private final PasswordTextBox oldPasswordField;
-
-        private final PasswordTextBox newPasswordField;
-
-        protected ChangePasswordWithEncryptionListener(Window win, PasswordTextBox newConfirmPassword, UserId userName, PasswordTextBox oldPasswordField, PasswordTextBox newPasswordField) {
-            this.win = win;
-            this.newConfirmPassword = newConfirmPassword;
-            this.userName = userName;
-            this.oldPasswordField = oldPasswordField;
-            this.newPasswordField = newPasswordField;
-        }
-
-        @Override
-        public void onClick(Button button, EventObject e) {
-            if (oldPasswordField.getText().trim().equals("") || newPasswordField.getText().trim().equals("") || newConfirmPassword.getText().trim().equals("")) {
-                MessageBox.alert("Please enter both the old password and the new password.");
-            }
-            else {
-                changePassword();
-            }
-        }
-
-        /**
-         *
-         */
-        protected void changePassword() {
-            if (newPasswordField.getText().trim().equals(newConfirmPassword.getText().trim())) {
-                win.getEl().mask("Changing password...");
-                AdminServiceManager.getInstance().getUserSaltAndChallenge(userName, new AsyncCallback<LoginChallengeData>() {
-
-                    public void onSuccess(LoginChallengeData result) {
-                        if (result != null) {
-                            validateEncryptPassAndChangePass(result, win, newConfirmPassword, userName, oldPasswordField, newPasswordField);
-                        }
-                        else {
-                            MessageBox.alert("Invalid password. Please try again.");
-                            oldPasswordField.setValue("");
-                            newPasswordField.setValue("");
-                            newConfirmPassword.setValue("");
-                        }
-
-                    }
-
-                    public void onFailure(Throwable caught) {
-                        MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
-                    }
-                });
-            }
-            else {
-
-                MessageBox.alert("Passwords do not match. Please enter them again.");
-            }
-        }
-    }
+//    private class ChangePasswordWithEncryptionListener extends ButtonListenerAdapter {
+//
+//        private final Window win;
+//
+//        private final PasswordTextBox newConfirmPassword;
+//
+//        private final UserId userName;
+//
+//        private final PasswordTextBox oldPasswordField;
+//
+//        private final PasswordTextBox newPasswordField;
+//
+//        protected ChangePasswordWithEncryptionListener(Window win, PasswordTextBox newConfirmPassword, UserId userName, PasswordTextBox oldPasswordField, PasswordTextBox newPasswordField) {
+//            this.win = win;
+//            this.newConfirmPassword = newConfirmPassword;
+//            this.userName = userName;
+//            this.oldPasswordField = oldPasswordField;
+//            this.newPasswordField = newPasswordField;
+//        }
+//
+//        @Override
+//        public void onClick(Button button, EventObject e) {
+//            if (oldPasswordField.getText().trim().equals("") || newPasswordField.getText().trim().equals("") || newConfirmPassword.getText().trim().equals("")) {
+//                MessageBox.alert("Please enter both the old password and the new password.");
+//            }
+//            else {
+//                changePassword();
+//            }
+//        }
+//
+//        /**
+//         *
+//         */
+//        protected void changePassword() {
+//            if (newPasswordField.getText().trim().equals(newConfirmPassword.getText().trim())) {
+//                win.getEl().mask("Changing password...");
+//                AdminServiceManager.getInstance().getUserSaltAndChallenge(userName, new AsyncCallback<LoginChallengeData>() {
+//
+//                    public void onSuccess(LoginChallengeData result) {
+//                        if (result != null) {
+//                            validateEncryptPassAndChangePass(result, win, newConfirmPassword, userName, oldPasswordField, newPasswordField);
+//                        }
+//                        else {
+//                            MessageBox.alert("Invalid password. Please try again.");
+//                            oldPasswordField.setValue("");
+//                            newPasswordField.setValue("");
+//                            newConfirmPassword.setValue("");
+//                        }
+//
+//                    }
+//
+//                    public void onFailure(Throwable caught) {
+//                        MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
+//                    }
+//                });
+//            }
+//            else {
+//
+//                MessageBox.alert("Passwords do not match. Please enter them again.");
+//            }
+//        }
+//    }
 
     private class ForgotPassHandler extends AbstractAsyncHandler<Void> {
 

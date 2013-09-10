@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.library.msgbox;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
@@ -19,6 +21,8 @@ public class MessageBox {
     private static final String DLG_TITLE = "";
 
     private static final String DEFAULT_SUB_MESSAGE = "";
+
+
 
     public static void showMessage(String mainMessage) {
         showMessage(mainMessage, DEFAULT_SUB_MESSAGE);
@@ -141,10 +145,22 @@ public class MessageBox {
                 return RETURN;
             }
         };
-        WebProtegeDialog<Void> dlg = createDialog(controller);
+        final WebProtegeDialog<Void> dlg = createDialog(controller);
         dlg.setVisible(true);
+        scheduleCentering(dlg);
     }
 
+    private static void scheduleCentering(final WebProtegeDialog<Void> dlg) {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                int left = (Window.getClientWidth() - dlg.getOffsetWidth()) / 2;
+                int top = (Window.getClientHeight() - dlg.getOffsetHeight()) / 2;
+                dlg.setPopupPosition(left, top);
+                dlg.setVisible(true);
+            }
+        });
+    }
 
     private static MessageBoxView createMessageBox(MessageStyle messageStyle, String mainMessage, String subMessage) {
         final MessageBoxView messageBoxView = new MessageBoxViewImpl();

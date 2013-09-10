@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.place.shared.PlaceChangeEvent;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Label;
@@ -21,13 +22,11 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.EmptySuccessWebProtegeCallback;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
@@ -47,6 +46,8 @@ public class EditorPresenter implements HasDispose {
 
     private static final Label LOADING_INDICATOR_WIDGET = new Label("Loading...");
 
+    private static final int VALUE_CHANGED_COMMIT_DELAY_MS = 1000;
+
     private EditorContextMapper editorContextMapper;
 
 
@@ -65,6 +66,12 @@ public class EditorPresenter implements HasDispose {
 
     private HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
 
+    private Timer commitOnValueChangedTimer = new Timer() {
+        @Override
+        public void run() {
+            commitCurrentValue(editorState.get());
+        }
+    };
 
 
     public EditorPresenter(ProjectId projectId, EditorContextMapper editorContextMapper) {
@@ -136,6 +143,7 @@ public class EditorPresenter implements HasDispose {
 
     private <C extends EditorCtx, O extends Serializable> void unbindPrevious(final EditorState<C, O> editorState) {
         valueChangedReg.removeHandler();
+        commitOnValueChangedTimer.cancel();
         commitCurrentValue(editorState);
         clearEditorState();
     }
@@ -201,7 +209,8 @@ public class EditorPresenter implements HasDispose {
                     valueChangedReg = editorView.addValueChangeHandler(new ValueChangeHandler<Optional<O>>() {
                         @Override
                         public void onValueChange(ValueChangeEvent<Optional<O>> event) {
-                            commitCurrentValue(editorState.get());
+//                            commitCurrentValue(editorState.get());
+                            rescheduleCommit();
                         }
                     });
                     final Widget editorWidget = editorView.asWidget();
@@ -219,6 +228,11 @@ public class EditorPresenter implements HasDispose {
         else {
             editorHolder.setWidget(new Label("No editor available for selection: " + editorCtx));
         }
+    }
+
+    private void rescheduleCommit() {
+        commitOnValueChangedTimer.cancel();
+        commitOnValueChangedTimer.schedule(VALUE_CHANGED_COMMIT_DELAY_MS);
     }
 
     @Override
@@ -282,6 +296,8 @@ public class EditorPresenter implements HasDispose {
             return editorManager;
         }
     }
+
+
 
 
 }

@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesResult;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
@@ -211,6 +212,24 @@ public class Application {
      */
     public Optional<ProjectId> getActiveProject() {
         return activeProject;
+    }
+
+    /**
+     * Determines whether the logged in user is the owner of the active project).
+     * @return {@code false} if there is no project that is the active project.  {@code false} if the logged in user
+     * is the guest user.  {@code true} if and only if the logged in user is equal to the active project owner.
+     */
+    public boolean isLoggedInUserOwnerOfActiveProject() {
+        if(!activeProject.isPresent()) {
+            return false;
+        }
+        ProjectId projectId = activeProject.get();
+        Optional<Project> project = ProjectManager.get().getProject(projectId);
+        if(!project.isPresent()) {
+            return false;
+        }
+        ProjectDetails projectDetails = project.get().getProjectDetails();
+        return projectDetails.getOwner().equals(getUserId());
     }
 
     /**

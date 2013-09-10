@@ -1,0 +1,31 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent"
+[
+            <!ENTITY downarrow "&#x25BE;">
+    ]
+>
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:style>
+        .main {
+            margin-left: 10px;
+        }
+        .help-item {
+            margin-left: 10px;
+        }
+    </ui:style>
+
+
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+
+        <g:Button ui:field="userNameItem" addStyleNames="button-style">Sign In</g:Button>
+
+
+        <g:Button ui:field="helpItem" addStyleNames="button-style {style.help-item}">Help &downarrow;</g:Button>
+
+
+        <g:Button ui:field="signUpForAccountItem" addStyleNames="button-style-red">Sign up for account</g:Button>
+
+    </g:HTMLPanel>
+</ui:UiBinder>
