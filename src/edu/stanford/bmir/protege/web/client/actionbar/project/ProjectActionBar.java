@@ -19,7 +19,7 @@ public interface ProjectActionBar extends IsWidget {
 
     void setShowProjectDetailsHandler(ShowProjectDetailsHandler showProjectDetailsHandler);
 
-    void setShowNewEntitySettingsHandler(ShowNewEntitySettingsHandler showNewEntitiesHandler);
+    void setShowFreshEntitySettingsHandler(ShowFreshEntitySettingsHandler showNewEntitiesHandler);
 
     void setShowNotificationSettingsHandler(ShowNotificationSettingsHandler showNotificationSettingsHandler);
 

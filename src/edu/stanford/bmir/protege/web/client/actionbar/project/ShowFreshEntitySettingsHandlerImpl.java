@@ -6,14 +6,14 @@ package edu.stanford.bmir.protege.web.client.actionbar.project;
  * Bio-Medical Informatics Research Group<br>
  * Date: 27/08/2013
  */
-public class ShowNewEntitySettingsHandlerImpl implements ShowNewEntitySettingsHandler {
+public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettingsHandler {
 
-    public ShowNewEntitySettingsHandlerImpl() {
+    public ShowFreshEntitySettingsHandlerImpl() {
 
     }
 
     @Override
-    public void handleShowNewEntitySettings() {
+    public void handleShowFreshEntitySettings() {
         // TODO: Hook in
     }
 }
