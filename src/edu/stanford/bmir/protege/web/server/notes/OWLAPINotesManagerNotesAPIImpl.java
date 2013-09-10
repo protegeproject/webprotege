@@ -235,6 +235,12 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     @Override
     public void setNoteStatus(NoteId noteId, NoteStatus noteStatus) {
         Annotation note = notesManager.getNote(noteId.getLexicalForm());
+        if(note == null) {
+            // Sometimes we fail to find the note.  I'm not sure why.  This has something to do with the weird internals
+            // and typing of the notes API.
+            LOGGER.info("Failed to find note by Id when changing the note status.  The noteId was %s", noteId);
+            return;
+        }
         if(noteStatus == NoteStatus.OPEN) {
             note.setArchived(false);
         }
