@@ -9,6 +9,7 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
@@ -336,6 +337,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         bogusPanel.setId(PLACE_HOLDER_PANEL);
         bogusPanel.setHeight(560);
         add(bogusPanel);
+
         updateButtonStates();
         if (nodeListener == null) {
             //listener for click on the comment icon to display notes
@@ -394,6 +396,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 }
             };
         }
+
 
 
 
@@ -1611,7 +1614,9 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
 
         if (watchButton != null) {
-            watchButton.setDisabled(Application.get().isGuestUser());
+            // This used to disable the button.  However, the buttons seem to be laid out only when the containing
+            // tab is selected and they appear over other components before this.
+            watchButton.setVisible(!Application.get().isGuestUser());
         }
     }
 

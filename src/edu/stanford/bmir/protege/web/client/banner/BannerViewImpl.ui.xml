@@ -1,0 +1,29 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:project="urn:import:edu.stanford.bmir.protege.web.client.actionbar.project"
+             xmlns:application="urn:import:edu.stanford.bmir.protege.web.client.actionbar.application">
+    <ui:with field='res' type='edu.stanford.bmir.protege.web.client.ui.res.WebProtegeClientBundle'/>
+
+    <ui:style>
+        .main {
+            /** The background is necessary to hide GWT EXT junk that doesn't get laid out properly until tabs are selected **/
+            background: #ffffff;
+        }
+        .holder {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+        .sub-bar {
+            display: inline;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}" debugId="Banner">
+        <g:Image resource="{res.webProtegeLogo}" addStyleNames="{style.sub-bar}"/>
+        <g:HTMLPanel addStyleNames="{style.holder}">
+            <project:ProjectBarImpl ui:field="projectActionBar" addStyleNames="{style.sub-bar}" debugId="ProjectBar"/>
+            <application:ApplicationBarImpl ui:field="applicationActionBar" addStyleNames="{style.sub-bar}" debugId="ApplicationBar"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -1,0 +1,28 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:workspace="urn:import:edu.stanford.bmir.protege.web.client.workspace"
+             xmlns:banner="urn:import:edu.stanford.bmir.protege.web.client.banner">
+
+    <ui:style>
+        .north {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 35px;
+        }
+        .center {
+            position: absolute;
+            top: 35px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+    </ui:style>
+    <g:HTMLPanel width="100%" height="100%">
+        <banner:BannerViewImpl ui:field="bannerView" addStyleNames="{style.north}"/>
+        <workspace:GwtExtAdapterPanel addStyleNames="{style.center}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

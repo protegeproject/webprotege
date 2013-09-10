@@ -244,7 +244,8 @@ ul.x-tab-strip-top {
  Style for TopPanel.java - the header portion in the main layout
  *****************************************************************/
 .top-panel {
-    height: 32px;
+    height: 50px;
+    border: 1px solid cyan;
 }
 
 .header-right {

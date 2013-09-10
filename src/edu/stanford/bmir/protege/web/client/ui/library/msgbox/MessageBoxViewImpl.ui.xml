@@ -8,6 +8,9 @@
             -moz-box-sizing: border-box;
             -webkit-box-sizing: border-box;
         }
+        .main-panel-style * p {
+            padding-bottom: 10px;
+        }
         .icon-style {
             width: 70px;
         }

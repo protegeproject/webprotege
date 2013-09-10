@@ -39,40 +39,40 @@ public class Authenticate implements EntryPoint {
 //        });
     }
 
-    private void checkAuthenType() {
-        String authenType = Window.Location.getParameter(AuthenticationConstants.AUTHEN_TYPE);
-        if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_LOGIN)) {//To open login popup in https window
-            final String randomNumber = Window.Location.getParameter(AuthenticationConstants.RANDOM_NUMBER);
-            HandlerRegistration windowCloseHandlerRegistration = Window
-                    .addWindowClosingHandler(new LoginWindowCloseHandler(randomNumber));
-            LoginUtil loginUtil = new LoginUtil();
-            loginUtil.setWindowCloseHandlerRegistration(windowCloseHandlerRegistration);
-            loginUtil.login(true);
-            setWindowSize("405", "408");
-
-        } else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_CHANGE_PASSWORD)) {
-            String userName = Window.Location.getParameter(AuthenticationConstants.USERNAME);
-            Window.addWindowClosingHandler(new WindowCloseHandler(AuthenticationConstants.CHANGE_PASSWORD_RESULT,
-                    AuthenticationConstants.CHANGE_PASSWORD_WINDOW_CLOSED));
-            LoginUtil loginUtil = new LoginUtil();
-            loginUtil.changePassword(UserId.getUserId(userName), true);
-        } else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_CREATE_USER_TO_ASSOC_OPEN_ID)) {
-            Window.addWindowClosingHandler(new WindowCloseHandler(AuthenticationConstants.CREATE_USER_TO_ASSOC_OPENID_RESULT,
-                    AuthenticationConstants.CREATE_USER_WINDOW_CLOSED));
-            LoginUtil loginUtil = new LoginUtil();
-            loginUtil.createNewUserToAssociateOpenId(true);
-        } else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_LOGIN_TO_ASSOC_OPEN_ID)) {
-            Window.addWindowClosingHandler(new WindowCloseHandler(AuthenticationConstants.AUTHEN_USER_TO_ASSOC_OPENID_RESULT,
-                    AuthenticationConstants.AUTHEN_USER_WINDOW_CLOSED));
-            LoginUtil loginUtil = new LoginUtil();
-            loginUtil.loginToAssociateOpenId(true);
-        }
-        // Not sure what this is used for - ask Tania
-//        else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_CREATE_USER)) {
+//    private void checkAuthenType() {
+//        String authenType = Window.Location.getParameter(AuthenticationConstants.AUTHEN_TYPE);
+//        if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_LOGIN)) {//To open login popup in https window
+//            final String randomNumber = Window.Location.getParameter(AuthenticationConstants.RANDOM_NUMBER);
+//            HandlerRegistration windowCloseHandlerRegistration = Window
+//                    .addWindowClosingHandler(new LoginWindowCloseHandler(randomNumber));
 //            LoginUtil loginUtil = new LoginUtil();
-//            loginUtil.createNewUser(true);
+//            loginUtil.setWindowCloseHandlerRegistration(windowCloseHandlerRegistration);
+//            loginUtil.login(true);
+//            setWindowSize("405", "408");
+//
+//        } else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_CHANGE_PASSWORD)) {
+//            String userName = Window.Location.getParameter(AuthenticationConstants.USERNAME);
+//            Window.addWindowClosingHandler(new WindowCloseHandler(AuthenticationConstants.CHANGE_PASSWORD_RESULT,
+//                    AuthenticationConstants.CHANGE_PASSWORD_WINDOW_CLOSED));
+//            LoginUtil loginUtil = new LoginUtil();
+//            loginUtil.changePassword(UserId.getUserId(userName), true);
+//        } else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_CREATE_USER_TO_ASSOC_OPEN_ID)) {
+//            Window.addWindowClosingHandler(new WindowCloseHandler(AuthenticationConstants.CREATE_USER_TO_ASSOC_OPENID_RESULT,
+//                    AuthenticationConstants.CREATE_USER_WINDOW_CLOSED));
+//            LoginUtil loginUtil = new LoginUtil();
+//            loginUtil.createNewUserToAssociateOpenId(true);
+//        } else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_LOGIN_TO_ASSOC_OPEN_ID)) {
+//            Window.addWindowClosingHandler(new WindowCloseHandler(AuthenticationConstants.AUTHEN_USER_TO_ASSOC_OPENID_RESULT,
+//                    AuthenticationConstants.AUTHEN_USER_WINDOW_CLOSED));
+//            LoginUtil loginUtil = new LoginUtil();
+//            loginUtil.loginToAssociateOpenId(true);
 //        }
-    }
+//        // Not sure what this is used for - ask Tania
+////        else if (authenType.trim().equals(AuthenticationConstants.AUTHEN_TYPE_CREATE_USER)) {
+////            LoginUtil loginUtil = new LoginUtil();
+////            loginUtil.createNewUser(true);
+////        }
+//    }
 
     protected void setWindowClosedCookie(String randomNumber) {
         Date expireDate = new Date();
