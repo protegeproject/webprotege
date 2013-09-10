@@ -33,9 +33,9 @@ public class GetRelatedPropertiesStrategy extends OntologyServiceStrategy<List<T
         for(OWLEntity entity : rm.getEntities(className)) {
             TripleMapperSelector selector = new TripleMapperSelector(getProject(), AnnotationsTreatment.INCLUDE_ANNOTATIONS, NonAnnotationTreatment.INCLUDE_NON_ANNOTATIONS);
             TripleMapper<?> mapper = selector.getMapper(entity);
-            result.addAll(mapper.getTriples());
-
-
+            if (mapper != null) {
+                result.addAll(mapper.getTriples());
+            }
             // Show domains and ranges as well?  (I find this a bit yucky and I don't think we should do this)
 
             OWLOntology rootOntology = getRootOntology();
