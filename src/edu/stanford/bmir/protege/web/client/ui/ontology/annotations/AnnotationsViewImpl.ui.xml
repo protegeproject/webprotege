@@ -1,6 +1,5 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.ui.editor"
              xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.ui.frame">
 
     <g:HTMLPanel styleName="web-protege-laf">
