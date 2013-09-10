@@ -43,4 +43,4 @@ portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeT
 portlet: edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeTreePortlet;
 portlet: edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTreePortlet;
 portlet: edu.stanford.bmir.protege.web.client.ui.icd.ICDExportImportPortlet;
-portlet: edu.stanford.bmir.protege.web.client.ui.ontology.restrictions.RestrictionsPortlet;
+portlet: edu.stanford.bmir.protege.web.client.ui.ontology.restrictions.ConditionsPortlet;
