@@ -33,7 +33,7 @@ import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import java.util.Collection;
 import java.util.List;
 
-public class RestrictionsPortlet extends AbstractOWLEntityPortlet{
+public class ConditionsPortlet extends AbstractOWLEntityPortlet{
 
     private final static int CONDITION_COL_INDEX = 0;
     private final static int EDIT_COL_INDEX = 1;
@@ -58,7 +58,7 @@ public class RestrictionsPortlet extends AbstractOWLEntityPortlet{
     private int editMode;
     private int lastActionRow = -1;
 
-    public RestrictionsPortlet(Project project) {
+    public ConditionsPortlet(Project project) {
         super(project);
     }
 
@@ -95,11 +95,11 @@ public class RestrictionsPortlet extends AbstractOWLEntityPortlet{
         clearGrid();
         EntityData entity = getEntity();
         if (entity != null) {
-            setTitle("Asserted Conditions for " + entity.getBrowserText());
+            setTitle("Conditions for " + entity.getBrowserText());
             OntologyServiceManager.getInstance().getClassConditions(getProjectId(), entity.getName(),
                     new GetClassConditionsAsyncHandler(entity));
         } else {
-            setTitle("Asserted Conditions (nothing selected)");
+            setTitle("Conditions (nothing selected)");
         }
     }
 
