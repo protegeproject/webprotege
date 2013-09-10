@@ -409,6 +409,10 @@ public class OWLAPIChangeManager {
                     manager.applyChange(change);
                 }
             }
+            if(manager.getOntologies().isEmpty()) {
+                // No revisions exported.  Just create an empty ontology
+                manager.createOntology(project.getRootOntology().getOntologyID());
+            }
             return manager;
         }
         catch (OWLOntologyCreationException e) {
