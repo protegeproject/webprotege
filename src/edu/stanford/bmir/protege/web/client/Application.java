@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitManagerInitializationTask;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
@@ -107,6 +108,7 @@ public class Application {
         List<ApplicationInitManager.ApplicationInitializationTask> initTasks = new ArrayList<ApplicationInitManager.ApplicationInitializationTask>();
         initTasks.add(new InitializeClientApplicationPropertiesTask());
         initTasks.add(new RestoreUserFromServerSessionTask());
+        initTasks.add(new EntityCrudKitManagerInitializationTask());
         ApplicationInitManager initManager = new ApplicationInitManager(initTasks);
         // Run the tasks and mark proper initalization on finish.
         initManager.runTasks(new AsyncCallback<Void>() {
