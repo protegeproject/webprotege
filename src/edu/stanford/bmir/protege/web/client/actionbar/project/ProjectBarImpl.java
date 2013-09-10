@@ -10,6 +10,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -87,7 +89,7 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
 
     @Override
     public void setProjectId(Optional<ProjectId> projectId) {
-        setVisible(projectId.isPresent());
+        setVisible(projectId.isPresent() && Application.get().isLoggedInUserOwnerOfActiveProject());
     }
 
     @Override
