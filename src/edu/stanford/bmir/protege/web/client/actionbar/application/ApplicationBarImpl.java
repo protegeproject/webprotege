@@ -137,12 +137,12 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
                 signOutRequestHandler.handleSignOutRequest();
             }
         });
-        popupMenu.addItem("Account settings", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                showAccountSettingsHandler.handleShowAccountSettings();
-            }
-        });
+//        popupMenu.addItem("Account settings", new ClickHandler() {
+//            @Override
+//            public void onClick(ClickEvent event) {
+//                showAccountSettingsHandler.handleShowAccountSettings();
+//            }
+//        });
         popupMenu.addItem("Change password", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
