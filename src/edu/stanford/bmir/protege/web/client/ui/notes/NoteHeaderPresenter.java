@@ -63,7 +63,7 @@ public class NoteHeaderPresenter implements HasDispose {
     private void setNoteResolved() {
         ProjectId projectId = Application.get().getActiveProject().get();
         NoteStatus status = currentNoteStatus == NoteStatus.OPEN ? NoteStatus.RESOLVED : NoteStatus.OPEN;
-        DispatchServiceManager.get().execute(new SetNoteStatusAction(projectId, note.getNoteId(), status), new AsyncCallback<SetNoteStatusResult>() {
+        DispatchServiceManager.get().execute(new                 SetNoteStatusAction(projectId, note.getNoteId(), status), new AsyncCallback<SetNoteStatusResult>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log("Setting status failed", caught);
