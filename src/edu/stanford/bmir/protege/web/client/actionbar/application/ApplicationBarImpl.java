@@ -42,17 +42,12 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
         }
     };
 
-    private ShowAccountSettingsHandler showAccountSettingsHandler = new ShowAccountSettingsHandler() {
-        @Override
-        public void handleShowAccountSettings() {
-        }
-    };
+//    private ShowAccountSettingsHandler showAccountSettingsHandler = new ShowAccountSettingsHandler() {
+//        @Override
+//        public void handleShowAccountSettings() {
+//        }
+//    };
 
-    private ShowHelpInformationHandler showHelpInformationHandler = new ShowHelpInformationHandler() {
-        @Override
-        public void handleShowHelpInformation() {
-        }
-    };
 
     private SignUpForAccountHandler signUpForAccountHandler = new SignUpForAccountHandler() {
         @Override
@@ -63,6 +58,19 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
     private ChangePasswordHandler changePasswordHandler = new ChangePasswordHandler() {
         @Override
         public void handleChangePassword() {
+        }
+    };
+
+
+    private ShowAboutBoxHandler showAboutBoxHandler = new ShowAboutBoxHandler() {
+        @Override
+        public void handleShowAboutBox() {
+        }
+    };
+
+    private ShowUserGuideHandler showUserGuideHandler = new ShowUserGuideHandler() {
+        @Override
+        public void handleShowUserGuide() {
         }
     };
 
@@ -111,7 +119,7 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
         popupMenu.addItem("User guide", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                com.google.gwt.user.client.Window.open("http://protegewiki.stanford.edu/wiki/WebProtegeUsersGuide", "_blank", "");
+                showUserGuideHandler.handleShowUserGuide();
             }
         });
         popupMenu.addItem("Send feedback", new ClickHandler() {
@@ -123,7 +131,7 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
         popupMenu.addItem("About", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                new AboutBox().show();
+                showAboutBoxHandler.handleShowAboutBox();
             }
         });
         popupMenu.showRelativeTo(helpItem);
@@ -179,11 +187,21 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
 
     @Override
     public void setSignOutRequestHandler(SignOutRequestHandler signOutRequestHandler) {
-        this.signOutRequestHandler = signOutRequestHandler;
+        this.signOutRequestHandler = checkNotNull(signOutRequestHandler);
     }
 
     @Override
     public void setChangePasswordHandler(ChangePasswordHandler changePasswordHandler) {
-        this.changePasswordHandler = changePasswordHandler;
+        this.changePasswordHandler = checkNotNull(changePasswordHandler);
+    }
+
+    @Override
+    public void setShowAboutBoxHandler(ShowAboutBoxHandler showAboutBoxHandler) {
+        this.showAboutBoxHandler = checkNotNull(showAboutBoxHandler);
+    }
+
+    @Override
+    public void setShowUserGuideHandler(ShowUserGuideHandler showUserGuideHandler) {
+        this.showUserGuideHandler = checkNotNull(showUserGuideHandler);
     }
 }

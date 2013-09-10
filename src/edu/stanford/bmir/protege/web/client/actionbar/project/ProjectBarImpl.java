@@ -29,9 +29,9 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
         }
     };
 
-    private ShowNewEntitySettingsHandler showNewEntitySettingsHandler = new ShowNewEntitySettingsHandler() {
+    private ShowFreshEntitySettingsHandler showFreshEntitySettingsHandler = new ShowFreshEntitySettingsHandler() {
         @Override
-        public void handleShowNewEntitySettings() {
+        public void handleShowFreshEntitySettings() {
         }
     };
 
@@ -76,11 +76,12 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
             }
         });
 
-//        popupMenu.addItem("Fresh entity settings...", new ClickHandler() {
-//            @Override
-//            public void onClick(ClickEvent event) {
-//            }
-//        });
+        popupMenu.addItem("Fresh entity settings...", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                showFreshEntitySettingsHandler.handleShowFreshEntitySettings();
+            }
+        });
         popupMenu.showRelativeTo(projectSettingsItem);
     }
 
@@ -95,8 +96,8 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
     }
 
     @Override
-    public void setShowNewEntitySettingsHandler(ShowNewEntitySettingsHandler showNewEntitiesHandler) {
-        this.showNewEntitySettingsHandler = checkNotNull(showNewEntitiesHandler);
+    public void setShowFreshEntitySettingsHandler(ShowFreshEntitySettingsHandler showNewEntitiesHandler) {
+        this.showFreshEntitySettingsHandler = checkNotNull(showNewEntitiesHandler);
     }
 
     @Override
