@@ -114,7 +114,7 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
                 com.google.gwt.user.client.Window.open("http://protegewiki.stanford.edu/wiki/WebProtegeUsersGuide", "_blank", "");
             }
         });
-        popupMenu.addItem("Send feeback", new ClickHandler() {
+        popupMenu.addItem("Send feedback", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 MessageBox.showMessage("Send us feedback", WebProtegeClientBundle.BUNDLE.feedbackBoxText().getText());

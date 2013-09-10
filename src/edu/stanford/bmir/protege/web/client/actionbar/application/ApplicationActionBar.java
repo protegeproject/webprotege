@@ -20,8 +20,4 @@ public interface ApplicationActionBar extends IsWidget {
     void setSignUpForAccountHandler(SignUpForAccountHandler signUpForAccountHandler);
 
     void setChangePasswordHandler(ChangePasswordHandler changePasswordHandler);
-//
-//    void setShowHelpInformationHandler(ShowHelpInformationHandler showHelpInformationHandler);
-//
-//    void setShowAccountSettingsHandler(ShowAccountSettingsHandler handler);
 }
