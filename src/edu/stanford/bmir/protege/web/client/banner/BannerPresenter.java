@@ -26,19 +26,17 @@ public class BannerPresenter {
     private BannerView bannerView = new BannerViewImpl();
 
     public BannerPresenter() {
-        final ProjectActionBar p = bannerView.getProjectActionBar();
-        p.setProjectId(Application.get().getActiveProject());
-        p.setShowShareSettingsHandler(new ShareSettingsHandlerImpl());
-        p.setShowFreshEntitySettingsHandler(new ShowFreshEntitySettingsHandlerImpl());
-        p.setShowProjectDetailsHandler(new ShowProjectDetailsHandlerImpl());
-
+        final ProjectActionBar projectActionBar = bannerView.getProjectActionBar();
+        projectActionBar.setProjectId(Application.get().getActiveProject());
+        projectActionBar.setShowShareSettingsHandler(new ShareSettingsHandlerImpl());
+        projectActionBar.setShowFreshEntitySettingsHandler(new ShowFreshEntitySettingsHandlerImpl());
+        projectActionBar.setShowProjectDetailsHandler(new ShowProjectDetailsHandlerImpl());
         EventBusManager.getManager().registerHandler(ActiveProjectChangedEvent.TYPE, new ActiveProjectChangedHandler() {
             @Override
             public void handleActiveProjectChanged(ActiveProjectChangedEvent event) {
-                p.setProjectId(event.getProjectId());
+                projectActionBar.setProjectId(event.getProjectId());
             }
         });
-
         final ApplicationActionBar w = bannerView.getApplicationActionBar();
         w.setSignedInUser(Application.get().getUserId());
         w.setSignInRequestHandler(new SignInRequestHandlerImpl());
@@ -47,17 +45,18 @@ public class BannerPresenter {
         w.setChangePasswordHandler(new ChangePasswordHandlerImpl());
         w.setShowAboutBoxHandler(new ShowAboutBoxHandlerImpl());
         w.setShowUserGuideHandler(new ShowUserGuideHandlerImpl());
-
         EventBusManager.getManager().registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {
                 w.setSignedInUser(event.getUserId());
+                projectActionBar.setProjectId(Application.get().getActiveProject());
             }
         });
         EventBusManager.getManager().registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
             @Override
             public void handleUserLoggedOut(UserLoggedOutEvent event) {
                 w.setSignedInUser(UserId.getGuest());
+                projectActionBar.setProjectId(Application.get().getActiveProject());
             }
         });
     }
