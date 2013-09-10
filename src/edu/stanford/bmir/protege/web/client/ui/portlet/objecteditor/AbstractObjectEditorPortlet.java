@@ -51,6 +51,7 @@ public abstract class AbstractObjectEditorPortlet<T extends Serializable> extend
         editor.addValueChangeHandler(new ValueChangeHandler<Optional<T>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<T>> event) {
+                GWT.log("Editor value changed!");
                 handleValueChanged(event.getValue());
             }
         });
@@ -184,10 +185,12 @@ public abstract class AbstractObjectEditorPortlet<T extends Serializable> extend
                 DispatchServiceManager.get().execute(action, new AsyncCallback<Result>() {
                     @Override
                     public void onFailure(Throwable caught) {
+                        GWT.log("Failure updating object", caught);
                     }
 
                     @Override
                     public void onSuccess(Result result) {
+                        GWT.log("Updated class frame");
                         handleUpdateObjectSuccess(result);
 
                     }
