@@ -7,6 +7,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.place.shared.PlaceChangeEvent;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -140,7 +141,7 @@ public class EditorPresenter implements HasDispose {
     }
 
     private <C extends EditorCtx, O extends Serializable> void commitCurrentValue(final EditorState<C, O> editorState) {
-        EditorView<O> view = editorState.getEditorView();
+        final EditorView<O> view = editorState.getEditorView();
         if(!view.isDirty()) {
             return;
         }
@@ -155,7 +156,22 @@ public class EditorPresenter implements HasDispose {
         }
         final C editorCtx = editorState.getEditorContext();
         UpdateObjectAction<O> updateAction = editorState.getEditorManager().createUpdateObjectAction(pristineValue, editedValue, editorCtx);
-        DispatchServiceManager.get().execute(updateAction, new EmptySuccessWebProtegeCallback<Result>());
+        GWT.log("Updating object");
+        DispatchServiceManager.get().execute(updateAction, new AsyncCallback<Result>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                GWT.log("Updating object failed", caught);
+            }
+
+            @Override
+            public void onSuccess(Result result) {
+                GWT.log("Object successfully updated");
+                Optional<EditorManager<C, O>> editorManager = editorContextMapper.getEditorManager(editorCtx);
+                if (editorManager.isPresent()) {
+                    setEditorState(editedValue, editorCtx, view, editorManager.get());
+                }
+            }
+        });
     }
 
 
