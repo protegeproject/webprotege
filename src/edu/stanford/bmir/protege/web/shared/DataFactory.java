@@ -259,7 +259,7 @@ public class DataFactory {
                     return DataFactory.getOWLLiteral(value);
                 }
                 catch (NumberFormatException e4) {
-                    return DataFactory.getOWLLiteral(lexicalValue, DataFactory.get().getRDFPlainLiteral());
+                    return DataFactory.getOWLLiteral(lexicalValue);
                 }
             }
 
