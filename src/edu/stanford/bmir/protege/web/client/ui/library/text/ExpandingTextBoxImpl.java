@@ -42,6 +42,8 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
 
     private SuggestOracle delegateSuggestOracle = EMPTY_SUGGEST_ORACLE;
 
+    private String lastSelection = "";
+
 
     interface ExpandingTextBoxImplUiBinder extends UiBinder<HTMLPanel, ExpandingTextBoxImpl> {
 
@@ -83,11 +85,14 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
                     event.preventDefault();
                     acceptKeyHandler.handleAcceptKey();
                 }
-                else if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.MULTI_LINE && (event.isControlKeyDown() || suggestBox.isSuggestionListShowing())) {
+                else if(event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.MULTI_LINE && isCurrentTextAutoCompleted(textArea)) {
+                    event.preventDefault();
+                }
+                else if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER && mode == ExpandingTextBoxMode.MULTI_LINE && event.isControlKeyDown()) {
                     event.preventDefault();
                     acceptKeyHandler.handleAcceptKey();
                 }
-                doPreElements(mode == ExpandingTextBoxMode.MULTI_LINE && event.getNativeKeyCode() == KeyCodes.KEY_ENTER && !event.isControlKeyDown());
+                doPreElements(mode == ExpandingTextBoxMode.MULTI_LINE && event.getNativeKeyCode() == KeyCodes.KEY_ENTER && (!event.isControlKeyDown() && !isCurrentTextAutoCompleted(textArea)));
             }
         });
         // Regain the focus after the suggest box closes (doesn't seem to happen by default here).
@@ -95,8 +100,13 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
             @Override
             public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
                 textArea.setFocus(true);
+                lastSelection = event.getSelectedItem().getReplacementString();
             }
         });
+    }
+
+    private boolean isCurrentTextAutoCompleted(TextArea textArea) {
+        return textArea.getText().equals(lastSelection);
     }
 
     @Override
