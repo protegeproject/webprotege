@@ -699,6 +699,8 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     @Override
     public void clearValue() {
+        editor.setValue("");
+        languageEditor.setValue("");
         setCurrentData(Optional.<OWLPrimitiveData>absent(), EventStrategy.DO_NOT_FIRE_EVENTS);
     }
 
@@ -731,9 +733,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
                 String lang = ((OWLLiteralData) data).getLiteral().getLang();
                 languageEditor.setValue(lang);
             }
-        } else {
-            editor.setText("");
-            languageEditor.setValue("");
         }
         updateDisplayForCurrentData();
         if (eventStrategy == EventStrategy.FIRE_EVENTS) {
