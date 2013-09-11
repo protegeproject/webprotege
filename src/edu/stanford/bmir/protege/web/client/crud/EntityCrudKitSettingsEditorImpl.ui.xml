@@ -1,0 +1,40 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:style>
+        .validator {
+            color: #ff0000;
+            padding: 2px;
+            padding-bottom: 4px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+        <table>
+            <colgroup>
+                <col width="100px"/>
+            </colgroup>
+            <tr>
+                <td valign="top">
+                    <g:Label text="IRI Prefix" addStyleNames="web-protege-form-label"/>
+                </td>
+                <td valign="top">
+                    <g:TextBox ui:field="iriPrefixEditor" visibleLength="90"/>
+                    <g:HTML ui:field="prefixValidatorMessage" visible="false" addStyleNames="{style.validator}"/>
+                </td>
+            </tr>
+        </table>
+        <div style="height: 5px;"/>
+        <table>
+            <colgroup>
+                <col width="100px"/>
+            </colgroup>
+            <tr>
+                <td valign="top"><g:Label text="IRI Suffix" addStyleNames="web-protege-form-label"/></td>
+                <td valign="top"><g:ListBox ui:field="suffixSelectorListBox" visibleItemCount="1"/></td>
+            </tr>
+        </table>
+        <div style="height: 10px;"/>
+        <g:SimplePanel ui:field="schemeSpecificSettingsEditorHolder"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

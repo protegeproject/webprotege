@@ -9,6 +9,8 @@ import org.semanticweb.owlapi.vocab.Namespaces;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -64,61 +66,65 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
     }
 
     public synchronized String getShortForm(OWLEntity owlEntity) {
-        if(owlEntity.isBuiltIn() || startsWithBuiltInPrefix(owlEntity)) {
-            QNameShortFormProvider qNameShortFormProvider = new QNameShortFormProvider(builtinPrefixes);
-            return qNameShortFormProvider.getShortForm(owlEntity);
-        }
-        int matchedIndex = Integer.MAX_VALUE;
+        try {
+            if(owlEntity.isBuiltIn() || startsWithBuiltInPrefix(owlEntity)) {
+                QNameShortFormProvider qNameShortFormProvider = new QNameShortFormProvider(builtinPrefixes);
+                return qNameShortFormProvider.getShortForm(owlEntity);
+            }
+            int matchedIndex = Integer.MAX_VALUE;
 //        int matchedLangIndex = Integer.MAX_VALUE;
-        boolean matchedDefaultLang = false;
-        OWLAnnotationValue renderingValue = null;
-        // Just ask for the language once (bad coding!)
-        final String defaultLanguage = project.getDefaultLanguage();
-        for(OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
-            for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(owlEntity.getIRI())) {
-                // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
-                // object to find the index.
-                int index = annotationPropertyIRIs.indexOf(ax.getProperty().getIRI());
-                if(index <= matchedIndex && index > -1) {
-                    if (index < matchedIndex) {
-                        matchedIndex = index;
-                        renderingValue = ax.getValue();
-                    }
-                    if(index == matchedIndex || index == Integer.MAX_VALUE) {
-                        final OWLAnnotationValue value = ax.getValue();
-                        if (value instanceof OWLLiteral) {
-                            OWLLiteral litValue = (OWLLiteral) value;
-                            String lang = litValue.getLang();
-                            if(lang != null) {
-                                if(lang.equals(defaultLanguage)) {
-                                    matchedDefaultLang = true;
-                                    renderingValue = litValue;
-                                }
-                                else if(!matchedDefaultLang) {
-                                    renderingValue = litValue;
-                                }
-                            }
-
+            boolean matchedDefaultLang = false;
+            OWLAnnotationValue renderingValue = null;
+            // Just ask for the language once (bad coding!)
+            final String defaultLanguage = project.getDefaultLanguage();
+            for(OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
+                for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(owlEntity.getIRI())) {
+                    // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
+                    // object to find the index.
+                    int index = annotationPropertyIRIs.indexOf(ax.getProperty().getIRI());
+                    if(index <= matchedIndex && index > -1) {
+                        if (index < matchedIndex) {
+                            matchedIndex = index;
+                            renderingValue = ax.getValue();
                         }
+                        if(index == matchedIndex || index == Integer.MAX_VALUE) {
+                            final OWLAnnotationValue value = ax.getValue();
+                            if (value instanceof OWLLiteral) {
+                                OWLLiteral litValue = (OWLLiteral) value;
+                                String lang = litValue.getLang();
+                                if(lang != null) {
+                                    if(lang.equals(defaultLanguage)) {
+                                        matchedDefaultLang = true;
+                                        renderingValue = litValue;
+                                    }
+                                    else if(!matchedDefaultLang) {
+                                        renderingValue = litValue;
+                                    }
+                                }
+
+                            }
+                        }
+
+
                     }
-
-
                 }
             }
+            String result;
+            if(renderingValue instanceof OWLLiteral) {
+                result = ((OWLLiteral) renderingValue).getLiteral();
+            }
+            else {
+                // Had this as an instance variable, but creating a new instance each time is definitely thread safe.
+                SimpleShortFormProvider simpleShortFormProvider = new SimpleShortFormProvider();
+                result = URLDecoder.decode(simpleShortFormProvider.getShortForm(owlEntity), "UTF-8");
+            }
+            if(result.contains(" ")) {
+                result = getQuoted(result);
+            }
+            return result;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
-        String result;
-        if(renderingValue instanceof OWLLiteral) {
-            result = ((OWLLiteral) renderingValue).getLiteral();
-        }
-        else {
-            // Had this as an instance variable, but creating a new instance each time is definitely thread safe.
-            SimpleShortFormProvider simpleShortFormProvider = new SimpleShortFormProvider();
-            result = simpleShortFormProvider.getShortForm(owlEntity);
-        }
-        if(result.contains(" ")) {
-            result = getQuoted(result);
-        }
-        return result;
     }
 
     private static String getQuoted(String result) {

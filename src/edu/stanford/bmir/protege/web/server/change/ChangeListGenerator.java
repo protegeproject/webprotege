@@ -21,9 +21,9 @@ public interface ChangeListGenerator<R> {
      * @param project The project which the changes are generated with reference to.
      * @param context The context for the change generation.  This contains information such as the id of the user
      * generating the changes.
-     * @return The generated change list and main result bundled up in a {@link GeneratedOntologyChanges} object.
+     * @return The generated change list and main result bundled up in a {@link OntologyChangeList} object.
      */
-    GeneratedOntologyChanges<R> generateChanges(OWLAPIProject project, ChangeGenerationContext context);
+    OntologyChangeList<R> generateChanges(OWLAPIProject project, ChangeGenerationContext context);
 
     R getRenamedResult(R result, RenameMap renameMap);
 

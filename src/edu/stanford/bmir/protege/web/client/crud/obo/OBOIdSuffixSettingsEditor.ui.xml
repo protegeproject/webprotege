@@ -1,0 +1,81 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text"
+             xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.ui.editor">
+    <ui:style>
+        .table-style {
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            width: 100%;
+            padding: 2px;
+            padding-right: 3px;
+            vertical-align: top;
+        }
+
+        .scroll-panel-style {
+            /*border: 1px solid silver;*/
+
+            border-top: 1px solid #f1f1f1;
+            border-bottom: 1px solid #f1f1f1;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+
+        .optional-style {
+            color: silver;
+            padding-left: 5px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+
+
+        <table>
+            <colgroup>
+                <col width="100px"/>
+            </colgroup>
+            <tr>
+                <td>
+                    <g:Label text="Digit count" addStyleNames="web-protege-form-label"/>
+                </td>
+                <td>
+                    <g:TextBox ui:field="totalDigitsEditor"/>
+                </td>
+            </tr>
+        </table>
+        <div style="height: 10px;"/>
+        <table>
+            <colgroup>
+                <col width="100px"/>
+            </colgroup>
+            <tr>
+                <td valign="top">
+                    <g:Label text="User specific ranges" addStyleNames="web-protege-form-label"/>
+                </td>
+                <td valign="top">
+                    <g:ScrollPanel height="200px" width="300px" addStyleNames="{style.scroll-panel-style}">
+                        <g:HTMLPanel addStyleNames="{style.table-style}">
+                            <editor:ValueListEditorImpl ui:field="userRangeTable"/>
+                        </g:HTMLPanel>
+                    </g:ScrollPanel>
+                </td>
+            </tr>
+        </table>
+
+        <div style="height: 10px;"/>
+        <!--<table>-->
+            <!--<colgroup>-->
+                <!--<col width="100px"/>-->
+            <!--</colgroup>-->
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--<g:Label text="Language" addStyleNames="web-protege-form-label"/>-->
+                <!--</td>-->
+                <!--<td>-->
+                    <!--<text:PlaceholderTextBox ui:field="labelLangEditor" visibleLength="8" placeholder="e.g. en"/><g:InlineLabel text=" (optional)" addStyleNames="{style.optional-style}"/>-->
+                <!--</td>-->
+            <!--</tr>-->
+        <!--</table>-->
+
+    </g:HTMLPanel>
+</ui:UiBinder>
