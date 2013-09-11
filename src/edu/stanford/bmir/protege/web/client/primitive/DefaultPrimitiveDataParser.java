@@ -111,6 +111,9 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
             OWLLiteralData literalData = parseLiteralData(trimmedContent, lang);
             callback.onSuccess(Optional.<OWLPrimitiveData>of(literalData));
         }
+        else {
+            callback.parsingFailure();
+        }
     }
 
     public native boolean isAbsoluteIRI(String url) /*-{

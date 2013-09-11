@@ -343,17 +343,24 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         return true;
     }
 
-    private void setIconInsetStyleName(String name) {
+    private void setIconInsetStyleName(Optional<String> name) {
         if (lastIconInsetStyleName != null) {
             editor.getSuggestBox().removeStyleName(lastIconInsetStyleName);
         }
-        lastIconInsetStyleName = name;
-        editor.getSuggestBox().addStyleName(name);
+        if (name.isPresent()) {
+            lastIconInsetStyleName = name.get();
+            editor.getSuggestBox().addStyleName(name.get());
+        }
+        else {
+            lastIconInsetStyleName = null;
+        }
     }
 
     private void setIconInsetStyleNameForEntityData() {
         if (!currentData.isPresent()) {
             clearIconInset();
+            editor.setTitle("");
+            hideErrorLabel();
             return;
         }
         final OWLPrimitiveData entityData = currentData.get();
@@ -454,7 +461,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
                 }
             }
         });
-        setIconInsetStyleName(styleName);
+        setIconInsetStyleName(Optional.<String>of(styleName));
     }
 
     /**
@@ -479,7 +486,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     //
     private void clearIconInset() {
-        setIconInsetStyleName("empty-icon-inset");
+        setIconInsetStyleName(Optional.<String>absent());
     }
 
     private void handleLanguageChanged() {

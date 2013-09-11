@@ -406,6 +406,10 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             registration.removeHandler();
         }
 
+        editor.clearValue();
+        editor.setPlaceholder("");
+        editor.setTitle("");
+
         pool.add(editor);
     }
 

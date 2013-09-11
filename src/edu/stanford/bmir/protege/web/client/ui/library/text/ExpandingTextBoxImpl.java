@@ -193,6 +193,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
     @Override
     public void setPlaceholder(String placeholder) {
         suggestBox.getTextBox().getElement().setAttribute("placeholder", placeholder);
+        doPreElements(false);
     }
 
     /**
