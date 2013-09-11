@@ -5,6 +5,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -323,11 +324,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         fillerEditor.addStyleName("web-protege-form-layout-editor-input");
         fillerEditor.setPlaceholder(FILLER_EDITOR_PLACE_HOLDER_TEXT);
 
-        if (propertyData.isPresent()) {
-            addDeleteButton(row);
-        }
-
-
+        addDeleteButton(row, propertyData.isPresent());
 
 
         HandlerRegistration propHandlerReg = propertyEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
@@ -455,9 +452,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     }
 
     private void handleFillerChanged(int row, PrimitiveDataEditor propertyEditor, PrimitiveDataEditor fillerEditor) {
-        if(shouldShowDeleteButton(row, propertyEditor, fillerEditor)) {
-            addDeleteButton(row);
-        }
+        addDeleteButton(row, shouldShowDeleteButton(row, propertyEditor, fillerEditor));
         updateFillerEditor(row, propertyEditor, fillerEditor);
         if(isInvalidValue(propertyEditor)) {
             inferPropertyTypeFromFiller(row, propertyEditor, fillerEditor);
@@ -543,9 +538,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
     private void handlePropertyChanged(int row, PrimitiveDataEditor propertyEditor, PrimitiveDataEditor fillerEditor) {
         fillerEditor.setPlaceholder(getValuePlaceholder(row));
-        if (shouldShowDeleteButton(row, propertyEditor, fillerEditor)) {
-            addDeleteButton(row);
-        }
+        addDeleteButton(row, shouldShowDeleteButton(row, propertyEditor, fillerEditor));
         if(isLiteralOrCanEditLiteral(propertyEditor.getValue(), fillerEditor.getValue())) {
             addLangEditor(row, fillerEditor.getLanguageEditor(), fillerEditor.getValue());
         }
@@ -573,10 +566,11 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         return propertyEditor.getValue().isPresent() || fillerEditor.getValue().isPresent();
     }
 
-    private void addDeleteButton(final int rowCount) {
+    private void addDeleteButton(final int rowCount, boolean visible) {
         Widget widget = table.getWidget(rowCount, DELETE_BUTTON_COL);
         if(widget instanceof DeleteButton) {
-            widget.setVisible(true);
+//            widget.setVisible(visible);
+            widget.getElement().getStyle().setVisibility(visible ? Style.Visibility.VISIBLE : Style.Visibility.HIDDEN);
             return;
         }
         final DeleteButton deleteButton = createDeleteButton();
@@ -586,6 +580,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                 deleteRow(deleteButton);
             }
         });
+        deleteButton.getElement().getStyle().setVisibility(visible ? Style.Visibility.VISIBLE : Style.Visibility.HIDDEN);
         table.setWidget(rowCount, DELETE_BUTTON_COL, deleteButton);
     }
 
