@@ -69,8 +69,8 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
     }
 
     @Override
-    public GeneratedOntologyChanges<Set<E>> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
-        GeneratedOntologyChanges.Builder<Set<E>> builder = new GeneratedOntologyChanges.Builder<Set<E>>();
+    public OntologyChangeList<Set<E>> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+        OntologyChangeList.Builder<Set<E>> builder = new OntologyChangeList.Builder<Set<E>>();
         Set<E> freshEntities = new HashSet<E>();
         for (String bt : browserTexts) {
             String browserText = bt.trim();

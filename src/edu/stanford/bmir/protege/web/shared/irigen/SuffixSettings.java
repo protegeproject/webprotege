@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.irigen;
 
 
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
+
 import java.io.Serializable;
 
 /**
@@ -14,7 +16,7 @@ import java.io.Serializable;
  */
 public abstract class SuffixSettings implements Serializable {
 
-    private SuffixSettingsId schemeId;
+    private EntityCrudKitId kitId;
 
     /**
      * For serialization only
@@ -24,12 +26,12 @@ public abstract class SuffixSettings implements Serializable {
     }
 
 
-    protected SuffixSettings(SuffixSettingsId schemeId) {
-        this.schemeId = schemeId;
+    protected SuffixSettings(EntityCrudKitId kitId) {
+        this.kitId = kitId;
     }
 
-    public SuffixSettingsId getId() {
-        return schemeId;
+    public EntityCrudKitId getId() {
+        return kitId;
     }
 
 }

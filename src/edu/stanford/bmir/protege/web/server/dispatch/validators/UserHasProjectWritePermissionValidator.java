@@ -20,10 +20,16 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class UserHasProjectWritePermissionValidator<A extends Action<R> & HasProjectId, R extends Result> implements RequestValidator<A> {
 
+    public static <A extends Action<R> & HasProjectId, R extends Result> UserHasProjectWritePermissionValidator<A, R> get() {
+        return new UserHasProjectWritePermissionValidator<A, R>();
+    }
+
     @Override
     public RequestValidationResult validateAction(A action, RequestContext requestContext) {
         ProjectId projectId = action.getProjectId();
         UserId userId = requestContext.getUserId();
         return RequestValidationResult.getValid();
     }
+
+
 }
