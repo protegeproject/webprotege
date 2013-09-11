@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.crud.uuid;
 
+import com.google.common.base.Optional;
+import com.google.gwt.http.client.URL;
 import edu.stanford.bmir.protege.web.client.crud.uuid.UUIDSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;
+import org.semanticweb.owlapi.model.IRI;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,6 +15,8 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
  * Date: 13/08/2013
  */
 public final class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
+
+    public static final String EXAMPLE_SUFFIX = "RtvBaCCEyk09YwGRQljc2z";
 
     private static EntityCrudKitId ID = EntityCrudKitId.get("UUID");
 
@@ -38,5 +43,20 @@ public final class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
     @Override
     public UUIDSuffixSettings getDefaultSuffixSettings() {
         return new UUIDSuffixSettings();
+    }
+
+    @Override
+    public Optional<String> getPrefixValidationMessage(String prefix) {
+        if(!(prefix.endsWith("#") || prefix.endsWith("/"))) {
+            return Optional.of("It is recommended that your prefix ends with a forward slash i.e. <b>/</b> (or a #)");
+        }
+        else {
+            return Optional.absent();
+        }
+    }
+
+    @Override
+    public IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, UUIDSuffixSettings suffixSettings) {
+        return IRI.create(URL.encode(prefixSettings.getIRIPrefix()), EXAMPLE_SUFFIX);
     }
 }

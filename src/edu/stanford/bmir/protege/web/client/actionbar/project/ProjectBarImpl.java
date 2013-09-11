@@ -78,7 +78,7 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
             }
         });
 
-        popupMenu.addItem("Fresh entity settings...", new ClickHandler() {
+        popupMenu.addItem("New entity settings...", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 showFreshEntitySettingsHandler.handleShowFreshEntitySettings();

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
+import com.google.gwt.safehtml.shared.UriUtils;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
@@ -7,9 +8,16 @@ import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
+import org.apache.commons.httpclient.util.URIUtil;
+import org.semanticweb.owlapi.io.XMLUtils;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -64,9 +72,14 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
     }
 
     private IRI createEntityIRI(EntityShortForm shortForm) {
-        WhiteSpaceTreatment whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
-        String transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
-        return IRI.create(prefixSettings.getIRIPrefix() + transformedShortForm);
+        try {
+            WhiteSpaceTreatment whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
+            String transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
+            String escapedShortForm = URLEncoder.encode(transformedShortForm, "UTF-8");
+            return IRI.create(prefixSettings.getIRIPrefix() + escapedShortForm);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 is not supported!");
+        }
     }
 
     @Override
@@ -78,13 +91,16 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
 
     @Override
     public <E extends OWLEntity> String getShortForm(E entity, EntityCrudContext context) {
-        String iriString = entity.getIRI().toString();
-        final String iriPrefix = prefixSettings.getIRIPrefix();
-        if(iriString.startsWith(iriPrefix)) {
-            return iriString.substring(iriPrefix.length());
-        }
-        else {
-            return iriString;
+        try {
+            String iriString = entity.getIRI().toString();
+            final String iriPrefix = prefixSettings.getIRIPrefix();
+            String name = XMLUtils.getNCNameSuffix(iriPrefix);
+            if(name == null) {
+                return iriString;
+            }
+            return URLDecoder.decode(name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("UTF-8 is not supported!");
         }
     }
 }

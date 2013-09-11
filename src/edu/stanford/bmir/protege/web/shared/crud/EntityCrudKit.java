@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasDisplayName;
+import org.semanticweb.owlapi.model.IRI;
 
 import java.io.Serializable;
 
@@ -69,6 +71,10 @@ public abstract class EntityCrudKit<S extends EntityCrudKitSuffixSettings> imple
     public abstract EntityCrudKitPrefixSettings getDefaultPrefixSettings();
 
     public abstract S getDefaultSuffixSettings();
+
+    public abstract Optional<String> getPrefixValidationMessage(String prefix);
+
+    public abstract IRI generateExample(EntityCrudKitPrefixSettings prefixSettings, S suffixSettings);
 
     @Override
     public String toString() {

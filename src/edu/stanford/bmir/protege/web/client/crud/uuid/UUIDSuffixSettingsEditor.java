@@ -2,11 +2,13 @@ package edu.stanford.bmir.protege.web.client.crud.uuid;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
@@ -57,12 +59,12 @@ public class UUIDSuffixSettingsEditor extends Composite implements EntityCrudKit
 
     @Override
     public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return null;
+        return addHandler(handler, DirtyChangedEvent.TYPE);
     }
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<UUIDSuffixSettings>> handler) {
-        return null;
+        return addHandler(handler, ValueChangeEvent.getType());
     }
 
 
