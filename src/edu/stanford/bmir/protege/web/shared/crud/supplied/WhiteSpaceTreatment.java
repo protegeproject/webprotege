@@ -33,7 +33,7 @@ public enum  WhiteSpaceTreatment {
         final String trimmedInput = input.trim();
         switch (this) {
             case ESCAPE:
-                return trimmedInput.replaceAll("\\s+", "%20");
+                return trimmedInput;
             case TRANSFORM_TO_CAMEL_CASE:
                 return transformToCamelCase(trimmedInput);
             case REPLACE_WITH_UNDERSCORES:

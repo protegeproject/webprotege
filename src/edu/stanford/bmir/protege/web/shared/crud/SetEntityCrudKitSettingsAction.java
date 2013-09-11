@@ -13,7 +13,11 @@ public class SetEntityCrudKitSettingsAction implements HasProjectAction<SetEntit
 
     private ProjectId projectId;
 
-    private EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> settings;
+    private EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> fromSettings;
+
+    private EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> toSettings;
+
+    private IRIPrefixUpdateStrategy prefixUpdateStrategy;
 
     /**
      * For serialization purposes only
@@ -21,9 +25,11 @@ public class SetEntityCrudKitSettingsAction implements HasProjectAction<SetEntit
     private SetEntityCrudKitSettingsAction() {
     }
 
-    public SetEntityCrudKitSettingsAction(ProjectId projectId, EntityCrudKitSettings<?> settings) {
+    public SetEntityCrudKitSettingsAction(ProjectId projectId, EntityCrudKitSettings<?> fromSettings, EntityCrudKitSettings<?> toSettings, IRIPrefixUpdateStrategy prefixUpdateStrategy) {
         this.projectId = projectId;
-        this.settings = settings;
+        this.toSettings = toSettings;
+        this.fromSettings = fromSettings;
+        this.prefixUpdateStrategy = prefixUpdateStrategy;
     }
 
     @Override
@@ -31,7 +37,15 @@ public class SetEntityCrudKitSettingsAction implements HasProjectAction<SetEntit
         return projectId;
     }
 
-    public EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> getSettings() {
-        return settings;
+    public IRIPrefixUpdateStrategy getPrefixUpdateStrategy() {
+        return prefixUpdateStrategy;
+    }
+
+    public EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> getToSettings() {
+        return toSettings;
+    }
+
+    public EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> getFromSettings() {
+        return fromSettings;
     }
 }

@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateFrameAction;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
@@ -76,10 +80,12 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
         project.applyChanges(userId, changeGenerator, descGenerator);
         if(!from.getDisplayName().equals(to.getDisplayName())) {
             // Set changes
-            OWLAPIEntityEditorKit entityEditorKit = project.getOWLEntityEditorKit();
-            OWLEntityCreator<S> creator = entityEditorKit.getEntityCreatorFactory().setBrowserText(project, userId, to.getFrame().getSubject(), to.getDisplayName());
-            List<OWLOntologyChange> renameChanges = creator.getChanges();
-            project.applyChanges(userId, new FixedChangeListGenerator(renameChanges), new FixedMessageChangeDescriptionGenerator<Object>("Renamed entity"));
+            EntityCrudKitHandler<?> entityEditorKit = project.getEntityCrudKitHandler();
+            OntologyChangeList.Builder<S> changeListBuilder = new OntologyChangeList.Builder<S>();
+            entityEditorKit.update(to.getFrame().getSubject(), EntityShortForm.get(to.getDisplayName()), new EntityCrudContext(project.getRootOntology(), project.getDataFactory()), changeListBuilder);
+//            OWLEntityCreator<S> creator = entityEditorKit.getEntityCreatorFactory().setBrowserText(project, userId, to.getFrame().getSubject(), to.getDisplayName());
+//            List<OWLOntologyChange> renameChanges = creator.getChanges();
+            project.applyChanges(userId, new FixedChangeListGenerator(changeListBuilder.build().getChanges()), new FixedMessageChangeDescriptionGenerator<Object>("Renamed entity"));
         }
         EventList<ProjectEvent<?>> events = project.getEventManager().getEventsFromTag(startTag);
         return createResponse(action.getTo(), events);

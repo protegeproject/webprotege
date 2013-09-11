@@ -6,11 +6,14 @@ import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
+import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 
@@ -39,14 +42,15 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
     protected TextBox iriPrefixEditor;
 
     @UiField
-    protected ListBox schemeSelectorListBox;
+    protected HTML prefixValidatorMessage;
+
+    @UiField
+    protected ListBox suffixSelectorListBox;
 
     @UiField
     protected SimplePanel schemeSpecificSettingsEditorHolder;
 
-    @UiField
-    protected HasText exampleField;
-
+    private boolean prefixIsDirty = false;
 
     private EntityCrudKitSuffixSettingsEditor<?> lastEditorKit;
 
@@ -58,19 +62,19 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         EntityCrudKitManager kitManager = EntityCrudKitManager.get();
         descriptors = new ArrayList<EntityCrudKit>(kitManager.getKits());
         for (EntityCrudKit descriptor : descriptors) {
-            schemeSelectorListBox.addItem(descriptor.getDisplayName());
+            suffixSelectorListBox.addItem(descriptor.getDisplayName());
             touchedEditors.add(Optional.<EntityCrudKitSuffixSettingsEditor>absent());
         }
-        schemeSelectorListBox.setSelectedIndex(0);
+        suffixSelectorListBox.setSelectedIndex(0);
         updateEditor(true);
     }
 
-    @UiHandler("schemeSelectorListBox")
+    @UiHandler("suffixSelectorListBox")
     protected void handleSchemeChanged(ChangeEvent valueChangeEvent) {
         updateEditor(false);
     }
 
-    @UiHandler("schemeSelectorListBox")
+    @UiHandler("suffixSelectorListBox")
     protected void handleKeyPressChange(KeyUpEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_UP || event.getNativeKeyCode() == KeyCodes.KEY_DOWN) {
             updateEditor(false);
@@ -79,13 +83,35 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
 
     @UiHandler("iriPrefixEditor")
     protected void handleIRIPrefixChanged(ValueChangeEvent<String> prefixChangedEvent) {
-//        updateExampleField();
+        prefixIsDirty = true;
+        validatePrefix();
     }
 
+    @UiHandler("iriPrefixEditor")
+    protected void handleIRIPrefixChanged(KeyUpEvent event) {
+        validatePrefix();
+    }
+
+    private void validatePrefix() {
+        int selectedIndex = suffixSelectorListBox.getSelectedIndex();
+        if(selectedIndex == -1) {
+            return;
+        }
+        String prefix = iriPrefixEditor.getText().trim();
+        EntityCrudKit<?> crudKit = descriptors.get(selectedIndex);
+        Optional<String> validationMessage = crudKit.getPrefixValidationMessage(prefix);
+        if(validationMessage.isPresent()) {
+            prefixValidatorMessage.setHTML(new SafeHtmlBuilder().appendHtmlConstant(validationMessage.get()).toSafeHtml());
+            prefixValidatorMessage.setVisible(true);
+        }
+        else {
+            prefixValidatorMessage.setVisible(false);
+        }
+    }
 
     @SuppressWarnings("unchecked")
     private Optional<EntityCrudKitSuffixSettingsEditor> updateEditor(boolean forceRefresh) {
-        int selIndex = schemeSelectorListBox.getSelectedIndex();
+        int selIndex = suffixSelectorListBox.getSelectedIndex();
         if (selIndex == -1) {
             return Optional.absent();
         }
@@ -94,6 +120,9 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         final EntityCrudKit descriptor = descriptors.get(selIndex);
         if (touchedEditor.isPresent()) {
             editor = touchedEditor.get();
+            if(!prefixIsDirty) {
+                iriPrefixEditor.setValue(descriptor.getDefaultPrefixSettings().getIRIPrefix());
+            }
         }
         else {
             editor = descriptor.getSuffixSettingsEditor();
@@ -102,13 +131,14 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
             iriPrefixEditor.setValue(descriptor.getDefaultPrefixSettings().getIRIPrefix());
         }
         schemeSpecificSettingsEditorHolder.setWidget(editor);
+        validatePrefix();
         return Optional.of(editor);
     }
 
     private String getIRIPrefix() {
-        return iriPrefixEditor.getText().trim();
+        String trimmedPrefix = iriPrefixEditor.getText().trim();
+        return URL.encode(trimmedPrefix);
     }
-
 
     @Override
     public boolean isWellFormed() {
@@ -117,7 +147,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
 
     @Override
     public Optional<Focusable> getInitialFocusable() {
-        return null;
+        return Optional.<Focusable>of(iriPrefixEditor);
     }
 
     @SuppressWarnings("unchecked")
@@ -127,13 +157,15 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         if (index == -1) {
             return;
         }
-        schemeSelectorListBox.setSelectedIndex(index);
+        suffixSelectorListBox.setSelectedIndex(index);
         Optional<EntityCrudKitSuffixSettingsEditor> editor = updateEditor(true);
-        iriPrefixEditor.setText(object.getPrefixSettings().getIRIPrefix());
+        String decodedPrefix = URL.decode(object.getPrefixSettings().getIRIPrefix());
+        iriPrefixEditor.setText(decodedPrefix);
         if (editor.isPresent()) {
             editor.get().setValue(object.getSuffixSettings());
         }
-
+        prefixIsDirty = false;
+        validatePrefix();
     }
 
     public int getDescriptorIndex(EntityCrudKitId id) {
@@ -148,6 +180,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
 
     @Override
     public void clearValue() {
+        prefixIsDirty = false;
     }
 
     @Override
@@ -171,11 +204,11 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
 
     @Override
     public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
-        return null;
+        return addHandler(handler, DirtyChangedEvent.TYPE);
     }
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<EntityCrudKitSettings>> handler) {
-        return null;
+        return addHandler(handler, ValueChangeEvent.getType());
     }
 }

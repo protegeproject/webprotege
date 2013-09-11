@@ -86,6 +86,7 @@ public class MessageBox {
         });
         WebProtegeDialog<Void> dlg = createDialog(controller);
         dlg.setVisible(true);
+        scheduleCentering(dlg);
     }
 
     public static void showYesNoConfirmBox(String mainMessage, String subMessage, final YesNoHandler handler) {
@@ -123,6 +124,7 @@ public class MessageBox {
         });
         WebProtegeDialog<Void> dlg = createDialog(controller);
         dlg.setVisible(true);
+        scheduleCentering(dlg);
 
     }
 
