@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.Event;
@@ -412,10 +413,15 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         _selectionListeners.remove(selectionListener);
     }
 
-    public void notifySelectionListeners(SelectionEvent selectionEvent) {
-        for (SelectionListener listener : _selectionListeners) {
-            listener.selectionChanged(selectionEvent);
-        }
+    public void notifySelectionListeners(final SelectionEvent selectionEvent) {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                for (SelectionListener listener : _selectionListeners) {
+                    listener.selectionChanged(selectionEvent);
+                }
+            }
+        });
     }
 
     /**

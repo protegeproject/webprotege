@@ -559,15 +559,13 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
             if (!(changeListGenerator instanceof SilentChangeListGenerator)) {
                 List<ProjectEvent<?>> highLevelEvents = new ArrayList<ProjectEvent<?>>();
                 HighLevelEventGenerator hle = new HighLevelEventGenerator(this, userId, revisionNumber);
-
                 highLevelEvents.addAll(hle.getHighLevelEvents(appliedChanges, revisionNumber));
-
-
                 for(HierarchyChangeComputer<?> computer : computers) {
                     highLevelEvents.addAll(computer.get(appliedChanges));
                 }
-
-
+                if(changeListGenerator instanceof HasHighLevelEvents) {
+                    highLevelEvents.addAll(((HasHighLevelEvents) changeListGenerator).getHighLevelEvents());
+                }
                 projectEventManager.postEvents(highLevelEvents);
             }
         }
