@@ -91,12 +91,12 @@ public class IndividualsTab extends AbstractTab {
             @Override
             public void handleSuccess(final List<EntityData> types) {
                 clsTreePortlet.setSelection(types);
-                indListPorlet.addStoreListener(new StoreListenerAdapter(){
-                    @Override
-                    public void onAdd(Store store, Record[] records, int index) {
-                        indListPorlet.setSelection(Arrays.asList(individual));
-                    }
-                });
+//                indListPorlet.addStoreListener(new StoreListenerAdapter(){
+//                    @Override
+//                    public void onAdd(Store store, Record[] records, int index) {
+//                        indListPorlet.setSelection(Arrays.asList(individual));
+//                    }
+//                });
             }
         });
     }

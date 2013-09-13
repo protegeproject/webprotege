@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.individuals;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.EventObject;
@@ -15,22 +16,26 @@ import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
 import com.gwtext.client.widgets.grid.*;
-import com.gwtext.client.widgets.grid.event.GridRowListener;
-import com.gwtext.client.widgets.grid.event.GridRowListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.action.CreateHandler;
+import edu.stanford.bmir.protege.web.client.action.DeleteHandler;
+import edu.stanford.bmir.protege.web.client.action.NullCreateHandler;
+import edu.stanford.bmir.protege.web.client.action.NullDeleteHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityResult;
+import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesList;
+import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesListImpl;
+import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
+import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewPresenter;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
-import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
@@ -41,13 +46,18 @@ import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.watches.AddWatchAction;
-import edu.stanford.bmir.protege.web.shared.watches.AddWatchResult;
-import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
+import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Portlet for showing a list of individuals. The list is filled with the
@@ -57,41 +67,34 @@ import java.util.*;
  * instances of a certain class by setting a property of the portlet
  * <code>showOnlyClass</code> to point to a class.
  *
- *
  * @author Tania Tudorache <tudorache@stanford.edu>
- *
  */
-public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
+public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements IndividualsListView {
 
     private static final String PRECONFIGURED_CLASS = "showOnlyClass";
 
-    protected GridPanel individualsGrid;
-    protected RecordDef recordDef;
-    protected Store store;
-    protected GridRowListener gridRowListener;
+
+    private DeleteHandler deleteHandler;
+
+    private CreateHandler createHandler;
+
+
+    private IndividualsListViewPresenter presenter;
 
     /*
      * Retrieved from the project configuration. If it is set,
      * then the individuals list will always display the instances
      * of the preconfigured class.
      */
-    protected EntityData preconfiguredClass;
+    protected Optional<OWLClass> preconfiguredClass = Optional.absent();
 
     private ToolbarButton createButton;
-    private ToolbarButton deleteButton;
-    private ToolbarButton watchButton;
 
-    private Renderer renderer = new Renderer() {
-        public String render(Object value, CellMetadata cellMetadata, Record record, int rowIndex, int colNum,
-                Store store) {
-            String val = UIUtil.getDisplayText(value);;
-            if (isWatched(record)) {
-                return val + " (W)";
-            } else {
-                return val;
-            }
-        }
-    };
+    private ToolbarButton deleteButton;
+
+//    private ToolbarButton watchButton;
+
+    private EntitiesList<OWLNamedIndividualData> individualsList;
 
     public IndividualsListPortlet(Project project) {
         super(project);
@@ -101,25 +104,30 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
     public void initialize() {
         setLayout(new FitLayout());
         setTitle("Individuals");
-
-        createGrid();
-        add(individualsGrid);
-        individualsGrid.addGridRowListener(getRowListener());
-
+        individualsList = new EntitiesListImpl<OWLNamedIndividualData>();
+        add(individualsList.asWidget());
+        individualsList.addSelectionHandler(new SelectionHandler<OWLNamedIndividualData>() {
+            @Override
+            public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<OWLNamedIndividualData> event) {
+                notifySelectionListeners(new SelectionEvent(IndividualsListPortlet.this));
+            }
+        });
         addToolbarButtons();
-
         initConfiguration();
-        if (preconfiguredClass != null) {
-            setEntity(preconfiguredClass);
+        if (preconfiguredClass != null && preconfiguredClass.isPresent()) {
+            presenter.setType(preconfiguredClass.get());
         }
+        deleteHandler = new NullDeleteHandler();
+        createHandler = new NullCreateHandler();
+        presenter = new IndividualsListViewPresenter(getProjectId(), this);
     }
 
     @Override
     public void setPortletConfiguration(PortletConfiguration portletConfiguration) {
         super.setPortletConfiguration(portletConfiguration);
         initConfiguration();
-        if (preconfiguredClass != null) {
-            setEntity(preconfiguredClass);
+        if (preconfiguredClass.isPresent()) {
+            presenter.setType(preconfiguredClass.get());
         }
     }
 
@@ -132,8 +140,13 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
         if (properties == null) {
             return;
         }
-        String preconfiguredClassName = (String) properties.get(PRECONFIGURED_CLASS);
-        preconfiguredClass = new EntityData(preconfiguredClassName);
+        final String preconfiguredClassName = (String) properties.get(PRECONFIGURED_CLASS);
+        if (preconfiguredClassName != null) {
+            preconfiguredClass = Optional.of(DataFactory.getOWLClass(preconfiguredClassName));
+        }
+        else {
+            preconfiguredClass = Optional.<OWLClass>absent();
+        }
     }
 
     @Override
@@ -141,134 +154,51 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
         if (_currentEntity != null) {
             setTitle("Individuals for " + _currentEntity.getBrowserText());
         }
-
         setEntity(_currentEntity);
     }
 
     @Override
     public void setEntity(EntityData newEntity) {
         setTitle(newEntity == null ? "Individuals (nothing selected)" : " Individuals for " + newEntity.getBrowserText());
-        if (preconfiguredClass != null) {
-            newEntity = preconfiguredClass;
-        }
-        if (_currentEntity != null) {
-            store.removeAll();
-        }
         _currentEntity = newEntity;
-        if (_currentEntity == null) {
-            return;
+        Optional<OWLClass> selectedClass;
+        if(preconfiguredClass.isPresent()) {
+            selectedClass = preconfiguredClass;
         }
-
-        OntologyServiceManager.getInstance().getIndividuals(getProjectId(), _currentEntity.getName(),
-                new GetIndividuals());
-    }
-
-    protected GridRowListener getRowListener() {
-        if (gridRowListener == null) {
-            gridRowListener = new GridRowListenerAdapter() {
-                @Override
-                public void onRowClick(GridPanel grid, int rowIndex, EventObject e) {
-                    notifySelectionListeners(new SelectionEvent(IndividualsListPortlet.this));
-                    super.onRowClick(grid, rowIndex, e);
-                }
-            };
+        else {
+            selectedClass = toOWLClass(_currentEntity);
         }
-        return gridRowListener;
-    }
-
-    protected void createGrid() {
-        recordDef = new RecordDef(new FieldDef[] { new ObjectFieldDef("individuals"), new BooleanFieldDef("watched") });
-
-        individualsGrid = new GridPanel();
-        createColumns();
-
-        individualsGrid.setHeight(590);
-        individualsGrid.setAutoWidth(true);
-        individualsGrid.setAutoExpandColumn("individuals");
-
-        ArrayReader reader = new ArrayReader(recordDef);
-        MemoryProxy dataProxy = new MemoryProxy(new Object[][] {});
-        store = new Store(dataProxy, reader);
-        store.load();
-        individualsGrid.setStore(store);
-    }
-
-    protected void createColumns() {
-        ColumnConfig indCol = new ColumnConfig();
-        indCol.setHeader("Name");
-        indCol.setId("individuals");
-        indCol.setDataIndex("individuals");
-        indCol.setResizable(true);
-        indCol.setSortable(true);
-
-        ColumnConfig watchedCol = new ColumnConfig();
-        watchedCol.setHeader("Watched");
-        watchedCol.setId("watched");
-        watchedCol.setDataIndex("watched");
-        watchedCol.setHidden(true);
-
-        //indCol.setRenderer(renderer); //TODO: does not work - bug in gwt-ext
-
-        ColumnConfig[] columns = new ColumnConfig[] { indCol, watchedCol };
-
-        ColumnModel columnModel = new ColumnModel(columns);
-        individualsGrid.setColumnModel(columnModel);
-    }
-
-    private void setWatched(Record record, boolean watched) {
-        record.set("watched",watched);
-        //workaround for not being able to set custom renderer
-        EntityData ed = (EntityData) record.getAsObject("individuals");
-        if (ed != null) {
-            ed.setBrowserText(ed.getBrowserText() + (watched ? " (W)" : "")); //TODO this will not work fine
-            Record copyRec = recordDef.createRecord(new Object[] { ed, watched });
-            int index = store.indexOf(record);
-            store.remove(record);
-            store.insert(index, copyRec);
+        if(selectedClass.isPresent()) {
+            presenter.setType(selectedClass.get());
         }
-    }
-
-    private boolean isWatched(Record record) {
-        return record.getAsBoolean("watched");
+        else {
+            presenter.clearType();
+        }
     }
 
     protected void addToolbarButtons() {
         setTopToolbar(new Toolbar());
         Toolbar toolbar = getTopToolbar();
-
         createButton = new ToolbarButton("Create");
         createButton.setCls("toolbar-button");
         createButton.addListener(new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
-                onCreateIndividual();
+                createHandler.handleCreate();
             }
         });
         createButton.setDisabled(!getProject().hasWritePermission(Application.get().getUserId()));
         toolbar.addButton(createButton);
-
-
         deleteButton = new ToolbarButton("Delete");
         deleteButton.setCls("toolbar-button");
         deleteButton.addListener(new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
-                onDeleteIndividual();
+                getDeleteHandler().handleDelete();
             }
         });
         deleteButton.setDisabled(!getProject().hasWritePermission(Application.get().getUserId()));
         toolbar.addButton(deleteButton);
-
-        watchButton = new ToolbarButton("Watch");
-        watchButton.setCls("toolbar-button");
-        watchButton.addListener(new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                onWatchIndividual();
-            }
-        });
-        watchButton.setDisabled(Application.get().isGuestUser());
-        toolbar.addButton(watchButton);
 
         Widget searchField = createSearchField();
         if (searchField != null) {
@@ -277,90 +207,6 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
             toolbar.addText("&nbsp<i>Search</i>:&nbsp&nbsp");
             toolbar.addElement(searchField.getElement());
         }
-    }
-
-    protected void onWatchIndividual() {
-        final Record selectedRec = individualsGrid.getSelectionModel().getSelected();
-
-        if (selectedRec == null || isWatched(selectedRec) ) {
-            return;
-        }
-
-        EntityData entityData = (EntityData) selectedRec.getAsObject("individuals");
-        if (entityData != null) {
-            Optional<OWLEntity> entity = getSelectedEntity();
-            if(!entity.isPresent()) {
-                return;
-            }
-            final AddWatchAction action = new AddWatchAction(new EntityFrameWatch(entity.get()), getProjectId(), getUserId());
-            DispatchServiceManager.get().execute(action, new AsyncCallback<AddWatchResult>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    GWT.log("There was a problem adding the watch");
-                }
-
-                @Override
-                public void onSuccess(AddWatchResult result) {
-                    setWatched(selectedRec, true);
-                }
-            });
-
-//            ChAOServiceManager.getInstance().addWatchedEntity(project.getDisplayName(),
-//                    GlobalSettings.get().getUserName(), entityData.getName(),
-//                    new AddWatchedIndividual(selectedRec));
-        }
-    }
-
-    protected void onDeleteIndividual() {
-        final Record selRecord = individualsGrid.getSelectionModel().getSelected();
-        if (selRecord == null) {
-            MessageBox.showAlert("No individual selected", "Please select an individual to delete.");
-            return;
-        }
-
-        final EntityData currentSelection = (EntityData) selRecord.getAsObject("individuals");
-        final String indName = currentSelection.getName();
-
-        MessageBox.showYesNoConfirmBox("Delete individual?", "Are you sure you want to delete " + indName + "?", new YesNoHandler() {
-            @Override
-            public void handleYes() {
-                deleteIndividual(currentSelection, selRecord);
-            }
-
-            @Override
-            public void handleNo() {
-            }
-        });
-    }
-
-    protected void deleteIndividual(EntityData indEntity, Record selRecord) {
-        if (indEntity == null) { return; }
-
-        OWLEntity entity = DataFactory.getOWLNamedIndividual(indEntity.getName());
-        DispatchServiceManager.get().execute(new DeleteEntityAction(entity, getProjectId()), new DeleteIndividualHandler(selRecord));
-//        OntologyServiceManager.getInstance().deleteEntity(project.getDisplayName(), indEntity.getName(),
-//                GlobalSettings.get().getUserName(), "Deleted individual " + indEntity.getBrowserText(),
-//                );
-
-        refreshFromServer(500);
-    }
-
-    protected void onCreateIndividual() {
-        CreateEntityDialog dlg = new CreateEntityDialog(EntityType.NAMED_INDIVIDUAL, new CreateEntityDialogController.CreateEntityHandler() {
-            @Override
-            public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
-                final Set<String> browserTexts = createEntityInfo.getBrowserTexts();
-                for(String browserText : browserTexts) {
-                    OntologyServiceManager.getInstance().createInstance(getProjectId(), browserText, _currentEntity == null ? null : _currentEntity.getName(), getUserId(), "Created individual", new CreateIndividualHandler());
-                }
-            }
-        });
-        dlg.setVisible(true);
-    }
-
-
-    protected String getCreateOperationDescription(String individualName, EntityData typeEntity) {
-        return "Created new individual " + (individualName == null ? "" : individualName) + " of type " + (typeEntity == null ? " root concept" : typeEntity.getBrowserText()) ;
     }
 
     protected Widget createSearchField() {
@@ -382,45 +228,19 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
         return searchField;
     }
 
-    public void addStoreListener(StoreListener listener){
-        store.addStoreListener(listener);
-    }
-
-    @Override
-    public void setSelection(Collection<EntityData> selection) {
-    	ArrayList<Record> selectedRecords = new ArrayList<Record>();
-    	Record[] allRecords = individualsGrid.getStore().getRecords();
-    	if (selection != null && allRecords != null) {
-			for (Record record : allRecords) {
-	    		if (selection.contains(record.getAsObject("individuals"))) {
-	    			selectedRecords.add(record);
-	    		}
-	    	}
-	    }
-    	individualsGrid.getSelectionModel().selectRecords(selectedRecords.toArray(new Record[0]));
-    	notifySelectionListeners(new SelectionEvent(IndividualsListPortlet.this));
-    }
-
     public List<EntityData> getSelection() {
-        return getMultipleSelection();
-    }
-
-    public EntityData getSingleSelection() {
-        Record selRecord = individualsGrid.getSelectionModel().getSelected();
-        if (selRecord == null) { return null; }
-        return (EntityData) selRecord.getAsObject("individuals");
-    }
-
-    public List<EntityData> getMultipleSelection() {
-        Record[] selRecords = individualsGrid.getSelectionModel().getSelections();
-        if (selRecords == null || selRecords.length == 0) {
-            return null;
+        Optional<OWLNamedIndividualData> selection = individualsList.getSelectedEntity();
+        if(selection.isPresent()) {
+            List<EntityData> result = new ArrayList<EntityData>();
+            OWLNamedIndividual entity = selection.get().getEntity();
+            EntityData entityData = new EntityData(entity.getIRI().toString(), selection.get().getBrowserText());
+            entityData.setValueType(ValueType.Instance);
+            result.add(entityData);
+            return result;
         }
-        List<EntityData> selection = new ArrayList<EntityData>();
-        for (int i = 0; i < selRecords.length; i++) {
-            selection.add((EntityData) selRecords[i].getAsObject("individuals"));
+        else {
+            return Collections.emptyList();
         }
-        return selection;
     }
 
     @Override
@@ -436,90 +256,54 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
             createButton.disable();
             deleteButton.disable();
         }
-        watchButton.setDisabled(Application.get().isGuestUser());
     }
 
-    /*
-     * Remote calls
-     */
-
-    class GetIndividuals extends AbstractAsyncHandler<List<EntityData>> {
-
-        @Override
-        public void handleFailure(Throwable caught) {
-            GWT.log("Error at getting individuals for " + _currentEntity, caught);
-        }
-
-        @Override
-        public void handleSuccess(List<EntityData> indData) {
-            GWT.log("Got individuals list from server: " + indData.size() + " individuals");
-            List<Record> records = new ArrayList<Record>(indData.size());
-            for (EntityData instData : indData) {
-                Record record = recordDef.createRecord(new Object[] { instData, false });
-                records.add(record);
-            }
-            store.add(records.toArray(new Record [records.size()]));
-            GWT.log("Added records to store");
-        }
+    @Override
+    public void setListData(List<OWLNamedIndividualData> individuals) {
+        individualsList.setListData(individuals);
     }
 
-//    class AddWatchedIndividual extends AbstractAsyncHandler<EntityData> {
-//
-//        private Record record;
-//
-//        public AddWatchedIndividual(Record record) {
-//            this.record = record;
-//        }
-//
-//        @Override
-//        public void handleFailure(Throwable caught) {
-//            GWT.log("Error at add watched entity", caught);
-//            MessageBox.alert("Error", "There was an error at adding the new watched entity. Pleas try again later.");
-//        }
-//
-//        @Override
-//        public void handleSuccess(EntityData entityData) {
-//            setWatched(record, true);
-//        }
-//    }
-
-    class CreateIndividualHandler extends AbstractAsyncHandler<EntityData> {
-
-        @Override
-        public void handleFailure(Throwable caught) {
-            GWT.log("Error at creating individual", caught);
-            MessageBox.showErrorMessage("Individual not deleted", caught);
-            reload();
-        }
-
-        @Override
-        public void handleSuccess(EntityData individualEntity) {
-            Record record = recordDef.createRecord(new Object[] { individualEntity, false });
-            store.add(record);
-            individualsGrid.getSelectionModel().selectRecords(record);
-            notifySelectionListeners(new SelectionEvent(IndividualsListPortlet.this));
-        }
+    @Override
+    public void addListData(Collection<OWLNamedIndividualData> individuals) {
+        individualsList.addAll(individuals);
     }
 
-    class DeleteIndividualHandler extends AbstractAsyncHandler<DeleteEntityResult> {
-
-        private Record indRecord;
-
-        public DeleteIndividualHandler(Record indRecord) {
-            this.indRecord = indRecord;
-        }
-
-        @Override
-        public void handleFailure(Throwable caught) {
-            GWT.log("Error at deleting individual", caught);
-            MessageBox.showErrorMessage("Individual not deleted", caught);
-            reload();
-        }
-
-        @Override
-        public void handleSuccess(DeleteEntityResult result) {
-            store.remove(indRecord);
-        }
+    @Override
+    public void removeListData(Collection<OWLNamedIndividualData> individuals) {
+        individualsList.removeAll(individuals);
     }
 
+    @Override
+    public Collection<OWLNamedIndividualData> getSelectedIndividuals() {
+        return individualsList.getSelectedEntity().asSet();
+    }
+
+    @Override
+    public Optional<OWLNamedIndividualData> getSelectedIndividual() {
+        return individualsList.getSelectedEntity();
+    }
+
+    @Override
+    public void setSelectedIndividual(OWLNamedIndividualData individual) {
+        individualsList.setSelectedEntity(individual);
+    }
+
+    @Override
+    public void setCreateHandler(CreateHandler createHandler) {
+        this.createHandler = checkNotNull(createHandler);
+    }
+
+    @Override
+    public void setDeleteHandler(DeleteHandler handler) {
+        this.deleteHandler = checkNotNull(handler);
+    }
+
+    public DeleteHandler getDeleteHandler() {
+        return deleteHandler;
+    }
+
+    @Override
+    public HandlerRegistration addSelectionHandler(SelectionHandler<OWLNamedIndividualData> handler) {
+        return individualsList.addSelectionHandler(handler);
+    }
 }

@@ -1,0 +1,18 @@
+    .cellListEvenItem {
+
+    }
+
+    .cellListKeyboardSelectedItem {
+    }
+
+    .cellListOddItem {
+    }
+
+    .cellListSelectedItem {
+        color: #000000;
+        background: #D9E8FB;
+    }
+
+    .cellListWidget {
+        cursor: pointer;
+    }

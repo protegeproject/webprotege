@@ -15,7 +15,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/02/2013
  */
-public class CreateClassesChangeGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLClass> {
+public class CreateClassesChangeGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLClass, OWLClass> {
 
     public CreateClassesChangeGenerator(Set<String> browserTexts, Optional<OWLClass> parent) {
         super(EntityType.CLASS, browserTexts, parent);
