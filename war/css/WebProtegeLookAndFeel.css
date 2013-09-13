@@ -636,6 +636,8 @@ select {
 
 .button-style {
     background: linear-gradient(#FAFAFA, #EAEAEA) repeat scroll 0 0 #CECECE;
+    background: -webkit-linear-gradient(#FAFAFA, #EAEAEA) repeat scroll 0 0 #CECECE;
+    background: -moz-linear-gradient(#FAFAFA, #EAEAEA) repeat scroll 0 0 #CECECE;
     border: 1px solid #DDDDDD;
     border-radius: 3px 3px 3px 3px;
     color: #555555;
@@ -661,6 +663,8 @@ select {
 
 .button-style-red {
     background: linear-gradient(#DD4545, #C80202) repeat scroll 0 0 #b72130;
+    background: -webkit-linear-gradient(#DD4545, #C80202) repeat scroll 0 0 #b72130;
+    background: -moz-linear-gradient(#DD4545, #C80202) repeat scroll 0 0 #b72130;
     border: 1px solid #b2151e;
     border-radius: 3px 3px 3px 3px;
     color: #FFFFFF;
