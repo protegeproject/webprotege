@@ -92,8 +92,6 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
 
     private ToolbarButton deleteButton;
 
-//    private ToolbarButton watchButton;
-
     private EntitiesList<OWLNamedIndividualData> individualsList;
 
     public IndividualsListPortlet(Project project) {
