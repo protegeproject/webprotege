@@ -15,7 +15,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/03/2013
  */
-public class CreateAnnotationPropertiesChangeGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLAnnotationProperty> {
+public class CreateAnnotationPropertiesChangeGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLAnnotationProperty, OWLAnnotationProperty> {
 
     public CreateAnnotationPropertiesChangeGenerator(Set<String> browserTexts, Optional<OWLAnnotationProperty> parent) {
         super(EntityType.ANNOTATION_PROPERTY, browserTexts, parent);

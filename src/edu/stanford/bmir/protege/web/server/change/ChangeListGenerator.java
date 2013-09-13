@@ -27,4 +27,5 @@ public interface ChangeListGenerator<R> {
 
     R getRenamedResult(R result, RenameMap renameMap);
 
+
 }

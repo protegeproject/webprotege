@@ -23,4 +23,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     @Source("feedback.html")
     TextResource feedbackBoxText();
+
+    @Source("individual.png")
+    ImageResource individualIcon();
 }

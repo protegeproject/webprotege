@@ -32,13 +32,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     associations with the parent entity in the ontology.
  * </p>
  */
-public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEntity> implements ChangeListGenerator<Set<E>> {
+public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEntity, P extends OWLEntity> implements ChangeListGenerator<Set<E>> {
 
     private EntityType<E> entityType;
 
     private Set<String> browserTexts;
 
-    private Optional<E> parent;
+    private Optional<P> parent;
 
 
     private static Map<String, String> builtInPrefixes = new HashMap<String, String>();
@@ -62,7 +62,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
      * @param parent The parent entity.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public AbstractCreateEntitiesChangeListGenerator(EntityType<E> entityType, Set<String> browserTexts, Optional<E> parent) {
+    public AbstractCreateEntitiesChangeListGenerator(EntityType<E> entityType, Set<String> browserTexts, Optional<P> parent) {
         this.entityType = checkNotNull(entityType);
         this.browserTexts = new HashSet<String>(checkNotNull(browserTexts));
         this.parent = checkNotNull(parent);
@@ -130,7 +130,7 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
      * @return A possibly empty set of axioms representing axioms that need to be added to the project ontologies to
      * associate the specified fresh entity with its optional parent.  Not {@code null}.
      */
-    protected abstract Set<OWLAxiom> createParentPlacementAxioms(E freshEntity, OWLAPIProject project, ChangeGenerationContext context, Optional<E> parent);
+    protected abstract Set<OWLAxiom> createParentPlacementAxioms(E freshEntity, OWLAPIProject project, ChangeGenerationContext context, Optional<P> parent);
 
 
 

@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.Collection;
@@ -79,6 +80,33 @@ public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
             return Optional.absent();
         }
         EntityData entityData = selection.iterator().next();
+        return toOWLEntityData(entityData);
+    }
+
+    protected Optional<OWLEntity> toOWLEntity(EntityData entityData) {
+        Optional<OWLEntityData> ed = toOWLEntityData(entityData);
+        if(ed.isPresent()) {
+            return Optional.of(ed.get().getEntity());
+        }
+        else {
+            return Optional.absent();
+        }
+    }
+
+    protected Optional<OWLClass> toOWLClass(EntityData entityData) {
+        if(entityData == null) {
+            return Optional.absent();
+        }
+        Optional<OWLEntityData> ed = toOWLEntityData(entityData);
+        if(ed.isPresent() && ed.get().getEntity().isOWLClass()) {
+            return Optional.of(ed.get().getEntity().asOWLClass());
+        }
+        else {
+            return Optional.absent();
+        }
+    }
+
+    protected Optional<OWLEntityData> toOWLEntityData(EntityData entityData) {
         if(entityData instanceof PropertyEntityData) {
             PropertyEntityData propertyEntityData = (PropertyEntityData) entityData;
             PropertyType propertyType = propertyEntityData.getPropertyType();
