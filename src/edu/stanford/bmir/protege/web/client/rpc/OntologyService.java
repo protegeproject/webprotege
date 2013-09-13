@@ -77,8 +77,6 @@ public interface OntologyService extends RemoteService {
     public List<EntityData> moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
             String user, String operationDescription);
 
-    public List<EntityData> getIndividuals(String projectName, String className);
-
     public PaginationData<EntityData> getIndividuals(String projectName, String className, int start, int limit, String sort, String dir);
 
     public String getRestrictionHtml(String projectName, String className);

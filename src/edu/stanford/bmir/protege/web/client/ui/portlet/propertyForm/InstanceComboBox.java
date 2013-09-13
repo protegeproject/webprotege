@@ -1,21 +1,28 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.form.ComboBox;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.event.ComboBoxCallback;
 import com.gwtext.client.widgets.form.event.ComboBoxListenerAdapter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.PagedIndividualsProxyImpl;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEventHandler;
+import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
+import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
 
 import java.util.Collection;
 import java.util.List;
@@ -135,30 +142,15 @@ public class InstanceComboBox extends AbstractFieldWidget {
             return;
         }
         store.removeAll();
-        OntologyServiceManager.getInstance().getIndividuals(getProjectId(), allowedType, new FillAllowedValuesCacheHandler());
-    }
-
-
-    /*
-     * Remote handlers
-     */
-
-    class FillAllowedValuesCacheHandler extends AbstractAsyncHandler<List<EntityData>> {
-
-        @Override
-        public void handleFailure(Throwable caught) {
-            GWT.log("Could not retrieve allowed values for combobox " + getProperty(), caught);
-        }
-
-        @Override
-        public void handleSuccess(List<EntityData> instances) {
-            store.removeAll();
-            for (EntityData inst : instances) {
-                store.add(recordDef.createRecord(new Object[]{inst.getName(), UIUtil.getDisplayText(inst)}));
+        DispatchServiceManager.get().execute(new GetIndividualsAction(getProjectId(), DataFactory.getOWLClass(allowedType)), new AbstractWebProtegeAsyncCallback<GetIndividualsResult>() {
+            @Override
+            public void onSuccess(GetIndividualsResult result) {
+                store.removeAll();
+                for (OWLNamedIndividualData ind : result.getIndividuals()) {
+                    store.add(recordDef.createRecord(new Object[]{ind.getEntity().getIRI().toString(), ind.getBrowserText()}));
+                }
             }
-        }
-
+        });
     }
-
 
 }
