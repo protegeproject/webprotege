@@ -97,7 +97,7 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
 
     private boolean canParseAsNumericLiteral(Request request) {
         OWLLiteral lit = DataFactory.parseLiteral(request.getQuery(), Optional.<String>absent());
-        return !lit.isRDFPlainLiteral();
+        return !(lit.getDatatype().isString() || lit.getDatatype().isRDFPlainLiteral());
     }
 
     /**
