@@ -600,21 +600,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     /**
-     * Gets the individuals which are asserted to be instances of a particular class.  In this implementation, ClassAssertions
-     * in the imports closure of the root ontology are used to compute the returned value.
-     * @param projectName The name of the relevant project.
-     * @param className A string corresponding to the class IRI, but this implementation will also tolerate browser text.
-     * Must not be null.
-     * @return A list of EntityData objects which represent the individuals that are instances of the specified class.
-     * @see {@link GetIndividualsStrategy}
-     */
-    public List<EntityData> getIndividuals(String projectName, String className) {
-        GetIndividualsStrategy strategy = new GetIndividualsStrategy(getProject(projectName), getUserId(), className);
-        return strategy.execute();
-    }
-
-    /**
-     * Gets a paginated list of individuals.  This implementation just delegates to {@link #getIndividuals(String, String)}
+     * Gets a paginated list of individuals.
      * and then uses {@link PaginationServerUtil} to compute the pagination.
      * @param projectName The name of the relevant project
      * @param className The name of the class who's individuals are to be retrieved.  This should be an IRI, but this
@@ -626,7 +612,8 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      * @return A {@link PaginationData} object conforming to the specified criteria.
      */
     public PaginationData<EntityData> getIndividuals(String projectName, String className, int start, int limit, String sort, String dir) {
-        List<EntityData> result = getIndividuals(projectName, className);
+        GetIndividualsStrategy strategy = new GetIndividualsStrategy(getProject(projectName), getUserId(), className);
+        List<EntityData> result = strategy.execute();
         return PaginationServerUtil.pagedRecords(result, start, limit, sort, dir);
     }
 

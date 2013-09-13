@@ -54,8 +54,6 @@ public interface OntologyServiceAsync {
 
     void getSubclasses(String projectName, String className, AsyncCallback<List<SubclassEntityData>> cb);
 
-    void getIndividuals(String projectName, String className, AsyncCallback<List<EntityData>> cb);
-
     void getIndividuals(String projectName, String className, int start, int limit, String sort, String dir,
             AsyncCallback<PaginationData<EntityData>> cb);
 
