@@ -16,7 +16,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/03/2013
  */
-public class CreateObjectPropertiesChangeGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLObjectProperty> {
+public class CreateObjectPropertiesChangeGenerator extends AbstractCreateEntitiesChangeListGenerator<OWLObjectProperty, OWLObjectProperty> {
 
     public CreateObjectPropertiesChangeGenerator(Set<String> browserTexts, Optional<OWLObjectProperty> parent) {
         super(EntityType.OBJECT_PROPERTY, browserTexts, parent);
