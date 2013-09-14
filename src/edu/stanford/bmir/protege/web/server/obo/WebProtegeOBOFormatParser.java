@@ -68,18 +68,4 @@ public class WebProtegeOBOFormatParser extends AbstractOWLParser {
             return new BufferedReader(new InputStreamReader(getInputStream(source.getDocumentIRI())));
         }
     }
-
-
-    public static void main(String[] args) throws Exception {
-        File file = new File("/tmp/gene_ontology_edit_v2013-06-11.obo");
-        WebProtegeOBOFormatParser parser = new WebProtegeOBOFormatParser();
-        final OWLOntologyManager man = WebProtegeOWLManager.createOWLOntologyManager();
-        final OWLOntology ontology = man.createOntology();
-        parser.parse(new FileDocumentSource(file), ontology);
-        man.saveOntology(ontology, new RDFXMLOntologyFormat(), IRI.create("file:/tmp/out.rdf.xml"));
-
-
-
-
-    }
 }
