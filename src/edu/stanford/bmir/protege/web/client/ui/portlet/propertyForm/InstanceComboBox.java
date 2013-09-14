@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.data.*;
@@ -23,6 +24,7 @@ import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEve
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEventHandler;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
+import edu.stanford.bmir.protege.web.shared.pagination.Range;
 
 import java.util.Collection;
 import java.util.List;
@@ -142,7 +144,8 @@ public class InstanceComboBox extends AbstractFieldWidget {
             return;
         }
         store.removeAll();
-        DispatchServiceManager.get().execute(new GetIndividualsAction(getProjectId(), DataFactory.getOWLClass(allowedType)), new AbstractWebProtegeAsyncCallback<GetIndividualsResult>() {
+        GetIndividualsAction action = new GetIndividualsAction(getProjectId(), DataFactory.getOWLClass(allowedType), Optional.<Range>absent());
+        DispatchServiceManager.get().execute(action, new AbstractWebProtegeAsyncCallback<GetIndividualsResult>() {
             @Override
             public void onSuccess(GetIndividualsResult result) {
                 store.removeAll();
