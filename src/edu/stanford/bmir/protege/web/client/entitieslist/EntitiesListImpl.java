@@ -78,10 +78,11 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
     protected CellList<E> cellList;
 
     public EntitiesListImpl() {
-        cellList = new CellList<E>(new OWLEntityDataCell(), WebProtegeCellListResources.INSTANCE, new OWLEntityDataKeyProvider());
+        OWLEntityDataKeyProvider keyProvider = new OWLEntityDataKeyProvider();
+        cellList = new CellList<E>(new OWLEntityDataCell(), WebProtegeCellListResources.INSTANCE, keyProvider);
         listDataProvider.addDataDisplay(cellList);
         cellList.setKeyboardSelectionPolicy(HasKeyboardSelectionPolicy.KeyboardSelectionPolicy.BOUND_TO_SELECTION);
-        final SingleSelectionModel<E> selectionModel = new SingleSelectionModel<E>();
+        final SingleSelectionModel<E> selectionModel = new SingleSelectionModel<E>(keyProvider);
         cellList.setSelectionModel(selectionModel);
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
