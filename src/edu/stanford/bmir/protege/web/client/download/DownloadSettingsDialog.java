@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
  */
 public class DownloadSettingsDialog {
 
-    private static DownloadFormatExtension lastExtension = DownloadFormatExtension.rdf;
+    private static DownloadFormatExtension lastExtension = DownloadFormatExtension.owl;
 
     public static void showDialog(final DownloadFormatExtensionHandler handler) {
         final DownloadSettingsView view = new DownloadSettingsViewImpl();

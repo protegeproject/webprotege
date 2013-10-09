@@ -8,7 +8,7 @@ package edu.stanford.bmir.protege.web.shared.download;
  */
 public enum DownloadFormatExtension {
 
-    rdf("RDF/XML"),
+    owl("RDF/XML"),
 
     ttl("Turtle"),
 

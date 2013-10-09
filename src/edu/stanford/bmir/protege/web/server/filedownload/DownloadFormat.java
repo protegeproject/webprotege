@@ -16,7 +16,7 @@ import org.semanticweb.owlapi.model.OWLOntologyFormat;
  */
 public enum DownloadFormat {
 
-    RDF_XML(new RDFXMLOntologyFormat(), "application/rdf+xml", DownloadFormatExtension.rdf),
+    RDF_XML(new RDFXMLOntologyFormat(), "application/rdf+xml", DownloadFormatExtension.owl),
 
     RDF_TURLE(new TurtleOntologyFormat(), "text/turtle", DownloadFormatExtension.ttl),
 
