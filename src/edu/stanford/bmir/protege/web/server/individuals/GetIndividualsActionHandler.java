@@ -56,7 +56,8 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
         });
         PageRequest pageRequest = action.getPageRequest();
         Pager<OWLNamedIndividualData> pager = Pager.getPagerForPageSize(individualsData, pageRequest.getPageSize());
-        return new GetIndividualsResult(pager.getPage(pageRequest.getPageNumber()));
+        Page<OWLNamedIndividualData> page = pager.getPage(pageRequest.getPageNumber());
+        return new GetIndividualsResult(page);
     }
 
     @Override
