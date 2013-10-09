@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.shared.individualslist;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class GetIndividualsResult implements Result {
 
-    private List<OWLNamedIndividualData> individuals = new ArrayList<OWLNamedIndividualData>();
+    private Page<OWLNamedIndividualData> result;
 
     /**
      * For serialization purposes only
@@ -22,11 +22,15 @@ public class GetIndividualsResult implements Result {
     private GetIndividualsResult() {
     }
 
-    public GetIndividualsResult(List<OWLNamedIndividualData> individuals) {
-        this.individuals = individuals;
+    public GetIndividualsResult(Page<OWLNamedIndividualData> result) {
+        this.result = result;
+    }
+
+    public Page<OWLNamedIndividualData> getPaginatedResult() {
+        return result;
     }
 
     public List<OWLNamedIndividualData> getIndividuals() {
-        return new ArrayList<OWLNamedIndividualData>(individuals);
+        return result.getPageElements();
     }
 }

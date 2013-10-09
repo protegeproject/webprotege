@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.pagination.Range;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -20,7 +20,7 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
 
     private OWLClass type;
 
-    private Optional<Range> range;
+    private PageRequest pageRequest;
 
     /**
      * For serialization purposes only
@@ -35,7 +35,7 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
      * @param range     The optional range for pagination.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public GetIndividualsAction(ProjectId projectId, Optional<Range> range) {
+    public GetIndividualsAction(ProjectId projectId, Optional<PageRequest> range) {
         this(projectId, DataFactory.get().getOWLThing(), range);
     }
 
@@ -46,13 +46,19 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
      * @param projectId The projectId.  Not {@code null}.
      * @param type      The asserted type of the individuals.  Not {@code null}.  A type of owl:Thing means all individuals
      *                  in the ontology should be in the result.
-     * @param range     The optional range for pagination.  Not {@code null}.
+     * @param pageRequest     The optional pageRequest for pagination.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public GetIndividualsAction(ProjectId projectId, OWLClass type, Optional<Range> range) {
+    public GetIndividualsAction(ProjectId projectId, OWLClass type, Optional<PageRequest> pageRequest) {
         super(projectId);
         this.type = checkNotNull(type);
-        this.range = checkNotNull(range);
+        checkNotNull(pageRequest);
+        if(pageRequest.isPresent()) {
+            this.pageRequest = pageRequest.get();
+        }
+        else {
+            this.pageRequest = PageRequest.requestSinglePage();
+        }
     }
 
     /**
@@ -65,17 +71,17 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
     }
 
     /**
-     * Gets the range for pagination purposes.
+     * Gets the page request
      *
-     * @return The pagination Range.  An absent value indicates that no pagination should be performed.  Not {@code null}.
+     * @return Gets the page request.
      */
-    public Optional<Range> getRange() {
-        return range;
+    public PageRequest getPageRequest() {
+        return pageRequest;
     }
 
     @Override
     public int hashCode() {
-        return "GetIndividualsAction".hashCode() + type.hashCode() + range.hashCode();
+        return "GetIndividualsAction".hashCode() + type.hashCode() + pageRequest.hashCode();
     }
 
     @Override
@@ -87,13 +93,13 @@ public class GetIndividualsAction extends AbstractHasProjectAction<GetIndividual
             return false;
         }
         GetIndividualsAction other = (GetIndividualsAction) o;
-        return this.type.equals(other.type) && this.range.equals(other.range);
+        return this.type.equals(other.type) && this.pageRequest.equals(other.pageRequest);
     }
 
     @Override
     public String toString() {
         return Objects.toStringHelper("GetIndividualsAction")
                 .add("type", type)
-                .add("range", range).toString();
+                .addValue(pageRequest).toString();
     }
 }

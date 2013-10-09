@@ -19,7 +19,7 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
-import edu.stanford.bmir.protege.web.shared.pagination.Range;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -69,7 +69,7 @@ public class IndividualsListViewPresenter {
     }
 
     private void updateList() {
-        GetIndividualsAction action = new GetIndividualsAction(projectId, currentType.or(DataFactory.getOWLThing()), Optional.<Range>absent());
+        GetIndividualsAction action = new GetIndividualsAction(projectId, currentType.or(DataFactory.getOWLThing()), Optional.<PageRequest>absent());
         DispatchServiceManager.get().execute(action, new AbstractWebProtegeAsyncCallback<GetIndividualsResult>() {
             @Override
             public void onSuccess(GetIndividualsResult result) {
