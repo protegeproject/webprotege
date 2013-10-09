@@ -24,10 +24,9 @@ import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEve
 import edu.stanford.bmir.protege.web.shared.event.NamedIndividualFrameChangedEventHandler;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsResult;
-import edu.stanford.bmir.protege.web.shared.pagination.Range;
+import edu.stanford.bmir.protege.web.shared.pagination.PageRequest;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 public class InstanceComboBox extends AbstractFieldWidget {
@@ -144,7 +143,7 @@ public class InstanceComboBox extends AbstractFieldWidget {
             return;
         }
         store.removeAll();
-        GetIndividualsAction action = new GetIndividualsAction(getProjectId(), DataFactory.getOWLClass(allowedType), Optional.<Range>absent());
+        GetIndividualsAction action = new GetIndividualsAction(getProjectId(), DataFactory.getOWLClass(allowedType), Optional.<PageRequest>absent());
         DispatchServiceManager.get().execute(action, new AbstractWebProtegeAsyncCallback<GetIndividualsResult>() {
             @Override
             public void onSuccess(GetIndividualsResult result) {
