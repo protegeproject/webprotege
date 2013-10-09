@@ -44,7 +44,7 @@ public class DownloadSettingsViewImpl extends Composite implements DownloadSetti
     public DownloadFormatExtension getDownloadFormatExtension() {
         int selIndex = formatListBox.getSelectedIndex();
         if(selIndex == 0) {
-            return DownloadFormatExtension.rdf;
+            return DownloadFormatExtension.owl;
         }
         else {
             return DownloadFormatExtension.values()[selIndex];
