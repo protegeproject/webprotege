@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
 import com.google.gwt.user.client.Window;
+import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -20,7 +22,7 @@ public class DownloadRevisionRequestHandlerImpl implements DownloadRevisionReque
 
     @Override
     public void handleDownloadRevisionRequest(RevisionNumber revisionNumber) {
-        String url = "/download?ontology=" + projectId.getId() + "&revision=" + revisionNumber.getValueAsInt();
-        Window.open(url, "Download revision " + revisionNumber.getValueAsInt(), "");
+        ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(projectId, revisionNumber, DownloadFormatExtension.owl);
+        downloader.download();
     }
 }
