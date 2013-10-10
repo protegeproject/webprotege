@@ -71,13 +71,13 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
 
     @UiHandler("suffixSelectorListBox")
     protected void handleSchemeChanged(ChangeEvent valueChangeEvent) {
-        updateEditor(false);
+        updateEditor(true);
     }
 
     @UiHandler("suffixSelectorListBox")
     protected void handleKeyPressChange(KeyUpEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_UP || event.getNativeKeyCode() == KeyCodes.KEY_DOWN) {
-            updateEditor(false);
+            updateEditor(true);
         }
     }
 
@@ -120,7 +120,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         final EntityCrudKit descriptor = descriptors.get(selIndex);
         if (touchedEditor.isPresent()) {
             editor = touchedEditor.get();
-            if(!prefixIsDirty) {
+            if(!prefixIsDirty && forceRefresh) {
                 iriPrefixEditor.setValue(descriptor.getDefaultPrefixSettings().getIRIPrefix());
             }
         }
