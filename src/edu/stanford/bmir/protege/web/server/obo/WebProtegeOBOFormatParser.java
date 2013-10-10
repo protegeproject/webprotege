@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
-import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import org.coode.owlapi.obo.parser.OBOOntologyFormat;
 import org.obolibrary.obo2owl.Obo2Owl;
 import org.obolibrary.oboformat.model.OBODoc;
 import org.obolibrary.oboformat.parser.OBOFormatParser;
 import org.obolibrary.oboformat.parser.OBOFormatParserException;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.*;
 import org.semanticweb.owlapi.model.*;
 
