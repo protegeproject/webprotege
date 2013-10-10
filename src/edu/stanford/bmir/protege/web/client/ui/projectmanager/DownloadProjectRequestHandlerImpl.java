@@ -5,6 +5,8 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.download.DownloadFormatExtensionHandler;
 import edu.stanford.bmir.protege.web.client.download.DownloadSettingsDialog;
+import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -28,10 +30,9 @@ public class DownloadProjectRequestHandlerImpl implements DownloadProjectRequest
     }
 
     private void doDownload(ProjectId projectId, DownloadFormatExtension extension) {
-        String encodedProjectName = URL.encode(projectId.getId());
-        String baseURL = GWT.getHostPageBaseURL();
-        String downloadURL = baseURL + "download?ontology=" + encodedProjectName + "&format=" + extension.getExtension();
-        Window.open(downloadURL, "Download ontology", "");
+        RevisionNumber head = RevisionNumber.getHeadRevisionNumber();
+        ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(projectId, head, extension);
+        downloader.download();
     }
 
 }
