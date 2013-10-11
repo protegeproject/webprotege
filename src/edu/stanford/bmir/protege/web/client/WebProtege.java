@@ -36,8 +36,6 @@ public class WebProtege implements EntryPoint {
     }
 
     private void handleUIInitialization() {
-        initServletMagagers();
-
         // This doesn't feel like it belongs here
         if (isInvitation()) {
             InviteUserUtil inviteUserUtil = new InviteUserUtil();
@@ -58,19 +56,6 @@ public class WebProtege implements EntryPoint {
         return isInvitationURL != null && isInvitationURL.trim().contains("true");
     }
 
-    /**
-     * Force Servlet initialization - needed when running in browsers.
-     */
-    protected void initServletMagagers() {
-        AdminServiceManager.getInstance();
-        AuthenticateServiceManager.getInstance();
-        OntologyServiceManager.getInstance();
-        ProjectConfigurationServiceManager.getInstance();
-        ChAOServiceManager.getInstance();
-        HierarchyServiceManager.getInstance();
-        OpenIdServiceManager.getInstance();
-        NotificationServiceManager.getInstance();
-    }
 
     protected void buildUI() {
         RootPanel.get().add(new WorkspaceViewImpl());

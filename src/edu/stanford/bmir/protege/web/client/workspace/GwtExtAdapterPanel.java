@@ -27,19 +27,8 @@ public class GwtExtAdapterPanel extends FlowPanel {
 
     public GwtExtAdapterPanel() {
 
-//        final Panel splittingPanel = new Panel();
-//        splittingPanel.setId("splittingpanel");
-//
-//        splittingPanel.setLayout(new AnchorLayout());
-//        splittingPanel.setBorder(false);
-//        splittingPanel.setAutoScroll(false);
-//
-//        BannerPresenter bannerPresenter = new BannerPresenter();
-//        splittingPanel.add(bannerPresenter.getView().asWidget());
-
         final ProjectDisplayContainerPanel projectDisplayContainerPanel = new ProjectDisplayContainerPanel();
         add(projectDisplayContainerPanel);
-//        rootPanel.add(projectDisplayContainerPanel, new AnchorLayoutData("100% 100%"));
 
         projectDisplayContainerPanel.addListener(new TabPanelListenerAdapter() {
             @Override
@@ -55,12 +44,6 @@ public class GwtExtAdapterPanel extends FlowPanel {
             }
         });
 
-        addHandler(new ResizeHandler() {
-            @Override
-            public void onResize(ResizeEvent event) {
-                System.out.println("RESIZE: ");
-            }
-        }, ResizeEvent.getType());
         Window.addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
