@@ -10,9 +10,12 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.*;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
@@ -36,11 +39,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Author: Matthew Horridge<br>
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
- * Date: 01/04/2013
+ * Date: 11/10/2013
  */
-public class ProjectListViewImpl extends Composite implements ProjectListView {
+public class ProjectListViewUIImpl extends Composite implements ProjectListView {
 
-    private final DataGrid<ProjectListEntry> projectTable;
+    interface ProjectListViewUIImplUiBinder extends UiBinder<HTMLPanel, ProjectListViewUIImpl> {
+
+    }
+
+    private static ProjectListViewUIImplUiBinder ourUiBinder = GWT.create(ProjectListViewUIImplUiBinder.class);
+
+
+
+    @UiField(provided = true)
+    protected DataGrid<ProjectListEntry> projectTable;
+
+    @UiField(provided = true)
+    protected AbstractPager projectTablePager;
 
     private final ListDataProvider<ProjectListEntry> listDataProvider;
 
@@ -74,8 +89,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
 
 
 
-    public ProjectListViewImpl() {
-
+    public ProjectListViewUIImpl() {
         ProvidesKey<ProjectListEntry> keyProvider = new ProvidesKey<ProjectListEntry>() {
             @Override
             public Object getKey(ProjectListEntry item) {
@@ -84,14 +98,8 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
         };
         DataGrid.Resources res = GWT.create(ProjectListResources.class);
 
-        SimplePager simplePager = new SimplePager();
-
-        FlowPanel fp = new FlowPanel();
-        fp.add(simplePager);
-
         projectTable = new DataGrid<ProjectListEntry>(Integer.MAX_VALUE, res, keyProvider);
-
-        fp.add(projectTable);
+        projectTablePager = new SimplePager(SimplePager.TextLocation.RIGHT, false, true);
 
         final ProjectDisplayNameColumn projectNameColumn = new ProjectDisplayNameColumn();
         projectTable.addColumn(projectNameColumn, "Project Name");
@@ -114,7 +122,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
         projectTable.addColumn(downloadColumn, "Download");
         projectTable.addColumn(trashColumn);
 
-        projectTable.setPageSize(Integer.MAX_VALUE);
+//        projectTable.setPageSize(Integer.MAX_VALUE);
 
         projectTable.setColumnWidth(projectNameColumn, "300px");
         projectTable.setColumnWidth(ownerColumn, "150px");
@@ -129,7 +137,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
 
         projectTable.setRowCount(Integer.MAX_VALUE);
 
-        initWidget(fp);
+
 
         listDataProvider = new ListDataProvider<ProjectListEntry>(keyProvider);
         listDataProvider.addDataDisplay(projectTable);
@@ -147,12 +155,17 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-                SelectionEvent.fire(ProjectListViewImpl.this, selectionModel.getSelectedObject().getProjectId());
+                SelectionEvent.fire(ProjectListViewUIImpl.this, selectionModel.getSelectedObject().getProjectId());
             }
         });
 
+        HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
+        initWidget(rootElement);
 
 
+        projectTable.setPageSize(100);
+//        projectTablePager.setPageSize(100);
+        projectTablePager.setDisplay(projectTable);
 
     }
 
@@ -333,10 +346,6 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
             return object.getProjectDetails().getOwner().equals(Application.get().getUserId());
         }
     }
-
-
-
-
 
 
 

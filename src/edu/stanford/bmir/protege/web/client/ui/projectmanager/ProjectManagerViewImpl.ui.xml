@@ -52,7 +52,7 @@
         .project-list-position {
             position: absolute;
             top: 60px;
-            bottom: 30px;
+            bottom: 33px;
             left: 250px;
             right: 0px;
             /*border: green 1px solid;*/
@@ -60,7 +60,7 @@
 
         .footer {
             position: absolute;
-            height: 30px;
+            height: 33px;
             bottom: 0px;
             left: 250px;
             right: 0px;
@@ -73,6 +73,7 @@
             margin-top: 80px;
             margin-left: 10px;
             color: #464646;
+            visibility: hidden;
         }
 
         .notes-panel br {
@@ -105,7 +106,7 @@
 
 
         <g:FlowPanel addStyleNames="{style.project-list-position}">
-            <projectlist:ProjectListViewImpl ui:field="projectListView" width="100%" height="100%"/>
+            <projectlist:ProjectListViewUIImpl ui:field="projectListView" width="100%" height="100%"/>
         </g:FlowPanel>
 
         <g:HTMLPanel addStyleNames="{style.footer}">
