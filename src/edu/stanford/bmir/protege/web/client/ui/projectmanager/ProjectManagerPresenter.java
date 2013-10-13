@@ -34,6 +34,8 @@ public class ProjectManagerPresenter {
 
     private final ProjectListFilter includeAllFilter;
 
+    private ProjectManagerViewCategory currentViewCategory = ProjectManagerViewCategory.HOME;
+
     public ProjectManagerPresenter(LoadProjectRequestHandler loadProjectRequestHandler) {
         this.projectManagerView = new ProjectManagerViewImpl();
 
@@ -77,11 +79,7 @@ public class ProjectManagerPresenter {
         projectManagerView.setViewCategoryChangedHandler(new ViewCategoryChangedHandler() {
             @Override
             public void handleViewCategoryChanged(ProjectManagerViewCategory selectedCategory) {
-                selectedFilter = viewCat2Filter.get(selectedCategory);
-                if(selectedFilter == null) {
-                    selectedFilter = includeAllFilter;
-                }
-                reload();
+                setSelectedViewCategory(selectedCategory);
             }
         });
 
@@ -125,6 +123,17 @@ public class ProjectManagerPresenter {
         reload();
     }
 
+    private void setSelectedViewCategory(ProjectManagerViewCategory selectedCategory) {
+        if(currentViewCategory.equals(selectedCategory)) {
+            return;
+        }
+        currentViewCategory = selectedCategory;
+        selectedFilter = viewCat2Filter.get(selectedCategory);
+        if(selectedFilter == null) {
+            selectedFilter = includeAllFilter;
+        }
+        reload();
+    }
 
     public ProjectManagerView getProjectManagerView() {
         return projectManagerView;
