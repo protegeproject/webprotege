@@ -20,9 +20,7 @@ import java.util.List;
 public class OWLOntologyChangeRecordList implements Iterable<OWLOntologyChangeRecord> {
 
 
-    private List<OWLOntologyChangeRecord> changeRecordList = null;
-
-    private int size;
+    private final List<OWLOntologyChangeRecord> changeRecordList;
 
     public OWLOntologyChangeRecordList() {
         changeRecordList = Collections.emptyList();

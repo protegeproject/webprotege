@@ -32,11 +32,8 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
 
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    private String currentLang;
-
     public WebProtegeBidirectionalShortFormProvider(OWLAPIProject project) {
         this.project = project;
-        this.currentLang = project.getDefaultLanguage();
         final Set<OWLOntology> importsClosure = project.getRootOntology().getImportsClosure();
         delegate = new BidirectionalShortFormProviderAdapter(importsClosure, new WebProtegeShortFormProvider(project)) {
             @Override

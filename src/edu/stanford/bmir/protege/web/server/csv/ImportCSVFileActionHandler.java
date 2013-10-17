@@ -15,9 +15,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -42,7 +40,7 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
         try {
             CSVGridParser parser = new CSVGridParser();
             final File file = new File(FileUploadConstants.UPLOADS_DIRECTORY, action.getDocumentId().getDocumentId());
-            final FileReader reader = new FileReader(file);
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
             CSVGrid grid = parser.readAll(reader);
             reader.close();
             return grid;
@@ -59,8 +57,6 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
 
     @Override
     protected ImportCSVFileResult createActionResult(ChangeApplicationResult<Integer> changeApplicationResult, ImportCSVFileAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
-        int eventListSize = eventList.getEvents().size();
-
         return new ImportCSVFileResult(new EventList<ProjectEvent<?>>(EventTag.get(0), EventTag.get(1)), changeApplicationResult.getSubject().get());
     }
 

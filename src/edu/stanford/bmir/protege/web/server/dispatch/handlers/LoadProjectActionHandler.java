@@ -48,7 +48,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
         long t0 = System.currentTimeMillis();
         webProtegeLogger.info("Loading project: " + action.getProjectId());
         OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
-        OWLAPIProject project = pm.getProject(action.getProjectId());
+        pm.getProject(action.getProjectId());
         long t1 = System.currentTimeMillis();
         webProtegeLogger.info(".... loaded project in " + (t1 - t0) + " ms");
         final ProjectId projectId = action.getProjectId();//project.getProjectId();
