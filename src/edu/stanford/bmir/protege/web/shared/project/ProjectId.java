@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -23,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProjectId implements Serializable {
 
-    private String projectName = "";
+    private String id = "";
 
     /**
      * A regular expression that specifies a pattern for a UUID
@@ -43,10 +44,10 @@ public class ProjectId implements Serializable {
      * Constructs a ProjectId.
      * @param id The lexical Id of the project.  Not <code>null</code>.  The specified id must be formatted according
      * to the regular expression for project id.  See {@link #getIdRegExp()}
-     * @throws NullPointerException if the projectName parameter is <code>null</code>.
+     * @throws NullPointerException if the id parameter is <code>null</code>.
      */
     private ProjectId(String id) throws ProjectIdFormatException{
-        this.projectName = checkFormat(checkNotNull(id));
+        this.id = checkFormat(checkNotNull(id));
     }
 
     /**
@@ -103,11 +104,11 @@ public class ProjectId implements Serializable {
     }
 
 //    public String getProjectName() {
-//        return projectName;
+//        return id;
 //    }
 
     public String getId() {
-        return projectName;
+        return id;
     }
     
     public String getSuggestedAcronym() {
@@ -150,7 +151,7 @@ public class ProjectId implements Serializable {
         MatchResult matchResult;
 
         List<String> words = new ArrayList<String>();
-        while((matchResult = regExp.exec(projectName)) != null)  {
+        while((matchResult = regExp.exec(id)) != null)  {
             String word = matchResult.getGroup(0);
             words.add(word);
         }
@@ -191,12 +192,12 @@ public class ProjectId implements Serializable {
 
     @Override
     public String toString() {
-        return "ProjectId(" + projectName + ")";
+        return Objects.toStringHelper("ProjectId").addValue(id).toString();
     }
 
     @Override
     public int hashCode() {
-        return projectName == null ? 0 : projectName.hashCode();
+        return id == null ? 0 : id.hashCode();
     }
 
     @Override
@@ -211,10 +212,10 @@ public class ProjectId implements Serializable {
             return false;
         }
         ProjectId other = (ProjectId) obj;
-        if(this.projectName == null) {
-            return other.projectName == null;
+        if(this.id == null) {
+            return other.id == null;
         }
-        return other.projectName != null && other.projectName.equals(this.projectName);
+        return other.id != null && other.id.equals(this.id);
     }
 
 
