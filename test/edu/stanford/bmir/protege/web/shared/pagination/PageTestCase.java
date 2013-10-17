@@ -18,7 +18,7 @@ public class PageTestCase {
 
     @Test(expected = IllegalArgumentException.class)
     public void constructorThrowsIllegalArgumentExceptionIfPageNumberIsGreaterThanPageCount() {
-        Page<String> page = new Page<String>(2, 1, Collections.<String>emptyList());
+        new Page<String>(2, 1, Collections.<String>emptyList());
     }
 
     @Test(expected = IllegalArgumentException.class)
