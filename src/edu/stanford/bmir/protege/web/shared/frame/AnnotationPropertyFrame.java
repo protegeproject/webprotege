@@ -83,7 +83,7 @@ public class AnnotationPropertyFrame implements EntityFrame<OWLAnnotationPropert
             return false;
         }
         AnnotationPropertyFrame other = (AnnotationPropertyFrame) obj;
-        return this.subject.equals(other.subject) && this.propertyValues.equals(other.propertyValues) && this.domains.equals(other.propertyValues) && this.ranges.equals(other.ranges);
+        return this.subject.equals(other.subject) && this.propertyValues.equals(other.propertyValues) && this.domains.equals(other.domains) && this.ranges.equals(other.ranges);
     }
 
     //    public Builder builder() {
