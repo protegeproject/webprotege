@@ -168,7 +168,8 @@ public class PublishToBioPortalForm extends FlowPanel implements HasInitialFocus
 
 
         ProjectId projectId = details.getProjectId();
-        ontologyAcroymnTextBox = form.addTextBox("Acronym", "Maximum 16 characters, no spaces, all upper case", projectId.getSuggestedAcronym(), new NonEmptyWebProtegeDialogTextFieldValidator("Please specify an acronym"));
+        // TODO FIX ACRONYM
+        ontologyAcroymnTextBox = form.addTextBox("Acronym", "Maximum 16 characters, no spaces, all upper case", details.getDisplayName(), new NonEmptyWebProtegeDialogTextFieldValidator("Please specify an acronym"));
         versionNumberTextBox = form.addTextBox("Version", "e.g. 1.0.3", "", new NonEmptyWebProtegeDialogTextFieldValidator("Please specify a version string"));
 
         form.addVerticalSpacer();
