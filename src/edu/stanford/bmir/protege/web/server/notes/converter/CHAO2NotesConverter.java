@@ -361,23 +361,4 @@ public class CHAO2NotesConverter {
             return literals.iterator().next().getLiteral();
         }
     }
-
-
-    public static void main(String[] args) throws Exception {
-        OWLParserFactoryRegistry.getInstance().registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
-        File file = new File("/Users/matthewhorridge/Desktop/oplchao/opl-chao.owl");
-        File domainOntologyDocument = new File("/Users/matthewhorridge/Desktop/oplchao/opl.owl");
-        OWLOntologyManager domainMan = WebProtegeOWLManager.createOWLOntologyManager();
-        OWLOntology domainOnt = domainMan.loadOntologyFromOntologyDocument(domainOntologyDocument);
-        OWLOntologyManager chaoMan = WebProtegeOWLManager.createOWLOntologyManager();
-        OWLOntology chaoOnt = chaoMan.loadOntologyFromOntologyDocument(file);
-
-        CHAO2NotesConverter converter = new CHAO2NotesConverter(domainOnt, chaoOnt, "http://www.owl-ontologies.com/Ontology1367000748.owl");
-        converter.dumpNotes();
-//        Multimap<OWLEntity, Note> notes = converter.convertToNotes();
-//        for(OWLEntity entity : notes.keySet()) {
-//            System.out.println(entity);
-//
-//        }
-    }
 }
