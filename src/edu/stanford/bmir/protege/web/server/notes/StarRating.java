@@ -70,9 +70,6 @@ public enum StarRating {
         if(localName.isEmpty()) {
             throw new IllegalArgumentException("localName must not be empty");
         }
-        if(value < 0) {
-            throw new IndexOutOfBoundsException("value  must be greater than 0");
-        }
         this.value = ordinal();
         this.localName = localName;
         iri = IRI.create(PREFIX + localName);
