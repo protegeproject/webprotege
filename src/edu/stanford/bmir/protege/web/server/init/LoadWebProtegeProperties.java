@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -37,7 +35,7 @@ public class LoadWebProtegeProperties implements ConfigurationTask {
     	File file = new File(new File(servletContext.getRealPath("")), fileName);
     	if(file.exists()) {
     		try {
-    			FileReader inStream = new FileReader(file);                    	
+    			InputStream inStream = new BufferedInputStream(new FileInputStream(file));
     			properties.load(inStream);
     			inStream.close();
     		} catch (IOException e) {

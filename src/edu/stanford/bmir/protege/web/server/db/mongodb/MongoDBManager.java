@@ -102,7 +102,7 @@ public class MongoDBManager {
      * Tests the database connection by asking for the names of the available databases.
      */
     private void testConnection() throws Exception {
-        List<String> databaseNames = client.getDatabaseNames();
+        client.getDatabaseNames();
     }
 
 

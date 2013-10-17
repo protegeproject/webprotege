@@ -303,7 +303,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
             return false;
         }
         // TODO: Cache
-        final OWLAnnotationProperty deprecated = getDataFactory().getOWLDeprecated();
         for (OWLOntology ont : getRootOntology().getImportsClosure()) {
             for (OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(entity.getIRI())) {
                 if (ax.isDeprecatedIRIAssertion()) {

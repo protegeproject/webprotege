@@ -17,7 +17,7 @@ public class NotificationChangeData {
             String name, NotificationType type) {
         this.author = author;
         this.description = description;
-        this.timestamp = timestamp;
+        this.timestamp = new Date(timestamp.getTime());
         this.project = project;
         this.valueType = valueType;
         this.name = name;
@@ -41,7 +41,7 @@ public class NotificationChangeData {
     }
 
     public Date getTimestamp() {
-        return timestamp;
+        return new Date(timestamp.getTime());
     }
 
     public String getValueType() {

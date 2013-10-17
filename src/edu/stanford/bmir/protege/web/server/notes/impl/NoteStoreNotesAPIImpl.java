@@ -104,7 +104,6 @@ public class NoteStoreNotesAPIImpl {
         try {
             OWLOntologyManager notesOntologyManager = notesOntology.getOWLOntologyManager();
             if(notesOntologyManager.getOntologyFormat(notesOntology) instanceof BinaryOWLOntologyDocumentFormat) {
-                OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(project.getProjectId());
                 List<OWLOntologyChangeData> infoList = new ArrayList<OWLOntologyChangeData>();
                 for(OWLOntologyChange change : changes) {
                     OWLOntologyChangeRecord rec = change.getChangeRecord();

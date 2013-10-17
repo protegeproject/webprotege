@@ -11,9 +11,7 @@ import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridAction;
 import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridResult;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -48,7 +46,7 @@ public class GetCSVGridActionHandler implements ActionHandler<GetCSVGridAction, 
     private CSVGrid getCSVGrid(File file, int rowLimit) {
         CSVGrid grid;
         try {
-            FileReader fileReader = new FileReader(file);
+            Reader fileReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
             CSVGridParser gridParser = new CSVGridParser();
             grid = gridParser.readToLimit(fileReader, rowLimit);
             fileReader.close();

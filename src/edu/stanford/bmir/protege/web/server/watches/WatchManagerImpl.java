@@ -208,13 +208,9 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
     private void handleFrameChanged(OWLEntity entity) {
         try {
             readLock.lock();
-            long t00 = System.currentTimeMillis();
             List<Watch<?>> watches = new ArrayList<Watch<?>>();
             watches.addAll(watchObject2Watch.get(entity));
-            long t0 = System.currentTimeMillis();
-            final Set<? extends OWLEntity> relatedEntities = getRelatedWatchEntities(entity);
-            long t1 = System.currentTimeMillis();
-            for (OWLEntity anc : relatedEntities) {
+            for (OWLEntity anc : getRelatedWatchEntities(entity)) {
                 watches.addAll(watchObject2Watch.get(anc));
             }
             for (Watch watch : watches) {
@@ -223,7 +219,6 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
                     fireWatch(watch, userId, entity);
                 }
             }
-            long t11 = System.currentTimeMillis();
         }
         finally {
             readLock.unlock();
@@ -307,8 +302,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     private void readWatches() {
         try {
-            FileReader fileReader = new FileReader(watchFile);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(watchFile), "utf-8"));
             String line;
             while((line = bufferedReader.readLine()) != null) {
                 int pos = line.indexOf(",");

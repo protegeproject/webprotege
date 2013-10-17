@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 /**
  * Author: Matthew Horridge<br>
@@ -60,10 +61,10 @@ public class WebProtegeOBOFormatParser extends AbstractOWLParser {
             return new BufferedReader(source.getReader());
         }
         else if(source.isInputStreamAvailable()) {
-            return new BufferedReader(new InputStreamReader(source.getInputStream()));
+            return new BufferedReader(new InputStreamReader(source.getInputStream(),"utf-8"));
         }
         else {
-            return new BufferedReader(new InputStreamReader(getInputStream(source.getDocumentIRI())));
+            return new BufferedReader(new InputStreamReader(getInputStream(source.getDocumentIRI()), "utf-8"));
         }
     }
 }

@@ -322,7 +322,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         // First get the direct values
         List<Triple> directValues = getEntityTriples(projectName, entities, properties);
         // Add in the reified stuff
-        List<Triple> reifiedValues = new ArrayList<Triple>();
         List<EntityPropertyValues> result = new ArrayList<EntityPropertyValues>();
         for(Triple triple : directValues) {
             EntityData entityData = triple.getValue();
@@ -1003,10 +1002,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     public EntityData createExternalReference(String projectName, String entityName, BioPortalReferenceData bpRefData, String user, String operationDescription) {
         OWLAPIProject project = getProject(projectName);
         RenderingManager rm = project.getRenderingManager();
-
-
-        ExternalReferenceStrategy strategy = new ExternalReferenceSubClassStrategy();
-
         applyChanges(new AddExternalReferenceChangeFactory(project, entityName, bpRefData, UserId.getUserId(user), operationDescription));
         return rm.getEntityData(bpRefData.getConceptId(), EntityType.CLASS);
     }

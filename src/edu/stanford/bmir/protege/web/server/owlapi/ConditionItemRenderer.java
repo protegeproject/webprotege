@@ -197,7 +197,6 @@ public class ConditionItemRenderer {
      */
     public ConditionItem getConditionItem(OWLClassExpression clsExpression, ConditionItemType type) {
         RenderingManager rm = project.getRenderingManager();
-        EscapingShortFormProvider escapingShortFormProvider = new EscapingShortFormProvider(rm.getShortFormProvider());
         String shortForm = rm.getBrowserText(clsExpression);
         String cleanedShortForm = shortForm.replaceAll("\\s+", " ");
         ConditionItem conditionItem = new ConditionItem(cleanedShortForm);

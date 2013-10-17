@@ -151,7 +151,6 @@ public class FileUploadServlet extends HttpServlet {
 
     private static String getErrorMessage(OWLOntologyCreationException e) {
         if(e instanceof UnparsableOntologyException) {
-            UnparsableOntologyException unparsableOntologyException = (UnparsableOntologyException) e;
             return "Could not parse ontology. Please load your ontology document into Protege to check that it is well formed.";
         }
         else if(e instanceof UnloadableImportException) {
