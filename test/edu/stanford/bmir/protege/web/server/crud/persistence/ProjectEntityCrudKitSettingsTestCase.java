@@ -6,9 +6,7 @@ import org.junit.Test;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
 
 /**
