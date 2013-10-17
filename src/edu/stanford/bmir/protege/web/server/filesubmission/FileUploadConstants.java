@@ -17,6 +17,6 @@ public class FileUploadConstants {
     /**
      * The directory to where files are uploaded.
      */
-    public static File UPLOADS_DIRECTORY = new File(WebProtegeFileStore.getInstance().getDataDirectory(), UPLOADS_DIRECTORY_NAME);
+    public static final File UPLOADS_DIRECTORY = new File(WebProtegeFileStore.getInstance().getDataDirectory(), UPLOADS_DIRECTORY_NAME);
 
 }
