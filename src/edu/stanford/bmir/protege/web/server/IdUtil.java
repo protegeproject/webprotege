@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
+import com.google.gwt.user.client.Random;
+
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.UUID;
@@ -23,7 +25,7 @@ public class IdUtil {
 
 
     public static String getBase62RandomInt() {
-        int randomValue = (int)(Math.random() * Integer.MAX_VALUE);
+        int randomValue = Random.nextInt();
         ByteBuffer byteBuffer = ByteBuffer.allocate(4);
         byteBuffer.putInt(randomValue);
         BigInteger bi = new BigInteger(byteBuffer.array());
