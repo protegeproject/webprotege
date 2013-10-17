@@ -85,7 +85,7 @@ public class NotePostedEvent extends ProjectEvent<NotePostedHandler> {
             return false;
         }
         NotePostedEvent other = (NotePostedEvent) obj;
-        return this.targetAsEntityData.equals(other.targetAsEntityData) && this.inReplyTo.equals(inReplyTo)  && this.noteDetails.equals(other.noteDetails);
+        return this.targetAsEntityData.equals(other.targetAsEntityData) && this.inReplyTo.equals(other.inReplyTo)  && this.noteDetails.equals(other.noteDetails);
     }
 
     @Override
