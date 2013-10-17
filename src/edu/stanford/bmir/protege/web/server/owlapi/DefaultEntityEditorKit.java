@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.shared.irigen.IRIGeneratorSettings;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
@@ -79,7 +78,7 @@ public class DefaultEntityEditorKit extends OWLAPIEntityEditorKit {
     }
 
 
-    private class BrowserTextChange {
+    private static class BrowserTextChange {
 
         private IRI subject;
 

@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.io.File;
-import java.util.*;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
@@ -18,15 +15,13 @@ import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protege.server.ServerProperties;
-import edu.stanford.smi.protege.server.metaproject.Group;
-import edu.stanford.smi.protege.server.metaproject.GroupOperation;
-import edu.stanford.smi.protege.server.metaproject.MetaProject;
-import edu.stanford.smi.protege.server.metaproject.MetaProjectConstants;
-import edu.stanford.smi.protege.server.metaproject.Operation;
-import edu.stanford.smi.protege.server.metaproject.Policy;
-import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
-import edu.stanford.smi.protege.server.metaproject.User;
+import edu.stanford.smi.protege.server.metaproject.*;
 import edu.stanford.smi.protege.server.metaproject.impl.MetaProjectImpl;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

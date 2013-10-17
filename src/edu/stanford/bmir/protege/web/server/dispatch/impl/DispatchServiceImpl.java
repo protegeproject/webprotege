@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -10,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

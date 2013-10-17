@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.util.ApplicationProperties;
 
 import java.net.UnknownHostException;
-import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

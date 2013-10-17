@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.server;
 
 import com.google.common.base.Optional;
-
+import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.smi.protege.server.metaproject.*;
 
 import java.util.ArrayList;

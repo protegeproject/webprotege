@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import java.io.*;
-import java.util.Properties;
-
-import javax.servlet.ServletContext;
-
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
+
+import javax.servlet.ServletContext;
+import java.io.*;
+import java.util.Properties;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

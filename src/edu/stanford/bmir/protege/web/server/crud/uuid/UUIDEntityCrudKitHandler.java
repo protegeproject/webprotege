@@ -4,7 +4,10 @@ import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
-import edu.stanford.bmir.protege.web.shared.crud.*;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import org.semanticweb.owlapi.model.*;
 

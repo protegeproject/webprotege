@@ -140,7 +140,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
     }
 
 
-    private class ClassExpressionTranslator extends OWLClassExpressionVisitorExAdapter<PropertyValue> {
+    private static class ClassExpressionTranslator extends OWLClassExpressionVisitorExAdapter<PropertyValue> {
         @Override
         public PropertyValue visit(OWLObjectSomeValuesFrom desc) {
             if(!desc.getProperty().isAnonymous() && !desc.getFiller().isAnonymous()) {
@@ -199,7 +199,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
     
     
-    private class PropertyValueTranslator implements PropertyValueVisitor<Set<OWLAxiom>, RuntimeException> {
+    private static class PropertyValueTranslator implements PropertyValueVisitor<Set<OWLAxiom>, RuntimeException> {
 
         private OWLEntity subject;
 

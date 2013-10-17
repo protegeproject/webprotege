@@ -427,32 +427,32 @@ public class OWLAPIProjectOWLOntologyManager implements OWLOntologyManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private class OntologyCreationNotAllowedException extends OWLOntologyCreationException {
+    private static class OntologyCreationNotAllowedException extends OWLOntologyCreationException {
 
     }
 
-    private class ImportLoadingNotAllowedException extends RuntimeException {
+    private static class ImportLoadingNotAllowedException extends RuntimeException {
 
     }
 
-    private class OntologyRemovalNotAllowedException extends RuntimeException {
+    private static class OntologyRemovalNotAllowedException extends RuntimeException {
 
     }
 
 
-    private class DocumentIRIChangeNotAllowedException extends RuntimeException {
+    private static class DocumentIRIChangeNotAllowedException extends RuntimeException {
 
     }
 
-    private class OntologyFormatChangeNotAllowedException extends RuntimeException {
+    private static class OntologyFormatChangeNotAllowedException extends RuntimeException {
 
     }
 
-    private class OperationNotPermittedException extends RuntimeException {
+    private static class OperationNotPermittedException extends RuntimeException {
 
     }
 
-    private class DirectChangeApplicationNotAllowedException extends RuntimeException {
+    private static class DirectChangeApplicationNotAllowedException extends RuntimeException {
 
     }
 }

@@ -80,7 +80,7 @@ public class OBOEntityEditorKit extends OWLAPIEntityEditorKit {
     }
     
     
-    private class BrowserTextChange {
+    private static class BrowserTextChange {
         
         private IRI subject;
         

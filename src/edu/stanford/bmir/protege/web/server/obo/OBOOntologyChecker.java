@@ -243,7 +243,7 @@ public class OBOOntologyChecker {
     }
 
 
-    private class OBOClassExpressionChecker implements OWLClassExpressionVisitorEx<Boolean> {
+    private static class OBOClassExpressionChecker implements OWLClassExpressionVisitorEx<Boolean> {
 
         public Boolean visit(OWLClass ce) {
             return true;

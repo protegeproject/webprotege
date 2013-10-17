@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.irigen.action.GetIRIGeneratorSettingsAction;
 import edu.stanford.bmir.protege.web.shared.irigen.action.GetIRIGeneratorSettingsResult;
-import edu.stanford.bmir.protege.web.shared.irigen.IRIGeneratorSettings;
 
 /**
  * Author: Matthew Horridge<br>

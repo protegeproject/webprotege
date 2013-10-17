@@ -15,7 +15,6 @@ import edu.stanford.smi.protege.server.metaproject.User;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

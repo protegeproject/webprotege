@@ -30,7 +30,7 @@ public class NotificationServiceImpl extends WebProtegeRemoteServiceServlet  imp
         final NotificationTimestamp notificationTimestamp = NotificationTimestamp.fromType(notificationType);
         String currentUserTimestamp = userProperties.getPropertyValue(notificationTimestamp.getValue());
         if (currentUserTimestamp == null) {
-            userProperties.addPropertyValue(notificationTimestamp.getValue(), new Long(new Date().getTime()).toString());
+            userProperties.addPropertyValue(notificationTimestamp.getValue(), Long.toString(new Date().getTime()));
         }
         userProperties.addPropertyValue(notificationType.getValue(), notificationInterval.getValue());
     }

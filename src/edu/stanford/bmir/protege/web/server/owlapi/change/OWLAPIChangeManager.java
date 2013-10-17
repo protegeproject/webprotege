@@ -2,10 +2,14 @@ package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionSummary;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import edu.stanford.bmir.protege.web.server.owlapi.*;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
@@ -19,7 +23,6 @@ import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
 import org.semanticweb.binaryowl.chunk.SkipSetting;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 
 import java.io.*;
 import java.util.*;

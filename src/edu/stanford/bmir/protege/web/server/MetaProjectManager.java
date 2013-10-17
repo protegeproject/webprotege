@@ -1,10 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
-import java.util.Collection;
-import java.util.List;
-
 import com.google.common.base.Optional;
-
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -15,6 +11,9 @@ import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.Operation;
 import edu.stanford.smi.protege.server.metaproject.User;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This interface assumes a particular implementation i.e. a Protege 3 implementation with Project object.

@@ -2,7 +2,10 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityResult;
-import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
+import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
+import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
+import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.crud.DeleteEntityChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
