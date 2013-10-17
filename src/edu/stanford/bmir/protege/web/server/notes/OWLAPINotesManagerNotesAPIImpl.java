@@ -226,8 +226,11 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 
     @Override
     public void deleteNoteAndReplies(NoteId noteId) {
-        notesManager.deleteNote(noteId.getLexicalForm());
-        project.getEventManager().postEvent(new NoteDeletedEvent(project.getProjectId(), noteId));
+        Annotation note = notesManager.getNote(noteId.getLexicalForm());
+        if (note != null) {
+            notesManager.deleteNote(noteId.getLexicalForm());
+            project.getEventManager().postEvent(new NoteDeletedEvent(project.getProjectId(), noteId));
+        }
     }
 
 
