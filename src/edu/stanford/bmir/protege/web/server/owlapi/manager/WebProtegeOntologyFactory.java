@@ -39,7 +39,7 @@ public class WebProtegeOntologyFactory implements OWLOntologyFactory {
 
     @Override
     public void setOWLOntologyManager(OWLOntologyManager owlOntologyManager) {
-        this.manager = manager;
+        this.manager = owlOntologyManager;
     }
 
     @Override
