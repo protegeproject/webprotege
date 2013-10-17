@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-
-import edu.stanford.bmir.protege.web.shared.irigen.IRIGeneratorSettings;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.util.ShortFormProvider;

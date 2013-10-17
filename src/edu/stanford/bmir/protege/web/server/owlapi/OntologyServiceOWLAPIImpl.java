@@ -5,8 +5,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
-import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceStrategy;
-import edu.stanford.bmir.protege.web.server.owlapi.extref.ExternalReferenceSubClassStrategy;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetric;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricValue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -130,24 +128,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         return pm.getProject(projectId).getRootOntology();
     }
 
-    /**
-     * Converts a web-protege name (IRI?) to an IRI.
-     * @param name The name.
-     * @return The IRI corresponding to the name.
-     */
-    private IRI toIRI(String name) {
-        return IRI.create(name);
-    }
-
-    /**
-     * Converts an IRI to a web-protege name.
-     * @param iri The IRI to be converted to a name.
-     * @return The name.
-     */
-    private String toName(IRI iri) {
-        return iri.toString();
-    }
-
     private String toName(OWLOntologyID id) {
         if (id.isAnonymous()) {
             return id.toString();
@@ -165,7 +145,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
     private UserId getUserId() {
         return getUserInSession();
-//        return getUserId(KBUtil.getUserInSession(getThreadLocalRequest()));
     }
 
 

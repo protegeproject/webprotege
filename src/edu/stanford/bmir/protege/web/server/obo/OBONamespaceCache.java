@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
-import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import org.coode.owlapi.obo.parser.OBOVocabulary;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;

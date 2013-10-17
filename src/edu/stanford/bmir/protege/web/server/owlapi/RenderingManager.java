@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
+import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.server.render.BrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.entity.*;

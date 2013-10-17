@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
 import com.thoughtworks.xstream.XStream;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
@@ -10,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.*;
 import java.util.LinkedHashMap;

@@ -5,8 +5,6 @@ import com.google.common.base.Optional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Author: Matthew Horridge<br>

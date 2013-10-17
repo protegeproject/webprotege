@@ -1,15 +1,15 @@
 package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.AccessPolicyUserData;
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InvitationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.domain.Invitation;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.server.metaproject.*;
 import edu.stanford.smi.protege.server.metaproject.impl.GroupOperationImpl;
@@ -259,7 +259,6 @@ public class AccessPolicyManager {
 
             Collection<AccessPolicyUserData> userList = new TreeSet<AccessPolicyUserData>(new AccessPolicyUserData());
             ProjectInstance projectInstance = getProjectInstance(projectId, metaProject);
-            Policy policy = metaProject.getPolicy();
             Operation readOnlyOperation = metaProject.getOperation(OntologyShareAccessConstants.PROJECT_READ_ONLY_ACCESS_OPERATION);
             Set<GroupOperation> groupOperations = projectInstance.getAllowedGroupOperations();
             Set<User> allPoliciesUsers = new HashSet<User>();

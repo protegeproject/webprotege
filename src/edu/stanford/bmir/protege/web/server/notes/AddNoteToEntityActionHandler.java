@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityResult;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
-import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 
 /**
  * Author: Matthew Horridge<br>

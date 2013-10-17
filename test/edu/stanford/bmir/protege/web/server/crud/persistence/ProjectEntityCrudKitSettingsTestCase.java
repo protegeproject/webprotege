@@ -80,7 +80,7 @@ public class ProjectEntityCrudKitSettingsTestCase {
     @Test
     public void projectFieldShouldHaveAnIdAnnotation() {
         try {
-            Id idAnno = ProjectEntityCrudKitSettings.class.getDeclaredField(PROJECT_ID_FIELD_NAME).getAnnotation(Id.class);
+            ProjectEntityCrudKitSettings.class.getDeclaredField(PROJECT_ID_FIELD_NAME).getAnnotation(Id.class);
         } catch (NoSuchFieldException e) {
             fail("projectId field does not exist");
         }

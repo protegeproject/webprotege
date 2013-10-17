@@ -1,10 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
-import org.semanticweb.owlapi.change.AddAxiomData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyID;
 
 import java.util.ArrayList;
 import java.util.Collections;

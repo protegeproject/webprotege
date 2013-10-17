@@ -1,30 +1,25 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateFrameAction;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
-import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
+import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
+import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.frame.FrameChangeGenerator;
 import edu.stanford.bmir.protege.web.server.frame.FrameTranslator;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIEntityEditorKit;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityCreator;
+import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-
-import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

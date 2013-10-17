@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.notes;
 
-import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
+import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;

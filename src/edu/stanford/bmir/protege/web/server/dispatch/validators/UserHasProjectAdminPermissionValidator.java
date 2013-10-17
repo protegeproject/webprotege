@@ -6,8 +6,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,8 +22,6 @@ public class UserHasProjectAdminPermissionValidator<A extends Action<R> & HasPro
 
     @Override
     public RequestValidationResult validateAction(A action, RequestContext requestContext) {
-        UserId userId = requestContext.getUserId();
-        ProjectId projectId = action.getProjectId();
         // TODO
         return RequestValidationResult.getValid();
     }

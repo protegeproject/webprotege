@@ -8,7 +8,6 @@ import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
 
-import java.awt.*;
 import java.util.Collection;
 import java.util.Iterator;
 

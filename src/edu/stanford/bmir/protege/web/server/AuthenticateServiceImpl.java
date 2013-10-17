@@ -2,11 +2,11 @@ package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateService;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.User;
 import edu.stanford.smi.protege.util.Log;
 

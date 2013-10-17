@@ -4,7 +4,6 @@ import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
 
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

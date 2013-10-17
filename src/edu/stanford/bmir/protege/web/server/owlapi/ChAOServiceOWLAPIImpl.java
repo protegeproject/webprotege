@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.ChAOService;
-import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
+import edu.stanford.bmir.protege.web.client.rpc.data.PaginationData;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;

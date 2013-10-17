@@ -6,15 +6,10 @@ import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
-import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentParserFactory;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.io.OWLParserFactoryRegistry;
 import org.semanticweb.owlapi.model.*;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;

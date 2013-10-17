@@ -11,12 +11,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.crud.IRIPrefixUpdateStrategy;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsResult;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.util.OWLEntityRenamer;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Author: Matthew Horridge<br>

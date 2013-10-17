@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import java.util.*;

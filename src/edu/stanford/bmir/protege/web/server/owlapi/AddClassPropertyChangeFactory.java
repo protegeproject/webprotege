@@ -31,7 +31,6 @@ public class AddClassPropertyChangeFactory extends OWLOntologyChangeFactory {
 
     @Override
     public void createChanges(List<OWLOntologyChange> changeListToFill) {
-        RenderingManager rm = getRenderingManager();
 
     }
 }

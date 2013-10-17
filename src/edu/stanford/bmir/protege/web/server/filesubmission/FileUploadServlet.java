@@ -9,7 +9,8 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.io.UnparsableOntologyException;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.UnloadableImportException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -187,7 +188,7 @@ public class FileUploadServlet extends HttpServlet {
 //    }
     
     
-    private class Pair {
+    private static class Pair {
         
         private String string;
         

@@ -182,7 +182,7 @@ public class EntityLookupServiceImpl extends WebProtegeRemoteServiceServlet impl
     }
 
     
-    private class OWLEntityDataMatch implements Comparable<OWLEntityDataMatch> {
+    private static class OWLEntityDataMatch implements Comparable<OWLEntityDataMatch> {
         
         private int matchIndex;
         

@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.openid.OpenIdAccountDetails;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.servlet.http.HttpSession;
 

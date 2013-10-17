@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.server.EmailUtil;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.owlapi.HierarchyProviderKey;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.Group;
 import edu.stanford.smi.protege.server.metaproject.User;
 

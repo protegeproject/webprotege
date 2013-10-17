@@ -1,42 +1,37 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitRegistry;
 import edu.stanford.bmir.protege.web.server.crud.ProjectEntityCrudKitHandlerCache;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettings;
-import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepositoryManager;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
-import edu.stanford.bmir.protege.web.shared.HasDataFactory;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
-import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
-import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
-import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.events.EventLifeTime;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.HighLevelEventGenerator;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
+import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManagerImpl;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.HasDataFactory;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.util.Log;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
@@ -47,7 +42,7 @@ import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider
 import org.protege.owlapi.model.ProtegeOWLOntologyManager;
 import org.semanticweb.binaryowl.BinaryOWLParseException;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
-import org.semanticweb.owlapi.io.*;
+import org.semanticweb.owlapi.io.OWLParserException;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.NonMappingOntologyIRIMapper;
 import org.semanticweb.owlapi.util.OWLObjectDuplicator;
@@ -761,7 +756,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
 
 
 
-    private class DummyPermissionsManager implements ProjectPermissionsManager {
+    private static class DummyPermissionsManager implements ProjectPermissionsManager {
 
         @Override
         public boolean hasReadAccess(UserId userId) {

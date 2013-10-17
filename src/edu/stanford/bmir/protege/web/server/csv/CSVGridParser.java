@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.server.csv;
 
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 
-import java.io.*;
-import java.util.List;
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Author: Matthew Horridge<br>
