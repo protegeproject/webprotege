@@ -95,6 +95,23 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
     }
 
     @Override
+    public boolean equals(Object o) {
+        if(o == this) {
+            return true;
+        }
+        if(!(o instanceof ProjectDetails)) {
+            return false;
+        }
+        ProjectDetails other = (ProjectDetails) o;
+        return this.projectId.equals(other.projectId) && this.displayName.equals(other.displayName) && this.description.equals(other.description) && this.owner.equals(other.owner) && this.inTrash == other.inTrash;
+    }
+
+    @Override
+    public int hashCode() {
+        return "ProjectDetails".hashCode() + projectId.hashCode() + displayName.hashCode() + description.hashCode() + owner.hashCode() + (inTrash ? 7 : 37);
+    }
+
+    @Override
     public int compareTo(ProjectDetails o) {
         final int dispNameDiff = displayName.compareToIgnoreCase(o.getDisplayName());
         if(dispNameDiff != 0) {
