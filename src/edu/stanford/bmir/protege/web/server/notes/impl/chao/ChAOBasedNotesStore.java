@@ -368,7 +368,7 @@ public class ChAOBasedNotesStore { // implements MutableNoteStore {
     }
 
     private OWLNamedIndividual getInReplyToNamedIndividual(Note note) {
-        return getInReplyToNamedIndividual(note);
+        return getInReplyToNamedIndividual(note.getNoteId());
     }
 
 
