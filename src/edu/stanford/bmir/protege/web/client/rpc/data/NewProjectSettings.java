@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
@@ -146,16 +147,9 @@ public class NewProjectSettings implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("NewProjectSettings");
-        sb.append("(");
-        sb.append(projectOwner);
-        sb.append(" ");
-        sb.append(" ProjectName(");
-        sb.append(displayName);
-        sb.append(") ProjectDescription(");
-        sb.append(projectDescription);
-        sb.append("))");
-        return sb.toString();
+        return Objects.toStringHelper("NewProjectSettings")
+                .addValue(projectOwner)
+                .add("DisplayName", displayName)
+                .add("Description", projectDescription).toString();
     }
 }
