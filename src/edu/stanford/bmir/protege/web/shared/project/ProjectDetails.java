@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 
@@ -130,5 +131,15 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
             return descriptionDiff;
         }
         return projectId.getId().compareTo(o.getProjectId().getId());
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("ProjectDetails")
+                .addValue(projectId)
+                .add("displayName", displayName)
+                .add("description", description)
+                .add("owner", owner)
+                .add("inTrash", inTrash).toString();
     }
 }
