@@ -4,7 +4,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 /**
  * Author: Matthew Horridge<br>
