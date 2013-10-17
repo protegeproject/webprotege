@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.server.persistence;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static junit.framework.Assert.assertEquals;
 
 /**
