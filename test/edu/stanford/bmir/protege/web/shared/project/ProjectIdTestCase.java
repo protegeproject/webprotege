@@ -4,9 +4,7 @@ package edu.stanford.bmir.protege.web.shared.project;
 import com.google.common.base.Optional;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -37,7 +35,7 @@ public class ProjectIdTestCase {
     public void equalsNullReturnsFalse() {
         String uuid = "0d8f03d4-d9bb-496d-a78c-146868af8265";
         ProjectId projectId = ProjectId.get(uuid);
-        assertFalse(projectId.equals(null));
+        assertNotNull(projectId);
     }
 
     @Test(expected = ProjectIdFormatException.class)
