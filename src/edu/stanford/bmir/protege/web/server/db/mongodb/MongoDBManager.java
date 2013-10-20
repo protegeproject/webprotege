@@ -3,10 +3,11 @@ package edu.stanford.bmir.protege.web.server.db.mongodb;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.smi.protege.util.ApplicationProperties;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 
 import java.net.UnknownHostException;
 
@@ -55,23 +56,23 @@ public class MongoDBManager {
     }
 
     private static int getPort() {
-        String overridingPortString = ApplicationProperties.getString(PORT_PROPERTY_NAME);
-        if (overridingPortString == null) {
+        Optional<String> overridingPort = WebProtegeProperties.get().getDBPort();
+        if (!overridingPort.isPresent()) {
             return DEFAULT_PORT;
         }
         try {
-            return Integer.parseInt(overridingPortString);
+            return Integer.parseInt(overridingPort.get());
         }
         catch (NumberFormatException e) {
-            System.err.println("Invalid port specification in mongod config file (port = " + overridingPortString + ").  Using default port.");
+            System.err.println("Invalid port specification in mongod config file (port = " + overridingPort.get() + ").  Using default port.");
             return DEFAULT_PORT;
         }
     }
 
     private static String getHostName() {
-        String overridingHostName = ApplicationProperties.getString(HOST_PROPERTY_NAME);
-        if(overridingHostName != null) {
-            return overridingHostName;
+        Optional<String> overridingHostName = WebProtegeProperties.get().getDBHost();
+        if(overridingHostName.isPresent()) {
+            return overridingHostName.get();
         }
         else {
             return DEFAULT_HOST_NAME;
