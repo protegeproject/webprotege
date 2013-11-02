@@ -4,9 +4,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,9 +22,13 @@ public class OWLAPISearchManager {
         this.project = project;
     }
     
-    public List<EntityData> search(String searchString) {
-        if(searchString.startsWith("*") && searchString.endsWith("*")) {
-            searchString = searchString.substring(1, searchString.length() - 1);
+    public List<EntityData> search(final String search) {
+        final String normalizedSearchString;
+        if(search.startsWith("*") && search.endsWith("*")) {
+            normalizedSearchString = search.substring(1, search.length() - 1);
+        }
+        else {
+            normalizedSearchString = search;
         }
         List<EntityData> result = new ArrayList<EntityData>();
 
@@ -34,7 +36,7 @@ public class OWLAPISearchManager {
         BidirectionalShortFormProvider sfp = rm.getShortFormProvider();
         // Needs to be more efficient, but will do for now
         Set<String> shortForms = sfp.getShortForms();
-        Pattern pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(normalizedSearchString, Pattern.CASE_INSENSITIVE);
 
         
         for(String shortForm : shortForms) {
@@ -47,6 +49,31 @@ public class OWLAPISearchManager {
                 }
             }
         }
+        Collections.sort(result, new Comparator<EntityData>() {
+            @Override
+            public int compare(EntityData entityData, EntityData entityData2) {
+                String browserText1 = entityData.getBrowserText();
+                String browserText2 = entityData2.getBrowserText();
+                if (browserText1 == null) {
+                    if(browserText2 == null) {
+                        return 0;
+                    }
+                    else {
+                        return 1;
+                    }
+                }
+                else if(browserText2 == null) {
+                    return -1;
+                }
+                if(browserText1.equalsIgnoreCase(normalizedSearchString)) {
+                    return -1;
+                }
+                else if(browserText2.equalsIgnoreCase(normalizedSearchString)) {
+                    return 1;
+                }
+                return browserText1.compareToIgnoreCase(browserText2);
+            }
+        });
         return result;
     }
 
