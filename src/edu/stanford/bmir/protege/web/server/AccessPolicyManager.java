@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.AccessPolicyUserData;
 import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InvitationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.domain.Invitation;
+import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
@@ -693,7 +694,7 @@ public class AccessPolicyManager {
                     }
 
                     String invitationEmailBody = getInvitationEmailBody(invitation.isWriter(), projectId, getOwner(projectId), getInvitationURL(invitationBaseURL, invitation.getEmailId(), tempUser.getPropertyValue(InvitationConstants.USER_PROPERTY_TEMPORARY_ACCOUNT_RANDOM_NO)));
-                    EmailUtil.sendEmail(invitation.getEmailId(), EmailConstants.INVITATION_SUBJECT, invitationEmailBody);
+                    App.get().getMailManager().sendMail(invitation.getEmailId(), EmailConstants.INVITATION_SUBJECT, invitationEmailBody);
 
                 }
                 catch (Exception e) {

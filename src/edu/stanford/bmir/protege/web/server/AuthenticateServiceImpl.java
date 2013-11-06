@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
+import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.User;
@@ -168,7 +169,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
             throw new IllegalArgumentException("User " + userName + " does not have an email configured.");
         }
         changePassword(userName, EmailConstants.RESET_PASSWORD);
-        EmailUtil.sendEmail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY);
+        App.get().getMailManager().sendMail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY);
 
     }
 
