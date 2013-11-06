@@ -131,8 +131,8 @@ public class WebProtegeProperties implements Serializable {
         return new File(dataDirectory);
     }
 
-    public Optional<String> getApplicationHostName() {
-        return getOptionalString(APPLICATION_HOST);
+    public String getApplicationHostName() {
+        return getRequiredString(APPLICATION_HOST);
     }
 
     public  boolean isOpenIdAuthenticationEnabled() {

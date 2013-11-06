@@ -165,7 +165,7 @@ public class MailManager {
      * @throws UnsupportedEncodingException
      */
     private InternetAddress getFromAddress() throws UnsupportedEncodingException {
-        final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + WebProtegeProperties.get().getApplicationHostName().or("webprotege.stanford.edu");
+        final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + WebProtegeProperties.get().getApplicationHostName();
         String from = getPropertyValue(MAIL_SMTP_FROM, defaultFromValue);
         final String defaultPersonalName = WebProtegeProperties.get().getApplicationName();
         String personalName = getPropertyValue(MAIL_SMTP_FROM_PERSONALNAME, defaultPersonalName);
