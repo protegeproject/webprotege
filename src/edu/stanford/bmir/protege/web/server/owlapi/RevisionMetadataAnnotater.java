@@ -53,7 +53,7 @@ public class RevisionMetadataAnnotater {
         StringBuilder sb = new StringBuilder();
         sb.append("This ontology was generated from an ontology revision in ");
         sb.append(WebProtegeProperties.get().getApplicationName());
-        final String host = WebProtegeProperties.get().getApplicationHostName().or("");
+        final String host = WebProtegeProperties.get().getApplicationHostName();
         if (!host.isEmpty()) {
             sb.append(" http://");
             sb.append(host);

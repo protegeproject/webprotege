@@ -282,7 +282,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
                 StringBuilder directLinkBuilder = new StringBuilder();
                 directLinkBuilder.append("http://");
-                directLinkBuilder.append(WebProtegeProperties.get().getApplicationHostName().or("webprotege.stanford.edu"));
+                directLinkBuilder.append(WebProtegeProperties.get().getApplicationHostName());
                 directLinkBuilder.append("#Edit:projectId=");
                 directLinkBuilder.append(project.getProjectId().getId());
                 directLinkBuilder.append(";tab=ClassesTab&id=");
