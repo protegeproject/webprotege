@@ -24,11 +24,11 @@ public class MailManager {
 
     public static final String MAIL_SMTP_USER = "mail.smtp.user";
 
-    public static final String MAIL_SMTP_PASSWORD = "mail.smtp.password";
+    public static final String MAIL_SMTP_PASSWORD = "mail.smtp.wp.password";
 
     public static final String MAIL_SMTP_FROM = "mail.smtp.from";
 
-    public static final String MAIL_SMTP_FROM_PERSONALNAME = "mail.smtp.from.personalName";
+    public static final String MAIL_SMTP_FROM_PERSONALNAME = "mail.smtp.from.wp.personalName";
 
     public static final String UTF_8 = "utf-8";
 
