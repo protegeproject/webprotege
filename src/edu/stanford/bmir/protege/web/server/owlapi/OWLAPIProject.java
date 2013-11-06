@@ -383,18 +383,16 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
         }
     }
 
-    private OWLEntityCreator<?> getEntityCreator(UserId userId, String shortName, EntityType<?> entityType) {
+    private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(UserId userId, String shortName, EntityType<E> entityType) {
         // TODO: SWAP
-        Optional<OWLEntity> entity = getEntityOfTypeIfPresent(entityType, shortName);
+        Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
         if (!entity.isPresent()) {
-
-            OntologyChangeList.Builder builder = OntologyChangeList.builder();
-            OWLEntity ent = getEntityCrudKitHandler().create(entityType, EntityShortForm.get(shortName), new EntityCrudContext(getRootOntology(), getDataFactory()), builder);
-//            return entityEditorKit.getEntityCreatorFactory().getEntityCreator(this, userId, shortName, entityType);
-            return new OWLEntityCreator<OWLEntity>(ent, builder.build().getChanges());
+            OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
+            E ent = getEntityCrudKitHandler().create(entityType, EntityShortForm.get(shortName), new EntityCrudContext(getRootOntology(), getDataFactory()), builder);
+            return new OWLEntityCreator<E>(ent, builder.build().getChanges());
         }
         else {
-            return new OWLEntityCreator<OWLEntity>(entity.get(), Collections.<OWLOntologyChange>emptyList());
+            return new OWLEntityCreator<E>(entity.get(), Collections.<OWLOntologyChange>emptyList());
         }
     }
 
@@ -408,10 +406,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
         return entityCrudKitHandlerCache.getHandler();
     }
 
-    private Optional<OWLEntity> getEntityOfTypeIfPresent(EntityType<? extends OWLEntity> entityType, String shortName) {
+    @SuppressWarnings("unchecked")
+    private <E extends OWLEntity> Optional<E> getEntityOfTypeIfPresent(EntityType<E> entityType, String shortName) {
         for (OWLEntity entity : renderingManager.getEntities(shortName)) {
             if (entity.isType(entityType)) {
-                return Optional.of(entity);
+                return Optional.of((E) entity);
             }
         }
         return Optional.absent();
@@ -491,7 +490,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
                         IRI currentIRI = entity.getIRI();
                         if (!iriRenameMap.containsKey(currentIRI)) {
                             String shortName = DataFactory.getFreshEntityShortName(entity);
-                            OWLEntityCreator<?> creator = getEntityCreator(userId, shortName, entity.getEntityType());
+                            OWLEntityCreator<? extends OWLEntity> creator = getEntityCreator(userId, shortName, (EntityType<? extends OWLEntity>) entity.getEntityType());
                             freshEntityChanges.addAll(creator.getChanges());
                             IRI replacementIRI = creator.getEntity().getIRI();
                             iriRenameMap.put(currentIRI, replacementIRI);
