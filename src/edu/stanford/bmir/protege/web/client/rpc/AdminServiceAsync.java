@@ -20,7 +20,7 @@ public interface AdminServiceAsync {
 
     void getUserEmail(String userName, AsyncCallback<String> callback);
 
-    void setUserEmail(String userName, String email, AsyncCallback<Void> callback);
+//    void setUserEmail(String userName, String email, AsyncCallback<Void> callback);
 
     void sendPasswordReminder(String userName, AsyncCallback<Void> callback) throws UnrecognizedUserNameException;
 
