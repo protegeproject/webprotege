@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 
@@ -32,9 +33,7 @@ public class MailManager {
 
     public static final String UTF_8 = "utf-8";
 
-    public static final String DEFAULT_FROM_VALUE = "no-reply@webprotege.stanford.edu";
-
-    public static final String DEFAULT_FROM_PERSONALNAME = "WebProtégé";
+    public static final String DEFAULT_FROM_VALUE_PREFIX = "no-reply@";
 
     public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(MailManager.class);
 
@@ -160,14 +159,16 @@ public class MailManager {
 
     /**
      * Gets the from address as an {@link InternetAddress}.  The personal name will be set to either the value supplied
-     * by the {@link MailManager#DEFAULT_FROM_PERSONALNAME} property, or by the default value (specified by
-     * {@link MailManager#DEFAULT_FROM_PERSONALNAME}).
+     * by the {@code mail.smtp.from} property, or by the default value, which is specified by
+     * concatenating the default prefix (@link MailManager#DEFAULT_FROM_VALUE_PREFIX) with the application host name.
      * @return The from address.
      * @throws UnsupportedEncodingException
      */
     private InternetAddress getFromAddress() throws UnsupportedEncodingException {
-        String from = getPropertyValue(MAIL_SMTP_FROM, DEFAULT_FROM_VALUE);
-        String personalName = getPropertyValue(MAIL_SMTP_FROM_PERSONALNAME, DEFAULT_FROM_PERSONALNAME);
+        final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + WebProtegeProperties.get().getApplicationHostName().or("webprotege.stanford.edu");
+        String from = getPropertyValue(MAIL_SMTP_FROM, defaultFromValue);
+        final String defaultPersonalName = WebProtegeProperties.get().getApplicationName();
+        String personalName = getPropertyValue(MAIL_SMTP_FROM_PERSONALNAME, defaultPersonalName);
         return new InternetAddress(from, personalName, UTF_8);
     }
 
