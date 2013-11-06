@@ -1,0 +1,26 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:HTMLPanel>
+        <table>
+            <colgroup>
+                <col width="160px"/>
+            </colgroup>
+            <tr>
+                <td>
+                    <g:Label addStyleNames="web-protege-form-label">Email address</g:Label>
+                </td>
+                <td>
+                    <g:TextBox ui:field="emailAddressField" visibleLength="60"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <g:Label addStyleNames="web-protege-form-label">Confirm email address</g:Label>
+                </td>
+                <td>
+                    <g:TextBox ui:field="confirmEmailAddressField" visibleLength="60"/>
+                </td>
+            </tr>
+        </table>
+    </g:HTMLPanel>
+</ui:UiBinder>

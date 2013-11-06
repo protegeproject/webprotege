@@ -19,9 +19,12 @@ import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
+import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
+import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
@@ -325,8 +328,7 @@ public class EditProfileUtil {
                 final EditProfileHandler callback = new EditProfileHandler(win);
                 final String userName = userNameTextBox.getText().trim();
                 final UserId userId = UserId.getUserId(userName);
-                AdminServiceManager.getInstance().setUserEmail(userId,
-                        userEmailTextBox.getText().trim(), callback);
+                DispatchServiceManager.get().execute(new SetEmailAddressAction(userId, userEmailTextBox.getText().trim()), new EmptySuccessWebProtegeCallback<SetEmailAddressResult>());
                 NotificationServiceManager.getInstance().setNotificationDelay(userId,
                             NotificationType.COMMENT, NotificationInterval.fromString(commentsNotification.getItemText(commentsNotification.getSelectedIndex())), callback);
                     NotificationServiceManager.getInstance().setNotificationDelay(userId,
