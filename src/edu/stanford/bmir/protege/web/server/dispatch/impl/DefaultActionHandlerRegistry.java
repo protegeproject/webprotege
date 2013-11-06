@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
+import edu.stanford.bmir.protege.web.server.mail.GetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.mail.SetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddNoteToEntityActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddReplyToNoteActionHandler;
@@ -33,6 +34,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
+import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteAction;
@@ -109,6 +111,7 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         // User stuff
         register(new GetCurrentUserInSessionActionHandler(), GetCurrentUserInSessionAction.class);
         register(new SetEmailAddressActionHandler(), SetEmailAddressAction.class);
+        register(new GetEmailAddressActionHandler(), GetEmailAddressAction.class);
 
         // Notes
         register(new GetDiscussionThreadActionHandler(), GetDiscussionThreadAction.class);
