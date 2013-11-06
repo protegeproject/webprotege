@@ -4,8 +4,10 @@ import edu.stanford.bmir.protege.web.client.rpc.AdminService;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
+import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
+import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
@@ -15,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
 import edu.stanford.smi.protege.server.metaproject.Operation;
 import edu.stanford.smi.protege.server.metaproject.User;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
@@ -109,10 +112,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
             throw new UnrecognizedUserNameException("User " + userName + " does not have an email configured.");
         }
         changePassword(userName, EmailConstants.RESET_PASSWORD);
-        if(!WebProtegeProperties.get().getEmailAccount().isPresent()) {
-            throw new WebProtegeConfigurationException("Email is not configured on the server.  Please contact the administrator");
-        }
-        EmailUtil.sendEmail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY);
+        App.get().getMailManager().sendMail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY);
     }
 
     public LoginChallengeData getUserSaltAndChallenge(String userNameOrEmail) {

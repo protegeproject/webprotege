@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.EmailUtil;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.owlapi.HierarchyProviderKey;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -136,11 +136,11 @@ public class DefaultLogger implements WebProtegeLogger {
         try {
             Optional<String> adminEmail = WebProtegeProperties.get().getAdministratorEmail();
             if (adminEmail.isPresent()) {
-                EmailUtil.sendEmail(adminEmail.get(), SUBJECT, message);
+                App.get().getMailManager().sendMail(adminEmail.get(), SUBJECT, message);
             }
         }
         catch (Throwable e) {
-            info("Problem emailing message %s", e.getMessage());
+            info("Problem sending mail %s", e.getMessage());
         }
     }
 

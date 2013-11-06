@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
+import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.init.*;
 
 import javax.servlet.ServletContext;
@@ -30,9 +31,13 @@ public class WebProtegeConfigurationChecker {
         LoadWebProtegeProperties loadWebProtegeProperties = new LoadWebProtegeProperties();
         loadWebProtegeProperties.run(servletContext);
 
+        LoadMailProperties loadMailProperties = new LoadMailProperties();
+        loadMailProperties.run(servletContext);
+
         for(ConfigurationTask task : configurationTasks) {
             task.run(servletContext);
         }
+
         return true;
     }
 

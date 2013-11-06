@@ -44,18 +44,6 @@ public enum WebProtegePropertyName {
     @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
     MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017), ClientVisibility.HIDDEN),
 
-    @WebProtegePropertiesDocumentation(description = "The host name of the email smtp server", example = "smtp.gmail.com")
-    EMAIL_HOST("email.host", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
-
-    @WebProtegePropertiesDocumentation(description = "The smtp port number", example = "465")
-    EMAIL_PORT("email.port", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
-
-    @WebProtegePropertiesDocumentation(description = "The email account that webprotege should use to send email notifications", example = "john.doe@stanford.edu")
-    EMAIL_ACCOUNT("email.account", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
-
-    @WebProtegePropertiesDocumentation(description = "The password for the email account that webprotege should use to send email notifications")
-    EMAIL_PASSWORD("email.password", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
-
     @WebProtegePropertiesDocumentation(description = "Specifies whether webprotege uses https rather than http as a protocol", example = "false")
     HTTPS_ENABLED("https.enabled", PropertyValue.ofBoolean(false), ClientVisibility.VISIBLE),
 
