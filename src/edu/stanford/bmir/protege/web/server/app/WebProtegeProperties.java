@@ -131,24 +131,8 @@ public class WebProtegeProperties implements Serializable {
         return new File(dataDirectory);
     }
 
-    public  Optional<String> getEmailHostName() {
-        return getOptionalString(EMAIL_HOST);
-    }
-
     public Optional<String> getApplicationHostName() {
         return getOptionalString(APPLICATION_HOST);
-    }
-
-    public  Optional<String> getEmailPort() {
-        return getOptionalString(EMAIL_PORT);
-    }
-
-    public  Optional<String> getEmailAccount() {
-        return getOptionalString(EMAIL_ACCOUNT);
-    }
-
-    public  Optional<String> getEmailPassword() {
-        return getOptionalString(EMAIL_PASSWORD);
     }
 
     public  boolean isOpenIdAuthenticationEnabled() {
@@ -167,10 +151,7 @@ public class WebProtegeProperties implements Serializable {
         return getOptionalString(MONGO_DB_HOST);
     }
 
-    public  String getSslFactory() {
-        return "javax.net.ssl.SSLSocketFactory";
-//        return edu.stanford.smi.protege.util.ApplicationProperties.getString(ApplicationPropertyNames.EMAIL_SSL_FACTORY_PROP, "javax.net.ssl.SSLSocketFactory");
-    }
+
 
 
     public  int getAccountInvitationExpirationPeriodInDays() {

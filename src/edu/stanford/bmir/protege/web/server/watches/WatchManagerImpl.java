@@ -3,8 +3,8 @@ package edu.stanford.bmir.protege.web.server.watches;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import edu.stanford.bmir.protege.web.server.EmailUtil;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
@@ -289,11 +289,11 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
                 directLinkBuilder.append(URLEncoder.encode(entity.getIRI().toString()));
 
                 message += "\n" + directLinkBuilder.toString();
-                EmailUtil.sendEmail(email, emailSubject, message);
+//                EmailUtil.sendEmail(email, emailSubject, message);
+                App.get().getMailManager().sendMail(email, emailSubject, message);
 
             }
         });
-//        EmailUtil.sendEmail();
     }
 
     @Override
