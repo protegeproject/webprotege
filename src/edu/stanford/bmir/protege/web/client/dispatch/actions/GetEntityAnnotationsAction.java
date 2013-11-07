@@ -16,6 +16,9 @@ import java.util.Set;
  */
 public class GetEntityAnnotationsAction extends AbstractHasProjectIdAndSubject<IRI> implements Action<RenderableGetObjectResult<Set<OWLAnnotation>>> {
 
+    /**
+     * For serialization purposes only
+     */
     private GetEntityAnnotationsAction() {
 
     }

@@ -17,6 +17,9 @@ public class OBOTermCrossProduct implements Serializable {
 
     private OBOTermRelationships relationships;
 
+    /**
+     * For serialization purposes only
+     */
     private OBOTermCrossProduct() {
     
     }

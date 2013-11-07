@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class EntityDataContextSelector implements EditorManagerSelector {
 
-    private Map<EntityType, EditorManager<?, ?>> map = new HashMap<EntityType, EditorManager<?, ?>>();
+    private Map<EntityType<?>, EditorManager<?, ?>> map = new HashMap<EntityType<?>, EditorManager<?, ?>>();
 
 
     public EntityDataContextSelector() {
@@ -30,7 +30,7 @@ public class EntityDataContextSelector implements EditorManagerSelector {
         if(!(editorCtx instanceof OWLEntityDataContext)) {
             return false;
         }
-        EntityType entityType = ((OWLEntityDataContext) editorCtx).getEntityData().getEntity().getEntityType();
+        EntityType<?> entityType = ((OWLEntityDataContext) editorCtx).getEntityData().getEntity().getEntityType();
         return map.containsKey(entityType);
     }
 

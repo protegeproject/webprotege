@@ -17,6 +17,9 @@ public class GetDiscussionThreadAction extends AbstractHasProjectAction<GetDiscu
     private OWLEntity targetEntity;
 
 
+    /**
+     * For serialization purposes only
+     */
     private GetDiscussionThreadAction() {
     }
 

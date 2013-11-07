@@ -116,13 +116,13 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
         }
     }
 
-    public void addWatch(Watch watch, UserId userId) {
+    public void addWatch(Watch<?> watch, UserId userId) {
         insertWatch(watch, userId);
         appendChange(Operation.ADD, watch, userId);
         project.getEventManager().postEvent(new WatchAddedEvent(project.getProjectId(), watch, userId));
     }
 
-    private void insertWatch(Watch watch, UserId userId) {
+    private void insertWatch(Watch<?> watch, UserId userId) {
         try {
             writeLock.lock();
             userId2Watch.put(checkNotNull(userId), checkNotNull(watch));
@@ -134,7 +134,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
         }
     }
 
-    public void removeWatch(Watch watch, UserId userId) {
+    public void removeWatch(Watch<?> watch, UserId userId) {
         try {
             writeLock.lock();
             boolean removed = uninsertWatch(watch, userId);
@@ -148,7 +148,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
         }
     }
 
-    private boolean uninsertWatch(Watch watch, UserId userId) {
+    private boolean uninsertWatch(Watch<?> watch, UserId userId) {
         boolean removed;
         try {
             writeLock.lock();
@@ -187,7 +187,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
     public boolean hasEntityBasedWatch(OWLEntity entity, UserId userId) {
         try {
             readLock.lock();
-            for (Watch watch : userId2Watch.get(userId)) {
+            for (Watch<?> watch : userId2Watch.get(userId)) {
                 if (watch instanceof EntityBasedWatch && ((EntityBasedWatch) watch).getEntity().equals(entity)) {
                     return true;
                 }
@@ -213,7 +213,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
             for (OWLEntity anc : getRelatedWatchEntities(entity)) {
                 watches.addAll(watchObject2Watch.get(anc));
             }
-            for (Watch watch : watches) {
+            for (Watch<?> watch : watches) {
                 for (UserId userId : watch2UserId.get(watch)) {
                     // Dispatch
                     fireWatch(watch, userId, entity);
@@ -262,7 +262,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
         });
     }
 
-    private void fireWatch(final Watch watch, final UserId userId, final OWLEntity entity) {
+    private void fireWatch(final Watch<?> watch, final UserId userId, final OWLEntity entity) {
 
         emailExecutor.submit(new Runnable() {
             @Override
@@ -308,7 +308,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
                 String iri = line.substring(pos + 2, pos = line.indexOf(">,"));
                 String userName = line.substring(pos + 2);
                 OWLEntity entity = parseEntity(entityTypeName, iri);
-                final Watch watch;
+                final Watch<?> watch;
                 if(ENTITY_FRAME_WATCH_NAME.equals(watchTypeName)) {
                     watch = new EntityFrameWatch(entity);
                 }

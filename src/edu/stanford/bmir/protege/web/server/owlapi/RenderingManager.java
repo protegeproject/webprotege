@@ -668,7 +668,7 @@ public class RenderingManager implements BrowserTextProvider  {
     /**
      * Gets an OWLDatatype for the corresponding Protege 3 ValueType.
      * @param valueType The value type
-     * @return 
+     * @return
      */
     public OWLDatatype getDatatype(ValueType valueType) {
         OWLDataFactory df = project.getDataFactory();
@@ -687,6 +687,7 @@ public class RenderingManager implements BrowserTextProvider  {
                 // What's this?
             case Any:
             case Literal:
+            case Cls:
                 // Fall through
         }
         return df.getTopDatatype();

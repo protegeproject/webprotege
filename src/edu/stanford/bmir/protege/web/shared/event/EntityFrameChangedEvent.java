@@ -59,7 +59,7 @@ public abstract class EntityFrameChangedEvent<E extends OWLEntity, H extends Eve
         if(!(obj instanceof EntityFrameChangedEvent)) {
             return false;
         }
-        EntityFrameChangedEvent other = (EntityFrameChangedEvent) obj;
+        EntityFrameChangedEvent<?,?> other = (EntityFrameChangedEvent<?,?>) obj;
         return this.entity.equals(other.entity) && this.getSource().equals(other.getSource());
     }
 

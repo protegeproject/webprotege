@@ -15,11 +15,11 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
 
     public transient static final Type<WatchRemovedHandler> TYPE = new Type<WatchRemovedHandler>();
 
-    private Watch watch;
+    private Watch<?> watch;
 
     private UserId userId;
 
-    public WatchRemovedEvent(ProjectId source, Watch watch, UserId userId) {
+    public WatchRemovedEvent(ProjectId source, Watch<?> watch, UserId userId) {
         super(source);
         this.watch = watch;
         this.userId = userId;
@@ -38,7 +38,7 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
         handler.handleWatchRemoved(this);
     }
 
-    public Watch getWatch() {
+    public Watch<?> getWatch() {
         return watch;
     }
 

@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.notes.NoteDetails;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
-import edu.stanford.bmir.protege.web.shared.notes.NoteTarget;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -23,14 +22,6 @@ public class NotePostedEvent extends ProjectEvent<NotePostedHandler> {
 
     private Optional<OWLEntityData> targetAsEntityData;
 
-//    public NotePostedEvent(ProjectId source, NoteTarget noteTarget, NoteDetails noteDetails) {
-//        super(source);
-//        this.noteDetails = noteDetails;
-//        this.noteTarget = noteTarget;
-//        // Internal
-//        this.targetAsEntityData = null;
-//    }
-
     public NotePostedEvent(ProjectId source, Optional<OWLEntityData> targetAsEntityData, NoteDetails noteDetails) {
         super(source);
         this.noteDetails = noteDetails;
@@ -45,6 +36,9 @@ public class NotePostedEvent extends ProjectEvent<NotePostedHandler> {
         this.targetAsEntityData = Optional.absent();
     }
 
+    /**
+     * For serialization only
+     */
     private NotePostedEvent() {
     }
 

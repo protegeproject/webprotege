@@ -74,10 +74,10 @@ public abstract class AbstractHasProjectIdAndSubject<S> implements HasProjectId,
         if(obj == this) {
             return true;
         }
-        if(!(obj instanceof AbstractHasProjectIdAndSubject)) {
+        if(!(obj instanceof AbstractHasProjectIdAndSubject<?>)) {
             return false;
         }
-        AbstractHasProjectIdAndSubject other = (AbstractHasProjectIdAndSubject) obj;
+        AbstractHasProjectIdAndSubject<?> other = (AbstractHasProjectIdAndSubject<?>) obj;
         return this.projectId.equals(other.projectId) && this.subject.equals(other.subject);
     }
 }

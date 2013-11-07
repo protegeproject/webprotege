@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.ValidationResult;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
-import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,9 +21,14 @@ import java.util.List;
  *     the request.  (i.e. conjunction rather than disjunction).
  * </p>
  */
-public class CompositeRequestValidator<A extends Action<? extends Result>> implements RequestValidator<A> {
+public class CompositeRequestValidator<A extends Action<?>> implements RequestValidator<A> {
 
     private List<RequestValidator<A>> requestValidators = new ArrayList<RequestValidator<A>>();
+
+
+    public static <A extends Action<?>> CompositeRequestValidator<A> get(List<RequestValidator<A>> requestValidators) {
+        return new CompositeRequestValidator<A>(requestValidators);
+    }
 
     public CompositeRequestValidator(RequestValidator<A> ... requestValidators) {
         this(Arrays.asList(requestValidators));

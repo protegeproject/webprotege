@@ -64,18 +64,7 @@ public class OBOEntityCreatorFactory extends OWLEntityCreatorFactory {
         }
         return "";
     }
-    
-    
-    private String getOBOOntologyNamespace(OWLAPIProject project) {
-        for (OWLAnnotation annotation : project.getRootOntology().getAnnotations()) {
-            if (annotation.getProperty().getIRI().equals(OBOVocabulary.DEFAULT_NAMESPACE.getIRI())) {
-                if (annotation.getValue() instanceof OWLLiteral) {
-                    return ((OWLLiteral) annotation.getValue()).getLiteral().toUpperCase();
-                }
-            }
-        }
-        return "";
-    }
+
 
     @Override
     public <E extends OWLEntity> OWLEntityCreator<E> setBrowserText(OWLAPIProject project, UserId userId, E entity, String browserText) {

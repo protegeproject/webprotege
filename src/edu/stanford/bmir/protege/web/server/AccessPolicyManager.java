@@ -254,6 +254,7 @@ public class AccessPolicyManager {
         return getUsersWithReadOnlyAccess(projectId, false);
     }
 
+    // TODO !!!! WHY ARE THERE EMPTY CATCH BLOCKS HERE?
     public Collection<AccessPolicyUserData> getUsersWithReadOnlyAccess(ProjectId projectId, boolean includeTemporaryAccount) {
         try {
             MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
@@ -272,122 +273,22 @@ public class AccessPolicyManager {
             }
 
             if (groupOperations != null) {
-                for (Iterator iterator = groupOperations.iterator(); iterator.hasNext(); ) {
+                for (GroupOperation groupOperation1 : groupOperations) {
                     try {
-                        GroupOperation groupOperation = (GroupOperation) iterator.next();
+                        GroupOperation groupOperation = groupOperation1;
                         Group group = groupOperation.getAllowedGroup();
                         if (group.getMembers() != null) {
                             allPoliciesUsers.addAll(group.getMembers());
                         }
+                    } catch (Exception e) {
                     }
-                    catch (Exception e) {
-                    }
-
                 }
             }
             Group group = metaProject.getGroup(projectId.getId() + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);// add
-
-            List<String> groupUserList = getUserListForGroupOperation(projectInstance, group, readOnlyOperation);
-//            User serverUser = metaProject.getUser(WebProtegeProperties.getProtegeServerUser());
-//            for (User user : allPoliciesUsers) {
-//                if (user.getName() != null && policy.isOperationAuthorized(user, readOnlyOperation, projectInstance)) {
-//                    if (includeTemporaryAccount || user.getPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT) == null || !user.getPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT).trim().equals("true")) { // Proceed if account is not temporary.
-//                        AccessPolicyUserData userData = new AccessPolicyUserData();
-//                        userData.setName(user.getName());
-//
-//                        if (groupUserList.contains(user.getName()) && !user.equals(serverUser)) {
-//                            userData.setPartofReaders(true);
-//                        }
-//                        try {
-//                            if (!user.equals(serverUser)) {
-//                                userList.add(userData);
-//                            }
-//                        }
-//                        catch (Exception e) {
-//                        }
-//                    }
-//                }
-//            }
-
             return userList;
         }
         catch (Exception e) {
         }
-        return null;
-    }
-
-    public Collection<AccessPolicyUserData> getUsersWithAccess(ProjectId projectId) {
-//        MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
-//
-//        Collection<AccessPolicyUserData> userList = new TreeSet<AccessPolicyUserData>(new AccessPolicyUserData());
-//        ProjectInstance projectInstance = metaProject.getProject(projectName);
-//
-//
-//
-//        Policy policy = metaProject.getPolicy();
-//
-//        Set<User> users = new HashSet<User>();
-//        Set<GroupOperation> groupOperations = projectInstance.getAllowedGroupOperations();
-//        for(GroupOperation groupOperation : groupOperations) {
-//            for(User user : groupOperation.getAllowedGroup().getMembers()) {
-//                if(!users.contains(user))
-//            }
-//
-//        }
-//
-//
-//
-//        Operation readOnlyOperation = metaProject.getOperation(OntologyShareAccessConstants.PROJECT_READ_ONLY_ACCESS_OPERATION);
-//        Set<GroupOperation> groupOperations = projectInstance.getAllowedGroupOperations();
-//        Set<User> allPoliciesUsers = new HashSet<User>();
-//
-//        if (isUsersFromDefaultPolicy(groupOperations, readOnlyOperation)) {
-//            AccessPolicyUserData userEveryBodyUserData = new AccessPolicyUserData();
-//            userEveryBodyUserData.setName(OntologyShareAccessConstants.USER_EVERYBODY_NAME);
-//            userList.add(userEveryBodyUserData);
-//            return userList;
-//        }
-//
-//        if (groupOperations != null) {
-//            for (Iterator iterator = groupOperations.iterator(); iterator.hasNext(); ) {
-//                try {
-//                    GroupOperation groupOperation = (GroupOperation) iterator.next();
-//                    Group group = groupOperation.getAllowedGroup();
-//                    if (group.getMembers() != null) {
-//                        allPoliciesUsers.addAll(group.getMembers());
-//                    }
-//                }
-//                catch (Exception e) {
-//                }
-//
-//            }
-//        }
-//        Group group = metaProject.getGroup(projectName + OntologyShareAccessConstants.ONTOLOGY_READERS_GROUP_SUFFIX);// add
-//
-//        List<String> groupUserList = getUserListForGroupOperation(projectInstance, group, readOnlyOperation);
-//        User serverUser = metaProject.getUser(ApplicationProperties.getProtegeServerUser());
-//        for (Iterator iterator = allPoliciesUsers.iterator(); iterator.hasNext(); ) {
-//            User user = (User) iterator.next();
-//            if (user.getName() != null && policy.isOperationAuthorized(user, readOnlyOperation, projectInstance)) {
-//                if (includeTemporaryAccount || user.getPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT) == null || !user.getPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT).trim().equals("true")) { // Proceed if account is not temporary.
-//                    AccessPolicyUserData userData = new AccessPolicyUserData();
-//                    userData.setName(user.getName());
-//
-//                    if (groupUserList.contains(user.getName()) && !user.equals(serverUser)) {
-//                        userData.setPartofReaders(true);
-//                    }
-//                    try {
-//                        if (!user.equals(serverUser)) {
-//                            userList.add(userData);
-//                        }
-//                    }
-//                    catch (Exception e) {
-//                    }
-//                }
-//            }
-//        }
-//
-//        return userList;
         return null;
     }
 

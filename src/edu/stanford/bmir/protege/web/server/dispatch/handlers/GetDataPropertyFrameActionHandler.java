@@ -24,7 +24,7 @@ public class GetDataPropertyFrameActionHandler extends AbstractHasProjectActionH
 
     @Override
     protected RequestValidator<GetDataPropertyFrameAction> getAdditionalRequestValidator(GetDataPropertyFrameAction action, RequestContext requestContext) {
-        return new UserHasProjectReadPermissionValidator();
+        return UserHasProjectReadPermissionValidator.get();
     }
 
     @Override
