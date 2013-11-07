@@ -17,7 +17,7 @@ public class ChangeEmailAddressDialogController extends WebProtegeOKCancelDialog
     private EmailAddressEditor emailAddressEditor;
 
     public ChangeEmailAddressDialogController() {
-        super("Set Email Address");
+        super("Change email address");
         emailAddressEditor = new EmailAddressEditorImpl();
     }
 
