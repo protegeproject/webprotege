@@ -40,6 +40,8 @@ public class WebProtegeDialog<D> extends DialogBox {
 
     private WebProtegeDialogController<D> controller;
 
+    private final FlowPanel mainPanel;
+
     public WebProtegeDialog(WebProtegeDialogController<D> controller) {
         super(AUTO_HIDE, MODAL);
         this.controller = controller;
@@ -48,9 +50,7 @@ public class WebProtegeDialog<D> extends DialogBox {
 
 
         setText(controller.getTitle());
-
-
-        FlowPanel mainPanel = new FlowPanel();
+        mainPanel = new FlowPanel();
         setWidget(mainPanel);
         addStyleName(WEB_PROTEGE_LAF);
         mainPanel.addStyleName(WEB_PROTEGE_DIALOG_MAIN_PANEL);
