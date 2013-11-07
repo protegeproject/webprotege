@@ -196,7 +196,7 @@ public class ParentsPanel extends Panel {
 
 
     protected HTML getHTML(EntityData parent) {
-        String buffer = new String();
+        String buffer = "";
         buffer += "<table width=\"100%\" border=\"0\" cellspacing=\"3\"  class=\"restriction_table\">";
         buffer += "<tr>";
         if (clickableParents) {

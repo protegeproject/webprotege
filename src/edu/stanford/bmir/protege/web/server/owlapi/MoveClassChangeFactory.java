@@ -21,14 +21,11 @@ public class MoveClassChangeFactory extends OWLOntologyChangeFactory {
     
     private String newParent;
 
-    private boolean checkForCycles;
-
     public MoveClassChangeFactory(OWLAPIProject project, UserId userId, String changeDescription, String clsName, String oldParent, String newParent, boolean checkForCycles) {
         super(project, userId, changeDescription);
         this.clsName = clsName;
         this.oldParent = oldParent;
         this.newParent = newParent;
-        this.checkForCycles = checkForCycles;
     }
 
     @Override

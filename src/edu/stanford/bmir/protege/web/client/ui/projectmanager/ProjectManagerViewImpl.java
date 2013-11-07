@@ -55,8 +55,6 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     @UiField Button closeNotices;
 
 
-    private ProjectManagerViewCategory lastViewCategory;
-
     private Set<ProjectManagerViewCategory> viewCategories = new HashSet<ProjectManagerViewCategory>();
 
     private CreateProjectRequestHandler createProjectRequestHandler = new CreateProjectRequestHandler() {

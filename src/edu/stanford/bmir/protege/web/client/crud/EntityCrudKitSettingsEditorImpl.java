@@ -30,8 +30,6 @@ import java.util.List;
  */
 public class EntityCrudKitSettingsEditorImpl extends Composite implements EntityCrudKitSettingsEditor, HasInitialFocusable {
 
-//    private final List<EntityCrudKitSuffixSettingsEditor<?>> editorKit
-
     private final List<EntityCrudKit> descriptors;
 
     interface EntityCrudKitSettingsEditorImplUiBinder extends UiBinder<HTMLPanel, EntityCrudKitSettingsEditorImpl> {
@@ -53,8 +51,6 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
     protected SimplePanel schemeSpecificSettingsEditorHolder;
 
     private boolean prefixIsDirty = false;
-
-    private EntityCrudKitSuffixSettingsEditor<?> lastEditorKit;
 
     private List<Optional<EntityCrudKitSuffixSettingsEditor>> touchedEditors = new ArrayList<Optional<EntityCrudKitSuffixSettingsEditor>>();
 

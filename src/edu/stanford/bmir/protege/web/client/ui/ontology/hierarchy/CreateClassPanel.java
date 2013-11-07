@@ -44,7 +44,6 @@ public class CreateClassPanel extends FormPanel implements Selectable {
     private TextAreaField reasonField;
     private AsyncCallback<EntityData> asyncCallback;
     private String topClass;
-    private boolean createICDSpecificEntities;
     private SearchGridPanel searchGridPanel;
     private Selectable searchDblClickSelectable;
 
@@ -57,7 +56,6 @@ public class CreateClassPanel extends FormPanel implements Selectable {
         this.projectId = projectId;
         this.asyncCallback = asyncCallback;
         this.topClass = topClass;
-        this.createICDSpecificEntities = createICDSpecificEntities;
         this.searchDblClickSelectable = searchDblClickSelectable;
         buildUI();
     }

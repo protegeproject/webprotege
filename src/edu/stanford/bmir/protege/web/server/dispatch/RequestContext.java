@@ -16,8 +16,6 @@ public class RequestContext {
 
     private UserId userId;
 
-    private HttpSession session;
-
     /**
      * Constructs a {@link RequestContext} for the user specified by {@code userId}.
      * @param userId The {@link UserId}.  Not {@code null}.
@@ -25,7 +23,6 @@ public class RequestContext {
      */
     public RequestContext(UserId userId, HttpSession session) {
         this.userId = checkNotNull(userId, "userId must not be null");
-        this.session = session;
     }
 
     /**

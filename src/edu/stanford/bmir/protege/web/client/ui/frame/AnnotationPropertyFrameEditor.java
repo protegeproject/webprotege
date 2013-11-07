@@ -69,7 +69,6 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
 
     private ProjectId projectId;
 
-    private Optional<LabelledFrame<AnnotationPropertyFrame>> previouslySetValue = Optional.absent();
 
     public AnnotationPropertyFrameEditor(ProjectId projectId) {
         this.projectId = projectId;
@@ -118,7 +117,6 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     @Override
     public void setValue(LabelledFrame<AnnotationPropertyFrame> object) {
         dirty = false;
-        previouslySetValue = Optional.of(object);
         displayNameField.setText(object.getDisplayName());
         final AnnotationPropertyFrame frame = object.getFrame();
         iriField.setText(frame.getSubject().getIRI().toString());

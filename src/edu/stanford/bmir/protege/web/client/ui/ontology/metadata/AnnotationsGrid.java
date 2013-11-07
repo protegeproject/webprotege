@@ -133,7 +133,7 @@ public class AnnotationsGrid extends GridPanel implements HasProjectId {
                         lang = literalValue.getLang();
                     }
                     else {
-                        lang = literalValue.getLang();
+                        lang = "";
                     }
                     Record record = recordDef.createRecord(new Object[] { name, value, lang });
                     store.add(record);

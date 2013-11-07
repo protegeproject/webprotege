@@ -35,9 +35,6 @@ public class NoteStoreNotesAPIImpl {
 
     public static final String CHANGES_ONTOLOGY_FILE_NAME = "changes.owl";
 
-
-    private OWLAPIProject project;
-
     private OWLOntology notesOntology;
 
     private final NotesManager notesManager;
@@ -48,7 +45,6 @@ public class NoteStoreNotesAPIImpl {
 
 
     public NoteStoreNotesAPIImpl(OWLAPIProject project) {
-        this.project = project;
         try {
             OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(project.getProjectId());
             File notesDataDirectory = documentStore.getNotesDataDirectory();
