@@ -1,15 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.Panel;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerView;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
-
-import java.util.Map;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>

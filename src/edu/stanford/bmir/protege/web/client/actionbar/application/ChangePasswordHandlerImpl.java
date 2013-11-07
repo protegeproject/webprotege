@@ -1,13 +1,7 @@
 package edu.stanford.bmir.protege.web.client.actionbar.application;
 
-import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Timer;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordPresenter;
-import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
-import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
-import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 /**
  * Author: Matthew Horridge<br>

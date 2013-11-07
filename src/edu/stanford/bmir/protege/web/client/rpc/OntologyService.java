@@ -3,9 +3,6 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.List;
 
@@ -58,13 +55,6 @@ public interface OntologyService extends RemoteService {
     public EntityData getRootEntity(String projectName);
 
     public EntityData getEntity(String projectName, String entityName);
-
-    /*
-     * Class methods
-     */
-
-    public EntityData createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls,
-            String propertyName, EntityData propertyValue, UserId userId, String operationDescription);
 
     public void addSuperCls(String projectName, String clsName, String superClsName, String user,
             String operationDescription);

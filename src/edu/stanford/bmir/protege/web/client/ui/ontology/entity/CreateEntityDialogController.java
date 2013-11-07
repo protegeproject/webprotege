@@ -3,15 +3,8 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.entity;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateClassesAction;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLClass;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

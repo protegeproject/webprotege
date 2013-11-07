@@ -61,19 +61,19 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
 
     private void showDialog(final GetEntityCrudKitSettingsResult result) {
         EntityCrudKitSettingsDialogController controller = new EntityCrudKitSettingsDialogController();
-        WebProtegeDialog<EntityCrudKitSettings> dlg = new WebProtegeDialog<EntityCrudKitSettings>(controller);
+        WebProtegeDialog<EntityCrudKitSettings<?>> dlg = new WebProtegeDialog<EntityCrudKitSettings<?>>(controller);
         dlg.setVisible(true);
         controller.getEditor().setValue(result.getSettings());
 
-        dlg.getController().setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<EntityCrudKitSettings>() {
+        dlg.getController().setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<EntityCrudKitSettings<?>>() {
             @Override
-            public void handleHide(EntityCrudKitSettings data, final WebProtegeDialogCloser closer) {
+            public void handleHide(EntityCrudKitSettings<?> data, final WebProtegeDialogCloser closer) {
                 updateFreshEntitySettings(result.getSettings(), data, closer);
             }
         });
     }
 
-    private void updateFreshEntitySettings(final EntityCrudKitSettings fromSettings, final EntityCrudKitSettings toSettings, final WebProtegeDialogCloser closer) {
+    private void updateFreshEntitySettings(final EntityCrudKitSettings<?> fromSettings, final EntityCrudKitSettings<?> toSettings, final WebProtegeDialogCloser closer) {
         String oldPrefix = fromSettings.getPrefixSettings().getIRIPrefix();
         String newPrefix = toSettings.getPrefixSettings().getIRIPrefix();
         if(!oldPrefix.equals(newPrefix)) {
@@ -97,7 +97,7 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
     }
 
 
-    private void updateFreshEntitySettingsWithStrategy(EntityCrudKitSettings fromSettings, EntityCrudKitSettings toSettings, final WebProtegeDialogCloser closer, IRIPrefixUpdateStrategy iriPrefixUpdateStrategy) {
+    private void updateFreshEntitySettingsWithStrategy(EntityCrudKitSettings<?> fromSettings, EntityCrudKitSettings<?> toSettings, final WebProtegeDialogCloser closer, IRIPrefixUpdateStrategy iriPrefixUpdateStrategy) {
         Optional<ProjectId> activeProject = Application.get().getActiveProject();
         if(!activeProject.isPresent()) {
             GWT.log("Active project is not present");

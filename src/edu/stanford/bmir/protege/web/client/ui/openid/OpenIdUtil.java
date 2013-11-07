@@ -21,10 +21,10 @@ import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.login.HashAlgorithm;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.Date;
 import java.util.Iterator;

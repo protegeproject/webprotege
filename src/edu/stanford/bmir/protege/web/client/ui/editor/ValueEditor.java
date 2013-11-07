@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.editor;
 import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.HasDirty;
-import edu.stanford.bmir.protege.web.shared.HasEmpty;
 import edu.stanford.bmir.protege.web.shared.HasWellFormed;
 
 /**

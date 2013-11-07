@@ -8,13 +8,12 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
-import edu.stanford.bmir.protege.web.client.ui.library.recaptcha.RecaptchaWidget;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationServiceProvider;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationWidget;
 import edu.stanford.bmir.protege.web.client.ui.verification.NullHumanVerificationWidget;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 
 /**

@@ -14,7 +14,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public class EntityCrudKitPluginManager implements HasPlugins<EntityCrudKitPlugin> {
+public class EntityCrudKitPluginManager implements HasPlugins<EntityCrudKitPlugin<?,?>> {
 
     private static EntityCrudKitPluginManager instance = new EntityCrudKitPluginManager();
 
@@ -26,8 +26,8 @@ public class EntityCrudKitPluginManager implements HasPlugins<EntityCrudKitPlugi
         return instance;
     }
 
-    public List<EntityCrudKitPlugin> getPlugins() {
-        List<EntityCrudKitPlugin> plugins = new ArrayList<EntityCrudKitPlugin>();
+    public List<EntityCrudKitPlugin<?,?>> getPlugins() {
+        List<EntityCrudKitPlugin<?,?>> plugins = new ArrayList<EntityCrudKitPlugin<?,?>>();
         plugins.add(new UUIDEntityCrudKitPlugin());
         plugins.add(new OBOIdSuffixEntityCrudKitPlugin());
         plugins.add(new SuppliedNameSuffixEntityCrudKitPlugin());

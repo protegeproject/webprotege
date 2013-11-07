@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.editor.ValueList;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 import org.semanticweb.owlapi.model.OWLEntity;
 

@@ -9,7 +9,10 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteEditorDialogController;
-import edu.stanford.bmir.protege.web.shared.notes.*;
+import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteAction;
+import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteResult;
+import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
+import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import static com.google.common.base.Preconditions.checkNotNull;

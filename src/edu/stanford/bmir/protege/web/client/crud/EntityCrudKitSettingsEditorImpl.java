@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.client.crud;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -184,7 +186,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
     }
 
     @Override
-    public Optional<EntityCrudKitSettings> getValue() {
+    public Optional<EntityCrudKitSettings<?>> getValue() {
         Optional<EntityCrudKitSuffixSettingsEditor> selEditor = updateEditor(false);
         if(!selEditor.isPresent()) {
             return Optional.absent();
@@ -194,7 +196,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         if(!editedValue.isPresent()) {
             return Optional.absent();
         }
-        return Optional.of(new EntityCrudKitSettings(new EntityCrudKitPrefixSettings(getIRIPrefix()), (EntityCrudKitSuffixSettings) editedValue.get()));
+        return Optional.<EntityCrudKitSettings<?>>of(new EntityCrudKitSettings(new EntityCrudKitPrefixSettings(getIRIPrefix()), (EntityCrudKitSuffixSettings) editedValue.get()));
     }
 
     @Override
@@ -208,7 +210,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<EntityCrudKitSettings>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<EntityCrudKitSettings<?>>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 }

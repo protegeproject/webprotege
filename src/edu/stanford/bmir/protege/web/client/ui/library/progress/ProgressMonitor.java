@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.ui.library.progress;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 
 /**
  * Author: Matthew Horridge<br>
