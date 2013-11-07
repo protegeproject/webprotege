@@ -216,11 +216,11 @@
 		<copy todir="${war}/etc" failonerror="false">
 		    <fileset dir="${etc}"/>
 		</copy>
-		
-		<antcall target="increment.build.number" />
+				
 		<copy file="${build.properties}" todir="${war}" />
 		
 		<war destfile="${build}/${war.name}.war" basedir="${war}" />
+		<antcall target="increment.build.number" />
 	</target>
 
 	
