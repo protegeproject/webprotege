@@ -129,8 +129,7 @@ public class OWLAPIProjectCache {
      * @return The interned project Id.  Not {@code null}.
      */
     private ProjectId getInternedProjectId(ProjectId projectId) {
-        projectIdInterningMap.putIfAbsent(projectId, projectId);
-        return projectIdInterningMap.get(projectId);
+        return projectIdInterningMap.putIfAbsent(projectId, projectId);
     }
 
     public OWLAPIProject getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException {

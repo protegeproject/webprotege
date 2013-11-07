@@ -73,8 +73,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
     private boolean dirty = false;
 
-    private Multimap<String, EntityType<?>> freshEntityNamed = HashMultimap.create();
-
     private boolean enabled = true;
 
 

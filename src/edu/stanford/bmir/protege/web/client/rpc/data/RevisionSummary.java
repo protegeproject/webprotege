@@ -64,7 +64,7 @@ public class RevisionSummary implements Serializable, Comparable<RevisionSummary
             return false;
         }
         RevisionSummary other = (RevisionSummary) obj;
-        return this.timestamp == other.timestamp && this.revisionNumber.equals(other.revisionNumber) && this.userId.equals(userId) && this.changeCount == other.changeCount;
+        return this.timestamp == other.timestamp && this.revisionNumber.equals(other.revisionNumber) && this.userId.equals(other.userId) && this.changeCount == other.changeCount;
     }
 
     /**

@@ -93,8 +93,6 @@ public class OWLAPIProjectFileStore {
 
     private static final String DOWNLOAD_CACHE_DIRECTORY = "download-cache";
 
-    private ProjectId projectId;
-
     private File projectDirectory;
     
     private File ontologyDataDirectory;
@@ -117,7 +115,6 @@ public class OWLAPIProjectFileStore {
      */
     private OWLAPIProjectFileStore(File webProtegeDataDirectory, ProjectId projectId) {
         checkNotNull(webProtegeDataDirectory);
-        this.projectId = checkNotNull(projectId);
         File baseDirectory = new File(webProtegeDataDirectory, BASE_DIRECTORY_NAME);
         File allProjectsDirectory = new File(baseDirectory, ALL_PROJECTS_DIRECTORY_NAME);
         this.projectDirectory = new File(allProjectsDirectory, projectId.getId());

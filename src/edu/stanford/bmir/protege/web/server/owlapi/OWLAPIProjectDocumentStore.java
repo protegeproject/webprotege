@@ -159,8 +159,9 @@ public class OWLAPIProjectDocumentStore {
         // Does it already exist in the download cache?
         createDownloadCacheIfNecessary(format);
         // Feed cached file to caller
+        final ReadWriteLock projectDownloadCacheLock = getProjectDownloadCacheLock(projectId);
         try {
-            getProjectDownloadCacheLock(projectId).readLock().lock();
+            projectDownloadCacheLock.readLock().lock();
             byte[] buffer = new byte[4096];
             File downloadCache = getDownloadCacheFile(format);
             InputStream is = new BufferedInputStream(new FileInputStream(downloadCache));
@@ -172,7 +173,7 @@ public class OWLAPIProjectDocumentStore {
             outputStream.flush();
         }
         finally {
-            getProjectDownloadCacheLock(projectId).readLock().unlock();
+            projectDownloadCacheLock.readLock().unlock();
         }
     }
 
@@ -224,8 +225,9 @@ public class OWLAPIProjectDocumentStore {
 
 
     public synchronized OWLAPIProjectAttributes getProjectAttributes() throws IOException {
+        ReadWriteLock projectAttributesCacheLock = getProjectAttributesCacheLock(projectId);
         try {
-            getProjectAttributesCacheLock(projectId).readLock().lock();
+            projectAttributesCacheLock.readLock().lock();
             File projectAttributesFile = getProjectAttributesFile();
             if (projectAttributesFile.exists()) {
                 DataInputStream dataInput = new DataInputStream(new BufferedInputStream(new FileInputStream(projectAttributesFile)));
@@ -240,13 +242,14 @@ public class OWLAPIProjectDocumentStore {
             }
         }
         finally {
-            getProjectAttributesCacheLock(projectId).readLock().unlock();
+            projectAttributesCacheLock.readLock().unlock();
         }
     }
 
     public void saveProjectAttributes(OWLAPIProjectAttributes projectAttributes) throws IOException {
+        ReadWriteLock projectAttributesCacheLock = getProjectAttributesCacheLock(projectId);
         try {
-            getProjectAttributesCacheLock(projectId).writeLock().lock();
+            projectAttributesCacheLock.writeLock().lock();
             File metadataFile = getProjectAttributesFile();
             metadataFile.getParentFile().mkdirs();
             DataOutputStream dataOutput = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(metadataFile)));
@@ -254,7 +257,7 @@ public class OWLAPIProjectDocumentStore {
             dataOutput.close();
         }
         finally {
-            getProjectAttributesCacheLock(projectId).writeLock().unlock();
+            projectAttributesCacheLock.writeLock().unlock();
         }
     }
 
@@ -422,8 +425,9 @@ public class OWLAPIProjectDocumentStore {
 
 
     private void createDownloadCacheIfNecessary(DownloadFormat format) throws IOException, OWLOntologyStorageException {
+        ReadWriteLock projectDownloadCacheLock = getProjectDownloadCacheLock(projectId);
         try {
-            getProjectDownloadCacheLock(projectId).writeLock().lock();
+            projectDownloadCacheLock.writeLock().lock();
             File downloadCacheDirectory = projectFileStore.getDownloadCacheDirectory();
             File cachedFile = getDownloadCacheFile(format);
             if (!cachedFile.exists()) {
@@ -439,7 +443,7 @@ public class OWLAPIProjectDocumentStore {
             }
         }
         finally {
-            getProjectDownloadCacheLock(projectId).writeLock().unlock();
+            projectDownloadCacheLock.writeLock().unlock();
         }
     }
 

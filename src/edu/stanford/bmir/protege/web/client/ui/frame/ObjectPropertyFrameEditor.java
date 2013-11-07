@@ -210,7 +210,6 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
             return previouslySetValue;
         }
         String displayName = getDisplayName();
-        String iriString = iriField.getValue().trim();
         Set<PropertyAnnotationValue> annotationValueSet = new HashSet<PropertyAnnotationValue>();
         annotationValueSet.addAll(annotations.getValue().get().getAnnotationPropertyValues());
         final ObjectPropertyFrame previousFrame = previouslySetValue.get().getFrame();
