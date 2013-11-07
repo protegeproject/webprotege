@@ -12,7 +12,8 @@ import java.util.Collections;
  */
 public class MetricsPortlet extends AbstractEntityPortlet {
 	
-	protected static boolean initialized = false;
+	protected boolean initialized = false;
+
 	protected MetricsGrid metricsGrid;
 
 	public MetricsPortlet(Project project) {

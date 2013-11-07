@@ -656,6 +656,7 @@ public class RenderingManager implements BrowserTextProvider  {
                         // What's this?
                     case Any:
                     case Literal:
+                    case Cls:
                     default:
                         // Nothing!  Leave as plain literal
                 }

@@ -15,14 +15,12 @@ import java.util.Map;
  */
 public class HtmlTextComponent extends Panel {
 
-    private Project project;
     private Map<String, Object> configProperties;
     private String loadURL = null;
     private String htmlText = null;
     private RequestBuilder requestBuilder = null;
 
     public HtmlTextComponent(Project project) {
-        this.project = project;
         initUI();
     }
 

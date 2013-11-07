@@ -62,8 +62,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
     private boolean editable = true;
 
-    private boolean lastEnabled = enabled;
-
     private boolean dirty;
 
     interface ClassFrameEditor2UiBinder extends UiBinder<HTMLPanel, ClassFrameEditor> {
@@ -127,7 +125,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
      */
     @Override
     public void setEnabled(boolean enabled) {
-        lastEnabled = enabled;
         setEnabledInternal(enabled);
     }
 

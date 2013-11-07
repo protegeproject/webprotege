@@ -13,14 +13,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
  */
 public class InputBox {
 
-    private InputBoxHandler inputBoxHandler = new InputBoxHandler() {
-        @Override
-        public void handleAcceptInput(String input) {
-
-        }
-
-    };
-
     public static void showDialog(String title, InputBoxHandler handler) {
         InputBoxController controller = new InputBoxController(title, handler);
         WebProtegeDialog.showDialog(controller);

@@ -67,12 +67,19 @@ public class AccessPolicyUserData implements Serializable, Comparator<AccessPoli
     }
 
     @Override
-    public boolean equals(Object obj) {
-        AccessPolicyUserData userDataToCompare = (AccessPolicyUserData) obj;
-        if (this.getName().equals(userDataToCompare.getName())
-                ) {
+    public int hashCode() {
+        return "AccessPolicyUserData".hashCode() + name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this) {
             return true;
         }
-        return false;
+        if(!(o instanceof AccessPolicyUserData)) {
+            return false;
+        }
+        AccessPolicyUserData other = (AccessPolicyUserData) o;
+        return name.equals(other.name);
     }
 }
