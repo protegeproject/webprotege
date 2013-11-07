@@ -73,8 +73,6 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
 
     private ProjectId projectId;
 
-    private Optional<LabelledFrame<DataPropertyFrame>> previouslySetValue = Optional.absent();
-
     public DataPropertyFrameEditor(ProjectId projectId) {
         this.projectId = projectId;
 
@@ -134,7 +132,6 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
     @Override
     public void setValue(LabelledFrame<DataPropertyFrame> object) {
         dirty = false;
-        previouslySetValue = Optional.of(object);
         displayNameField.setText(object.getDisplayName());
         final DataPropertyFrame frame = object.getFrame();
         iriField.setText(frame.getSubject().getIRI().toString());

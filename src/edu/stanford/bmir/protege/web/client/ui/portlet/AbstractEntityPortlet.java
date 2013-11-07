@@ -56,8 +56,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     protected EntityData _currentEntity;
 
-    private int revision;
-
     private AbstractTab tab;
 
     private PortletConfiguration portletConfiguration;

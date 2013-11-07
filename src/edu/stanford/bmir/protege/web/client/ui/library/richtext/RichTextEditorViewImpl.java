@@ -77,10 +77,6 @@ public class RichTextEditorViewImpl extends Composite implements RichTextEditorV
         });
     }
 
-    private void pruneTrailingEmptyElements() {
-        pruneTrailingEmptyElements(IFrameElement.as(richTextArea.getElement()));
-    }
-
     private void pruneTrailingEmptyElements(Node element) {
         for(int i = 0; i < element.getChildCount(); i++) {
             pruneTrailingEmptyElements(element.getChild(i));

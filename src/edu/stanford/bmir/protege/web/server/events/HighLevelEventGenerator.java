@@ -24,14 +24,8 @@ public class HighLevelEventGenerator {
 
     private OWLAPIProject project;
 
-    private UserId userId;
-
-    private RevisionNumber revisionNumber;
-
     public HighLevelEventGenerator(OWLAPIProject project, UserId userId, RevisionNumber revisionNumber) {
         this.project = project;
-        this.userId = userId;
-        this.revisionNumber = revisionNumber;
     }
 
     public List<ProjectEvent<?>> getHighLevelEvents(List<OWLOntologyChange> ontologyChanges, RevisionNumber revisionNumber) {

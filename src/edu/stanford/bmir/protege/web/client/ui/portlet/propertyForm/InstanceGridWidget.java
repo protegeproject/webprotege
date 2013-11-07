@@ -1146,10 +1146,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
 
     protected class ReplacePropertyValueHandler extends AbstractAsyncHandler<Void> {
 
-        private EntityData newEntityData;
-
         public ReplacePropertyValueHandler(EntityData newEntityData) {
-            this.newEntityData = newEntityData;
         }
 
         @Override
@@ -1208,10 +1205,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
 
     protected class AddExistingValueHandler extends AbstractAsyncHandler<Void> {
 
-        private EntityData newEntityData;
-
         public AddExistingValueHandler(EntityData newEntityData) {
-            this.newEntityData = newEntityData;
         }
 
         @Override
@@ -1294,7 +1288,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
             boolean unknown = (value == null);
             try {
                 if (value instanceof Boolean) {
-                    checked = ((Boolean)value).booleanValue();
+                    checked = (Boolean) value;
                 }
                 else {
                     checked = new Boolean((String)value).booleanValue();
@@ -1319,7 +1313,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
             boolean unknown = (value == null);
             try {
                 if (value instanceof Boolean) {
-                    checked = ((Boolean)value).booleanValue();
+                    checked = (Boolean) value;
                 }
                 else {
                     checked = new Boolean((String)value).booleanValue();

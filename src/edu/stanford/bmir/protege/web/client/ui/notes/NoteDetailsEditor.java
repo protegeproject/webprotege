@@ -34,6 +34,7 @@ public class NoteDetailsEditor extends Composite implements NoteDetailsDisplay {
 
     @Override
     public void setValue(NoteDetails object) {
+        lastDetails = Optional.of(object);
         editorPanel.setAuthor(object.getNoteHeader().getAuthor().getUserName());
         editorPanel.setDate(object.getNoteHeader().getTimestamp());
         editorPanel.setBody(object.getNoteContent().getBody().or(""));

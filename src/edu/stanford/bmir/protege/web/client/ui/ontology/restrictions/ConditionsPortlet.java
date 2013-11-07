@@ -339,10 +339,7 @@ public class ConditionsPortlet extends AbstractOWLEntityPortlet{
 
     class DeleteClassConditionAsyncHandler extends AbstractAsyncHandler<List<ConditionItem>> {
 
-        private EntityData entity;
-
         public DeleteClassConditionAsyncHandler(EntityData entity) {
-            this.entity = entity;
         }
 
         @Override
@@ -359,10 +356,7 @@ public class ConditionsPortlet extends AbstractOWLEntityPortlet{
 
     class ReplaceConditionAsyncHandler extends AbstractAsyncHandler<List<ConditionItem>> {
 
-        private ConditionItem originalConditionItem;
-
         public ReplaceConditionAsyncHandler(ConditionItem originalConditionItem) {
-            this.originalConditionItem = originalConditionItem;
         }
 
         @Override
