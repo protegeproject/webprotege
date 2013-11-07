@@ -5,9 +5,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteEditorDialogController;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -30,7 +31,7 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
 
     @Override
     public void handleReplyToNote() {
-        NoteContentEditorDialog dlg = new NoteContentEditorDialog(new NoteContentEditorHandler() {
+        NoteEditorDialogController controller = new NoteEditorDialogController(new NoteContentEditorHandler() {
             @Override
             public void handleAccept(Optional<NoteContent> noteContent) {
                 if (noteContent.isPresent()) {
@@ -38,8 +39,8 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
                 }
             }
         });
-        dlg.setMode(NoteContentEditorMode.REPLY);
-        dlg.setVisible(true);
+        controller.setMode(NoteContentEditorMode.REPLY);
+        WebProtegeDialog.showDialog(controller);
     }
 
     private void doReply(NoteContent content) {

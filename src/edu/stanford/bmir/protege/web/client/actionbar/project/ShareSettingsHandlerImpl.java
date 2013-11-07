@@ -3,7 +3,8 @@ package edu.stanford.bmir.protege.web.client.actionbar.project;
 import com.google.common.base.Optional;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.ui.ontology.sharing.SharingSettingsDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ui.ontology.sharing.SharingSettingsDialogController;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -21,7 +22,7 @@ public class ShareSettingsHandlerImpl implements ShowShareSettingsHandler {
             MessageBox.alert("No project is selected");
             return;
         }
-        SharingSettingsDialog dlg = new SharingSettingsDialog(activeProjectId.get());
-        dlg.setVisible(true);
+        SharingSettingsDialogController controller = new SharingSettingsDialogController(activeProjectId.get());
+        WebProtegeDialog.showDialog(controller);
     }
 }

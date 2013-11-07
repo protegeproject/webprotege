@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/04/2013
  */
-public class InputBox extends WebProtegeDialog<String> {
+public class InputBox {
 
     private InputBoxHandler inputBoxHandler = new InputBoxHandler() {
         @Override
@@ -22,12 +22,8 @@ public class InputBox extends WebProtegeDialog<String> {
     };
 
     public static void showDialog(String title, InputBoxHandler handler) {
-        InputBox dlg = new InputBox(title, handler);
-        dlg.setVisible(true);
-    }
-
-    public InputBox(String title, InputBoxHandler handler) {
-        super(new InputBoxController(title, handler));
+        InputBoxController controller = new InputBoxController(title, handler);
+        WebProtegeDialog.showDialog(controller);
     }
 
     private static class InputBoxController extends WebProtegeOKCancelDialogController<String> {

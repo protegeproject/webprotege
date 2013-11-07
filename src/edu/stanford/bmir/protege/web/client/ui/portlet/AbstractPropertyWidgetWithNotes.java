@@ -3,14 +3,12 @@ package edu.stanford.bmir.protege.web.client.ui.portlet;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtext.client.core.Position;
-import com.gwtext.client.widgets.Window;
-import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteEditorDialogController;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityResult;
@@ -38,7 +36,7 @@ public abstract class AbstractPropertyWidgetWithNotes extends AbstractPropertyWi
             GWT.log("Editing notes on " + value + " ...", null);
 
             // TODO: THIS NEEDS FIXING
-            NoteContentEditorDialog.showDialog(NoteContentEditorMode.NEW_TOPIC, new NoteContentEditorHandler() {
+            NoteEditorDialogController controller = new NoteEditorDialogController(new NoteContentEditorHandler() {
                 @Override
                 public void handleAccept(Optional<NoteContent> noteContent) {
                     if (noteContent.isPresent()) {
@@ -55,6 +53,8 @@ public abstract class AbstractPropertyWidgetWithNotes extends AbstractPropertyWi
                     }
                 }
             });
+            controller.setMode(NoteContentEditorMode.NEW_TOPIC);
+            WebProtegeDialog.showDialog(controller);
         }
     }
 

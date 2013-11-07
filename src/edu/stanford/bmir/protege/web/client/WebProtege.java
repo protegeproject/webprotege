@@ -7,7 +7,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
-import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InvitationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InviteUserUtil;
 import edu.stanford.bmir.protege.web.client.workspace.WorkspaceViewImpl;

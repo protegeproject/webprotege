@@ -20,10 +20,7 @@ import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
-import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
@@ -348,14 +345,12 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             MessageBox.alert("Please select a property in the tree first");
             return;
         }
-        CreateEntityDialog createEntityDialog = new CreateEntityDialog(selectedEntityType.get(), new CreateEntityDialogController.CreateEntityHandler() {
+        WebProtegeDialog.showDialog(new CreateEntityDialogController(selectedEntityType.get(), new CreateEntityDialogController.CreateEntityHandler() {
             @Override
             public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
                 handleCreateProperty(createEntityInfo);
             }
-        });
-        createEntityDialog.setVisible(true);
-
+        }));
     }
 
     private void handleCreateProperty(final CreateEntityInfo createEntityInfo) {
