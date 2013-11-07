@@ -56,13 +56,13 @@ public class DispatchServiceManager {
     }
 
 
-    private class AsyncCallbackProxy<R extends Result> implements AsyncCallback<DispatchServiceResultContainer<R>> {
+    private class AsyncCallbackProxy<R extends Result> implements AsyncCallback<DispatchServiceResultContainer> {
 
         private Action<?> action;
 
-        private AsyncCallback<R> delegate;
+        private AsyncCallback<Result> delegate;
 
-        public AsyncCallbackProxy(Action<?> action, AsyncCallback<R> delegate) {
+        public AsyncCallbackProxy(Action<?> action, AsyncCallback<Result> delegate) {
             this.delegate = delegate;
             this.action = action;
         }
@@ -76,7 +76,7 @@ public class DispatchServiceManager {
         }
 
         @Override
-        public void onSuccess(DispatchServiceResultContainer<R> result) {
+        public void onSuccess(DispatchServiceResultContainer result) {
             // TODO: Fix
             cacheRenderables(result.getResult());
             dispatchEvents(result.getResult());
