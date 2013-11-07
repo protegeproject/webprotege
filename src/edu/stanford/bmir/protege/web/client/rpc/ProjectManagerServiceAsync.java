@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.List;
-import java.util.Set;
 
 public interface ProjectManagerServiceAsync {
 

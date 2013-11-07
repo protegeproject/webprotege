@@ -30,7 +30,7 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
 
     private final ValueChangeHandler<Optional<O>> valueChangeHandler;
 
-    interface ValueListEditorImplUiBinder extends UiBinder<HTMLPanel, ValueListEditorImpl> {
+    interface ValueListEditorImplUiBinder extends UiBinder<HTMLPanel, ValueListEditorImpl<?>> {
 
     }
 

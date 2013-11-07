@@ -28,8 +28,6 @@ import java.util.Collection;
  */
 public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction, LoadProjectResult> {
 
-    private static final UserHasProjectReadPermissionValidator<LoadProjectAction, LoadProjectResult> VALIDATOR = new UserHasProjectReadPermissionValidator<LoadProjectAction, LoadProjectResult>();
-
     @Override
     public Class<LoadProjectAction> getActionClass() {
         return LoadProjectAction.class;
@@ -37,7 +35,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
 
     @Override
     public RequestValidator<LoadProjectAction> getRequestValidator(LoadProjectAction action, RequestContext requestContext) {
-        return VALIDATOR;
+        return UserHasProjectReadPermissionValidator.get();
     }
 
     @Override

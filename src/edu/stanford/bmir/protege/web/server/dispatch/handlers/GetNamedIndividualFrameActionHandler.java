@@ -34,8 +34,8 @@ public class GetNamedIndividualFrameActionHandler implements ActionHandler<GetNa
     }
 
     @Override
-    public RequestValidator getRequestValidator(GetNamedIndividualFrameAction action, RequestContext requestContext) {
-        return new UserHasProjectReadPermissionValidator();
+    public RequestValidator<GetNamedIndividualFrameAction> getRequestValidator(GetNamedIndividualFrameAction action, RequestContext requestContext) {
+        return UserHasProjectReadPermissionValidator.get();
     }
 
     @Override

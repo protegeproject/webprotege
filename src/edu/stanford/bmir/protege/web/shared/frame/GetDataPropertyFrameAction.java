@@ -19,6 +19,9 @@ public class GetDataPropertyFrameAction implements GetObjectAction<LabelledFrame
 
     private ProjectId projectId;
 
+    /**
+     * For serialization purposes only
+     */
     private GetDataPropertyFrameAction() {
     }
 

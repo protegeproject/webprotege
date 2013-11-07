@@ -13,8 +13,6 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
 
-import java.util.Date;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

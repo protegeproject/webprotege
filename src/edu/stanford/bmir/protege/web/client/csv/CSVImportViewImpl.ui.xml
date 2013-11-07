@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:csv="urn:import:edu.stanford.bmir.protege.web.client.csv"
              xmlns:dlg="urn:import:edu.stanford.bmir.protege.web.client.ui.library.dlg"
-             xmlns:common="urn:import:edu.stanford.bmir.protege.web.client.ui.library.common">
+        >
     <ui:style>
         .holder {
             /*position: absolute;*/

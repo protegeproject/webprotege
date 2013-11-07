@@ -18,6 +18,9 @@ public class CreateAnnotationPropertiesAction extends AbstractCreateEntityInHier
         super(projectId, browserTexts, parent);
     }
 
+    /**
+     * For serialization purposes only
+     */
     private CreateAnnotationPropertiesAction() {
     }
 }

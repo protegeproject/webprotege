@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class HierarchyRootAddedEvent<T> extends ProjectEvent<HierarchyRootAddedHandler<T>> {
 
-    public transient static final Type<HierarchyRootAddedHandler> TYPE = new Type<HierarchyRootAddedHandler>();
+    public transient static final Type<HierarchyRootAddedHandler<?>> TYPE = new Type<HierarchyRootAddedHandler<?>>();
 
     private HierarchyId<T> hierarchyId;
 

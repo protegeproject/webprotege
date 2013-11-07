@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.client.workspace;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.banner.BannerPresenter;
-import edu.stanford.bmir.protege.web.client.banner.BannerView;
 import edu.stanford.bmir.protege.web.client.banner.BannerViewImpl;
 
 /**

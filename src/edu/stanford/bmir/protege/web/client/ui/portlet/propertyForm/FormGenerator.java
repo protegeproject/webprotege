@@ -128,6 +128,7 @@ public class FormGenerator implements HasDispose {
     }
 
 
+    @SuppressWarnings("unchecked")
     protected void createInnerPanelComponents(Panel panel, Map panelConf) {
         Collection<String> properties = panelConf.keySet(); // TODO: this won't be sorted
         String[] sortedProps = new String[properties.size()];
@@ -146,41 +147,42 @@ public class FormGenerator implements HasDispose {
         for (String prop : sortedProps) {
             Object value = panelConf.get(prop);
             if (value instanceof Map) {
+                Map<String, Object> map = (Map<String, Object>) value;
                 String component_type = (String) ((Map) value).get(FormConstants.COMPONENT_TYPE);
                 if (component_type != null) {
                     PropertyWidget widget = null;
                     if (component_type.equals(FormConstants.TEXTFIELD)) {
-                        widget = createTextField((Map<String, Object>) value, prop);
+                        widget = createTextField(map, prop);
                     } else if (component_type.equals(FormConstants.TEXTAREA)) {
-                        widget = createTextArea((Map) value, prop);
+                        widget = createTextArea(map, prop);
                     } else if (component_type.equals(FormConstants.COMBOBOX)) {
-                        widget = createComboBox((Map) value, prop);
+                        widget = createComboBox(map, prop);
                     } else if (component_type.equals(FormConstants.HTMLEDITOR)) {
-                        widget = createHtmlEditor((Map) value, prop);
+                        widget = createHtmlEditor(map, prop);
                     } else if (component_type.equals(FormConstants.FIELDSET)) {
                         // widget = createFieldSet((Map)value);
                     } else if (component_type.equals(FormConstants.MULTITEXTFIELD)) {
-                        widget = createMultiTextField((Map) value, prop);
+                        widget = createMultiTextField(map, prop);
                     } else if (component_type.equals(FormConstants.INSTANCETEXTFIELD)) {
-                    	widget = createInstanceTextField((Map) value, prop);
+                    	widget = createInstanceTextField(map, prop);
                     }  else if (component_type.equals(FormConstants.INSTANCEREFERENCE)) {
-                    	widget = createInstanceReferenceField((Map) value, prop);
+                    	widget = createInstanceReferenceField(map, prop);
                     } else if (component_type.equals(FormConstants.GRID)) {
-                        widget = createGrid((Map) value, prop);
+                        widget = createGrid(map, prop);
                     } else if (component_type.equals(FormConstants.EXTERNALREFERENCE)) {
-                        widget = createExternalReference((Map) value, prop);
+                        widget = createExternalReference(map, prop);
                     } else if (component_type.equals(FormConstants.CLASS_SELECTION_FIELD)) {
-                        widget = createClassSelectionField((Map) value, prop);
+                        widget = createClassSelectionField(map, prop);
                     } else if (component_type.equals(FormConstants.PROPERTY_SELECTION_FIELD)) {
-                        widget = createPropertySelectionField((Map) value, prop);
+                        widget = createPropertySelectionField(map, prop);
                     } else if (component_type.equals(FormConstants.HTMLMESSAGE)) {
-                        widget = createHtmlMessage((Map<String, Object>) value, prop);
+                        widget = createHtmlMessage(map, prop);
                     } else if (component_type.equals(FormConstants.INSTANCE_CHECKBOX)) {
-                        widget = createInstanceCheckBox((Map) value, prop);
+                        widget = createInstanceCheckBox(map, prop);
                     } else if (component_type.equals(FormConstants.INSTANCE_RADIOBUTTON)) {
-                        widget = createInstanceRadioButton((Map) value, prop);
+                        widget = createInstanceRadioButton(map, prop);
                     } else if (component_type.equals(FormConstants.INSTANCE_COMBOBOX)) {
-                        widget = createInstanceComboBox((Map) value, prop);
+                        widget = createInstanceComboBox(map, prop);
                     }
                     if (widget != null && widget.getComponent() != null) {
                         widgets.add(widget);

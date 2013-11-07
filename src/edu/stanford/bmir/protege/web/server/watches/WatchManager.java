@@ -29,7 +29,7 @@ public interface WatchManager {
      * @param userId The {@link edu.stanford.bmir.protege.web.shared.user.UserId} which specifies the user to add the watch for. Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    void addWatch(Watch watch, UserId userId);
+    void addWatch(Watch<?> watch, UserId userId);
 
     /**
      * Removes the specified watch for the specified user.
@@ -38,7 +38,7 @@ public interface WatchManager {
      * @param userId The {@link edu.stanford.bmir.protege.web.shared.user.UserId} that specifies the user.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    void removeWatch(Watch watch, UserId userId);
+    void removeWatch(Watch<?> watch, UserId userId);
 
     /**
      * Removes all watches for the specified user.

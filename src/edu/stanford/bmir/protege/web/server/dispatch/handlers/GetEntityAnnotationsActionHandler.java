@@ -30,8 +30,8 @@ public class GetEntityAnnotationsActionHandler extends AbstractHasProjectActionH
     }
 
     @Override
-    protected RequestValidator getAdditionalRequestValidator(GetEntityAnnotationsAction action, RequestContext requestContext) {
-        return new UserHasProjectReadPermissionValidator();
+    protected RequestValidator<GetEntityAnnotationsAction> getAdditionalRequestValidator(GetEntityAnnotationsAction action, RequestContext requestContext) {
+        return UserHasProjectReadPermissionValidator.get();
     }
 
     @Override

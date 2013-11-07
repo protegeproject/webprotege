@@ -2,19 +2,14 @@ package edu.stanford.bmir.protege.web.client.workspace;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
-import com.gwtext.client.widgets.Viewport;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
-import com.gwtext.client.widgets.layout.AnchorLayoutData;
-import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
 
 /**

@@ -5,7 +5,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
-import java.util.List;
 import java.util.Set;
 
 /**

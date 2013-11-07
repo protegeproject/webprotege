@@ -76,7 +76,7 @@ public class OWLAPIProjectMetadataManager {
     private void save() {
         try {
             WRITE_LOCK.lock();
-            ArrayList errors = new ArrayList();
+            List<?> errors = new ArrayList();
             getMetaProject().save(errors);
             for(Object o : errors) {
                 System.out.println(o);
@@ -219,10 +219,6 @@ public class OWLAPIProjectMetadataManager {
         }
     }
 
-
-    private void setLongPropertyValue(ProjectId projectId, String propertyName, long value) {
-        setPropertyValue(projectId, propertyName, Long.toString(value));
-    }
     
     private String getPropertyValue(ProjectId projectId, String propertyName, String defaultValue) {
         try {

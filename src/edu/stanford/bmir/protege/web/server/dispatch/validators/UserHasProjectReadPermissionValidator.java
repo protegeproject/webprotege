@@ -19,10 +19,10 @@ import java.util.Collection;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class UserHasProjectReadPermissionValidator<A extends Action<R> & HasProjectId, R extends Result> implements RequestValidator<A> {
+public class UserHasProjectReadPermissionValidator<A extends Action<?> & HasProjectId> implements RequestValidator<A> {
 
-    public static <A extends Action<R> & HasProjectId, R extends Result> UserHasProjectReadPermissionValidator<A, R> get() {
-        return new UserHasProjectReadPermissionValidator<A, R>();
+    public static <A extends Action<?> & HasProjectId> UserHasProjectReadPermissionValidator<A> get() {
+        return new UserHasProjectReadPermissionValidator<A>();
     }
 
     @Override

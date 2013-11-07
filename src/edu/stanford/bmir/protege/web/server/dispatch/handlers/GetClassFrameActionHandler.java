@@ -35,8 +35,8 @@ public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<
     }
 
     @Override
-    protected RequestValidator getAdditionalRequestValidator(GetClassFrameAction action, RequestContext requestContext) {
-        return new UserHasProjectReadPermissionValidator();
+    protected RequestValidator<GetClassFrameAction> getAdditionalRequestValidator(GetClassFrameAction action, RequestContext requestContext) {
+        return UserHasProjectReadPermissionValidator.get();
     }
 
     @Override

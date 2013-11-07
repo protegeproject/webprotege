@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermDefinition;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 

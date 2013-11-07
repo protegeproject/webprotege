@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 

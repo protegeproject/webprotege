@@ -3,9 +3,6 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.List;
 
@@ -59,20 +56,7 @@ public interface OntologyService extends RemoteService {
 
     public EntityData getEntity(String projectName, String entityName);
 
-    /*
-     * Class methods
-     */
-
-    public EntityData createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls,
-            String propertyName, EntityData propertyValue, UserId userId, String operationDescription);
-
-    public void addSuperCls(String projectName, String clsName, String superClsName, String user,
-            String operationDescription);
-
     public List<SubclassEntityData> getSubclasses(String projectName, String className);
-
-    public void removeSuperCls(String projectName, String clsName, String superClsName, String user,
-            String operationDescription);
 
     public List<EntityData> moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
             String user, String operationDescription);
@@ -96,8 +80,6 @@ public interface OntologyService extends RemoteService {
 
     public List<EntityData> getParents(String projectName, String className, boolean direct);
 
-    public String getParentsHtml(String projectName, String className, boolean direct);
-
     /**
      * Used by the "related properties" table.
      */
@@ -106,15 +88,6 @@ public interface OntologyService extends RemoteService {
     /*
      * Properties methods
      */
-
-    public EntityData createObjectProperty(String projectName, String propertyName, String superPropName, String user,
-            String operationDescription);
-
-    public EntityData createDatatypeProperty(String projectName, String propertyName, String superPropName,
-            String user, String operationDescription);
-
-    public EntityData createAnnotationProperty(String projectName, String propertyName, String superPropName,
-            String user, String operationDescription);
 
     public List<EntityData> getSubproperties(String projectName, String propertyName);
 

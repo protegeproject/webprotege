@@ -13,6 +13,9 @@ public class NotProjectOwnerException extends PermissionDeniedException {
 
     private ProjectId projectId;
 
+    /**
+     * For serialization purposes only
+     */
     private NotProjectOwnerException() {
     }
 

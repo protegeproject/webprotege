@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.usage;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.AbstractHasProjectIdAndSubject;
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -19,6 +18,9 @@ public class GetUsageAction extends AbstractHasProjectIdAndSubject<OWLEntity> im
 
     private UsageFilter usageFilter;
 
+    /**
+     * For serialization purposes only
+     */
     private GetUsageAction() {
     }
 

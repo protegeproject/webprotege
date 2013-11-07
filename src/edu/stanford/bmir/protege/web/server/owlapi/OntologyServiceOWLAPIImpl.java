@@ -357,23 +357,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         return rm.getEntityData(selectedEntity);
     }
 
-//    /**
-//     * Deletes any entities that correspond to the specified entity name.  Since more than one entity could have the
-//     * specified name, this could delete multiple entities. The actual behaviour of this implementation
-//     * is defined in {@link DeleteEntityChangeFactory}.
-//     * @param projectName The name of the project in which the deletion will occur.
-//     * @param entityName The name of the entity.  Should be an IRI, but could also be browser text for components that
-//     * don't do things correctly.
-//     * @param user The user (name)
-//     * @param operationDescription A high level description of the change.
-//     */
-//    public void deleteEntity(String projectName, String entityName, String user, String operationDescription) {
-//        OWLAPIProject project = getProject(projectName);
-//        UserId userId = getUserId(user);
-//        applyChanges(new DeleteEntityChangeFactory(project, userId, operationDescription, entityName));
-//    }
-
-
     /**
      * Renames all entities that correspond to the specified entity name.  The actual behaviour of this implementation
      * is defined in {@link RenameEntityChangeFactory}.
@@ -407,49 +390,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         applyChanges(cf);
         return getRenderingManager(projectId).getEntityData(className, EntityType.CLASS);
     }
-
-    /**
-     * In this implementation, this method delegates to the {@link #createCls(edu.stanford.bmir.protege.web.shared.project.ProjectId, String, org.semanticweb.owlapi.model.OWLClass, edu.stanford.bmir.protege.web.shared.user.UserId, String)}
-     * method.
-     *
-     * @param projectId
-     * @param clsName The name of the class to "create" this should be an IRI but could also be the browser text.
-     * @param superCls
-     *@param createMetaClses ?????
-     * @param userId
-     * @param operationDescription A high level description.   @return EntityData that represents the newly created class.
-     */
-    public EntityData createCls(ProjectId projectId, String clsName, OWLClass superCls, boolean createMetaClses, UserId userId, String operationDescription) {
-        // Not sure what we should do with the meta class here - delegate to the method without the metaclass
-        return createCls(projectId, clsName, superCls, userId, operationDescription);
-    }
-
-    /**
-     * This implementation applies changes which are created using the same procedure as the {@link #createCls(String, String, String, String, String)}
-     * method and then adds the specified property value as an annotation to the class.  It seems like this method is
-     * only called by the {@link edu.stanford.bmir.protege.web.client.ui.ontology.classes.LabelingClassTreePortlet}, which
-     * doesn't appear to be used anywhere.  In any case, the OWL API implementation approaches this from a different point
-     * of view - i.e. it uses different strategies in the form of {@link OWLEntityCreatorFactory} objects (much cleaner
-     * really).  I vote for getting rid of this method and its associated junk.
-     *
-     * @param projectId
-     * @param clsName The name of the class to be "created".  Should be an IRI, but could also be some browser text.
-     * @param superCls
-     *@param propertyName The name of the property to add.  In this case, this must correspond to an annotation property, otherwise,
-     * it will not be added.
-     * @param propertyValue The value of the property to be added.  This should correspond to an OWLAnnotationValue, otherwise
- * it will not be added.
-     * @param userId
-     * @param operationDescription A high level description of the changes that will take place.    @return EntityData representing the newly "created" class.
-     */
-    public EntityData createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls, String propertyName, EntityData propertyValue, UserId userId, String operationDescription) {
-        OWLAPIProject project = getProject(projectId);
-        CreateClassChangeFactory createClassChangeFactory = new CreateClassChangeFactory(project, userId, operationDescription, clsName, superCls);
-        AddClassPropertyChangeFactory addClassPropertyChangeFactory = new AddClassPropertyChangeFactory(project, userId, operationDescription, clsName, propertyName, propertyValue);
-        applyChanges(createClassChangeFactory, addClassPropertyChangeFactory);
-        return project.getRenderingManager().getEntityData(clsName, EntityType.CLASS);
-    }
-
 
     /**
      * Gets the subclasses of a given entity.  This implementation uses the {@link AssertedClassHierarchyProvider} that
@@ -520,52 +460,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         });
         return result;
     }
-
-
-
-    /**
-     * Makes a class a subclass of another class.  This essentially adds a SubClassOf axiom to the root ontology of the
-     * specified project.
-     * @param projectName The project in which the changes will take place.
-     * @param clsName The class name which corresponds to the class which will be made a subclass of the specified class
-     * below.  The name should be an IRI, but this implementation will also tolerate it being browser text.
-     * @param superClsName The class name which corresponds to the superclass in the SubClassOf axiom.  This should be
-     * an IRI but this implementation will also tolerate it being browser text. Not null.
-     * @param user The user making the changes. Not null.
-     * @param operationDescription A high level description of the change.
-     */
-    public void addSuperCls(String projectName, String clsName, String superClsName, String user, String operationDescription) {
-        if (projectName == null) {
-            throw new NullPointerException("projectName must not be null");
-        }
-        if (clsName == null) {
-            throw new NullPointerException("clsName must not be null");
-        }
-        if (superClsName == null) {
-            throw new NullPointerException("superClsName must not be null");
-        }
-        if (user == null) {
-            throw new NullPointerException("user must not be null");
-        }
-        OWLAPIProject project = getProject(projectName);
-        UserId userId = getUserId(user);
-        applyChanges(new AddSuperClassChangeFactory(project, userId, operationDescription, clsName, superClsName));
-    }
-
-    /**
-     * Removes a subclass axiom from the ontology.
-     * @param projectName
-     * @param clsName
-     * @param superClsName
-     * @param user
-     * @param operationDescription
-     */
-    public void removeSuperCls(String projectName, String clsName, String superClsName, String user, String operationDescription) {
-        OWLAPIProject project = getProject(projectName);
-        UserId userId = getUserId(user);
-        applyChanges(new RemoveSuperClassChangeFactory(project, userId, operationDescription, clsName, superClsName));
-    }
-
 
     public List<EntityData> moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles, String user, String operationDescription) {
         // Why check for cycles here and nowhere else?
@@ -733,30 +627,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         UserId userId = getUserId();
         GetRelatedPropertiesStrategy strategy = new GetRelatedPropertiesStrategy(getProject(projectName), userId, className);
         return strategy.execute();
-    }
-
-    public EntityData createObjectProperty(String projectName, String propertyName, String superPropName, String user, String operationDescription) {
-        OWLAPIProject project = getProject(projectName);
-        UserId userId = getUserId(user);
-        OWLOntologyChangeFactory changeFactory = new CreateObjectPropertyChangeFactory(project, userId, operationDescription, propertyName, superPropName);
-        applyChanges(changeFactory);
-        return getRenderingManager(projectName).getEntityData(propertyName, EntityType.OBJECT_PROPERTY);
-    }
-
-    public EntityData createDatatypeProperty(String projectName, String propertyName, String superPropName, String user, String operationDescription) {
-        // Trial and error reveals some of these names can be null!  Horrible.
-        OWLAPIProject project = getProject(projectName);
-        UserId userId = getUserId(user);
-        applyChanges(new CreateDataPropertyChangeFactory(project, userId, operationDescription, propertyName, superPropName));
-        return getRenderingManager(projectName).getEntityData(propertyName, EntityType.DATA_PROPERTY);
-    }
-
-    public EntityData createAnnotationProperty(String projectName, String propertyName, String superPropName, String user, String operationDescription) {
-        // Trial and error reveals some of these names can be null!
-        OWLAPIProject project = getProject(projectName);
-        UserId userId = getUserId(user);
-        applyChanges(new CreateAnnotationPropertyChangeFactory(project, userId, operationDescription, propertyName, superPropName));
-        return getRenderingManager(projectName).getEntityData(propertyName, EntityType.ANNOTATION_PROPERTY);
     }
 
     public List<EntityData> getSubproperties(String projectName, String propertyName) {

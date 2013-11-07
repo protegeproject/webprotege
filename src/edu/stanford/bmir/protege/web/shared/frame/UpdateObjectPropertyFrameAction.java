@@ -13,6 +13,9 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
  */
 public class UpdateObjectPropertyFrameAction extends UpdateFrameAction<ObjectPropertyFrame, OWLObjectProperty> {
 
+    /**
+     * For serialization purposes only
+     */
     private UpdateObjectPropertyFrameAction() {
     }
 

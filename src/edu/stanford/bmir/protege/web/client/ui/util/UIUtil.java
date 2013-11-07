@@ -5,8 +5,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.gwtext.client.core.ExtElement;
 import com.gwtext.client.widgets.MessageBox;
-import com.gwtext.client.widgets.MessageBoxConfig;
-import com.gwtext.client.widgets.WaitConfig;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
@@ -40,23 +38,6 @@ public class UIUtil {
     private static String[] noteTypes = new String[]{"Comment"};   //default value
 
     public static void showLoadProgessBar(final String message, final String barMessage) {
-//        MessageBox.show(new MessageBoxConfig() {
-//            {
-//                setMsg(message);
-//                setProgressText(barMessage);
-//                setDefaultTextHeight(30);
-//                setWidth(300);
-//                setWait(true);
-//                setClosable(true);
-//                setTitle("Dialog");
-//                setWaitConfig(new WaitConfig() {
-//                    {
-//                        setInterval(200);
-//                    }
-//                });
-//                //setAnimEl(button.getId());
-//            }
-//        });
         ProgressMonitor.get().showProgressMonitor(message, barMessage);
     }
 
@@ -183,13 +164,12 @@ public class UIUtil {
         }
     }
 
-    public static List getListConfigurationProperty(Map<String, Object> config, String prop) {
+    public static List<String> getListConfigurationProperty(Map<String, Object> config, String prop) {
         if (config == null) {
             return null;
         }
         try {
-            List listValue = (List) config.get(prop);
-            return listValue;
+            return  (List<String>) config.get(prop);
         }
         catch (Exception e) {
             return null;

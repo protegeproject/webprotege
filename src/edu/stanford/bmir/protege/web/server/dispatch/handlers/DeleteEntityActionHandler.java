@@ -59,7 +59,7 @@ public class DeleteEntityActionHandler extends AbstractProjectChangeHandler<OWLE
     }
 
 
-    private String getEntityTypeName(EntityType entityType) {
+    private String getEntityTypeName(EntityType<?> entityType) {
         if(entityType == EntityType.CLASS) {
             return "Class";
         }

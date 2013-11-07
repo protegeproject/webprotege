@@ -12,6 +12,9 @@ public class GetCSVGridResult implements Result {
 
     private CSVGrid csvGrid;
 
+    /**
+     * For serialization purposes only
+     */
     private GetCSVGridResult() {
     }
 

@@ -24,6 +24,9 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
         this.newBrowserText = newBrowserText;
     }
 
+    /**
+     * For serialization purposes only
+     */
     private BrowserTextChangedEvent() {
     }
 

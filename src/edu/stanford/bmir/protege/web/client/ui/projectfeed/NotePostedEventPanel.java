@@ -14,9 +14,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabe
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
-import edu.stanford.bmir.protege.web.shared.notes.NoteField;
 import edu.stanford.bmir.protege.web.shared.notes.NoteHeader;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -44,9 +42,6 @@ public class NotePostedEventPanel extends Composite implements ProjectFeedItemDi
 
     @UiField
     protected HTML bodyLabel;
-
-
-    private ProjectId projectId;
 
 
     public NotePostedEventPanel() {
