@@ -56,13 +56,7 @@ public interface OntologyService extends RemoteService {
 
     public EntityData getEntity(String projectName, String entityName);
 
-    public void addSuperCls(String projectName, String clsName, String superClsName, String user,
-            String operationDescription);
-
     public List<SubclassEntityData> getSubclasses(String projectName, String className);
-
-    public void removeSuperCls(String projectName, String clsName, String superClsName, String user,
-            String operationDescription);
 
     public List<EntityData> moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
             String user, String operationDescription);
@@ -86,8 +80,6 @@ public interface OntologyService extends RemoteService {
 
     public List<EntityData> getParents(String projectName, String className, boolean direct);
 
-    public String getParentsHtml(String projectName, String className, boolean direct);
-
     /**
      * Used by the "related properties" table.
      */
@@ -96,15 +88,6 @@ public interface OntologyService extends RemoteService {
     /*
      * Properties methods
      */
-
-    public EntityData createObjectProperty(String projectName, String propertyName, String superPropName, String user,
-            String operationDescription);
-
-    public EntityData createDatatypeProperty(String projectName, String propertyName, String superPropName,
-            String user, String operationDescription);
-
-    public EntityData createAnnotationProperty(String projectName, String propertyName, String superPropName,
-            String user, String operationDescription);
 
     public List<EntityData> getSubproperties(String projectName, String propertyName);
 
