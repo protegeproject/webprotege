@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.ui.frame.NamedIndividualFrameEditor;
-import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

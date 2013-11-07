@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.dispatch;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.InvocationException;

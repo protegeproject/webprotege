@@ -21,11 +21,12 @@ import edu.stanford.bmir.protege.web.client.primitive.MutableFreshEntitiesHandle
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorSuggestOracleMode;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.csv.ColumnType;
-import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceResult;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequest;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequestType;
-import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;

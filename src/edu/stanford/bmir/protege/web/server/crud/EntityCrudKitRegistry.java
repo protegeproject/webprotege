@@ -31,7 +31,7 @@ public class EntityCrudKitRegistry {
 
     private EntityCrudKitRegistry() {
         EntityCrudKitPluginManager pluginManager = EntityCrudKitPluginManager.get();
-        List<EntityCrudKitPlugin> plugins = pluginManager.getPlugins();
+        List<EntityCrudKitPlugin<?,?>> plugins = pluginManager.getPlugins();
         for(EntityCrudKitPlugin plugin : plugins) {
             EntityCrudKit kit = plugin.getEntityCrudKit();
             kits.add(kit);

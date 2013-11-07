@@ -5,7 +5,6 @@ import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -24,8 +23,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionSummary;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListResources;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
-
-import java.util.Date;
 
 /**
  * Author: Matthew Horridge<br>

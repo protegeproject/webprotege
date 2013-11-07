@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

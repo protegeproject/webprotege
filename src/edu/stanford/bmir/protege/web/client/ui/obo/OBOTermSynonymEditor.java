@@ -1,16 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
-import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonymScope;
-import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDown;
-import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDownModel;
 
 /**
  * Author: Matthew Horridge<br>

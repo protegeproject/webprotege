@@ -4,7 +4,10 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 
 /**
  * Author: Matthew Horridge<br>

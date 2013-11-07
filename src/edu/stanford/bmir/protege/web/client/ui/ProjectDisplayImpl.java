@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
-
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
@@ -40,7 +39,10 @@ import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

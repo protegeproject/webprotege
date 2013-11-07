@@ -14,7 +14,8 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>

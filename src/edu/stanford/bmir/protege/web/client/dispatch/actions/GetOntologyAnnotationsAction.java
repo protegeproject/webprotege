@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
-import edu.stanford.bmir.protege.web.shared.HasSignature;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 

@@ -5,8 +5,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.gwtext.client.core.ExtElement;
 import com.gwtext.client.widgets.MessageBox;
-import com.gwtext.client.widgets.MessageBoxConfig;
-import com.gwtext.client.widgets.WaitConfig;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;

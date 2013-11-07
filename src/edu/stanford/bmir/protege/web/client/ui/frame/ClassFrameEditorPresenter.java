@@ -3,8 +3,8 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.ui.library.common.HasEditable;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.client.ui.library.common.HasEditable;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 
 /**

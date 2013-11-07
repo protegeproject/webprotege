@@ -11,7 +11,6 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.client.ui.library.popupmenu;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.UIObject;
 
 /**
  * Author: Matthew Horridge<br>

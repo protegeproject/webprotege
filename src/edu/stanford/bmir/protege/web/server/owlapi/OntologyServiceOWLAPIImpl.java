@@ -425,33 +425,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     /**
-     * This implementation applies changes which are created using the same procedure as the {@link #createCls(String, String, String, String, String)}
-     * method and then adds the specified property value as an annotation to the class.  It seems like this method is
-     * only called by the {@link edu.stanford.bmir.protege.web.client.ui.ontology.classes.LabelingClassTreePortlet}, which
-     * doesn't appear to be used anywhere.  In any case, the OWL API implementation approaches this from a different point
-     * of view - i.e. it uses different strategies in the form of {@link OWLEntityCreatorFactory} objects (much cleaner
-     * really).  I vote for getting rid of this method and its associated junk.
-     *
-     * @param projectId
-     * @param clsName The name of the class to be "created".  Should be an IRI, but could also be some browser text.
-     * @param superCls
-     *@param propertyName The name of the property to add.  In this case, this must correspond to an annotation property, otherwise,
-     * it will not be added.
-     * @param propertyValue The value of the property to be added.  This should correspond to an OWLAnnotationValue, otherwise
- * it will not be added.
-     * @param userId
-     * @param operationDescription A high level description of the changes that will take place.    @return EntityData representing the newly "created" class.
-     */
-    public EntityData createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls, String propertyName, EntityData propertyValue, UserId userId, String operationDescription) {
-        OWLAPIProject project = getProject(projectId);
-        CreateClassChangeFactory createClassChangeFactory = new CreateClassChangeFactory(project, userId, operationDescription, clsName, superCls);
-        AddClassPropertyChangeFactory addClassPropertyChangeFactory = new AddClassPropertyChangeFactory(project, userId, operationDescription, clsName, propertyName, propertyValue);
-        applyChanges(createClassChangeFactory, addClassPropertyChangeFactory);
-        return project.getRenderingManager().getEntityData(clsName, EntityType.CLASS);
-    }
-
-
-    /**
      * Gets the subclasses of a given entity.  This implementation uses the {@link AssertedClassHierarchyProvider} that
      * is used in Protege 4 to answer the request.
      * @param projectName The name of the relevant project.

@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;

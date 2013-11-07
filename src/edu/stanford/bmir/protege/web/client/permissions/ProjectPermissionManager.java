@@ -9,13 +9,13 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.HashMap;
 import java.util.Map;

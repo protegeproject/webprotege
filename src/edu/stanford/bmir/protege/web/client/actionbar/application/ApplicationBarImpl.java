@@ -1,20 +1,16 @@
 package edu.stanford.bmir.protege.web.client.actionbar.application;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
-import com.gwtext.client.widgets.menu.*;
-import com.gwtext.client.widgets.menu.MenuItem;
+import com.google.gwt.user.client.ui.ButtonBase;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.about.AboutBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.ui.res.WebProtegeClientBundle;

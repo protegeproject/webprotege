@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.download.DownloadFormatExtensionHandler;
 import edu.stanford.bmir.protege.web.client.download.DownloadSettingsDialog;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;

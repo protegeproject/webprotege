@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.events;
 
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
  * Author: Matthew Horridge<br>
