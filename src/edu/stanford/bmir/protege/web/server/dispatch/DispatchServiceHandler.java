@@ -14,5 +14,5 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  */
 public interface DispatchServiceHandler {
 
-    <A extends Action<R>, R extends Result> DispatchServiceResultContainer<R> execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException;
+    <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException;
 }
