@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.ClassFrameEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueGridGrammar;
 import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueListEditor;
-import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

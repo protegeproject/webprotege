@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
-import edu.stanford.bmir.protege.web.shared.obo.*;
+import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
+import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
 
 import java.util.Set;
 

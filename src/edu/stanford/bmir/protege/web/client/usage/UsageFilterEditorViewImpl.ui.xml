@@ -1,6 +1,5 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:usage="urn:import:edu.stanford.bmir.protege.web.client.usage"
              xmlns:checkbox="urn:import:edu.stanford.bmir.protege.web.client.ui.library.checkbox">
     <ui:style>
         .check-box-panel {

@@ -29,7 +29,6 @@ public class SearchUtil {
 
     private AsyncCallback<Boolean> asyncCallback;
 
-    private Component busyComponent;
 
     public SearchUtil(ProjectId projectId, Selectable selectable) {
         this(projectId, selectable, null);
@@ -125,7 +124,6 @@ public class SearchUtil {
     }
 
     public void setBusyComponent(Component busyComponent) {
-        this.busyComponent = busyComponent;
         searchGrid.setBusyComponent(busyComponent);
     }
 

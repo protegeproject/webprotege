@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
  * Bio-Medical Informatics Research Group<br>
  * Date: 31/07/2013
  */
-public class EntityCrudKitSettingsDialogController extends WebProtegeOKCancelDialogController<EntityCrudKitSettings> {
+public class EntityCrudKitSettingsDialogController extends WebProtegeOKCancelDialogController<EntityCrudKitSettings<?>> {
 
     private static final String TITLE = "New Entity Settings";
 
@@ -38,7 +38,7 @@ public class EntityCrudKitSettingsDialogController extends WebProtegeOKCancelDia
     }
 
     @Override
-    public EntityCrudKitSettings getData() {
+    public EntityCrudKitSettings<?> getData() {
         return editor.getValue().get();
     }
 }

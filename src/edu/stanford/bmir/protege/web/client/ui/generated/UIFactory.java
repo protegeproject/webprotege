@@ -108,9 +108,6 @@ public class UIFactory {
             else if (portletJavaClassName.equals(ClassTreePortlet.class.getName())) {
                 return new ClassTreePortlet(project);
             }
-            else if (portletJavaClassName.equals(LabelingClassTreePortlet.class.getName())) {
-                return new LabelingClassTreePortlet(project);
-            }
             else if (portletJavaClassName.equals(ImportsTreePortlet.class.getName())) {
                 return new ImportsTreePortlet(project);
             }

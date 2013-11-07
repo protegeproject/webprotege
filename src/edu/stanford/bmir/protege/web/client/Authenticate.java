@@ -1,19 +1,13 @@
 package edu.stanford.bmir.protege.web.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author z.khan

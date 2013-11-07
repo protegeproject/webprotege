@@ -10,11 +10,11 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSes
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.*;
 

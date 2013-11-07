@@ -72,8 +72,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private Optional<OWLPrimitiveData> currentData = Optional.absent();
 
-    private EntityLinkMode entityLinkMode = EntityLinkMode.SHOW_LINKS_FOR_ENTITIES;
-
     private FreshEntitiesHandler freshEntitiesHandler = new NullFreshEntitiesHandler();
 
     private String lastIconInsetStyleName = "empty-icon-inset";
@@ -153,7 +151,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     @Override
     public void setEntityLinkMode(EntityLinkMode entityLinkMode) {
-        this.entityLinkMode = entityLinkMode;
+//        this.entityLinkMode = entityLinkMode;
     }
 
     @Override

@@ -17,6 +17,10 @@ public class AnnotationPropertyFrameChangedEvent extends EntityFrameChangedEvent
         super(entity, projectId);
     }
 
+    /**
+     * For serialization purposes only
+     */
+    @SuppressWarnings("unused")
     private AnnotationPropertyFrameChangedEvent() {
     }
 

@@ -33,7 +33,6 @@ public class OpenIdAuthenticationServlet extends HttpServlet {
     private static final WebProtegeLogger log = WebProtegeLoggerManager.get(OpenIdAuthenticationServlet.class);
 
     @Override
-    @SuppressWarnings("unchecked")
     public void service(HttpServletRequest httpServletRequest, HttpServletResponse httpResp) {
         String returnUrl = httpServletRequest.getRequestURL().toString();
         returnUrl = returnUrl.substring(0, returnUrl.lastIndexOf('/')) + "/openidresponse";
@@ -42,9 +41,8 @@ public class OpenIdAuthenticationServlet extends HttpServlet {
         String domainNameAndPort = httpServletRequest.getParameter(AuthenticationConstants.DOMAIN_NAME_AND_PORT);
         String protocol = httpServletRequest.getParameter(AuthenticationConstants.PROTOCOL);
         if (domainNameAndPort != null) {
-            URL url;
             try {
-                url = new URL(returnUrl);
+                URL url = new URL(returnUrl);
                 returnUrl = returnUrl.replace(url.getProtocol() + ":", protocol);
                 if (url.getPort() != -1) {
                     returnUrl = returnUrl.replace(url.getHost() + ":" + url.getPort(), domainNameAndPort);
@@ -63,7 +61,7 @@ public class OpenIdAuthenticationServlet extends HttpServlet {
             manager.getRealmVerifier().setEnforceRpId(false);
             // perform discovery on the user-supplied identifier
 
-            List discoveries = manager.discover(openId);
+            List<?> discoveries = manager.discover(openId);
 
             // attempt to associate with the OpenID provider
             // and retrieve one service endpoint for authentication

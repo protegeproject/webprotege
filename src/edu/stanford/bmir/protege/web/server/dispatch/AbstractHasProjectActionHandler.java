@@ -8,6 +8,9 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -25,8 +28,12 @@ public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasP
 
     @Override
     final public RequestValidator<A> getRequestValidator(A action, RequestContext requestContext) {
-        final RequestValidator additionalRequestValidator = getAdditionalRequestValidator(action, requestContext);
-        return new CompositeRequestValidator<A>(new ProjectExistsValidator(), additionalRequestValidator);
+        final RequestValidator<A> additionalRequestValidator = getAdditionalRequestValidator(action, requestContext);
+        final ProjectExistsValidator<A> projectExistsValidator = ProjectExistsValidator.get();
+        List<RequestValidator<A>> validators = new ArrayList<RequestValidator<A>>();
+        validators.add(additionalRequestValidator);
+        validators.add(projectExistsValidator);
+        return CompositeRequestValidator.get(validators);
     }
 
     /**

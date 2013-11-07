@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -15,6 +14,9 @@ public class GetEntityCrudKitSettingsResult implements Result {
 
     private EntityCrudKitSettings<?> settings;
 
+    /**
+     * For serialization purposes only
+     */
     private GetEntityCrudKitSettingsResult() {
     }
 

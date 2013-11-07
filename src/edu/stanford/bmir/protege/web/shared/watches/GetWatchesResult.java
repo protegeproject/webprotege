@@ -14,13 +14,19 @@ import java.util.Set;
  */
 public class GetWatchesResult implements Result {
 
-    private Set<Watch> watches;
+    private Set<Watch<?>> watches;
 
-    public GetWatchesResult(Set<Watch> watches) {
-        this.watches = new HashSet<Watch>(watches);
+    /**
+     * For serialization purposes only
+     */
+    private GetWatchesResult() {
     }
 
-    public Set<Watch> getWatches() {
+    public GetWatchesResult(Set<Watch<?>> watches) {
+        this.watches = new HashSet<Watch<?>>(watches);
+    }
+
+    public Set<Watch<?>> getWatches() {
         return Collections.unmodifiableSet(watches);
     }
 }

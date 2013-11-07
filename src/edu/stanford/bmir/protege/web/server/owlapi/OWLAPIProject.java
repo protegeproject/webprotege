@@ -428,7 +428,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
      *             edu.stanford.bmir.protege.web.server.change.ChangeListGenerator, ChangeDescriptionGenerator)}
      */
     public ChangeApplicationResult<?> applyChanges(UserId userId, List<OWLOntologyChange> changes, String changeDescription) {
-        return applyChanges(userId, new FixedChangeListGenerator(changes), new FixedMessageChangeDescriptionGenerator(changeDescription));
+        return applyChanges(userId, FixedChangeListGenerator.get(changes), FixedMessageChangeDescriptionGenerator.get(changeDescription));
     }
 
     /**
@@ -530,7 +530,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
             // Now we do the actual changing, so we lock the project here.  No writes or reads can take place whilst
             // we apply the changes
             RevisionNumber revisionNumber;
-            long timestamp;
             try {
                 projectChangeWriteLock.lock();
                 appliedChanges = delegateManager.applyChanges(minimisedChanges);

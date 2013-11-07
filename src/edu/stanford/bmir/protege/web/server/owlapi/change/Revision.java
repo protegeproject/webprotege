@@ -134,7 +134,6 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
         for (final OWLOntologyChangeRecord changeRecord : changes) {
             if (changeRecord.getData() instanceof AxiomChangeData) {
                 AxiomChangeData info = (AxiomChangeData) changeRecord.getData();
-                OWLAxiom axiom = info.getAxiom();
                 if (entity == null || isEntitySubjectOfChange(entity, info)) {
                     sb.append("<div style=\"overflow: hidden;\">");
                     String ren = changeRecord.getData().accept(new OWLOntologyChangeDataVisitor<String, RuntimeException>() {

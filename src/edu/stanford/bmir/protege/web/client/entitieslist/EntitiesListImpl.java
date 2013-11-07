@@ -21,7 +21,10 @@ import edu.stanford.bmir.protege.web.client.ui.res.WebProtegeCellListResources;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -68,7 +71,7 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
 
     private EntitiesListItemRenderer<E> renderer = new DefaultEntitiesListItemRenderer<E>();
 
-    interface EntitiesListImplUiBinder extends UiBinder<HTMLPanel, EntitiesListImpl> {
+    interface EntitiesListImplUiBinder extends UiBinder<HTMLPanel, EntitiesListImpl<?>> {
 
     }
 
@@ -138,6 +141,7 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
         return Optional.<E>fromNullable(sel);
     }
 
+    @SuppressWarnings("unchecked")
     private SingleSelectionModel<E> getSingleSelectionModel() {
         return ((SingleSelectionModel<E>) cellList.getSelectionModel());
     }

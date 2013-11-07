@@ -18,6 +18,9 @@ public class GetCSVGridAction implements Action<GetCSVGridResult> {
 
     private int rowLimit;
 
+    /**
+     * For serialization purposes only
+     */
     private GetCSVGridAction() {
     }
 

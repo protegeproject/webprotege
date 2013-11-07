@@ -21,7 +21,7 @@ public class DefaultDispatchServiceExecutor implements DispatchServiceHandler {
 
 
     @Override
-    public <A extends Action<R>, R extends Result> DispatchServiceResultContainer<R> execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException {
+    public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException {
         ActionHandler<A, R> actionHandler = handlerRegistry.getActionHandler(action);
         RequestValidator<A> validator = actionHandler.getRequestValidator(action, requestContext);
         if (validator instanceof UserHasProjectWritePermissionValidator) {
@@ -32,6 +32,6 @@ public class DefaultDispatchServiceExecutor implements DispatchServiceHandler {
             }
         }
         R result = actionHandler.execute(action, executionContext);
-        return new DispatchServiceResultContainer<R>(result);
+        return new DispatchServiceResultContainer(result);
     }
 }

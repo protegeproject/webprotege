@@ -35,8 +35,8 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
     }
 
     @Override
-    protected RequestValidator getAdditionalRequestValidator(CreateClassesAction action, RequestContext requestContext) {
-        return new UserHasProjectReadPermissionValidator();
+    protected RequestValidator<CreateClassesAction> getAdditionalRequestValidator(CreateClassesAction action, RequestContext requestContext) {
+        return UserHasProjectReadPermissionValidator.get();
     }
 
     @Override

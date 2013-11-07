@@ -17,6 +17,9 @@ public class ImportCSVFileResult implements Result, HasEventList<ProjectEvent<?>
 
     private int rowCount;
 
+    /**
+     * For serialization purposes only
+     */
     private ImportCSVFileResult() {
     }
 

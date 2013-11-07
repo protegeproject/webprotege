@@ -8,7 +8,10 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.notes.*;
+import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
+import edu.stanford.bmir.protege.web.shared.notes.NoteDetails;
+import edu.stanford.bmir.protege.web.shared.notes.NoteHeader;
+import edu.stanford.bmir.protege.web.shared.notes.NoteType;
 
 import java.util.Date;
 

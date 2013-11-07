@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
-import com.google.gwt.user.client.Window;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;

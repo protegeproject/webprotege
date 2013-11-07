@@ -15,7 +15,11 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class ProjectExistsValidator<A extends Action<R> & HasProjectId, R extends Result> implements RequestValidator<A> {
+public class ProjectExistsValidator<A extends Action<?> & HasProjectId> implements RequestValidator<A> {
+
+    public static <A extends Action<?> & HasProjectId> ProjectExistsValidator<A> get() {
+        return new ProjectExistsValidator<A>();
+    }
 
     @Override
     public RequestValidationResult validateAction(A action, RequestContext requestContext) {

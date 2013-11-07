@@ -57,15 +57,6 @@ public interface OntologyServiceAsync {
     void getIndividuals(String projectName, String className, int start, int limit, String sort, String dir,
             AsyncCallback<PaginationData<EntityData>> cb);
 
-    void createClsWithProperty(ProjectId projectId, String clsName, OWLClass superCls, String propertyName, EntityData propertyValue, UserId userId, String operationDescription,
-            AsyncCallback<EntityData> cb);
-
-    void addSuperCls(String projectName, String clsName, String superClsName, String user, String operationDescription,
-            AsyncCallback<Void> cb);
-
-    void removeSuperCls(String projectName, String clsName, String superClsName, String user,
-            String operationDescription, AsyncCallback<Void> cb);
-
     void moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
             String user,  String operationDescription, AsyncCallback<List<EntityData>> cb);
 
@@ -86,22 +77,7 @@ public interface OntologyServiceAsync {
 
     void getParents(String projectName, String className, boolean direct, AsyncCallback<List<EntityData>> callback);
 
-    void getParentsHtml(String projectName, String className, boolean direct, AsyncCallback<String> callback);
-
     void getRelatedProperties(String projectName, String className, AsyncCallback<List<Triple>> callback);
-
-    /*
-     * Properties methods
-     */
-
-    void createObjectProperty(String projectName, String propertyName, String superPropName, String user,
-            String operationDescription, AsyncCallback<EntityData> cb);
-
-    void createDatatypeProperty(String projectName, String propertyName, String superPropName, String user,
-            String operationDescription, AsyncCallback<EntityData> cb);
-
-    void createAnnotationProperty(String projectName, String propertyName, String superPropName, String user,
-            String operationDescription, AsyncCallback<EntityData> cb);
 
     void getSubproperties(String projectName, String propertyName, AsyncCallback<List<EntityData>> cb);
 

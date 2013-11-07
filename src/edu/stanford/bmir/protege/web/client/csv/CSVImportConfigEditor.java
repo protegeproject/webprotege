@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.csv;
 
 import com.google.common.base.Optional;
-import com.google.gwt.resources.client.CssResource;
 import edu.stanford.bmir.protege.web.shared.csv.CSVColumnDescriptor;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 
