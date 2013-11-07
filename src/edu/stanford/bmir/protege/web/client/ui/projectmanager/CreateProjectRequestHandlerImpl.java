@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
-import edu.stanford.bmir.protege.web.client.ui.ontology.home.NewProjectDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ui.ontology.home.NewProjectDialogController;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,7 +13,6 @@ public class CreateProjectRequestHandlerImpl implements CreateProjectRequestHand
 
     @Override
     public void handleCreateProjectRequest() {
-        NewProjectDialog dlg = new NewProjectDialog();
-        dlg.show();
+        WebProtegeDialog.showDialog(new NewProjectDialogController());
     }
 }

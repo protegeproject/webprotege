@@ -55,11 +55,10 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.DiscussionThreadDialog;
-import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileDialog;
+import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -969,7 +968,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
 
     private void createSubClasses() {
-        CreateEntityDialog dlg = new CreateEntityDialog(EntityType.CLASS, new CreateEntityDialogController.CreateEntityHandler() {
+        WebProtegeDialog.showDialog(new CreateEntityDialogController(EntityType.CLASS, new CreateEntityDialogController.CreateEntityHandler() {
             @Override
             public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
                 final OWLClass superCls = getSelectedClass();
@@ -981,12 +980,11 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                     DispatchServiceManager.get().execute(new CreateClassAction(getProjectId(), browserTexts.iterator().next(), superCls), getCreateClassAsyncHandler());
                 }
             }
-        });
-        dlg.setVisible(true);
+        }));
     }
 
     private void createSubClassesByImportingCSVDocument() {
-        UploadFileDialog d = new UploadFileDialog("Upload CSV", new UploadFileResultHandler() {
+        UploadFileDialogController controller = new UploadFileDialogController("Upload CSV", new UploadFileResultHandler() {
             @Override
             public void handleFileUploaded(final DocumentId fileDocumentId) {
                 WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<CSVImportDescriptor>(new CSVImportDialogController(getProjectId(), fileDocumentId, getSelectedClass()));
@@ -1000,10 +998,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 MessageBox.showAlert("Error uploading CSV file", errorMessage);
             }
         });
-        d.setVisible(true);
 
-
-
+        WebProtegeDialog.showDialog(controller);
     }
 
     private AsyncCallback<CreateClassesResult> getCreateClassesActionAsyncHandler() {

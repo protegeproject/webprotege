@@ -10,9 +10,9 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividu
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.DeleteEntityResult;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
-import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -79,7 +79,7 @@ public class IndividualsListViewPresenter {
     }
 
     private void handleCreateIndividuals() {
-        CreateEntityDialog dlg = new CreateEntityDialog(EntityType.NAMED_INDIVIDUAL, new CreateEntityDialogController.CreateEntityHandler() {
+        WebProtegeDialog.showDialog(new CreateEntityDialogController(EntityType.NAMED_INDIVIDUAL, new CreateEntityDialogController.CreateEntityHandler() {
             @Override
             public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
                 final Set<String> browserTexts = createEntityInfo.getBrowserTexts();
@@ -94,8 +94,7 @@ public class IndividualsListViewPresenter {
                     }
                 });
             }
-        });
-        dlg.setVisible(true);
+        }));
     }
 
     private void handleDeleteIndividuals() {

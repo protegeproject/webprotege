@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.actionbar.application;
 
-import edu.stanford.bmir.protege.web.client.ui.signup.WebProtegeSignupDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ui.signup.WebProtegeSignupDialogController;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,7 +13,6 @@ public class SignUpForAccountHandlerImpl implements SignUpForAccountHandler {
 
     @Override
     public void handleSignUpForAccount() {
-        WebProtegeSignupDialog dlg = new WebProtegeSignupDialog();
-        dlg.setVisible(true);
+        WebProtegeDialog.showDialog(new WebProtegeSignupDialogController());
     }
 }

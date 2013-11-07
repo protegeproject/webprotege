@@ -14,15 +14,20 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/04/2013
  */
-public class DiscussionThreadDialog extends WebProtegeDialog<Void> {
+public class DiscussionThreadDialog {
 
 
     private static final String WIDTH_PX = "600px";
 
     private static final String HEIGHT_PX = "500px";
 
-    private DiscussionThreadDialog(String title, final Widget widget) {
-        super(new WebProtegeOKDialogController<Void>(title) {
+
+    public static void showDialog(ProjectId projectId, OWLEntity target) {
+        final DiscussionThreadPresenter presenter = new DiscussionThreadPresenter(projectId);
+        presenter.setTarget(target);
+        final Widget widget = presenter.getWidget();
+        widget.setSize(WIDTH_PX, HEIGHT_PX);
+        WebProtegeOKCancelDialogController<Void> controller = new WebProtegeOKCancelDialogController<Void>("Discussions") {
             @Override
             public Widget getWidget() {
                 return widget;
@@ -37,27 +42,15 @@ public class DiscussionThreadDialog extends WebProtegeDialog<Void> {
             public Void getData() {
                 return null;
             }
-        });
-    }
-
-
-
-
-
-    public static void showDialog(ProjectId projectId, OWLEntity target) {
-        final DiscussionThreadPresenter presenter = new DiscussionThreadPresenter(projectId);
-        presenter.setTarget(target);
-        Widget widget = presenter.getWidget();
-        widget.setSize(WIDTH_PX, HEIGHT_PX);
-        DiscussionThreadDialog dlg = new DiscussionThreadDialog("Discussions", widget);
-        dlg.getController().setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Void>() {
+        };
+        controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Void>() {
             @Override
             public void handleHide(Void data, WebProtegeDialogCloser closer) {
                 presenter.dispose();
                 closer.hide();
             }
         });
-        dlg.setVisible(true);
+        WebProtegeDialog.showDialog(controller);
     }
 
 }

@@ -20,9 +20,10 @@ import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteEditorDialogController;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.ReferenceFieldWidget;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -554,7 +555,7 @@ public class BioPortalSearchComponent extends GridPanel {
     }
 
     public void createReferenceIfUserComments() {
-        NoteContentEditorDialog.showDialog(NoteContentEditorMode.NEW_TOPIC, new NoteContentEditorHandler() {
+        NoteEditorDialogController controller = new NoteEditorDialogController(new NoteContentEditorHandler() {
             @Override
             public void handleAccept(Optional<NoteContent> noteContent) {
                 if (noteContent.isPresent()) {
@@ -562,6 +563,8 @@ public class BioPortalSearchComponent extends GridPanel {
                 }
             }
         });
+        controller.setMode(NoteContentEditorMode.NEW_TOPIC);
+        WebProtegeDialog.showDialog(controller);
     }
 
     public void createDNFReference(NoteContent noteContent) {

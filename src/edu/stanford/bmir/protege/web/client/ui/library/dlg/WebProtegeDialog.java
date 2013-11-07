@@ -5,13 +5,10 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,7 +16,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/01/2012
  */
-public class WebProtegeDialog<D> extends DialogBox {
+public final class WebProtegeDialog<D> extends DialogBox {
 
     public static final boolean AUTO_HIDE = false;
 
@@ -231,6 +228,17 @@ public class WebProtegeDialog<D> extends DialogBox {
                 hideWithCancelButton();
             }
         }
+    }
+
+    /**
+     * Shows a dialog for the specified controller.
+     * @param controller The controller for which a dialog should be shown.  Not {@code null}.
+     * @param <D> The type of data shown by the dialog.
+     * @throws NullPointerException if {@code controller} is {@code null}.
+     */
+    public static <D> void showDialog(WebProtegeDialogController<D> controller) {
+        WebProtegeDialog<D> dlg = new WebProtegeDialog<D>(checkNotNull(controller));
+        dlg.setVisible(true);
     }
 
 }

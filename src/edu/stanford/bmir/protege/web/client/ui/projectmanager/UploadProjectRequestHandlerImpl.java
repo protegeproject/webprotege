@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
-import edu.stanford.bmir.protege.web.client.ui.ontology.home.UploadProjectDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ui.ontology.home.UploadProjectDialogController;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,7 +13,6 @@ public class UploadProjectRequestHandlerImpl implements UploadProjectRequestHand
 
     @Override
     public void handleUploadProjectRequest() {
-        UploadProjectDialog dlg = new UploadProjectDialog();
-        dlg.show();
+        WebProtegeDialog.showDialog(new UploadProjectDialogController());
     }
 }

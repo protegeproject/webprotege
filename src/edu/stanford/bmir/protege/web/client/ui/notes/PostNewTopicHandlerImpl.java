@@ -5,12 +5,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
-import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;
+import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteEditorDialogController;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityResult;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
@@ -36,7 +34,7 @@ public class PostNewTopicHandlerImpl implements PostNewTopicHandler {
         if(!entity.isPresent()) {
             return;
         }
-        NoteContentEditorDialog dlg = new NoteContentEditorDialog(new NoteContentEditorHandler() {
+        NoteEditorDialogController controller = new NoteEditorDialogController(new NoteContentEditorHandler() {
             @Override
             public void handleAccept(Optional<NoteContent> noteContent) {
                 if(noteContent.isPresent()) {
@@ -44,8 +42,8 @@ public class PostNewTopicHandlerImpl implements PostNewTopicHandler {
                 }
             }
         });
-        dlg.setMode(NoteContentEditorMode.NEW_TOPIC);
-        dlg.setVisible(true);
+        controller.setMode(NoteContentEditorMode.NEW_TOPIC);
+        WebProtegeDialog.showDialog(controller);
     }
 
 
