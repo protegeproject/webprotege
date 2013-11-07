@@ -15,6 +15,9 @@ public class GetEmailAddressAction implements Action<GetEmailAddressResult> {
 
     private UserId userId;
 
+    /**
+     * For serialization purposes only
+     */
     private GetEmailAddressAction() {
     }
 

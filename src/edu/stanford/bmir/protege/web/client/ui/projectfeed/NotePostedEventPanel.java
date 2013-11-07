@@ -15,7 +15,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteHeader;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>

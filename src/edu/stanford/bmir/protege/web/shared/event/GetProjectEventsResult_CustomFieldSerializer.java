@@ -51,11 +51,12 @@ public class GetProjectEventsResult_CustomFieldSerializer extends CustomFieldSer
         return instantiate(streamReader);
     }
 
+    @SuppressWarnings("unchecked")
     public static GetProjectEventsResult instantiate(SerializationStreamReader streamReader) throws SerializationException {
         byte empty = streamReader.readByte();
         List<ProjectEvent<?>> events;
         if(empty == 1) {
-            events = (List) streamReader.readObject();
+            events = (List<ProjectEvent<?>>) streamReader.readObject();
         }
         else {
             events = Collections.emptyList();

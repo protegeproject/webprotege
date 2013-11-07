@@ -44,7 +44,7 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
      */
     @Override
     protected RequestValidator<A> getAdditionalRequestValidator(A action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator();
+        return UserHasProjectWritePermissionValidator.get();
     }
 
     /**
@@ -78,9 +78,9 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
             EntityCrudKitHandler<?> entityEditorKit = project.getEntityCrudKitHandler();
             OntologyChangeList.Builder<S> changeListBuilder = new OntologyChangeList.Builder<S>();
             entityEditorKit.update(to.getFrame().getSubject(), EntityShortForm.get(to.getDisplayName()), new EntityCrudContext(project.getRootOntology(), project.getDataFactory()), changeListBuilder);
-//            OWLEntityCreator<S> creator = entityEditorKit.getEntityCreatorFactory().setBrowserText(project, userId, to.getFrame().getSubject(), to.getDisplayName());
-//            List<OWLOntologyChange> renameChanges = creator.getChanges();
-            project.applyChanges(userId, new FixedChangeListGenerator(changeListBuilder.build().getChanges()), new FixedMessageChangeDescriptionGenerator<Object>("Renamed entity"));
+            FixedChangeListGenerator<S> changeListGenerator = FixedChangeListGenerator.get(changeListBuilder.build().getChanges());
+            FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator = FixedMessageChangeDescriptionGenerator.get("Renamed entity");
+            project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
         }
         EventList<ProjectEvent<?>> events = project.getEventManager().getEventsFromTag(startTag);
         return createResponse(action.getTo(), events);

@@ -18,8 +18,6 @@ import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
  */
 public class GetDiscussionThreadActionHandler extends AbstractHasProjectActionHandler<GetDiscussionThreadAction, GetDiscussionThreadResult> {
 
-    private static final UserHasProjectReadPermissionValidator<GetDiscussionThreadAction,GetDiscussionThreadResult> VALIDATOR = new UserHasProjectReadPermissionValidator<GetDiscussionThreadAction, GetDiscussionThreadResult>();
-
     @Override
     public Class<GetDiscussionThreadAction> getActionClass() {
         return GetDiscussionThreadAction.class;
@@ -27,7 +25,7 @@ public class GetDiscussionThreadActionHandler extends AbstractHasProjectActionHa
 
     @Override
     protected RequestValidator<GetDiscussionThreadAction> getAdditionalRequestValidator(GetDiscussionThreadAction action, RequestContext requestContext) {
-        return VALIDATOR;
+        return UserHasProjectReadPermissionValidator.get();
     }
 
     @Override

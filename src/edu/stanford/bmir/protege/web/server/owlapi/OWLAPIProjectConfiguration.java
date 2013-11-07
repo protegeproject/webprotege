@@ -42,11 +42,12 @@ public class OWLAPIProjectConfiguration {
     }
 
 
+    @SuppressWarnings("unchecked")
     private OWLAPIEntityEditorKitFactory createOWLEntityEditorKitFactory(OWLAPIProjectAttributes attributes) {
         try {
             String clsName = attributes.getStringAttribute(OWL_ENTITY_EDITOR_KIT_FACTORY_CLASS_KEY, DefaultEntityEditorKitFactory.class.getName());
-            Class cls = Class.forName(clsName);
-            return (OWLAPIEntityEditorKitFactory) cls.newInstance();
+            Class<OWLAPIEntityEditorKitFactory> cls = (Class<OWLAPIEntityEditorKitFactory>) Class.forName(clsName);
+            return cls.newInstance();
 
         }
         catch (ClassNotFoundException e) {

@@ -20,6 +20,9 @@ public class EntityCrudKitSettings<S extends EntityCrudKitSuffixSettings> implem
 
     private S suffixSettings;
 
+    /**
+     * For serialization purposes only
+     */
     private EntityCrudKitSettings() {
     }
 
@@ -64,7 +67,7 @@ public class EntityCrudKitSettings<S extends EntityCrudKitSuffixSettings> implem
         if(!(o instanceof EntityCrudKitSettings)) {
             return false;
         }
-        EntityCrudKitSettings other = (EntityCrudKitSettings) o;
+        EntityCrudKitSettings<?> other = (EntityCrudKitSettings<?>) o;
         return this.prefixSettings.equals(other.prefixSettings) && this.suffixSettings.equals(other.suffixSettings);
     }
 

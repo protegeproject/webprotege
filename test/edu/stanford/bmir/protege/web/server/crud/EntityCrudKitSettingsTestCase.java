@@ -32,8 +32,8 @@ public class EntityCrudKitSettingsTestCase {
     public void objectsWithSamePrefixAndSuffixSettingsHaveEqualHashCodes() {
         EntityCrudKitPrefixSettings prefixSettings = new EntityCrudKitPrefixSettings();
         EntityCrudKitSuffixSettings suffixSettings = mock(EntityCrudKitSuffixSettings.class);
-        EntityCrudKitSettings settingsA = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
-        EntityCrudKitSettings settingsB = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
+        EntityCrudKitSettings<?> settingsA = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
+        EntityCrudKitSettings<?> settingsB = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
         assertEquals(settingsA.hashCode(), settingsB.hashCode());
     }
 
@@ -41,8 +41,8 @@ public class EntityCrudKitSettingsTestCase {
     public void objectsWithSamePrefixAndSuffixSettingsAreEqual() {
         EntityCrudKitPrefixSettings prefixSettings = new EntityCrudKitPrefixSettings();
         EntityCrudKitSuffixSettings suffixSettings = mock(EntityCrudKitSuffixSettings.class);
-        EntityCrudKitSettings settingsA = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
-        EntityCrudKitSettings settingsB = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
+        EntityCrudKitSettings<?> settingsA = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
+        EntityCrudKitSettings<?> settingsB = new EntityCrudKitSettings<EntityCrudKitSuffixSettings>(prefixSettings, suffixSettings);
         assertEquals(settingsA, settingsB);
     }
 

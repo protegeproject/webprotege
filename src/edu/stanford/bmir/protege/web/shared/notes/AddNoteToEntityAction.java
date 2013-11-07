@@ -16,6 +16,9 @@ public class AddNoteToEntityAction extends AbstractHasProjectAction<AddNoteToEnt
 
     private NoteContent noteContent;
 
+    /**
+     * For serialization purposes only
+     */
     private AddNoteToEntityAction() {
     }
 
