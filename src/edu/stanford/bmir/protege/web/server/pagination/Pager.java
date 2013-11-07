@@ -22,10 +22,6 @@ import static com.google.common.base.Preconditions.*;
  */
 public class Pager<T extends Serializable> implements Serializable {
 
-    private List<T> sourceData;
-
-    private int pageSize;
-
     private List<List<T>> partition;
 
     /**
@@ -39,9 +35,7 @@ public class Pager<T extends Serializable> implements Serializable {
     }
 
     private Pager(List<T> sourceData, int pageSize) {
-        this.sourceData = new ArrayList<T>(checkNotNull(sourceData));
         checkArgument(pageSize > 0);
-        this.pageSize = pageSize;
         this.partition = Lists.partition(sourceData, pageSize);
 
     }
