@@ -212,7 +212,8 @@
 		<copy file="${gwt.dir}/gwt-servlet-deps.jar" todir="${war}/WEB-INF/lib" />
 		
 		<copy file="webprotege.properties" todir="${war}" failonerror="false" />
-		
+		<copy file="mail.properties" todir="${war}" failonerror="false" />
+
 		<copy todir="${war}/etc" failonerror="false">
 		    <fileset dir="${etc}"/>
 		</copy>
