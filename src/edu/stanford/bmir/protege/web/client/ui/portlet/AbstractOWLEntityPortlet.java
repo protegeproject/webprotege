@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -97,13 +98,12 @@ public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
         if(entityData == null) {
             return Optional.absent();
         }
-        Optional<OWLEntityData> ed = toOWLEntityData(entityData);
-        if(ed.isPresent() && ed.get().getEntity().isOWLClass()) {
-            return Optional.of(ed.get().getEntity().asOWLClass());
-        }
-        else {
+        String name = entityData.getName();
+        if(name == null) {
             return Optional.absent();
         }
+        IRI iri = IRI.create(name);
+        return Optional.of(DataFactory.getOWLClass(iri));
     }
 
     protected Optional<OWLEntityData> toOWLEntityData(EntityData entityData) {
