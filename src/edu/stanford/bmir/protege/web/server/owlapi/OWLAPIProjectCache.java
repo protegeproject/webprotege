@@ -103,7 +103,8 @@ public class OWLAPIProjectCache {
 
 
     public OWLAPIProject getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
-        synchronized (getInternedProjectId(projectId)) {
+        ProjectId internedProjectId = getInternedProjectId(projectId);
+        synchronized (internedProjectId) {
             try {
                 OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
                 OWLAPIProject project = projectId2ProjectMap.get(projectId);
@@ -129,7 +130,8 @@ public class OWLAPIProjectCache {
      * @return The interned project Id.  Not {@code null}.
      */
     private ProjectId getInternedProjectId(ProjectId projectId) {
-        return projectIdInterningMap.putIfAbsent(projectId, projectId);
+        projectIdInterningMap.putIfAbsent(projectId, projectId);
+        return projectIdInterningMap.get(projectId);
     }
 
     public OWLAPIProject getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException {
