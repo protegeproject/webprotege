@@ -46,7 +46,7 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
 
     @Override
     protected RequestValidator<CreateAnnotationPropertiesAction> getAdditionalRequestValidator(CreateAnnotationPropertiesAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<CreateAnnotationPropertiesAction, CreateAnnotationPropertiesResult>();
+        return new UserHasProjectWritePermissionValidator<CreateAnnotationPropertiesAction>();
     }
 
     @Override

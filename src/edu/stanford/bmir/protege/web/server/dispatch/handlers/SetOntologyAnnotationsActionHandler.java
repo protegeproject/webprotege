@@ -30,7 +30,7 @@ import java.util.Set;
  */
 public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHandler<Set<OWLAnnotation>, SetOntologyAnnotationsAction, SetOntologyAnnotationsResult> {
 
-    private static final UserHasProjectWritePermissionValidator<SetOntologyAnnotationsAction, SetOntologyAnnotationsResult> VALIDATOR = new UserHasProjectWritePermissionValidator<SetOntologyAnnotationsAction, SetOntologyAnnotationsResult>();
+    private static final UserHasProjectWritePermissionValidator<SetOntologyAnnotationsAction> VALIDATOR = new UserHasProjectWritePermissionValidator<SetOntologyAnnotationsAction>();
 
     @Override
     public Class<SetOntologyAnnotationsAction> getActionClass() {

@@ -16,10 +16,10 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  *     A validator which passes users that have write permission for project specific actions.
  * </p>
  */
-public class UserHasProjectWritePermissionValidator<A extends Action<R> & HasProjectId, R extends Result> implements RequestValidator<A> {
+public class UserHasProjectWritePermissionValidator<A extends Action<?> & HasProjectId> implements RequestValidator<A> {
 
-    public static <A extends Action<R> & HasProjectId, R extends Result> UserHasProjectWritePermissionValidator<A, R> get() {
-        return new UserHasProjectWritePermissionValidator<A, R>();
+    public static <A extends Action<?> & HasProjectId> UserHasProjectWritePermissionValidator<A> get() {
+        return new UserHasProjectWritePermissionValidator<A>();
     }
 
     @Override

@@ -46,7 +46,7 @@ public class CreateDataPropertiesActionHandler extends AbstractProjectChangeHand
 
     @Override
     protected RequestValidator<CreateDataPropertiesAction> getAdditionalRequestValidator(CreateDataPropertiesAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<CreateDataPropertiesAction, CreateDataPropertiesResult>();
+        return new UserHasProjectWritePermissionValidator<CreateDataPropertiesAction>();
     }
 
     @Override
