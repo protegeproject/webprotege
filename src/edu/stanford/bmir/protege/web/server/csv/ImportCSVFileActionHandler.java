@@ -65,6 +65,6 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
 
     @Override
     protected RequestValidator<ImportCSVFileAction> getAdditionalRequestValidator(ImportCSVFileAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<ImportCSVFileAction, ImportCSVFileResult>();
+        return new UserHasProjectWritePermissionValidator<ImportCSVFileAction>();
     }
 }

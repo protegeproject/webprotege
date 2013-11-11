@@ -26,7 +26,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public class DeleteEntityActionHandler extends AbstractProjectChangeHandler<OWLEntity, DeleteEntityAction, DeleteEntityResult> {
 
-    private static final UserHasProjectWritePermissionValidator<DeleteEntityAction, DeleteEntityResult> VALIDATOR = new UserHasProjectWritePermissionValidator<DeleteEntityAction, DeleteEntityResult>();
+    private static final UserHasProjectWritePermissionValidator<DeleteEntityAction> VALIDATOR = new UserHasProjectWritePermissionValidator<DeleteEntityAction>();
 
 
     @Override

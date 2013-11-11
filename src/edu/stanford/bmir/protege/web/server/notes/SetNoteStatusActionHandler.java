@@ -22,7 +22,7 @@ public class SetNoteStatusActionHandler extends AbstractHasProjectActionHandler<
 
     @Override
     protected RequestValidator<SetNoteStatusAction> getAdditionalRequestValidator(SetNoteStatusAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<SetNoteStatusAction, SetNoteStatusResult>();
+        return new UserHasProjectWritePermissionValidator<SetNoteStatusAction>();
     }
 
     @Override

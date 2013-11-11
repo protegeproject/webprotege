@@ -20,7 +20,7 @@ public class DeleteNoteActionHandler extends AbstractHasProjectActionHandler<Del
 
     @Override
     protected RequestValidator<DeleteNoteAction> getAdditionalRequestValidator(DeleteNoteAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<DeleteNoteAction, DeleteNoteResult>();
+        return new UserHasProjectWritePermissionValidator<DeleteNoteAction>();
     }
 
     @Override

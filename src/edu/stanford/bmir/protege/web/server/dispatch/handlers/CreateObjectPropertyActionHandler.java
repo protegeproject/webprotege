@@ -33,7 +33,7 @@ public class CreateObjectPropertyActionHandler extends AbstractProjectChangeHand
 
     @Override
     protected RequestValidator<CreateObjectPropertiesAction> getAdditionalRequestValidator(CreateObjectPropertiesAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<CreateObjectPropertiesAction, CreateObjectPropertiesResult>();
+        return new UserHasProjectWritePermissionValidator<CreateObjectPropertiesAction>();
     }
 
     @Override
