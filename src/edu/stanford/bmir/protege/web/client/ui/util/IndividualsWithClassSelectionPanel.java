@@ -9,6 +9,7 @@ import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import com.gwtext.client.widgets.layout.VerticalLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
@@ -45,7 +46,8 @@ public class IndividualsWithClassSelectionPanel extends Panel {
             Panel clsesPanel = createClsesPanel();
             add(clsesPanel, new ColumnLayoutData(0.5));
         } else {
-            indListPorlet.setEntity(UIUtil.getFirstItem(clses)); //TODO: handle multiple classes
+            EntityData firstItem = UIUtil.getFirstItem(clses);
+            indListPorlet.setEntity(firstItem); //TODO: handle multiple classes
         }
     }
 
