@@ -81,6 +81,14 @@ public class DefaultLogger implements WebProtegeLogger {
         if(request.isPresent()) {
             HttpServletRequest req = request.get();
             pw.println("Request URI: " + req.getRequestURI());
+            String remoteAddr = req.getRemoteAddr();
+            if (remoteAddr != null) {
+                pw.println("Remote address: " + remoteAddr);
+            }
+            String remoteHost = req.getRemoteHost();
+            if (remoteHost != null) {
+                pw.println("Remote host: " + remoteHost);
+            }
             pw.println();
             pw.println("Headers: ");
             Enumeration headerNames = req.getHeaderNames();
