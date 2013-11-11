@@ -30,6 +30,7 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -150,6 +151,24 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
         }
         else {
             presenter.clearType();
+        }
+    }
+
+    @Override
+    public void setSelection(Collection<EntityData> selection) {
+        if(selection == null) {
+            return;
+        }
+        if(selection.isEmpty()) {
+            return;
+        }
+        for(EntityData entityData : selection) {
+            Optional<OWLEntityData> sel = toOWLEntityData(entityData);
+            if(sel.isPresent() && sel.get() instanceof OWLNamedIndividualData) {
+                setSelectedIndividual((OWLNamedIndividualData) sel.get());
+                break;
+            }
+
         }
     }
 
