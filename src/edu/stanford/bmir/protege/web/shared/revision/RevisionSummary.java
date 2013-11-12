@@ -1,5 +1,6 @@
-package edu.stanford.bmir.protege.web.client.rpc.data;
+package edu.stanford.bmir.protege.web.shared.revision;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
@@ -10,7 +11,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/10/2012
  */
-public class RevisionSummary implements Serializable, Comparable<RevisionSummary> {
+public class RevisionSummary implements Serializable, IsSerializable, Comparable<RevisionSummary> {
 
     private RevisionNumber revisionNumber;
 

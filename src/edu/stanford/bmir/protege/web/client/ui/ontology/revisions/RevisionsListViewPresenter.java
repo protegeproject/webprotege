@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import edu.stanford.bmir.protege.web.client.rpc.RevisionManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.RevisionManagerServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.data.RevisionSummary;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
