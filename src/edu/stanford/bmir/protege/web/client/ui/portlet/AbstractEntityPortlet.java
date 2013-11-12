@@ -49,7 +49,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * initializations for portlet (e.g. resizing, dragging, etc.) and the life
  * cycle of a portlet.
  * @author Tania Tudorache <tudorache@stanford.edu>
+ * @deprecated Use {@link AbstractOWLEntityPortlet}.
  */
+@Deprecated
 public abstract class AbstractEntityPortlet extends Portlet implements EntityPortlet, HasEventHandlerManagement {
 
     private Project project;
