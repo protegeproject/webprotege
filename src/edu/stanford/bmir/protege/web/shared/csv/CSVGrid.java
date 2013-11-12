@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.csv;
 
-import com.google.common.base.Splitter;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/05/2013
  */
-public class CSVGrid implements Serializable {
+public class CSVGrid implements IsSerializable {
 
     private List<CSVRow> grid = new ArrayList<CSVRow>();
 

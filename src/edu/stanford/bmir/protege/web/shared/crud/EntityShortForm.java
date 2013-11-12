@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -11,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/08/2013
  */
-public class EntityShortForm implements Serializable {
+public class EntityShortForm implements Serializable, IsSerializable {
 
     private String shortForm;
 

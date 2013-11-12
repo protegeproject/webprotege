@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.csv;
 
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/05/2013
  */
-public final class CSVColumnDescriptor implements Serializable {
+public final class CSVColumnDescriptor implements IsSerializable {
 
     private int columnIndex;
 
