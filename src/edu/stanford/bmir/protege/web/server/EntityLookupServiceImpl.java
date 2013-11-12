@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.client.rpc.EntityLookupService;
-import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceResult;
+import edu.stanford.bmir.protege.web.shared.entity.EntityLookupServiceResult;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequest;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequestType;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
