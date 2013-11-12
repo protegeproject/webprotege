@@ -157,98 +157,98 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
         super.onAfterResponseSerialized(serializedResponse);
     }
 
-    @Override
-    protected SerializationPolicy doGetSerializationPolicy(HttpServletRequest request, String moduleBaseURL, String strongName) {
-        // See  https://groups.google.com/forum/?fromgroups#!searchin/google-web-toolkit/proxypass$20serialization/google-web-toolkit/3wE9yWLMJo4/Mebd0XgW1EIJ
-        try {
-            final String contextPath = request.getContextPath();
-            // When deploying locally, the module base URL is something like
-            // http://127.0.0.1:8888/webprotege/
-            // In production this is
-            // http://webprotege.stanford.edu
-            final URI rawModuleBaseURI = URI.create(moduleBaseURL);
-            final String rawModulePath = rawModuleBaseURI.getPath();
-            int contextIndex = rawModulePath.indexOf(contextPath);
-            final String modulePath;
-            if (contextIndex < 0) {
-                modulePath = contextPath + rawModulePath;
-            } else if (contextIndex > 0) {
-                modulePath = rawModulePath.substring(contextIndex);
-            } else {
-                modulePath = rawModulePath;
-            }
-            URI moduleBaseURI = new URI(rawModuleBaseURI.getScheme(), rawModuleBaseURI.getAuthority(), modulePath, rawModuleBaseURI.getQuery(), rawModuleBaseURI.getFragment());
-            return loadSerializationPolicy(this, request, moduleBaseURI.toString(), strongName);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @Override
+//    protected SerializationPolicy doGetSerializationPolicy(HttpServletRequest request, String moduleBaseURL, String strongName) {
+//        // See  https://groups.google.com/forum/?fromgroups#!searchin/google-web-toolkit/proxypass$20serialization/google-web-toolkit/3wE9yWLMJo4/Mebd0XgW1EIJ
+//        try {
+//            final String contextPath = request.getContextPath();
+//            // When deploying locally, the module base URL is something like
+//            // http://127.0.0.1:8888/webprotege/
+//            // In production this is
+//            // http://webprotege.stanford.edu
+//            final URI rawModuleBaseURI = URI.create(moduleBaseURL);
+//            final String rawModulePath = rawModuleBaseURI.getPath();
+//            int contextIndex = rawModulePath.indexOf(contextPath);
+//            final String modulePath;
+//            if (contextIndex < 0) {
+//                modulePath = contextPath + rawModulePath;
+//            } else if (contextIndex > 0) {
+//                modulePath = rawModulePath.substring(contextIndex);
+//            } else {
+//                modulePath = rawModulePath;
+//            }
+//            URI moduleBaseURI = new URI(rawModuleBaseURI.getScheme(), rawModuleBaseURI.getAuthority(), modulePath, rawModuleBaseURI.getQuery(), rawModuleBaseURI.getFragment());
+//            return loadSerializationPolicy(this, request, moduleBaseURI.toString(), strongName);
+//        } catch (URISyntaxException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-    private static SerializationPolicy loadSerializationPolicy(HttpServlet servlet,
-                                                               HttpServletRequest request, String moduleBaseURL, String strongName) {
-        // The request can tell you the path of the web app relative to the
-        // container root.
-        String contextPath = request.getContextPath();
-        String modulePath = null;
-        if (moduleBaseURL != null) {
-            try {
-                modulePath = new URL(moduleBaseURL).getPath();
-            } catch (MalformedURLException ex) {
-                // log the information, we will default
-                servlet.log("Malformed moduleBaseURL: " + moduleBaseURL, ex);
-            }
-        }
-        SerializationPolicy serializationPolicy = null;
-
-    /*
-     * Check that the module path must be in the same web app as the servlet
-     * itself. If you need to implement a scheme different than this, override
-     * this method.
-     */
-        if (modulePath == null || !modulePath.startsWith(contextPath)) {
-            String message = "ERROR: The module path requested, "
-                    + modulePath
-                    + ", is not in the same web application as this servlet, "
-                    + contextPath
-                    + ".  Your module may not be properly configured or your client and server code maybe out of date.";
-            servlet.log(message);
-        } else {
-            // Strip off the context path from the module base URL. It should be a
-            // strict prefix.
-            String contextRelativePath = modulePath.substring(contextPath.length());
-            String serializationPolicyFilePath = SerializationPolicyLoader.getSerializationPolicyFileName(contextRelativePath
-                    + strongName);
-            // Open the RPC resource file and read its contents.
-            InputStream is = servlet.getServletContext().getResourceAsStream(
-                    serializationPolicyFilePath);
-            try {
-                if (is != null) {
-                    try {
-                        serializationPolicy = SerializationPolicyLoader.loadFromStream(is,
-                                null);
-                    } catch (ParseException e) {
-                        servlet.log("ERROR: Failed to parse the policy file '"
-                                + serializationPolicyFilePath + "'", e);
-                    } catch (IOException e) {
-                        servlet.log("ERROR: Could not read the policy file '"
-                                + serializationPolicyFilePath + "'", e);
-                    }
-                } else {
-                    String message = "ERROR: The serialization policy file '"
-                            + serializationPolicyFilePath
-                            + "' was not found; did you forget to include it in this deployment?";
-                    servlet.log(message);
-                }
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {
-                        // Ignore this error
-                    }
-                }
-            }
-        }
-        return serializationPolicy;
-    }
+//    private static SerializationPolicy loadSerializationPolicy(HttpServlet servlet,
+//                                                               HttpServletRequest request, String moduleBaseURL, String strongName) {
+//        // The request can tell you the path of the web app relative to the
+//        // container root.
+//        String contextPath = request.getContextPath();
+//        String modulePath = null;
+//        if (moduleBaseURL != null) {
+//            try {
+//                modulePath = new URL(moduleBaseURL).getPath();
+//            } catch (MalformedURLException ex) {
+//                // log the information, we will default
+//                servlet.log("Malformed moduleBaseURL: " + moduleBaseURL, ex);
+//            }
+//        }
+//        SerializationPolicy serializationPolicy = null;
+//
+//    /*
+//     * Check that the module path must be in the same web app as the servlet
+//     * itself. If you need to implement a scheme different than this, override
+//     * this method.
+//     */
+//        if (modulePath == null || !modulePath.startsWith(contextPath)) {
+//            String message = "ERROR: The module path requested, "
+//                    + modulePath
+//                    + ", is not in the same web application as this servlet, "
+//                    + contextPath
+//                    + ".  Your module may not be properly configured or your client and server code maybe out of date.";
+//            servlet.log(message);
+//        } else {
+//            // Strip off the context path from the module base URL. It should be a
+//            // strict prefix.
+//            String contextRelativePath = modulePath.substring(contextPath.length());
+//            String serializationPolicyFilePath = SerializationPolicyLoader.getSerializationPolicyFileName(contextRelativePath
+//                    + strongName);
+//            // Open the RPC resource file and read its contents.
+//            InputStream is = servlet.getServletContext().getResourceAsStream(
+//                    serializationPolicyFilePath);
+//            try {
+//                if (is != null) {
+//                    try {
+//                        serializationPolicy = SerializationPolicyLoader.loadFromStream(is,
+//                                null);
+//                    } catch (ParseException e) {
+//                        servlet.log("ERROR: Failed to parse the policy file '"
+//                                + serializationPolicyFilePath + "'", e);
+//                    } catch (IOException e) {
+//                        servlet.log("ERROR: Could not read the policy file '"
+//                                + serializationPolicyFilePath + "'", e);
+//                    }
+//                } else {
+//                    String message = "ERROR: The serialization policy file '"
+//                            + serializationPolicyFilePath
+//                            + "' was not found; did you forget to include it in this deployment?";
+//                    servlet.log(message);
+//                }
+//            } finally {
+//                if (is != null) {
+//                    try {
+//                        is.close();
+//                    } catch (IOException e) {
+//                        // Ignore this error
+//                    }
+//                }
+//            }
+//        }
+//        return serializationPolicy;
+//    }
 }
