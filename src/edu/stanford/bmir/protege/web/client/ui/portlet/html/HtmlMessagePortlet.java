@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.html;
 
-import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -13,7 +12,7 @@ import java.util.Map;
 /**
  * @author Csongor Nyulas
  */
-public class HtmlMessagePortlet extends AbstractEntityPortlet {
+public class HtmlMessagePortlet extends AbstractOWLEntityPortlet {
 
 
     private HtmlTextComponent htmlTextComponent;
@@ -26,10 +25,8 @@ public class HtmlMessagePortlet extends AbstractEntityPortlet {
 
     @Override
     public void initialize() {
-        setLayout(new FitLayout());
         setBorder(true);
         setPaddings(3);
-
         initConfiguration();
         htmlTextComponent = new HtmlTextComponent(getProject());
         add(htmlTextComponent);

@@ -6,7 +6,7 @@ import com.gwtext.client.widgets.event.PanelListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidget;
 import edu.stanford.bmir.protege.web.client.ui.portlet.PropertyWidget;
 
@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Tania Tudorache <tudorache@stanford.edu>
  *
  */
-public class PropertyFieldPortlet extends AbstractEntityPortlet {
+public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
 
     private TabPanel wrappingPanel;
     private FormGenerator formGenerator;

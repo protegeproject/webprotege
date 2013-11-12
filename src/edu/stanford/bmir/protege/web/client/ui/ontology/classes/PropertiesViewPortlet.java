@@ -11,13 +11,13 @@ import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 import java.util.Collection;
 import java.util.List;
 
-public class PropertiesViewPortlet extends AbstractEntityPortlet {
+public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
 
     private GridPanel propGrid;
     private RecordDef recordDef;

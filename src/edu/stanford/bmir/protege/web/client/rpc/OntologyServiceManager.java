@@ -90,10 +90,6 @@ public class OntologyServiceManager {
         proxy.moveCls(projectId.getId(), clsName, oldParentName, newParentName, checkForCycles, userId.getUserName(), operationDescription, cb);
     }
 
-    public void getRestrictionHtml(ProjectId projectId, String className, AsyncCallback<String> cb) {
-        proxy.getRestrictionHtml(projectId.getId(), className, cb);
-    }
-
     public void getClassConditions(ProjectId projectId, String className, AsyncCallback<List<ConditionItem>> cb) {
         proxy.getClassConditions(projectId.getId(), className, cb);
     }
