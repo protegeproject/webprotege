@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.rpc;
+package edu.stanford.bmir.protege.web.shared.entity;
 
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 

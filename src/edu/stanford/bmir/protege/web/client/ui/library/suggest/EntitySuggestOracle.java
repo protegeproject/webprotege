@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.SuggestOracle;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.rpc.EntityLookupService;
 import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceResult;
+import edu.stanford.bmir.protege.web.shared.entity.EntityLookupServiceResult;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequest;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequestType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

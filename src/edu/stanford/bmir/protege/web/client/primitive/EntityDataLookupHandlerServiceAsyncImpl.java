@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceResult;
+import edu.stanford.bmir.protege.web.shared.entity.EntityLookupServiceResult;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequest;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequestType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
