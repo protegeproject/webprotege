@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import edu.stanford.bmir.protege.web.client.download.DownloadFormatExtensionHandler;
 import edu.stanford.bmir.protege.web.client.download.DownloadSettingsDialog;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
@@ -17,10 +19,19 @@ public class DownloadProjectRequestHandlerImpl implements DownloadProjectRequest
 
     @Override
     public void handleProjectDownloadRequest(final ProjectId projectId) {
-        DownloadSettingsDialog.showDialog(new DownloadFormatExtensionHandler() {
+        GWT.runAsync(new RunAsyncCallback() {
             @Override
-            public void handleDownload(DownloadFormatExtension extension) {
-                doDownload(projectId, extension);
+            public void onFailure(Throwable reason) {
+            }
+
+            @Override
+            public void onSuccess() {
+                DownloadSettingsDialog.showDialog(new DownloadFormatExtensionHandler() {
+                    @Override
+                    public void handleDownload(DownloadFormatExtension extension) {
+                        doDownload(projectId, extension);
+                    }
+                });
             }
         });
 

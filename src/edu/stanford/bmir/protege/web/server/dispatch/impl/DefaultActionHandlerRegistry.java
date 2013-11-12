@@ -69,6 +69,7 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         register(new GetClientApplicationPropertiesActionHandler(), GetClientApplicationPropertiesAction.class);
 
         register(new GetAvailableProjectsHandler(), GetAvailableProjectsAction.class);
+
         register(new LoadProjectActionHandler(), LoadProjectAction.class);
 
         register(new GetProjectEventsActionHandler(), GetProjectEventsAction.class);
