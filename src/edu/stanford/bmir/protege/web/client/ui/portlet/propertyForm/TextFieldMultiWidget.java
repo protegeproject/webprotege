@@ -3,6 +3,9 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.form.Field;
@@ -18,7 +21,7 @@ import java.util.*;
 
 public class TextFieldMultiWidget extends AbstractPropertyWidget {
 
-	private Panel wrappingPanel;
+	private FlowPanel wrappingPanel;
 	private final List<PropertyWidget> widgets;
 	private String labelString;
 	private Anchor addNewLink;
@@ -31,8 +34,8 @@ public class TextFieldMultiWidget extends AbstractPropertyWidget {
 		}
 
 	@Override
-	public Component createComponent() {
-	    wrappingPanel = new Panel();
+	public Widget createComponent() {
+	    wrappingPanel = new FlowPanel();
         addNewLink = new Anchor("&nbsp&nbsp<img src=\"images/add.png\"></img>&nbsp Add new value", true);
         addNewLink.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -46,15 +49,12 @@ public class TextFieldMultiWidget extends AbstractPropertyWidget {
 
 	@Override
     public void refresh() {
-		wrappingPanel.doLayout();
 	}
 
 	protected void onAddNewValue() {
 		PropertyWidget widget = createWidget("");
 		//TODO: fix me!!!!! hack!! not cast to component
-		wrappingPanel.insert(wrappingPanel.getComponents().length -1, widget.getComponent());
-
-		wrappingPanel.doLayout();
+		wrappingPanel.add(widget.getComponent());
 	}
 
 	protected Field createFieldComponent() {
@@ -93,7 +93,7 @@ public class TextFieldMultiWidget extends AbstractPropertyWidget {
 	@Override
     public void setValues(Collection<EntityData> vs) {
 		this.values = vs;
-		wrappingPanel.removeAll();
+		wrappingPanel.clear();
 		if (values.size() > 0)  {
 			for (EntityData value : values) {
 				PropertyWidget widget = createWidget(value);
@@ -109,13 +109,12 @@ public class TextFieldMultiWidget extends AbstractPropertyWidget {
 		if (!isDisabled() && !isReadOnly()) {
 		    wrappingPanel.add(addNewLink);
 		}
-		wrappingPanel.doLayout();
 	}
 
 	private PropertyWidget createWidget(Object value) {
 	    TextFieldWidget widget = createInnerWidget();
 
-		if (wrappingPanel.getComponents().length == 0) { //TODO: hack
+		if (wrappingPanel.getWidgetCount() == 0) { //TODO: hack
 			widget.setLabel(labelString, getHelpURL(), getTooltipText());
 		} else {
 			widget.setLabel(null, null, null); //hack
@@ -144,7 +143,7 @@ public class TextFieldMultiWidget extends AbstractPropertyWidget {
 
 
 	@Override
-	public Component getComponent() {
+	public Widget getComponent() {
 		return wrappingPanel;
 	}
 }
