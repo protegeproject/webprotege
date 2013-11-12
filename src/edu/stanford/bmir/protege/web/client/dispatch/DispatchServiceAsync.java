@@ -7,5 +7,5 @@ import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedExceptio
 
 public interface DispatchServiceAsync {
 
-    void executeAction(Action<?> action, AsyncCallback<DispatchServiceResultContainer> async) throws ActionExecutionException, PermissionDeniedException;
+    void executeAction(Action action, AsyncCallback<DispatchServiceResultContainer> async) throws ActionExecutionException, PermissionDeniedException;
 }

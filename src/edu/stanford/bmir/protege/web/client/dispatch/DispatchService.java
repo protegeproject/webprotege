@@ -15,8 +15,7 @@ import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedExceptio
 @RemoteServiceRelativePath("dispatchservice")
 public interface DispatchService extends RemoteService  {
 
-//    <A extends Action<R>, R extends Result> R executeAction(A action) throws ActionExecutionException;
-    DispatchServiceResultContainer executeAction(Action<?> action) throws ActionExecutionException, PermissionDeniedException;
+    DispatchServiceResultContainer executeAction(Action action) throws ActionExecutionException, PermissionDeniedException;
 
 
 }
