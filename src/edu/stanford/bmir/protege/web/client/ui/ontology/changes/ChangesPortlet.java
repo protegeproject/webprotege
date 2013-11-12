@@ -1,15 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
-import com.google.gwt.core.client.GWT;
-import com.gwtext.client.core.SortDir;
 import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.PagingToolbar;
 import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
-import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
@@ -150,31 +146,5 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
 				timestampCol, appliesToCol };
 		ColumnModel columnModel = new ColumnModel(columns);
 		changesGrid.setColumnModel(columnModel);
-	}
-
-	class GetChangesHandler extends
-			AbstractAsyncHandler<Collection<ChangeData>> {
-
-		@Override
-		public void handleFailure(Throwable caught) {
-			GWT.log("RPC error getting changes for the "
-					+ getProjectId() + "ontology", caught);
-		}
-
-		@Override
-		public void handleSuccess(Collection<ChangeData> result) {
-			for (ChangeData data : result) {
-				/*
-				 * TODO: Populate "Applies to" column with something other than
-				 * an empty string.
-				 */
-				Record record = recordDef.createRecord(new Object[] {
-						data.getDescription(), data.getAuthor(),
-						data.getTimestamp(), "" });
-				store.add(record);
-			}
-			store.sort("timestamp", SortDir.DESC);
-			changesGrid.getView().refresh();
-		}
 	}
 }
