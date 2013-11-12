@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.html;
 
-import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
@@ -26,10 +25,8 @@ public class HtmlMessagePortlet extends AbstractOWLEntityPortlet {
 
     @Override
     public void initialize() {
-        setLayout(new FitLayout());
         setBorder(true);
         setPaddings(3);
-
         initConfiguration();
         htmlTextComponent = new HtmlTextComponent(getProject());
         add(htmlTextComponent);
