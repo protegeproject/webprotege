@@ -269,7 +269,7 @@ public class OWLAPIChangeManager {
             axiomTypes.add(AxiomType.DATA_PROPERTY_ASSERTION);
 
             // Mop Up
-            for (AxiomType type : AxiomType.AXIOM_TYPES) {
+            for (AxiomType<?> type : AxiomType.AXIOM_TYPES) {
                 if (!axiomTypes.contains(type)) {
                     axiomTypes.add(type);
                 }
