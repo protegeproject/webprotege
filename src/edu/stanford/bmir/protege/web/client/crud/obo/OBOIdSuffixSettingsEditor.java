@@ -17,7 +17,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEditor;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
-import edu.stanford.bmir.protege.web.shared.irigen.obo.UserIdRange;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 
 import java.util.Collections;
 import java.util.List;

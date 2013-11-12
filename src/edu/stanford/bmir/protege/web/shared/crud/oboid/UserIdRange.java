@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.irigen.obo;
+package edu.stanford.bmir.protege.web.shared.crud.oboid;
 
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
