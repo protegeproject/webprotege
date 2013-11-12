@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +14,7 @@ import java.util.Collections;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/10/2012
  */
-public class RevisionsPortlet extends AbstractEntityPortlet {
+public class RevisionsPortlet extends AbstractOWLEntityPortlet {
 
     public static final int INITIAL_HEIGHT = 400;
 
