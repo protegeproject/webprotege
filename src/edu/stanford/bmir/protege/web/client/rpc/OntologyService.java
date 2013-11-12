@@ -63,8 +63,6 @@ public interface OntologyService extends RemoteService {
 
     public PaginationData<EntityData> getIndividuals(String projectName, String className, int start, int limit, String sort, String dir);
 
-    public String getRestrictionHtml(String projectName, String className);
-
     public List<ConditionItem> getClassConditions(String projectName, String className);
 
     public List<ConditionItem> deleteCondition(String projectName, String className, ConditionItem conditionItem, int row,

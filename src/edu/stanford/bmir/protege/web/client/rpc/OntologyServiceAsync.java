@@ -60,8 +60,6 @@ public interface OntologyServiceAsync {
     void moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
             String user,  String operationDescription, AsyncCallback<List<EntityData>> cb);
 
-    void getRestrictionHtml(String projectName, String className, AsyncCallback<String> cb);
-
     void getClassConditions(String projectName, String className, AsyncCallback<List<ConditionItem>> cb);
 
     void deleteCondition(String projectName, String className, ConditionItem conditionItem, int row, String operationDescription,
