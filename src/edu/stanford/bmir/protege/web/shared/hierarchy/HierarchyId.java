@@ -1,12 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-
-import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -16,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/03/2013
  */
-public class HierarchyId<T> implements Serializable {
+public class HierarchyId<T> implements IsSerializable {
 
     public static final HierarchyId<OWLClass> CLASS_HIERARCHY = get("Class");
 
