@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.notes;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasLexicalForm;
 
 import java.io.Serializable;
@@ -18,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     NoteId objects are immutable.
  * </p>
  */
-public final class NoteId implements HasLexicalForm, Serializable {
+public final class NoteId implements HasLexicalForm, Serializable, IsSerializable {
 
     private String lexicalForm;
 
