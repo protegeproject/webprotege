@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.client.ui.obo.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.OntologyAnnotationsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeAnalysisTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeTablePortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet;
@@ -151,9 +150,6 @@ public class UIFactory {
             }
             else if (portletJavaClassName.equals(ChangeTablePortlet.class.getName())) {
                 return new ChangeTablePortlet(project);
-            }
-            else if (portletJavaClassName.equals(ChangeTreePortlet.class.getName())) {
-                return new ChangeTreePortlet(project);
             }
             else if (portletJavaClassName.equals(BioPortalProposalsPortlet.class.getName())) {
                 return new BioPortalProposalsPortlet(project);
