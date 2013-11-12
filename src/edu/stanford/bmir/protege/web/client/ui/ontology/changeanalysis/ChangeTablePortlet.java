@@ -15,7 +15,7 @@ public class ChangeTablePortlet extends ChangesPortlet {
 	public ChangeTablePortlet(Project project) {
 		super(project);
 	}
-	
+
 	public ChangesProxyImpl getDataProxy() {
 		return proxy;
 	}
@@ -46,6 +46,6 @@ public class ChangeTablePortlet extends ChangesPortlet {
 		
 		PagingToolbar pToolbar = (PagingToolbar) changesGrid.getBottomToolbar();
 		store.load(0, pToolbar.getPageSize());
-		
+
 	}
 }

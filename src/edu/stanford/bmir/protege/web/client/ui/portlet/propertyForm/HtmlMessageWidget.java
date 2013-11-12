@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Component;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidget;
@@ -14,14 +15,14 @@ public class HtmlMessageWidget extends AbstractPropertyWidget {
 	}
 
     @Override
-    public Component createComponent() {
+    public Widget createComponent() {
         htmlTextComponent = new HtmlTextComponent(getProject());
         htmlTextComponent.setConfigProperties(getWidgetConfiguration());
         return htmlTextComponent;
     }
 
     @Override
-    public Component getComponent() {
+    public Widget getComponent() {
         return htmlTextComponent;
     }
 

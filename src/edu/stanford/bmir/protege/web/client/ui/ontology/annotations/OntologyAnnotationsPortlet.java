@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotati
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEventHandler;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -29,7 +29,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
-public class OntologyAnnotationsPortlet extends AbstractEntityPortlet {
+public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
 
     private static final int DEFAULT_HEIGHT = 400;
 

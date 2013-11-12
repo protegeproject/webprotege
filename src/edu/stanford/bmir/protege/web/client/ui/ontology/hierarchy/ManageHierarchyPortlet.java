@@ -11,14 +11,14 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 import java.util.Collection;
 import java.util.Map;
 
-public class ManageHierarchyPortlet extends AbstractEntityPortlet {
+public class ManageHierarchyPortlet extends AbstractOWLEntityPortlet {
 
     private static final String TOP_CLASS_PROP = "topClass";
 

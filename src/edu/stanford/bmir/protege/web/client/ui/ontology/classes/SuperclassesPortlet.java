@@ -5,14 +5,14 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ParentsPanel;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class SuperclassesPortlet extends AbstractEntityPortlet {
+public class SuperclassesPortlet extends AbstractOWLEntityPortlet {
 
     private ParentsPanel parentsPanel;
 

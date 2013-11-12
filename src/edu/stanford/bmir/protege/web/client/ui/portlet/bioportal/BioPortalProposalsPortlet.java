@@ -22,14 +22,14 @@ import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsMana
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.AbstractValidatableTab;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 import java.util.Collection;
 import java.util.Date;
 
-public class BioPortalProposalsPortlet extends AbstractEntityPortlet {
+public class BioPortalProposalsPortlet extends AbstractOWLEntityPortlet {
 
     private GridPanel grid;
     private Store store;

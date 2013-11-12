@@ -6,7 +6,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.library.common.Refreshable;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Collection;
@@ -14,7 +14,7 @@ import java.util.Collection;
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
  */
-public class OntologiesPortlet extends AbstractEntityPortlet implements Refreshable, HasSelectionHandlers<ProjectId> {
+public class OntologiesPortlet extends AbstractOWLEntityPortlet implements Refreshable, HasSelectionHandlers<ProjectId> {
 
     public OntologiesPortlet(Project project) {
         super(project);

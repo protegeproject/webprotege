@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.app;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/07/2013
  */
-public class ClientApplicationProperties implements Serializable {
+public class ClientApplicationProperties implements IsSerializable {
 
 
     private Map<WebProtegePropertyName, String> propertyMap;

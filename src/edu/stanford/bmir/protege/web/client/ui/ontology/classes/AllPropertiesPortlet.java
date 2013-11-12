@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 
 import java.util.Collection;
 
@@ -12,7 +12,7 @@ import java.util.Collection;
  *
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
-public class AllPropertiesPortlet extends AbstractEntityPortlet {
+public class AllPropertiesPortlet extends AbstractOWLEntityPortlet {
 
     protected AllPropertiesGrid propGrid;
 

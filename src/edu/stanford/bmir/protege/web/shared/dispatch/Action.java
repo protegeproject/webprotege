@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
-import java.io.Serializable;
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 
 /**
  * Author: Matthew Horridge<br>
@@ -11,5 +12,5 @@ import java.io.Serializable;
  *     The basic interface for actions that are sent to the dispatch service
  * </p>
  */
-public interface Action<R extends Result> extends Serializable {
+public interface Action<R extends Result> extends IsSerializable {
 }
