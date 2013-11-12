@@ -6,8 +6,6 @@ import edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet;
 import edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet;
 import edu.stanford.bmir.protege.web.client.ui.obo.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.OntologyAnnotationsPortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeAnalysisTab;
-import edu.stanford.bmir.protege.web.client.ui.ontology.changeanalysis.ChangeTablePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet;
@@ -85,9 +83,6 @@ public class UIFactory {
         else if (tabJavaClassName.equals(ManageHierarchyTab.class.getName())) {
             return new ManageHierarchyTab(project);
         }
-        else if (tabJavaClassName.equals(ChangeAnalysisTab.class.getName())) {
-            return new ChangeAnalysisTab(project);
-        }
         return null;
     }
 
@@ -147,9 +142,6 @@ public class UIFactory {
             }
             else if (portletJavaClassName.equals(PropertiesViewPortlet.class.getName())) {
                 return new PropertiesViewPortlet(project);
-            }
-            else if (portletJavaClassName.equals(ChangeTablePortlet.class.getName())) {
-                return new ChangeTablePortlet(project);
             }
             else if (portletJavaClassName.equals(BioPortalProposalsPortlet.class.getName())) {
                 return new BioPortalProposalsPortlet(project);
@@ -214,7 +206,7 @@ public class UIFactory {
          * OtherTerminologiesTab.class.getName(),
          *
          */
-        String[] tabs = {ClassesTab.class.getName(), PropertiesTab.class.getName(), IndividualsTab.class.getName(), MetadataTab.class.getName(), NotesTab.class.getName(), ChangeAnalysisTab.class.getName()};
+        String[] tabs = {ClassesTab.class.getName(), PropertiesTab.class.getName(), IndividualsTab.class.getName(), MetadataTab.class.getName(), NotesTab.class.getName()};
         return Arrays.asList(tabs);
     }
 
