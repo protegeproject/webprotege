@@ -44,13 +44,13 @@ public class LayoutManager {
 		tab.setup();
 	}
 	
-	public EntityPortlet createPortlet(PortletConfiguration portletConfig) {
-		if (portletConfig == null) {return null;}
-		String name = portletConfig.getName();
-		EntityPortlet portlet = UIFactory.createPortlet(project, name);
-		if (portlet == null) {return null;}
-		return portlet;
-	}
+//	public EntityPortlet createPortlet(PortletConfiguration portletConfig) {
+//		if (portletConfig == null) {return null;}
+//		String name = portletConfig.getName();
+//		EntityPortlet portlet = UIFactory.createPortlet(project, name);
+//		if (portlet == null) {return null;}
+//		return portlet;
+//	}
 	
 	public ColumnLayoutData[] createColumnLayoutData(List<Float> cols) {
 		if (cols == null) { return null; }

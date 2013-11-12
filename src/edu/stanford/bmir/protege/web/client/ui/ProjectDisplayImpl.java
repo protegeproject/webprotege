@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Element;
@@ -227,19 +228,24 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
     }
 
-    protected void onPortletAdded(String javaClassName) {
-        try {
-            EntityPortlet portlet = UIFactory.createPortlet(getProject(), javaClassName);
-            if (portlet == null) {
-                return;
-            }
-            AbstractTab activeTab = getActiveOntologyTab();
-            activeTab.addPortlet(portlet, activeTab.getColumnCount() - 1);
-            doLayout();
-        }
-        catch (Exception e) {
-            GWT.log("Problem adding portlet", e);
-        }
+    protected void onPortletAdded(final String javaClassName) {
+            GWT.runAsync(new RunAsyncCallback() {
+                @Override
+                public void onFailure(Throwable reason) {
+                    GWT.log("There was a problem adding the portlet", reason);
+                }
+
+                @Override
+                public void onSuccess() {
+                    EntityPortlet portlet = UIFactory.createPortlet(getProject(), javaClassName);
+                    if (portlet == null) {
+                        return;
+                    }
+                    AbstractTab activeTab = getActiveOntologyTab();
+                    activeTab.addPortlet(portlet, activeTab.getColumnCount() - 1);
+                    doLayout();
+                }
+            });
 
     }
 
