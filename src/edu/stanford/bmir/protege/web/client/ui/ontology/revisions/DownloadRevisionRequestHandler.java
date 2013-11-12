@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
 /**
  * Author: Matthew Horridge<br>
