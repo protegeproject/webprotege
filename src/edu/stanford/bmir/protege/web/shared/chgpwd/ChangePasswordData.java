@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.chgpwd;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -8,13 +10,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 27/08/2013
  */
-public final class ChangePasswordData {
+public final class ChangePasswordData implements IsSerializable {
 
     private String oldPassword;
 
     private String newPassword;
 
     private String newPasswordConfirmation;
+
+    /**
+     * For serialization purposes only
+     */
+    private ChangePasswordData() {
+    }
 
     public ChangePasswordData(String oldPassword, String newPassword, String newPasswordConfirmation) {
         this.oldPassword = checkNotNull(oldPassword);
