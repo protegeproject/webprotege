@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.csv;
 
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/05/2013
  */
-public class CSVImportDescriptor implements Serializable {
+public class CSVImportDescriptor implements IsSerializable {
 
     private CSVRowImportType rowImportType;
 
