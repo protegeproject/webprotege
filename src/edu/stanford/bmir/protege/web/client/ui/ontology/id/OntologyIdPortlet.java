@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAc
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdResult;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 
 import java.util.Collection;
 
@@ -17,7 +17,7 @@ import java.util.Collection;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
-public class OntologyIdPortlet extends AbstractEntityPortlet {
+public class OntologyIdPortlet extends AbstractOWLEntityPortlet {
 
     private OntologyIdEditor editor;
 

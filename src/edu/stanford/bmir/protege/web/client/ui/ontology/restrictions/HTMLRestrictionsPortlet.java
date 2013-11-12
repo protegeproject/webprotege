@@ -8,11 +8,11 @@ import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 
 import java.util.ArrayList;
 
-public class HTMLRestrictionsPortlet extends AbstractEntityPortlet {
+public class HTMLRestrictionsPortlet extends AbstractOWLEntityPortlet {
 
 	private Panel panel;
 
