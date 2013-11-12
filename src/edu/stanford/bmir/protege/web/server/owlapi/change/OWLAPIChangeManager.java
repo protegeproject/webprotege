@@ -148,9 +148,6 @@ public class OWLAPIChangeManager {
     }
 
     private List<OWLOntologyChangeRecord> internChangeRecords(OntologyChangeRecordList list, final Interner<OWLAxiom> axiomInterner, Interner<OWLOntologyID> ontologyIDInterner) {
-        LOGGER.info("Interning change records");
-
-
         List<OWLOntologyChangeRecord> result = new ArrayList<OWLOntologyChangeRecord>();
         List<OWLOntologyChangeRecord> records = list.getChangeRecords();
 
