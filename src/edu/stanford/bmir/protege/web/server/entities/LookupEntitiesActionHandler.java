@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectRe
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
@@ -173,7 +174,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
     }
 
     private boolean isMatch(String shortForm, Matcher matcher, EntityLookupRequest request) {
-        if(request.getSearchType() == EntitySearchType.EXACT_MATCH) {
+        if(request.getSearchType() == SearchType.EXACT_MATCH) {
             return matcher.matches();
         }
         else {

@@ -6,6 +6,7 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.*;
@@ -51,7 +52,7 @@ public class EntitySuggestOracle extends SuggestOracle {
 
     @Override
     public void requestSuggestions(final Request request, final Callback callback) {
-        DispatchServiceManager.get().execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), EntitySearchType.getDefault(), suggestLimit, entityTypes)), new AsyncCallback<LookupEntitiesResult>() {
+        DispatchServiceManager.get().execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), new AsyncCallback<LookupEntitiesResult>() {
             @Override
             public void onFailure(Throwable caught) {
                 MessageBox.alert(caught.getMessage());
