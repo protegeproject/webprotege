@@ -1,12 +1,35 @@
+*.class
+
+# gwt caches and compiled units #
+war/gwt_bree/
+gwt-unitCache/
+
+# boilerplate generated classes #
+.apt_generated/
+
+# more caches and things from deploy #
+war/WEB-INF/deploy/
+war/WEB-INF/classes/
+war/WEB-INF/lib/gwt-servlet.jar
+
+# build files
 build/
 local.properties
-.idea/
-*.iml
-.DS_Store
-.svn/
-webprotege.properties
-mail.properties
 out/
 /classes
 extras/
 
+# IDE files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# WebProtege specific files
+webprotege.properties
+mail.properties
+
+# others
+.svn/
+.DS_Store
