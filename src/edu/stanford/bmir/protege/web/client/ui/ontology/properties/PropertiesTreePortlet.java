@@ -32,6 +32,7 @@ import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedHandler;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import org.semanticweb.owlapi.model.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -138,18 +139,18 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             }
         });
 
-        addProjectEventHandler(HierarchyRootAddedEvent.TYPE, new HierarchyRootAddedHandler() {
+        addProjectEventHandler(HierarchyRootAddedEvent.TYPE, new HierarchyRootAddedHandler<Serializable>() {
             @Override
-            public void handleHierarchyRootAdded(HierarchyRootAddedEvent event) {
+            public void handleHierarchyRootAdded(HierarchyRootAddedEvent<Serializable> event) {
                 if (isEventForThisProject(event)) {
                     handleRootAdded(event);
                 }
             }
         });
 
-        addProjectEventHandler(HierarchyRootRemovedEvent.TYPE, new HierarchyRootRemovedHandler<Object>() {
+        addProjectEventHandler(HierarchyRootRemovedEvent.TYPE, new HierarchyRootRemovedHandler<Serializable>() {
             @Override
-            public void handleHierarchyRootRemoved(HierarchyRootRemovedEvent event) {
+            public void handleHierarchyRootRemoved(HierarchyRootRemovedEvent<Serializable> event) {
                 if (isEventForThisProject(event)) {
                     handleRootRemoved(event);
                 }

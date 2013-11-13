@@ -3,13 +3,15 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import java.io.Serializable;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/03/2013
  */
-public class HierarchyRootRemovedEvent<T> extends ProjectEvent<HierarchyRootRemovedHandler<T>> {
+public class HierarchyRootRemovedEvent<T extends Serializable> extends ProjectEvent<HierarchyRootRemovedHandler<T>> {
 
     public transient static final Type<HierarchyRootRemovedHandler<?>> TYPE = new Type<HierarchyRootRemovedHandler<?>>();
 
