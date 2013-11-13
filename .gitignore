@@ -7,3 +7,4 @@ local.properties
 webprotege.properties
 mail.properties
 out/
+/classes
