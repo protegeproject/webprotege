@@ -4,8 +4,8 @@ import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
-import edu.stanford.bmir.protege.web.client.rpc.data.RevisionSummary;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
@@ -148,9 +148,6 @@ public class OWLAPIChangeManager {
     }
 
     private List<OWLOntologyChangeRecord> internChangeRecords(OntologyChangeRecordList list, final Interner<OWLAxiom> axiomInterner, Interner<OWLOntologyID> ontologyIDInterner) {
-        LOGGER.info("Interning change records");
-
-
         List<OWLOntologyChangeRecord> result = new ArrayList<OWLOntologyChangeRecord>();
         List<OWLOntologyChangeRecord> records = list.getChangeRecords();
 
@@ -272,7 +269,7 @@ public class OWLAPIChangeManager {
             axiomTypes.add(AxiomType.DATA_PROPERTY_ASSERTION);
 
             // Mop Up
-            for (AxiomType type : AxiomType.AXIOM_TYPES) {
+            for (AxiomType<?> type : AxiomType.AXIOM_TYPES) {
                 if (!axiomTypes.contains(type)) {
                     axiomTypes.add(type);
                 }

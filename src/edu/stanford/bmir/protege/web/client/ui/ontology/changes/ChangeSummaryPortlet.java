@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 
 import java.util.Collection;
 import java.util.Date;
@@ -20,7 +20,7 @@ import java.util.Date;
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
  */
-public class ChangeSummaryPortlet extends AbstractEntityPortlet {
+public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
 
     private ChangesGrid grid;
 

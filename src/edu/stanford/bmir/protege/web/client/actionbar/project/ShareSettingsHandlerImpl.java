@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.actionbar.project;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
@@ -17,12 +19,21 @@ public class ShareSettingsHandlerImpl implements ShowShareSettingsHandler {
 
     @Override
     public void handleShowShareSettings() {
-        Optional<ProjectId> activeProjectId = Application.get().getActiveProject();
-        if(!activeProjectId.isPresent()) {
-            MessageBox.alert("No project is selected");
-            return;
-        }
-        SharingSettingsDialogController controller = new SharingSettingsDialogController(activeProjectId.get());
-        WebProtegeDialog.showDialog(controller);
+        GWT.runAsync(new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable reason) {
+            }
+
+            @Override
+            public void onSuccess() {
+                Optional<ProjectId> activeProjectId = Application.get().getActiveProject();
+                if(!activeProjectId.isPresent()) {
+                    MessageBox.alert("No project is selected");
+                    return;
+                }
+                SharingSettingsDialogController controller = new SharingSettingsDialogController(activeProjectId.get());
+                WebProtegeDialog.showDialog(controller);
+            }
+        });
     }
 }

@@ -8,3 +8,5 @@ webprotege.properties
 mail.properties
 out/
 /classes
+extras/
+

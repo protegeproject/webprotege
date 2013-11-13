@@ -25,7 +25,7 @@ public class DispatchServiceImpl extends WebProtegeRemoteServiceServlet implemen
     private DispatchServiceHandler executor = new DefaultDispatchServiceExecutor();
 
     @Override
-    public DispatchServiceResultContainer executeAction(Action<?> action) throws ActionExecutionException, PermissionDeniedException {
+    public DispatchServiceResultContainer executeAction(Action action) throws ActionExecutionException, PermissionDeniedException {
         UserId userId = getUserInSession();
         HttpServletRequest request = getThreadLocalRequest();
         HttpSession session = request.getSession();

@@ -2,9 +2,8 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.html;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.*;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.layout.AnchorLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
 
@@ -13,19 +12,23 @@ import java.util.Map;
 /**
  * @author Csongor Nyulas
  */
-public class HtmlTextComponent extends Panel {
+public class HtmlTextComponent extends Composite {
 
     private Map<String, Object> configProperties;
     private String loadURL = null;
     private String htmlText = null;
     private RequestBuilder requestBuilder = null;
 
+    private HTML html;
+
     public HtmlTextComponent(Project project) {
         initUI();
     }
 
     private void initUI() {
-        this.setLayout(new AnchorLayout());
+        html = new HTML();
+        html.setSize("100%", "100%");
+        initWidget(html);
         refreshContent();
     }
 
@@ -49,11 +52,8 @@ public class HtmlTextComponent extends Panel {
     }
 
     private void replaceHTML(String html) {
-        this.addClass("html-portlet");
-
-        this.removeAll();
-        this.add(new HTML(html));
-        this.doLayout();
+        this.addStyleName("html-portlet");
+        this.html.setHTML(html);
     }
 
     private void readConfigurations() {

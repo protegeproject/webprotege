@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.actionbar.project;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsDialogController;
@@ -30,11 +31,20 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
 
     @Override
     public void handleShowFreshEntitySettings() {
-        Optional<ProjectId> activeProject = Application.get().getActiveProject();
-        if(!activeProject.isPresent()) {
-            return;
-        }
-        getSettingsAndShowDialog(activeProject);
+        GWT.runAsync(new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable reason) {
+            }
+
+            @Override
+            public void onSuccess() {
+                Optional<ProjectId> activeProject = Application.get().getActiveProject();
+                if(!activeProject.isPresent()) {
+                    return;
+                }
+                getSettingsAndShowDialog(activeProject);
+            }
+        });
     }
 
     private void getSettingsAndShowDialog(Optional<ProjectId> activeProject) {

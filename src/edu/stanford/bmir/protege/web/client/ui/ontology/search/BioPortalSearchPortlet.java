@@ -3,11 +3,11 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.search;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 
 import java.util.ArrayList;
 
-public class BioPortalSearchPortlet extends AbstractEntityPortlet {
+public class BioPortalSearchPortlet extends AbstractOWLEntityPortlet {
 
     private BioPortalSearchComponent searchComp;
 

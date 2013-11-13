@@ -5,11 +5,9 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -22,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *      An identifier for a project.  Project identifiers are essentially UUID strings.
  * </p>
  */
-public class ProjectId implements Serializable {
+public class ProjectId implements Serializable, IsSerializable {
 
     private String id = "";
 

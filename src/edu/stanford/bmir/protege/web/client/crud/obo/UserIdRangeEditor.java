@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.crud.obo;
 
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
-import edu.stanford.bmir.protege.web.shared.irigen.obo.UserIdRange;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 
 /**
  * Author: Matthew Horridge<br>

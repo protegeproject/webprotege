@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Component;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -40,7 +41,7 @@ public interface PropertyWidget {
 
     PropertyEntityData getProperty();
 
-    Component getComponent();
+    Widget getComponent();
 
     /**
      * Makes a call to the server to get the values for this widget.

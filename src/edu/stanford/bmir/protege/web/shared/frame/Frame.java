@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.io.Serializable;
  *     A high level interface for frame objects.  All frames have some kind of subject.
  * </p>
  */
-public interface Frame<S> extends Serializable, HasSignature {
+public interface Frame<S> extends Serializable, HasSignature, IsSerializable {
 
     /**
      * Gets the subject of this frame.

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 import com.google.web.bindery.event.shared.Event;
 
 import java.io.Serializable;
@@ -10,7 +11,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 16/01/2013
  */
-public abstract class SerializableEvent<H> extends Event<H> implements Serializable {
+public abstract class SerializableEvent<H> extends Event<H> implements IsSerializable {
 
     private Serializable source;
 

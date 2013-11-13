@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.gwtext.client.widgets.MessageBox;
@@ -196,7 +197,16 @@ public class Application {
      */
     public void loadProject(final ProjectId projectId, final AsyncCallback<Project> callback) {
         checkNotNull(callback);
-        ProjectManager.get().loadProject(projectId, callback);
+        GWT.runAsync(new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable reason) {
+            }
+
+            @Override
+            public void onSuccess() {
+                ProjectManager.get().loadProject(projectId, callback);
+            }
+        });
     }
 
     public void closeProject(ProjectId projectId, AsyncCallback<ProjectId> callback) {

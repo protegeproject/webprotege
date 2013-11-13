@@ -22,6 +22,7 @@ import java.util.Collections;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
+@SuppressWarnings("deprecated")
 public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
 
     protected AbstractOWLEntityPortlet(Project project) {

@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
  * interface of a tab.<br />
  * <br />
  * 
- * It is recommended that all portlets extend the {@link AbstractEntityPortlet}
+ * It is recommended that all portlets extend the {@link AbstractOWLEntityPortlet}
  * class.
  * 
  * @author Tania Tudorache <tudorache@stanford.edu>
