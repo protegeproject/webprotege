@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.rpc.data;
+package edu.stanford.bmir.protege.web.shared.entity;
 
 /**
  * Author: Matthew Horridge<br>
@@ -6,7 +6,7 @@ package edu.stanford.bmir.protege.web.client.rpc.data;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/12/2012
  */
-public enum EntityLookupRequestType {
+public enum EntitySearchType {
 
     EXACT_MATCH(false),
 
@@ -16,11 +16,11 @@ public enum EntityLookupRequestType {
 
     private boolean ignoreCase;
 
-    private EntityLookupRequestType(boolean ignoreCase) {
+    private EntitySearchType(boolean ignoreCase) {
         this.ignoreCase = ignoreCase;
     }
 
-    public static EntityLookupRequestType getDefault() {
+    public static EntitySearchType getDefault() {
         return SUB_STRING_MATCH_IGNORE_CASE;
     }
 

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusHandler;
@@ -13,8 +12,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.rpc.EntityLookupService;
-import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
@@ -46,13 +43,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/12/2012
  * <p>
- * An editor for {@link OWLPrimitiveData} objects.  The editor supports auto-completion using the
- * {@link EntityLookupService} and has an option to allow the creation of new primitives.
+ * An editor for {@link OWLPrimitiveData} objects.  The editor supports auto-completion
+ * and has an option to allow the creation of new primitives.
  * </p>
  */
 public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDataEditor, HasEnabled {
-
-    private static final EntityLookupServiceAsync LOOKUP_SERVICE_ASYNC = GWT.create(EntityLookupService.class);
 
     public static final int SUGGEST_LIMIT = 20;
 
@@ -76,7 +71,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private String lastIconInsetStyleName = "empty-icon-inset";
 
-    private PrimitiveDataParser primitiveDataParser = new DefaultPrimitiveDataParser(new EntityDataLookupHandlerServiceAsyncImpl(LOOKUP_SERVICE_ASYNC));
+    private PrimitiveDataParser primitiveDataParser = new DefaultPrimitiveDataParser(new EntityDataLookupHandlerServiceAsyncImpl());
 
     private boolean dirty = false;
 

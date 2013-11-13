@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-
 import java.io.Serializable;
 
 /**
@@ -10,7 +8,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/05/2012
  */
-public class EntityLookupServiceResult implements Serializable, Comparable<EntityLookupServiceResult> {
+public class EntityLookupResult implements Serializable, Comparable<EntityLookupResult> {
 
     private OWLEntityData visualEntity;
     
@@ -18,10 +16,10 @@ public class EntityLookupServiceResult implements Serializable, Comparable<Entit
     
     private int browserTextMatchEnd;
 
-    private EntityLookupServiceResult() {
+    private EntityLookupResult() {
     }
 
-    public EntityLookupServiceResult(OWLEntityData visualEntity, int browserTextMatchStart, int browserTextMatchEnd) {
+    public EntityLookupResult(OWLEntityData visualEntity, int browserTextMatchStart, int browserTextMatchEnd) {
         this.visualEntity = visualEntity;
         this.browserTextMatchStart = browserTextMatchStart;
         this.browserTextMatchEnd = browserTextMatchEnd;
@@ -56,7 +54,7 @@ public class EntityLookupServiceResult implements Serializable, Comparable<Entit
     }
 
     @Override
-    public int compareTo(EntityLookupServiceResult other) {
+    public int compareTo(EntityLookupResult other) {
 
         boolean probablyWordStart = isProbablyWordStart(browserTextMatchStart);
         boolean otherProbablyWordStart = other.isProbablyWordStart(other.browserTextMatchStart);

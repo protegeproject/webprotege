@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerNotFoundException;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlerRegistry;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
+import edu.stanford.bmir.protege.web.server.entities.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
@@ -31,6 +32,7 @@ import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridAction;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
@@ -103,6 +105,8 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         register(new CreateDataPropertiesActionHandler(), CreateDataPropertiesAction.class);
         register(new CreateAnnotationPropertiesActionHandler(), CreateAnnotationPropertiesAction.class);
         register(new CreateNamedIndividualsActionHandler(), CreateNamedIndividualsAction.class);
+
+        register(new LookupEntitiesActionHandler(), LookupEntitiesAction.class);
 
         // Watches
         register(new AddWatchActionHandler(), AddWatchAction.class);
