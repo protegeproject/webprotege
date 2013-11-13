@@ -10,13 +10,17 @@
 	<property name="jar.name" value="webprotege-lib.jar" />
 
 	<property name="src" location="./src" />
+	<property name="test.src" location="test" />
 	<property name="etc" location="./etc" />
 	<property name="war.template" location="./war" />
 	<property name="lib" location="${war.template}/WEB-INF/lib" />
+	<property name="test.lib" location="test-lib" />
 	
 	<property name="build" location="./build" />
 	<property name="classes" location="${build}/classes" />
 	<property name="war" location="${build}/war" />
+
+	<property name="api.docs" location="docs" />
 	
 	<property name="build.properties" location="build.properties" />
 	
@@ -131,7 +135,7 @@
 		<mkdir dir="war/WEB-INF/classes" />
 		<javac srcdir="${src}" includes="**" encoding="utf-8" includeAntRuntime="false"
 			destdir="${classes}" nowarn="true" debug="true" debuglevel="lines,vars,source">
-			<classpath refid="project.classpath" />
+			     <classpath refid="project.classpath" /> 
 		</javac>
 		<copy todir="${classes}">
 			<fileset dir="${src}">
@@ -281,6 +285,69 @@
 		</java>
 	</target>
 
+	<!--
+     #  ********** Test *************
+     -->
+	<target name="build-test" depends="stage.war,compile.java"
+		description="test the project" >
+            <javac srcdir            = "${test.src}"
+		   destdir           = "${classes}"
+		   encoding          = "UTF-8"
+		   includeantruntime = "false">
+  	        <classpath>
+		    <path refid="project.classpath" />
+		    <!-- pull in all jar files in ${test.lib}
+                         this includes JUnit
+                     -->
+	            <fileset dir="${test.lib}">
+		        <include name="**/*.jar"/>
+		    </fileset>
+		</classpath>
+	    </javac>
+	</target>
+
+	<target name="test" depends="build-test"
+		description="run the project tests" >
+            <junit printsummary="yes" fork="yes" haltonfailure="yes">
+  	        <classpath>
+		    <path refid="project.classpath" />
+		    <pathelement path="${classes}" />
+		    <!-- pull in all jar files in ${test.lib}
+                         this includes JUnit
+                     -->
+	            <fileset dir="${test.lib}">
+		        <include name="**/*.jar"/>
+		    </fileset>
+		</classpath>
+ 
+		<formatter type="plain"/>
+		<batchtest>
+                  <fileset dir="${classes}">
+		    <include name="**/*TestCase.class" />
+                  </fileset>
+		</batchtest>
+	    </junit>
+	</target>
+
+	<!--
+     #  ********** Documentation *************
+     -->
+	<target name="doc">
+  	    <javadoc packagenames="edu.standford.*"
+		     defaultexcludes="yes"
+		     destdir="${api.docs}"
+		     author="true"
+		     version="true"
+		     use="true"
+		     windowtitle="WebProtégé API">
+	      <fileset dir="${src}" casesensitive="yes">
+		  <include name="**/*.java"/>
+		  <exclude name="**/*Test*"/>
+	      </fileset>
+	      <doctitle><![CDATA[<h1>WebProtégé API</h1>]]></doctitle>
+	      <!-- <bottom><![CDATA[<i>Copyright &#169; 2011&emdash;2013 Protégé authors. All Rights Reserved.</i>]]></bottom> -->
+	    </javadoc>
+	</target>
 	
 	<!-- 
      #  ********** Usage *************
@@ -291,15 +358,15 @@
 		<echo message="deploy - makes a war file and deploys it to ${CATALINA_HOME}" />
 		<echo message="devmode - runs webprotege in devMode mode with remote debug support" />
 		<echo message="stage.war - makes a copy of the war directory in ./build/war" />
+		<echo message="test - builds and runs all tests" />
+		<echo message="doc - builds the API documentation" />
 		<echo message="usage - prints this help message" />
 		<echo message="clean - cleans the build directory" />
 	</target>
 
-	
 	<!-- 
      #  ********** Clean *************
      -->
-
 	<target name="clean">
 		<delete dir="${build}" />
 	</target>
