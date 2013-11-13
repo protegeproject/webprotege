@@ -18,6 +18,7 @@ local.properties
 out/
 /classes
 extras/
+TEST-*.txt
 
 # IDE files
 .idea/
@@ -33,3 +34,4 @@ mail.properties
 # others
 .svn/
 .DS_Store
+/docs
