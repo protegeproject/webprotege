@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.NewProjectDialogController;
 
@@ -13,6 +15,16 @@ public class CreateProjectRequestHandlerImpl implements CreateProjectRequestHand
 
     @Override
     public void handleCreateProjectRequest() {
-        WebProtegeDialog.showDialog(new NewProjectDialogController());
+        // Code splitting
+        GWT.runAsync(new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable reason) {
+            }
+
+            @Override
+            public void onSuccess() {
+                WebProtegeDialog.showDialog(new NewProjectDialogController());
+            }
+        });
     }
 }

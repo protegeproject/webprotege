@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -10,7 +10,7 @@ import java.util.Collections;
 /**
  * @author Jennifer Vendetti
  */
-public class MetricsPortlet extends AbstractEntityPortlet {
+public class MetricsPortlet extends AbstractOWLEntityPortlet {
 	
 	protected boolean initialized = false;
 

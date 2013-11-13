@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
-import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
 import edu.stanford.bmir.protege.web.server.filedownload.DownloadFormat;
@@ -573,17 +573,6 @@ public class OWLAPIProjectDocumentStore {
         }
         return projectAttributes;
     }
-
-    /**
-     * Uses heuristics to determine whether or no an ontology is an OBO ontology.
-     * @param ontology The ontology
-     * @see {@link edu.stanford.bmir.protege.web.server.obo.OBOOntologyChecker}
-     * @return <code>true</code> if the ontology is an OBO (or could be saved as an OBO) ontology, otherwise <code>false</code>
-     */
-    private boolean isOBOFormat(OWLOntology ontology) {
-        return new OBOOntologyChecker().isOBOOntology(ontology);
-    }
-
 
     private void saveNewProjectOntologyAndCreateNotesOntologyDocument(OWLOntologyManager rootOntologyManager, OWLOntology ontology) throws OWLOntologyStorageException {
         File binaryDocumentFile = getBinaryOntologyDocumentFile();

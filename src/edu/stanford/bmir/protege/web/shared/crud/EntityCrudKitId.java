@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
 import com.google.common.base.Objects;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasLexicalForm;
 
 import java.io.Serializable;
@@ -16,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     Provides an identifier for an {@link EntityCrudKit} and its associated paraphernalia.
  * </p>
  */
-public final class EntityCrudKitId implements Serializable, HasLexicalForm {
+public final class EntityCrudKitId implements Serializable, HasLexicalForm, IsSerializable {
 
     private String lexicalForm;
 

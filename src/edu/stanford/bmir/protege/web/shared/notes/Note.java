@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.notes;
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.annotation.concurrent.Immutable;
@@ -22,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * </p>
  */
 @Immutable
-public final class Note implements Serializable {
+public final class Note implements IsSerializable {
 
     private NoteHeader header;
 

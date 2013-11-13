@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.notes;
 
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 04/03/2013
  */
-public class NoteTarget implements Serializable {
+public class NoteTarget implements IsSerializable {
 
     private OWLEntity entity;
 

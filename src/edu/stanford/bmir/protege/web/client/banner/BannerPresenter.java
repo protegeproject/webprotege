@@ -31,12 +31,6 @@ public class BannerPresenter {
         projectActionBar.setShowShareSettingsHandler(new ShareSettingsHandlerImpl());
         projectActionBar.setShowFreshEntitySettingsHandler(new ShowFreshEntitySettingsHandlerImpl());
         projectActionBar.setShowProjectDetailsHandler(new ShowProjectDetailsHandlerImpl());
-        EventBusManager.getManager().registerHandler(ActiveProjectChangedEvent.TYPE, new ActiveProjectChangedHandler() {
-            @Override
-            public void handleActiveProjectChanged(ActiveProjectChangedEvent event) {
-                projectActionBar.setProjectId(event.getProjectId());
-            }
-        });
         final ApplicationActionBar w = bannerView.getApplicationActionBar();
         w.setSignedInUser(Application.get().getUserId());
         w.setSignInRequestHandler(new SignInRequestHandlerImpl());
@@ -46,6 +40,14 @@ public class BannerPresenter {
         w.setChangeEmailAddressHandler(new ChangeEmailAddressHandlerImpl());
         w.setShowAboutBoxHandler(new ShowAboutBoxHandlerImpl());
         w.setShowUserGuideHandler(new ShowUserGuideHandlerImpl());
+
+
+        EventBusManager.getManager().registerHandler(ActiveProjectChangedEvent.TYPE, new ActiveProjectChangedHandler() {
+            @Override
+            public void handleActiveProjectChanged(ActiveProjectChangedEvent event) {
+                projectActionBar.setProjectId(event.getProjectId());
+            }
+        });
         EventBusManager.getManager().registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {

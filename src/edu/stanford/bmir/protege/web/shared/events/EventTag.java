@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.events;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import javax.annotation.concurrent.Immutable;
 import java.io.Serializable;
 
@@ -13,7 +15,7 @@ import java.io.Serializable;
  * </p>
  */
 @Immutable
-public class EventTag implements Serializable, Comparable<EventTag> {
+public class EventTag implements Serializable, IsSerializable, Comparable<EventTag> {
 
     private static final EventTag FIRST = new EventTag(0);
 

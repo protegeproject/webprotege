@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.rpc.SerializationException;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.server.owlapi.HierarchyProviderKey;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.Group;
 import edu.stanford.smi.protege.server.metaproject.User;
@@ -37,23 +37,25 @@ public class DefaultLogger implements WebProtegeLogger {
     @Override
     public void severe(Throwable t, UserId userId) {
         String message = formatMessage(t, Optional.of(userId), Optional.<HttpServletRequest>absent());
-        logSevereMessage(message);
+        logSevereMessage(message, isMailableException(t));
     }
 
     @Override
     public void severe(Throwable t, UserId userId, HttpServletRequest servletRequest) {
         String message = formatMessage(t, Optional.of(userId), Optional.of(servletRequest));
-        logSevereMessage(message);
+        logSevereMessage(message, isMailableException(t));
     }
 
     @Override
     public void severe(Throwable t) {
         String message = formatMessage(t, Optional.<UserId>absent(), Optional.<HttpServletRequest>absent());
-        logSevereMessage(message);
+        logSevereMessage(message, isMailableException(t));
     }
 
-    private void logSevereMessage(String message) {
-        emailMessage(message);
+    private void logSevereMessage(String message, boolean sendMail) {
+        if (sendMail) {
+            emailMessage(message);
+        }
         writeToLog(message, Level.SEVERE);
     }
 
@@ -81,6 +83,14 @@ public class DefaultLogger implements WebProtegeLogger {
         if(request.isPresent()) {
             HttpServletRequest req = request.get();
             pw.println("Request URI: " + req.getRequestURI());
+            String remoteAddr = req.getRemoteAddr();
+            if (remoteAddr != null) {
+                pw.println("Remote address: " + remoteAddr);
+            }
+            String remoteHost = req.getRemoteHost();
+            if (remoteHost != null) {
+                pw.println("Remote host: " + remoteHost);
+            }
             pw.println();
             pw.println("Headers: ");
             Enumeration headerNames = req.getHeaderNames();
@@ -150,8 +160,8 @@ public class DefaultLogger implements WebProtegeLogger {
         }
     }
 
-    public static void main(String[] args) {
-        DefaultLogger l = new DefaultLogger(HierarchyProviderKey.class);
-        l.severe(new RuntimeException("Test throwing"));
+    private boolean isMailableException(Throwable throwable) {
+        // We get too many of these on deployment sometimes.  For now, exclude from emailing.
+        return !(throwable instanceof SerializationException);
     }
 }

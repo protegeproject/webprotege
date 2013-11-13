@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.crud;
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasDisplayName;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -20,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     the display name.
  * </p>
  */
-public abstract class EntityCrudKit<S extends EntityCrudKitSuffixSettings> implements HasKitId, HasDisplayName, Serializable {
+public abstract class EntityCrudKit<S extends EntityCrudKitSuffixSettings> implements HasKitId, HasDisplayName, Serializable, IsSerializable {
 
     private EntityCrudKitId kitId;
 

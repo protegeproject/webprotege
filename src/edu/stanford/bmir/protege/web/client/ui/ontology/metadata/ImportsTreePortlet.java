@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ImportsData;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
  */
-public class ImportsTreePortlet extends AbstractEntityPortlet {
+public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 
 	protected TreePanel importsTree;
 	protected ArrayList<EntityData> currentSelection;

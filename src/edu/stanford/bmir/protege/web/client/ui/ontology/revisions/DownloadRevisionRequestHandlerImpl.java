@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
-import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

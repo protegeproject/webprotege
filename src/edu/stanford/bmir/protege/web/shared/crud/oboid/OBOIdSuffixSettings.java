@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.crud.oboid;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
-import edu.stanford.bmir.protege.web.shared.irigen.obo.UserIdRange;
 
 import java.util.ArrayList;
 import java.util.Collections;

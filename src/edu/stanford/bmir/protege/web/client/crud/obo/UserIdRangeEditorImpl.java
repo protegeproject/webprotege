@@ -15,7 +15,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestB
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.UserIdSuggestOracle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.irigen.obo.UserIdRange;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**

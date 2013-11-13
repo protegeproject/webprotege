@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
@@ -50,9 +51,9 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
     }
 
 
-    public abstract Component getComponent(); //TODO: should be Widget?
+    public abstract Widget getComponent(); //TODO: should be Widget?
 
-    public abstract Component createComponent();
+    public abstract Widget createComponent();
 
     protected String getLabelHtml(String label, String helpURL, String tooltip) {
         String labelHtml = label;
@@ -81,10 +82,6 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
 
     public void setSubject(EntityData subject) {
         this.subject = subject;
-    }
-
-    public boolean isDisplayed() {
-        return (getComponent()).getEl() != null && getComponent().getEl().isVisible(true);
     }
 
     /**

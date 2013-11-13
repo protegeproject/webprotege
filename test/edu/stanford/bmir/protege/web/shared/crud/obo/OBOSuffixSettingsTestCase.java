@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.shared.crud.obo;
 
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
-import edu.stanford.bmir.protege.web.shared.irigen.obo.UserIdRange;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 import org.junit.Test;
 
 import java.util.ArrayList;

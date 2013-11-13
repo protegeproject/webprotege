@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.gwtext.client.widgets.Component;
@@ -108,18 +109,27 @@ public class ProjectDisplayContainerPanel extends TabPanel {
 
 
 
-    private void respondToActiveProjectChangedEvent(ActiveProjectChangedEvent event) {
-        Optional<ProjectId> projectId = event.getProjectId();
-        if(!projectId.isPresent()) {
-            // Go home
-            setActiveTab(0);
-        }
-        else {
-            ProjectDisplayImpl display = projectId2ProjectPanelMap.get(projectId.get());
-            if (display != null) {
-            	setActiveTab(display.getLabel());
+    private void respondToActiveProjectChangedEvent(final ActiveProjectChangedEvent event) {
+        GWT.runAsync(new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable reason) {
             }
-        }
+
+            @Override
+            public void onSuccess() {
+                Optional<ProjectId> projectId = event.getProjectId();
+                if(!projectId.isPresent()) {
+                    // Go home
+                    setActiveTab(0);
+                }
+                else {
+                    ProjectDisplayImpl display = projectId2ProjectPanelMap.get(projectId.get());
+                    if (display != null) {
+                        setActiveTab(display.getLabel());
+                    }
+                }
+            }
+        });
     }
 
     private void displayCurrentPlace() {
@@ -140,15 +150,24 @@ public class ProjectDisplayContainerPanel extends TabPanel {
     }
 
     private void removeAllTabs() {
-        for (ProjectDisplayImpl ontologyTabPanel : projectId2ProjectPanelMap.values()) {
-            Project project = ontologyTabPanel.getProject();
-            ProjectManager.get().unloadProject(project.getProjectId());
-            hideTabStripItem(ontologyTabPanel);
-            ontologyTabPanel.hide();
-            ontologyTabPanel.destroy();
-        }
-        projectId2ProjectPanelMap.clear();
-        activate(0);
+        GWT.runAsync(new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable reason) {
+            }
+
+            @Override
+            public void onSuccess() {
+                for (ProjectDisplayImpl ontologyTabPanel : projectId2ProjectPanelMap.values()) {
+                    Project project = ontologyTabPanel.getProject();
+                    ProjectManager.get().unloadProject(project.getProjectId());
+                    hideTabStripItem(ontologyTabPanel);
+                    ontologyTabPanel.hide();
+                    ontologyTabPanel.destroy();
+                }
+                projectId2ProjectPanelMap.clear();
+                activate(0);
+            }
+        });
 
     }
 
@@ -157,8 +176,17 @@ public class ProjectDisplayContainerPanel extends TabPanel {
 
         LoadProjectRequestHandler loadProjectRequestHandler = new LoadProjectRequestHandler() {
             @Override
-            public void handleProjectLoadRequest(ProjectId projectId) {
-                loadProject(projectId);
+            public void handleProjectLoadRequest(final ProjectId projectId) {
+                GWT.runAsync(new RunAsyncCallback() {
+                    @Override
+                    public void onFailure(Throwable reason) {
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        loadProject(projectId);
+                    }
+                });
             }
         };
 
@@ -171,46 +199,64 @@ public class ProjectDisplayContainerPanel extends TabPanel {
     }
 
 
-    private void loadProject(ProjectId projectId) {
-        ProjectDisplayImpl ontTab = projectId2ProjectPanelMap.get(projectId);
-        if (ontTab != null) {
-            activate(ontTab.getId());
-            return;
-        }
-        else {
-            UIUtil.showLoadProgessBar("Loading project", "Please wait");
-            Application.get().loadProject(projectId, new LoadProjectHandler(projectId));
-        }
+    private void loadProject(final ProjectId projectId) {
+        GWT.runAsync(new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable reason) {
+            }
+
+            @Override
+            public void onSuccess() {
+                ProjectDisplayImpl ontTab = projectId2ProjectPanelMap.get(projectId);
+                if (ontTab != null) {
+                    activate(ontTab.getId());
+                    return;
+                }
+                else {
+                    UIUtil.showLoadProgessBar("Loading project", "Please wait");
+                    Application.get().loadProject(projectId, new LoadProjectHandler(projectId));
+                }
+            }
+        });
 
 
     }
 
     private void addProjectDisplay(final ProjectId projectId) {
-        ProjectDisplayImpl projectPanel = new ProjectDisplayImpl(projectId);
-        projectPanel.setClosable(true);
-        projectId2ProjectPanelMap.put(projectId, projectPanel);
-
-        projectPanel.addListener(new PanelListenerAdapter() {
+        GWT.runAsync(new RunAsyncCallback() {
             @Override
-            public boolean doBeforeDestroy(Component component) {
-                if (component instanceof ProjectDisplayImpl) {
-                    ProjectDisplayImpl o = (ProjectDisplayImpl) component;
-                    ProjectId projectId = o.getProjectId();
-                    projectId2ProjectPanelMap.remove(projectId);
-                    ProjectManager.get().unloadProject(projectId);
-                    hideTabStripItem(o);
-                    o.hide();
-                    activate(0);
-                }
-                Application.get().setActiveProject(Optional.<ProjectId>absent());
-                return true;
+            public void onFailure(Throwable reason) {
+            }
+
+            @Override
+            public void onSuccess() {
+                ProjectDisplayImpl projectPanel = new ProjectDisplayImpl(projectId);
+                projectPanel.setClosable(true);
+                projectId2ProjectPanelMap.put(projectId, projectPanel);
+
+                projectPanel.addListener(new PanelListenerAdapter() {
+                    @Override
+                    public boolean doBeforeDestroy(Component component) {
+                        if (component instanceof ProjectDisplayImpl) {
+                            ProjectDisplayImpl o = (ProjectDisplayImpl) component;
+                            ProjectId projectId = o.getProjectId();
+                            projectId2ProjectPanelMap.remove(projectId);
+                            ProjectManager.get().unloadProject(projectId);
+                            hideTabStripItem(o);
+                            o.hide();
+                            activate(0);
+                        }
+                        Application.get().setActiveProject(Optional.<ProjectId>absent());
+                        return true;
+                    }
+                });
+
+                add(projectPanel);
+                activate(projectPanel.getId());
+                setActiveTab(projectPanel.getId());
+                projectPanel.layoutProject();
             }
         });
-
-        add(projectPanel);
-        activate(projectPanel.getId());
-        setActiveTab(projectPanel.getId());
-        projectPanel.layoutProject();
     }
 
 

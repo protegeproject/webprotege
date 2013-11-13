@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.RevisionNumber;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalConfigurationManager;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalMetadataCache;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalRestAPI;

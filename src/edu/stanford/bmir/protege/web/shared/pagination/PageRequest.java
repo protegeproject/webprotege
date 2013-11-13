@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.pagination;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.*;
@@ -10,7 +12,7 @@ import static com.google.common.base.Preconditions.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/10/2013
  */
-public class PageRequest implements Serializable {
+public class PageRequest implements Serializable, IsSerializable {
 
     public static final int DEFAULT_PAGE_SIZE = 30;
 
