@@ -1,14 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.library.suggest;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.gwtext.client.widgets.MessageBox;
-import edu.stanford.bmir.protege.web.client.rpc.EntityLookupService;
-import edu.stanford.bmir.protege.web.client.rpc.EntityLookupServiceAsync;
-import edu.stanford.bmir.protege.web.shared.entity.EntityLookupServiceResult;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequest;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityLookupRequestType;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 
@@ -28,8 +24,6 @@ public class EntitySuggestOracle extends SuggestOracle {
 
     final private ProjectId projectId;
 
-    final private static EntityLookupServiceAsync service = GWT.create(EntityLookupService.class);
-    
     final Set<EntityType<?>> entityTypes = new HashSet<EntityType<?>>();
 
     public EntitySuggestOracle(ProjectId projectId, int suggestLimit, EntityType<?> ... entityMatchTypes) {
@@ -57,19 +51,18 @@ public class EntitySuggestOracle extends SuggestOracle {
 
     @Override
     public void requestSuggestions(final Request request, final Callback callback) {
-        service.lookupEntities(getProjectId(), new EntityLookupRequest(request.getQuery(), EntityLookupRequestType.getDefault(), suggestLimit, entityTypes), new AsyncCallback<List<EntityLookupServiceResult>>() {
+        DispatchServiceManager.get().execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), EntitySearchType.getDefault(), suggestLimit, entityTypes)), new AsyncCallback<LookupEntitiesResult>() {
+            @Override
             public void onFailure(Throwable caught) {
                 MessageBox.alert(caught.getMessage());
             }
 
-            public void onSuccess(List<EntityLookupServiceResult> result) {
+            @Override
+            public void onSuccess(LookupEntitiesResult result) {
                 List<EntitySuggestion> suggestions = new ArrayList<EntitySuggestion>();
-                for (final EntityLookupServiceResult entity : result) {
+                for (final EntityLookupResult entity : result.getEntityLookupResults()) {
                     suggestions.add(new EntitySuggestion(entity.getOWLEntityData(), entity.getDisplayText()));
                 }
-//                if(suggestions.isEmpty()) {
-//                    suggestions.addAll(getEntityCreationSuggestions(request));
-//                }
                 callback.onSuggestionsReady(request, new Response(suggestions));
             }
         });

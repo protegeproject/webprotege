@@ -109,11 +109,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>EntityLookupService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.EntityLookupServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>RecaptchaService</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.RecaptchaServiceImpl</servlet-class>
 	</servlet>
@@ -234,11 +229,6 @@
 	<servlet-mapping>
 		<servlet-name>OBOTextEditorService</servlet-name>
 		<url-pattern>/webprotege/obotexteditorservice</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>EntityLookupService</servlet-name>
-		<url-pattern>/webprotege/entitylookupservice</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
