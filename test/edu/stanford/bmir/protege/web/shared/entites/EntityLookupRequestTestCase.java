@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entites;
 
 import edu.stanford.bmir.protege.web.shared.entity.EntityLookupRequest;
-import edu.stanford.bmir.protege.web.shared.entity.EntitySearchType;
+import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.EntityType;
 
@@ -26,12 +26,12 @@ public class EntityLookupRequestTestCase {
 
     @Test(expected = NullPointerException.class)
     public void nullSearchStringThrowsNullPointerException2() {
-        new EntityLookupRequest(null, EntitySearchType.EXACT_MATCH);
+        new EntityLookupRequest(null, SearchType.SUB_STRING_MATCH_IGNORE_CASE);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullSearchStringThrowsNullPointerException3() {
-        new EntityLookupRequest(null, EntitySearchType.EXACT_MATCH, 20, Arrays.<EntityType<?>>asList(EntityType.CLASS));
+        new EntityLookupRequest(null, SearchType.SUB_STRING_MATCH_IGNORE_CASE, 20, Arrays.<EntityType<?>>asList(EntityType.CLASS));
     }
 
     @Test(expected = NullPointerException.class)
@@ -46,18 +46,18 @@ public class EntityLookupRequestTestCase {
 
     @Test(expected = IllegalArgumentException.class)
     public void negativeSearchLimitThrowsIllegalArgumentException() {
-        new EntityLookupRequest("Test", EntitySearchType.EXACT_MATCH, -1, Arrays.<EntityType<?>>asList(EntityType.CLASS));
+        new EntityLookupRequest("Test", SearchType.SUB_STRING_MATCH_IGNORE_CASE, -1, Arrays.<EntityType<?>>asList(EntityType.CLASS));
     }
 
     @Test(expected = NullPointerException.class)
     public void nullSearchedEntityTypesThrowsNullPointerExeception() {
-        new EntityLookupRequest("Test", EntitySearchType.EXACT_MATCH, 1, null);
+        new EntityLookupRequest("Test", SearchType.SUB_STRING_MATCH_IGNORE_CASE, 1, null);
     }
 
     @Test
     public void defaultSearchTypeIsTheSameAsSearchTypeDefault() {
         EntityLookupRequest request = new EntityLookupRequest("Test");
-        assertEquals(EntitySearchType.getDefault(), request.getSearchType());
+        assertEquals(SearchType.getDefault(), request.getSearchType());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class EntityLookupRequestTestCase {
         Set<EntityType<?>> types = new HashSet<EntityType<?>>();
         types.add(EntityType.CLASS);
         Set<EntityType<?>> typesCopy = new HashSet<EntityType<?>>(types);
-        EntityLookupRequest request = new EntityLookupRequest("Test", EntitySearchType.EXACT_MATCH, 20, types);
+        EntityLookupRequest request = new EntityLookupRequest("Test", SearchType.SUB_STRING_MATCH_IGNORE_CASE, 20, types);
         types.add(EntityType.OBJECT_PROPERTY);
         assertEquals(typesCopy, request.getSearchedEntityTypes());
     }
@@ -74,7 +74,7 @@ public class EntityLookupRequestTestCase {
     public void getSearchedEntityTypesReturnsCopy() {
         Set<EntityType<?>> types = new HashSet<EntityType<?>>();
         types.add(EntityType.CLASS);
-        EntityLookupRequest request = new EntityLookupRequest("Test", EntitySearchType.EXACT_MATCH, 20, types);
+        EntityLookupRequest request = new EntityLookupRequest("Test", SearchType.SUB_STRING_MATCH_IGNORE_CASE, 20, types);
         request.getSearchedEntityTypes().add(EntityType.OBJECT_PROPERTY);
         assertEquals(types, request.getSearchedEntityTypes());
     }
@@ -87,20 +87,20 @@ public class EntityLookupRequestTestCase {
 
     @Test
     public void getSearchLimitReturnsSuppliedSearchLimit() {
-        EntityLookupRequest request = new EntityLookupRequest("Test", EntitySearchType.EXACT_MATCH, 5, Arrays.<EntityType<?>>asList(EntityType.CLASS));
+        EntityLookupRequest request = new EntityLookupRequest("Test", SearchType.SUB_STRING_MATCH_IGNORE_CASE, 5, Arrays.<EntityType<?>>asList(EntityType.CLASS));
         assertEquals(5, request.getSearchLimit());
     }
 
     @Test
     public void getSearchTypeReturnsSuppliedType() {
-        EntityLookupRequest request = new EntityLookupRequest("Test", EntitySearchType.SUB_STRING_MATCH_IGNORE_CASE, 5, Arrays.<EntityType<?>>asList(EntityType.CLASS));
-        assertEquals(EntitySearchType.SUB_STRING_MATCH_IGNORE_CASE, request.getSearchType());
+        EntityLookupRequest request = new EntityLookupRequest("Test", SearchType.SUB_STRING_MATCH_IGNORE_CASE, 5, Arrays.<EntityType<?>>asList(EntityType.CLASS));
+        assertEquals(SearchType.SUB_STRING_MATCH_IGNORE_CASE, request.getSearchType());
     }
 
     @Test
     public void equalArgsGiveEqualRequests() {
-        EntityLookupRequest requestA = new EntityLookupRequest("Test", EntitySearchType.SUB_STRING_MATCH_IGNORE_CASE, 5, Arrays.<EntityType<?>>asList(EntityType.CLASS));
-        EntityLookupRequest requestB = new EntityLookupRequest("Test", EntitySearchType.SUB_STRING_MATCH_IGNORE_CASE, 5, Arrays.<EntityType<?>>asList(EntityType.CLASS));
+        EntityLookupRequest requestA = new EntityLookupRequest("Test", SearchType.SUB_STRING_MATCH_IGNORE_CASE, 5, Arrays.<EntityType<?>>asList(EntityType.CLASS));
+        EntityLookupRequest requestB = new EntityLookupRequest("Test", SearchType.SUB_STRING_MATCH_IGNORE_CASE, 5, Arrays.<EntityType<?>>asList(EntityType.CLASS));
         assertEquals(requestA.hashCode(), requestB.hashCode());
         assertEquals(requestA, requestB);
     }

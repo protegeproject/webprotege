@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.entity.EntityLookupResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class EntityDataLookupHandlerServiceAsyncImpl implements EntityDataLookup
 
         final ProjectId projectId = lookupContext.getProjectId();
         final Set<EntityType<?>> allowedEntityTypes = lookupContext.getAllowedEntityTypes();
-        final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, EntitySearchType.EXACT_MATCH_IGNORE_CASE, 1, allowedEntityTypes);
+        final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, SearchType.EXACT_MATCH_IGNORE_CASE, 1, allowedEntityTypes);
         DispatchServiceManager.get().execute(new LookupEntitiesAction(projectId, entityLookupRequest), new AsyncCallback<LookupEntitiesResult>() {
             @Override
             public void onFailure(Throwable caught) {

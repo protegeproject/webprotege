@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.entity;
 
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.io.Serializable;
@@ -27,7 +28,7 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
 
     private String searchString;
 
-    private EntitySearchType searchType = EntitySearchType.getDefault();
+    private SearchType searchType = SearchType.getDefault();
 
     private Set<EntityType<?>> searchedEntityTypes = new HashSet<EntityType<?>>();
     
@@ -43,22 +44,22 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
 
     /**
      * Creates an {@link EntityLookupRequest} that specifies entities should be matched according to the specified
-     * string.  The search type against the specified string is determined by {@link EntitySearchType#getDefault()}.
+     * string.  The search type against the specified string is determined by {@link edu.stanford.bmir.protege.web.shared.search.SearchType#getDefault()}.
      * @param searchString The {@link String} to be matched.  Not {@code null}.
      * @throws NullPointerException if {@code searchString} is {@code null}.
      */
     public EntityLookupRequest(String searchString) {
-        this(searchString, EntitySearchType.getDefault());
+        this(searchString, SearchType.getDefault());
     }
 
     /**
      * Creates an {@link EntityLookupRequest} that specifies entities should be search for by the sepcified string
      * and search type.
      * @param searchString The search {@link String}.  Not {@code null}.
-     * @param searchType The type of search to be performed..  See {@link EntitySearchType}.
+     * @param searchType The type of search to be performed..  See {@link edu.stanford.bmir.protege.web.shared.search.SearchType}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public EntityLookupRequest(String searchString, EntitySearchType searchType) {
+    public EntityLookupRequest(String searchString, SearchType searchType) {
         this(searchString, searchType, DEFAULT_MATCH_LIMIT, EntityType.values());
     }
 
@@ -70,7 +71,7 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
      * @param searchedEntityTypes The types of entities to be searched.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public EntityLookupRequest(String searchString, EntitySearchType searchType, int searchLimit, Collection<EntityType<?>> searchedEntityTypes) {
+    public EntityLookupRequest(String searchString, SearchType searchType, int searchLimit, Collection<EntityType<?>> searchedEntityTypes) {
         this.searchString = checkNotNull(searchString);
         this.searchType = checkNotNull(searchType);
         if(searchLimit < 0) {
@@ -88,7 +89,7 @@ public class EntityLookupRequest implements Serializable, IsSerializable {
         return searchString;
     }
 
-    public EntitySearchType getSearchType() {
+    public SearchType getSearchType() {
         return searchType;
     }
 

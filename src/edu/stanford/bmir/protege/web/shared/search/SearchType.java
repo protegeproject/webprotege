@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.entity;
+package edu.stanford.bmir.protege.web.shared.search;
 
 /**
  * Author: Matthew Horridge<br>
@@ -6,7 +6,7 @@ package edu.stanford.bmir.protege.web.shared.entity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/12/2012
  */
-public enum EntitySearchType {
+public enum SearchType {
 
     EXACT_MATCH(false),
 
@@ -16,11 +16,11 @@ public enum EntitySearchType {
 
     private boolean ignoreCase;
 
-    private EntitySearchType(boolean ignoreCase) {
+    private SearchType(boolean ignoreCase) {
         this.ignoreCase = ignoreCase;
     }
 
-    public static EntitySearchType getDefault() {
+    public static SearchType getDefault() {
         return SUB_STRING_MATCH_IGNORE_CASE;
     }
 
