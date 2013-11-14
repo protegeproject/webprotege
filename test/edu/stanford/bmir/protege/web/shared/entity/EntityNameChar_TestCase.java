@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import edu.stanford.bmir.protege.web.shared.search.EntityNameCharType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

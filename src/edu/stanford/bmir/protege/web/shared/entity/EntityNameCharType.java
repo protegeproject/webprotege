@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.search;
+package edu.stanford.bmir.protege.web.shared.entity;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
