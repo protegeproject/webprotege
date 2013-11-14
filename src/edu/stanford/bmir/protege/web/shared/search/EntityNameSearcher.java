@@ -20,21 +20,12 @@ public class EntityNameSearcher {
         this.searchString = checkNotNull(searchString);
     }
 
-    private static boolean isQuoted(String text) {
-        char firstChar = text.charAt(0);
-        if (firstChar != SINGLE_QUOTE) {
-            return false;
-        }
-        char lastChar = text.charAt(text.length() - 1);
-        return lastChar == SINGLE_QUOTE;
-    }
-
     public Optional<EntityNameMatchResult> getMatchIn(String text) {
         // Base case.  Exact match, quoted or unquoted.
         if (text.equalsIgnoreCase(searchString)) {
             return Optional.of(createExactMatchResultForString(text));
         }
-        if (isQuoted(text) && text.substring(0, text.length()).equalsIgnoreCase(searchString)) {
+        if (EntityNameUtils.isQuoted(text) && text.substring(0, text.length()).equalsIgnoreCase(searchString)) {
             return Optional.of(createExactMatchResultForQuotedString(text));
         }
         // Search for a substring.  We try to find the best match in terms of a word match, word prefix match or
@@ -48,7 +39,7 @@ public class EntityNameSearcher {
             if (index == -1) {
                 break;
             }
-            int nextWordStart = EntityNameWordFinder.indexOfWord(text, index);
+            int nextWordStart = EntityNameUtils.indexOfWord(text, index);
             // Match on a word start
             if (nextWordStart == index) {
                 // It is definitely a word prefix
@@ -57,7 +48,7 @@ public class EntityNameSearcher {
                     firstWordPrefixMatchIndex = index;
                 }
                 if (index < text.length()) {
-                    int wordEndIndex = EntityNameWordFinder.indexOfWordEnd(text, index);
+                    int wordEndIndex = EntityNameUtils.indexOfWordEnd(text, index);
                     if (wordEndIndex == index + searchString.length()) {
                         firstWordMatchIndex = index;
                         // Found the first whole word match,  No more to do.

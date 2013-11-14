@@ -10,167 +10,184 @@ import static org.junit.Assert.assertEquals;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/11/2013
  */
-public class EntityNameWordFinder_IsWordStartTestCase {
+public class EntityNameUtils_IsWordStart_TestCase {
+
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionForNullString() {
+        EntityNameUtils.isWordStart(null, 0);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void shouldThrowIndexOutOfBoundsExceptionForNegativeStart() {
+        EntityNameUtils.isWordStart(" ", -1);
+    }
+
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void shouldThrowIndexOutOfBoundsExceptionForStartEqualToStringLength() {
+        EntityNameUtils.isWordStart(" ", 1);
+    }
+
 
     @Test
     public void shouldReturnTrueForLowerCaseCharAtZeroIndex() {
-        boolean start = EntityNameWordFinder.isWordStart("a", 0);
+        boolean start = EntityNameUtils.isWordStart("a", 0);
         assertEquals(true, start);
     }
 
     @Test
     public void shouldReturnTrueForLowerCaseCharFollowingSingleQuoteAtIndexZero() {
-        boolean start = EntityNameWordFinder.isWordStart("'a", 1);
+        boolean start = EntityNameUtils.isWordStart("'a", 1);
         assertEquals(true, start);
     }
 
     @Test
     public void shouldReturnTrueForUpperCaseCharAtZeroIndex() {
-        boolean start = EntityNameWordFinder.isWordStart("A", 0);
+        boolean start = EntityNameUtils.isWordStart("A", 0);
         assertEquals(true, start);
     }
 
     @Test
     public void shouldReturnTrueForUpperCaseCharFollowingSingleQuoteAtIndexZero() {
-        boolean start = EntityNameWordFinder.isWordStart("'A", 1);
+        boolean start = EntityNameUtils.isWordStart("'A", 1);
         assertEquals(true, start);
     }
 
     @Test
     public void shouldReturnTrueForDigitCharAtZeroIndex() {
-        boolean start = EntityNameWordFinder.isWordStart("2", 0);
+        boolean start = EntityNameUtils.isWordStart("2", 0);
         assertEquals(true, start);
     }
 
     @Test
     public void shouldReturnTrueForDigitCharFollowingSingleQuoteAtIndexZero() {
-        boolean start = EntityNameWordFinder.isWordStart("'2", 1);
+        boolean start = EntityNameUtils.isWordStart("'2", 1);
         assertEquals(true, start);
     }
 
     @Test
     public void shouldReturnFalseForSingleQuoteAtZeroIndex() {
-        boolean start = EntityNameWordFinder.isWordStart("'a", 0);
+        boolean start = EntityNameUtils.isWordStart("'a", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForSingleQuoteAtEndIndex() {
-        boolean start = EntityNameWordFinder.isWordStart("a'", 1);
+        boolean start = EntityNameUtils.isWordStart("a'", 1);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForDigitThatFollowsDigit() {
-        boolean start = EntityNameWordFinder.isWordStart("22", 1);
+        boolean start = EntityNameUtils.isWordStart("22", 1);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnTrueForUpperCaseUpperCaseLowerCaseAtIndexOne() {
-        boolean start = EntityNameWordFinder.isWordStart("AAa", 1);
+        boolean start = EntityNameUtils.isWordStart("AAa", 1);
         assertEquals(true, start);
     }
 
     @Test
     public void shouldReturnFalseForLowerCaseLetterAfterUpperCaseLetter() {
-        boolean start = EntityNameWordFinder.isWordStart("Aa", 1);
+        boolean start = EntityNameUtils.isWordStart("Aa", 1);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForUpperCaseUpperCaseAtIndexOne() {
-        boolean start = EntityNameWordFinder.isWordStart("AA", 1);
+        boolean start = EntityNameUtils.isWordStart("AA", 1);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnTrueForUpperCaseDigitAtIndexOne() {
-        boolean start = EntityNameWordFinder.isWordStart("A2", 1);
+        boolean start = EntityNameUtils.isWordStart("A2", 1);
         assertEquals(true, start);
     }
 
     @Test
     public void shouldReturnFalseForLowerCaseCharPrecededByLowerCaseChar() {
-        boolean start = EntityNameWordFinder.isWordStart("abc", 1);
+        boolean start = EntityNameUtils.isWordStart("abc", 1);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForSpace() {
-        boolean start = EntityNameWordFinder.isWordStart(" ", 0);
+        boolean start = EntityNameUtils.isWordStart(" ", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForUnderscore() {
-        boolean start = EntityNameWordFinder.isWordStart("_", 0);
+        boolean start = EntityNameUtils.isWordStart("_", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForBackSlash() {
-        boolean start = EntityNameWordFinder.isWordStart("\\", 0);
+        boolean start = EntityNameUtils.isWordStart("\\", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForOpenBracket() {
-        boolean start = EntityNameWordFinder.isWordStart("(", 0);
+        boolean start = EntityNameUtils.isWordStart("(", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForCloseBracket() {
-        boolean start = EntityNameWordFinder.isWordStart(")", 0);
+        boolean start = EntityNameUtils.isWordStart(")", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForOpenBrace() {
-        boolean start = EntityNameWordFinder.isWordStart("{", 0);
+        boolean start = EntityNameUtils.isWordStart("{", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForCloseBrace() {
-        boolean start = EntityNameWordFinder.isWordStart("}", 0);
+        boolean start = EntityNameUtils.isWordStart("}", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForOpenSquareBracket() {
-        boolean start = EntityNameWordFinder.isWordStart("[", 0);
+        boolean start = EntityNameUtils.isWordStart("[", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForCloseSquareBracket() {
-        boolean start = EntityNameWordFinder.isWordStart("]", 0);
+        boolean start = EntityNameUtils.isWordStart("]", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForLessThan() {
-        boolean start = EntityNameWordFinder.isWordStart("<", 0);
+        boolean start = EntityNameUtils.isWordStart("<", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForGreaterThan() {
-        boolean start = EntityNameWordFinder.isWordStart(">", 0);
+        boolean start = EntityNameUtils.isWordStart(">", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForComma() {
-        boolean start = EntityNameWordFinder.isWordStart(",", 0);
+        boolean start = EntityNameUtils.isWordStart(",", 0);
         assertEquals(false, start);
     }
 
     @Test
     public void shouldReturnFalseForHyphenFollowingLetter() {
-        boolean start = EntityNameWordFinder.isWordStart("x-", 1);
+        boolean start = EntityNameUtils.isWordStart("x-", 1);
         assertEquals(false, start);
     }
 
