@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.entity.EntityNameUtils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
