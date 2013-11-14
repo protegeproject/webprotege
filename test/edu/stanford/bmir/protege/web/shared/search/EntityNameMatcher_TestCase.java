@@ -102,4 +102,18 @@ public class EntityNameMatcher_TestCase {
         assertEquals(EntityNameMatchType.WORD_PREFIX_MATCH, resultValue.getMatchType());
     }
 
+    @Test
+    public void shouldReturnAbsentForNonSubString() {
+        EntityNameMatcher matcher = new EntityNameMatcher("a");
+        Optional<EntityNameMatchResult> result = matcher.findIn("x:xXx");
+        assertEquals(false, result.isPresent());
+    }
+
+    @Test
+    public void shouldReturnAbsentForSearchingOnEmptyString() {
+        EntityNameMatcher matcher = new EntityNameMatcher("a");
+        Optional<EntityNameMatchResult> result = matcher.findIn("");
+        assertEquals(false, result.isPresent());
+    }
+
 }
