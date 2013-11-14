@@ -13,6 +13,18 @@ import static org.junit.Assert.assertEquals;
  */
 public class EntityNameMatcher_TestCase {
 
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionForNullSearchString() {
+        new EntityNameMatcher(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionForNullEntityName() {
+        EntityNameMatcher matcher = new EntityNameMatcher("");
+        matcher.findIn(null);
+    }
+
+
     @Test
     public void shouldReturnExactMatchOfNonQuotedString() {
         EntityNameMatcher matcher = new EntityNameMatcher("abc");
