@@ -76,7 +76,7 @@ public class EntityNameMatcher {
         final EntityNameMatchType matchType = matchIndexHelper.getBestMatchType();
         if (matchType != EntityNameMatchType.NONE) {
             int matchIndex = matchIndexHelper.getBestMatchIndex();
-            return Optional.of(new EntityNameMatchResult(entityName, matchIndex, matchIndex + searchString.length(), matchType));
+            return Optional.of(new EntityNameMatchResult(matchIndex, matchIndex + searchString.length(), matchType));
         }
         else {
             return Optional.absent();
@@ -84,11 +84,11 @@ public class EntityNameMatcher {
     }
 
     private EntityNameMatchResult createExactMatchResultForQuotedString(String text) {
-        return new EntityNameMatchResult(text, 1, text.length() - 1, EntityNameMatchType.EXACT_MATCH);
+        return new EntityNameMatchResult(1, text.length() - 1, EntityNameMatchType.EXACT_MATCH);
     }
 
     private EntityNameMatchResult createExactMatchResultForString(String text) {
-        return new EntityNameMatchResult(text, 0, text.length(), EntityNameMatchType.EXACT_MATCH);
+        return new EntityNameMatchResult(0, text.length(), EntityNameMatchType.EXACT_MATCH);
     }
 
     private static int indexOfIgnoreCase(String searchFor, String in, int start) {
