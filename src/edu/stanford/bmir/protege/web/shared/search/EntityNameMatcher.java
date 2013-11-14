@@ -10,16 +10,41 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/11/2013
+ * <p>
+ *     A utility for searching for substrings in entity names.  Matches that match whole entity names (quoted
+ *     or unquoted) will be returned first, then matches that match whole words in entity names, then matches that
+ *     math word prefixes in entity names, then matches that match substrings in entity names.
+ *
+ *     If the entity name is a prefix name, matches that occur after the prefix name will be found in
+ *     preferences to possible matches that would occur in the prefix name.
+ *
+ *     For example, given a search string of "bc", and an entity name of "abcBc", the "Bc" substring would be matched
+ *     over the first "bc" substring.  For the same search string and an entity name of "bc:bc", the second occurrence
+ *     of "bc" would be matched in preference to the first occurrence.
+ * </p>
  */
 public class EntityNameMatcher {
 
     private String searchString;
 
+    /**
+     * Constructs and {@link EntityNameMatcher} which searches for the specified string.
+     * @param searchString The string to search with.  Not {@code null}.  May be empty.
+     * @throws NullPointerException if {@code searchString} is {@code null}.
+     */
     public EntityNameMatcher(String searchString) {
         this.searchString = checkNotNull(searchString);
     }
 
+    /**
+     * Finds this {@link EntityNameMatcher}'s search string in the specified entity name.
+     * @param entityName A string representing the entity name.  Not {@code null}.
+     * @return A search result that specifies the where the this {@link EntityNameMatcher}'s search string was found
+     * in {@code entityName}.  Not {@code null}.  An absent value indicates that no match was found.
+     * @throws NullPointerException if {@code entityName} is {@code null}.
+     */
     public Optional<EntityNameMatchResult> findIn(String entityName) {
+        checkNotNull(entityName);
         Optional<EntityNameMatchResult> exactMatchResult = searchForExactEntityNameMatch(entityName);
         if(exactMatchResult.isPresent()) {
             return exactMatchResult;
