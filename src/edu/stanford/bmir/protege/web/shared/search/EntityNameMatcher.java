@@ -45,8 +45,7 @@ public class EntityNameMatcher {
     private Optional<EntityNameMatchResult> searchForBestPartialEntityNameMatch(String entityName) {
         final int prefixNameSeparatorIndex = entityName.indexOf(':');
         MatchIndexHelper matchIndexHelper = new MatchIndexHelper(prefixNameSeparatorIndex);
-        int index = 0;
-        while (true) {
+        for (int index = 0; index < entityName.length(); index++) {
             index = indexOfIgnoreCase(searchString, entityName, index);
             if (index == -1) {
                 break;

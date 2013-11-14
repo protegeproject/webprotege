@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.search;
 
 import com.google.common.base.Optional;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -79,7 +78,28 @@ public class EntityNameMatcher_TestCase {
         assertEquals(3, resultValue.getStart());
         assertEquals(5, resultValue.getEnd());
         assertEquals(EntityNameMatchType.WORD_MATCH, resultValue.getMatchType());
+    }
 
+    @Test
+    public void shouldFindEmptyStringAtStart() {
+        EntityNameMatcher matcher = new EntityNameMatcher("");
+        Optional<EntityNameMatchResult> result = matcher.findIn("ab");
+        assertEquals(true, result.isPresent());
+        EntityNameMatchResult resultValue = result.get();
+        assertEquals(0, resultValue.getStart());
+        assertEquals(0, resultValue.getEnd());
+        assertEquals(EntityNameMatchType.WORD_PREFIX_MATCH, resultValue.getMatchType());
+    }
+
+    @Test
+    public void shouldFindEmptyStringAfterPrefixSeparator() {
+        EntityNameMatcher matcher = new EntityNameMatcher("");
+        Optional<EntityNameMatchResult> result = matcher.findIn("ab:ab");
+        assertEquals(true, result.isPresent());
+        EntityNameMatchResult resultValue = result.get();
+        assertEquals(0, resultValue.getStart());
+        assertEquals(0, resultValue.getEnd());
+        assertEquals(EntityNameMatchType.WORD_PREFIX_MATCH, resultValue.getMatchType());
     }
 
 }
