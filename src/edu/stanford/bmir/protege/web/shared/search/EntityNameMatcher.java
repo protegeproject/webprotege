@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.shared.search;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNameUtils;
 
-import java.util.regex.Matcher;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -69,10 +67,10 @@ public class EntityNameMatcher {
             }
             index++;
         }
-        return getEntityNameMatchResult(entityName, matchIndexHelper);
+        return getEntityNameMatchResult(matchIndexHelper);
     }
 
-    private Optional<EntityNameMatchResult> getEntityNameMatchResult(String entityName, MatchIndexHelper matchIndexHelper) {
+    private Optional<EntityNameMatchResult> getEntityNameMatchResult(MatchIndexHelper matchIndexHelper) {
         final EntityNameMatchType matchType = matchIndexHelper.getBestMatchType();
         if (matchType != EntityNameMatchType.NONE) {
             int matchIndex = matchIndexHelper.getBestMatchIndex();
