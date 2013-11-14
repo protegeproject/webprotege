@@ -33,7 +33,8 @@ public class EntityNameUtils {
         return entityName.length() >= 2 && entityName.charAt(0) == SINGLE_QUOTE && entityName.charAt(entityName.length() - 1) == SINGLE_QUOTE;
     }
 
-    public static String quoteIfNecessary(String entityName) {
+    // TODO: Need tests
+    private static String quoteIfNecessary(String entityName) {
         checkNotNull(entityName);
         if(!entityName.contains(" ")) {
             return entityName;
@@ -41,7 +42,8 @@ public class EntityNameUtils {
         return quote(entityName);
     }
 
-    public static String quote(String entityName) {
+    // TODO: Need tests
+    private static String quote(String entityName) {
         StringBuilder sb = new StringBuilder();
         sb.append("'");
         for(int i = 0; i < entityName.length(); i++) {
@@ -57,7 +59,8 @@ public class EntityNameUtils {
         return sb.toString();
     }
 
-    public static String unquote(String entityName) {
+    // TODO: Need tests
+    private static String unquote(String entityName) {
         if(entityName.length() < 2) {
             return entityName;
         }
