@@ -9,12 +9,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectRe
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
+import edu.stanford.bmir.protege.web.shared.search.EntityNameMatcher;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,10 +26,6 @@ import java.util.regex.Pattern;
  * Date: 12/11/2013
  */
 public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler<LookupEntitiesAction, LookupEntitiesResult> {
-
-    public static final String WORD_BOUNDARY_PATTERN_START = "\'?\\b";
-
-    public static final String NON_WORD_BOUNDARY_PATTERN_START = "\'?";
 
     @Override
     public Class<LookupEntitiesAction> getActionClass() {
@@ -51,31 +48,18 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
         final RenderingManager rm = project.getRenderingManager();
         BidirectionalShortFormProvider sfp = rm.getShortFormProvider();
 
-        AtomicReference<String> searchString = new AtomicReference<String>(entityLookupRequest.getSearchString());
-        String quotedSearchString = Pattern.quote(searchString.get());
-        final int flags = getFlags(entityLookupRequest);
-        Pattern wordBoundaryPattern = Pattern.compile(WORD_BOUNDARY_PATTERN_START + quotedSearchString, flags);
-        Pattern nonWordBoundaryPattern = Pattern.compile(NON_WORD_BOUNDARY_PATTERN_START + quotedSearchString, flags);
         Set<OWLEntityDataMatch> matches = new TreeSet<OWLEntityDataMatch>();
-        for(String shortForm : sfp.getShortForms()) {
-            final Matcher matcher;
-            Matcher wordBoundaryMatcher = wordBoundaryPattern.matcher(shortForm);
-            boolean matched = isMatch(shortForm, wordBoundaryMatcher, entityLookupRequest);
-            if(matched) {
-                matcher = wordBoundaryMatcher;
-            }
-            else {
-                Matcher nonWordBoundaryMatcher = nonWordBoundaryPattern.matcher(shortForm);
-                matched = isMatch(shortForm, nonWordBoundaryMatcher, entityLookupRequest);
-                matcher = nonWordBoundaryMatcher;
-            }
 
-            if(matched) {
+        EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
+        for(String shortForm : sfp.getShortForms()) {
+            Optional<EntityNameMatchResult> result = matcher.findIn(shortForm);
+            if(result.isPresent()) {
                 Set<OWLEntity> entities = sfp.getEntities(shortForm);
                 for(OWLEntity matchingEntity : entities) {
                     Optional<OWLEntityData> match = toOWLEntityData(matchingEntity, entityLookupRequest, rm);
                     if(match.isPresent()) {
-                        matches.add(new OWLEntityDataMatch(matcher.start(), matcher.end(), match.get()));
+                        EntityNameMatchResult resultValue = result.get();
+                        matches.add(new OWLEntityDataMatch(match.get(), resultValue));
                     }
                     if(matches.size() >= 1000) {
                         break;
@@ -88,8 +72,8 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
         }
         List<EntityLookupResult> result = new ArrayList<EntityLookupResult>();
         for(OWLEntityDataMatch visualEntityMatch : matches) {
-            OWLEntityData visualEntity = visualEntityMatch.getVisualEntity();
-            result.add(new EntityLookupResult(visualEntity, visualEntityMatch.matchIndex, visualEntityMatch.matchEndIndex));
+            OWLEntityData visualEntity = visualEntityMatch.getEntityData();
+            result.add(new EntityLookupResult(visualEntity, visualEntityMatch.getMatchResult()));
         }
         Collections.sort(result);
         if(result.size() >= entityLookupRequest.getSearchLimit()) {
@@ -97,6 +81,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
         }
         return result;
     }
+
 
     private Optional<OWLEntityData> toOWLEntityData(OWLEntity matchingEntity, final EntityLookupRequest entityLookupRequest, final RenderingManager rm) {
         return matchingEntity.accept(new OWLEntityVisitorEx<Optional<OWLEntityData>>() {
@@ -162,82 +147,32 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                         });
     }
 
-    private int getFlags(EntityLookupRequest entityLookupRequest) {
-        int flags;
-        if(entityLookupRequest.getSearchType().isCaseInsensitive()) {
-            flags = Pattern.CASE_INSENSITIVE;
-        }
-        else {
-            flags = 0;
-        }
-        return flags;
-    }
-
-    private boolean isMatch(String shortForm, Matcher matcher, EntityLookupRequest request) {
-        if(request.getSearchType() == SearchType.EXACT_MATCH) {
-            return matcher.matches();
-        }
-        else {
-            int prefixSeparatorIndex = shortForm.indexOf(':');
-            int startFrom;
-            if(prefixSeparatorIndex != -1) {
-                startFrom = prefixSeparatorIndex;
-            }
-            else {
-                startFrom = 0;
-            }
-
-
-            boolean localNameMatched = matcher.find(startFrom);
-            if(!localNameMatched && startFrom != 0) {
-                return matcher.find();
-            }
-            boolean subsequentMatch = localNameMatched;
-            while(subsequentMatch) {
-                subsequentMatch = matcher.find(matcher.start() + 1);
-                if(subsequentMatch) {
-                    if(Character.isUpperCase(shortForm.charAt(matcher.start()))) {
-                        return true;
-                    }
-                }
-            }
-            return localNameMatched && matcher.find(startFrom);
-        }
-    }
-
-
     private static class OWLEntityDataMatch implements Comparable<OWLEntityDataMatch> {
-
-        private int matchIndex;
-
-        private int matchEndIndex;
 
         private OWLEntityData visualEntity;
 
-        private OWLEntityDataMatch(int matchIndex, int matchEndIndex, OWLEntityData visualEntity) {
-            this.matchIndex = matchIndex;
-            this.matchEndIndex = matchEndIndex;
+        private EntityNameMatchResult matchResult;
+
+        private OWLEntityDataMatch(OWLEntityData visualEntity, EntityNameMatchResult matchResult) {
             this.visualEntity = visualEntity;
+            this.matchResult = matchResult;
         }
 
-        public OWLEntityData getVisualEntity() {
+        public OWLEntityData getEntityData() {
             return visualEntity;
         }
 
-        public int compareTo(OWLEntityDataMatch o) {
-            int diff = matchIndex - o.matchIndex;
+        private EntityNameMatchResult getMatchResult() {
+            return matchResult;
+        }
+
+        @Override
+        public int compareTo(OWLEntityDataMatch owlEntityDataMatch) {
+            int diff = this.matchResult.compareTo(owlEntityDataMatch.matchResult);
             if(diff != 0) {
                 return diff;
             }
-            String browserText1 = visualEntity.getBrowserText();
-            if(browserText1.startsWith("'")) {
-                browserText1 = browserText1.substring(1);
-            }
-            String browserText2 = o.getVisualEntity().getBrowserText();
-            if(browserText2.startsWith("'")) {
-                browserText2 = browserText2.substring(1);
-            }
-            return browserText1.compareToIgnoreCase(browserText2);
+            return visualEntity.compareToIgnorePrefixNames(owlEntityDataMatch.getEntityData());
         }
     }
 
