@@ -145,6 +145,15 @@ public class EntityNameUtils {
         return -1;
     }
 
+    /**
+     * Given a string that represents and entity name, finds the index of the next word end in the name from a given index.
+     * @param entityName The entityName containing the entity name.  Not {@code null}.
+     * @param startIndex The position to begin searching from.  Words ends will be found at this position or after this position.
+     * @return The index of the next word from the startIndex position, or -1 if there are no word ends after the specified
+     * startIndex position.
+     * @throws NullPointerException if {@code entityName} is {@code null}.
+     * @throws IllegalArgumentException if {@code startIndex} is negative or is greater or equal to the length of {@code entityName}.
+     */
     public static int indexOfWordEnd(final String entityName, int startIndex) {
         checkNotNull(entityName);
         checkElementIndex(startIndex, entityName.length());
@@ -163,8 +172,15 @@ public class EntityNameUtils {
         return lastIndex;
     }
 
-
-
+    /**
+     * Gets the index of the first word char at or after the specified start index.
+     * @param entityName The entity name.  Not {@code null}.
+     * @param startIndex The start index.
+     * @return The index of the first word character encountered from {@code startIndex}.  This may be {@code startIndex}
+     * itself.  -1 if there is no word character at {@code startIndex} of after {@code startIndex}.
+     * @throws NullPointerException if {@code entityName} is {@code null}.
+     * @throws IndexOutOfBoundsException if {@code startIndex} does not point to a character in {@code entityName}.
+     */
     public static int indexOfWordChar(String entityName, int startIndex) {
         for(int i = startIndex ; i < entityName.length(); i++) {
             char curChar = entityName.charAt(i);
