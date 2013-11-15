@@ -46,31 +46,6 @@ data.directory=/data/webprotege/
 # Optional
 #mongodb.port=27017
 
-# -------- email.host ----------- #
-# The host name of the email smtp server. 
-# The email account is used to send notifications.
-# Example: smtp.gmail.com
-# Optional
-#email.host=your.smtp.server
-
-# -------- email.port ----------- #
-# The email smtp port number. 
-# Example: 465
-# Optional
-#email.port=465
-
-# -------- email.account ----------- #
-# The email account that WebProtege should use to send email notifications.
-# Example: john.doe@stanford.edu
-# Optional
-#email.account=your@email.org
-
-# -------- email.password ----------- #
-# The password for the email account that WebProtege should use to send email notifications.
-# Example: mypassword
-# Optional
-#email.password=your_password
-
 # -------- https.enabled ----------- #
 # Specifies whether WebProtege uses https rather than http as a protocol.
 # See how to configure tomcat to use https here:
