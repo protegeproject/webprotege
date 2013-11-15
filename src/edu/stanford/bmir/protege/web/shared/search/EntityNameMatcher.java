@@ -99,7 +99,7 @@ public class EntityNameMatcher {
         final EntityNameMatchType matchType = matchIndexHelper.getBestMatchType();
         if (matchType != EntityNameMatchType.NONE) {
             int matchIndex = matchIndexHelper.getBestMatchIndex();
-            return Optional.of(new EntityNameMatchResult(matchIndex, matchIndex + searchString.length(), matchType));
+            return Optional.of(new EntityNameMatchResult(matchIndex, matchIndex + searchString.length(), matchType, matchIndexHelper.getBestMatchPrefixNameMatchType()));
         }
         else {
             return Optional.absent();
@@ -107,11 +107,15 @@ public class EntityNameMatcher {
     }
 
     private EntityNameMatchResult createExactMatchResultForQuotedString(String text) {
-        return new EntityNameMatchResult(1, text.length() - 1, EntityNameMatchType.EXACT_MATCH);
+        return new EntityNameMatchResult(1, text.length() - 1, EntityNameMatchType.EXACT_MATCH, getPrefixNameMatchTypeForExactMatch(text));
+    }
+
+    private PrefixNameMatchType getPrefixNameMatchTypeForExactMatch(String text) {
+        return text.indexOf(':') == -1 ? PrefixNameMatchType.NOT_IN_PREFIX_NAME : PrefixNameMatchType.IN_PREFIX_NAME;
     }
 
     private EntityNameMatchResult createExactMatchResultForString(String text) {
-        return new EntityNameMatchResult(0, text.length(), EntityNameMatchType.EXACT_MATCH);
+        return new EntityNameMatchResult(0, text.length(), EntityNameMatchType.EXACT_MATCH, getPrefixNameMatchTypeForExactMatch(text));
     }
 
     private static int indexOfIgnoreCase(String searchFor, String in, int start) {
@@ -191,6 +195,29 @@ public class EntityNameMatcher {
                 return EntityNameMatchType.SUB_STRING_MATCH;
             }
             return EntityNameMatchType.NONE;
+        }
+
+        public PrefixNameMatchType getBestMatchPrefixNameMatchType() {
+            int matchIndex = getBestMatchIndex();
+            if(matchIndex > prefixNameSeparatorIndex) {
+                return PrefixNameMatchType.NOT_IN_PREFIX_NAME;
+            }
+            else {
+                return PrefixNameMatchType.IN_PREFIX_NAME;
+            }
+//            if(prefixNameSeparatorIndex == -1) {
+//                return PrefixNameMatchType.NOT_IN_PREFIX_NAME;
+//            }
+//            if(wordMatchIndex != -1 && wordMatchIndex > prefixNameSeparatorIndex) {
+//                return PrefixNameMatchType.NOT_IN_PREFIX_NAME;
+//            }
+//            if(wordPrefixMatchIndex != -1 && wordPrefixMatchIndex > prefixNameSeparatorIndex) {
+//                return PrefixNameMatchType.NOT_IN_PREFIX_NAME;
+//            }
+//            if(subStringMatchIndex != -1 && subStringMatchIndex > prefixNameSeparatorIndex) {
+//                return PrefixNameMatchType.NOT_IN_PREFIX_NAME;
+//            }
+//            return PrefixNameMatchType.IN_PREFIX_NAME;
         }
     }
 }
