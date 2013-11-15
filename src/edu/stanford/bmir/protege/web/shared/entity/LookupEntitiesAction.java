@@ -17,6 +17,7 @@ public class LookupEntitiesAction implements HasProjectAction<LookupEntitiesResu
 
     private EntityLookupRequest entityLookupRequest;
 
+    @SuppressWarnings("unused")
     private LookupEntitiesAction() {
     }
 
