@@ -34,6 +34,7 @@ public class EntityNameMatcher_TestCase {
         assertEquals(0, resultValue.getStart());
         assertEquals(3, resultValue.getEnd());
         assertEquals(EntityNameMatchType.EXACT_MATCH, resultValue.getMatchType());
+        assertEquals(PrefixNameMatchType.NOT_IN_PREFIX_NAME, resultValue.getPrefixNameMatchType());
     }
 
     @Test
@@ -45,6 +46,7 @@ public class EntityNameMatcher_TestCase {
         assertEquals(1, resultValue.getStart());
         assertEquals(4, resultValue.getEnd());
         assertEquals(EntityNameMatchType.EXACT_MATCH, resultValue.getMatchType());
+        assertEquals(PrefixNameMatchType.NOT_IN_PREFIX_NAME, resultValue.getPrefixNameMatchType());
     }
 
     @Test
@@ -56,6 +58,7 @@ public class EntityNameMatcher_TestCase {
         assertEquals(0, resultValue.getStart());
         assertEquals(3, resultValue.getEnd());
         assertEquals(EntityNameMatchType.WORD_MATCH, resultValue.getMatchType());
+        assertEquals(PrefixNameMatchType.NOT_IN_PREFIX_NAME, resultValue.getPrefixNameMatchType());
     }
 
 
@@ -68,6 +71,7 @@ public class EntityNameMatcher_TestCase {
         assertEquals(0, resultValue.getStart());
         assertEquals(3, resultValue.getEnd());
         assertEquals(EntityNameMatchType.WORD_MATCH, resultValue.getMatchType());
+        assertEquals(PrefixNameMatchType.NOT_IN_PREFIX_NAME, resultValue.getPrefixNameMatchType());
     }
 
     @Test
@@ -79,6 +83,7 @@ public class EntityNameMatcher_TestCase {
         assertEquals(3, resultValue.getStart());
         assertEquals(5, resultValue.getEnd());
         assertEquals(EntityNameMatchType.WORD_MATCH, resultValue.getMatchType());
+        assertEquals(PrefixNameMatchType.NOT_IN_PREFIX_NAME, resultValue.getPrefixNameMatchType());
     }
 
     @Test
@@ -90,6 +95,7 @@ public class EntityNameMatcher_TestCase {
         assertEquals(3, resultValue.getStart());
         assertEquals(5, resultValue.getEnd());
         assertEquals(EntityNameMatchType.WORD_MATCH, resultValue.getMatchType());
+        assertEquals(PrefixNameMatchType.NOT_IN_PREFIX_NAME, resultValue.getPrefixNameMatchType());
     }
 
     @Test
@@ -101,10 +107,11 @@ public class EntityNameMatcher_TestCase {
         assertEquals(0, resultValue.getStart());
         assertEquals(0, resultValue.getEnd());
         assertEquals(EntityNameMatchType.WORD_PREFIX_MATCH, resultValue.getMatchType());
+        assertEquals(PrefixNameMatchType.NOT_IN_PREFIX_NAME, resultValue.getPrefixNameMatchType());
     }
 
     @Test
-    public void shouldFindEmptyStringAfterPrefixSeparator() {
+    public void shouldFindEmptyStringBeforePrefixSeparator() {
         EntityNameMatcher matcher = new EntityNameMatcher("");
         Optional<EntityNameMatchResult> result = matcher.findIn("ab:ab");
         assertEquals(true, result.isPresent());
@@ -112,6 +119,7 @@ public class EntityNameMatcher_TestCase {
         assertEquals(0, resultValue.getStart());
         assertEquals(0, resultValue.getEnd());
         assertEquals(EntityNameMatchType.WORD_PREFIX_MATCH, resultValue.getMatchType());
+        assertEquals(PrefixNameMatchType.IN_PREFIX_NAME, resultValue.getPrefixNameMatchType());
     }
 
     @Test

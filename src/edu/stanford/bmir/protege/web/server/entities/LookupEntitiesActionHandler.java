@@ -47,9 +47,7 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
     private List<EntityLookupResult> lookupEntities(final OWLAPIProject project, final EntityLookupRequest entityLookupRequest) {
         final RenderingManager rm = project.getRenderingManager();
         BidirectionalShortFormProvider sfp = rm.getShortFormProvider();
-
         Set<OWLEntityDataMatch> matches = new TreeSet<OWLEntityDataMatch>();
-
         EntityNameMatcher matcher = new EntityNameMatcher(entityLookupRequest.getSearchString());
         for(String shortForm : sfp.getShortForms()) {
             Optional<EntityNameMatchResult> result = matcher.findIn(shortForm);
@@ -61,11 +59,13 @@ public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler
                         EntityNameMatchResult resultValue = result.get();
                         matches.add(new OWLEntityDataMatch(match.get(), resultValue));
                     }
+                    // BAD
                     if(matches.size() >= 1000) {
                         break;
                     }
                 }
             }
+            // BAD
             if(matches.size() >= 1000) {
                 break;
             }
