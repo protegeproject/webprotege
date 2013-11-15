@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.shared.search;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.EntityNameUtils;
 
-import java.util.regex.Matcher;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -12,16 +10,41 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/11/2013
+ * <p>
+ *     A utility for searching for substrings in entity names.  Matches that match whole entity names (quoted
+ *     or unquoted) will be returned first, then matches that match whole words in entity names, then matches that
+ *     math word prefixes in entity names, then matches that match substrings in entity names.
+ *
+ *     If the entity name is a prefix name, matches that occur after the prefix name will be found in
+ *     preferences to possible matches that would occur in the prefix name.
+ *
+ *     For example, given a search string of "bc", and an entity name of "abcBc", the "Bc" substring would be matched
+ *     over the first "bc" substring.  For the same search string and an entity name of "bc:bc", the second occurrence
+ *     of "bc" would be matched in preference to the first occurrence.
+ * </p>
  */
 public class EntityNameMatcher {
 
     private String searchString;
 
+    /**
+     * Constructs and {@link EntityNameMatcher} which searches for the specified string.
+     * @param searchString The string to search with.  Not {@code null}.  May be empty.
+     * @throws NullPointerException if {@code searchString} is {@code null}.
+     */
     public EntityNameMatcher(String searchString) {
         this.searchString = checkNotNull(searchString);
     }
 
+    /**
+     * Finds this {@link EntityNameMatcher}'s search string in the specified entity name.
+     * @param entityName A string representing the entity name.  Not {@code null}.
+     * @return A search result that specifies the where the this {@link EntityNameMatcher}'s search string was found
+     * in {@code entityName}.  Not {@code null}.  An absent value indicates that no match was found.
+     * @throws NullPointerException if {@code entityName} is {@code null}.
+     */
     public Optional<EntityNameMatchResult> findIn(String entityName) {
+        checkNotNull(entityName);
         Optional<EntityNameMatchResult> exactMatchResult = searchForExactEntityNameMatch(entityName);
         if(exactMatchResult.isPresent()) {
             return exactMatchResult;
@@ -45,8 +68,7 @@ public class EntityNameMatcher {
     private Optional<EntityNameMatchResult> searchForBestPartialEntityNameMatch(String entityName) {
         final int prefixNameSeparatorIndex = entityName.indexOf(':');
         MatchIndexHelper matchIndexHelper = new MatchIndexHelper(prefixNameSeparatorIndex);
-        int index = 0;
-        while (true) {
+        for (int index = 0; index < entityName.length(); index++) {
             index = indexOfIgnoreCase(searchString, entityName, index);
             if (index == -1) {
                 break;
@@ -70,14 +92,14 @@ public class EntityNameMatcher {
             }
             index++;
         }
-        return getEntityNameMatchResult(entityName, matchIndexHelper);
+        return getEntityNameMatchResult(matchIndexHelper);
     }
 
-    private Optional<EntityNameMatchResult> getEntityNameMatchResult(String entityName, MatchIndexHelper matchIndexHelper) {
+    private Optional<EntityNameMatchResult> getEntityNameMatchResult(MatchIndexHelper matchIndexHelper) {
         final EntityNameMatchType matchType = matchIndexHelper.getBestMatchType();
         if (matchType != EntityNameMatchType.NONE) {
             int matchIndex = matchIndexHelper.getBestMatchIndex();
-            return Optional.of(new EntityNameMatchResult(entityName, matchIndex, matchIndex + searchString.length(), matchType));
+            return Optional.of(new EntityNameMatchResult(matchIndex, matchIndex + searchString.length(), matchType, matchIndexHelper.getBestMatchPrefixNameMatchType()));
         }
         else {
             return Optional.absent();
@@ -85,11 +107,15 @@ public class EntityNameMatcher {
     }
 
     private EntityNameMatchResult createExactMatchResultForQuotedString(String text) {
-        return new EntityNameMatchResult(text, 1, text.length() - 1, EntityNameMatchType.EXACT_MATCH);
+        return new EntityNameMatchResult(1, text.length() - 1, EntityNameMatchType.EXACT_MATCH, getPrefixNameMatchTypeForExactMatch(text));
+    }
+
+    private PrefixNameMatchType getPrefixNameMatchTypeForExactMatch(String text) {
+        return text.indexOf(':') == -1 ? PrefixNameMatchType.NOT_IN_PREFIX_NAME : PrefixNameMatchType.IN_PREFIX_NAME;
     }
 
     private EntityNameMatchResult createExactMatchResultForString(String text) {
-        return new EntityNameMatchResult(text, 0, text.length(), EntityNameMatchType.EXACT_MATCH);
+        return new EntityNameMatchResult(0, text.length(), EntityNameMatchType.EXACT_MATCH, getPrefixNameMatchTypeForExactMatch(text));
     }
 
     private static int indexOfIgnoreCase(String searchFor, String in, int start) {
@@ -169,6 +195,29 @@ public class EntityNameMatcher {
                 return EntityNameMatchType.SUB_STRING_MATCH;
             }
             return EntityNameMatchType.NONE;
+        }
+
+        public PrefixNameMatchType getBestMatchPrefixNameMatchType() {
+            int matchIndex = getBestMatchIndex();
+            if(matchIndex > prefixNameSeparatorIndex) {
+                return PrefixNameMatchType.NOT_IN_PREFIX_NAME;
+            }
+            else {
+                return PrefixNameMatchType.IN_PREFIX_NAME;
+            }
+//            if(prefixNameSeparatorIndex == -1) {
+//                return PrefixNameMatchType.NOT_IN_PREFIX_NAME;
+//            }
+//            if(wordMatchIndex != -1 && wordMatchIndex > prefixNameSeparatorIndex) {
+//                return PrefixNameMatchType.NOT_IN_PREFIX_NAME;
+//            }
+//            if(wordPrefixMatchIndex != -1 && wordPrefixMatchIndex > prefixNameSeparatorIndex) {
+//                return PrefixNameMatchType.NOT_IN_PREFIX_NAME;
+//            }
+//            if(subStringMatchIndex != -1 && subStringMatchIndex > prefixNameSeparatorIndex) {
+//                return PrefixNameMatchType.NOT_IN_PREFIX_NAME;
+//            }
+//            return PrefixNameMatchType.IN_PREFIX_NAME;
         }
     }
 }

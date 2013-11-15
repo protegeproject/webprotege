@@ -73,48 +73,4 @@ public class EntitySuggestOracle extends SuggestOracle {
     public boolean isDisplayStringHTML() {
         return true;
     }
-
-
-//    private List<EntitySuggestion> getEntityCreationSuggestions(Request request) {
-//        List<EntitySuggestion> suggestions = new ArrayList<EntitySuggestion>();
-//
-//
-//        if(entityTypes.contains(EntityLookupRequestEntityMatchType.MATCH_CLASSES)) {
-//            OWLClass cls = DataFactory.getOWLClass("");
-//            OWLClassData data = new OWLClassData(cls, request.getQuery());
-//            suggestions.add(new EntitySuggestion(data, "Create class called " + request.getQuery()));
-//        }
-//
-//        if(entityTypes.contains(EntityLookupRequestEntityMatchType.MATCH_OBJECT_PROPERTIES)) {
-//            OWLObjectProperty property = DataFactory.getOWLObjectProperty("");
-//            OWLEntityData entityData = new OWLObjectPropertyData(property, request.getQuery());
-//            suggestions.add(new EntitySuggestion(entityData, "Create object property called " + request.getQuery()));
-//        }
-//
-//        if(entityTypes.contains(EntityLookupRequestEntityMatchType.MATCH_DATA_PROPERTIES)) {
-//            OWLDataProperty property = DataFactory.getOWLDataProperty("");
-//            OWLDataPropertyData entityData = new OWLDataPropertyData(property, request.getQuery());
-//            suggestions.add(new EntitySuggestion(entityData, "Create data property called " + request.getQuery()));
-//        }
-//
-//
-//
-//        if(entityTypes.contains(EntityLookupRequestEntityMatchType.MATCH_ANNOTATION_PROPERTIES)) {
-//            OWLAnnotationProperty property = DataFactory.getOWLAnnotationProperty("");
-//            OWLAnnotationPropertyData entityData = new OWLAnnotationPropertyData(property, request.getQuery());
-//            suggestions.add(new EntitySuggestion(entityData, "Create annotation property called " + request.getQuery()));
-//        }
-//
-//
-//
-//        if(entityTypes.contains(EntityLookupRequestEntityMatchType.MATCH_NAMED_INDIVIDUALS)) {
-//            OWLNamedIndividual property = DataFactory.getOWLNamedIndividual("");
-//            OWLEntityData entityData = new OWLNamedIndividualData(property, request.getQuery());
-//            suggestions.add(new EntitySuggestion(entityData, "Create individual called " + request.getQuery()));
-//        }
-//
-//        return suggestions;
-//
-//
-//    }
 }

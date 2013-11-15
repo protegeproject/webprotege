@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
+
 import java.io.Serializable;
 
 /**
@@ -12,32 +14,28 @@ public class EntityLookupResult implements Serializable, Comparable<EntityLookup
 
     private OWLEntityData visualEntity;
     
-    private int browserTextMatchStart;
-    
-    private int browserTextMatchEnd;
+    private EntityNameMatchResult matchResult;
 
     private EntityLookupResult() {
     }
 
-    public EntityLookupResult(OWLEntityData visualEntity, int browserTextMatchStart, int browserTextMatchEnd) {
+    public EntityLookupResult(OWLEntityData visualEntity, EntityNameMatchResult matchResult) {
         this.visualEntity = visualEntity;
-        this.browserTextMatchStart = browserTextMatchStart;
-        this.browserTextMatchEnd = browserTextMatchEnd;
+        this.matchResult = matchResult;
     }
 
     public OWLEntityData getOWLEntityData() {
         return visualEntity;
     }
 
-    public int getBrowserTextMatchStart() {
-        return browserTextMatchStart;
+
+    public EntityNameMatchResult getMatchResult() {
+        return matchResult;
     }
 
-    public int getBrowserTextMatchEnd() {
-        return browserTextMatchEnd;
-    }
-    
     public String getDisplayText() {
+        int browserTextMatchStart = matchResult.getStart();
+        int browserTextMatchEnd = matchResult.getEnd();
         StringBuilder sb = new StringBuilder();
         String browserText = visualEntity.getBrowserText();
         if (browserTextMatchStart < browserText.length() && browserTextMatchEnd <= browserText.length()) {
@@ -55,110 +53,10 @@ public class EntityLookupResult implements Serializable, Comparable<EntityLookup
 
     @Override
     public int compareTo(EntityLookupResult other) {
-
-        boolean probablyWordStart = isProbablyWordStart(browserTextMatchStart);
-        boolean otherProbablyWordStart = other.isProbablyWordStart(other.browserTextMatchStart);
-        if(probablyWordStart) {
-            if(!otherProbablyWordStart) {
-                return -1;
-            }
-        }
-        else if(otherProbablyWordStart) {
-            return 1;
-        }
-
-        // TODO: CASE
-
-        if(!hasPrefixSeparator()) {
-            if(other.hasPrefixSeparator()) {
-                return -1;
-            }
-        }
-        else if(!other.hasPrefixSeparator()) {
-            return 1;
-        }
-
-        boolean matchInLocalName = isMatchInLocalName();
-        boolean otherMatchInLocalName = other.isMatchInLocalName();
-
-        if(matchInLocalName) {
-            if(!otherMatchInLocalName) {
-                return -1;
-            }
-        }
-        else if(otherMatchInLocalName) {
-            return 1;
-        }
-
-
-        int thisOffsetMatchStart = getOffsetMatchStart();
-        int otherOffsetMatchStart = other.getOffsetMatchStart();
-
-        if(thisOffsetMatchStart < otherOffsetMatchStart) {
-            return -1;
-        }
-        else if(thisOffsetMatchStart > otherOffsetMatchStart) {
-            return 1;
+        int diff =  this.matchResult.compareTo(other.matchResult);
+        if(diff != 0) {
+            return diff;
         }
         return visualEntity.compareToIgnorePrefixNames(other.visualEntity);
-    }
-
-    private boolean hasPrefixSeparator() {
-        return getPrefixSeparatorIndex() != -1;
-    }
-
-    private boolean isMatchInLocalName() {
-        int prefixSeparatorIndex = getPrefixSeparatorIndex();
-        // Either no prefix separator or the match is after the prefix separator
-        return prefixSeparatorIndex == -1 || browserTextMatchStart > prefixSeparatorIndex;
-    }
-
-    private boolean isProbablyWordStart(int index) {
-        if(index < 0) {
-            return false;
-        }
-        if(index == 0) {
-            return true;
-        }
-        String browserText = visualEntity.getBrowserText();
-        if(index >= browserText.length()) {
-            // TODO: Fix
-            return false;
-        }
-        char previousChar = browserText.charAt(index - 1);
-        if(previousChar == ':') {
-            return true;
-        }
-        if(previousChar == '_') {
-            return true;
-        }
-        if(previousChar == ' ') {
-            return true;
-        }
-        if(previousChar == '\'') {
-            return true;
-        }
-        if(Character.isUpperCase(browserText.charAt(index))) {
-            return true;
-        }
-        return false;
-
-    }
-
-    private int getOffsetMatchStart() {
-        int prefixSeparatorIndex = getPrefixSeparatorIndex();
-        final int offsetMatchStart;
-        if(prefixSeparatorIndex != -1 && prefixSeparatorIndex < browserTextMatchStart) {
-            offsetMatchStart = browserTextMatchStart - prefixSeparatorIndex;
-        }
-        else {
-            offsetMatchStart = browserTextMatchStart;
-        }
-        return offsetMatchStart;
-    }
-
-
-    private int getPrefixSeparatorIndex() {
-        return visualEntity.getBrowserText().indexOf(':');
     }
 }
