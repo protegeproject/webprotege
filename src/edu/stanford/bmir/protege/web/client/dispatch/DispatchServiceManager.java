@@ -1,16 +1,20 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
 import com.google.common.base.Optional;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.UmbrellaException;
+import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
+import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
 import edu.stanford.bmir.protege.web.shared.dispatch.InvocationExceptionTolerantAction;
@@ -20,8 +24,11 @@ import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Author: Matthew Horridge<br>
@@ -36,6 +43,7 @@ public class DispatchServiceManager {
 
     private DispatchServiceAsync async = GWT.create(DispatchService.class);
 
+
     private DispatchServiceManager() {
 
     }
@@ -47,9 +55,31 @@ public class DispatchServiceManager {
 
     private int requestCount;
 
+    private Map<ProjectId, ResultCache> resultCacheMap = new HashMap<ProjectId, ResultCache>();
+
+    private ResultCache getResultCache(ProjectId projectId) {
+        ResultCache resultCache = resultCacheMap.get(projectId);
+        if(resultCache == null) {
+            resultCache = new ResultCache(projectId);
+            resultCacheMap.put(projectId, resultCache);
+        }
+        return resultCache;
+    }
+
     @SuppressWarnings("unchecked")
     public <A extends Action<R>, R extends Result> void execute(A action, final AsyncCallback<R> callback) {
-        GWT.log("Making request to server: " + requestCount + " [" + action.getClass().getName() + "]");
+        if(action instanceof HasProjectId) {
+            ProjectId projectId = ((HasProjectId) action).getProjectId();
+            ResultCache resultCache = getResultCache(projectId);
+            Optional<R> result = resultCache.getCachedResult(action);
+            if(result.isPresent()) {
+                GWT.log("[DISPATCH] Using cached result (" + action + ")");
+                callback.onSuccess(result.get());
+                return;
+            }
+        }
+
+        GWT.log("[DISPATCH] Making request to server.  Request " + requestCount + ". (" + action + ")");
         requestCount++;
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
     }
@@ -77,6 +107,10 @@ public class DispatchServiceManager {
         @Override
         public void onSuccess(DispatchServiceResultContainer result) {
             // TODO: Fix
+            if(action instanceof HasProjectId) {
+                ResultCache resultCache = getResultCache(((HasProjectId) action).getProjectId());
+                resultCache.cacheResult((Action<R>) action, (R) result.getResult());
+            }
             cacheRenderables(result.getResult());
             dispatchEvents(result.getResult());
             delegate.onSuccess(result.getResult());
@@ -102,7 +136,7 @@ public class DispatchServiceManager {
             // TODO: more than once!
 
             for(Event<?> event : events) {
-                GWT.log(event.toString());
+                GWT.log("[DISPATCH] Dispatching event (" + event.toDebugString() + ")");
             }
             EventBusManager.getManager().postEvents(events);
         }

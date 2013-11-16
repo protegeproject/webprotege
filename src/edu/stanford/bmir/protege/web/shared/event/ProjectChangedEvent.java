@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -115,5 +116,12 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
         }
         ProjectChangedEvent other = (ProjectChangedEvent) obj;
         return this.subjects.equals(other.subjects) && this.revisionSummary.equals(other.revisionSummary);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("ProjectChangedEvent")
+                .add("subjects", subjects)
+                .add("revisionSummary", revisionSummary).toString();
     }
 }

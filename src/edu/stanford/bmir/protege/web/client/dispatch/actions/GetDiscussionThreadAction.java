@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -20,6 +21,7 @@ public class GetDiscussionThreadAction extends AbstractHasProjectAction<GetDiscu
     /**
      * For serialization purposes only
      */
+    @SuppressWarnings("unused")
     private GetDiscussionThreadAction() {
     }
 
@@ -30,5 +32,29 @@ public class GetDiscussionThreadAction extends AbstractHasProjectAction<GetDiscu
 
     public OWLEntity getTargetEntity() {
         return targetEntity;
+    }
+
+    @Override
+    public int hashCode() {
+        return "GetDiscussionThreadAction".hashCode() + targetEntity.hashCode() + getProjectId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this) {
+            return true;
+        }
+        if(!(o instanceof GetDiscussionThreadAction)) {
+            return false;
+        }
+        GetDiscussionThreadAction other = (GetDiscussionThreadAction) o;
+        return this.targetEntity.equals(other.targetEntity) && this.getProjectId().equals(other.getProjectId());
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("GetDiscussionThreadAction")
+                .addValue(getProjectId())
+                .add("entity", targetEntity).toString();
     }
 }

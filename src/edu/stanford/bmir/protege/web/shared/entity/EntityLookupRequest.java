@@ -24,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class EntityLookupRequest implements Serializable, IsSerializable {
 
-    public static final int DEFAULT_MATCH_LIMIT = 100;
+    public static final int DEFAULT_MATCH_LIMIT = 20;
 
     private String searchString;
 

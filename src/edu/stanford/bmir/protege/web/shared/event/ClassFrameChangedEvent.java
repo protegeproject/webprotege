@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -62,5 +63,11 @@ public class ClassFrameChangedEvent extends EntityFrameChangedEvent<OWLClass, Cl
         }
         ClassFrameChangedEvent other = (ClassFrameChangedEvent) obj;
         return this.getEntity().equals(other.getEntity());
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("ClassFrameChangedEvent")
+                .addValue(getEntity()).toString();
     }
 }

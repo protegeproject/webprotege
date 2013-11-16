@@ -18,18 +18,19 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/09/2013
  */
-public class EntityDataLookupHandlerServiceAsyncImpl implements EntityDataLookupHandler {
+public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
 
-    public EntityDataLookupHandlerServiceAsyncImpl() {
+    public EntityDataLookupHandlerImpl() {
     }
 
     @Override
     public void lookupEntity(String displayName, final EntityDataLookupContext lookupContext, final AsyncCallback<Optional<OWLEntityData>> callback) {
-
         final String trimmedContent = displayName.trim();
-
         final ProjectId projectId = lookupContext.getProjectId();
         final Set<EntityType<?>> allowedEntityTypes = lookupContext.getAllowedEntityTypes();
+        if(allowedEntityTypes.isEmpty()) {
+            callback.onSuccess(Optional.<OWLEntityData>absent());
+        }
         final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, SearchType.EXACT_MATCH_IGNORE_CASE, 1, allowedEntityTypes);
         DispatchServiceManager.get().execute(new LookupEntitiesAction(projectId, entityLookupRequest), new AsyncCallback<LookupEntitiesResult>() {
             @Override
