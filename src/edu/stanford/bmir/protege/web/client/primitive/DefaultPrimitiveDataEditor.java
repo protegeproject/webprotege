@@ -71,7 +71,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private String lastIconInsetStyleName = "empty-icon-inset";
 
-    private PrimitiveDataParser primitiveDataParser = new DefaultPrimitiveDataParser(new EntityDataLookupHandlerServiceAsyncImpl());
+    private PrimitiveDataParser primitiveDataParser = new DefaultPrimitiveDataParser(new EntityDataLookupHandlerImpl());
 
     private boolean dirty = false;
 

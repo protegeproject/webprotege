@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -49,6 +50,7 @@ public class LookupEntitiesAction implements HasProjectAction<LookupEntitiesResu
         return entityLookupRequest;
     }
 
+
     @Override
     public int hashCode() {
         return "LookupEntitiesAction".hashCode() + projectId.hashCode() + entityLookupRequest.hashCode();
@@ -64,5 +66,12 @@ public class LookupEntitiesAction implements HasProjectAction<LookupEntitiesResu
         }
         LookupEntitiesAction other = (LookupEntitiesAction) o;
         return this.projectId.equals(other.projectId) && this.entityLookupRequest.equals(other.entityLookupRequest);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("LookupEntitiesAction")
+                .addValue(projectId)
+                .addValue(entityLookupRequest).toString();
     }
 }

@@ -160,8 +160,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             Element parentElement = tableElement.getParentElement();
             Element nextSibling = tableElement.getNextSiblingElement();
             tableElement.removeFromParent();
-            long t0 = new Date().getTime();
-
             recyclePrimitiveDataEditors();
             recycleDeleteButtons();
             table.removeAllRows();
@@ -170,8 +168,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                 addRelationship(propertyValue, provider);
             }
             ensureBlankRow();
-            long t1 = new Date().getTime();
-            GWT.log("        DOM update time: " + (t1 - t0));
             if (nextSibling != null) {
                 parentElement.insertBefore(nextSibling, tableElement);
             }

@@ -37,10 +37,6 @@ public class EntitySuggestOracle extends SuggestOracle {
         this(projectId, DEFAULT_SUGGEST_LIMIT);
     }
 
-    public Set<EntityType<?>> getEntityTypes() {
-        return entityTypes;
-    }
-
     public void setEntityTypes(Set<EntityType<?>> entityTypes) {
         this.entityTypes.clear();
         this.entityTypes.addAll(entityTypes);
@@ -52,6 +48,10 @@ public class EntitySuggestOracle extends SuggestOracle {
 
     @Override
     public void requestSuggestions(final Request request, final Callback callback) {
+        if(entityTypes.isEmpty()) {
+            callback.onSuggestionsReady(request, new Response(Collections.<Suggestion>emptyList()));
+            return;
+        }
         DispatchServiceManager.get().execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), new AsyncCallback<LookupEntitiesResult>() {
             @Override
             public void onFailure(Throwable caught) {

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
-import edu.stanford.bmir.protege.web.client.dispatch.Cachable;
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
@@ -15,7 +15,7 @@ import org.semanticweb.owlapi.model.OWLClass;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class GetClassFrameAction extends AbstractHasProjectIdAndSubject<OWLClass> implements GetObjectAction<LabelledFrame<ClassFrame>>, HasProjectId, HasSubject<OWLClass>, Cachable {
+public class GetClassFrameAction extends AbstractHasProjectIdAndSubject<OWLClass> implements GetObjectAction<LabelledFrame<ClassFrame>>, HasProjectId, HasSubject<OWLClass> {
 
     /**
      * For serialization purposes only
@@ -43,5 +43,12 @@ public class GetClassFrameAction extends AbstractHasProjectIdAndSubject<OWLClass
         }
         GetClassFrameAction other = (GetClassFrameAction) obj;
         return super.equals(other);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("GetClassFrameAction")
+                .addValue(getProjectId())
+                .add("entity", getSubject()).toString();
     }
 }

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.events;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
@@ -61,7 +62,7 @@ public class EventPollingManager {
 
 
     public void pollForProjectEvents() {
-        GWT.log("Polling for project events for " + projectId + " from " + nextTag);
+        GWT.log("[Event Polling Manager] Polling for project events for " + projectId + " from " + nextTag);
         UserId userId = Application.get().getUserId();
         DispatchServiceManager.get().execute(new GetProjectEventsAction(nextTag, projectId, userId), new AsyncCallback<GetProjectEventsResult>() {
             @Override
@@ -80,15 +81,18 @@ public class EventPollingManager {
         if(eventList.isEmpty()) {
             return;
         }
-        GWT.log("Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag());
+        GWT.log("[Event Polling Manager] Retrieved " + eventList.getEvents().size() + " events from server. From " + eventList.getStartTag() + " to " + eventList.getEndTag());
         EventTag eventListStartTag = eventList.getStartTag();
         if(!eventList.getStartTag().equals(eventList.getEndTag()) && nextTag.isGreaterOrEqualTo(eventListStartTag)) {
             // We haven't missed any events - our next retrieval will be from where we got the event to.
             nextTag = eventList.getEndTag();
-            GWT.log("Updated events.  Next tag is " + nextTag);
+            GWT.log("[Event Polling Manager] Updated events.  Next tag is " + nextTag);
         }
         if (!eventList.isEmpty()) {
-            GWT.log("Dispatching events from polling manager");
+            GWT.log("[Event Polling Manager] Dispatching events from polling manager...");
+            for(Event<?> event : eventList.getEvents()) {
+                GWT.log("[Event Polling Manager] Event: " + event.toString());
+            }
             EventBusManager.getManager().postEvents(eventList.getEvents());
         }
     }
