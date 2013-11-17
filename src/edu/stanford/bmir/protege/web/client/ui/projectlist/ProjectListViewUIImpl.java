@@ -232,9 +232,7 @@ public class ProjectListViewUIImpl extends Composite implements ProjectListView 
             final String projectName = object.getProjectDetails().getDisplayName();
             SafeHtmlBuilder projectNameBuilder = new SafeHtmlBuilder();
             String escapedProjectName = projectNameBuilder.appendEscaped(projectName).toSafeHtml().asString();
-
-
-            sb.appendHtmlConstant("<div style=\"width: 100%; height: 100%; color: #6982AB; cursor: pointer;\" title=\"Open " + escapedProjectName + "\">" + object.getProjectDetails().getDisplayName() + "</div>");
+            sb.appendHtmlConstant("<div style=\"width: 100%; height: 100%; color: #6982AB; cursor: pointer;\" title=\"Open " + escapedProjectName + "\">" + escapedProjectName + "</div>");
         }
 
         @Override
