@@ -64,22 +64,22 @@
     <dependency>
       <groupId>net.sourceforge.owlapi</groupId>
       <artifactId>owlapi-api</artifactId>
-      <version>3.4.8</version>
+      <version>3.4.3</version>
     </dependency>
     <dependency>
       <groupId>net.sourceforge.owlapi</groupId>
       <artifactId>owlapi-apibinding</artifactId>
-      <version>3.4.8</version>
+      <version>3.4.3</version>
     </dependency>
     <dependency>
       <groupId>net.sourceforge.owlapi</groupId>
       <artifactId>owlapi-impl</artifactId>
-      <version>3.4.8</version>
+      <version>3.4.3</version>
     </dependency>            
     <dependency>
       <groupId>net.sourceforge.owlapi</groupId>
       <artifactId>owlapi-parsers</artifactId>
-      <version>3.4.8</version>
+      <version>3.4.3</version>
     </dependency>
     <dependency>
       <groupId>net.sourceforge.owlapi</groupId>
@@ -118,11 +118,6 @@
       <version>3.2.4</version>
     </dependency>            
 
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-commons-core</artifactId>
-      <version>1.0.0.RELEASE</version>
-    </dependency>
     <dependency>
       <groupId>org.openid4java</groupId>
       <artifactId>openid4java</artifactId>
@@ -272,6 +267,8 @@
             <configuration>
 	      <!-- It's necessary to let GWT Complile eat a lot of memory -->
               <extraJvmArgs>-Xmx1024M -Xss1024k</extraJvmArgs>
+	      <source>1.7</source>
+              <target>1.6</target>
             </configuration>
             <goals>
               <goal>compile</goal>
