@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>edu.stanford.bmir</groupId>
-  <artifactId>edu.stanford.bmir.protege.web</artifactId>
+  <artifactId>webprotege</artifactId>
   <version>0.1</version>
   <packaging>war</packaging>
 
@@ -24,6 +24,11 @@
       <id>gwtext</id>
       <url>http://www.gwt-ext.com/maven2/</url>
     </repository>
+    <!-- Get gwt-crypto from Googlecode -->
+    <repository>
+      <id>gwt-crypto repo</id>
+      <url>http://gwt-crypto.googlecode.com/svn/trunk/repo/</url>
+    </repository>
     <!-- We have to carry around some things, so put them in
          a local repository -->
     <repository>
@@ -39,11 +44,12 @@
       <version>${gwtVersion}</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- Apparently, this is a bad thing to do.
     <dependency>
-      <groupId>com.google.gwt</groupId>
+     <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
       <version>${gwtVersion}</version>
-    </dependency>
+    </dependency> -->
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
@@ -60,6 +66,26 @@
       <artifactId>guava</artifactId>
       <version>15.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-gwt</artifactId>
+      <version>15.0</version>
+    </dependency>
+    <!-- 
+	 We'll need to upgrade to this at some stage
+    <dependency>
+        <groupId>com.googlecode.gwt-crypto</groupId>
+        <artifactId>gwt-crypto</artifactId>
+        <version>2.3.0</version>
+    </dependency>
+    But for the moment we use 1.0.3
+    -->
+    <dependency>
+      <groupId>com.googlecode.gwt.crypto</groupId>
+      <artifactId>gwt-crypto</artifactId>
+      <version>1.0.3</version>
+    </dependency>
+
 
     <dependency>
       <groupId>net.sourceforge.owlapi</groupId>
@@ -197,6 +223,11 @@
       <version>1.4.0-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>org.semanticweb</groupId>
+      <artifactId>owlapi-gwt-module</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
       <groupId>edu.stanford.smi</groupId>
       <artifactId>protege</artifactId>
       <version>3</version>
@@ -227,7 +258,6 @@
       <artifactId>oboformat</artifactId>
       <version>0.5.5-SNAPSHOT</version>
     </dependency>
-
 
     <!-- test-only dependencies -->
     <dependency>
