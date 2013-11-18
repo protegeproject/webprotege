@@ -44,12 +44,15 @@
       <version>${gwtVersion}</version>
       <scope>runtime</scope>
     </dependency>
-    <!-- Apparently, this is a bad thing to do.
+    <!-- Apparently, pulling in gwt-dev is a bad thing to do. 
+	 The compiler states: [WARNING] Don't declare gwt-dev as a project dependency. This may introduce complex dependency conflicts
+    -->
     <dependency>
      <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
       <version>${gwtVersion}</version>
-    </dependency> -->
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
@@ -258,25 +261,25 @@
       <artifactId>oboformat</artifactId>
       <version>0.5.5-SNAPSHOT</version>
     </dependency>
+    <!-- End locally sourced stuff -->
 
-    <!-- test-only dependencies -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.8.2</version>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
       <version>1.0.0.GA</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
       <version>1.0.0.GA</version>
       <classifier>sources</classifier>
+    </dependency>
+
+    <!-- test-only dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
