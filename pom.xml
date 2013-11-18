@@ -92,28 +92,18 @@
 
     <dependency>
       <groupId>net.sourceforge.owlapi</groupId>
-      <artifactId>owlapi-api</artifactId>
-      <version>3.4.3</version>
+      <artifactId>owlapi-distribution</artifactId>
+      <version>3.4.8</version>
     </dependency>
     <dependency>
-      <groupId>net.sourceforge.owlapi</groupId>
-      <artifactId>owlapi-apibinding</artifactId>
-      <version>3.4.3</version>
+      <groupId>edu.stanford.protege</groupId>
+      <artifactId>bioportal-services-lib</artifactId>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
-      <groupId>net.sourceforge.owlapi</groupId>
-      <artifactId>owlapi-impl</artifactId>
-      <version>3.4.3</version>
-    </dependency>            
-    <dependency>
-      <groupId>net.sourceforge.owlapi</groupId>
-      <artifactId>owlapi-parsers</artifactId>
-      <version>3.4.3</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.owlapi</groupId>
-      <artifactId>owlapi-obo</artifactId>
-      <version>3.3</version>
+      <groupId>edu.stanford.protege</groupId>
+      <artifactId>protege</artifactId>
+      <version>3.5.0</version>
     </dependency>
     <dependency>
       <groupId>net.sf.opencsv</groupId>
@@ -231,27 +221,8 @@
       <version>1.2</version>
     </dependency>
     <dependency>
-      <groupId>edu.stanford.smi</groupId>
-      <artifactId>protege</artifactId>
-      <version>3</version>
-    </dependency>
-    <dependency>
       <groupId>org.protege</groupId>
       <artifactId>notes-api</artifactId>
-      <!-- The version number here was made up.
-           I have no idea what version this package actually is.-->
-      <version>1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.ncbo</groupId>
-      <artifactId>bioportal-services-lib</artifactId>
-      <!-- The version number here was made up.
-           I have no idea what version this package actually is.-->
-      <version>1</version>
-    </dependency>
-    <dependency>
-      <groupId>edu.stanford.bmir</groupId>
-      <artifactId>icd</artifactId>
       <!-- The version number here was made up.
            I have no idea what version this package actually is.-->
       <version>1</version>
@@ -297,12 +268,6 @@
         <version>2.5.1</version>
         <executions>
           <execution>
-            <configuration>
-	      <!-- It's necessary to let GWT Complile eat a lot of memory -->
-              <extraJvmArgs>-Xmx1024M -Xss1024k</extraJvmArgs>
-	      <source>1.7</source>
-              <target>1.6</target>
-            </configuration>
             <goals>
               <goal>compile</goal>
               <goal>test</goal>
@@ -314,6 +279,10 @@
         <!-- Plugin configuration. There are many available options, see 
           gwt-maven-plugin documentation at codehaus.org -->
         <configuration>
+	  <!-- It's necessary to let GWT Complile eat a lot of memory -->
+          <extraJvmArgs>-Xmx1024M -Xss1024k</extraJvmArgs>
+	  <source>1.6</source>
+          <target>1.6</target>
           <runTarget>WebProtege.html</runTarget>
           <hostedWebapp>${webappDirectory}</hostedWebapp>
         </configuration>
@@ -341,8 +310,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
     </plugins>

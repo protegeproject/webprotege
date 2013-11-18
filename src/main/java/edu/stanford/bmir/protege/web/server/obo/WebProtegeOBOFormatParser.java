@@ -64,7 +64,7 @@ public class WebProtegeOBOFormatParser extends AbstractOWLParser {
             return new BufferedReader(new InputStreamReader(source.getInputStream(),"utf-8"));
         }
         else {
-            return new BufferedReader(new InputStreamReader(getInputStream(source.getDocumentIRI()), "utf-8"));
+            return new BufferedReader(new InputStreamReader(getInputStream(source.getDocumentIRI(), new OWLOntologyLoaderConfiguration()), "utf-8"));
         }
     }
 }
