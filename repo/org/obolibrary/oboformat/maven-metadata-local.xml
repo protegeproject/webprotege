@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.obolibrary</groupId>
+  <artifactId>oboformat</artifactId>
+  <versioning>
+    <versions>
+      <version>0.5.5-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20131118133524</lastUpdated>
+  </versioning>
+</metadata>
