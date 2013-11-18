@@ -269,10 +269,15 @@
         <version>2.5.1</version>
         <executions>
           <execution>
+            <configuration>
+	      <!-- It's necessary to let GWT Complile eat a lot of memory -->
+              <extraJvmArgs>-Xmx1024M -Xss1024k</extraJvmArgs>
+            </configuration>
             <goals>
               <goal>compile</goal>
               <goal>test</goal>
-              <goal>generateAsync</goal>
+	      <!--  Don't generateAsync as we do this manually
+              <goal>generateAsync</goal> -->
             </goals>
           </execution>
         </executions>
