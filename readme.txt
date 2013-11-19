@@ -71,7 +71,7 @@ Web Protege can also be deployed into into tomcat by running
 
           mvn tomcat:deploy
 
-and then starting tomcat. You need to set the CATALINA_HOME environment variable.
+and then starting tomcat. By default a deployment uses Tomcat manager to deploy to http://localhost:8080/webprotege.
 
 Note: you need mongodb to run WebProtege. Please make sure mongodb is running. Find more information at:
 http://protegewiki.stanford.edu/wiki/WebProtegeAdminGuide#Install_mongoDB
