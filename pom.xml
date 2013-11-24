@@ -4,7 +4,7 @@
 
   <groupId>edu.stanford.bmir</groupId>
   <artifactId>webprotege</artifactId>
-  <version>0.1</version>
+  <version>2.1.11</version>
   <packaging>war</packaging>
 
   <name>WebProtégé</name>
@@ -229,13 +229,15 @@
       <version>2.0.2</version>
     </dependency>
 
+      <dependency>
+          <groupId>net.sourceforge.owlapi</groupId>
+          <artifactId>binaryowl</artifactId>
+          <version>1.4.0</version>
+      </dependency>
+
     <!-- Things from local repository.
          We'd like these to go into Maven central -->
-    <dependency>
-      <groupId>org.semanticweb</groupId>
-      <artifactId>binaryowl</artifactId>
-      <version>1.4.0-SNAPSHOT</version>
-    </dependency>
+
     <dependency>
       <groupId>org.semanticweb</groupId>
       <artifactId>owlapi-gwt-module</artifactId>

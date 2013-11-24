@@ -5,6 +5,9 @@
 
 # build files
 target/
+build/
+extras/
+out/
 TEST-*.txt
 
 # IDE files
@@ -22,3 +25,4 @@ mail.properties
 .svn/
 .DS_Store
 /docs
+
