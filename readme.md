@@ -1,4 +1,5 @@
----------------- WebProtégé README ----------------
+WebProtégé
+==========
 
 What is WebProtégé?
 -------------------
@@ -21,7 +22,7 @@ http://webprotege.stanford.edu
 
 
 This README file
------------------
+----------------
 
 This README file describes how to build and run WebProtege. This file is intended for developers or administrators
 who want to use WebProtege locally. 
@@ -35,7 +36,7 @@ for WebProtege, please read the information below.
 
 
 Dependencies
--------------
+------------
 
 1)  Google Web Toolkit (GWT)
     URL: http://code.google.com/webtoolkit/
@@ -47,7 +48,7 @@ You also need Java (1.6 or later), Ant, and a servlet container, such as tomcat.
 
 
 Building
--------------
+--------
 
 Copy local.properties.template to local.properties, and edit local.properties to match your file paths.
 All properties are well documented. Make sure that you set the property gwt.dir to point to your local installation 
@@ -65,7 +66,7 @@ your servlet container (e.g. tomcat/webapps), or use "ant deploy" (see below).
 
 
 Running
--------------
+-------
 
 DevMode can be started with: 
 
@@ -84,16 +85,13 @@ http://protegewiki.stanford.edu/wiki/WebProtegeAdminGuide#Install_mongoDB
 
 
 Configuration
----------------
+-------------
 
 WebProtege can be configured and customized in different ways, e.g. UI layout, email, etc. Please find more information here:
 http://protegewiki.stanford.edu/wiki/WebProtegeAdminGuide#Configuration_and_Customization_.28optional.29
 
 
 Documentation
----------------
+-------------
 More documentation at: 
 http://protegewiki.stanford.edu/wiki/WebProtege
-
--------------------------
-Last updated: 2013/11/15
