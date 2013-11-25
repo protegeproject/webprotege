@@ -100,7 +100,28 @@ public class BrowserTextMapTestCase {
         BrowserTextMap mapB = new BrowserTextMap(signature, browserTextProvider);
 
         assertEquals(mapA, mapB);
+    }
 
+    @Test
+    public void buildProcessesNestedSignature() {
+        OWLClass clsA = new OWLClassImpl(IRI.create("http://stuff.com/A"));
+        BrowserTextProvider browserTextProvider = mock(BrowserTextProvider.class);
+        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(Optional.<String>of("A"));
+        BrowserTextMap map = BrowserTextMap.build(browserTextProvider, Collections.singleton(clsA));
+        Optional<String> value = map.getBrowserText(clsA);
+        assertEquals(true, value.isPresent());
+        assertEquals("A", value.get());
+    }
+
+    @Test
+    public void buildProcessesDirectSignature() {
+        OWLClass clsA = new OWLClassImpl(IRI.create("http://stuff.com/A"));
+        BrowserTextProvider browserTextProvider = mock(BrowserTextProvider.class);
+        when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(Optional.<String>of("A"));
+        BrowserTextMap map = BrowserTextMap.build(browserTextProvider, clsA);
+        Optional<String> value = map.getBrowserText(clsA);
+        assertEquals(true, value.isPresent());
+        assertEquals("A", value.get());
     }
 
 }
