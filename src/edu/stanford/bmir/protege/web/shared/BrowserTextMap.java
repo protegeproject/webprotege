@@ -27,31 +27,13 @@ public class BrowserTextMap implements Serializable {
 
     }
 
-    public BrowserTextMap(Map<OWLEntity, String> map) {
-        this.map = new HashMap<OWLEntity, String>(map);
-    }
-
     public BrowserTextMap(HasSignature hasSignature, BrowserTextProvider browserTextProvider) {
-        this(hasSignature.getSignature(), browserTextProvider);
+        this(checkNotNull(hasSignature.getSignature()), checkNotNull(browserTextProvider));
     }
-
-//    public BrowserTextMap(BrowserTextProvider browserTextProvider, HasSignature ... hasSignatures) {
-//        for(HasSignature hasSignature : hasSignatures) {
-//            for(OWLEntity entity : hasSignature.getSignature()) {
-//                Optional<String> value = browserTextProvider.getOWLEntityBrowserText(entity);
-//                if(value.isPresent()) {
-//                    map.put(entity, value.get());
-//                }
-//            }
-//        }
-//    }
-//
-//    public BrowserTextMap(OWLObject object, BrowserTextProvider browserTextProvider) {
-//        this(object.getSignature(), browserTextProvider);
-//    }
-
 
     public BrowserTextMap(Set<? extends OWLObject> signature, BrowserTextProvider browserTextProvider) {
+        checkNotNull(signature);
+        checkNotNull(browserTextProvider);
         for(OWLObject object : signature) {
             for (OWLEntity entity : object.getSignature()) {
                 Optional<String> value = browserTextProvider.getOWLEntityBrowserText(entity);
@@ -61,10 +43,6 @@ public class BrowserTextMap implements Serializable {
             }
         }
     }
-
-
-
-
 
     public Collection<OWLEntityData> getOWLEntityData() {
         Set<OWLEntityData> result = new HashSet<OWLEntityData>();
@@ -167,8 +145,22 @@ public class BrowserTextMap implements Serializable {
             }
             return map;
         }
+    }
 
+    @Override
+    public int hashCode() {
+        return "BrowserTextMap".hashCode() + map.hashCode();
+    }
 
-
+    @Override
+    public boolean equals(Object o) {
+        if(o == this) {
+            return true;
+        }
+        if(!(o instanceof BrowserTextMap)) {
+            return false;
+        }
+        BrowserTextMap other = (BrowserTextMap) o;
+        return this.map.equals(other.map);
     }
 }
