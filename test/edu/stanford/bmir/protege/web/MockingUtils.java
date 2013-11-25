@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web;
 
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,14 +21,14 @@ import static org.mockito.Mockito.when;
  */
 public class MockingUtils {
 
-    private static int iriCounter = 0;
+    private static int counter = 0;
 
-    private static synchronized int nextIRICounter() {
-        return iriCounter++;
+    private static synchronized int nextInt() {
+        return counter++;
     }
 
     public static IRI mockIRI() {
-        return IRI.create("http://stuff.com/I" + nextIRICounter());
+        return IRI.create("http://stuff.com/I" + nextInt());
     }
 
     public static OWLClass mockOWLClass() {
@@ -53,4 +56,9 @@ public class MockingUtils {
         when(hasSignature.getSignature()).thenReturn(new HashSet<OWLEntity>(Arrays.asList(entities)));
         return hasSignature;
     }
+
+    public static UserId mockUserId() {
+        return UserId.getUserId("User" + nextInt());
+    }
+
 }
