@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static edu.stanford.bmir.protege.web.MockingUtils.mockOWLClass;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -40,7 +42,7 @@ public class BrowserTextMapTestCase {
 
     @Test
     public void getOWLEntityBrowserTextReturnsCorrectBrowserText() {
-        OWLClass clsA = new OWLClassImpl(IRI.create("http://stuff.com/A"));
+        OWLClass clsA = mockOWLClass();
         Set<OWLObject> signature = new HashSet<OWLObject>();
         signature.add(clsA);
 
@@ -52,13 +54,13 @@ public class BrowserTextMapTestCase {
         assertEquals(true, value.isPresent());
         assertEquals("A", value.get());
 
-        OWLClass clsB = new OWLClassImpl(IRI.create("http://stuff.com/B"));
+        OWLClass clsB = mockOWLClass();
         assertEquals(false, map.getBrowserText(clsB).isPresent());
     }
 
     @Test
     public void getOWLEntityDataReturnsCorrectEntityData() {
-        OWLClass clsA = new OWLClassImpl(IRI.create("http://stuff.com/A"));
+        OWLClass clsA = mockOWLClass();
         Set<OWLObject> signature = new HashSet<OWLObject>();
         signature.add(clsA);
 
@@ -73,7 +75,7 @@ public class BrowserTextMapTestCase {
 
     @Test
     public void hashCodeReturnsSameHashCodeForEqualObjects() {
-        OWLClass clsA = new OWLClassImpl(IRI.create("http://stuff.com/A"));
+        OWLClass clsA = mockOWLClass();
         Set<OWLObject> signature = new HashSet<OWLObject>();
         signature.add(clsA);
 
@@ -89,7 +91,7 @@ public class BrowserTextMapTestCase {
 
     @Test
     public void equalsReturnsTrueForEqualObjects() {
-        OWLClass clsA = new OWLClassImpl(IRI.create("http://stuff.com/A"));
+        OWLClass clsA = mockOWLClass();
         Set<OWLObject> signature = new HashSet<OWLObject>();
         signature.add(clsA);
 
@@ -104,7 +106,7 @@ public class BrowserTextMapTestCase {
 
     @Test
     public void buildProcessesNestedSignature() {
-        OWLClass clsA = new OWLClassImpl(IRI.create("http://stuff.com/A"));
+        OWLClass clsA = mockOWLClass();
         BrowserTextProvider browserTextProvider = mock(BrowserTextProvider.class);
         when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(Optional.<String>of("A"));
         BrowserTextMap map = BrowserTextMap.build(browserTextProvider, Collections.singleton(clsA));
@@ -115,7 +117,7 @@ public class BrowserTextMapTestCase {
 
     @Test
     public void buildProcessesDirectSignature() {
-        OWLClass clsA = new OWLClassImpl(IRI.create("http://stuff.com/A"));
+        OWLClass clsA = mockOWLClass();
         BrowserTextProvider browserTextProvider = mock(BrowserTextProvider.class);
         when(browserTextProvider.getOWLEntityBrowserText(clsA)).thenReturn(Optional.<String>of("A"));
         BrowserTextMap map = BrowserTextMap.build(browserTextProvider, clsA);
