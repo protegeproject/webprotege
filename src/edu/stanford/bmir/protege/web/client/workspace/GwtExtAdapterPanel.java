@@ -25,20 +25,6 @@ public class GwtExtAdapterPanel extends FlowPanel {
         final ProjectDisplayContainerPanel projectDisplayContainerPanel = new ProjectDisplayContainerPanel();
         add(projectDisplayContainerPanel);
 
-        projectDisplayContainerPanel.addListener(new TabPanelListenerAdapter() {
-            @Override
-            public boolean doBeforeTabChange(TabPanel source, Panel newPanel, Panel oldPanel) {
-                GWT.log("Project tab changed");
-                return true;
-            }
-
-            @Override
-            public boolean doBeforeClose(Panel panel) {
-                GWT.log("Project tab close");
-                return true;
-            }
-        });
-
         Window.addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
