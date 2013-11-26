@@ -2,11 +2,8 @@ package edu.stanford.bmir.protege.web.server.obo;
 
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
-import org.coode.owlapi.obo.parser.OBOVocabulary;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLLiteral;
+import org.obolibrary.obo2owl.Obo2OWLConstants;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,6 +18,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Date: 20/05/2012
  */
 public class OBONamespaceCache {
+
+    public static final IRI OBO_NAMESPACE_IRI = Obo2OWLConstants.Obo2OWLVocabulary.IRI_OIO_hasOboNamespace.getIRI();
 
     private Set<OBONamespace> namespaceCache = new HashSet<OBONamespace>();
 
@@ -73,11 +72,11 @@ public class OBONamespaceCache {
     }
 
     private boolean isNamespaceAnnotationProperty(OWLAnnotationAssertionAxiom ax) {
-        return ax.getProperty().getIRI().equals(OBOVocabulary.NAMESPACE.getIRI());
+        return ax.getProperty().getIRI().equals(OBO_NAMESPACE_IRI);
     }
 
     private boolean isNamespaceAnnotation(OWLAnnotation annotation) {
-        return annotation.getProperty().getIRI().equals(OBOVocabulary.NAMESPACE.getIRI()) || annotation.getProperty().getIRI().equals(OBOVocabulary.DEFAULT_NAMESPACE.getIRI());
+        return annotation.getProperty().getIRI().equals(OBO_NAMESPACE_IRI) || annotation.getProperty().getIRI().equals(OBO_NAMESPACE_IRI);
     }
 
     public Set<OBONamespace> getNamespaces() {
