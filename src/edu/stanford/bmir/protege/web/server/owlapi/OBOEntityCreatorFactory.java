@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.coode.owlapi.obo.parser.OBOVocabulary;
+import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
@@ -55,13 +55,13 @@ public class OBOEntityCreatorFactory extends OWLEntityCreatorFactory {
 
 
     private String getOBOOntologyName(OWLAPIProject project) {
-        for (OWLAnnotation annotation : project.getRootOntology().getAnnotations()) {
-            if (annotation.getProperty().getIRI().equals(OBOVocabulary.ONTOLOGY.getIRI())) {
-                if (annotation.getValue() instanceof OWLLiteral) {
-                    return ((OWLLiteral) annotation.getValue()).getLiteral().toUpperCase();
-                }
-            }
-        }
+//        for (OWLAnnotation annotation : project.getRootOntology().getAnnotations()) {
+//            if (annotation.getProperty().getIRI().equals(Obo2OWLConstants.Obo2OWLVocabulary.)) {
+//                if (annotation.getValue() instanceof OWLLiteral) {
+//                    return ((OWLLiteral) annotation.getValue()).getLiteral().toUpperCase();
+//                }
+//            }
+//        }
         return "";
     }
 
@@ -118,7 +118,7 @@ public class OBOEntityCreatorFactory extends OWLEntityCreatorFactory {
         if (namespace.isEmpty()) {
             return;
         }
-        OWLAnnotationProperty namespaceProperty = df.getOWLAnnotationProperty(OBOVocabulary.NAMESPACE.getIRI());
+        OWLAnnotationProperty namespaceProperty = df.getOWLAnnotationProperty(Obo2OWLConstants.Obo2OWLVocabulary.IRI_OIO_hasOboNamespace.getIRI());
         OWLLiteral namespaceValue = df.getOWLLiteral(namespace);
         OWLAnnotationAssertionAxiom namespaceAxiom = df.getOWLAnnotationAssertionAxiom(namespaceProperty, entity.getIRI(), namespaceValue);
         ontologyChanges.add(new AddAxiom(rootOntology, namespaceAxiom));

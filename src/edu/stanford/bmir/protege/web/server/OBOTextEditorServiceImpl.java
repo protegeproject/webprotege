@@ -10,8 +10,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLObjectPropertyData;
 import edu.stanford.bmir.protege.web.shared.obo.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.coode.owlapi.obo.parser.OBOPrefix;
-import org.coode.owlapi.obo.parser.OBOVocabulary;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.obolibrary.oboformat.parser.OBOFormatConstants;
 import org.semanticweb.owlapi.model.*;
@@ -29,6 +27,7 @@ import java.util.regex.Pattern;
  */
 public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet implements OBOTextEditorService {
 
+    public static final IRI OBO_NAMESPACE_IRI = Obo2OWLConstants.Obo2OWLVocabulary.IRI_OIO_hasOboNamespace.getIRI();
 
     public synchronized Set<OBONamespace> getNamespaces(ProjectId projectId) {
 //        if (cache == null) {
@@ -45,7 +44,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
         // rdfs:label
         String label = getStringAnnotationValue(projectId, iri, OWLRDFVocabulary.RDFS_LABEL.getIRI(), id);
         // namespace
-        String namespace = getStringAnnotationValue(projectId, iri, OBOVocabulary.NAMESPACE.getIRI(), "");
+        String namespace = getStringAnnotationValue(projectId, iri, OBO_NAMESPACE_IRI, "");
         return new OBOTermId(id, label, namespace);
     }
 
@@ -64,7 +63,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
             description.append(" ");
         }
         if (!existingTermId.getNamespace().equals(termId.getNamespace())) {
-            changes.addAll(replaceStringAnnotationValue(projectId, iri, OBOVocabulary.NAMESPACE.getIRI(), termId.getNamespace()));
+            changes.addAll(replaceStringAnnotationValue(projectId, iri, OBO_NAMESPACE_IRI, termId.getNamespace()));
             description.append("Set term namespace to ");
             description.append(termId.getNamespace());
         }
@@ -392,8 +391,8 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
     private OBOXRef toOBOXRef(String value, String description) {
         // Need to peel apart the ID
-        if (value.startsWith(OBOPrefix.OBO.getPrefix())) {
-            String localValue = value.substring(OBOPrefix.OBO.getPrefix().length());
+        if (value.startsWith(Obo2OWLConstants.DEFAULT_IRI_PREFIX)) {
+            String localValue = value.substring(Obo2OWLConstants.DEFAULT_IRI_PREFIX.length());
             Matcher matcher = SEPARATOR_PATTERN.matcher(localValue);
             if (matcher.matches()) {
                 String dbname = unescapeSpaces(matcher.group(1));
@@ -424,15 +423,11 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     private String toOBOId(org.semanticweb.owlapi.model.IRI iri) {
         String value = iri.toString();
         String localPart = "";
-        if (value.startsWith(OBOPrefix.OBO.getPrefix())) {
-            localPart = value.substring(OBOPrefix.OBO.getPrefix().length());
+        if (value.startsWith(Obo2OWLConstants.DEFAULT_IRI_PREFIX)) {
+            localPart = value.substring(Obo2OWLConstants.DEFAULT_IRI_PREFIX.length());
         }
-        else if (value.startsWith(OBOPrefix.OBO_IN_OWL.getPrefix())) {
-            localPart = value.substring(OBOPrefix.OBO_IN_OWL.getPrefix().length());
-
-        }
-        else if (value.startsWith(OBOPrefix.IAO.getPrefix())) {
-            localPart = value.substring(OBOPrefix.IAO.getPrefix().length());
+        else if (value.startsWith(Obo2OWLConstants.OIOVOCAB_IRI_PREFIX)) {
+            localPart = value.substring(Obo2OWLConstants.OIOVOCAB_IRI_PREFIX.length());
         }
         else {
             String fragment = iri.getFragment();
