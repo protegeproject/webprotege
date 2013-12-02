@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Test;
 
@@ -67,15 +68,17 @@ public class ProjectDetailsTestCase {
 
     @Test
     public void equalValuesMeansEqualProjectDetails() {
-        ProjectDetails projectDetailsA = new ProjectDetails(projectId, "A", "B", UserId.getUserId("C"), true);
-        ProjectDetails projectDetailsB = new ProjectDetails(projectId, "A", "B", UserId.getUserId("C"), true);
+        UserId userId = MockingUtils.mockUserId();
+        ProjectDetails projectDetailsA = new ProjectDetails(projectId, "A", "B", userId, true);
+        ProjectDetails projectDetailsB = new ProjectDetails(projectId, "A", "B", userId, true);
         assertEquals(projectDetailsA, projectDetailsB);
     }
 
     @Test
     public void equalValuesMeansEqualHashCodes() {
-        ProjectDetails projectDetailsA = new ProjectDetails(projectId, "A", "B", UserId.getUserId("C"), true);
-        ProjectDetails projectDetailsB = new ProjectDetails(projectId, "A", "B", UserId.getUserId("C"), true);
+        UserId userId = MockingUtils.mockUserId();
+        ProjectDetails projectDetailsA = new ProjectDetails(projectId, "A", "B", userId, true);
+        ProjectDetails projectDetailsB = new ProjectDetails(projectId, "A", "B", userId, true);
         assertEquals(projectDetailsA.hashCode(), projectDetailsB.hashCode());
     }
 

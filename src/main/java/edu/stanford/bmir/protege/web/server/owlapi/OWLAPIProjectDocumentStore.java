@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.server.filedownload.DownloadFormat;
 import edu.stanford.bmir.protege.web.server.filesubmission.FileUploadConstants;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import edu.stanford.bmir.protege.web.server.obo.OBOOntologyChecker;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;

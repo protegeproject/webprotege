@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.mail;
 
+import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Test;
 
@@ -13,8 +14,6 @@ import static junit.framework.Assert.assertEquals;
  */
 public class GetEmailAddressActionTestCase {
 
-    public static final UserId DUMMY_USER_ID = UserId.getUserId("dummy");
-
     @Test(expected = NullPointerException.class)
     public void nullUserIdThrowsNullPointerException() {
         new GetEmailAddressAction(null);
@@ -27,21 +26,24 @@ public class GetEmailAddressActionTestCase {
 
     @Test
     public void getUserIdReturnsSuppliedUserId() {
-        GetEmailAddressAction action = new GetEmailAddressAction(DUMMY_USER_ID);
-        assertEquals(DUMMY_USER_ID, action.getUserId());
+        UserId userId = MockingUtils.mockUserId();
+        GetEmailAddressAction action = new GetEmailAddressAction(userId);
+        assertEquals(userId, action.getUserId());
     }
 
     @Test
     public void equalsReturnsTrueForSameUserId() {
-        GetEmailAddressAction actionA = new GetEmailAddressAction(DUMMY_USER_ID);
-        GetEmailAddressAction actionB = new GetEmailAddressAction(DUMMY_USER_ID);
+        UserId userId = MockingUtils.mockUserId();
+        GetEmailAddressAction actionA = new GetEmailAddressAction(userId);
+        GetEmailAddressAction actionB = new GetEmailAddressAction(userId);
         assertEquals(actionA, actionB);
     }
 
     @Test
     public void hashCodeReturnsSameValueForSameUserId() {
-        GetEmailAddressAction actionA = new GetEmailAddressAction(DUMMY_USER_ID);
-        GetEmailAddressAction actionB = new GetEmailAddressAction(DUMMY_USER_ID);
+        UserId userId = MockingUtils.mockUserId();
+        GetEmailAddressAction actionA = new GetEmailAddressAction(userId);
+        GetEmailAddressAction actionB = new GetEmailAddressAction(userId);
         assertEquals(actionA.hashCode(), actionB.hashCode());
     }
 }

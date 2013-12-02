@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
 import org.coode.owlapi.obo.parser.OBOOntologyFormat;
-import org.coode.owlapi.obo.parser.OBOPrefix;
+import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.*;
 
 /**
@@ -50,15 +50,15 @@ public class OBOOntologyChecker {
 
     private boolean isOBOEntity(OWLEntity entity) {
         String propertyIRI = entity.getIRI().toString();
-        if (propertyIRI.startsWith(OBOPrefix.OBO.getPrefix())) {
+        if (propertyIRI.startsWith(Obo2OWLConstants.DEFAULT_IRI_PREFIX)) {
             return true;
         }
-        else if (propertyIRI.startsWith(OBOPrefix.OBO_IN_OWL.getPrefix())) {
+        else if (propertyIRI.startsWith(Obo2OWLConstants.OIOVOCAB_IRI_PREFIX)) {
             return true;
         }
-        else if (propertyIRI.startsWith(OBOPrefix.IAO.getPrefix())) {
-            return true;
-        }
+//        else if (propertyIRI.startsWith(Obo2OWLConstants.Obo2OWLVocabulary.IRI)) {
+//            return true;
+//        }
         return false;
     }
 

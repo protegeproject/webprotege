@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.obo;
 
+import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import org.coode.owlapi.obo.parser.OBOOntologyFormat;
 import org.obolibrary.obo2owl.Obo2Owl;
 import org.obolibrary.oboformat.model.OBODoc;
@@ -24,20 +25,21 @@ public class WebProtegeOBOFormatParser extends AbstractOWLParser {
 
     @Override
     public OWLOntologyFormat parse(OWLOntologyDocumentSource documentSource, OWLOntology ontology) throws OWLParserException, IOException, OWLOntologyChangeException, UnloadableImportException {
-        return parse(ontology, documentSource);
+        return parse(ontology, documentSource, new OWLOntologyLoaderConfiguration());
     }
 
     @Override
     public OWLOntologyFormat parse(OWLOntologyDocumentSource documentSource, OWLOntology ontology, OWLOntologyLoaderConfiguration configuration) throws OWLParserException, IOException, OWLOntologyChangeException, UnloadableImportException {
-        return parse(ontology, documentSource);
+        return parse(ontology, documentSource, configuration);
     }
 
-    private OWLOntologyFormat parse(OWLOntology ont, OWLOntologyDocumentSource source) throws IOException, OWLParserException {
+    private OWLOntologyFormat parse(OWLOntology ont, OWLOntologyDocumentSource source, OWLOntologyLoaderConfiguration configuration) throws IOException, OWLParserException {
         try {
             OBOFormatParser parser = new OBOFormatParser();
-            BufferedReader reader = getBufferedReader(source);
+            BufferedReader reader = getBufferedReader(source, configuration);
             OBODoc oboDoc = parser.parse(reader);
-            Obo2Owl obo2Owl = new Obo2Owl();
+            OWLOntologyManager tempManager = WebProtegeOWLManager.createOWLOntologyManager();
+            Obo2Owl obo2Owl = new Obo2Owl(tempManager);
             OWLOntology tempOnt = obo2Owl.convert(oboDoc);
             OWLOntologyManager man = ont.getOWLOntologyManager();
             man.applyChange(new SetOntologyID(ont, tempOnt.getOntologyID()));
@@ -56,7 +58,7 @@ public class WebProtegeOBOFormatParser extends AbstractOWLParser {
     }
 
 
-    private BufferedReader getBufferedReader(OWLOntologyDocumentSource source) throws IOException {
+    private BufferedReader getBufferedReader(OWLOntologyDocumentSource source, OWLOntologyLoaderConfiguration configuration) throws IOException {
         if(source.isReaderAvailable()) {
             return new BufferedReader(source.getReader());
         }
@@ -64,7 +66,7 @@ public class WebProtegeOBOFormatParser extends AbstractOWLParser {
             return new BufferedReader(new InputStreamReader(source.getInputStream(),"utf-8"));
         }
         else {
-            return new BufferedReader(new InputStreamReader(getInputStream(source.getDocumentIRI(), new OWLOntologyLoaderConfiguration()), "utf-8"));
+            return new BufferedReader(new InputStreamReader(getInputStream(source.getDocumentIRI(), configuration), "utf-8"));
         }
     }
 }
