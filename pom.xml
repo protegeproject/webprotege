@@ -248,11 +248,6 @@
            I have no idea what version this package actually is.-->
       <version>1</version>
     </dependency>
-    <dependency>
-      <groupId>org.obolibrary</groupId>
-      <artifactId>oboformat</artifactId>
-      <version>0.5.5-SNAPSHOT</version>
-    </dependency>
     <!-- End locally sourced stuff -->
 
     <dependency>
