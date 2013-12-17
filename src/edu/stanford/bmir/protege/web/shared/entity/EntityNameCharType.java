@@ -116,7 +116,7 @@ public enum EntityNameCharType {
     /**
      * A maker for categories of letters.  Splits letters into word letters and non-word letters.
      */
-    private static enum LetterCategory {
+    static enum LetterCategory {
         WORD,
         NON_WORD
     }
