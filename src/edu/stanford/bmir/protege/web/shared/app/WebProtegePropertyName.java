@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Finally, some of the property values will not be visible to clients (in the browser).  This information is encoded
  * by the {@link ClientVisibility} flag.
  */
-public enum WebProtegePropertyName {
+public enum WebProtegePropertyName implements Serializable {
 
     @WebProtegePropertiesDocumentation(description = "The name of the webprotege application that appears in the browser title bar", example = "WebProtege")
     APPLICATION_NAME("application.name", PropertyValue.ofString("WebProt\u00E9g\u00E9"), ClientVisibility.VISIBLE),
