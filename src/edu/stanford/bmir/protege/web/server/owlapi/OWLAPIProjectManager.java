@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
@@ -27,6 +28,14 @@ public class OWLAPIProjectManager {
     
     public OWLAPIProject getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
         return projectCache.getProject(projectId);
+    }
+
+    public Optional<OWLAPIProject> getProjectIfActive(ProjectId projectId) throws ProjectDocumentNotFoundException {
+        return projectCache.getProjectIfActive(projectId);
+    }
+
+    public boolean isActive(ProjectId projectId) {
+        return projectCache.isActive(projectId);
     }
     
     public OWLAPIProject createNewProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException {

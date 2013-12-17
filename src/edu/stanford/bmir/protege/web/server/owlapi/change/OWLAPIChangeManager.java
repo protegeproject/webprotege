@@ -79,7 +79,6 @@ public class OWLAPIChangeManager {
     private void read() {
         revisions.clear();
         try {
-            LOGGER.info("Reading changes");
             File changeHistoryFile = getChangeHistoryFile();
             if (!changeHistoryFile.exists()) {
                 // Create it with the baseline?
@@ -112,7 +111,7 @@ public class OWLAPIChangeManager {
             }, SkipSetting.SKIP_NONE);
             inputStream.close();
             long t1 = System.currentTimeMillis();
-            LOGGER.info("Loaded " + revisions.size() + " changes in " + (t1 - t0));
+            LOGGER.info(project.getProjectId(), "Loaded %d revisions in %d ms", revisions.size(), (t1 - t0));
 
         }
         catch (BinaryOWLParseException e) {

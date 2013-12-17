@@ -31,7 +31,7 @@ public class EventList<E extends SerializableEvent<?>> implements Serializable {
     /**
      * For serialization only
      */
-    private EventList() {
+    protected EventList() {
     }
 
     public EventList(EventTag startTag, EventTag endTag) {

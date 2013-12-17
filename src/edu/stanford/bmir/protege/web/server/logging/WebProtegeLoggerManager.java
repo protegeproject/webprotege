@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
-
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -9,7 +7,6 @@ package edu.stanford.bmir.protege.web.server.logging;
  * Date: 04/03/2013
  */
 public class WebProtegeLoggerManager {
-
 
 
     public static WebProtegeLogger get(Class<?> cls) {

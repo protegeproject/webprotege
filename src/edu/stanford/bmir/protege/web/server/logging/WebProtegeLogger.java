@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,8 @@ public interface WebProtegeLogger {
     void severe(Throwable t);
 
     void info(String message);
+
+    void info(ProjectId projectId, String message, Object ... args);
 
     void info(String message, Object... args);
 
