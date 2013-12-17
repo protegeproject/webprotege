@@ -93,14 +93,14 @@ public enum WebProtegePropertyName implements Serializable {
     }
 
 
-    public static enum Optionality {
+    public static enum Optionality implements Serializable {
 
         HAS_DEFAULT_VALUE,
 
         VALUE_MUST_BE_SPECIFIED_IN_PROTEGE_PROPERTIES
     }
 
-    public static enum ClientVisibility {
+    public static enum ClientVisibility implements Serializable {
 
         VISIBLE,
 
