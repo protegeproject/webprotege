@@ -86,7 +86,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             long t1 = System.currentTimeMillis();
             importLegacyNotesIfNecessary();
 
-            WebProtegeLoggerManager.get(OWLAPINotesManagerNotesAPIImpl.class).info("Initialized notes manager in " + (t1 - t0) + "ms");
+            WebProtegeLoggerManager.get(OWLAPINotesManagerNotesAPIImpl.class).info(project.getProjectId(), "Initialized notes manager in %d ms", (t1 - t0));
         }
         catch (OWLOntologyCreationException e) {
             // Can't start - too dangerous to do anything without human intervention
@@ -103,17 +103,17 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         File notesDataDirectory = documentStore.getNotesDataDirectory();
         File legacy = new File(notesDataDirectory, "notes-data.legacy");
         if(legacy.exists()) {
-            LOGGER.info("Importing legacy notes data");
+            LOGGER.info(project.getProjectId(), "Importing legacy notes data");
             try {
                 final BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(legacy));
                 OWLOntology legacyNotesOntology = WebProtegeOWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(inputStream);
                 String base = legacyNotesOntology.getOntologyID().getOntologyIRI().toString();
-                LOGGER.info("Using base obtained from legacy notes ontology: " + base);
+                LOGGER.info(project.getProjectId(), "Using base obtained from legacy notes ontology: " + base);
                 CHAO2NotesConverter converter = new CHAO2NotesConverter(project.getRootOntology(), legacyNotesOntology, base);
                 converter.convertToNotes(this);
                 inputStream.close();
                 FileUtils.moveFile(legacy, new File(legacy.getParentFile(), "notes-data.legacy.imported-" + System.currentTimeMillis()));
-                LOGGER.info("Import completed");
+                LOGGER.info(project.getProjectId(), "Import completed");
             }
             catch (Exception e) {
                 LOGGER.severe(e);
@@ -240,7 +240,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         if(note == null) {
             // Sometimes we fail to find the note.  I'm not sure why.  This has something to do with the weird internals
             // and typing of the notes API.
-            LOGGER.info("Failed to find note by Id when changing the note status.  The noteId was %s", noteId);
+            LOGGER.info(project.getProjectId(), "Failed to find note by Id when changing the note status.  The noteId was %s", noteId);
             return;
         }
         if(noteStatus == NoteStatus.OPEN) {

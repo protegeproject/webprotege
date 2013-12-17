@@ -17,6 +17,13 @@ public class ProjectEventList extends EventList<ProjectEvent<?>> {
 
     private ProjectId projectId;
 
+    /**
+     * For serialization only
+     */
+    private ProjectEventList() {
+
+    }
+
     private ProjectEventList(EventTag startTag, EventTag endTag, ProjectId projectId) {
         super(startTag, endTag);
         this.projectId = projectId;

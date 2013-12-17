@@ -268,18 +268,17 @@ public class OWLAPIProjectDocumentStore {
             long t0 = System.currentTimeMillis();
             OWLOntologyLoaderListener loaderListener = new OWLOntologyLoaderListener() {
                 public void startedLoadingOntology(LoadingStartedEvent event) {
-                    LOGGER.info("Loading started: " + event.getDocumentIRI());
+                    LOGGER.info(projectId, "Ontology loading started: " + event.getDocumentIRI());
                 }
 
                 public void finishedLoadingOntology(LoadingFinishedEvent event) {
                     // Give something else a chance - in case we have LOTS of imports
-                    LOGGER.info("Yielding for others");
                     Thread.yield();
                     if (event.isSuccessful()) {
-                        LOGGER.info("Loading finished: " + event.getDocumentIRI() + " (Loaded: " + event.getOntologyID() + ")");
+                        LOGGER.info(projectId, "Ontology loading finished: " + event.getDocumentIRI() + " (Loaded: " + event.getOntologyID() + ")");
                     }
                     else {
-                        LOGGER.info("Loading failed: " + event.getDocumentIRI() + " (Reason: " + event.getException().getMessage() + ")");
+                        LOGGER.info(projectId, "Ontology loading failed: " + event.getDocumentIRI() + " (Reason: " + event.getException().getMessage() + ")");
                     }
                 }
             };
@@ -287,8 +286,7 @@ public class OWLAPIProjectDocumentStore {
             final MissingImportListener missingImportListener = new MissingImportListener() {
                 @Override
                 public void importMissing(MissingImportEvent missingImportEvent) {
-                    LOGGER.info("Missing import: " + missingImportEvent.getImportedOntologyURI());
-                    LOGGER.info("Due to " + missingImportEvent.getCreationException().getMessage());
+                    LOGGER.info(projectId, "Missing import: " + missingImportEvent.getImportedOntologyURI() + " due to " + missingImportEvent.getCreationException().getMessage());
                 }
             };
             manager.addMissingImportListener(missingImportListener);
@@ -297,12 +295,12 @@ public class OWLAPIProjectDocumentStore {
             manager.addIRIMapper(new OWLOntologyIRIMapper() {
                 @Override
                 public IRI getDocumentIRI(IRI iri) {
-                    LOGGER.info("Fetching ontology from WEB " + iri.toQuotedString());
+                    LOGGER.info(projectId, "Fetching ontology from Web " + iri.toQuotedString());
                     return iri;
                 }
             });
             // Important - add last
-            ImportsCacheIRIMapper iriMapper = new ImportsCacheIRIMapper(projectFileStore.getImportsCacheDataDirectory());
+            ImportsCacheIRIMapper iriMapper = new ImportsCacheIRIMapper(projectId, projectFileStore.getImportsCacheDataDirectory());
             manager.addIRIMapper(iriMapper);
 
 
@@ -317,7 +315,7 @@ public class OWLAPIProjectDocumentStore {
             }
             finally {
                 long t1 = System.currentTimeMillis();
-                LOGGER.info("Loaded project (" + projectId + "): " + (t1 - t0));
+                LOGGER.info(projectId, "Ontology loading completed in " + (t1 - t0) + " ms");
                 manager.removeIRIMapper(iriMapper);
                 manager.removeOntologyLoaderListener(loaderListener);
                 manager.removeMissingImportListener(missingImportListener);
@@ -342,7 +340,7 @@ public class OWLAPIProjectDocumentStore {
                     os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
                     BinaryOWLOntologyDocumentSerializer serializer = new BinaryOWLOntologyDocumentSerializer();
                     serializer.write(new OWLOntologyWrapper(ont), os);
-                    LOGGER.info("Cached imported ontology: " + ont.getOntologyID() + " in " + file.getName());
+                    LOGGER.info(projectId, "Cached imported ontology: " + ont.getOntologyID() + " in " + file.getName());
                 }
                 catch (IOException e) {
                     LOGGER.severe(e);
@@ -597,13 +595,16 @@ public class OWLAPIProjectDocumentStore {
 
     private static class ImportsCacheIRIMapper implements OWLOntologyIRIMapper {
 
+        private ProjectId projectId;
+
         private File dir;
 
         private Set<OWLOntologyID> ontologyIDs = new HashSet<OWLOntologyID>();
 
         private Map<IRI, IRI> iri2Document = new HashMap<IRI, IRI>();
 
-        private ImportsCacheIRIMapper(File dir) {
+        private ImportsCacheIRIMapper(ProjectId projectId, File dir) {
+            this.projectId = projectId;
             this.dir = dir;
             fillCache();
         }
@@ -623,7 +624,7 @@ public class OWLAPIProjectDocumentStore {
                 }
             }
             for(OWLOntologyID id : ontologyIDs) {
-                LOGGER.info("Cached import: " + id);
+                LOGGER.info(projectId, "Cached import: " + id);
             }
         }
 

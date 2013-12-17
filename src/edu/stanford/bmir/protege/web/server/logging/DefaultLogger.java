@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.Group;
 import edu.stanford.smi.protege.server.metaproject.User;
@@ -15,8 +16,7 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.IllegalFormatException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -28,10 +28,18 @@ public class DefaultLogger implements WebProtegeLogger {
 
     private static final String SUBJECT = "Unexpected Exception in webprotege";
 
+    public static final String LOG_NAME = "webprotege";
+
     private Logger logger;
 
     public DefaultLogger(Class<?> cls) {
-        this.logger = Logger.getLogger(cls.getName());
+        this.logger = Logger.getLogger(LOG_NAME);
+        if (logger.getUseParentHandlers()) {
+            this.logger.setUseParentHandlers(false);
+            ConsoleHandler consoleHandler = new ConsoleHandler();
+            consoleHandler.setFormatter(new WebProtegeLogFormatter());
+            this.logger.addHandler(consoleHandler);
+        }
     }
 
     @Override
@@ -129,6 +137,18 @@ public class DefaultLogger implements WebProtegeLogger {
         writeToLog(formattedMessage, Level.INFO);
     }
 
+    @Override
+    public void info(ProjectId projectId, String message, Object... args) {
+        if(!logger.isLoggable(Level.INFO)) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("Project: ");
+        sb.append(projectId.getId());
+        sb.append("\n");
+        sb.append(formatMessage(message, args));
+        writeToLog(sb.toString(), Level.INFO);
+    }
 
     private String formatMessage(String message, Object[] args) {
         String formattedMessage;
@@ -136,7 +156,7 @@ public class DefaultLogger implements WebProtegeLogger {
             formattedMessage = String.format(message, args);
         }
         catch (IllegalFormatException e) {
-            formattedMessage = "Illegally formatted log message: " + message;
+            formattedMessage = "Illegally formatted log message: " + message + ". " + e.getMessage();
         }
         return formattedMessage;
     }
