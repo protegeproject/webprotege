@@ -10,7 +10,6 @@ package edu.stanford.bmir.protege.web.shared.app;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.WebProtegePropertiesDocumentation;
 
-import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Finally, some of the property values will not be visible to clients (in the browser).  This information is encoded
  * by the {@link ClientVisibility} flag.
  */
-public enum WebProtegePropertyName implements Serializable {
+public enum WebProtegePropertyName {
 
     @WebProtegePropertiesDocumentation(description = "The name of the webprotege application that appears in the browser title bar", example = "WebProtege")
     APPLICATION_NAME("application.name", PropertyValue.ofString("WebProt\u00E9g\u00E9"), ClientVisibility.VISIBLE),
@@ -57,7 +56,7 @@ public enum WebProtegePropertyName implements Serializable {
     OPEN_ID_ENABLED("openid.enabled", PropertyValue.ofBoolean(true), ClientVisibility.VISIBLE);
 
 
-    private static class PropertyValue implements Serializable {
+    private static class PropertyValue {
 
         private String value;
 
@@ -93,14 +92,14 @@ public enum WebProtegePropertyName implements Serializable {
     }
 
 
-    public static enum Optionality implements Serializable {
+    public static enum Optionality {
 
         HAS_DEFAULT_VALUE,
 
         VALUE_MUST_BE_SPECIFIED_IN_PROTEGE_PROPERTIES
     }
 
-    public static enum ClientVisibility implements Serializable {
+    public static enum ClientVisibility {
 
         VISIBLE,
 
