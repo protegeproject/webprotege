@@ -4,7 +4,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
@@ -140,7 +142,8 @@ public class OWLAPIProjectCache {
                     project = OWLAPIProject.getProject(documentStore);
                     projectId2ProjectMap.put(projectId, project);
                     LOGGER.info("%s has been loaded.", projectId);
-                    logMemoryUsage(projectId);
+                    WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(LOGGER);
+                    loggerEx.logMemoryUsage();
                 }
                 if (accessMode == AccessMode.NORMAL) {
                     logProjectAccess(projectId);
@@ -232,7 +235,7 @@ public class OWLAPIProjectCache {
             int currentSize = lastAccessMap.size();
             lastAccessMap.put(projectId, currentTime);
             if(lastAccessMap.size() > currentSize) {
-                LOGGER.info(lastAccessMap.size() + " projects are being accessed");
+                LOGGER.info("%d projects are being accessed", lastAccessMap.size());
             }
         }
         finally {
@@ -240,19 +243,19 @@ public class OWLAPIProjectCache {
         }
     }
 
-    private void logMemoryUsage(ProjectId projectId) {
-        Runtime runtime = Runtime.getRuntime();
-        long totalMemoryBytes = runtime.totalMemory();
-        long freeMemoryBytes = runtime.freeMemory();
-        long freeMemoryMB = toMB(freeMemoryBytes);
-        long usedMemoryBytes = totalMemoryBytes - freeMemoryBytes;
-        long usedMemoryMB = toMB(usedMemoryBytes);
-        long totalMemoryMB = toMB(totalMemoryBytes);
-        double percentageUsed = (100.0 * usedMemoryBytes) / totalMemoryBytes;
-        LOGGER.info("Using %d MB of %d MB (%.2f%%) [%d MB free]", usedMemoryMB, totalMemoryMB, percentageUsed, freeMemoryMB);
-    }
-
-    private long toMB(long bytes) {
-        return bytes / (1024 * 1024);
-    }
+//    private void logMemoryUsage(ProjectId projectId) {
+//        Runtime runtime = Runtime.getRuntime();
+//        long totalMemoryBytes = runtime.totalMemory();
+//        long freeMemoryBytes = runtime.freeMemory();
+//        long freeMemoryMB = toMB(freeMemoryBytes);
+//        long usedMemoryBytes = totalMemoryBytes - freeMemoryBytes;
+//        long usedMemoryMB = toMB(usedMemoryBytes);
+//        long totalMemoryMB = toMB(totalMemoryBytes);
+//        double percentageUsed = (100.0 * usedMemoryBytes) / totalMemoryBytes;
+//        LOGGER.info("Using %d MB of %d MB (%.2f%%) [%d MB free]", usedMemoryMB, totalMemoryMB, percentageUsed, freeMemoryMB);
+//    }
+//
+//    private long toMB(long bytes) {
+//        return bytes / (1024 * 1024);
+//    }
 }
