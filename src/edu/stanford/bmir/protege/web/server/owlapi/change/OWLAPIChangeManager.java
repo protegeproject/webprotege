@@ -111,7 +111,7 @@ public class OWLAPIChangeManager {
             }, SkipSetting.SKIP_NONE);
             inputStream.close();
             long t1 = System.currentTimeMillis();
-            LOGGER.info(project.getProjectId(), "Loaded %d revisions in %d ms", revisions.size(), (t1 - t0));
+            LOGGER.info(project.getProjectId(), "Change history loading complete.  Loaded %d revisions in %d ms", revisions.size(), (t1 - t0));
 
         }
         catch (BinaryOWLParseException e) {

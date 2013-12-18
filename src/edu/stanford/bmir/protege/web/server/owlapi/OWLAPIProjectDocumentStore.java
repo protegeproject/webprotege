@@ -295,7 +295,7 @@ public class OWLAPIProjectDocumentStore {
             manager.addIRIMapper(new OWLOntologyIRIMapper() {
                 @Override
                 public IRI getDocumentIRI(IRI iri) {
-                    LOGGER.info(projectId, "Fetching ontology from Web " + iri.toQuotedString());
+                    LOGGER.info(projectId, "Fetching imported ontology from %s.", iri.toQuotedString());
                     return iri;
                 }
             });
@@ -308,6 +308,7 @@ public class OWLAPIProjectDocumentStore {
                 OWLOntologyLoaderConfiguration config = new OWLOntologyLoaderConfiguration();
                 config = config.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
                 FileDocumentSource documentSource = new FileDocumentSource(rootOntologyDocument);
+                LOGGER.info(projectId, "Loading root ontology imports closure.");
                 OWLOntology rootOntology = manager.loadOntologyFromOntologyDocument(documentSource, config);
                 cacheImports(iriMapper, rootOntology);
                 return rootOntology;
@@ -315,7 +316,7 @@ public class OWLAPIProjectDocumentStore {
             }
             finally {
                 long t1 = System.currentTimeMillis();
-                LOGGER.info(projectId, "Ontology loading completed in " + (t1 - t0) + " ms");
+                LOGGER.info(projectId, "Ontology loading completed in " + (t1 - t0) + " ms.");
                 manager.removeIRIMapper(iriMapper);
                 manager.removeOntologyLoaderListener(loaderListener);
                 manager.removeMissingImportListener(missingImportListener);
