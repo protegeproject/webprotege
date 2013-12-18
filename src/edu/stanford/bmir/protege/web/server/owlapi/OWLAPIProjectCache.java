@@ -137,11 +137,10 @@ public class OWLAPIProjectCache {
             try {
                 OWLAPIProject project = projectId2ProjectMap.get(projectId);
                 if (project == null) {
-                    LOGGER.info("%s is not loaded.  Loading...", projectId);
+                    LOGGER.info("Request for unloaded project. Loading %s.", projectId.getId());
                     OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
                     project = OWLAPIProject.getProject(documentStore);
                     projectId2ProjectMap.put(projectId, project);
-                    LOGGER.info("%s has been loaded.", projectId);
                     WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(LOGGER);
                     loggerEx.logMemoryUsage();
                 }
@@ -186,12 +185,12 @@ public class OWLAPIProjectCache {
             OWLAPIProject project = projectId2ProjectMap.remove(projectId);
             lastAccessMap.remove(projectId);
             project.dispose();
-            LOGGER.info("%d projects are being accessed", lastAccessMap.size());
         }
         finally {
+            final int projectsBeingAccessed = lastAccessMap.size();
             LAST_ACCESS_LOCK.writeLock().unlock();
             WRITE_LOCK.unlock();
-            LOGGER.info("Purged project: %s", projectId.toString());
+            LOGGER.info("Purged project: %s.  %d projects are now being accessed.", projectId.getId(), projectsBeingAccessed);
         }
     }
 
@@ -235,7 +234,7 @@ public class OWLAPIProjectCache {
             int currentSize = lastAccessMap.size();
             lastAccessMap.put(projectId, currentTime);
             if(lastAccessMap.size() > currentSize) {
-                LOGGER.info("%d projects are being accessed", lastAccessMap.size());
+                LOGGER.info("%d projects are now being accessed", lastAccessMap.size());
             }
         }
         finally {
