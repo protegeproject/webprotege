@@ -56,13 +56,10 @@ public class FileUploadServlet extends HttpServlet {
     @Override
     @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LOGGER.info("Received upload...");
+        LOGGER.info("Received upload from %s", req.getRemoteAddr());
         resp.setHeader("Content-Type", RESPONSE_MIME_TYPE);
         try {
             if (ServletFileUpload.isMultipartContent(req)) {
-
-                LOGGER.info("POST is multipart (OK)");
-
                 FileItemFactory factory = new DiskFileItemFactory();
                 ServletFileUpload upload = new ServletFileUpload(factory);
                 upload.setFileSizeMax(DEFAULT_MAX_FILE_SIZE);
@@ -72,18 +69,12 @@ public class FileUploadServlet extends HttpServlet {
                 for (FileItem item : items) {
                     if (!item.isFormField()) {
                         File uploadedFile = createServerSideFile();
-                        LOGGER.info("Created server side file: " + uploadedFile.getAbsolutePath());
+                        long sizeInBytes = uploadedFile.length();
+                        long sizeInMB = sizeInBytes / (1024 * 1024);
+                        LOGGER.info("Created server side file %s.  File size is %d MB ", uploadedFile.getName(), sizeInMB);
                         item.write(uploadedFile);
                         resp.setStatus(HttpServletResponse.SC_CREATED);
-//                        try {
-//                            processOntology(uploadedFile);
-                            LOGGER.info("Sending response to client");
-                            sendSuccessMessage(resp, uploadedFile.getName());
-//                        }
-//                        catch (OWLOntologyCreationException e) {
-//                            LOGGER.info("Caught OWLOntologyCreationException %s", e.toString());
-//                            sendErrorMessage(resp, e);
-//                        }
+                        sendSuccessMessage(resp, uploadedFile.getName());
                         return;
                     }
                 }
@@ -172,21 +163,8 @@ public class FileUploadServlet extends HttpServlet {
      */
     private File createServerSideFile() throws IOException {
         FileUploadConstants.UPLOADS_DIRECTORY.mkdirs();
-        File tempFile = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX, FileUploadConstants.UPLOADS_DIRECTORY);
-        LOGGER.info("Created temp file: " + tempFile.getAbsolutePath());
-        return tempFile;
+        return File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX, FileUploadConstants.UPLOADS_DIRECTORY);
     }
-
-    
-    
-//    private void processOntology(File ontologyDocument) throws OWLOntologyCreationException {
-//        LOGGER.info("Parsing uploaded file ontology...");
-//        OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
-//        OWLOntologyLoaderConfiguration configuration = new OWLOntologyLoaderConfiguration().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
-//        manager.loadOntologyFromOntologyDocument(new FileDocumentSource(ontologyDocument), configuration);
-//        LOGGER.info("    .... parsed");
-//    }
-    
     
     private static class Pair {
         
