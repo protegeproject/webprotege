@@ -10,7 +10,6 @@ package edu.stanford.bmir.protege.web.shared.app;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.WebProtegePropertiesDocumentation;
 
-import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -57,7 +56,7 @@ public enum WebProtegePropertyName {
     OPEN_ID_ENABLED("openid.enabled", PropertyValue.ofBoolean(true), ClientVisibility.VISIBLE);
 
 
-    private static class PropertyValue implements Serializable {
+    private static class PropertyValue {
 
         private String value;
 

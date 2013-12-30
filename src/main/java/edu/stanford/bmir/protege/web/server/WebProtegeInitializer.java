@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server;
 import edu.stanford.bmir.protege.web.server.db.mongodb.MongoDBManager;
 import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
@@ -15,17 +17,23 @@ import java.util.Set;
 
 public class WebProtegeInitializer implements ServletContextListener {
 
-	
+    public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(WebProtegeInitializer.class);
+
     public void contextInitialized(ServletContextEvent sce) {
         try {
             WebProtegeConfigurationChecker checker = new WebProtegeConfigurationChecker();
             checker.performConfiguration(sce.getServletContext());
             warmupMetaProject();
+            LOGGER.info("Initialization complete");
+            WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(LOGGER);
+            loggerEx.logMemoryUsage();
         }
         catch (WebProtegeConfigurationException e) {
+            LOGGER.severe(e);
             WebProtegeWebAppFilter.setConfigError(e);
         }
         catch (Throwable t) {
+            LOGGER.severe(t);
             WebProtegeWebAppFilter.setError(t);
         }
     }

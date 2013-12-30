@@ -546,7 +546,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
                 projectChangeWriteLock.unlock();
             }
 
-            LOGGER.info("%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
+            LOGGER.info(getProjectId(), "%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
 
             if (!(changeListGenerator instanceof SilentChangeListGenerator)) {
                 List<ProjectEvent<?>> highLevelEvents = new ArrayList<ProjectEvent<?>>();

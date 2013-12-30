@@ -5,9 +5,11 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.render.BrowserTextRenderer;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
@@ -123,7 +125,7 @@ public class RenderingManager implements BrowserTextProvider  {
         // components get what they deserve!
         Set<OWLEntity> entities = shortFormProvider.getEntities(entityName);
         if (!entities.isEmpty()) {
-            printBrowserTextReferenceWarningMessage();
+            printBrowserTextReferenceWarningMessage(entityName);
             return entities;
         }
         // Not referring to browser text, or there is no browser text!
@@ -836,8 +838,9 @@ public class RenderingManager implements BrowserTextProvider  {
     }
 
 
-    private static void printBrowserTextReferenceWarningMessage() {
-        System.err.println("Some client (UI component) is refering to entities by browser text rather than name.  Entities should be referred to by name i.e. IRI!");
+    private void printBrowserTextReferenceWarningMessage(String referenceName) {
+        ProjectId projectId = project.getProjectId();
+        WebProtegeLoggerManager.get(RenderingManager.class).info(projectId, "Could not find entity by name \"%s\".  This name may be the browser text rather than an entity IRI.", referenceName);
     }
 
 }

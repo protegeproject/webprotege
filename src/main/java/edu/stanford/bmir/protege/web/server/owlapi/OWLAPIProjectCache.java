@@ -1,8 +1,12 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import com.google.common.collect.MapMaker;
+import com.google.common.base.Optional;
+import com.google.common.collect.Interner;
+import com.google.common.collect.Interners;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
@@ -12,7 +16,6 @@ import org.semanticweb.owlapi.io.OWLParserException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -27,7 +30,7 @@ public class OWLAPIProjectCache {
 
     private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(OWLAPIProjectCache.class);
 
-    private final ConcurrentMap<ProjectId, ProjectId> projectIdInterningMap;
+    private final Interner<ProjectId> projectIdInterner;
 
 
     private final ReadWriteLock projectMapReadWriteLoc = new ReentrantReadWriteLock();
@@ -39,7 +42,9 @@ public class OWLAPIProjectCache {
     private Map<ProjectId, OWLAPIProject> projectId2ProjectMap = new ConcurrentHashMap<ProjectId, OWLAPIProject>();
 
 
-    private ReadWriteLock LAST_ACCESS_LOCK = new ReentrantReadWriteLock();
+    private final ReadWriteLock LAST_ACCESS_LOCK = new ReentrantReadWriteLock();
+
+    private final ReadWriteLock PROJECT_ID_LOCK = new ReentrantReadWriteLock();
 
     private Map<ProjectId, Long> lastAccessMap = new HashMap<ProjectId, Long>();
 
@@ -51,11 +56,11 @@ public class OWLAPIProjectCache {
     public static final int PURGE_CHECK_PERIOD_MS = 30 * 1000;
 
     /**
-     * Ellapsed time from the last access after which a project should be considered dormant (and should therefore
+     * Elapsed time from the last access after which a project should be considered dormant (and should therefore
      * be purged).  This can interact with the frequency with which clients poll the project event queue (which is
      * be default every 10 seconds).
      */
-    private static final long DORMANT_PROJECT_TIME_MS = 1 * 60 * 1000;
+    private static final long DORMANT_PROJECT_TIME_MS = 3 * 60 * 1000;
 
 
     public OWLAPIProjectCache() {
@@ -66,10 +71,7 @@ public class OWLAPIProjectCache {
                 purgeDormantProjects();
             }
         }, 0, PURGE_CHECK_PERIOD_MS);
-
-
-        MapMaker mapMaker = new MapMaker();
-        projectIdInterningMap = mapMaker.concurrencyLevel(5).initialCapacity(20).weakKeys().makeMap();
+        projectIdInterner = Interners.newWeakInterner();
 
     }
 
@@ -102,17 +104,49 @@ public class OWLAPIProjectCache {
     }
 
 
+
+
     public OWLAPIProject getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
-        ProjectId internedProjectId = getInternedProjectId(projectId);
-        synchronized (internedProjectId) {
+        return getProjectInternal(projectId, AccessMode.NORMAL);
+    }
+
+    public Optional<OWLAPIProject> getProjectIfActive(ProjectId projectId) {
+        try {
+            READ_LOCK.lock();
+            if(!isActive(projectId)) {
+                return Optional.absent();
+            }
+            else {
+                return Optional.of(getProjectInternal(projectId, AccessMode.QUIET));
+            }
+        }
+        finally {
+            READ_LOCK.unlock();
+        }
+
+    }
+
+    private enum AccessMode {
+        NORMAL,
+        QUIET
+    }
+
+    private OWLAPIProject getProjectInternal(ProjectId projectId, AccessMode accessMode) {
+        // Per project lock
+        synchronized (getInternedProjectId(projectId)) {
             try {
-                OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
                 OWLAPIProject project = projectId2ProjectMap.get(projectId);
                 if (project == null) {
+                    LOGGER.info("Request for unloaded project. Loading %s.", projectId.getId());
+                    OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
                     project = OWLAPIProject.getProject(documentStore);
                     projectId2ProjectMap.put(projectId, project);
+                    WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(LOGGER);
+                    loggerEx.logMemoryUsage();
                 }
-                logProjectAccess(projectId);
+                if (accessMode == AccessMode.NORMAL) {
+                    logProjectAccess(projectId);
+                }
                 return project;
             }
             catch (IOException e) {
@@ -125,13 +159,13 @@ public class OWLAPIProjectCache {
     }
 
     /**
-     * Gets an interned {@link ProjectId} that is equal to the specified {@link ProjectId}
+     * Gets an interned {@link ProjectId} that is equal to the specified {@link ProjectId}.
      * @param projectId The project id to intern.
      * @return The interned project Id.  Not {@code null}.
      */
     private ProjectId getInternedProjectId(ProjectId projectId) {
-        projectIdInterningMap.putIfAbsent(projectId, projectId);
-        return projectIdInterningMap.get(projectId);
+        // The interner is thread safe.
+        return projectIdInterner.intern(projectId);
     }
 
     public OWLAPIProject getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException {
@@ -151,12 +185,22 @@ public class OWLAPIProjectCache {
             OWLAPIProject project = projectId2ProjectMap.remove(projectId);
             lastAccessMap.remove(projectId);
             project.dispose();
-            LOGGER.info(lastAccessMap.size() + " projects are being accessed");
         }
         finally {
+            final int projectsBeingAccessed = lastAccessMap.size();
             LAST_ACCESS_LOCK.writeLock().unlock();
             WRITE_LOCK.unlock();
-            LOGGER.info("Purged project: " + projectId);
+            LOGGER.info("Purged project: %s.  %d projects are now being accessed.", projectId.getId(), projectsBeingAccessed);
+        }
+    }
+
+    public boolean isActive(ProjectId projectId) {
+        try {
+            READ_LOCK.lock();
+            return lastAccessMap.containsKey(projectId);
+        }
+        finally {
+            READ_LOCK.unlock();
         }
     }
 
@@ -183,18 +227,34 @@ public class OWLAPIProjectCache {
         }
     }
 
-    protected void logProjectAccess(final ProjectId projectId) {
+    private void logProjectAccess(final ProjectId projectId) {
         try {
             LAST_ACCESS_LOCK.writeLock().lock();
             long currentTime = System.currentTimeMillis();
             int currentSize = lastAccessMap.size();
             lastAccessMap.put(projectId, currentTime);
             if(lastAccessMap.size() > currentSize) {
-                LOGGER.info(lastAccessMap.size() + " projects are being accessed");
+                LOGGER.info("%d projects are now being accessed", lastAccessMap.size());
             }
         }
         finally {
             LAST_ACCESS_LOCK.writeLock().unlock();
         }
     }
+
+//    private void logMemoryUsage(ProjectId projectId) {
+//        Runtime runtime = Runtime.getRuntime();
+//        long totalMemoryBytes = runtime.totalMemory();
+//        long freeMemoryBytes = runtime.freeMemory();
+//        long freeMemoryMB = toMB(freeMemoryBytes);
+//        long usedMemoryBytes = totalMemoryBytes - freeMemoryBytes;
+//        long usedMemoryMB = toMB(usedMemoryBytes);
+//        long totalMemoryMB = toMB(totalMemoryBytes);
+//        double percentageUsed = (100.0 * usedMemoryBytes) / totalMemoryBytes;
+//        LOGGER.info("Using %d MB of %d MB (%.2f%%) [%d MB free]", usedMemoryMB, totalMemoryMB, percentageUsed, freeMemoryMB);
+//    }
+//
+//    private long toMB(long bytes) {
+//        return bytes / (1024 * 1024);
+//    }
 }
