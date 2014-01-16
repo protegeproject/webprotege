@@ -86,8 +86,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         entitySuggestOracle = new PrimitiveDataEditorSuggestOracle(new EntitySuggestOracle(projectId, SUGGEST_LIMIT, EntityType.OBJECT_PROPERTY));
         editor = new ExpandingTextBox();
         editor.addStyleName("web-protege-form-layout-editor-input");
-        baseWidget.add(editor);
-        initWidget(baseWidget);
         editor.setMode(ExpandingTextBoxMode.SINGLE_LINE);
         editor.setOracle(entitySuggestOracle);
         editor.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
@@ -103,6 +101,8 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
                 handleEdit();
             }
         });
+        baseWidget.add(editor);
+        initWidget(baseWidget);
         languageEditor.addValueChangeHandler(new ValueChangeHandler<Optional<String>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<String>> event) {
