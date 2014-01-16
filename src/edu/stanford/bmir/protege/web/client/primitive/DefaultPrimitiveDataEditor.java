@@ -84,9 +84,6 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         this.languageEditor = new DefaultLanguageEditor();
         this.baseWidget = new FlowPanel();
         entitySuggestOracle = new PrimitiveDataEditorSuggestOracle(new EntitySuggestOracle(projectId, SUGGEST_LIMIT, EntityType.OBJECT_PROPERTY));
-        TextBox textBox = new TextBox();
-        textBox.setWidth("100%");
-        textBox.setEnabled(false);
         editor = new ExpandingTextBox();
         editor.addStyleName("web-protege-form-layout-editor-input");
         baseWidget.add(editor);
