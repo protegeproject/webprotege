@@ -25,6 +25,8 @@ public class PrimitiveDataEditorClientModule extends AbstractGinModule {
         bind(PrimitiveDataParser.class).to(DefaultPrimitiveDataParser.class);
         bind(EntityDataLookupHandler.class).to(EntityDataLookupHandlerImpl.class);
         bind(FreshEntitiesHandler.class).to(NullFreshEntitiesHandler.class);
+        bind(PrimitiveDataEditorFreshEntityView.class).to(PrimitiveDataEditorFreshEntityViewImpl.class);
         bindConstant().annotatedWith(EntitySuggestOracleSuggestLimit.class).to(SUGGEST_LIMIT);
+        bindConstant().annotatedWith(EntitySuggestOracleSuggestMode.class).to(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
     }
 }

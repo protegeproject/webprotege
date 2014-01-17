@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -10,10 +8,11 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedEvent;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
@@ -27,6 +26,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
@@ -45,11 +45,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataEditor, HasEnabled {
 
-    public static final String ERROR_STYLE_NAME = "web-protege-error-label";
 
     private final ProjectId projectId;
-
-    private final FlowPanel errorLabel = new FlowPanel();
 
     private final PrimitiveDataEditorSuggestOracle entitySuggestOracle;
 
@@ -63,26 +60,20 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private final Set<PrimitiveType> allowedTypes = new LinkedHashSet<PrimitiveType>();
 
-    private String lastIconInsetStyleName = "empty-icon-inset";
-
-
     private boolean dirty = false;
 
     private boolean enabled;
 
-    private FlowPanel baseWidget;
-
     private PrimitiveDataEditorView view;
 
     @Inject
-    public PrimitiveDataEditorImpl(PrimitiveDataEditorView baseBox, ProjectId projectId, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
+    public PrimitiveDataEditorImpl(PrimitiveDataEditorView editorView, ProjectId projectId, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
         this.projectId = projectId;
         this.languageEditor = languageEditor;
         this.freshEntitiesHandler = freshEntitiesHandler;
-        this.baseWidget = new FlowPanel();
         this.primitiveDataParser = parser;
         entitySuggestOracle = suggestOracle;
-        view = baseBox;
+        view = editorView;
         view.asWidget().addStyleName("web-protege-form-layout-editor-input");
         view.setMode(PrimitiveDataEditorView.Mode.SINGLE_LINE);
         view.setSuggestOracle(entitySuggestOracle);
@@ -99,15 +90,12 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 handleEdit();
             }
         });
-        baseWidget.add(view);
-        initWidget(baseWidget);
         languageEditor.addValueChangeHandler(new ValueChangeHandler<Optional<String>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<String>> event) {
                 handleLanguageChanged();
             }
         });
-        errorLabel.addStyleName(ERROR_STYLE_NAME);
         view.setAnchorVisible(false);
         view.addAnchorClickedHandler(new AnchorClickedHandler() {
             @Override
@@ -115,6 +103,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 handleAnchorClick();
             }
         });
+        initWidget(view.asWidget());
     }
 
     @Override
@@ -342,6 +331,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     @Override
     public void clearValue() {
         view.setText("");
+        view.setPrimitiveDataStyleName(Optional.<String>absent());
         languageEditor.setValue("");
         setCurrentData(Optional.<OWLPrimitiveData>absent(), EventStrategy.DO_NOT_FIRE_EVENTS);
     }
@@ -393,52 +383,9 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         if (!currentData.isPresent()) {
             return;
         }
-        EntityData entityData = currentData.get().accept(new OWLPrimitiveDataVisitorAdapter<EntityData, RuntimeException>() {
-//            @Override
-//            public EntityData visit(OWLClassData data) throws RuntimeException {
-//                final EntityData entityData = new EntityData(data.getEntity().getIRI().toString(), data.getBrowserText());
-//                entityData.setValueType(ValueType.Cls);
-//                return entityData;
-//            }
-//
-//            @Override
-//            public EntityData visit(OWLObjectPropertyData data) throws RuntimeException {
-//                PropertyEntityData entityData = new PropertyEntityData(data.getEntity().getIRI().toString(), data.getBrowserText(), Collections.<EntityData>emptySet());
-//                entityData.setValueType(ValueType.Property);
-//                entityData.setPropertyType(PropertyType.OBJECT);
-//                return entityData;
-//            }
-//
-//            @Override
-//            public EntityData visit(OWLDataPropertyData data) throws RuntimeException {
-//                PropertyEntityData entityData = new PropertyEntityData(data.getEntity().getIRI().toString(), data.getBrowserText(), Collections.<EntityData>emptySet());
-//                entityData.setValueType(ValueType.Property);
-//                entityData.setPropertyType(PropertyType.DATATYPE);
-//                return entityData;
-//            }
-//
-//            @Override
-//            public EntityData visit(OWLAnnotationPropertyData data) throws RuntimeException {
-//                PropertyEntityData entityData = new PropertyEntityData(data.getEntity().getIRI().toString(), data.getBrowserText(), Collections.<EntityData>emptySet());
-//                entityData.setValueType(ValueType.Property);
-//                entityData.setPropertyType(PropertyType.ANNOTATION);
-//                return entityData;
-//            }
-//
-//            @Override
-//            public EntityData visit(OWLNamedIndividualData data) throws RuntimeException {
-//                final EntityData entityData = new EntityData(data.getEntity().getIRI().toString(), data.getBrowserText());
-//                entityData.setValueType(ValueType.Instance);
-//                return entityData;
-//            }
-//
-//            @Override
-//            public EntityData visit(OWLDatatypeData data) throws RuntimeException {
-//                return null;
-//            }
-
+        currentData.get().accept(new OWLPrimitiveDataVisitorAdapter<Void, RuntimeException>() {
             @Override
-            public EntityData visit(IRIData data) throws RuntimeException {
+            public Void visit(IRIData data) throws RuntimeException {
                 Window.open(data.getObject().toString(), data.getBrowserText(), "");
                 return null;
             }
@@ -446,12 +393,20 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     private void showErrorLabel() {
-        setupErrorLabel();
-        baseWidget.add(errorLabel);
+        String errorMessage = freshEntitiesHandler.getErrorMessage(view.getText());
+        SafeHtml errorMessageHTML = new SafeHtmlBuilder().appendHtmlConstant(errorMessage).toSafeHtml();
+        Set<EntityType<?>> suggestTypes;
+        if(freshEntitiesHandler.getFreshEntitiesPolicy() == FreshEntitiesPolicy.ALLOWED) {
+            suggestTypes = getMatchTypes();
+        }
+        else {
+            suggestTypes = Collections.emptySet();
+        }
+        view.showErrorMessage(errorMessageHTML, suggestTypes);
     }
 
     private void hideErrorLabel() {
-        baseWidget.remove(errorLabel);
+        view.clearErrorMessage();
     }
 
     private void reparsePrimitiveData() {
@@ -536,24 +491,12 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     private void setIconInsetStyleName(Optional<String> name) {
-        if (lastIconInsetStyleName != null) {
-//            view.getSuggestBox().removeStyleName(lastIconInsetStyleName);
-            view.setPrimitiveDataStyleName(lastIconInsetStyleName);
-        }
-        if (name.isPresent()) {
-            lastIconInsetStyleName = name.get();
-//            view.getSuggestBox().addStyleName(name.get());
-            view.setPrimitiveDataStyleName(name.get());
-        }
-        else {
-            lastIconInsetStyleName = null;
-        }
+        view.setPrimitiveDataStyleName(name);
     }
     ////////////////////////////////////////////////////////////////////////////////////////
 
     private void setIconInsetStyleNameForEntityData() {
         if (!currentData.isPresent()) {
-            clearIconInset();
             view.setTitle("");
             hideErrorLabel();
             return;
@@ -679,11 +622,6 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         return !currentData.isPresent() || allowedTypes.contains(currentData.get().getType());
     }
 
-    //
-    private void clearIconInset() {
-        setIconInsetStyleName(Optional.<String>absent());
-    }
-
     private void handleLanguageChanged() {
         reparsePrimitiveData();
     }
@@ -702,30 +640,6 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             }
         }
         return types;
-    }
-
-    private void setupErrorLabel() {
-        errorLabel.clear();
-        final String text = getTrimmedText();
-        final HTML errorMessageLabel = new HTML(freshEntitiesHandler.getErrorMessage(text));
-        errorLabel.add(errorMessageLabel);
-        errorLabel.removeStyleName(ERROR_STYLE_NAME);
-        errorLabel.addStyleName("web-protege-warning-label");
-        if (freshEntitiesHandler.getFreshEntitiesPolicy() == FreshEntitiesPolicy.ALLOWED) {
-            for (PrimitiveType primitiveType : allowedTypes) {
-                final EntityType<?> entityType = primitiveType.getEntityType();
-                if (entityType != null) {
-                    Anchor anchor = new Anchor("Add as " + entityType.getName());
-                    errorLabel.add(new SimplePanel(anchor));
-                    anchor.addClickHandler(new ClickHandler() {
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            coerceToEntityType(entityType);
-                        }
-                    });
-                }
-            }
-        }
     }
 
     private void fireValueChangedEvent() {

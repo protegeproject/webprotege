@@ -7,13 +7,18 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxMode;
+import org.semanticweb.owlapi.model.EntityType;
+
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,12 +32,19 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
     private ExpandingTextBox delegate;
 
+    private PrimitiveDataEditorFreshEntityView errorView;
+
     private Optional<String> lastStyleName = Optional.absent();
 
     @Inject
-    public PrimitiveDataEditorViewImpl(ExpandingTextBox delegate) {
+    public PrimitiveDataEditorViewImpl(ExpandingTextBox delegate, PrimitiveDataEditorFreshEntityView errorView) {
+        FlowPanel holder = new FlowPanel();
         this.delegate = delegate;
-        initWidget(delegate);
+        holder.add(delegate);
+        this.errorView = errorView;
+        this.errorView.asWidget().setVisible(false);
+        holder.add(errorView);
+        initWidget(holder);
     }
 
     @Override
@@ -51,13 +63,15 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     }
 
     @Override
-    public void setPrimitiveDataStyleName(String styleName) {
+    public void setPrimitiveDataStyleName(Optional<String> styleName) {
         checkNotNull(styleName);
         if(lastStyleName.isPresent()) {
             delegate.getSuggestBox().removeStyleName(lastStyleName.get());
         }
-        lastStyleName = Optional.of(styleName);
-        delegate.getSuggestBox().addStyleName(styleName);
+        lastStyleName = styleName;
+        if (styleName.isPresent()) {
+            delegate.getSuggestBox().addStyleName(styleName.get());
+        }
     }
 
     @Override
@@ -139,5 +153,16 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
         return delegate.addValueChangeHandler(handler);
+    }
+
+    @Override
+    public void showErrorMessage(SafeHtml errorMessage, Set<EntityType<?>> expectedTypes) {
+        errorView.setExpectedTypes(errorMessage, expectedTypes);
+        errorView.asWidget().setVisible(true);
+    }
+
+    @Override
+    public void clearErrorMessage() {
+        errorView.asWidget().setVisible(false);
     }
 }
