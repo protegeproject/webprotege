@@ -11,8 +11,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.primitive.DefaultPrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorGinjector;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;

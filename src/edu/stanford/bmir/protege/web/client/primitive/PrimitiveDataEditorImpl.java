@@ -47,13 +47,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * and has an option to allow the creation of new primitives.
  * </p>
  */
-public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDataEditor, HasEnabled {
+public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataEditor, HasEnabled {
 
     public static final String ERROR_STYLE_NAME = "web-protege-error-label";
 
     private final ProjectId projectId;
-
-//    private final ExpandingTextBox editor;
 
     private final FlowPanel errorLabel = new FlowPanel();
 
@@ -84,7 +82,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
     private PrimitiveDataEditorView editor;
 
     @Inject
-    public DefaultPrimitiveDataEditor(PrimitiveDataEditorView baseBox, ProjectId projectId, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
+    public PrimitiveDataEditorImpl(PrimitiveDataEditorView baseBox, ProjectId projectId, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
         this.projectId = projectId;
         this.languageEditor = languageEditor;
         this.freshEntitiesHandler = freshEntitiesHandler;

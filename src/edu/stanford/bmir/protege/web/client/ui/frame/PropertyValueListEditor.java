@@ -25,7 +25,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.button.DeleteButton;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasEditable;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasTextRendering;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxMode;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
@@ -213,7 +212,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     }
 
     private String getValuePlaceholder(int row) {
-        DefaultPrimitiveDataEditor widget = (DefaultPrimitiveDataEditor) table.getWidget(row, 0);
+        PrimitiveDataEditorImpl widget = (PrimitiveDataEditorImpl) table.getWidget(row, 0);
         Optional<OWLPrimitiveData> value = widget.getValue();
         if(!value.isPresent()) {
             return FILLER_EDITOR_PLACE_HOLDER_TEXT;
@@ -366,14 +365,14 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     }
 
 
-    private List<DefaultPrimitiveDataEditor> pool = new ArrayList<DefaultPrimitiveDataEditor>();
+    private List<PrimitiveDataEditorImpl> pool = new ArrayList<PrimitiveDataEditorImpl>();
 
     private Multimap<PrimitiveDataEditor, HandlerRegistration> handlerRegistrations = HashMultimap.create();
 
     private void recyclePrimitiveDataEditors() {
         for(int row = 0; row < table.getRowCount(); row++) {
-            DefaultPrimitiveDataEditor propertyEditor = (DefaultPrimitiveDataEditor) table.getWidget(row, PROPERTY_COLUMN);
-            DefaultPrimitiveDataEditor fillerEditor = (DefaultPrimitiveDataEditor) table.getWidget(row, FILLER_COLUMN);
+            PrimitiveDataEditorImpl propertyEditor = (PrimitiveDataEditorImpl) table.getWidget(row, PROPERTY_COLUMN);
+            PrimitiveDataEditorImpl fillerEditor = (PrimitiveDataEditorImpl) table.getWidget(row, FILLER_COLUMN);
             recycle(propertyEditor);
             recycle(fillerEditor);
         }
@@ -390,7 +389,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
 
 
-    private void recycle(DefaultPrimitiveDataEditor editor) {
+    private void recycle(PrimitiveDataEditorImpl editor) {
         if(pool.size() == MAX_POOL_SIZE) {
             return;
         }

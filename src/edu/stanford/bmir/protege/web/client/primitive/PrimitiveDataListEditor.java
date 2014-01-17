@@ -204,7 +204,7 @@ public class PrimitiveDataListEditor extends SimplePanel implements HasPlacehold
 
         PrimitiveDataEditor editor = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
 
-//        DefaultPrimitiveDataEditor editor = new DefaultPrimitiveDataEditor(projectId);
+//        PrimitiveDataEditorImpl editor = new PrimitiveDataEditorImpl(projectId);
         editor.setAllowedTypes(allowedTypes);
         editor.setFreshEntitiesHandler(freshEntitiesHandler);
         if(value.isPresent()) {
