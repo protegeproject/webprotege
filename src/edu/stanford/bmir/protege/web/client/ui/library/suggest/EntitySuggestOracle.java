@@ -2,8 +2,11 @@ package edu.stanford.bmir.protege.web.client.ui.library.suggest;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SuggestOracle;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.primitive.EntitySuggestOracleSuggestLimit;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
@@ -27,14 +30,10 @@ public class EntitySuggestOracle extends SuggestOracle {
 
     final Set<EntityType<?>> entityTypes = new HashSet<EntityType<?>>();
 
-    public EntitySuggestOracle(ProjectId projectId, int suggestLimit, EntityType<?> ... entityMatchTypes) {
+    @Inject
+    public EntitySuggestOracle(ProjectId projectId, @EntitySuggestOracleSuggestLimit int suggestLimit) {
         this.projectId = projectId;
         this.suggestLimit = suggestLimit;
-        entityTypes.addAll(Arrays.asList(entityMatchTypes));
-    }
-
-    public EntitySuggestOracle(ProjectId projectId) {
-        this(projectId, DEFAULT_SUGGEST_LIMIT);
     }
 
     public void setEntityTypes(Set<EntityType<?>> entityTypes) {

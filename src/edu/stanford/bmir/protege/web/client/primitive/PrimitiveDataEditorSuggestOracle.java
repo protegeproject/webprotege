@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.SuggestOracle;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestOracle;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -28,6 +29,7 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
 
     private PrimitiveDataEditorSuggestOracleMode mode = PrimitiveDataEditorSuggestOracleMode.DO_NOT_SUGGEST_CREATE_NEW_ENTITIES;
 
+    @Inject
     public PrimitiveDataEditorSuggestOracle(EntitySuggestOracle delegate) {
         this.delegate = delegate;
         allowedPrimitiveTypes.add(EntityType.CLASS);
