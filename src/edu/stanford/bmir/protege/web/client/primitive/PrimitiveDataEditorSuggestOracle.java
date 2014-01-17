@@ -27,11 +27,12 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
 
     private Set<EntityType<?>> allowedPrimitiveTypes = new LinkedHashSet<EntityType<?>>();
 
-    private PrimitiveDataEditorSuggestOracleMode mode = PrimitiveDataEditorSuggestOracleMode.DO_NOT_SUGGEST_CREATE_NEW_ENTITIES;
+    private PrimitiveDataEditorSuggestOracleMode mode;
 
     @Inject
-    public PrimitiveDataEditorSuggestOracle(EntitySuggestOracle delegate) {
+    public PrimitiveDataEditorSuggestOracle(EntitySuggestOracle delegate, @EntitySuggestOracleSuggestMode PrimitiveDataEditorSuggestOracleMode mode) {
         this.delegate = delegate;
+        this.mode = mode;
         allowedPrimitiveTypes.add(EntityType.CLASS);
         allowedPrimitiveTypes.add(EntityType.NAMED_INDIVIDUAL);
 
