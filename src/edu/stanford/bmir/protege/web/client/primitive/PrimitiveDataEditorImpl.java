@@ -14,9 +14,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
-import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedEvent;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
@@ -30,7 +27,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
@@ -43,7 +39,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/12/2012
  * <p>
- * An editor for {@link OWLPrimitiveData} objects.  The editor supports auto-completion
+ * An view for {@link OWLPrimitiveData} objects.  The view supports auto-completion
  * and has an option to allow the creation of new primitives.
  * </p>
  */
@@ -59,18 +55,15 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private final LanguageEditor languageEditor;
 
-    private final Set<PrimitiveType> allowedTypes = new LinkedHashSet<PrimitiveType>();
-
     private final PrimitiveDataParser primitiveDataParser;
 
     private FreshEntitiesHandler freshEntitiesHandler;
 
     private Optional<OWLPrimitiveData> currentData = Optional.absent();
 
-
+    private final Set<PrimitiveType> allowedTypes = new LinkedHashSet<PrimitiveType>();
 
     private String lastIconInsetStyleName = "empty-icon-inset";
-
 
 
     private boolean dirty = false;
@@ -79,7 +72,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private FlowPanel baseWidget;
 
-    private PrimitiveDataEditorView editor;
+    private PrimitiveDataEditorView view;
 
     @Inject
     public PrimitiveDataEditorImpl(PrimitiveDataEditorView baseBox, ProjectId projectId, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
@@ -89,24 +82,24 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         this.baseWidget = new FlowPanel();
         this.primitiveDataParser = parser;
         entitySuggestOracle = suggestOracle;
-        editor = baseBox;
-        editor.asWidget().addStyleName("web-protege-form-layout-editor-input");
-        editor.setMode(PrimitiveDataEditorView.Mode.SINGLE_LINE);
-        editor.setSuggestOracle(entitySuggestOracle);
-        editor.addSelectionHandler(new SelectionHandler<EntitySuggestion>() {
+        view = baseBox;
+        view.asWidget().addStyleName("web-protege-form-layout-editor-input");
+        view.setMode(PrimitiveDataEditorView.Mode.SINGLE_LINE);
+        view.setSuggestOracle(entitySuggestOracle);
+        view.addSelectionHandler(new SelectionHandler<EntitySuggestion>() {
             @Override
             public void onSelection(SelectionEvent<EntitySuggestion> event) {
                 EntitySuggestion suggestion = event.getSelectedItem();
                 setCurrentData(Optional.<OWLPrimitiveData>of(suggestion.getEntity()), EventStrategy.FIRE_EVENTS);
             }
         });
-        editor.addValueChangeHandler(new ValueChangeHandler<String>() {
+        view.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
                 handleEdit();
             }
         });
-        baseWidget.add(editor);
+        baseWidget.add(view);
         initWidget(baseWidget);
         languageEditor.addValueChangeHandler(new ValueChangeHandler<Optional<String>>() {
             @Override
@@ -115,8 +108,8 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             }
         });
         errorLabel.addStyleName(ERROR_STYLE_NAME);
-        editor.setAnchorVisible(false);
-        editor.addAnchorClickedHandler(new AnchorClickedHandler() {
+        view.setAnchorVisible(false);
+        view.addAnchorClickedHandler(new AnchorClickedHandler() {
             @Override
             public void handleAnchorClicked(AnchorClickedEvent event) {
                 handleAnchorClick();
@@ -138,7 +131,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     @Override
     public void setMode(PrimitiveDataEditorView.Mode mode) {
         checkNotNull(mode);
-        editor.setMode(mode);
+        view.setMode(mode);
     }
 
     @Override
@@ -168,7 +161,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        editor.setEnabled(enabled);
+        view.setEnabled(enabled);
         languageEditor.setEnabled(enabled);
     }
 
@@ -179,12 +172,12 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     @Override
     public String getPlaceholder() {
-        return editor.getPlaceholder();
+        return view.getPlaceholder();
     }
 
     @Override
     public void setPlaceholder(String placeholder) {
-        editor.setPlaceholder(placeholder);
+        view.setPlaceholder(placeholder);
     }
 
     /**
@@ -205,7 +198,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
      */
     @Override
     public HandlerRegistration addFocusHandler(FocusHandler handler) {
-        return editor.addFocusHandler(handler);
+        return view.addFocusHandler(handler);
     }
 
     /**
@@ -216,7 +209,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
      */
     @Override
     public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
-        return editor.addKeyUpHandler(handler);
+        return view.addKeyUpHandler(handler);
     }
 
     @Override
@@ -348,7 +341,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     @Override
     public void clearValue() {
-        editor.setText("");
+        view.setText("");
         languageEditor.setValue("");
         setCurrentData(Optional.<OWLPrimitiveData>absent(), EventStrategy.DO_NOT_FIRE_EVENTS);
     }
@@ -483,7 +476,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     private String getTrimmedText() {
-        return editor.getText().trim();
+        return view.getText().trim();
     }
 
     private boolean isCurrentDataRendered() {
@@ -517,10 +510,10 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         setIconInsetStyleNameForEntityData();
         validateCurrentEntityTypeAgainstAllowedTypes();
         if (isExternalIRI()) {
-            editor.setAnchorTitle("Open link in new window");
-            editor.setAnchorVisible(true);
+            view.setAnchorTitle("Open link in new window");
+            view.setAnchorVisible(true);
         } else {
-            editor.setAnchorVisible(false);
+            view.setAnchorVisible(false);
         }
     }
 
@@ -544,13 +537,13 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private void setIconInsetStyleName(Optional<String> name) {
         if (lastIconInsetStyleName != null) {
-//            editor.getSuggestBox().removeStyleName(lastIconInsetStyleName);
-            editor.setPrimitiveDataStyleName(lastIconInsetStyleName);
+//            view.getSuggestBox().removeStyleName(lastIconInsetStyleName);
+            view.setPrimitiveDataStyleName(lastIconInsetStyleName);
         }
         if (name.isPresent()) {
             lastIconInsetStyleName = name.get();
-//            editor.getSuggestBox().addStyleName(name.get());
-            editor.setPrimitiveDataStyleName(name.get());
+//            view.getSuggestBox().addStyleName(name.get());
+            view.setPrimitiveDataStyleName(name.get());
         }
         else {
             lastIconInsetStyleName = null;
@@ -561,7 +554,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     private void setIconInsetStyleNameForEntityData() {
         if (!currentData.isPresent()) {
             clearIconInset();
-            editor.setTitle("");
+            view.setTitle("");
             hideErrorLabel();
             return;
         }
@@ -569,7 +562,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         String styleName = entityData.accept(new OWLPrimitiveDataVisitorAdapter<String, RuntimeException>() {
             @Override
             protected String getDefaultReturnValue() {
-                editor.setTitle("");
+                view.setTitle("");
                 return "empty-icon-inset";
             }
 
@@ -622,7 +615,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                     sb.append(iri);
                     sb.append(">");
                 }
-                editor.setTitle(sb.toString());
+                view.setTitle(sb.toString());
             }
 
             @Override
@@ -650,7 +643,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                     tooltip.append(" is a ");
                 }
                 tooltip.append(datatypeName);
-                editor.setTitle(tooltip.toString());
+                view.setTitle(tooltip.toString());
                 return styleName;
             }
 
@@ -748,7 +741,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         currentData = nextCurrentData;
         if (nextCurrentData.isPresent()) {
             OWLPrimitiveData data = nextCurrentData.get();
-            editor.setText(data.getBrowserText());
+            view.setText(data.getBrowserText());
             if (data instanceof OWLLiteralData) {
                 String lang = ((OWLLiteralData) data).getLiteral().getLang();
                 languageEditor.setValue(lang);
