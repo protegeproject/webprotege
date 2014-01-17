@@ -19,6 +19,7 @@ public class PrimitiveDataEditorClientModule extends AbstractGinModule {
     protected void configure() {
         install(new ApplicationClientModule());
         bind(PrimitiveDataEditor.class).to(DefaultPrimitiveDataEditor.class);
+        bind(PrimitiveDataEditorView.class).to(PrimitiveDataEditorViewImpl.class);
         bind(LanguageEditor.class).to(DefaultLanguageEditor.class);
         bind(ProjectId.class).toProvider(ActiveProjectIdProvider.class);
         bind(PrimitiveDataParser.class).to(DefaultPrimitiveDataParser.class);

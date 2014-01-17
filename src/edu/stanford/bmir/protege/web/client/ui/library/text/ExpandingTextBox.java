@@ -6,6 +6,8 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
+import edu.stanford.bmir.protege.web.client.ui.anchor.HasAnchor;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasTextRendering;
 
@@ -19,7 +21,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.common.HasTextRendering;
  *     using a GWT {@link SuggestBox}.
  * </p>
  */
-public class ExpandingTextBox extends SimplePanel implements Focusable, HasText, HasEnabled, HasValue<String>, HasTextRendering, HasPlaceholder, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers {
+public class ExpandingTextBox extends SimplePanel implements Focusable, HasText, HasEnabled, HasValue<String>, HasTextRendering, HasPlaceholder, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers, HasAnchor {
 
     private final ExpandingTextBoxImpl impl;
 
@@ -36,8 +38,9 @@ public class ExpandingTextBox extends SimplePanel implements Focusable, HasText,
         impl.setAnchorVisible(visible);
     }
 
-    public HandlerRegistration addAnchorClickHandler(ClickHandler clickHandler) {
-        return impl.addAnchorClickHandler(clickHandler);
+    @Override
+    public HandlerRegistration addAnchorClickedHandler(AnchorClickedHandler handler) {
+        return impl.addAnchorClickedHandler(handler);
     }
 
     public void setAnchorTitle(String title) {

@@ -314,7 +314,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
 
         if (grammar.getFillerTypes().contains(PrimitiveType.LITERAL)) {
-            fillerEditor.setMode(ExpandingTextBoxMode.MULTI_LINE);
+            fillerEditor.setMode(PrimitiveDataEditorView.Mode.MULTI_LINE);
         }
 
         fillerEditor.asWidget().addStyleName("web-protege-form-layout-editor-input");
@@ -634,7 +634,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                     return null;
                 }
             });
-            fillerEditor.setMode(propertyData.get() instanceof OWLAnnotationPropertyData ? ExpandingTextBoxMode.MULTI_LINE : ExpandingTextBoxMode.SINGLE_LINE);
+            fillerEditor.setMode(propertyData.get() instanceof OWLAnnotationPropertyData ? PrimitiveDataEditorView.Mode.MULTI_LINE : PrimitiveDataEditorView.Mode.SINGLE_LINE);
         }
         else {
             if(!canInferPropertyType()) {
