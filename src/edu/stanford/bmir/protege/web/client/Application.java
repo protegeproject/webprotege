@@ -79,7 +79,7 @@ public class Application {
                 // Consider logging and posting to server.
                 GWT.log("Uncaught exception", e);
                 if (e instanceof SerializationException) {
-                    MessageBox.alert("WebProtege has been upgraded.  Please clear your browser caches and refresh your brow");
+                    MessageBox.alert("WebProtege has been upgraded.  Please clear your browser caches and refresh your browser.");
                 }
             }
         });

@@ -7,6 +7,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -20,11 +21,13 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
  */
 public class DefaultLanguageEditor extends Composite implements LanguageEditor, HasPlaceholder {
 
-    private SuggestBox suggestBox = new SuggestBox();
+    private final SuggestBox suggestBox;
 
     private boolean dirty = false;
 
-    public DefaultLanguageEditor() {
+    @Inject
+    public DefaultLanguageEditor(SuggestBox baseBox) {
+        suggestBox = baseBox;
         suggestBox.setWidth("30px");
         suggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override

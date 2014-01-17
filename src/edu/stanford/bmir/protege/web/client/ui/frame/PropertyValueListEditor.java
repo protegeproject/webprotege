@@ -82,7 +82,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
     private boolean settingValue = false;
 
-
     public PropertyValueListEditor(ProjectId projectId, PropertyValueGridGrammar grammar) {
         this.grammar = grammar;
         addStyleName("web-protege-laf");
@@ -243,7 +242,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         final int row = table.getRowCount();
 
 
-        final DefaultPrimitiveDataEditor propertyEditor = createPrimitiveEditor();
+        final PrimitiveDataEditor propertyEditor = createPrimitiveEditor();
         table.setWidget(row, PROPERTY_COLUMN, propertyEditor);
         propertyEditor.setFreshEntitiesHandler(new MutableFreshEntitiesHandler() {
             /**
@@ -271,13 +270,13 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             propertyEditor.setSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
         }
 
-        propertyEditor.addStyleName("web-protege-property-grid-editor");
-        propertyEditor.addStyleName("web-protege-form-layout-editor-input");
+        propertyEditor.asWidget().addStyleName("web-protege-property-grid-editor");
+        propertyEditor.asWidget().addStyleName("web-protege-form-layout-editor-input");
 
         propertyEditor.setAllowedTypes(grammar.getPropertyTypes());
 
 
-        final DefaultPrimitiveDataEditor fillerEditor = createPrimitiveEditor();
+        final PrimitiveDataEditor fillerEditor = createPrimitiveEditor();
         fillerEditor.setAllowedTypes(grammar.getFillerTypes());
         fillerEditor.setSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
 
@@ -318,7 +317,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             fillerEditor.setMode(ExpandingTextBoxMode.MULTI_LINE);
         }
 
-        fillerEditor.addStyleName("web-protege-form-layout-editor-input");
+        fillerEditor.asWidget().addStyleName("web-protege-form-layout-editor-input");
         fillerEditor.setPlaceholder(FILLER_EDITOR_PLACE_HOLDER_TEXT);
 
         addDeleteButton(row, propertyData.isPresent());
@@ -327,7 +326,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         HandlerRegistration propHandlerReg = propertyEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
-                int row = getRowForWidget(PROPERTY_COLUMN, propertyEditor);
+                int row = getRowForWidget(PROPERTY_COLUMN, propertyEditor.asWidget());
                 if (row != -1) {
                     handlePropertyChanged(row, propertyEditor, fillerEditor);
                 }
@@ -339,7 +338,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         HandlerRegistration fillerHandlerReg = fillerEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
-                int row = getRowForWidget(FILLER_COLUMN, fillerEditor);
+                int row = getRowForWidget(FILLER_COLUMN, fillerEditor.asWidget());
                 if (row != -1) {
                     handleFillerChanged(row, propertyEditor, fillerEditor);
                 }
@@ -416,13 +415,13 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         deleteButtonPool.add(deleteButton);
     }
 
-    private DefaultPrimitiveDataEditor createPrimitiveEditor() {
-        DefaultPrimitiveDataEditor editor;
+    private PrimitiveDataEditor createPrimitiveEditor() {
+        PrimitiveDataEditor editor;
         if(!pool.isEmpty()) {
             editor = pool.remove(0);
         }
         else {
-            editor = new DefaultPrimitiveDataEditor(projectId);
+            editor = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
             editor.setFreshEntitiesHandler(freshEntitiesHandler);
         }
         editor.setEnabled(enabled);

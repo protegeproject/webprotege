@@ -12,6 +12,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
@@ -49,8 +50,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDataEditor, HasEnabled {
 
-    public static final int SUGGEST_LIMIT = 20;
-
     public static final String ERROR_STYLE_NAME = "web-protege-error-label";
 
     private final ProjectId projectId;
@@ -65,13 +64,17 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private final Set<PrimitiveType> allowedTypes = new LinkedHashSet<PrimitiveType>();
 
+    private final PrimitiveDataParser primitiveDataParser;
+
+    private FreshEntitiesHandler freshEntitiesHandler;
+
     private Optional<OWLPrimitiveData> currentData = Optional.absent();
 
-    private FreshEntitiesHandler freshEntitiesHandler = new NullFreshEntitiesHandler();
+
 
     private String lastIconInsetStyleName = "empty-icon-inset";
 
-    private PrimitiveDataParser primitiveDataParser = new DefaultPrimitiveDataParser(new EntityDataLookupHandlerImpl());
+
 
     private boolean dirty = false;
 
@@ -79,12 +82,15 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private FlowPanel baseWidget;
 
-    public DefaultPrimitiveDataEditor(ProjectId projectId) {
+    @Inject
+    public DefaultPrimitiveDataEditor(ExpandingTextBox baseBox, ProjectId projectId, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
         this.projectId = projectId;
-        this.languageEditor = new DefaultLanguageEditor();
+        this.languageEditor = languageEditor;
+        this.freshEntitiesHandler = freshEntitiesHandler;
         this.baseWidget = new FlowPanel();
-        entitySuggestOracle = new PrimitiveDataEditorSuggestOracle(new EntitySuggestOracle(projectId, SUGGEST_LIMIT, EntityType.OBJECT_PROPERTY));
-        editor = new ExpandingTextBox();
+        this.primitiveDataParser = parser;
+        entitySuggestOracle = suggestOracle;
+        editor = baseBox;
         editor.addStyleName("web-protege-form-layout-editor-input");
         editor.setMode(ExpandingTextBoxMode.SINGLE_LINE);
         editor.setOracle(entitySuggestOracle);
