@@ -17,11 +17,10 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
+import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedEvent;
+import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
-import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestOracle;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxMode;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -54,7 +53,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private final ProjectId projectId;
 
-    private final ExpandingTextBox editor;
+//    private final ExpandingTextBox editor;
 
     private final FlowPanel errorLabel = new FlowPanel();
 
@@ -82,8 +81,10 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private FlowPanel baseWidget;
 
+    private PrimitiveDataEditorView editor;
+
     @Inject
-    public DefaultPrimitiveDataEditor(ExpandingTextBox baseBox, ProjectId projectId, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
+    public DefaultPrimitiveDataEditor(PrimitiveDataEditorView baseBox, ProjectId projectId, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
         this.projectId = projectId;
         this.languageEditor = languageEditor;
         this.freshEntitiesHandler = freshEntitiesHandler;
@@ -91,13 +92,13 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         this.primitiveDataParser = parser;
         entitySuggestOracle = suggestOracle;
         editor = baseBox;
-        editor.addStyleName("web-protege-form-layout-editor-input");
-        editor.setMode(ExpandingTextBoxMode.SINGLE_LINE);
-        editor.setOracle(entitySuggestOracle);
-        editor.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+        editor.asWidget().addStyleName("web-protege-form-layout-editor-input");
+        editor.setMode(PrimitiveDataEditorView.Mode.SINGLE_LINE);
+        editor.setSuggestOracle(entitySuggestOracle);
+        editor.addSelectionHandler(new SelectionHandler<EntitySuggestion>() {
             @Override
-            public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
-                EntitySuggestion suggestion = (EntitySuggestion) event.getSelectedItem();
+            public void onSelection(SelectionEvent<EntitySuggestion> event) {
+                EntitySuggestion suggestion = event.getSelectedItem();
                 setCurrentData(Optional.<OWLPrimitiveData>of(suggestion.getEntity()), EventStrategy.FIRE_EVENTS);
             }
         });
@@ -117,10 +118,10 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         });
         errorLabel.addStyleName(ERROR_STYLE_NAME);
         editor.setAnchorVisible(false);
-        editor.addAnchorClickHandler(new ClickHandler() {
+        editor.addAnchorClickedHandler(new AnchorClickedHandler() {
             @Override
-            public void onClick(ClickEvent event) {
-                handleAnchorClick(event);
+            public void handleAnchorClicked(AnchorClickedEvent event) {
+                handleAnchorClick();
             }
         });
     }
@@ -137,7 +138,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
     }
 
     @Override
-    public void setMode(ExpandingTextBoxMode mode) {
+    public void setMode(PrimitiveDataEditorView.Mode mode) {
         checkNotNull(mode);
         editor.setMode(mode);
     }
@@ -349,7 +350,7 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     @Override
     public void clearValue() {
-        editor.setValue("");
+        editor.setText("");
         languageEditor.setValue("");
         setCurrentData(Optional.<OWLPrimitiveData>absent(), EventStrategy.DO_NOT_FIRE_EVENTS);
     }
@@ -377,9 +378,9 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         this.allowedTypes.clear();
         this.allowedTypes.addAll(primitiveTypes);
         if (!allowedTypes.contains(PrimitiveType.LITERAL)) {
-            setMode(ExpandingTextBoxMode.SINGLE_LINE);
+            setMode(PrimitiveDataEditorView.Mode.SINGLE_LINE);
         } else {
-            setMode(ExpandingTextBoxMode.MULTI_LINE);
+            setMode(PrimitiveDataEditorView.Mode.MULTI_LINE);
         }
         updateOracle();
         if (!isCurrentEntityTypeAllowed()) {
@@ -397,53 +398,53 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
         dirty = true;
     }
 
-    private void handleAnchorClick(ClickEvent event) {
+    private void handleAnchorClick() {
         if (!currentData.isPresent()) {
             return;
         }
         EntityData entityData = currentData.get().accept(new OWLPrimitiveDataVisitorAdapter<EntityData, RuntimeException>() {
-            @Override
-            public EntityData visit(OWLClassData data) throws RuntimeException {
-                final EntityData entityData = new EntityData(data.getEntity().getIRI().toString(), data.getBrowserText());
-                entityData.setValueType(ValueType.Cls);
-                return entityData;
-            }
-
-            @Override
-            public EntityData visit(OWLObjectPropertyData data) throws RuntimeException {
-                PropertyEntityData entityData = new PropertyEntityData(data.getEntity().getIRI().toString(), data.getBrowserText(), Collections.<EntityData>emptySet());
-                entityData.setValueType(ValueType.Property);
-                entityData.setPropertyType(PropertyType.OBJECT);
-                return entityData;
-            }
-
-            @Override
-            public EntityData visit(OWLDataPropertyData data) throws RuntimeException {
-                PropertyEntityData entityData = new PropertyEntityData(data.getEntity().getIRI().toString(), data.getBrowserText(), Collections.<EntityData>emptySet());
-                entityData.setValueType(ValueType.Property);
-                entityData.setPropertyType(PropertyType.DATATYPE);
-                return entityData;
-            }
-
-            @Override
-            public EntityData visit(OWLAnnotationPropertyData data) throws RuntimeException {
-                PropertyEntityData entityData = new PropertyEntityData(data.getEntity().getIRI().toString(), data.getBrowserText(), Collections.<EntityData>emptySet());
-                entityData.setValueType(ValueType.Property);
-                entityData.setPropertyType(PropertyType.ANNOTATION);
-                return entityData;
-            }
-
-            @Override
-            public EntityData visit(OWLNamedIndividualData data) throws RuntimeException {
-                final EntityData entityData = new EntityData(data.getEntity().getIRI().toString(), data.getBrowserText());
-                entityData.setValueType(ValueType.Instance);
-                return entityData;
-            }
-
-            @Override
-            public EntityData visit(OWLDatatypeData data) throws RuntimeException {
-                return null;
-            }
+//            @Override
+//            public EntityData visit(OWLClassData data) throws RuntimeException {
+//                final EntityData entityData = new EntityData(data.getEntity().getIRI().toString(), data.getBrowserText());
+//                entityData.setValueType(ValueType.Cls);
+//                return entityData;
+//            }
+//
+//            @Override
+//            public EntityData visit(OWLObjectPropertyData data) throws RuntimeException {
+//                PropertyEntityData entityData = new PropertyEntityData(data.getEntity().getIRI().toString(), data.getBrowserText(), Collections.<EntityData>emptySet());
+//                entityData.setValueType(ValueType.Property);
+//                entityData.setPropertyType(PropertyType.OBJECT);
+//                return entityData;
+//            }
+//
+//            @Override
+//            public EntityData visit(OWLDataPropertyData data) throws RuntimeException {
+//                PropertyEntityData entityData = new PropertyEntityData(data.getEntity().getIRI().toString(), data.getBrowserText(), Collections.<EntityData>emptySet());
+//                entityData.setValueType(ValueType.Property);
+//                entityData.setPropertyType(PropertyType.DATATYPE);
+//                return entityData;
+//            }
+//
+//            @Override
+//            public EntityData visit(OWLAnnotationPropertyData data) throws RuntimeException {
+//                PropertyEntityData entityData = new PropertyEntityData(data.getEntity().getIRI().toString(), data.getBrowserText(), Collections.<EntityData>emptySet());
+//                entityData.setValueType(ValueType.Property);
+//                entityData.setPropertyType(PropertyType.ANNOTATION);
+//                return entityData;
+//            }
+//
+//            @Override
+//            public EntityData visit(OWLNamedIndividualData data) throws RuntimeException {
+//                final EntityData entityData = new EntityData(data.getEntity().getIRI().toString(), data.getBrowserText());
+//                entityData.setValueType(ValueType.Instance);
+//                return entityData;
+//            }
+//
+//            @Override
+//            public EntityData visit(OWLDatatypeData data) throws RuntimeException {
+//                return null;
+//            }
 
             @Override
             public EntityData visit(IRIData data) throws RuntimeException {
@@ -545,11 +546,13 @@ public class DefaultPrimitiveDataEditor extends Composite implements PrimitiveDa
 
     private void setIconInsetStyleName(Optional<String> name) {
         if (lastIconInsetStyleName != null) {
-            editor.getSuggestBox().removeStyleName(lastIconInsetStyleName);
+//            editor.getSuggestBox().removeStyleName(lastIconInsetStyleName);
+            editor.setPrimitiveDataStyleName(lastIconInsetStyleName);
         }
         if (name.isPresent()) {
             lastIconInsetStyleName = name.get();
-            editor.getSuggestBox().addStyleName(name.get());
+//            editor.getSuggestBox().addStyleName(name.get());
+            editor.setPrimitiveDataStyleName(name.get());
         }
         else {
             lastIconInsetStyleName = null;

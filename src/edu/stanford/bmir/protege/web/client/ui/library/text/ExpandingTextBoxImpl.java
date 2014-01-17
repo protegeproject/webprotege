@@ -9,6 +9,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedEvent;
+import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
+import edu.stanford.bmir.protege.web.client.ui.anchor.HasAnchor;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.AcceptKeyHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasAcceptKeyHandler;
@@ -21,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 04/12/2012
  */
-public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasAcceptKeyHandler, HasText, HasEnabled, HasPlaceholder, HasValueChangeHandlers<String>, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers {
+public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasAcceptKeyHandler, HasText, HasEnabled, HasPlaceholder, HasValueChangeHandlers<String>, HasSelectionHandlers<SuggestOracle.Suggestion>, HasKeyUpHandlers, HasFocusHandlers, HasAnchor {
 
     /**
      * For internal use.  The name of the element which has inner text set to size the suggest box to fit its content.
@@ -114,20 +117,34 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
         this.acceptKeyHandler = checkNotNull(acceptKeyHandler);
     }
 
+    @Override
     public void setAnchorVisible(boolean visible) {
         anchor.setVisible(visible);
     }
 
+    @Override
     public void setAnchorTitle(String title) {
         checkNotNull(title);
         anchor.setTitle(title);
     }
 
-    public HandlerRegistration addAnchorClickHandler(ClickHandler clickHandler) {
-        checkNotNull(clickHandler);
-        return anchor.addClickHandler(clickHandler);
+    @Override
+    public HandlerRegistration addAnchorClickedHandler(AnchorClickedHandler handler) {
+        final HandlerRegistration anchorClickReg = addHandler(handler, AnchorClickedEvent.TYPE);
+        final HandlerRegistration clickReg = anchor.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                fireEvent(new AnchorClickedEvent(ExpandingTextBoxImpl.this));
+            }
+        });
+        return new HandlerRegistration() {
+            @Override
+            public void removeHandler() {
+                clickReg.removeHandler();
+                anchorClickReg.removeHandler();
+            }
+        };
     }
-
 
     /**
      * Returns true if the widget is enabled, false if not.
