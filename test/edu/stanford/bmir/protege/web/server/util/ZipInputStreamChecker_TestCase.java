@@ -1,7 +1,5 @@
-package edu.stanford.bmir.protege.web.server.project;
+package edu.stanford.bmir.protege.web.server.util;
 
-import edu.stanford.bmir.protege.web.server.owlapi.ZipInputStreamChecker;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

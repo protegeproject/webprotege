@@ -1,6 +1,8 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.util;
 
 import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
@@ -14,6 +16,15 @@ public class ZipInputStreamChecker {
     public static final char ZIP_FILE_MAGIC_NUMBER_BYTE_0 = 'P';
 
     public static final char ZIP_FILE_MAGIC_NUMBER_BYTE_1 = 'K';
+
+    public boolean isZipFile(File file) throws IOException {
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
+        try {
+            return isZipInputStream(bufferedInputStream);
+        } finally {
+            bufferedInputStream.close();
+        }
+    }
 
     public boolean isZipInputStream(BufferedInputStream in) throws IOException {
         in.mark(2);
