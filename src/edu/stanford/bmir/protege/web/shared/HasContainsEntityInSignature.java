@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared;
 
-import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,5 +10,5 @@ import org.semanticweb.owlapi.model.IRI;
  */
 public interface HasContainsEntityInSignature {
 
-    boolean containsEntityInSignature(IRI entityIRI);
+    boolean containsEntityInSignature(OWLEntity entity);
 }

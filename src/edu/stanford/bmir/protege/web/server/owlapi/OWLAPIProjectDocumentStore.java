@@ -223,42 +223,41 @@ public class OWLAPIProjectDocumentStore {
     }
 
 
-    public synchronized OWLAPIProjectAttributes getProjectAttributes() throws IOException {
-        ReadWriteLock projectAttributesCacheLock = getProjectAttributesCacheLock(projectId);
-        try {
-            projectAttributesCacheLock.readLock().lock();
-            File projectAttributesFile = getProjectAttributesFile();
-            if (projectAttributesFile.exists()) {
-                DataInputStream dataInput = new DataInputStream(new BufferedInputStream(new FileInputStream(projectAttributesFile)));
-                OWLAPIProjectAttributes attributes = new OWLAPIProjectAttributes(dataInput);
-                dataInput.close();
-                return attributes;
-            }
-            else {
-                OWLAPIProjectAttributes freshProjectAttributes = new OWLAPIProjectAttributes();
-                saveProjectAttributes(freshProjectAttributes);
-                return freshProjectAttributes;
-            }
-        }
-        finally {
-            projectAttributesCacheLock.readLock().unlock();
-        }
-    }
+//    public synchronized OWLAPIProjectAttributes getProjectAttributes() throws IOException {
+//        ReadWriteLock projectAttributesCacheLock = getProjectAttributesCacheLock(projectId);
+//        try {
+//            projectAttributesCacheLock.readLock().lock();
+//            File projectAttributesFile = getProjectAttributesFile();
+//            if (projectAttributesFile.exists()) {
+//                DataInputStream dataInput = new DataInputStream(new BufferedInputStream(new FileInputStream(projectAttributesFile)));
+//                OWLAPIProjectAttributes attributes = new OWLAPIProjectAttributes(dataInput);
+//                dataInput.close();
+//                return attributes;
+//            }
+//            else {
+//                OWLAPIProjectAttributes freshProjectAttributes = new OWLAPIProjectAttributes();
+//                return freshProjectAttributes;
+//            }
+//        }
+//        finally {
+//            projectAttributesCacheLock.readLock().unlock();
+//        }
+//    }
 
-    public void saveProjectAttributes(OWLAPIProjectAttributes projectAttributes) throws IOException {
-        ReadWriteLock projectAttributesCacheLock = getProjectAttributesCacheLock(projectId);
-        try {
-            projectAttributesCacheLock.writeLock().lock();
-            File metadataFile = getProjectAttributesFile();
-            metadataFile.getParentFile().mkdirs();
-            DataOutputStream dataOutput = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(metadataFile)));
-            projectAttributes.write(dataOutput);
-            dataOutput.close();
-        }
-        finally {
-            projectAttributesCacheLock.writeLock().unlock();
-        }
-    }
+//    public void saveProjectAttributes(OWLAPIProjectAttributes projectAttributes) throws IOException {
+//        ReadWriteLock projectAttributesCacheLock = getProjectAttributesCacheLock(projectId);
+//        try {
+//            projectAttributesCacheLock.writeLock().lock();
+//            File metadataFile = getProjectAttributesFile();
+//            metadataFile.getParentFile().mkdirs();
+//            DataOutputStream dataOutput = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(metadataFile)));
+//            projectAttributes.write(dataOutput);
+//            dataOutput.close();
+//        }
+//        finally {
+//            projectAttributesCacheLock.writeLock().unlock();
+//        }
+//    }
 
     public OWLOntology loadRootOntologyIntoManager(OWLOntologyManager manager) throws OWLOntologyCreationException {
         try {
@@ -501,16 +500,13 @@ public class OWLAPIProjectDocumentStore {
 
 
 
-    private synchronized OWLAPIProjectAttributes createEmptyProject(NewProjectSettings newProjectSettings) throws IOException {
+    private synchronized void createEmptyProject(NewProjectSettings newProjectSettings) throws IOException {
         try {
             IRI ontologyIRI = createUniqueOntologyIRI();
             OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
             OWLOntology ontology = rootOntologyManager.createOntology(ontologyIRI);
             rootOntologyManager.setOntologyFormat(ontology, new BinaryOWLOntologyDocumentFormat());
-            OWLAPIProjectAttributes projectAttributes = createProjectAttributes(newProjectSettings, ontology);
             saveNewProjectOntologyAndCreateNotesOntologyDocument(rootOntologyManager, ontology);
-            saveProjectAttributes(projectAttributes);
-            return projectAttributes;
         }
         catch (OWLOntologyCreationException e) {
             throw new RuntimeException(e);
@@ -520,7 +516,7 @@ public class OWLAPIProjectDocumentStore {
         }
     }
 
-    private synchronized OWLAPIProjectAttributes createProjectFromSources(NewProjectSettings newProjectSettings) throws IOException {
+    private synchronized void createProjectFromSources(NewProjectSettings newProjectSettings) throws IOException {
         try {
             File uploadsDirectory = FileUploadConstants.UPLOADS_DIRECTORY;
 
@@ -533,12 +529,10 @@ public class OWLAPIProjectDocumentStore {
                 OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
                 OWLOntology ontology = rootOntologyManager.loadOntologyFromOntologyDocument(streamDocumentSource, loaderConfig);
                 inputStream.close();
-                OWLAPIProjectAttributes projectAttributes = createProjectAttributes(newProjectSettings, ontology);
+//                OWLAPIProjectAttributes projectAttributes = createProjectAttributes(newProjectSettings, ontology);
                 rootOntologyManager.setOntologyFormat(ontology, new BinaryOWLOntologyDocumentFormat());
                 saveNewProjectOntologyAndCreateNotesOntologyDocument(rootOntologyManager, ontology);
-                saveProjectAttributes(projectAttributes);
                 deleteSourceFile(uploadedFile);
-                return projectAttributes;
             }
             else {
                 throw new FileNotFoundException(uploadedFile.getAbsolutePath());
@@ -557,19 +551,6 @@ public class OWLAPIProjectDocumentStore {
 
     private void deleteSourceFile(File sourceFile) {
         sourceFile.delete();
-    }
-
-    private OWLAPIProjectAttributes createProjectAttributes(NewProjectSettings newProjectSettings, OWLOntology ontology) {
-        OWLAPIProjectAttributes projectAttributes;
-        if (OWLAPIProjectType.getOBOProjectType().getProjectTypeName().equals(newProjectSettings.getProjectType().getName())) {
-            OWLAPIProjectConfiguration configuration = new OWLAPIProjectConfiguration(new OBOEntityEditorKitFactory(), OWLAPIProjectType.getOBOProjectType());
-            projectAttributes = configuration.getProjectAttributes();
-        }
-        else {
-            OWLAPIProjectConfiguration configuration = new OWLAPIProjectConfiguration(new DefaultEntityEditorKitFactory(), OWLAPIProjectType.getDefaultProjectType());
-            projectAttributes = configuration.getProjectAttributes();
-        }
-        return projectAttributes;
     }
 
     private void saveNewProjectOntologyAndCreateNotesOntologyDocument(OWLOntologyManager rootOntologyManager, OWLOntology ontology) throws OWLOntologyStorageException {
