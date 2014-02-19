@@ -540,11 +540,6 @@ public class OWLAPIProjectDocumentStore {
                 RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
                 OWLOntology ontology = importer.importRawProjectSources(projectSources);
 
-//                InputStream inputStream = new BufferedInputStream(new FileInputStream(uploadedFile));
-//                StreamDocumentSource streamDocumentSource = new StreamDocumentSource(inputStream);
-//                OWLOntology ontology = rootOntologyManager.loadOntologyFromOntologyDocument(streamDocumentSource, loaderConfig);
-//                inputStream.close();
-//                OWLAPIProjectAttributes projectAttributes = createProjectAttributes(newProjectSettings, ontology);
                 for(OWLOntology ont : rootOntologyManager.getOntologies()) {
                     rootOntologyManager.setOntologyFormat(ont, new BinaryOWLOntologyDocumentFormat());
                 }
