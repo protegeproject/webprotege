@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.util.DefaultTempFileFactory;
+import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
@@ -14,6 +16,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.apache.commons.io.FileUtils;
 import org.semanticweb.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.binaryowl.BinaryOWLOntologyDocumentHandlerAdapter;
 import org.semanticweb.binaryowl.BinaryOWLOntologyDocumentSerializer;
@@ -25,7 +28,6 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.change.SetOntologyIDData;
 import org.semanticweb.owlapi.io.FileDocumentSource;
-import org.semanticweb.owlapi.io.StreamDocumentSource;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -522,15 +524,30 @@ public class OWLAPIProjectDocumentStore {
 
             DocumentId documentId = newProjectSettings.getSourceDocumentId();
             File uploadedFile = new File(uploadsDirectory, documentId.getDocumentId());
+            UploadedProjectSourcesExtractor extractor = new UploadedProjectSourcesExtractor(
+                    new ZipInputStreamChecker(),
+                    new ZipArchiveProjectSourcesExtractor(
+                            new DefaultTempFileFactory(),
+                            new DefaultRootOntologyDocumentMatcher()),
+                    new SingleDocumentProjectSourcesExtractor()
+            );
+
             if (uploadedFile.exists()) {
                 OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
-                InputStream inputStream = new BufferedInputStream(new FileInputStream(uploadedFile));
-                StreamDocumentSource streamDocumentSource = new StreamDocumentSource(inputStream);
-                OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
-                OWLOntology ontology = rootOntologyManager.loadOntologyFromOntologyDocument(streamDocumentSource, loaderConfig);
-                inputStream.close();
+                RawProjectSources projectSources = extractor.extractProjectSources(uploadedFile);
+                OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration()
+                        .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
+                RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
+                OWLOntology ontology = importer.importRawProjectSources(projectSources);
+
+//                InputStream inputStream = new BufferedInputStream(new FileInputStream(uploadedFile));
+//                StreamDocumentSource streamDocumentSource = new StreamDocumentSource(inputStream);
+//                OWLOntology ontology = rootOntologyManager.loadOntologyFromOntologyDocument(streamDocumentSource, loaderConfig);
+//                inputStream.close();
 //                OWLAPIProjectAttributes projectAttributes = createProjectAttributes(newProjectSettings, ontology);
-                rootOntologyManager.setOntologyFormat(ontology, new BinaryOWLOntologyDocumentFormat());
+                for(OWLOntology ont : rootOntologyManager.getOntologies()) {
+                    rootOntologyManager.setOntologyFormat(ont, new BinaryOWLOntologyDocumentFormat());
+                }
                 saveNewProjectOntologyAndCreateNotesOntologyDocument(rootOntologyManager, ontology);
                 deleteSourceFile(uploadedFile);
             }
@@ -550,13 +567,15 @@ public class OWLAPIProjectDocumentStore {
     }
 
     private void deleteSourceFile(File sourceFile) {
-        sourceFile.delete();
+        FileUtils.deleteQuietly(sourceFile);
     }
 
     private void saveNewProjectOntologyAndCreateNotesOntologyDocument(OWLOntologyManager rootOntologyManager, OWLOntology ontology) throws OWLOntologyStorageException {
         File binaryDocumentFile = getBinaryOntologyDocumentFile();
         binaryDocumentFile.getParentFile().mkdirs();
         rootOntologyManager.saveOntology(ontology, new BinaryOWLOntologyDocumentFormat(), IRI.create(binaryDocumentFile));
+        ImportsCacheManager cacheManager = new ImportsCacheManager(projectId);
+        cacheManager.cacheImports(ontology);
     }
 
     private static IRI createUniqueOntologyIRI() {
