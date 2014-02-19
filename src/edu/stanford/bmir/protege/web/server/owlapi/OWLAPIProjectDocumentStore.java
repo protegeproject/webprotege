@@ -492,16 +492,6 @@ public class OWLAPIProjectDocumentStore {
     }
 
 
-
-
-
-    private File getProjectAttributesFile() {
-        OWLAPIProjectFileStore projectFileStore = OWLAPIProjectFileStore.getProjectFileStore(projectId);
-        return new File(projectFileStore.getProjectDirectory(), PROJECT_ATTRIBUTES_FILE_NAME);
-    }
-
-
-
     private synchronized void createEmptyProject(NewProjectSettings newProjectSettings) throws IOException {
         try {
             IRI ontologyIRI = createUniqueOntologyIRI();
