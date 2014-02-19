@@ -20,7 +20,7 @@ public class EntityShortForm implements Serializable, IsSerializable {
     private EntityShortForm() {
     }
 
-    private EntityShortForm(String shortForm) {
+    public EntityShortForm(String shortForm) {
         this.shortForm = checkNotNull(shortForm);
     }
 

@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.events;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLEntityBrowserTextChangeSet;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
@@ -138,16 +137,6 @@ public class HighLevelEventGenerator {
             for (OWLEntity entity : project.getRootOntology().getEntitiesInSignature(entityIRI, true)) {
                 boolean deprecated = project.isDeprecated(entity);
                 result.add(new EntityDeprecatedChangedEvent(project.getProjectId(), entity, deprecated));
-            }
-        }
-
-        Set<OWLEntity> changedBrowserTexts = new HashSet<OWLEntity>();
-        List<OWLEntityBrowserTextChangeSet> browserTextChangeSets = project.getOWLEntityEditorKit().getChangedEntities(changeRecords);
-        for(int i = browserTextChangeSets.size() - 1; i > -1; i--) {
-            final OWLEntityBrowserTextChangeSet o = browserTextChangeSets.get(i);
-            if(!changedBrowserTexts.contains(o.getEntity())) {
-                changedBrowserTexts.add(o.getEntity());
-                result.add(new BrowserTextChangedEvent(o.getEntity(), o.getNewBrowserText(), project.getProjectId()));
             }
         }
 

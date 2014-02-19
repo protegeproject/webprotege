@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
+import edu.stanford.bmir.protege.web.server.crud.BrowserTextChangedEventComputer;
+import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
@@ -21,9 +24,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.metrics.OWLAPIProjectMetricsM
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManagerImpl;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.HasDataFactory;
-import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -32,7 +32,6 @@ import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedExceptio
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.util.Log;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
 import org.coode.owlapi.rdf.rdfxml.RDFXMLOntologyStorer;
@@ -55,8 +54,6 @@ import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOntol
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -71,7 +68,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/03/2012
  */
-public class OWLAPIProject implements HasDispose, HasDataFactory {
+public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI {
 
 
 
@@ -91,12 +88,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
     private final EventManager<ProjectEvent<?>> projectEventManager;
 
     private OWLOntology ontology;
-
-    private OWLAPIProjectAttributes projectAttributes;
-
-    private OWLAPIProjectConfiguration projectConfiguration;
-
-    private OWLAPIEntityEditorKit entityEditorKit;
 
     private AssertedClassHierarchyProvider classHierarchyProvider = new AssertedClassHierarchyProvider(WebProtegeOWLManager.createOWLOntologyManager());
 
@@ -127,9 +118,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
     private final Lock projectChangeWriteLock = projectChangeLock.writeLock();
 
     private final Lock changeProcesssingLock = new ReentrantLock();
-
-    private final ExecutorService projectAttributesSaver = Executors.newSingleThreadExecutor();
-
 
     private final ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache;
 
@@ -206,44 +194,10 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
                 }
             });
             manager.sealDelegate();
-            projectAttributes = documentStore.getProjectAttributes();
-            projectAttributes.addListener(new OWLAPIProjectAttributesListener() {
-                public void attributeRemoved(OWLAPIProjectAttributes attributes, String attributeName) {
-                    saveProjectAttributes();
-                }
-
-                public void attributeChanged(OWLAPIProjectAttributes attributes, String attributeName) {
-                    saveProjectAttributes();
-                }
-
-                public void attributesRemoved(OWLAPIProjectAttributes attributes) {
-                    saveProjectAttributes();
-                }
-            });
-            projectConfiguration = new OWLAPIProjectConfiguration(projectAttributes);
-
-
         }
         catch (OWLOntologyCreationException e) {
             throw new RuntimeException("Failed to load project: " + e.getMessage(), e);
         }
-    }
-
-//    public NoteStore getNoteStore() {
-//        return noteStore;
-//    }
-
-    private void saveProjectAttributes() {
-        projectAttributesSaver.submit(new Runnable() {
-            public void run() {
-                try {
-                    documentStore.saveProjectAttributes(projectAttributes);
-                }
-                catch (IOException e) {
-                    Log.getLogger().severe("Could not save project attributes. Reason: " + e.getMessage());
-                }
-            }
-        });
     }
 
     /**
@@ -272,8 +226,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
 
         annotationPropertyHierarchyProvider = new OWLAnnotationPropertyHierarchyProvider(manager);
         annotationPropertyHierarchyProvider.setOntologies(manager.getOntologies());
-
-        entityEditorKit = projectConfiguration.getOWLEntityEditorKitFactory().createEntityEditorKit(this);
 
         metricsManager = new OWLAPIProjectMetricsManager(this);
 
@@ -355,10 +307,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
 
     public OWLAPISearchManager getSearchManager() {
         return searchManager;
-    }
-
-    public OWLAPIEntityEditorKit getOWLEntityEditorKit() {
-        return entityEditorKit;
     }
 
     public OWLOntology getRootOntology() {
@@ -521,10 +469,16 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
             }
 
             List<HierarchyChangeComputer<?>> computers = createHierarchyChangeComputers();
-
             for(HierarchyChangeComputer<?> computer : computers) {
                 computer.prepareForChanges(minimisedChanges);
             }
+            BrowserTextChangedEventComputer shortFormChangeComputer = new BrowserTextChangedEventComputer(
+                    new OntologyChangeSubjectProvider(this),
+                    renderingManager.getShortFormProvider(),
+                    this
+            );
+            shortFormChangeComputer.prepareForChanges(minimisedChanges);
+
 
 
             // Now we do the actual changing, so we lock the project here.  No writes or reads can take place whilst
@@ -552,6 +506,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
                 List<ProjectEvent<?>> highLevelEvents = new ArrayList<ProjectEvent<?>>();
                 HighLevelEventGenerator hle = new HighLevelEventGenerator(this, userId, revisionNumber);
                 highLevelEvents.addAll(hle.getHighLevelEvents(appliedChanges, revisionNumber));
+                highLevelEvents.addAll(shortFormChangeComputer.getShortFormChanges(appliedChanges, getProjectId()));
+
                 for(HierarchyChangeComputer<?> computer : computers) {
                     highLevelEvents.addAll(computer.get(appliedChanges));
                 }
@@ -739,8 +695,16 @@ public class OWLAPIProject implements HasDispose, HasDataFactory {
         });
     }
 
+    @Override
+    public boolean containsEntityInSignature(OWLEntity entity) {
+        return getRootOntology().containsEntityInSignature(entity, true);
+    }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public Set<OWLEntity> getEntitiesWithIRI(IRI iri) {
+        return getRootOntology().getEntitiesInSignature(iri, true);
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
