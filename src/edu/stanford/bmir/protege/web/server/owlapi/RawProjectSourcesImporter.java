@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
@@ -22,12 +23,14 @@ public class RawProjectSourcesImporter {
         this.loaderConfig = loaderConfig;
     }
 
-    public void importRawProjectSources(RawProjectSources projectSources) throws OWLOntologyCreationException {
+    public OWLOntology importRawProjectSources(RawProjectSources projectSources) throws OWLOntologyCreationException {
         try {
             manager.addIRIMapper(projectSources.getOntologyIRIMapper());
+            OWLOntology ontology = null;
             for (OWLOntologyDocumentSource documentSource : projectSources.getDocumentSources()) {
-                manager.loadOntologyFromOntologyDocument(documentSource, loaderConfig);
+                ontology = manager.loadOntologyFromOntologyDocument(documentSource, loaderConfig);
             }
+            return ontology;
         } finally {
             manager.removeIRIMapper(projectSources.getOntologyIRIMapper());
         }

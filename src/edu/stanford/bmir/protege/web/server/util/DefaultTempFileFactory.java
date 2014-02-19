@@ -1,7 +1,11 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.util;
+
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @author Matthew Horridge,
@@ -11,14 +15,11 @@ import java.io.IOException;
  */
 public class DefaultTempFileFactory implements TempFileFactory {
 
-    private static final String PREFIX = "webprotege";
-
-    private static final String SUFFIX = "tempfile";
-
     @Override
     public File createTempDirectory() throws IOException {
-        File file = File.createTempFile(PREFIX, SUFFIX);
-        file.mkdirs();
-        return file;
+        File systemTempDirectory = FileUtils.getTempDirectory();
+        File result = new File(systemTempDirectory, "tmp-" + UUID.randomUUID().toString());
+        result.mkdirs();
+        return result;
     }
 }
