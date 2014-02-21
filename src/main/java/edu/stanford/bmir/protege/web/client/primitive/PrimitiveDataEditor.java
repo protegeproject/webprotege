@@ -37,7 +37,7 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
      * Specifies whether or not the editor should be a single or multiple line editor.
      * @param mode The mode of the editor.  Not {@code null}.
      */
-    void setMode(ExpandingTextBoxMode mode);
+    void setMode(PrimitiveDataEditorView.Mode mode);
 
     /**
      * Specifies whether or not a link should be shown when the content of the editor is an entity.

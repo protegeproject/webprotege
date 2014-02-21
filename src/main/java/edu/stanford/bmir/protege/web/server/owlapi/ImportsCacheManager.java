@@ -70,17 +70,20 @@ public class ImportsCacheManager {
 
     public OWLOntologyIRIMapper getIRIMapper() {
         try {
-            READ_LOCK.lock();
+            WRITE_LOCK.lock();
+            readCachedImportsFromDisk();
             return new ImportsCacheIRIMapper(iri2Document);
         }
         finally {
-            READ_LOCK.lock();
+            WRITE_LOCK.lock();
         }
     }
 
     public void cacheImports(OWLOntology rootOntology) {
         try {
             WRITE_LOCK.lock();
+            ontologyIDs.clear();
+            readCachedImportsFromDisk();
             projectFileStore.getImportsCacheDataDirectory().mkdirs();
             for(OWLOntology ont : rootOntology.getImportsClosure()) {
                 // TODO: Don't cache project ontologies!
@@ -172,7 +175,7 @@ public class ImportsCacheManager {
             }
             for(File ontologyDocument : cachedDocuments) {
                 if (!ontologyDocument.isHidden() && !ontologyDocument.isDirectory()) {
-                    parseFile(ontologyDocument);
+                    parseOntologyDocument(ontologyDocument);
                 }
             }
             for(OWLOntologyID id : ontologyIDs) {
@@ -184,7 +187,7 @@ public class ImportsCacheManager {
         }
     }
 
-    private void parseFile(File ontologyDocument) {
+    private void parseOntologyDocument(File ontologyDocument) {
         try {
             WRITE_LOCK.lock();
             InputStream is = null;
@@ -232,9 +235,9 @@ public class ImportsCacheManager {
 
 
 
-    public void refreshCachedOntology(OWLOntologyID ontologyID) {
-
-    }
+//    public void refreshCachedOntology(OWLOntologyID ontologyID) {
+//
+//    }
 
 
 

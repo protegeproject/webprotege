@@ -25,7 +25,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.button.DeleteButton;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasEditable;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasTextRendering;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxMode;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
@@ -81,7 +80,6 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     private boolean editable = true;
 
     private boolean settingValue = false;
-
 
     public PropertyValueListEditor(ProjectId projectId, PropertyValueGridGrammar grammar) {
         this.grammar = grammar;
@@ -214,7 +212,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     }
 
     private String getValuePlaceholder(int row) {
-        DefaultPrimitiveDataEditor widget = (DefaultPrimitiveDataEditor) table.getWidget(row, 0);
+        PrimitiveDataEditorImpl widget = (PrimitiveDataEditorImpl) table.getWidget(row, 0);
         Optional<OWLPrimitiveData> value = widget.getValue();
         if(!value.isPresent()) {
             return FILLER_EDITOR_PLACE_HOLDER_TEXT;
@@ -243,7 +241,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         final int row = table.getRowCount();
 
 
-        final DefaultPrimitiveDataEditor propertyEditor = createPrimitiveEditor();
+        final PrimitiveDataEditor propertyEditor = createPrimitiveEditor();
         table.setWidget(row, PROPERTY_COLUMN, propertyEditor);
         propertyEditor.setFreshEntitiesHandler(new MutableFreshEntitiesHandler() {
             /**
@@ -271,13 +269,13 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             propertyEditor.setSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
         }
 
-        propertyEditor.addStyleName("web-protege-property-grid-editor");
-        propertyEditor.addStyleName("web-protege-form-layout-editor-input");
+        propertyEditor.asWidget().addStyleName("web-protege-property-grid-editor");
+        propertyEditor.asWidget().addStyleName("web-protege-form-layout-editor-input");
 
         propertyEditor.setAllowedTypes(grammar.getPropertyTypes());
 
 
-        final DefaultPrimitiveDataEditor fillerEditor = createPrimitiveEditor();
+        final PrimitiveDataEditor fillerEditor = createPrimitiveEditor();
         fillerEditor.setAllowedTypes(grammar.getFillerTypes());
         fillerEditor.setSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
 
@@ -315,10 +313,10 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
 
         if (grammar.getFillerTypes().contains(PrimitiveType.LITERAL)) {
-            fillerEditor.setMode(ExpandingTextBoxMode.MULTI_LINE);
+            fillerEditor.setMode(PrimitiveDataEditorView.Mode.MULTI_LINE);
         }
 
-        fillerEditor.addStyleName("web-protege-form-layout-editor-input");
+        fillerEditor.asWidget().addStyleName("web-protege-form-layout-editor-input");
         fillerEditor.setPlaceholder(FILLER_EDITOR_PLACE_HOLDER_TEXT);
 
         addDeleteButton(row, propertyData.isPresent());
@@ -327,7 +325,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         HandlerRegistration propHandlerReg = propertyEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
-                int row = getRowForWidget(PROPERTY_COLUMN, propertyEditor);
+                int row = getRowForWidget(PROPERTY_COLUMN, propertyEditor.asWidget());
                 if (row != -1) {
                     handlePropertyChanged(row, propertyEditor, fillerEditor);
                 }
@@ -339,7 +337,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         HandlerRegistration fillerHandlerReg = fillerEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
-                int row = getRowForWidget(FILLER_COLUMN, fillerEditor);
+                int row = getRowForWidget(FILLER_COLUMN, fillerEditor.asWidget());
                 if (row != -1) {
                     handleFillerChanged(row, propertyEditor, fillerEditor);
                 }
@@ -367,14 +365,14 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     }
 
 
-    private List<DefaultPrimitiveDataEditor> pool = new ArrayList<DefaultPrimitiveDataEditor>();
+    private List<PrimitiveDataEditorImpl> pool = new ArrayList<PrimitiveDataEditorImpl>();
 
     private Multimap<PrimitiveDataEditor, HandlerRegistration> handlerRegistrations = HashMultimap.create();
 
     private void recyclePrimitiveDataEditors() {
         for(int row = 0; row < table.getRowCount(); row++) {
-            DefaultPrimitiveDataEditor propertyEditor = (DefaultPrimitiveDataEditor) table.getWidget(row, PROPERTY_COLUMN);
-            DefaultPrimitiveDataEditor fillerEditor = (DefaultPrimitiveDataEditor) table.getWidget(row, FILLER_COLUMN);
+            PrimitiveDataEditorImpl propertyEditor = (PrimitiveDataEditorImpl) table.getWidget(row, PROPERTY_COLUMN);
+            PrimitiveDataEditorImpl fillerEditor = (PrimitiveDataEditorImpl) table.getWidget(row, FILLER_COLUMN);
             recycle(propertyEditor);
             recycle(fillerEditor);
         }
@@ -391,7 +389,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
 
 
-    private void recycle(DefaultPrimitiveDataEditor editor) {
+    private void recycle(PrimitiveDataEditorImpl editor) {
         if(pool.size() == MAX_POOL_SIZE) {
             return;
         }
@@ -399,11 +397,9 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         for(HandlerRegistration registration : handlerRegistrations.removeAll(editor)) {
             registration.removeHandler();
         }
-
         editor.clearValue();
         editor.setPlaceholder("");
         editor.setTitle("");
-
         pool.add(editor);
     }
 
@@ -416,13 +412,13 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         deleteButtonPool.add(deleteButton);
     }
 
-    private DefaultPrimitiveDataEditor createPrimitiveEditor() {
-        DefaultPrimitiveDataEditor editor;
+    private PrimitiveDataEditor createPrimitiveEditor() {
+        PrimitiveDataEditor editor;
         if(!pool.isEmpty()) {
             editor = pool.remove(0);
         }
         else {
-            editor = new DefaultPrimitiveDataEditor(projectId);
+            editor = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
             editor.setFreshEntitiesHandler(freshEntitiesHandler);
         }
         editor.setEnabled(enabled);
@@ -635,7 +631,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                     return null;
                 }
             });
-            fillerEditor.setMode(propertyData.get() instanceof OWLAnnotationPropertyData ? ExpandingTextBoxMode.MULTI_LINE : ExpandingTextBoxMode.SINGLE_LINE);
+            fillerEditor.setMode(propertyData.get() instanceof OWLAnnotationPropertyData ? PrimitiveDataEditorView.Mode.MULTI_LINE : PrimitiveDataEditorView.Mode.SINGLE_LINE);
         }
         else {
             if(!canInferPropertyType()) {

@@ -16,9 +16,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.primitive.DefaultPrimitiveDataEditor;
-import edu.stanford.bmir.protege.web.client.primitive.MutableFreshEntitiesHandler;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorSuggestOracleMode;
+import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.csv.ColumnType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
@@ -43,7 +41,7 @@ public class CSVColumnRelationEditorViewImpl extends Composite implements CSVCol
     private static CSVColumnRelationEditorViewImplUiBinder ourUiBinder = GWT.create(CSVColumnRelationEditorViewImplUiBinder.class);
 
     @UiField(provided = true)
-    protected DefaultPrimitiveDataEditor propertyField;
+    protected PrimitiveDataEditor propertyField;
 
     @UiField
     protected ListBox relationTypeField;
@@ -51,7 +49,7 @@ public class CSVColumnRelationEditorViewImpl extends Composite implements CSVCol
 
 
     public CSVColumnRelationEditorViewImpl() {
-        propertyField = new DefaultPrimitiveDataEditor(Application.get().getActiveProject().get());
+        propertyField = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
         propertyField.setSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
 
         propertyField.setFreshEntitiesHandler(new MutableFreshEntitiesHandler());

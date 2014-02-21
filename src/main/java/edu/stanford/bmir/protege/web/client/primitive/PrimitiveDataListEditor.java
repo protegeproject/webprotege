@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -130,7 +131,7 @@ public class PrimitiveDataListEditor extends SimplePanel implements HasPlacehold
 
     private void addRow(Optional<OWLPrimitiveData> data) {
         int row = flexTable.getRowCount();
-        final DefaultPrimitiveDataEditor editor = createEditor(data);
+        final PrimitiveDataEditor editor = createEditor(data);
         editor.setSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
         editor.setEnabled(enabled);
         flexTable.setWidget(row, 0, editor);
@@ -199,8 +200,11 @@ public class PrimitiveDataListEditor extends SimplePanel implements HasPlacehold
         return primitiveDataEditor.getValue();
     }
 
-    private DefaultPrimitiveDataEditor createEditor(Optional<OWLPrimitiveData> value) {
-        DefaultPrimitiveDataEditor editor = new DefaultPrimitiveDataEditor(projectId);
+    private PrimitiveDataEditor createEditor(Optional<OWLPrimitiveData> value) {
+
+        PrimitiveDataEditor editor = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
+
+//        PrimitiveDataEditorImpl editor = new PrimitiveDataEditorImpl(projectId);
         editor.setAllowedTypes(allowedTypes);
         editor.setFreshEntitiesHandler(freshEntitiesHandler);
         if(value.isPresent()) {

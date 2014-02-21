@@ -11,8 +11,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.primitive.DefaultPrimitiveDataEditor;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorGinjector;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -36,22 +36,22 @@ public class OBORelationshipEditorImpl extends Composite implements ValueEditor<
     private static OBORelationshipEditorImplUiBinder ourUiBinder = GWT.create(OBORelationshipEditorImplUiBinder.class);
 
     @UiField(provided = true)
-    protected DefaultPrimitiveDataEditor propertyField;
+    protected PrimitiveDataEditor propertyField;
 
     @UiField(provided = true)
-    protected DefaultPrimitiveDataEditor valueField;
+    protected PrimitiveDataEditor valueField;
 
     public OBORelationshipEditorImpl() {
         propertyField = createPrimitiveDataEditor();
         valueField = createPrimitiveDataEditor();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
-        propertyField.getElement().setAttribute("placeholder", "Enter property name");
-        valueField.getElement().setAttribute("placeholder", "Enter class name");
+        propertyField.asWidget().getElement().setAttribute("placeholder", "Enter property name");
+        valueField.asWidget().getElement().setAttribute("placeholder", "Enter class name");
     }
 
-    private static DefaultPrimitiveDataEditor createPrimitiveDataEditor() {
-        return new DefaultPrimitiveDataEditor(Application.get().getActiveProject().get());
+    private static PrimitiveDataEditor createPrimitiveDataEditor() {
+        return PrimitiveDataEditorGinjector.INSTANCE.getEditor();
     }
 
     @UiHandler("propertyField")

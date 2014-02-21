@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.IRIData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -24,6 +25,7 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
 
     private EntityDataLookupHandler entityDataLookupHandler;
 
+    @Inject
     public DefaultPrimitiveDataParser(EntityDataLookupHandler entityDataLookupHandler) {
         this.entityDataLookupHandler = entityDataLookupHandler;
     }

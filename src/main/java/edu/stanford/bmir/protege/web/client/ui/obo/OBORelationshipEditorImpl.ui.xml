@@ -16,10 +16,10 @@
             </colgroup>
             <tr>
                 <td valign="top">
-                    <frame:DefaultPrimitiveDataEditor ui:field="propertyField" placeholder="Enter property name" mode="SINGLE_LINE" objectPropertiesAllowed="true" addStyleNames="{style.relationship-editor}"/>
+                    <frame:PrimitiveDataEditor ui:field="propertyField" placeholder="Enter property name" mode="SINGLE_LINE" objectPropertiesAllowed="true" addStyleNames="{style.relationship-editor}"/>
                 </td>
                 <td valign="top" style="padding-left: 1px;">
-                    <frame:DefaultPrimitiveDataEditor ui:field="valueField" placeholder="Enter class name" mode="SINGLE_LINE" classesAllowed="true" addStyleNames="{style.relationship-editor}"/>
+                    <frame:PrimitiveDataEditor ui:field="valueField" placeholder="Enter class name" mode="SINGLE_LINE" classesAllowed="true" addStyleNames="{style.relationship-editor}"/>
                 </td>
             </tr>
         </table>

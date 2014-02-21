@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.entity.EntityLookupResult;
@@ -20,7 +21,11 @@ import java.util.Set;
  */
 public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
 
-    public EntityDataLookupHandlerImpl() {
+    private DispatchServiceManager dispatchServiceManager;
+
+    @Inject
+    public EntityDataLookupHandlerImpl(DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -32,7 +37,7 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
             callback.onSuccess(Optional.<OWLEntityData>absent());
         }
         final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, SearchType.EXACT_MATCH_IGNORE_CASE, 1, allowedEntityTypes);
-        DispatchServiceManager.get().execute(new LookupEntitiesAction(projectId, entityLookupRequest), new AsyncCallback<LookupEntitiesResult>() {
+        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, entityLookupRequest), new AsyncCallback<LookupEntitiesResult>() {
             @Override
             public void onFailure(Throwable caught) {
                 callback.onFailure(caught);
