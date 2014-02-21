@@ -75,6 +75,11 @@
       <artifactId>guava-gwt</artifactId>
       <version>15.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.gwt.inject</groupId>
+      <artifactId>gin</artifactId>
+      <version>2.1.2</version>
+    </dependency>
     <!-- 
 	 We'll need to upgrade to this at some stage
     <dependency>
