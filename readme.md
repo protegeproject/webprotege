@@ -50,19 +50,15 @@ You also need Java (1.6 or later), Ant, and a servlet container, such as tomcat.
 Building
 --------
 
-Copy local.properties.template to local.properties, and edit local.properties to match your file paths.
-All properties are well documented. Make sure that you set the property gwt.dir to point to your local installation 
-of GWT. Usually, there is no need to touch any of the other properties.
-
 If you want to change the default setup properties for WebProtege, copy the etc/webprotege.properties.template
 to war/webprotege.properties, and edit the properties, which are well documented in the file.
 
 To build the webprotege WAR file, run
 
-         ant war
+         mvn package
          
-This command will create the webprotege.war file in build/webprotege.war. You can either copy this file manually to
-your servlet container (e.g. tomcat/webapps), or use "ant deploy" (see below). 
+This command will create the webprotege-${version}.war file in target/webprotege-${version}.war. You can either copy this file manually to
+your servlet container (e.g. tomcat/webapps), or use "mvn gwt:run" to run it in an instance of Jetty (see below). 
 
 
 Running
@@ -70,15 +66,13 @@ Running
 
 DevMode can be started with: 
 
-          ant devmode
-
-Note that OSX users must modify the extra.hosted.jvm.arg setting in the local.properties file in order to run the devmode.
+          mvn gwt:run
 
 Web Protege can also be deployed into into tomcat by running 
 
-          ant deploy
+          mvn tomcat:deploy
 
-and then starting tomcat. You need to set the CATALINA_HOME environment variable in local.properties.
+and then starting tomcat. By default a deployment uses Tomcat manager to deploy to http://localhost:8080/webprotege.
 
 Note: you need mongodb to run WebProtege. Please make sure mongodb is running. Find more information at:
 http://protegewiki.stanford.edu/wiki/WebProtegeAdminGuide#Install_mongoDB
@@ -95,3 +89,6 @@ Documentation
 -------------
 More documentation at: 
 http://protegewiki.stanford.edu/wiki/WebProtege
+
+-------------------------
+Last updated: 2013/11/19

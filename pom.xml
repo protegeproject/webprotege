@@ -1,0 +1,378 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>edu.stanford.bmir</groupId>
+  <artifactId>webprotege</artifactId>
+  <version>0.1</version>
+  <packaging>war</packaging>
+
+  <name>WebProtégé</name>
+  <url>http://protegewiki.stanford.edu/wiki/WebProtege</url>
+
+  <properties>
+    <!-- Convenience property to set the GWT version -->
+    <gwtVersion>2.5.1</gwtVersion>
+    <springframeworkVersion>3.2.4.RELEASE</springframeworkVersion>
+    <!-- GWT needs at least java 1.5 -->
+    <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <repositories>
+    <!-- The GWT-Ext people maintain their own Maven repo -->
+    <repository>
+      <id>gwtext</id>
+      <url>http://www.gwt-ext.com/maven2/</url>
+    </repository>
+    <!-- Get gwt-crypto from Googlecode -->
+    <repository>
+      <id>gwt-crypto repo</id>
+      <url>http://gwt-crypto.googlecode.com/svn/trunk/repo/</url>
+    </repository>
+    <!-- We have to carry around some things, so put them in
+         a local repository -->
+    <repository>
+      <id>local-repo</id>
+      <url>file://${project.basedir}/repo</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-servlet</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- Apparently, pulling in gwt-dev is a bad thing to do. 
+	 The compiler states: [WARNING] Don't declare gwt-dev as a project dependency. This may introduce complex dependency conflicts
+    -->
+    <dependency>
+     <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-dev</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <version>${gwtVersion}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.gwtext</groupId>
+      <artifactId>gwtext</artifactId>
+      <version>2.0.5</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>15.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-gwt</artifactId>
+      <version>15.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.gwt.inject</groupId>
+      <artifactId>gin</artifactId>
+      <version>2.1.2</version>
+    </dependency>
+    <!-- 
+	 We'll need to upgrade to this at some stage
+    <dependency>
+        <groupId>com.googlecode.gwt-crypto</groupId>
+        <artifactId>gwt-crypto</artifactId>
+        <version>2.3.0</version>
+    </dependency>
+    But for the moment we use 1.0.3
+    -->
+    <dependency>
+      <groupId>com.googlecode.gwt.crypto</groupId>
+      <artifactId>gwt-crypto</artifactId>
+      <version>1.0.3</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>net.sourceforge.owlapi</groupId>
+      <artifactId>owlapi-distribution</artifactId>
+      <version>3.4.9</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.stanford.protege</groupId>
+      <artifactId>bioportal-services-lib</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.stanford.protege</groupId>
+      <artifactId>protege</artifactId>
+      <version>3.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>2.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.stanford.protege</groupId>
+      <artifactId>org.protege.owl.rdf</artifactId>
+      <version>1.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.stanford.protege</groupId>
+      <artifactId>org.protege.common</artifactId>
+      <version>4.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.protege</groupId>
+      <artifactId>protege-editor-core-application</artifactId>
+      <version>4.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.protege</groupId>
+      <artifactId>protege-editor-owl</artifactId>
+      <version>4.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.stanford.protege</groupId>
+      <artifactId>protege-owlapi-extensions</artifactId>
+      <version>3.2.4</version>
+    </dependency>            
+
+    <dependency>
+      <groupId>org.openid4java</groupId>
+      <artifactId>openid4java</artifactId>
+      <version>0.9.8</version>
+    </dependency>
+    <dependency>
+      <groupId>net.tanesha.recaptcha4j</groupId>
+      <artifactId>recaptcha4j</artifactId>
+      <version>0.0.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>javax.mail</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.thoughtworks.xstream</groupId>
+      <artifactId>xstream</artifactId>
+      <version>1.4.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${springframeworkVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aop</artifactId>
+      <version>${springframeworkVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${springframeworkVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <version>${springframeworkVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-mongodb</artifactId>
+      <version>1.3.1.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongo-java-driver</artifactId>
+      <version>2.11.3</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.3</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.3</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient-cache</artifactId>
+      <version>4.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpmime</artifactId>
+      <version>4.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>2.0.2</version>
+    </dependency>
+
+    <!-- Things from local repository.
+         We'd like these to go into Maven central -->
+    <dependency>
+      <groupId>org.semanticweb</groupId>
+      <artifactId>binaryowl</artifactId>
+      <version>1.4.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.semanticweb</groupId>
+      <artifactId>owlapi-gwt-module</artifactId>
+      <version>1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.protege</groupId>
+      <artifactId>notes-api</artifactId>
+      <!-- The version number here was made up.
+           I have no idea what version this package actually is.-->
+      <version>1</version>
+    </dependency>
+    <!-- End locally sourced stuff -->
+
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>1.0.0.GA</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>1.0.0.GA</version>
+      <classifier>sources</classifier>
+    </dependency>
+
+    <!-- test-only dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.9.5</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <!-- Generate compiled stuff in the folder used for developing mode -->
+    <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
+
+    <plugins>
+
+      <!-- GWT Maven Plugin -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <version>2.5.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>test</goal>
+	      <!--  Don't generateAsync as we do this manually
+              <goal>generateAsync</goal> -->
+            </goals>
+          </execution>
+        </executions>
+        <!-- Plugin configuration. There are many available options, see 
+          gwt-maven-plugin documentation at codehaus.org -->
+        <configuration>
+	  <!-- It's necessary to let GWT Complile eat a lot of memory -->
+          <extraJvmArgs>-Xmx1024M -Xss1024k</extraJvmArgs>
+          <runTarget>WebProtege.html</runTarget>
+          <hostedWebapp>${webappDirectory}</hostedWebapp>
+        </configuration>
+      </plugin>
+
+      <!-- Run all tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.16</version>
+	<dependencies>
+	  <!-- Force use of JUnit rather than TestNG -->
+	  <dependency>
+	    <groupId>org.apache.maven.surefire</groupId>
+	    <artifactId>surefire-junit47</artifactId>
+	    <version>2.8</version>
+	  </dependency>
+	</dependencies>
+        <configuration>
+          <includes>
+            <include>%regex[.*Test.*]</include>
+          </includes>
+        </configuration>
+      </plugin>
+
+      <!-- do javadoc as part of build, with default configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+      </plugin>
+
+      <!-- Copy static web files before executing gwt:run -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.1.1</version>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>exploded</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <webappDirectory>${webappDirectory}</webappDirectory>
+        </configuration>
+      </plugin>
+
+      <!-- Standard compiler configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <compilerArgument>-Xlint:all</compilerArgument>
+          <showWarnings>true</showWarnings>
+          <showDeprecation>true</showDeprecation>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
