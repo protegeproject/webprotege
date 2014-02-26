@@ -50,6 +50,8 @@ public class ZipFileExtractor_TestCase {
         entryB.setSize(bytes.length);
         zipOutputStream.putNextEntry(entryB);
         zipOutputStream.write(bytes);
+        ZipEntry entryC = new ZipEntry("/EmptyDirectory/");
+        zipOutputStream.putNextEntry(entryC);
         zipOutputStream.close();
 
         ZipFileExtractor extractor = new ZipFileExtractor();
@@ -64,5 +66,8 @@ public class ZipFileExtractor_TestCase {
         File extractedDirectory = new File(outputDirectory, "Directory");
         assertTrue(extractedDirectory.exists());
         assertTrue(extractedDirectory.isDirectory());
+        File emptyDirectory = new File(outputDirectory, "EmptyDirectory");
+        assertTrue(emptyDirectory.exists());
+        assertTrue(emptyDirectory.isDirectory());
     }
 }
