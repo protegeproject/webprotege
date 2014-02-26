@@ -111,7 +111,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         for(int rowIndex = 0; rowIndex < table.getRowCount(); rowIndex++) {
             for(int colIndex = 0; colIndex < table.getCellCount(rowIndex); colIndex++) {
                 Widget widget = table.getWidget(rowIndex, colIndex);
-                if(widget instanceof HasEnabled) {
+                if(widget instanceof HasEnabled && !"false".equals(widget.getElement().getAttribute("asserted"))) {
                     ((HasEnabled) widget).setEnabled(enabled);
                 }
             }
@@ -199,7 +199,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             else {
                 return;
             }
-        addRow(propRendering.isPresent() ? Optional.<OWLPrimitiveData>of(propRendering.get()) : Optional.<OWLPrimitiveData>absent(), Optional.of(valueRendering));
+        addRow(propRendering.isPresent() ? Optional.<OWLPrimitiveData>of(propRendering.get()) : Optional.<OWLPrimitiveData>absent(), Optional.of(valueRendering), propertyValue.getState());
     }
 
 
@@ -208,7 +208,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     }
 
     private void addBlankRow() {
-        addRow(Optional.<OWLPrimitiveData>absent(), Optional.<OWLPrimitiveData>absent());
+        addRow(Optional.<OWLPrimitiveData>absent(), Optional.<OWLPrimitiveData>absent(), PropertyValueState.ASSERTED);
     }
 
     private String getValuePlaceholder(int row) {
@@ -237,7 +237,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     public void sort() {
     }
 
-    private void addRow(Optional<OWLPrimitiveData> propertyData, Optional<OWLPrimitiveData> fillerData) {
+    private void addRow(final Optional<OWLPrimitiveData> propertyData, final Optional<OWLPrimitiveData> fillerData, final PropertyValueState state) {
         final int row = table.getRowCount();
 
 
@@ -273,9 +273,9 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         propertyEditor.asWidget().addStyleName("web-protege-form-layout-editor-input");
 
         propertyEditor.setAllowedTypes(grammar.getPropertyTypes());
-
-
-        final PrimitiveDataEditor fillerEditor = createPrimitiveEditor();
+        propertyEditor.getElement().setAttribute("asserted", state == PropertyValueState.ASSERTED ? "true" : "false");
+        propertyEditor.setEnabled(state == PropertyValueState.ASSERTED);
+        final DefaultPrimitiveDataEditor fillerEditor = createPrimitiveEditor();
         fillerEditor.setAllowedTypes(grammar.getFillerTypes());
         fillerEditor.setSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
 
@@ -318,8 +318,11 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
         fillerEditor.asWidget().addStyleName("web-protege-form-layout-editor-input");
         fillerEditor.setPlaceholder(FILLER_EDITOR_PLACE_HOLDER_TEXT);
+        fillerEditor.getElement().setAttribute("asserted", state == PropertyValueState.ASSERTED ? "true" : "false");
+        fillerEditor.setEnabled(state == PropertyValueState.ASSERTED);
 
-        addDeleteButton(row, propertyData.isPresent());
+
+        addDeleteButton(row, propertyData.isPresent(), state);
 
 
         HandlerRegistration propHandlerReg = propertyEditor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
@@ -445,7 +448,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
     }
 
     private void handleFillerChanged(int row, PrimitiveDataEditor propertyEditor, PrimitiveDataEditor fillerEditor) {
-        addDeleteButton(row, shouldShowDeleteButton(row, propertyEditor, fillerEditor));
+        addDeleteButton(row, shouldShowDeleteButton(row, propertyEditor, fillerEditor), PropertyValueState.ASSERTED);
         updateFillerEditor(row, propertyEditor, fillerEditor);
         if(isInvalidValue(propertyEditor)) {
             inferPropertyTypeFromFiller(row, propertyEditor, fillerEditor);
@@ -531,7 +534,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
 
     private void handlePropertyChanged(int row, PrimitiveDataEditor propertyEditor, PrimitiveDataEditor fillerEditor) {
         fillerEditor.setPlaceholder(getValuePlaceholder(row));
-        addDeleteButton(row, shouldShowDeleteButton(row, propertyEditor, fillerEditor));
+        addDeleteButton(row, shouldShowDeleteButton(row, propertyEditor, fillerEditor), PropertyValueState.ASSERTED);
         if(isLiteralOrCanEditLiteral(propertyEditor.getValue(), fillerEditor.getValue())) {
             addLangEditor(row, fillerEditor.getLanguageEditor(), fillerEditor.getValue());
         }
@@ -559,7 +562,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         return propertyEditor.getValue().isPresent() || fillerEditor.getValue().isPresent();
     }
 
-    private void addDeleteButton(final int rowCount, boolean visible) {
+    private void addDeleteButton(final int rowCount, boolean visible, PropertyValueState state) {
         Widget widget = table.getWidget(rowCount, DELETE_BUTTON_COL);
         if(widget instanceof DeleteButton) {
 //            widget.setVisible(visible);
@@ -567,12 +570,14 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
             return;
         }
         final DeleteButton deleteButton = createDeleteButton();
+        deleteButton.getElement().setAttribute("asserted", state == PropertyValueState.ASSERTED ? "true" : "false");
         deleteButton.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 deleteRow(deleteButton);
             }
         });
+        deleteButton.setEnabled(state == PropertyValueState.ASSERTED);
         deleteButton.getElement().getStyle().setVisibility(visible ? Style.Visibility.VISIBLE : Style.Visibility.HIDDEN);
         table.setWidget(rowCount, DELETE_BUTTON_COL, deleteButton);
     }
@@ -742,7 +747,14 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         if(!fillerData.isPresent()) {
             return Optional.absent();
         }
-        return createPropertyData(propertyData, fillerData);
+        PropertyValueState state;
+        if("true".equals(((Widget) propertyEditor).getElement().getAttribute("asserted"))) {
+            state = PropertyValueState.ASSERTED;
+        }
+        else {
+            state = PropertyValueState.DERIVED;
+        }
+        return createPropertyData(propertyData, fillerData, state);
     }
 
     @Override
@@ -750,7 +762,7 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
         return Optional.of(createPropertyList());
     }
 
-    private Optional<PropertyValue> createPropertyData(final Optional<OWLPrimitiveData> property, final Optional<OWLPrimitiveData> fillerData) {
+    private Optional<PropertyValue> createPropertyData(final Optional<OWLPrimitiveData> property, final Optional<OWLPrimitiveData> fillerData, final PropertyValueState state) {
         if(!property.isPresent()) {
             return Optional.absent();
         }
@@ -768,12 +780,12 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                 return fillerData.get().accept(new OWLPrimitiveDataVisitorAdapter<Optional<PropertyValue>, RuntimeException>() {
                     @Override
                     public Optional<PropertyValue> visit(OWLClassData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyClassValue(propertyData.getEntity(), data.getEntity()));
+                        return Optional.<PropertyValue>of(new PropertyClassValue(propertyData.getEntity(), data.getEntity(), state));
                     }
 
                     @Override
                     public Optional<PropertyValue> visit(OWLNamedIndividualData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyIndividualValue(propertyData.getEntity(), data.getEntity()));
+                        return Optional.<PropertyValue>of(new PropertyIndividualValue(propertyData.getEntity(), data.getEntity(), state));
                     }
                 });
             }
@@ -783,12 +795,12 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                 return fillerData.get().accept(new OWLPrimitiveDataVisitorAdapter<Optional<PropertyValue>, RuntimeException>() {
                     @Override
                     public Optional<PropertyValue> visit(OWLDatatypeData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyDatatypeValue(propertyData.getEntity(), data.getEntity()));
+                        return Optional.<PropertyValue>of(new PropertyDatatypeValue(propertyData.getEntity(), data.getEntity(), state));
                     }
 
                     @Override
                     public Optional<PropertyValue> visit(OWLLiteralData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyLiteralValue(propertyData.getEntity(), data.getLiteral()));
+                        return Optional.<PropertyValue>of(new PropertyLiteralValue(propertyData.getEntity(), data.getLiteral(), state));
                     }
                 });
             }
@@ -798,42 +810,42 @@ public class PropertyValueListEditor extends FlowPanel implements ValueEditor<Pr
                 return fillerData.get().accept(new OWLPrimitiveDataVisitorAdapter<Optional<PropertyValue>, RuntimeException>() {
                     @Override
                     public Optional<PropertyValue> visit(OWLLiteralData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getLiteral()));
+                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getLiteral(), state));
                     }
 
                     @Override
                     public Optional<PropertyValue> visit(IRIData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getObject()));
+                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getObject(), state));
                     }
 
                     @Override
                     public Optional<PropertyValue> visit(OWLClassData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity()));
+                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
                     }
 
                     @Override
                     public Optional<PropertyValue> visit(OWLObjectPropertyData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity()));
+                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
                     }
 
                     @Override
                     public Optional<PropertyValue> visit(OWLDataPropertyData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity()));
+                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
                     }
 
                     @Override
                     public Optional<PropertyValue> visit(OWLAnnotationPropertyData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity()));
+                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
                     }
 
                     @Override
                     public Optional<PropertyValue> visit(OWLNamedIndividualData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity()));
+                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
                     }
 
                     @Override
                     public Optional<PropertyValue> visit(OWLDatatypeData data) throws RuntimeException {
-                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity()));
+                        return Optional.<PropertyValue>of(new PropertyAnnotationValue(propertyData.getEntity(), data.getEntity(), state));
                     }
                 });
             }

@@ -14,8 +14,8 @@ public final class PropertyClassValue extends ObjectPropertyValue implements Cla
     private PropertyClassValue() {
     }
 
-    public PropertyClassValue(OWLObjectProperty property, OWLClass value) {
-        super(property, value);
+    public PropertyClassValue(OWLObjectProperty property, OWLClass value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
     @Override

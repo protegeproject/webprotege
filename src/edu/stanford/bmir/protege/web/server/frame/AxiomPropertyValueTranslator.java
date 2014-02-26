@@ -48,16 +48,19 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
     public Set<PropertyValue> getPropertyValues(OWLEntity subject, OWLAxiom axiom, OWLOntology rootOntology) {
         final AxiomTranslator visitor = new AxiomTranslator(subject, rootOntology);
-        PropertyValue result = axiom.accept(visitor);
+        Set<PropertyValue> result = axiom.accept(visitor);
         if(result == null) {
             return Collections.emptySet();
         }
         else {
-            return Collections.singleton(result);
+            return result;
         }
     }
     
     public Set<OWLAxiom> getAxioms(OWLEntity subject, PropertyValue propertyValue, Mode mode) {
+        if(propertyValue.getState() == PropertyValueState.DERIVED) {
+            return Collections.emptySet();
+        }
         PropertyValueTranslator translator = new PropertyValueTranslator(subject, mode);
         return propertyValue.accept(translator);
     }
@@ -68,7 +71,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
 
 
-    private class AxiomTranslator extends OWLObjectVisitorExAdapter<PropertyValue> {
+    private class AxiomTranslator extends OWLObjectVisitorExAdapter<Set<PropertyValue>> {
 
         private OWLEntity subject;
 
@@ -80,7 +83,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
-        public PropertyValue visit(OWLSubClassOfAxiom axiom) {
+        public Set<PropertyValue> visit(OWLSubClassOfAxiom axiom) {
             if (axiom.getSubClass().equals(subject)) {
                 return axiom.getSuperClass().accept(new ClassExpressionTranslator());
             }
@@ -90,17 +93,38 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
-        public PropertyValue visit(OWLAnnotationAssertionAxiom axiom) {
+        public Set<PropertyValue> visit(OWLEquivalentClassesAxiom axiom) {
+            if(!subject.isOWLClass()) {
+                return Collections.emptySet();
+            }
+            Set<PropertyValue> result = new HashSet<PropertyValue>();
+            if(axiom.contains(subject.asOWLClass())) {
+                for(OWLClassExpression ce : axiom.getClassExpressions()) {
+                    if(!ce.equals(subject)) {
+                        for (OWLClassExpression conj : ce.asConjunctSet()) {
+                            Set<PropertyValue> vals = conj.accept(new ClassExpressionTranslator(PropertyValueState.DERIVED));
+                            if (vals != null) {
+                                result.addAll(vals);
+                            }
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public Set<PropertyValue> visit(OWLAnnotationAssertionAxiom axiom) {
             if (axiom.getSubject().equals(subject.getIRI())) {
                 if(axiom.getValue() instanceof IRI) {
                     Set<OWLEntity> entities = rootOntology.getEntitiesInSignature((IRI) axiom.getValue(), true);
                     if(!entities.isEmpty()) {
                         List<OWLEntity> sorted = new ArrayList<OWLEntity>(entities);
                         Collections.sort(sorted);
-                        return new PropertyAnnotationValue(axiom.getProperty(), sorted.get(0));
+                        return toSet(new PropertyAnnotationValue(axiom.getProperty(), sorted.get(0), PropertyValueState.ASSERTED));
                     }
                 }
-                    return new PropertyAnnotationValue(axiom.getProperty(), axiom.getValue());
+                    return toSet(new PropertyAnnotationValue(axiom.getProperty(), axiom.getValue(), PropertyValueState.ASSERTED));
 
             }
             else {
@@ -109,9 +133,9 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
-        public PropertyValue visit(OWLObjectPropertyAssertionAxiom axiom) {
+        public Set<PropertyValue> visit(OWLObjectPropertyAssertionAxiom axiom) {
             if(axiom.getSubject().equals(subject) && !axiom.getProperty().isAnonymous() && !axiom.getObject().isAnonymous()) {
-                return new PropertyIndividualValue(axiom.getProperty().asOWLObjectProperty(), axiom.getObject().asOWLNamedIndividual());
+                return toSet(new PropertyIndividualValue(axiom.getProperty().asOWLObjectProperty(), axiom.getObject().asOWLNamedIndividual(), PropertyValueState.ASSERTED));
             }
             else {
                 return null;
@@ -119,9 +143,9 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
-        public PropertyValue visit(OWLDataPropertyAssertionAxiom axiom) {
+        public Set<PropertyValue> visit(OWLDataPropertyAssertionAxiom axiom) {
             if(axiom.getSubject().equals(subject)) {
-                return new PropertyLiteralValue(axiom.getProperty().asOWLDataProperty(), axiom.getObject());
+                return toSet(new PropertyLiteralValue(axiom.getProperty().asOWLDataProperty(), axiom.getObject(), PropertyValueState.ASSERTED));
             }
             else {
                 return null;
@@ -129,7 +153,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
-        public PropertyValue visit(OWLClassAssertionAxiom axiom) {
+        public Set<PropertyValue> visit(OWLClassAssertionAxiom axiom) {
             if(axiom.getIndividual().equals(subject)) {
                 return axiom.getClassExpression().accept(new ClassExpressionTranslator());
             }
@@ -139,12 +163,42 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
     }
 
+    private Set<PropertyValue> toSet(PropertyValue propertyValue) {
+        return Collections.singleton(propertyValue);
+    }
+
+
+
+    private class ClassExpressionTranslator extends OWLClassExpressionVisitorExAdapter<Set<PropertyValue>> {
+
+        private PropertyValueState state = PropertyValueState.ASSERTED;
+
+        private ClassExpressionTranslator() {
+        }
+
+        private ClassExpressionTranslator(PropertyValueState state) {
+            this.state = state;
+        }
 
     private static class ClassExpressionTranslator extends OWLClassExpressionVisitorExAdapter<PropertyValue> {
+
         @Override
-        public PropertyValue visit(OWLObjectSomeValuesFrom desc) {
+        public Set<PropertyValue> visit(OWLObjectIntersectionOf ce) {
+            state = PropertyValueState.DERIVED;
+            Set<PropertyValue> result = new HashSet<PropertyValue>();
+            for(OWLClassExpression op : ce.asConjunctSet()) {
+                Set<PropertyValue> accept = op.accept(this);
+                if (accept != null) {
+                    result.addAll(accept);
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public Set<PropertyValue> visit(OWLObjectSomeValuesFrom desc) {
             if(!desc.getProperty().isAnonymous() && !desc.getFiller().isAnonymous()) {
-                return new PropertyClassValue(desc.getProperty().asOWLObjectProperty(), desc.getFiller().asOWLClass());
+                return toSet(new PropertyClassValue(desc.getProperty().asOWLObjectProperty(), desc.getFiller().asOWLClass(), state));
             }
             else {
                 return null;
@@ -152,9 +206,9 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
-        public PropertyValue visit(OWLObjectMinCardinality ce) {
+        public Set<PropertyValue> visit(OWLObjectMinCardinality ce) {
             if(ce.getCardinality() == 1 && !ce.getProperty().isAnonymous() && !ce.getFiller().isAnonymous()) {
-                return new PropertyClassValue(ce.getProperty().asOWLObjectProperty(), ce.getFiller().asOWLClass());
+                return toSet(new PropertyClassValue(ce.getProperty().asOWLObjectProperty(), ce.getFiller().asOWLClass(), state));
             }
             else {
                 return null;
@@ -162,9 +216,19 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
-        public PropertyValue visit(OWLObjectHasValue desc) {
+        public Set<PropertyValue> visit(OWLObjectExactCardinality ce) {
+            if(ce.getCardinality() == 1 && !ce.getProperty().isAnonymous() && !ce.getFiller().isAnonymous()) {
+                return toSet(new PropertyClassValue(ce.getProperty().asOWLObjectProperty(), ce.getFiller().asOWLClass(), PropertyValueState.DERIVED));
+            }
+            else {
+                return null;
+            }
+        }
+
+        @Override
+        public Set<PropertyValue> visit(OWLObjectHasValue desc) {
             if(!desc.getProperty().isAnonymous() && !desc.getValue().isAnonymous()) {
-                return new PropertyIndividualValue(desc.getProperty().asOWLObjectProperty(), desc.getValue().asOWLNamedIndividual());
+                return toSet(new PropertyIndividualValue(desc.getProperty().asOWLObjectProperty(), desc.getValue().asOWLNamedIndividual(), state));
             }
             else {
                 return null;
@@ -172,9 +236,9 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
-        public PropertyValue visit(OWLDataSomeValuesFrom desc) {
+        public Set<PropertyValue> visit(OWLDataSomeValuesFrom desc) {
             if (desc.getFiller().isDatatype()) {
-                return new PropertyDatatypeValue(desc.getProperty().asOWLDataProperty(), desc.getFiller().asOWLDatatype());
+                return toSet(new PropertyDatatypeValue(desc.getProperty().asOWLDataProperty(), desc.getFiller().asOWLDatatype(), state));
             }
             else {
                 return null;
@@ -182,9 +246,9 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
-        public PropertyValue visit(OWLDataMinCardinality ce) {
+        public Set<PropertyValue> visit(OWLDataMinCardinality ce) {
             if(ce.getCardinality() == 1 && !ce.getProperty().isAnonymous() && ce.getFiller().isDatatype()) {
-                return new PropertyDatatypeValue(ce.getProperty().asOWLDataProperty(), ce.getFiller().asOWLDatatype());
+                return toSet(new PropertyDatatypeValue(ce.getProperty().asOWLDataProperty(), ce.getFiller().asOWLDatatype(), state));
             }
             else {
                 return null;
@@ -192,8 +256,18 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         }
 
         @Override
-        public PropertyValue visit(OWLDataHasValue desc) {
-            return new PropertyLiteralValue(desc.getProperty().asOWLDataProperty(), desc.getValue());
+        public Set<PropertyValue> visit(OWLDataExactCardinality ce) {
+            if(ce.getCardinality() == 1 && !ce.getProperty().isAnonymous() && ce.getFiller().isDatatype()) {
+                return toSet(new PropertyDatatypeValue(ce.getProperty().asOWLDataProperty(), ce.getFiller().asOWLDatatype(), state));
+            }
+            else {
+                return null;
+            }
+        }
+
+        @Override
+        public Set<PropertyValue> visit(OWLDataHasValue desc) {
+            return toSet(new PropertyLiteralValue(desc.getProperty().asOWLDataProperty(), desc.getValue(), state));
         }
     }
 

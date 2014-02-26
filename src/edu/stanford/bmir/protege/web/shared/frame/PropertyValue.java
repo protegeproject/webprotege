@@ -13,6 +13,8 @@ import java.io.Serializable;
  */
 public abstract class PropertyValue implements Comparable<PropertyValue>, Serializable {
 
+    private PropertyValueState state;
+
     private OWLEntity property;
 
     private OWLObject value;
@@ -21,9 +23,10 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
 
     }
 
-    public PropertyValue(OWLEntity property, OWLObject value) {
+    public PropertyValue(OWLEntity property, OWLObject value, PropertyValueState propertyValueState) {
         this.property = property;
         this.value = value;
+        this.state = propertyValueState;
     }
 
     public OWLEntity getProperty() {
@@ -32,6 +35,10 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
 
     public OWLObject getValue() {
         return value;
+    }
+
+    public PropertyValueState getState() {
+        return state;
     }
 
     public abstract boolean isAnnotation();

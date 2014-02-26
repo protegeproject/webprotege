@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.HashSet;
@@ -24,7 +25,7 @@ public class AnnotationPropertyFrameTranslator implements FrameTranslator<Annota
         Set<OWLEntity> ranges = new HashSet<OWLEntity>();
         for(OWLOntology ont : rootOntology.getImportsClosure()) {
             for(OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(subject.getIRI())) {
-                propertyValues.add(new PropertyAnnotationValue(ax.getProperty(), ax.getValue()));
+                propertyValues.add(new PropertyAnnotationValue(ax.getProperty(), ax.getValue(), PropertyValueState.ASSERTED));
             }
             for(OWLAnnotationPropertyDomainAxiom ax : ont.getAnnotationPropertyDomainAxioms(subject)) {
                 domains.addAll(rootOntology.getEntitiesInSignature(ax.getDomain()));
