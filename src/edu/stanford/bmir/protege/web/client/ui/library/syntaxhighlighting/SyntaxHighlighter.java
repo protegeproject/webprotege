@@ -10,11 +10,17 @@ import com.google.gwt.user.client.ui.FlowPanel;
  */
 public class SyntaxHighlighter extends FlowPanel {
 
+    private int counter = 0;
+
     private String id;
+
+
 
     public SyntaxHighlighter() {
         try {
-            id = "code-mirror-element";
+            counter++;
+            id = "cm-el-" + id;
+//            id = "code-mirror-element";
             getElement().setId(id);
         }
         catch (RuntimeException e) {
