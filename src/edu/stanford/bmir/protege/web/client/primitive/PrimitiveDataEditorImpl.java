@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedEvent;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
+import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -67,7 +68,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     private PrimitiveDataEditorView view;
 
     @Inject
-    public PrimitiveDataEditorImpl(PrimitiveDataEditorView editorView, ProjectId projectId, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
+    public PrimitiveDataEditorImpl(ProjectId projectId, PrimitiveDataEditorView editorView, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
         this.projectId = projectId;
         this.languageEditor = languageEditor;
         this.freshEntitiesHandler = freshEntitiesHandler;
@@ -105,6 +106,18 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         });
         initWidget(view.asWidget());
     }
+
+    @Override
+    public void setPlaceholder(String placeholder) {
+        view.setPlaceholder(placeholder);
+    }
+
+    @Override
+    public String getPlaceholder() {
+        return view.getPlaceholder();
+    }
+
+
 
     @Override
     public void setSuggestMode(PrimitiveDataEditorSuggestOracleMode mode) {
@@ -159,15 +172,6 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         return languageEditor;
     }
 
-    @Override
-    public String getPlaceholder() {
-        return view.getPlaceholder();
-    }
-
-    @Override
-    public void setPlaceholder(String placeholder) {
-        view.setPlaceholder(placeholder);
-    }
 
     /**
      * Gets this object's text.

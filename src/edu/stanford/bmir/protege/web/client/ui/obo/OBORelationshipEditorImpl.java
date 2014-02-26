@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorGinjector;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -36,10 +37,10 @@ public class OBORelationshipEditorImpl extends Composite implements ValueEditor<
     private static OBORelationshipEditorImplUiBinder ourUiBinder = GWT.create(OBORelationshipEditorImplUiBinder.class);
 
     @UiField(provided = true)
-    protected PrimitiveDataEditor propertyField;
+    protected PrimitiveDataEditorImpl propertyField;
 
     @UiField(provided = true)
-    protected PrimitiveDataEditor valueField;
+    protected PrimitiveDataEditorImpl valueField;
 
     public OBORelationshipEditorImpl() {
         propertyField = createPrimitiveDataEditor();
@@ -50,7 +51,7 @@ public class OBORelationshipEditorImpl extends Composite implements ValueEditor<
         valueField.asWidget().getElement().setAttribute("placeholder", "Enter class name");
     }
 
-    private static PrimitiveDataEditor createPrimitiveDataEditor() {
+    private static PrimitiveDataEditorImpl createPrimitiveDataEditor() {
         return PrimitiveDataEditorGinjector.INSTANCE.getEditor();
     }
 
