@@ -41,7 +41,7 @@ public class CSVColumnRelationEditorViewImpl extends Composite implements CSVCol
     private static CSVColumnRelationEditorViewImplUiBinder ourUiBinder = GWT.create(CSVColumnRelationEditorViewImplUiBinder.class);
 
     @UiField(provided = true)
-    protected PrimitiveDataEditor propertyField;
+    protected PrimitiveDataEditorImpl propertyField;
 
     @UiField
     protected ListBox relationTypeField;
