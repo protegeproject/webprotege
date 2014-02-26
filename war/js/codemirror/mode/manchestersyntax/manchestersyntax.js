@@ -23,8 +23,6 @@ CodeMirror.defineMode("manchestersyntax", function (config) {
             ('or'), ('and'), ('not')
     ]);
 
-    var operatorChars = /[*+\-<>=&|]/;
-
     function tokenBase(stream, state) {
         var ch = stream.next();
         curPunc = null;
