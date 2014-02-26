@@ -1,90 +1,3 @@
-.cm-s-manchester-syntax span.cm-quantifier {
-    color: #c528eb;
-    font-family: verdana,arial,helvetica,sans-serif;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-.cm-s-manchester-syntax span.cm-boolean-connective {
-    color: #0669eb;
-    font-family: verdana,arial,helvetica,sans-serif;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-.cm-s-manchester-syntax span.cm-string {
-    font-family: verdana,arial,helvetica,sans-serif;
-    font-size: 12px;
-}
-
-
-/*.CodeMirror pre {*/
-    /*font-size: 12px;*/
-    /*line-height: 12px;*/
-    /*height: 14px;*/
-/*}*/
-
-.CodeMirror pre {
-    line-height: 16px;
-}
-
-.axiom-kw {
-    font-weight: bold;
-    color: #0A5EA8;
-}
-
-
-.section-kw {
-    font-weight: bold;
-    color: #0A5EA8;
-}
-
-.quantifier-kw {
-    font-weight: bold;
-    color: #B200B2;
-}
-
-.connective-kw {
-    font-weight: bold;
-    color: #00B2B2;
-}
-
-.deprecated {
-    opacity: 0.5;
-    text-decoration: line-through;
-}
-
-.highlight {
-    font-weight: bold;
-    background: #FFEB7F;
-}
-
-.iri {
-    color: #0000ff;
-    text-decoration: underline;
-}
-
-.literal {
-    color: #a0522d;
-}
-
-.l-par {
-    padding-right: 2px;
-    color: #a9a9a9;
-}
-
-.r-par {
-    padding-left: 2px;
-    color: #a9a9a9;
-}
-
-.exp-block {
-    display: inline-block;
-    vertical-align: top;
-}
-
-
-
 body {
     font-family: verdana, arial, helvetica, sans-serif;
     font-size: 12px;
@@ -104,7 +17,6 @@ tr {
     margin-bottom: 30px;
     /*border-bottom: 1px solid #f3f3f3;*/
     padding-bottom: 5px;
-    font-size: 12px;
 }
 
 .ms-frame-subject {
@@ -211,27 +123,27 @@ tr {
 }
 
 .ms-item-ce {
-    background: url("../images/tree/class.png") no-repeat 0 -1px;
+    background: url("images/tree/class.png") no-repeat 0 -1px;
     padding-left: 20px;
 }
 
 .ms-item-ind {
-    background: url("../images/tree/individual.png") no-repeat 0 -1px;
+    background: url("images/tree/individual.png") no-repeat 0 -1px;
     padding-left: 20px;
 }
 
 .ms-item-anno {
-    background: url("../images/tree/annotation-property.png") no-repeat 0 -1px;
+    background: url("images/tree/annotation-property.png") no-repeat 0 -1px;
     padding-left: 20px;
 }
 
 .ms-item-prop {
-    background: url("../images/tree/property.png") no-repeat 0 -1px;
+    background: url("images/tree/property.png") no-repeat 0 -1px;
     padding-left: 20px;
 }
 
 .ms-item-dr {
-    background: url("../images/tree/datatype.png") no-repeat 0 -1px;
+    background: url("images/tree/datarange.png") no-repeat 0 -1px;
     padding-left: 20px;
 }
 

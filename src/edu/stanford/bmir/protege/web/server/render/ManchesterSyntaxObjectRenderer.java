@@ -1,15 +1,19 @@
 package edu.stanford.bmir.protege.web.server.render;
 
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
+import org.markdown4j.Markdown4jProcessor;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax.*;
 
@@ -19,29 +23,36 @@ import static org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 11/07/2013
  */
-public class BrowserTextRenderer {
+public class ManchesterSyntaxObjectRenderer {
 
-    private OWLAPIProject project;
+    private ShortFormProvider shortFormProvider;
 
+    private EntityIRIChecker entityIRIChecker;
 
-    public BrowserTextRenderer(OWLAPIProject project) {
-        this.project = project;
+    private LiteralStyle literalStyle;
+
+    private PrettyPrint prettyPrintOverride = PrettyPrint.ON;
+
+    private HttpLinkRenderer linkRenderer;
+
+    private LiteralRenderer literalRenderer;
+
+    public ManchesterSyntaxObjectRenderer(ShortFormProvider shortFormProvider,
+                                          EntityIRIChecker entityIRIChecker,
+                                          LiteralStyle literalStyle,
+                                          HttpLinkRenderer linkRenderer,
+                                          LiteralRenderer literalRenderer) {
+        this.shortFormProvider = shortFormProvider;
+        this.entityIRIChecker = entityIRIChecker;
+        this.literalStyle = literalStyle;
+        this.linkRenderer = linkRenderer;
+        this.literalRenderer = literalRenderer;
+
     }
-
 
     public String render(OWLObject object, HighlightChecker highlightChecker, DeprecatedChecker checker) {
         StringBuilder sb = new StringBuilder();
-        EntityRenderer entityRenderer = new EntityRenderer(sb, project.getRenderingManager().getShortFormProvider(), new EntityIRIChecker() {
-            @Override
-            public boolean isEntityIRI(IRI iri) {
-                return iri.isTopEntity() || iri.isBottomEntity() || project.getRootOntology().containsEntityInSignature(iri, true);
-            }
-
-            @Override
-            public Collection<OWLEntity> getEntitiesWithIRI(IRI iri) {
-                return project.getRootOntology().getEntitiesInSignature(iri, true);
-            }
-        }, highlightChecker, checker);
+        EntityRenderer entityRenderer = new EntityRenderer(sb, shortFormProvider, entityIRIChecker, highlightChecker, checker, literalStyle, literalRenderer,  prettyPrintOverride, linkRenderer);
         object.accept(entityRenderer);
         return sb.toString();
     }
@@ -78,15 +89,43 @@ public class BrowserTextRenderer {
 
         private DeprecatedChecker deprecatedChecker;
 
+        private LiteralStyle literalStyle;
 
-        private EntityRenderer(StringBuilder stringBuilder, ShortFormProvider sfp, EntityIRIChecker entityIRIChecker, HighlightChecker highlightChecker, DeprecatedChecker deprecatedChecker) {
+        private int classExpressionDepth = 0;
+
+        private PrettyPrint prettyPrintOverride;
+
+        private HttpLinkRenderer linkRenderer;
+
+        private LiteralRenderer literalRenderer;
+
+        private EntityRenderer(StringBuilder stringBuilder,
+                               ShortFormProvider sfp,
+                               EntityIRIChecker entityIRIChecker,
+                               HighlightChecker highlightChecker,
+                               DeprecatedChecker deprecatedChecker,
+                               LiteralStyle literalStyle,
+                               LiteralRenderer literalRenderer,
+                               PrettyPrint prettyPrintOverride,
+                               HttpLinkRenderer linkRenderer) {
             this.stringBuilder = stringBuilder;
             this.sfp = sfp;
             this.entityIRIChecker = entityIRIChecker;
             this.highlightChecker = highlightChecker;
             this.deprecatedChecker = deprecatedChecker;
+            this.literalStyle = literalStyle;
+            this.prettyPrintOverride = prettyPrintOverride;
+            this.linkRenderer = linkRenderer;
+            this.literalRenderer = literalRenderer;
         }
 
+        private void increaseDepth() {
+            classExpressionDepth++;
+        }
+
+        private void decreaseDepth() {
+            classExpressionDepth--;
+        }
 
         private void renderEntity(OWLEntity entity) {
             String shortForm = sfp.getShortForm(entity);
@@ -100,7 +139,7 @@ public class BrowserTextRenderer {
             }
         }
 
-        private void renderEntityShortForm(String shortForm, OWLEntity entity) {
+        private void renderEntityShortForm(final String shortForm, OWLEntity entity) {
             StringBuilder classNamesBuilder = new StringBuilder();
             final boolean highlighted = highlightChecker.isHighlighted(entity);
             if (highlighted) {
@@ -113,7 +152,7 @@ public class BrowserTextRenderer {
             stringBuilder.append("<span title=\"").append(entity.getEntityType().getName()).append(": ");
             stringBuilder.append(entity.getIRI());
             stringBuilder.append("\" class=\"").append(classNamesBuilder.toString().trim()).append("\">");
-            stringBuilder.append(new SafeHtmlBuilder().appendEscaped(shortForm).toSafeHtml().asString());
+            stringBuilder.append(new SafeHtmlBuilder().appendEscaped(shortForm).toSafeHtml().asString().replace(" ", "&nbsp;"));
             stringBuilder.append("</span>");
         }
 
@@ -121,16 +160,16 @@ public class BrowserTextRenderer {
         private void renderKeyword(ManchesterOWLSyntax keyword) {
             String styleName = "";
             if (keyword.isAxiomKeyword()) {
-                styleName = "axiom-kw";
+                styleName = "ms-axiom-kw";
             }
             else if (keyword.isClassExpressionConnectiveKeyword()) {
-                styleName = "connective-kw";
+                styleName = "ms-connective-kw";
             }
             else if (keyword.isClassExpressionQuantiferKeyword()) {
-                styleName = "quantifier-kw";
+                styleName = "ms-quantifier-kw";
             }
             else if (keyword.isSectionKeyword()) {
-                styleName = "section-kw";
+                styleName = "ms-section-kw";
             }
 
             stringBuilder.append("<span class=\"").append(styleName).append("\"").append(">");
@@ -192,25 +231,21 @@ public class BrowserTextRenderer {
 
         @Override
         public void visit(OWLAnnotation node) {
+            stringBuilder.append("<span class=\"ms-annotation-prop\">");
             node.getProperty().accept(this);
+            stringBuilder.append("</span>");
             renderSpace();
+            stringBuilder.append("<span class=\"ms-annotation-val\">");
             node.getValue().accept(this);
+            stringBuilder.append("<span>");
         }
 
 
         @Override
         public void visit(IRI iri) {
             boolean entityIRI = entityIRIChecker.isEntityIRI(iri);
-            StringBuilder iriStringBuilder = new StringBuilder();
             if (!entityIRI) {
-                iriStringBuilder.append("<a target=\"_blank\" href=\"");
-                iriStringBuilder.append(iri.toString());
-                iriStringBuilder.append("\">");
-                iriStringBuilder.append("<span class=\"iri\">");
-                renderEscapedIRI(iri, iriStringBuilder);
-                iriStringBuilder.append("</span>");
-                iriStringBuilder.append("</a>");
-                stringBuilder.append(iriStringBuilder.toString());
+                linkRenderer.renderLink(iri.toString(), stringBuilder);
             }
             else {
                 for (OWLEntity entity : entityIRIChecker.getEntitiesWithIRI(iri)) {
@@ -237,32 +272,32 @@ public class BrowserTextRenderer {
             }
         }
 
-        private void renderCollection(Collection<? extends OWLObject> collection, ManchesterOWLSyntax separator, boolean bracket, boolean prettyPrint) {
-            if (prettyPrint) {
-                stringBuilder.append("<div style=\"display: inline-block; vertical-align: top;\">");
+        private void renderCollection(Collection<? extends OWLObject> collection, ManchesterOWLSyntax separator, Bracketing bracket, PrettyPrint prettyPrint) {
+            if (prettyPrint == PrettyPrint.ON) {
+                stringBuilder.append("<div class=\"ms-expr-block\">");
             }
-            if (bracket) {
+            if (bracket == Bracketing.ON) {
                 renderOpenBracket();
             }
-            if (prettyPrint) {
-                stringBuilder.append("<div class=\"exp-block\">");
+            if (prettyPrint == PrettyPrint.ON) {
+                stringBuilder.append("<div class=\"ms-expr-block\">");
             }
             Iterator<? extends OWLObject> it = collection.iterator();
             if(it.hasNext()) {
                 OWLObject firstObject = it.next();
-                if (prettyPrint) {
+                if (prettyPrint == PrettyPrint.ON) {
                     stringBuilder.append("<div>");
                 }
                 firstObject.accept(this);
-                if (prettyPrint) {
+                if (prettyPrint == PrettyPrint.ON) {
                     stringBuilder.append("</div>");
                 }
                 // Could be just one thing
-                if(!it.hasNext() && bracket) {
+                if(!it.hasNext() && bracket == Bracketing.ON) {
                     renderCloseBracket();
                 }
                 while(it.hasNext()) {
-                    if (prettyPrint) {
+                    if (prettyPrint == PrettyPrint.ON) {
                         stringBuilder.append("<div>");
                     }
                     renderSpace();
@@ -270,16 +305,18 @@ public class BrowserTextRenderer {
                     renderSpace();
                     OWLObject object = it.next();
                     object.accept(this);
-                    if(!it.hasNext()) {
+                    if(!it.hasNext() && bracket == Bracketing.ON) {
                         renderCloseBracket();
                     }
-                    if (prettyPrint) {
+                    if (prettyPrint == PrettyPrint.ON) {
                         stringBuilder.append("</div>");
                     }
                 }
             }
-            if (prettyPrint) {
+            if (prettyPrint == PrettyPrint.ON) {
                 stringBuilder.append("</div>");
+            }
+            if (prettyPrint == PrettyPrint.ON) {
                 stringBuilder.append("</div>");
             }
         }
@@ -588,48 +625,57 @@ public class BrowserTextRenderer {
 
         @Override
         public void visit(OWLObjectIntersectionOf ce) {
-            boolean wrap = shouldWrapOperands(ce);
-            renderCollection(ce.getOperands(), AND, ce.getOperands().size() > 1, wrap);
+            PrettyPrint pp = shouldWrapOperands(ce);
+            renderCollection(ce.getOperands(), AND, Bracketing.OFF, getPrettyPrinting(pp));
         }
 
         private void renderCloseBracket() {
-            stringBuilder.append("<span class=\"r-par\">)</span>");
+            stringBuilder.append("<span class=\"ms-r-par\">)</span>");
         }
 
         private void renderOpenBracket() {
-            stringBuilder.append("<span class=\"l-par\">(</span>");
+            stringBuilder.append("<span class=\"ms-l-par\">(</span>");
         }
 
-        private boolean isBracketedClassExpression(OWLObject ce) {
-            return ce instanceof OWLClassExpression && !((OWLClassExpression) ce).isClassExpressionLiteral() && !(ce instanceof OWLObjectOneOf);
+        private Bracketing getBracketingForObject(OWLObject ce) {
+            if(ce instanceof OWLClassExpression && !((OWLClassExpression) ce).isClassExpressionLiteral() && !(ce instanceof OWLObjectOneOf) && classExpressionDepth >= 1) {
+                return Bracketing.ON;
+            }
+            else {
+                return Bracketing.OFF;
+            }
         }
 
 
         @Override
         public void visit(OWLObjectUnionOf ce) {
-            boolean wrap = shouldWrapOperands(ce);
-            renderCollection(ce.getOperands(), OR, ce.getOperands().size() > 1, wrap);
+            PrettyPrint pp = shouldWrapOperands(ce);
+            increaseDepth();
+            renderCollection(ce.getOperands(), OR, getBracketingForObject(ce), getPrettyPrinting(pp));
+            decreaseDepth();
         }
 
-        private boolean shouldWrapOperands(OWLNaryBooleanClassExpression ce) {
-            boolean wrap = false;
+        private PrettyPrint shouldWrapOperands(OWLNaryBooleanClassExpression ce) {
+            PrettyPrint pp = PrettyPrint.OFF;
             for(OWLClassExpression op : ce.getOperands()) {
                 if(op.isAnonymous()) {
-                    wrap = true;
+                    pp = PrettyPrint.ON;
                 }
             }
-            return wrap;
+            return pp;
         }
 
         @Override
         public void visit(OWLObjectComplementOf ce) {
             renderUnaryKeyword(NOT);
+            increaseDepth();
             renderBracketed(ce.getOperand());
+            decreaseDepth();
         }
 
         private void renderBracketed(OWLObject ce) {
-            boolean bracketed = isBracketedClassExpression(ce);
-            if (bracketed) {
+            Bracketing bracketed = getBracketingForObject(ce);
+            if (bracketed == Bracketing.ON) {
                 renderOpenBracket();
                 ce.accept(this);
                 renderCloseBracket();
@@ -647,13 +693,17 @@ public class BrowserTextRenderer {
         private void renderRestriction(OWLQuantifiedRestriction<?, ?, ?> ce, ManchesterOWLSyntax keyword) {
             ce.getProperty().accept(this);
             renderBinaryKeyword(keyword);
+            increaseDepth();
             renderBracketed(ce.getFiller());
+            decreaseDepth();
         }
 
         private void renderRestriction(OWLHasValueRestriction<?, ?, ?> ce, ManchesterOWLSyntax keyword) {
             ce.getProperty().accept(this);
             renderBinaryKeyword(keyword);
+            increaseDepth();
             renderBracketed(ce.getValue());
+            decreaseDepth();
         }
 
         private void renderRestriction(OWLCardinalityRestriction<?, ?, ?> ce, ManchesterOWLSyntax keyword) {
@@ -661,7 +711,9 @@ public class BrowserTextRenderer {
             renderBinaryKeyword(keyword);
             stringBuilder.append(ce.getCardinality());
             renderSpace();
+            increaseDepth();
             renderBracketed(ce.getFiller());
+            decreaseDepth();
         }
 
         @Override
@@ -736,37 +788,61 @@ public class BrowserTextRenderer {
 
         @Override
         public void visit(OWLLiteral node) {
+            String literal = node.getLiteral();
             if (node.isInteger() || node.isBoolean() || node.isDouble()) {
-                stringBuilder.append(node.getLiteral());
+                stringBuilder.append(literal);
             }
             else if (node.isFloat()) {
-                stringBuilder.append(node.getLiteral());
+                stringBuilder.append(literal);
                 stringBuilder.append("f");
             }
             else {
-                stringBuilder.append("<span class=\"literal\">\"");
-                stringBuilder.append(node.getLiteral());
-                stringBuilder.append("\"</span>");
-                if (node.isRDFPlainLiteral()) {
-                    if (node.hasLang()) {
-                        stringBuilder.append("<span style=\"color: gray;\">");
-                        stringBuilder.append(" [language: ");
-                        stringBuilder.append(node.getLang());
-                        stringBuilder.append("]</span>");
+                if(linkRenderer.isLink(node)) {
+                    linkRenderer.renderLink(literal, stringBuilder);
+                }
+                else {
+                    stringBuilder.append("<span class=\"ms-literal\">\"");
+                    literalRenderer.renderLiteral(literal, stringBuilder);
+                    stringBuilder.append("\"</span>");
+                    if (node.isRDFPlainLiteral()) {
+                        stringBuilder.append("<span class=\"ms-lang-tag\">");
+                        if (node.hasLang()) {
+                            if (literalStyle == LiteralStyle.BRACKETED) {
+                                stringBuilder.append("[language: ");
+                                stringBuilder.append(node.getLang());
+                                stringBuilder.append("]");
+                            }
+                            else {
+                                stringBuilder.append("@");
+                                stringBuilder.append(node.getLang());
+                            }
+                            stringBuilder.append("</span>");
+                        }
+                    }
+                    else if(!node.getDatatype().isString()) {
+                        stringBuilder.append("<span class=\"ms-lit-datatype\">");
+                        if (literalStyle == LiteralStyle.BRACKETED) {
+                            stringBuilder.append(" [datatype: ");
+                            node.getDatatype().accept(this);
+                            stringBuilder.append("]");
+                        }
+                        else {
+                            stringBuilder.append("^^");
+                            node.getDatatype().accept(this);
+                        }
+                        stringBuilder.append("</span>");
                     }
                 }
-                else if(!node.getDatatype().isString()) {
-                    stringBuilder.append("<span style=\"color: gray;\">");
-                    stringBuilder.append(" [datatype: ");
-                    node.getDatatype().accept(this);
-                    stringBuilder.append("]</span>");
-                }
+
             }
         }
 
+
         @Override
         public void visit(OWLFacetRestriction node) {
-            stringBuilder.append(node.getFacet().getShortName());
+            stringBuilder.append(
+                    new SafeHtmlBuilder().appendEscaped(node.getFacet().getSymbolicForm()).toSafeHtml().asString()
+            );
             renderSpace();
             node.getFacetValue().accept(this);
         }
@@ -785,20 +861,29 @@ public class BrowserTextRenderer {
                 node.getDataRange().accept(this);
             }
             else {
-                renderOpenBracket();
+//                renderOpenBracket();
                 node.getDataRange().accept(this);
-                renderCloseBracket();
+//                renderCloseBracket();
+            }
+        }
+
+        private PrettyPrint getPrettyPrinting(PrettyPrint defaultValue) {
+            if(prettyPrintOverride == PrettyPrint.ON) {
+                return PrettyPrint.ON;
+            }
+            else {
+                return defaultValue;
             }
         }
 
         @Override
         public void visit(OWLDataIntersectionOf node) {
-            renderCollection(node.getOperands(), AND, node.getOperands().size() > 1, false);
+            renderCollection(node.getOperands(), AND, getBracketingForObject(node), getPrettyPrinting(PrettyPrint.OFF));
         }
 
         @Override
         public void visit(OWLDataUnionOf node) {
-            renderCollection(node.getOperands(), OR, node.getOperands().size() > 1, false);
+            renderCollection(node.getOperands(), OR, getBracketingForObject(node), getPrettyPrinting(PrettyPrint.OFF));
         }
 
         @Override

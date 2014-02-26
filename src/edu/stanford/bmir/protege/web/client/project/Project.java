@@ -36,7 +36,6 @@ public class Project implements HasProjectId, HasDispose {
 
     private EventPollingManager eventPollingManager;
 
-
     /**
      * Creates a project from the specified details.
      * @param projectDetails The details.  Not {@code null}.
