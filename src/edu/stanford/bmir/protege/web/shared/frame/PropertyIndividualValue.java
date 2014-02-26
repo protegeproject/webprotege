@@ -14,8 +14,8 @@ public final class PropertyIndividualValue extends ObjectPropertyValue {
     private PropertyIndividualValue() {
     }
 
-    public PropertyIndividualValue(OWLObjectProperty property, OWLNamedIndividual value) {
-        super(property, value);
+    public PropertyIndividualValue(OWLObjectProperty property, OWLNamedIndividual value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
 

@@ -16,12 +16,12 @@ public abstract class DataPropertyValue extends PropertyValue implements ClassFr
     protected DataPropertyValue() {
     }
 
-    public DataPropertyValue(OWLDataProperty property, OWLDatatype value) {
-        super(property, value);
+    public DataPropertyValue(OWLDataProperty property, OWLDatatype value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
-    protected DataPropertyValue(OWLDataProperty property, OWLLiteral value) {
-        super(property, value);
+    protected DataPropertyValue(OWLDataProperty property, OWLLiteral value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
     @Override

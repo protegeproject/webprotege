@@ -18,12 +18,12 @@ public final class PropertyAnnotationValue extends PropertyValue {
     private PropertyAnnotationValue() {
     }
 
-    public PropertyAnnotationValue(OWLAnnotationProperty property, OWLAnnotationValue value) {
-        super(property, value);
+    public PropertyAnnotationValue(OWLAnnotationProperty property, OWLAnnotationValue value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
-    public PropertyAnnotationValue(OWLAnnotationProperty property, OWLEntity entityValue) {
-        super(property, entityValue.getIRI());
+    public PropertyAnnotationValue(OWLAnnotationProperty property, OWLEntity entityValue, PropertyValueState propertyValueState) {
+        super(property, entityValue.getIRI(), propertyValueState);
         this.entity = entityValue;
     }
 

@@ -263,40 +263,40 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
             propertyValues.addAll(propertyValue);
         }
 
-        public void addPropertyValue(OWLObjectProperty property, OWLClass value) {
-            addPropertyValue(new PropertyClassValue(property, value));
+        public void addPropertyValue(OWLObjectProperty property, OWLClass value, PropertyValueState propertyValueState) {
+            addPropertyValue(new PropertyClassValue(property, value, propertyValueState));
         }
 
-        public void addPropertyValue(OWLObjectProperty property, OWLNamedIndividual value) {
-            addPropertyValue(new PropertyIndividualValue(property, value));
+        public void addPropertyValue(OWLObjectProperty property, OWLNamedIndividual value, PropertyValueState propertyValueState) {
+            addPropertyValue(new PropertyIndividualValue(property, value, propertyValueState));
         }
 
-        public void addPropertyValue(OWLDataProperty property, OWLDatatype value) {
-            addPropertyValue(new PropertyDatatypeValue(property, value));
+        public void addPropertyValue(OWLDataProperty property, OWLDatatype value, PropertyValueState propertyValueState) {
+            addPropertyValue(new PropertyDatatypeValue(property, value, propertyValueState));
         }
 
-        public void addPropertyValue(OWLDataProperty property, OWLLiteral value) {
-            addPropertyValue(new PropertyLiteralValue(property, value));
+        public void addPropertyValue(OWLDataProperty property, OWLLiteral value, PropertyValueState propertyValueState) {
+            addPropertyValue(new PropertyLiteralValue(property, value, propertyValueState));
         }
 
-        public void addPropertyValue(OWLDataProperty property, int value) {
-            addPropertyValue(property, DataFactory.getOWLLiteral(value));
+        public void addPropertyValue(OWLDataProperty property, int value, PropertyValueState propertyValueState) {
+            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
         }
 
-        public void addPropertyValue(OWLDataProperty property, double value) {
-            addPropertyValue(property, DataFactory.getOWLLiteral(value));
+        public void addPropertyValue(OWLDataProperty property, double value, PropertyValueState propertyValueState) {
+            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
         }
 
-        public void addPropertyValue(OWLDataProperty property, boolean value) {
-            addPropertyValue(property, DataFactory.getOWLLiteral(value));
+        public void addPropertyValue(OWLDataProperty property, boolean value, PropertyValueState propertyValueState) {
+            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
         }
 
-        public void addPropertyValue(OWLDataProperty property, String value) {
-            addPropertyValue(property, DataFactory.getOWLLiteral(value));
+        public void addPropertyValue(OWLDataProperty property, String value, PropertyValueState propertyValueState) {
+            addPropertyValue(property, DataFactory.getOWLLiteral(value), propertyValueState);
         }
 
-        public void addPropertyValue(OWLAnnotationProperty property, OWLAnnotationValue value) {
-            addPropertyValue(new PropertyAnnotationValue(property, value));
+        public void addPropertyValue(OWLAnnotationProperty property, OWLAnnotationValue value, PropertyValueState propertyValueState) {
+            addPropertyValue(new PropertyAnnotationValue(property, value, propertyValueState));
         }
 
         /**

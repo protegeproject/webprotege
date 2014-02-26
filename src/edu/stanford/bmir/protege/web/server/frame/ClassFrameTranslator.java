@@ -54,7 +54,9 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                     relevantAxioms.add(subClassOfAxiom);
                 }
             }
-            // TODO: Needs some more thought
+            for(OWLEquivalentClassesAxiom ax : rootOntology.getEquivalentClassesAxioms(subject)) {
+                relevantAxioms.add(ax);
+            }
 //            if (relevantAxioms.isEmpty()) {
 //                for(OWLEquivalentClassesAxiom equivalentClassesAxiom : rootOntology.getEquivalentClassesAxioms(subject)) {
 //                    for(OWLSubClassOfAxiom sca : equivalentClassesAxiom.asOWLSubClassOfAxioms()) {

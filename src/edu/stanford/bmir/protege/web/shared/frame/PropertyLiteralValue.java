@@ -15,27 +15,27 @@ public final class PropertyLiteralValue extends DataPropertyValue {
     private PropertyLiteralValue() {
     }
 
-    public PropertyLiteralValue(OWLDataProperty property, OWLLiteral value) {
-        super(property, value);
+    public PropertyLiteralValue(OWLDataProperty property, OWLLiteral value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
-    public PropertyLiteralValue(OWLDataProperty property, int value) {
-        super(property, DataFactory.getOWLLiteral(value));
-    }
-
-
-    public PropertyLiteralValue(OWLDataProperty property, double value) {
-        super(property, DataFactory.getOWLLiteral(value));
+    public PropertyLiteralValue(OWLDataProperty property, int value, PropertyValueState propertyValueState) {
+        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
     }
 
 
-    public PropertyLiteralValue(OWLDataProperty property, String value) {
-        super(property, DataFactory.getOWLLiteral(value));
+    public PropertyLiteralValue(OWLDataProperty property, double value, PropertyValueState propertyValueState) {
+        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
     }
 
 
-    public PropertyLiteralValue(OWLDataProperty property, boolean value) {
-        super(property, DataFactory.getOWLLiteral(value));
+    public PropertyLiteralValue(OWLDataProperty property, String value, PropertyValueState propertyValueState) {
+        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
+    }
+
+
+    public PropertyLiteralValue(OWLDataProperty property, boolean value, PropertyValueState propertyValueState) {
+        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
     }
 
     @Override

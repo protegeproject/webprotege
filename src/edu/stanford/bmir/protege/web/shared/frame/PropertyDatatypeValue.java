@@ -14,8 +14,8 @@ public final class PropertyDatatypeValue extends DataPropertyValue {
     private PropertyDatatypeValue() {
     }
 
-    public PropertyDatatypeValue(OWLDataProperty property, OWLDatatype value) {
-        super(property, value);
+    public PropertyDatatypeValue(OWLDataProperty property, OWLDatatype value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
     @Override
