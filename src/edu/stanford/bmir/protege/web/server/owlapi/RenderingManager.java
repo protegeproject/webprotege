@@ -5,14 +5,16 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
+import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import edu.stanford.bmir.protege.web.server.render.BrowserTextRenderer;
+import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
+import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -32,7 +34,7 @@ import java.util.*;
  * This class is here to deal with the confusion/mess surrounding "names" in web-protege.  It translates between OWLObjects
  * and EntityData and names.
  */
-public class RenderingManager implements BrowserTextProvider  {
+public class RenderingManager implements BrowserTextProvider, HasGetFrameRendering  {
 
     public static final String NULL_BROWSER_TEXT = "\"\"";
 
@@ -43,6 +45,13 @@ public class RenderingManager implements BrowserTextProvider  {
     // An immutable map of IRI to OWLEntity for built in entities.
     private Map<IRI, OWLEntity> builtInEntities;
 
+    private OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
+
+    private ManchesterSyntaxObjectRenderer.EntityIRIChecker entityIRIChecker;
+
+    private ManchesterSyntaxObjectRenderer.DeprecatedChecker deprecatedEntityChecker;
+
+    private ManchesterSyntaxObjectRenderer.HighlightChecker highlightChecker;
 
     public RenderingManager(OWLAPIProject prj) {
         this.project = prj;
@@ -50,6 +59,45 @@ public class RenderingManager implements BrowserTextProvider  {
         setupBuiltInEntities();
 
         shortFormProvider = new WebProtegeBidirectionalShortFormProvider(project);
+
+        ontologyIRIShortFormProvider = new OntologyIRIShortFormProvider() {
+            @Override
+            public String getShortForm(IRI iri) {
+                if (iri.equals(project.getRootOntology().getOntologyID().getOntologyIRI())) {
+                    return "root ontology";
+                }
+                return super.getShortForm(iri);
+            }
+        };
+
+        entityIRIChecker = new ManchesterSyntaxObjectRenderer
+                .EntityIRIChecker() {
+            @Override
+            public boolean isEntityIRI(IRI iri) {
+                return project.getRootOntology().containsEntityInSignature(iri);
+            }
+
+            @Override
+            public Collection<OWLEntity> getEntitiesWithIRI(IRI iri) {
+                return project.getEntitiesWithIRI(iri);
+            }
+        };
+
+        deprecatedEntityChecker = new ManchesterSyntaxObjectRenderer
+                .DeprecatedChecker() {
+            @Override
+            public boolean isDeprecated(OWLEntity entity) {
+                return project.isDeprecated(entity);
+            }
+        };
+
+        highlightChecker = new ManchesterSyntaxObjectRenderer
+                .HighlightChecker() {
+            @Override
+            public boolean isHighlighted(OWLEntity entity) {
+                return false;
+            }
+        };
     }
 
 
@@ -717,9 +765,28 @@ public class RenderingManager implements BrowserTextProvider  {
         return browserText;
     }
 
+    @Override
+    public String getFrameRendering(OWLObject subject) {
+        if(!(subject instanceof OWLEntity)) {
+            return "";
+        }
+        OWLEntity entity = (OWLEntity) subject;
+        ManchesterSyntaxObjectRenderer objectRenderer = new ManchesterSyntaxObjectRenderer(shortFormProvider,
+                entityIRIChecker,
+                LiteralStyle.REGULAR,
+                new DefaultHttpLinkRenderer(),
+                new MarkdownLiteralRenderer());
+        ManchesterSyntaxEntityFrameRenderer renderer = new ManchesterSyntaxEntityFrameRenderer(
+                project.getRootOntology(),
+                shortFormProvider, ontologyIRIShortFormProvider, objectRenderer,
+                highlightChecker, deprecatedEntityChecker, new DefaultItemStyleProvider(), NestedAnnotationStyle.COMPACT);
+        StringBuilder builder = new StringBuilder();
+        renderer.render(entity, builder);
+        return builder.toString();
+    }
 
     public String getHTMLBrowserText(OWLObject object) {
-        return getHTMLBrowserText(object, new BrowserTextRenderer.HighlightChecker() {
+        return getHTMLBrowserText(object, new ManchesterSyntaxObjectRenderer.HighlightChecker() {
             @Override
             public boolean isHighlighted(OWLEntity entity) {
                 return false;
@@ -728,7 +795,7 @@ public class RenderingManager implements BrowserTextProvider  {
     }
 
     public String getHTMLBrowserText(OWLObject object, final Set<String> highlightedPhrases) {
-        return getHTMLBrowserText(object, new BrowserTextRenderer.HighlightChecker() {
+        return getHTMLBrowserText(object, new ManchesterSyntaxObjectRenderer.HighlightChecker() {
             @Override
             public boolean isHighlighted(OWLEntity entity) {
                 return highlightedPhrases.contains(getShortForm(entity));
@@ -736,9 +803,14 @@ public class RenderingManager implements BrowserTextProvider  {
         });
     }
 
-    public String getHTMLBrowserText(OWLObject object, BrowserTextRenderer.HighlightChecker highlightChecker) {
-        BrowserTextRenderer renderer = new BrowserTextRenderer(project);
-        return renderer.render(object, highlightChecker, new BrowserTextRenderer.DeprecatedChecker() {
+    public String getHTMLBrowserText(OWLObject object, ManchesterSyntaxObjectRenderer.HighlightChecker highlightChecker) {
+        ManchesterSyntaxObjectRenderer renderer = new ManchesterSyntaxObjectRenderer(
+                project.getRenderingManager().getShortFormProvider(),
+                new DefaultEntityIRIChecker(project.getRootOntology()),
+                LiteralStyle.BRACKETED,
+                new DefaultHttpLinkRenderer(),
+                new MarkdownLiteralRenderer());
+        return renderer.render(object, highlightChecker, new ManchesterSyntaxObjectRenderer.DeprecatedChecker() {
             @Override
             public boolean isDeprecated(OWLEntity entity) {
                 return project.isDeprecated(entity);

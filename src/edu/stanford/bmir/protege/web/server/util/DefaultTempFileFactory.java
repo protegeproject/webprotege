@@ -17,7 +17,7 @@ public class DefaultTempFileFactory implements TempFileFactory {
 
     @Override
     public File createTempDirectory() throws IOException {
-        File systemTempDirectory = FileUtils.getTempDirectory();
+        File systemTempDirectory = new File("/tmp");
         File result = new File(systemTempDirectory, "tmp-" + UUID.randomUUID().toString());
         result.mkdirs();
         return result;

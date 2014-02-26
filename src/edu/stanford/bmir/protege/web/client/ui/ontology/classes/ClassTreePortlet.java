@@ -135,7 +135,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         this.allowsMultiSelection = allowsMultiSelection;
         this.topClass = topClass;
         registerEventHandlers();
-
         initialize();
     }
 
