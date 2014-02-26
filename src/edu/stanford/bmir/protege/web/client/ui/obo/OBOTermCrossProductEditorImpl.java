@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorGinjector;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
@@ -41,7 +42,7 @@ public class OBOTermCrossProductEditorImpl extends Composite implements OBOTermC
 
 
     @UiField(provided = true)
-    protected PrimitiveDataEditor genusField;
+    protected PrimitiveDataEditorImpl genusField;
 
     @UiField(provided =  true)
     protected OBOTermRelationshipEditor relationshipsField;
