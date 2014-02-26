@@ -18,7 +18,7 @@
             </colgroup>
             <tr>
                 <td style="padding-bottom: 1px;">
-                    <frame:PrimitiveDataEditor ui:field="genusField" addStyleNames="{style.cross-product-editor}" placeholder="Enter genus (class) name" classesAllowed="true"/>
+                    <frame:PrimitiveDataEditorImpl ui:field="genusField" placeholder="Enter genus (class) name" addStyleNames="{style.cross-product-editor}" classesAllowed="true"/>
                 </td>
             </tr>
             <tr>
