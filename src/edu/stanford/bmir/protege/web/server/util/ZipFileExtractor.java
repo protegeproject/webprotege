@@ -32,12 +32,18 @@ public class ZipFileExtractor {
         ZipEntry entry = zipEntryEnumeration.nextElement();
         String entryName = entry.getName();
         File entryFile = new File(outputDirectory, entryName);
-        File entryParentFile = entryFile.getParentFile();
-        entryParentFile.mkdirs();
-        BufferedOutputStream entryOutputStream = new BufferedOutputStream(new FileOutputStream(entryFile));
-        InputStream entryInputStream = zipFile.getInputStream(entry);
-        IOUtils.copy(entryInputStream, entryOutputStream);
-        entryInputStream.close();
-        entryOutputStream.close();
+        if(entryName.endsWith("/")) {
+            entryFile.mkdirs();
+        }
+        else {
+            File entryParentFile = entryFile.getParentFile();
+            entryParentFile.mkdirs();
+            BufferedOutputStream entryOutputStream = new BufferedOutputStream(new FileOutputStream(entryFile));
+            InputStream entryInputStream = zipFile.getInputStream(entry);
+            IOUtils.copy(entryInputStream, entryOutputStream);
+            entryInputStream.close();
+            entryOutputStream.close();
+        }
+
     }
 }
