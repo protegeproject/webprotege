@@ -17,6 +17,8 @@ public class ClassFrameRenderer implements FrameRenderer<OWLClass> {
         renderers.add(new ClassSubClassOfSectionRenderer());
         renderers.add(new ClassEquivalentToSectionRenderer());
         renderers.add(new ClassDisjointWithSectionRenderer());
+//        renderers.add(new ClassDomainOfSectionRenderer());
+//        renderers.add(new ClassRangeOfSectionRenderer());
         return renderers;
 
     }
