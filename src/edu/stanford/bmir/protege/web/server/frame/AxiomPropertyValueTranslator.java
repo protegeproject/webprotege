@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
+import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
@@ -46,8 +47,9 @@ import java.util.*;
 public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
 
-    public Set<PropertyValue> getPropertyValues(OWLEntity subject, OWLAxiom axiom, OWLOntology rootOntology) {
-        final AxiomTranslator visitor = new AxiomTranslator(subject, rootOntology);
+
+    public Set<PropertyValue> getPropertyValues(OWLEntity subject, OWLAxiom axiom, OWLOntology rootOntology, PropertyValueState initialState) {
+        final AxiomTranslator visitor = new AxiomTranslator(subject, rootOntology, initialState);
         Set<PropertyValue> result = axiom.accept(visitor);
         if(result == null) {
             return Collections.emptySet();
@@ -77,15 +79,18 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
         private OWLOntology rootOntology;
 
-        private AxiomTranslator(OWLEntity subject, OWLOntology rootOntology) {
+        private PropertyValueState initialState;
+
+        private AxiomTranslator(OWLEntity subject, OWLOntology rootOntology, PropertyValueState initialState) {
             this.subject = subject;
             this.rootOntology = rootOntology;
+            this.initialState = initialState;
         }
 
         @Override
         public Set<PropertyValue> visit(OWLSubClassOfAxiom axiom) {
             if (axiom.getSubClass().equals(subject)) {
-                return axiom.getSuperClass().accept(new ClassExpressionTranslator());
+                return axiom.getSuperClass().accept(new ClassExpressionTranslator(initialState));
             }
             else {
                 return null;
@@ -155,7 +160,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         @Override
         public Set<PropertyValue> visit(OWLClassAssertionAxiom axiom) {
             if(axiom.getIndividual().equals(subject)) {
-                return axiom.getClassExpression().accept(new ClassExpressionTranslator());
+                return axiom.getClassExpression().accept(new ClassExpressionTranslator(initialState));
             }
             else {
                 return null;
@@ -171,16 +176,11 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
     private class ClassExpressionTranslator extends OWLClassExpressionVisitorExAdapter<Set<PropertyValue>> {
 
-        private PropertyValueState state = PropertyValueState.ASSERTED;
+        private PropertyValueState state;
 
-        private ClassExpressionTranslator() {
+        private ClassExpressionTranslator(PropertyValueState initialState) {
+            this.state = initialState;
         }
-
-        private ClassExpressionTranslator(PropertyValueState state) {
-            this.state = state;
-        }
-
-    private static class ClassExpressionTranslator extends OWLClassExpressionVisitorExAdapter<PropertyValue> {
 
         @Override
         public Set<PropertyValue> visit(OWLObjectIntersectionOf ce) {
@@ -197,8 +197,19 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
 
         @Override
         public Set<PropertyValue> visit(OWLObjectSomeValuesFrom desc) {
-            if(!desc.getProperty().isAnonymous() && !desc.getFiller().isAnonymous()) {
-                return toSet(new PropertyClassValue(desc.getProperty().asOWLObjectProperty(), desc.getFiller().asOWLClass(), state));
+            if(!desc.getProperty().isAnonymous()) {
+                if (!desc.getFiller().isAnonymous()) {
+                    return toSet(new PropertyClassValue(desc.getProperty().asOWLObjectProperty(), desc.getFiller().asOWLClass(), state));
+                }
+                else {
+                    Set<PropertyValue> result = Sets.newHashSet();
+                    for(OWLClassExpression ce : desc.getFiller().asConjunctSet()) {
+                        if (!ce.isAnonymous()) {
+                            result.add(new PropertyClassValue(desc.getProperty().asOWLObjectProperty(), ce.asOWLClass(), PropertyValueState.DERIVED));
+                        }
+                    }
+                    return result;
+                }
             }
             else {
                 return null;
@@ -211,7 +222,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
                 return toSet(new PropertyClassValue(ce.getProperty().asOWLObjectProperty(), ce.getFiller().asOWLClass(), state));
             }
             else {
-                return null;
+                return toSet(new PropertyClassValue(ce.getProperty().asOWLObjectProperty(), ce.getFiller().asOWLClass(), PropertyValueState.DERIVED));
             }
         }
 

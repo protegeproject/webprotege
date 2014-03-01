@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
-import edu.stanford.bmir.protege.web.client.ui.frame.ClassFrameEditor;
-import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
-import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueGridGrammar;
-import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueListEditor;
+import edu.stanford.bmir.protege.web.client.ui.frame.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -21,8 +18,8 @@ public class ClassFrameEditorFactory implements EditorConfigurationFactory<Label
 
     @Override
     public ValueEditor<LabelledFrame<ClassFrame>> getEditor(ProjectId projectId) {
-        PropertyValueListEditor annotationsEditor = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getAnnotationsGrammar());
-        PropertyValueListEditor propertiesEditor = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getLogicalPropertiesGrammar());
+        PropertyValueListEditor2 annotationsEditor = new PropertyValueListEditor2(projectId);
+        PropertyValueListEditor2 propertiesEditor = new PropertyValueListEditor2(projectId);
         return new ClassFrameEditor(projectId, annotationsEditor, propertiesEditor);
     }
 

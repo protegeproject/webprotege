@@ -35,7 +35,6 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
         this.mode = mode;
         allowedPrimitiveTypes.add(EntityType.CLASS);
         allowedPrimitiveTypes.add(EntityType.NAMED_INDIVIDUAL);
-
     }
 
     public void setEntityTypes(Set<EntityType<?>> entityTypes) {

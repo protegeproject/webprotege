@@ -47,7 +47,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     protected TextBox iriField;
 
     @UiField(provided = true)
-    protected final PropertyValueListEditor annotations;
+    protected final PropertyValueListEditor2 annotations;
 
     @UiField(provided = true)
     final PrimitiveDataListEditor domains;
@@ -69,7 +69,8 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
 
     public ObjectPropertyFrameEditor(ProjectId projectId) {
         this.projectId = projectId;
-        annotations = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getAnnotationsGrammar());
+        annotations = new PropertyValueListEditor2(projectId);
+        annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
         domains.setPlaceholder("Enter class name");
         ranges = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);

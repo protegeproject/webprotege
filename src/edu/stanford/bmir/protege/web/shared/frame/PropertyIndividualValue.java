@@ -25,6 +25,11 @@ public final class PropertyIndividualValue extends ObjectPropertyValue {
     }
 
     @Override
+    public boolean isValueMostSpecific() {
+        return true;
+    }
+
+    @Override
     public boolean isAnnotation() {
         return false;
     }
@@ -54,5 +59,10 @@ public final class PropertyIndividualValue extends ObjectPropertyValue {
         }
         PropertyIndividualValue other = (PropertyIndividualValue) obj;
         return this.getProperty().equals(other.getProperty()) && this.getValue().equals(other.getValue());
+    }
+
+    @Override
+    protected PropertyValue duplicateWithState(PropertyValueState state) {
+        return new PropertyIndividualValue(getProperty(), getValue(), state);
     }
 }

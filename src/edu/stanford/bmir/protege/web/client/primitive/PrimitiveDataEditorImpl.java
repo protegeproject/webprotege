@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -17,7 +18,6 @@ import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedEvent;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -27,10 +27,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -46,6 +43,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataEditor, HasEnabled {
 
+    public static final double PLACEHOLDER_ICON_OPACITY = 0.3;
 
     private final ProjectId projectId;
 
@@ -59,13 +57,17 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private Optional<OWLPrimitiveData> currentData = Optional.absent();
 
-    private final Set<PrimitiveType> allowedTypes = new LinkedHashSet<PrimitiveType>();
+    private final Set<PrimitiveType> allowedTypes = Sets.newLinkedHashSet();
 
     private boolean dirty = false;
 
     private boolean enabled;
 
     private PrimitiveDataEditorView view;
+
+    private String textPlaceholder = "";
+
+    private Optional<OWLPrimitiveData> primitiveDataPlaceholder = Optional.absent();
 
     @Inject
     public PrimitiveDataEditorImpl(ProjectId projectId, PrimitiveDataEditorView editorView, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
@@ -109,6 +111,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     @Override
     public void setPlaceholder(String placeholder) {
+        this.textPlaceholder = placeholder;
         view.setPlaceholder(placeholder);
     }
 
@@ -117,7 +120,22 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         return view.getPlaceholder();
     }
 
+    @Override
+    public void setPrimitiveDataPlaceholder(Optional<OWLPrimitiveData> placeholder) {
+        primitiveDataPlaceholder = placeholder;
+        if(!primitiveDataPlaceholder.isPresent()) {
+            view.setPlaceholder(textPlaceholder);
+        }
+        else {
+            view.setPlaceholder(primitiveDataPlaceholder.get().getBrowserText());
+            setIconInsetStyleNameForEntityData(primitiveDataPlaceholder, PLACEHOLDER_ICON_OPACITY);
+        }
+    }
 
+    @Override
+    public Optional<OWLPrimitiveData> getPrimitiveDataPlaceholder() {
+        return null;
+    }
 
     @Override
     public void setSuggestMode(PrimitiveDataEditorSuggestOracleMode mode) {
@@ -171,7 +189,6 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     public LanguageEditor getLanguageEditor() {
         return languageEditor;
     }
-
 
     /**
      * Gets this object's text.
@@ -303,6 +320,9 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     @Override
     public void coerceToEntityType(EntityType<?> entityType) {
+        if(currentData.isPresent() && entityType.equals(currentData.get().getType().getEntityType())) {
+            return;
+        }
         String text = getTrimmedText();
         OWLEntity entity = freshEntitiesHandler.getFreshEntity(text, entityType);
         OWLPrimitiveData coercedData = DataFactory.getOWLEntityData(entity, text);
@@ -356,7 +376,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     @Override
-    public void setAllowedTypes(SortedSet<PrimitiveType> primitiveTypes) {
+    public void setAllowedTypes(Collection<PrimitiveType> primitiveTypes) {
         if (primitiveTypes.equals(this.allowedTypes)) {
             return;
         }
@@ -466,14 +486,20 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     private void updateDisplayForCurrentData() {
-        setIconInsetStyleNameForEntityData();
-        validateCurrentEntityTypeAgainstAllowedTypes();
-        if (isExternalIRI()) {
-            view.setAnchorTitle("Open link in new window");
-            view.setAnchorVisible(true);
-        } else {
-            view.setAnchorVisible(false);
+        if(currentData.isPresent()) {
+            setIconInsetStyleNameForEntityData(currentData, 1.0);
+            validateCurrentEntityTypeAgainstAllowedTypes();
+            if (isExternalIRI()) {
+                view.setAnchorTitle("Open link in new window");
+                view.setAnchorVisible(true);
+            } else {
+                view.setAnchorVisible(false);
+            }
         }
+        else {
+            setIconInsetStyleNameForEntityData(primitiveDataPlaceholder, PLACEHOLDER_ICON_OPACITY);
+        }
+
     }
 
     private boolean isExternalIRI() {
@@ -499,13 +525,16 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
     ////////////////////////////////////////////////////////////////////////////////////////
 
-    private void setIconInsetStyleNameForEntityData() {
-        if (!currentData.isPresent()) {
+
+
+    private void setIconInsetStyleNameForEntityData(final Optional<OWLPrimitiveData> data, double iconOpacity) {
+        if (!data.isPresent()) {
             view.setTitle("");
             hideErrorLabel();
+            setIconInsetStyleName(Optional.of("empty-icon-inset"));
             return;
         }
-        final OWLPrimitiveData entityData = currentData.get();
+        final OWLPrimitiveData entityData = data.get();
         String styleName = entityData.accept(new OWLPrimitiveDataVisitorAdapter<String, RuntimeException>() {
             @Override
             protected String getDefaultReturnValue() {

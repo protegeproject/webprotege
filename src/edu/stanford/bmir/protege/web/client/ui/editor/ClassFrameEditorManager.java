@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateClassFrameAction;
-import edu.stanford.bmir.protege.web.client.ui.frame.ClassFrameEditor;
-import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
-import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueGridGrammar;
-import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueListEditor;
+import edu.stanford.bmir.protege.web.client.ui.frame.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
@@ -31,8 +28,10 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityDataConte
     public EditorView<LabelledFrame<ClassFrame>> getView(OWLEntityDataContext context) {
         if (editor == null || !projectId.equals(context.getProjectId())) {
             projectId = context.getProjectId();
-            PropertyValueListEditor annotationsEditor = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getAnnotationsGrammar());
-            PropertyValueListEditor propertiesEditor = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getLogicalPropertiesGrammar());
+            PropertyValueListEditor2 annotationsEditor = new PropertyValueListEditor2(projectId);
+            annotationsEditor.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
+            PropertyValueListEditor2 propertiesEditor = new PropertyValueListEditor2(projectId);
+            propertiesEditor.setGrammar(PropertyValueGridGrammar.getClassGrammar());
             editor = new ClassFrameEditor(projectId, annotationsEditor, propertiesEditor);
         }
         return editor;

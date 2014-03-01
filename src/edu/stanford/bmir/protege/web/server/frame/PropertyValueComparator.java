@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -30,6 +31,15 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
 
     @Override
     public int compare(PropertyValue o1, PropertyValue o2) {
+
+//        if(o1.getState() == PropertyValueState.DERIVED) {
+//            if(o2.getState() != PropertyValueState.DERIVED) {
+//                return -1;
+//            }
+//        }
+//        else if(o2.getState() == PropertyValueState.DERIVED) {
+//            return 1;
+//        }
 
         // Sort property values by language, property rendering and then value rendering.
         // rdfs:label and then rdfs:comment get priority over other properties.
