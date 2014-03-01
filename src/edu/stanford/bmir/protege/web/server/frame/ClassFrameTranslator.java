@@ -62,52 +62,6 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         return builder.build();
     }
 
-//    private List<PropertyValue> prunePropertyValues(List<PropertyValue> propertyValues,
-//                                                    OWLOntology ontology,
-//                                                    OWLAPIProject project) {
-//        List<PropertyValue> result = Lists.newArrayList(propertyValues);
-//        for (int i = 0; i < propertyValues.size(); i++) {
-//            for (int j = 0; j < propertyValues.size(); j++) {
-//                if (i != j && result.get(i) != null && result.get(j) != null) {
-//                    PropertyValue propertyValueA = propertyValues.get(i);
-//                    PropertyValue propertyValueB = propertyValues.get(j);
-//                    PropertyValueSubsumptionChecker subsumptionChecker = getPropertyValueSubsumptionChecler(ontology,
-//                            project);
-//                    if (subsumptionChecker.isSubsumedBy(propertyValueA, propertyValueB)) {
-//                        // Don't show B because this is more specific!
-//                        result.set(j, null);
-//                    }
-//                }
-//            }
-//        }
-//        for (Iterator<PropertyValue> it = result.iterator(); it.hasNext(); ) {
-//            if (it.next() == null) {
-//                it.remove();
-//            }
-//        }
-//        return result;
-//    }
-
-//    private PropertyValueSubsumptionChecker getPropertyValueSubsumptionChecler(OWLOntology ontology,
-//                                                                               OWLAPIProject project) {
-//        ClassClassAncestorChecker classAncestorChecker = new ClassClassAncestorChecker(project
-//                .getClassHierarchyProvider());
-//        ObjectPropertyObjectPropertyAncestorChecker objectPropertyAncestorChecker = new
-//                ObjectPropertyObjectPropertyAncestorChecker(
-//                project.getObjectPropertyHierarchyProvider());
-//        DataPropertyDataPropertyAncestorChecker dataPropertyAncestorChecker = new
-//                DataPropertyDataPropertyAncestorChecker(
-//                project.getDataPropertyHierarchyProvider());
-//        NamedIndividualClassAncestorChecker namedIndividualClassAncestorChecker = new
-//                NamedIndividualClassAncestorChecker(
-//                ontology,
-//                classAncestorChecker);
-//        return new StructuralPropertyValueSubsumptionChecker(classAncestorChecker,
-//                objectPropertyAncestorChecker,
-//                dataPropertyAncestorChecker,
-//                namedIndividualClassAncestorChecker);
-//    }
-
     private List<PropertyValue> translateAxiomsToPropertyValues(OWLClass subject,
                                                                 OWLOntology rootOntology,
                                                                 Set<OWLAxiom> relevantAxioms,
