@@ -15,26 +15,26 @@ import java.util.Collection;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
  */
-public class PropertyValueEditorPresenter {
+public class PropertyValueDescriptorEditorPresenter {
 
     private PropertyValueDescriptorEditor editor;
 
     private PropertyValueGridGrammar grammar = PropertyValueGridGrammar.getClassGrammar();
 
-    public PropertyValueEditorPresenter(PropertyValueDescriptorEditor editor) {
+    public PropertyValueDescriptorEditorPresenter(PropertyValueDescriptorEditor editor) {
         this.editor = editor;
         this.editor.addPropertyValueChangedHandler(new PropertyValuePropertyChangedHandler() {
             @Override
             public void handlePropertyChanged(PropertyValuePropertyChangedEvent event) {
                 GWT.log("PropertyValuePropertyChangedHandler.handlingEvent");
-                PropertyValueEditorPresenter.this.handlePropertyChanged();
+                PropertyValueDescriptorEditorPresenter.this.handlePropertyChanged();
             }
         });
         this.editor.addPropertyValueChangedHandler(new PropertyValueValueChangedHandler() {
             @Override
             public void handlePropertyValueChanged(PropertyValueValueChangedEvent event) {
                 GWT.log("PropertyValueValueChangedHandler.handlingEvent");
-                PropertyValueEditorPresenter.this.handleValueChanged();
+                PropertyValueDescriptorEditorPresenter.this.handleValueChanged();
             }
         });
         this.editor.setPropertyFieldFreshEntitiesHandler(new PropertyFieldFreshEntitiesHandler());
