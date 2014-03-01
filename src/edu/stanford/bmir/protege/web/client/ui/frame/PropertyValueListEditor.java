@@ -47,7 +47,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
                     @Override
                     public ValueEditor<PropertyValueDescriptor> createEditor() {
                         PropertyValueDescriptorEditorImpl propertyValueEditor = new PropertyValueDescriptorEditorImpl();
-                        PropertyValueEditorPresenter presenter = new PropertyValueEditorPresenter(propertyValueEditor);
+                        PropertyValueDescriptorEditorPresenter presenter = new PropertyValueDescriptorEditorPresenter(propertyValueEditor);
                         presenter.setGrammar(grammar);
                         return propertyValueEditor;
                     }
