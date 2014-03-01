@@ -44,6 +44,11 @@ public final class PropertyLiteralValue extends DataPropertyValue {
     }
 
     @Override
+    public boolean isValueMostSpecific() {
+        return true;
+    }
+
+    @Override
     public boolean isAnnotation() {
         return false;
     }
@@ -73,5 +78,10 @@ public final class PropertyLiteralValue extends DataPropertyValue {
         }
         PropertyLiteralValue other = (PropertyLiteralValue) obj;
         return this.getProperty().equals(other.getProperty()) && this.getValue().equals(other.getValue());
+    }
+
+    @Override
+    protected PropertyValue duplicateWithState(PropertyValueState state) {
+        return new PropertyLiteralValue(getProperty(), getValue(), state);
     }
 }

@@ -41,6 +41,8 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
         return state;
     }
 
+    public abstract boolean isValueMostSpecific();
+
     public abstract boolean isAnnotation();
 
     public abstract boolean isLogical();
@@ -68,5 +70,16 @@ public abstract class PropertyValue implements Comparable<PropertyValue>, Serial
         return this.getValue().compareTo(o.getValue());
 
     }
+
+    public PropertyValue setState(PropertyValueState state) {
+        if(this.state == state) {
+            return this;
+        }
+        else {
+            return duplicateWithState(state);
+        }
+    }
+
+    protected abstract PropertyValue duplicateWithState(PropertyValueState state);
 
 }

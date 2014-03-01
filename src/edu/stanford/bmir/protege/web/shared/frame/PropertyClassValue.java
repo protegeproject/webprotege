@@ -24,6 +24,11 @@ public final class PropertyClassValue extends ObjectPropertyValue implements Cla
     }
 
     @Override
+    public boolean isValueMostSpecific() {
+        return false;
+    }
+
+    @Override
     public <R, E extends Throwable> R accept(PropertyValueVisitor<R, E> visitor) throws E {
         return visitor.visit(this);
     }
@@ -53,5 +58,10 @@ public final class PropertyClassValue extends ObjectPropertyValue implements Cla
         }
         PropertyClassValue other = (PropertyClassValue) obj;
         return this.getProperty().equals(other.getProperty()) && this.getValue().equals(other.getValue());
+    }
+
+    @Override
+    protected PropertyValue duplicateWithState(PropertyValueState state) {
+        return new PropertyClassValue(getProperty(), getValue(), state);
     }
 }

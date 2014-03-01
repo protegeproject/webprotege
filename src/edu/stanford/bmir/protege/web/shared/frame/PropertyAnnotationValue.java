@@ -28,6 +28,11 @@ public final class PropertyAnnotationValue extends PropertyValue {
     }
 
     @Override
+    public boolean isValueMostSpecific() {
+        return true;
+    }
+
+    @Override
     public OWLAnnotationProperty getProperty() {
         return (OWLAnnotationProperty) super.getProperty();
     }
@@ -54,6 +59,11 @@ public final class PropertyAnnotationValue extends PropertyValue {
     @Override
     public boolean isLogical() {
         return false;
+    }
+
+    @Override
+    protected PropertyValue duplicateWithState(PropertyValueState state) {
+        return new PropertyAnnotationValue(getProperty(), getValue(), state);
     }
 
     @Override

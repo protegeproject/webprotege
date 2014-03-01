@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import org.semanticweb.owlapi.model.EntityType;
 
+import java.util.Collection;
 import java.util.SortedSet;
 
 /**
@@ -25,7 +26,7 @@ import java.util.SortedSet;
  *     contains various boolean setters and getters to do this so that it may be used with UIBinder.
  * </p>
  */
-public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<OWLPrimitiveData>, HasFocusHandlers, HasKeyUpHandlers, HasTextRendering, HasPlaceholder {
+public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<OWLPrimitiveData>, HasFocusHandlers, HasKeyUpHandlers, HasTextRendering, HasPlaceholder, HasPrimitiveDataPlaceholder {
 
     /**
      * Gets the language editor for this primitive data editor
@@ -60,7 +61,7 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
      * @param primitiveTypes The set of primitive types that this editor can edit.  May be empty (although this doesn't
      *                       make much sense!).  Not {@code null}.
      */
-    void setAllowedTypes(SortedSet<PrimitiveType> primitiveTypes);
+    void setAllowedTypes(Collection<PrimitiveType> primitiveTypes);
 
     /**
      * Specifies whether or not the editor should allow {@link org.semanticweb.owlapi.model.OWLClass}

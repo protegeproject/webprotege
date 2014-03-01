@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -45,10 +46,10 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 //    protected final PrimitiveDataListEditor subclassof;
 
     @UiField(provided = true)
-    protected final PropertyValueListEditor annotations;
+    protected final PropertyValueListEditor2 annotations;
 
     @UiField(provided = true)
-    protected final PropertyValueListEditor properties;
+    protected final PropertyValueListEditor2 properties;
 
     private final ProjectId projectId;
 
@@ -56,7 +57,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
     private OWLClass currentSubject;
 
-    private Set<OWLClass> currentClasses = new HashSet<OWLClass>();
+//    private Set<OWLClass> currentClasses = new HashSet<OWLClass>();
 
     private boolean enabled = true;
 
@@ -70,7 +71,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
     private static ClassFrameEditor2UiBinder ourUiBinder = GWT.create(ClassFrameEditor2UiBinder.class);
 
-    public ClassFrameEditor(ProjectId projectId, PropertyValueListEditor annotations, PropertyValueListEditor properties) {
+    public ClassFrameEditor(ProjectId projectId, PropertyValueListEditor2 annotations, PropertyValueListEditor2 properties) {
         this.projectId = projectId;
         this.annotations = annotations;
         this.properties = properties;
@@ -82,8 +83,8 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     public void setValue(final LabelledFrame<ClassFrame> lcf) {
         lastClassFrame = lcf;
         currentSubject = lcf.getFrame().getSubject();
-        currentClasses.clear();
-        currentClasses.addAll(lcf.getFrame().getClasses());
+//        currentClasses.clear();
+//        currentClasses.addAll(lcf.getFrame().getClasses());
 
         String unquoted = removeQuotes(lcf.getDisplayName());
         displayNameField.setValue(unquoted);
@@ -192,9 +193,9 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
             ClassFrame.Builder builder = new ClassFrame.Builder(currentSubject);
             builder.addPropertyValues(annotations.getValue().get().getPropertyValues());
             builder.addPropertyValues(properties.getValue().get().getPropertyValues());
-            for(OWLClass cls : currentClasses) {
-                builder.addClass(cls);
-            }
+//            for(OWLClass cls : currentClasses) {
+//                builder.addClass(cls);
+//            }
             ClassFrame cf = builder.build();
             LabelledFrame<ClassFrame> labelledClassFrame = new LabelledFrame<ClassFrame>(getDisplayName(), cf);
             return Optional.of(labelledClassFrame);

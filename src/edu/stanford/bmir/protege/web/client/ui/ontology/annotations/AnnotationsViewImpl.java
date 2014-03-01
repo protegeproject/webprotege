@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueGridGrammar;
-import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueListEditor;
+import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueListEditor2;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -42,10 +42,11 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     private static AnnotationsViewImplUiBinder ourUiBinder = GWT.create(AnnotationsViewImplUiBinder.class);
 
     @UiField(provided = true)
-    protected PropertyValueListEditor editor;
+    protected PropertyValueListEditor2 editor;
 
     public AnnotationsViewImpl(ProjectId projectId) {
-        editor = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getAnnotationsGrammar());
+        editor = new PropertyValueListEditor2(projectId);
+        editor.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

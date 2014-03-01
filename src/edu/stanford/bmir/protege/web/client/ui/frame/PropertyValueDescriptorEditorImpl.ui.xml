@@ -1,0 +1,36 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
+    <ui:style>
+        .property-field {
+            /*width: 200px;*/
+            min-width: 200px;
+            max-width: 200px;
+            box-sizing: border-box;
+        }
+        .value-field {
+            /*width: 100%;*/
+            box-sizing: border-box;
+        }
+        .language-field {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+        <table>
+            <tr>
+                <td width="200px">
+                    <primitive:PrimitiveDataEditorImpl ui:field="propertyField" addStyleNames="{style.property-field}" placeholder="Enter property"/>
+                </td>
+                <td width="100%">
+                    <primitive:PrimitiveDataEditorImpl ui:field="valueField" addStyleNames="{style.value-field}" placeholder="Enter value"/>
+                </td>
+                <td width="4em">
+                    <primitive:DefaultLanguageEditor ui:field="languageField" addStyleNames="{style.language-field}" placeholder="lang"/>
+                </td>
+            </tr>
+        </table>
+    </g:HTMLPanel>
+</ui:UiBinder>

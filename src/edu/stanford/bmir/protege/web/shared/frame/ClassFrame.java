@@ -85,17 +85,17 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
         return new PropertyValueList(propertyValues);
     }
 
-    /**
-     * Gets the classEntries in this frame.
-     * @return The (possibly empty) set of classEntries in this frame.  Not {@code null}.
-     */
-    public Set<OWLClass> getClasses() {
-        Set<OWLClass> result = new HashSet<OWLClass>();
-        for(OWLClass entry : classEntries) {
-            result.add(entry);
-        }
-        return result;
-    }
+//    /**
+//     * Gets the classEntries in this frame.
+//     * @return The (possibly empty) set of classEntries in this frame.  Not {@code null}.
+//     */
+//    public Set<OWLClass> getClasses() {
+//        Set<OWLClass> result = new HashSet<OWLClass>();
+//        for(OWLClass entry : classEntries) {
+//            result.add(entry);
+//        }
+//        return result;
+//    }
 
     /**
      * Gets the {@link PropertyValue}s in this frame.

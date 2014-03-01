@@ -2,8 +2,10 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
@@ -36,15 +38,10 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
     }
 
     private NamedIndividualFrame translateToNamedIndividualFrame(OWLNamedIndividual subject, OWLOntology rootOntology, OWLAPIProject project) {
-        Set<OWLAxiom> translateFrom = new HashSet<OWLAxiom>();
-        for (OWLOntology ontology : rootOntology.getImportsClosure()) {
-            translateFrom.addAll(ontology.getClassAssertionAxioms(subject));
-            translateFrom.addAll(ontology.getAnnotationAssertionAxioms(subject.getIRI()));
-            translateFrom.addAll(ontology.getObjectPropertyAssertionAxioms(subject));
-            translateFrom.addAll(ontology.getDataPropertyAssertionAxioms(subject));
-        }
+        Set<OWLAxiom> relevantAxioms = getRelevantAxioms(subject, rootOntology);
+
         NamedIndividualFrame.Builder builder = new NamedIndividualFrame.Builder(subject);
-        for(OWLAxiom axiom : translateFrom) {
+        for(OWLAxiom axiom : relevantAxioms) {
             if(axiom instanceof OWLClassAssertionAxiom) {
                 OWLClassAssertionAxiom ax = (OWLClassAssertionAxiom) axiom;
                 if(ax.getIndividual().equals(subject) && !ax.getClassExpression().isAnonymous()) {
@@ -53,10 +50,27 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
             }
         }
         List<PropertyValue> propertyValues = new ArrayList<PropertyValue>();
-        for(OWLAxiom axiom : translateFrom) {
+        for(OWLAxiom axiom : relevantAxioms) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
-            propertyValues.addAll(translator.getPropertyValues(subject, axiom, rootOntology));
+            propertyValues.addAll(translator.getPropertyValues(subject, axiom, rootOntology, PropertyValueState.ASSERTED));
         }
+        for(OWLOntology ont : rootOntology.getImportsClosure()) {
+            for(OWLClassAssertionAxiom ax : ont.getClassAssertionAxioms(subject)) {
+                if(!ax.getClassExpression().isAnonymous()) {
+                    OWLClass type = (OWLClass) ax.getClassExpression();
+                    ClassFrameTranslator classFrameTranslator = new ClassFrameTranslator();
+                    ClassFrame classFrame = classFrameTranslator.getFrame(type, rootOntology, project);
+                    for(PropertyValue propertyValue : classFrame.getPropertyValues()) {
+                        // Bit yucky
+                        if (!propertyValue.isAnnotation()) {
+                            propertyValues.add(propertyValue.setState(PropertyValueState.DERIVED));
+                        }
+                    }
+                }
+            }
+        }
+
+        propertyValues = new PropertyValueMinimiser().minimisePropertyValues(propertyValues, rootOntology, project);
         Collections.sort(propertyValues, new PropertyValueComparator(project));
         builder.addPropertyValues(propertyValues);
         for (OWLOntology ont : rootOntology.getImportsClosure()) {
@@ -73,6 +87,16 @@ public class NamedIndividualFrameTranslator implements EntityFrameTranslator<Nam
         return builder.build();
     }
 
+    private Set<OWLAxiom> getRelevantAxioms(OWLNamedIndividual subject, OWLOntology rootOntology) {
+        Set<OWLAxiom> relevantAxioms = new HashSet<OWLAxiom>();
+        for (OWLOntology ontology : rootOntology.getImportsClosure()) {
+            relevantAxioms.addAll(ontology.getClassAssertionAxioms(subject));
+            relevantAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getIRI()));
+            relevantAxioms.addAll(ontology.getObjectPropertyAssertionAxioms(subject));
+            relevantAxioms.addAll(ontology.getDataPropertyAssertionAxioms(subject));
+        }
+        return relevantAxioms;
+    }
 
     private Set<OWLAxiom> translateToAxioms(OWLNamedIndividual subject, NamedIndividualFrame frame, Mode mode) {
         Set<OWLAxiom> result = new HashSet<OWLAxiom>();

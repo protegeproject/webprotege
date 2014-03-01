@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Collections;
@@ -43,7 +44,8 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
         AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
         Set<PropertyAnnotationValue> propertyValues = new HashSet<PropertyAnnotationValue>();
         for(OWLAxiom ax : propertyValueAxioms) {
-            Set<PropertyValue> translationResult = translator.getPropertyValues(subject, ax, rootOntology);
+            Set<PropertyValue> translationResult = translator.getPropertyValues(subject, ax, rootOntology,
+                    PropertyValueState.ASSERTED);
             for(PropertyValue pv : translationResult) {
                 if(pv.isAnnotation()) {
                     propertyValues.add((PropertyAnnotationValue) pv);
