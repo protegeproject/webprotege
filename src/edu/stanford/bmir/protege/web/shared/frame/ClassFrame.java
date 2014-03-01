@@ -20,7 +20,7 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
 
     private OWLClass subject;
 
-    private ClassFrameType classFrameType;
+//    private ClassFrameType classFrameType;
 
     private Set<OWLClass> classEntries;
 
@@ -31,14 +31,13 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
     }
 
     public ClassFrame(OWLClass subject) {
-        this(subject, Collections.<OWLClass>emptySet(), Collections.<PropertyValue>emptySet(), ClassFrameType.ASSERTED);
+        this(subject, Collections.<OWLClass>emptySet(), Collections.<PropertyValue>emptySet());
     }
 
-    public ClassFrame(OWLClass subject, Set<OWLClass> classes, Set<PropertyValue> propertyValues, ClassFrameType classFrameType) {
+    public ClassFrame(OWLClass subject, Set<OWLClass> classes, Set<PropertyValue> propertyValues) {
         this.subject = subject;
         this.classEntries = classes;
         this.propertyValues = propertyValues;
-        this.classFrameType = classFrameType;
     }
 
     /**
@@ -58,9 +57,9 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
         return subject;
     }
 
-    public ClassFrameType getClassFrameType() {
-        return classFrameType;
-    }
+//    public ClassFrameType getClassFrameType() {
+//        return classFrameType;
+//    }
 
     public Set<OWLClass> getClassEntries() {
         return classEntries;
@@ -211,8 +210,6 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
      */
     public static class Builder {
 
-        private ClassFrameType classFrameType = ClassFrameType.ASSERTED;
-
         private OWLClass subject;
 
         // Mutable
@@ -229,10 +226,6 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
             this.subject = subject;
             this.classes.addAll(classes);
             this.propertyValues.addAll(propertyValues);
-        }
-
-        public void setClassFrameType(ClassFrameType frameType) {
-            this.classFrameType = frameType;
         }
 
         public OWLClass getSubject() {
@@ -304,7 +297,7 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
          * @return The class frame.  Not {@code null}.
          */
         public ClassFrame build() {
-            return new ClassFrame(subject, classes, propertyValues, classFrameType);
+            return new ClassFrame(subject, classes, propertyValues);
         }
 
     }

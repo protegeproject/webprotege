@@ -1,16 +1,8 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import edu.stanford.bmir.protege.web.server.hierarchy.ClassClassAncestorChecker;
-import edu.stanford.bmir.protege.web.server.hierarchy.DataPropertyDataPropertyAncestorChecker;
-import edu.stanford.bmir.protege.web.server.hierarchy.NamedIndividualClassAncestorChecker;
-import edu.stanford.bmir.protege.web.server.hierarchy.ObjectPropertyObjectPropertyAncestorChecker;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrameType;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.*;
@@ -63,10 +55,6 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
                         getRelevantAxioms(ancestor, rootOntology, builder, false),
                         PropertyValueState.DERIVED));
             }
-        }
-        builder.setClassFrameType(ClassFrameType.ASSERTED);
-        if (propertyValues.isEmpty()) {
-            builder.setClassFrameType(ClassFrameType.ASSERTED);
         }
         propertyValues = new PropertyValueMinimiser().minimisePropertyValues(propertyValues, rootOntology, project);
         Collections.sort(propertyValues, new PropertyValueComparator(project));
