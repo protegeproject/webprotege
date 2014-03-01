@@ -1,11 +1,12 @@
-package edu.stanford.bmir.protege.web.client.ui.frame;
+package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.frame.*;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
+ *
  */
 public class PropertyValueDescriptor {
 
@@ -17,11 +18,14 @@ public class PropertyValueDescriptor {
 
     private boolean mostSpecific;
 
-    public PropertyValueDescriptor(OWLPropertyData property, OWLPrimitiveData value, PropertyValueState state, boolean mostSpecific) {
+    private Optional<OWLPrimitiveData> auxiliaryData;
+
+    public PropertyValueDescriptor(OWLPropertyData property, OWLPrimitiveData value, PropertyValueState state, boolean mostSpecific, Optional<OWLPrimitiveData> auxiliaryData) {
         this.property = property;
         this.value = value;
         this.state = state;
         this.mostSpecific = mostSpecific;
+        this.auxiliaryData = auxiliaryData;
     }
 
     @Override
@@ -58,7 +62,14 @@ public class PropertyValueDescriptor {
 
     public boolean isMostSpecific() { return mostSpecific; }
 
+    public Optional<OWLPrimitiveData> getAuxiliaryData() {
+        return auxiliaryData;
+    }
+
     public Optional<PropertyValue> toPropertyValue() {
+        if(auxiliaryData.isPresent()) {
+            GWT.log("The auxiliary data is " + auxiliaryData.get());
+        }
             return property.accept(new OWLPrimitiveDataVisitorAdapter<Optional<PropertyValue>, RuntimeException>() {
                 @Override
                 protected Optional<PropertyValue> getDefaultReturnValue() {

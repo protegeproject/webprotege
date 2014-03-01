@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.EntityType;
 
@@ -177,6 +178,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     @Override
     public void setValue(PropertyValueDescriptor propertyValue) {
         this.currentValue = Optional.of(propertyValue);
+        valueField.setPrimitiveDataPlaceholder(Optional.<OWLPrimitiveData>absent());
         if(propertyValue.getState() == PropertyValueState.ASSERTED) {
             propertyField.setValue(propertyValue.getProperty());
             valueField.setValue(propertyValue.getValue());
@@ -232,7 +234,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
         else {
             if(propertyField.getValue().isPresent() && valueField.getValue().isPresent()) {
                 return Optional.of(new PropertyValueDescriptor((OWLPropertyData) propertyField.getValue().get(),
-                        valueField.getValue().get(), propertyValueState, false));
+                        valueField.getValue().get(), propertyValueState, false, valueField.getPrimitiveDataPlaceholder()));
             }
             else {
                 return Optional.absent();
