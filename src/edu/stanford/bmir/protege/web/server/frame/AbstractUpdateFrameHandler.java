@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.dispatch.handlers;
+package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;

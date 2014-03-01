@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.dispatch.handlers;
+package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.frame.NamedIndividualFrameTranslator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;

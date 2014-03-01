@@ -1,11 +1,9 @@
-package edu.stanford.bmir.protege.web.server.dispatch.handlers;
+package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateClassFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
-import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
-import edu.stanford.bmir.protege.web.server.frame.FrameTranslator;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectResult;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
