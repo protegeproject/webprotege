@@ -42,10 +42,10 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 //    protected final PrimitiveDataListEditor subclassof;
 
     @UiField(provided = true)
-    protected final PropertyValueListEditor2 annotations;
+    protected final PropertyValueListEditor annotations;
 
     @UiField(provided = true)
-    protected final PropertyValueListEditor2 properties;
+    protected final PropertyValueListEditor properties;
 
     private final ProjectId projectId;
 
@@ -67,7 +67,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
     private static ClassFrameEditor2UiBinder ourUiBinder = GWT.create(ClassFrameEditor2UiBinder.class);
 
-    public ClassFrameEditor(ProjectId projectId, PropertyValueListEditor2 annotations, PropertyValueListEditor2 properties) {
+    public ClassFrameEditor(ProjectId projectId, PropertyValueListEditor annotations, PropertyValueListEditor properties) {
         this.projectId = projectId;
         this.annotations = annotations;
         this.properties = properties;

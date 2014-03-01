@@ -52,7 +52,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
     protected TextBox iriField;
 
     @UiField(provided = true)
-    protected PropertyValueListEditor2 assertions;
+    protected PropertyValueListEditor assertions;
 
     @UiField(provided = true)
     protected PrimitiveDataListEditor types;
@@ -79,7 +79,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 //        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.CLASS);
 //        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.LITERAL);
 //        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.DATA_TYPE);
-        assertions = new PropertyValueListEditor2(projectId);
+        assertions = new PropertyValueListEditor(projectId);
         assertions.setGrammar(PropertyValueGridGrammar.getNamedIndividualGrammar());
         types = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
         types.setPlaceholder("Enter class name");

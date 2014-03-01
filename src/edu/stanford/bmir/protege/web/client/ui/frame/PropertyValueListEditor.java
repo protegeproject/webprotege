@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
  */
-public class PropertyValueListEditor2 extends Composite implements ValueEditor<PropertyValueList>, HasEnabled {
+public class PropertyValueListEditor extends Composite implements ValueEditor<PropertyValueList>, HasEnabled {
 
     private ValueListEditor<PropertyValueDescriptor> editor;
 
@@ -40,7 +40,7 @@ public class PropertyValueListEditor2 extends Composite implements ValueEditor<P
 
     private PropertyValueGridGrammar grammar = PropertyValueGridGrammar.getClassGrammar();
 
-    public PropertyValueListEditor2(ProjectId projectId) {
+    public PropertyValueListEditor(ProjectId projectId) {
         this.projectId = projectId;
         this.editor = new ValueListEditorImpl<PropertyValueDescriptor>(
                 new ValueEditorFactory<PropertyValueDescriptor>() {
@@ -57,8 +57,8 @@ public class PropertyValueListEditor2 extends Composite implements ValueEditor<P
         editor.addValueChangeHandler(new ValueChangeHandler<Optional<List<PropertyValueDescriptor>>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<List<PropertyValueDescriptor>>> event) {
-                GWT.log("Received ValueChangeEvent from The ValueListEditor.  Firing the event for the PropertyValueListEditor2.");
-                ValueChangeEvent.fire(PropertyValueListEditor2.this, getValue());
+                GWT.log("Received ValueChangeEvent from The ValueListEditor.  Firing the event for the PropertyValueListEditor.");
+                ValueChangeEvent.fire(PropertyValueListEditor.this, getValue());
             }
         });
     }
