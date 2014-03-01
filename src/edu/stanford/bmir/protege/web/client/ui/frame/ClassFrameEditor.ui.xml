@@ -40,7 +40,7 @@
                 </td>
                 <td valign="top">
                     <!--<g:TextBox ui:field="iriField" width="100%"/>-->
-                    <wp:PropertyValueListEditor2 ui:field="annotations"/>
+                    <wp:PropertyValueListEditor ui:field="annotations"/>
                 </td>
             </tr>
         </table>
@@ -54,8 +54,8 @@
                        <g:Label text="Properties" addStyleNames="web-protege-form-label"/>
                    </td>
                    <td valign="top">
-                       <wp:PropertyValueListEditor2 ui:field="properties">
-                       </wp:PropertyValueListEditor2>
+                       <wp:PropertyValueListEditor ui:field="properties">
+                       </wp:PropertyValueListEditor>
                    </td>
                </tr>
            </table>

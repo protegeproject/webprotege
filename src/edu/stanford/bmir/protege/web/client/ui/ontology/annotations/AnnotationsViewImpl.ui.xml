@@ -11,7 +11,7 @@
                     <g:Label text="Ontology Annotations" styleName="web-protege-form-label" addStyleNames="web-protege-form-layout-editor-input"/>
                 </td>
                 <td valign="top">
-                    <frame:PropertyValueListEditor2 ui:field="editor"/>
+                    <frame:PropertyValueListEditor ui:field="editor"/>
                 </td>
             </tr>
         </table>

@@ -34,7 +34,7 @@
                 </td>
                 <td valign="top">
                     <!--<g:TextBox ui:field="iriField" width="100%"/>-->
-                    <frame:PropertyValueListEditor2 ui:field="annotations"/>
+                    <frame:PropertyValueListEditor ui:field="annotations"/>
                 </td>
             </tr>
         </table>

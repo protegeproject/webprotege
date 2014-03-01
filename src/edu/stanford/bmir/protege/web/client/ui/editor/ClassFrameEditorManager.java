@@ -28,9 +28,9 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityDataConte
     public EditorView<LabelledFrame<ClassFrame>> getView(OWLEntityDataContext context) {
         if (editor == null || !projectId.equals(context.getProjectId())) {
             projectId = context.getProjectId();
-            PropertyValueListEditor2 annotationsEditor = new PropertyValueListEditor2(projectId);
+            PropertyValueListEditor annotationsEditor = new PropertyValueListEditor(projectId);
             annotationsEditor.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-            PropertyValueListEditor2 propertiesEditor = new PropertyValueListEditor2(projectId);
+            PropertyValueListEditor propertiesEditor = new PropertyValueListEditor(projectId);
             propertiesEditor.setGrammar(PropertyValueGridGrammar.getClassGrammar());
             editor = new ClassFrameEditor(projectId, annotationsEditor, propertiesEditor);
         }
