@@ -45,6 +45,8 @@ public abstract class OWLEntityData extends OWLPrimitiveData implements Comparab
         return comparisonString.compareToIgnoreCase(otherComparisonString);
     }
 
+    public abstract <R> R accept(OWLEntityDataVisitorEx<R> visitor);
+
     public int compareToIgnoreCase(OWLEntityData other) {
         return browserText.compareToIgnoreCase(other.browserText);
     }
