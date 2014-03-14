@@ -15,8 +15,8 @@ public class ClassFramePresenterStrategy implements FramePresenterStrategy<Label
 
     @Override
     public ValueEditor<LabelledFrame<ClassFrame>> getEditor(ProjectId projectId) {
-        PropertyValueListEditor annotationsEditor = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getAnnotationsGrammar());
-        PropertyValueListEditor propertiesEditor = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getLogicalPropertiesGrammar());
+        PropertyValueListEditor annotationsEditor = new PropertyValueListEditor(projectId);
+        PropertyValueListEditor propertiesEditor = new PropertyValueListEditor(projectId);
         return new ClassFrameEditor(projectId, annotationsEditor, propertiesEditor);
     }
 

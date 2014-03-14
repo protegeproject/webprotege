@@ -17,12 +17,12 @@ public abstract class ObjectPropertyValue extends PropertyValue implements Class
     protected ObjectPropertyValue() {
     }
 
-    public ObjectPropertyValue(OWLObjectProperty property, OWLNamedIndividual value) {
-        super(property, value);
+    public ObjectPropertyValue(OWLObjectProperty property, OWLNamedIndividual value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
-    protected ObjectPropertyValue(OWLEntity property, OWLClass value) {
-        super(property, value);
+    protected ObjectPropertyValue(OWLEntity property, OWLClass value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
     @Override

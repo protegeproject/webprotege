@@ -14,13 +14,18 @@ public final class PropertyDatatypeValue extends DataPropertyValue {
     private PropertyDatatypeValue() {
     }
 
-    public PropertyDatatypeValue(OWLDataProperty property, OWLDatatype value) {
-        super(property, value);
+    public PropertyDatatypeValue(OWLDataProperty property, OWLDatatype value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
     @Override
     public OWLDatatype getValue() {
         return (OWLDatatype) super.getValue();
+    }
+
+    @Override
+    public boolean isValueMostSpecific() {
+        return false;
     }
 
     @Override
@@ -53,5 +58,10 @@ public final class PropertyDatatypeValue extends DataPropertyValue {
         }
         PropertyDatatypeValue other = (PropertyDatatypeValue) obj;
         return this.getProperty().equals(other.getProperty()) && this.getValue().equals(other.getValue());
+    }
+
+    @Override
+    protected PropertyValue duplicateWithState(PropertyValueState state) {
+        return new PropertyDatatypeValue(getProperty(), getValue(), state);
     }
 }

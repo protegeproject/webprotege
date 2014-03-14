@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
+import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -7,12 +8,12 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasTextRendering;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxMode;
+import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import org.semanticweb.owlapi.model.EntityType;
 
-import java.util.SortedSet;
+import java.util.Collection;
 
 /**
  * Author: Matthew Horridge<br>
@@ -25,7 +26,7 @@ import java.util.SortedSet;
  *     contains various boolean setters and getters to do this so that it may be used with UIBinder.
  * </p>
  */
-public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<OWLPrimitiveData>, HasFocusHandlers, HasKeyUpHandlers, HasTextRendering, HasPlaceholder {
+public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<OWLPrimitiveData>, HasFocusHandlers, HasKeyUpHandlers, HasTextRendering, HasPlaceholder, HasPrimitiveDataPlaceholder {
 
     /**
      * Gets the language editor for this primitive data editor
@@ -60,7 +61,7 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
      * @param primitiveTypes The set of primitive types that this editor can edit.  May be empty (although this doesn't
      *                       make much sense!).  Not {@code null}.
      */
-    void setAllowedTypes(SortedSet<PrimitiveType> primitiveTypes);
+    void setAllowedTypes(Collection<PrimitiveType> primitiveTypes);
 
     /**
      * Specifies whether or not the editor should allow {@link org.semanticweb.owlapi.model.OWLClass}
@@ -205,13 +206,15 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
     void coerceToEntityType(EntityType<?> type);
 
     /**
-     * Specifies whether or not the editor should offer the possibility of creating new types of entities for unrecognised
-     * names, or whether the editor should only allow entities for recognised names.
-     * @param mode The mode.  Not {@code null}.
-     * @see PrimitiveDataEditorSuggestOracleMode
+     * Sets the suggest strategy for fresh (or unrecognised) names.  Unrecognised names usually suggest the create of
+     * fresh entities with those names.
+     * @param suggestStrategy The suggest strategy.  Not {@code null}.
      */
-    void setSuggestMode(PrimitiveDataEditorSuggestOracleMode mode);
+    void setFreshEntitiesSuggestStrategy(FreshEntitySuggestStrategy suggestStrategy);
 
+//    void setFreshEntitySuggestionSelectedHandler(FreshEntitySuggestionSelectedHandler handler);
+
+    Optional<EntitySuggestion> getSelectedSuggestion();
 
     /**
      * Sets the FreshEntitiesHandler for this editor.

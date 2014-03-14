@@ -28,7 +28,7 @@
     line-height: 16px;
 }
 
-.axiom-kw {
+.ms-axiom-kw {
     font-weight: bold;
     color: #0A5EA8;
 }
@@ -96,15 +96,20 @@ td {
     vertical-align: top;
 }
 
-tr {
-    border-bottom: 1px solid;
-}
-
 .ms-frame {
     margin-bottom: 30px;
     /*border-bottom: 1px solid #f3f3f3;*/
     padding-bottom: 5px;
     font-size: 12px;
+
+}
+
+.ms-frame ul {
+    list-style: disc;
+    list-style-position: inside;
+    padding-left: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 .ms-frame-subject {

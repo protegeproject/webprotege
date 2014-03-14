@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
@@ -44,7 +45,8 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     protected PropertyValueListEditor editor;
 
     public AnnotationsViewImpl(ProjectId projectId) {
-        editor = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getAnnotationsGrammar());
+        editor = new PropertyValueListEditor(projectId);
+        editor.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
@@ -73,7 +75,7 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     public void setValue(Set<OWLAnnotation> object) {
         List<PropertyAnnotationValue> values = new ArrayList<PropertyAnnotationValue>();
         for(OWLAnnotation annotation : object) {
-            values.add(new PropertyAnnotationValue(annotation.getProperty(), annotation.getValue()));
+            values.add(new PropertyAnnotationValue(annotation.getProperty(), annotation.getValue(), PropertyValueState.ASSERTED));
         }
         editor.setValue(new PropertyValueList(values));
     }

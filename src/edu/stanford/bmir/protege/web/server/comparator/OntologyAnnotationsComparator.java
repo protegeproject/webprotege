@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
@@ -69,8 +70,8 @@ public class OntologyAnnotationsComparator implements Comparator<OWLAnnotation> 
             return index1 - index2;
         }
         PropertyValueComparator propertyValueComparator = new PropertyValueComparator(project);
-        PropertyValue propertyValue1 = new PropertyAnnotationValue(o1.getProperty(), o1.getValue());
-        PropertyValue propertyValue2 = new PropertyAnnotationValue(o2.getProperty(), o2.getValue());
+        PropertyValue propertyValue1 = new PropertyAnnotationValue(o1.getProperty(), o1.getValue(), PropertyValueState.ASSERTED);
+        PropertyValue propertyValue2 = new PropertyAnnotationValue(o2.getProperty(), o2.getValue(), PropertyValueState.ASSERTED);
         return propertyValueComparator.compare(propertyValue1, propertyValue2);
     }
 }

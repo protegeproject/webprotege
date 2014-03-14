@@ -37,6 +37,11 @@ public class OWLDatatypeData extends OWLEntityData {
     }
 
     @Override
+    public <R> R accept(OWLEntityDataVisitorEx<R> visitor) {
+        return  visitor.visit(this);
+    }
+
+    @Override
     public int hashCode() {
         return "OWLDatatypeData".hashCode() + getEntity().hashCode() + getBrowserText().hashCode();
     }

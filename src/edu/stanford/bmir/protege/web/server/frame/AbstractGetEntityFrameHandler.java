@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.dispatch.handlers;
+package edu.stanford.bmir.protege.web.server.frame;
 
 /**
  * Author: Matthew Horridge<br>

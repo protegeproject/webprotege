@@ -72,7 +72,8 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
 
     public AnnotationPropertyFrameEditor(ProjectId projectId) {
         this.projectId = projectId;
-        annotations = new PropertyValueListEditor(projectId, PropertyValueGridGrammar.getAnnotationsGrammar());
+        annotations = new PropertyValueListEditor(projectId);
+        annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
         ranges = new PrimitiveDataListEditor(projectId, PrimitiveType.DATA_TYPE);
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);

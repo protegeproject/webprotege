@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
+import com.google.common.collect.*;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 
 import java.util.*;
@@ -12,34 +13,29 @@ import java.util.*;
  */
 public class PropertyValueGridGrammar {
 
-    private SortedSet<PrimitiveType> fillerTypes = new TreeSet<PrimitiveType>();
+    private Set<PrimitiveType> fillerTypes = Sets.newLinkedHashSet();
 
-    private SortedMap<PrimitiveType, SortedSet<PrimitiveType>> productionMap = new TreeMap<PrimitiveType, SortedSet<PrimitiveType>>();
+    private Multimap<PrimitiveType, PrimitiveType> productionMap = ArrayListMultimap.create();
 
     public void addProduction(PrimitiveType propertyType, PrimitiveType fillerType) {
-        SortedSet<PrimitiveType> values = productionMap.get(propertyType);
-        if(values == null) {
-            values = new TreeSet<PrimitiveType>();
-            productionMap.put(propertyType, values);
-        }
-        values.add(fillerType);
+        productionMap.put(propertyType, fillerType);
         fillerTypes.add(fillerType);
     }
 
-    public SortedSet<PrimitiveType> getPropertyTypes() {
-        return new TreeSet<PrimitiveType>(productionMap.keySet());
+    public Collection<PrimitiveType> getPropertyTypes() {
+        return new LinkedHashSet<PrimitiveType>(productionMap.keySet());
     }
 
-    public SortedSet<PrimitiveType> getFillerTypes() {
+    public Collection<PrimitiveType> getValueTypes() {
         return fillerTypes;
     }
 
-    public Set<PrimitiveType> getValueTypesForPropertyType(PrimitiveType propertyType) {
-        Set<PrimitiveType> values =  productionMap.get(propertyType);
+    public Collection<PrimitiveType> getValueTypesForPropertyType(PrimitiveType propertyType) {
+        Collection<PrimitiveType> values =  productionMap.get(propertyType);
         if(values == null) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
-        return values;
+        return new LinkedHashSet<PrimitiveType>(values);
     }
 
     public static PropertyValueGridGrammar getAnnotationsGrammar() {
@@ -49,12 +45,23 @@ public class PropertyValueGridGrammar {
         return grammar;
     }
 
-    public static PropertyValueGridGrammar getLogicalPropertiesGrammar() {
+    public static PropertyValueGridGrammar getClassGrammar() {
         PropertyValueGridGrammar grammar = new PropertyValueGridGrammar();
         grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.CLASS);
         grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.NAMED_INDIVIDUAL);
         grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.DATA_TYPE);
         grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.LITERAL);
+        return grammar;
+    }
+
+    public static PropertyValueGridGrammar getNamedIndividualGrammar() {
+        PropertyValueGridGrammar grammar = new PropertyValueGridGrammar();
+        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.LITERAL);
+        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.IRI);
+        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.NAMED_INDIVIDUAL);
+        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.CLASS);
+        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.LITERAL);
+        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.DATA_TYPE);
         return grammar;
     }
 

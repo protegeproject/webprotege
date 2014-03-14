@@ -17,15 +17,12 @@ import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
-import edu.stanford.bmir.protege.web.shared.frame.ClassFrameType;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -56,7 +53,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
     private OWLClass currentSubject;
 
-    private Set<OWLClass> currentClasses = new HashSet<OWLClass>();
+//    private Set<OWLClass> currentClasses = new HashSet<OWLClass>();
 
     private boolean enabled = true;
 
@@ -82,8 +79,8 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     public void setValue(final LabelledFrame<ClassFrame> lcf) {
         lastClassFrame = lcf;
         currentSubject = lcf.getFrame().getSubject();
-        currentClasses.clear();
-        currentClasses.addAll(lcf.getFrame().getClasses());
+//        currentClasses.clear();
+//        currentClasses.addAll(lcf.getFrame().getClasses());
 
         String unquoted = removeQuotes(lcf.getDisplayName());
         displayNameField.setValue(unquoted);
@@ -101,12 +98,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     private void updatePropertiesEnabled() {
         if(lastClassFrame == null) {
             return;
-        }
-        if(lastClassFrame.getFrame().getClassFrameType() == ClassFrameType.ASSERTED) {
-            properties.setEnabled(enabled);
-        }
-        else {
-            properties.setEnabled(false);
         }
     }
 
@@ -188,13 +179,12 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
             return Optional.absent();
         }
         else {
-
             ClassFrame.Builder builder = new ClassFrame.Builder(currentSubject);
             builder.addPropertyValues(annotations.getValue().get().getPropertyValues());
             builder.addPropertyValues(properties.getValue().get().getPropertyValues());
-            for(OWLClass cls : currentClasses) {
-                builder.addClass(cls);
-            }
+//            for(OWLClass cls : currentClasses) {
+//                builder.addClass(cls);
+//            }
             ClassFrame cf = builder.build();
             LabelledFrame<ClassFrame> labelledClassFrame = new LabelledFrame<ClassFrame>(getDisplayName(), cf);
             return Optional.of(labelledClassFrame);
@@ -235,6 +225,9 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     @UiHandler("annotations")
     protected void handleAnnotationsDirtyChanged(DirtyChangedEvent evt) {
         setDirty(true, EventStrategy.FIRE_EVENTS);
+        if(isWellFormed()) {
+            ValueChangeEvent.fire(this, getValue());
+        }
     }
 
     @UiHandler("properties")

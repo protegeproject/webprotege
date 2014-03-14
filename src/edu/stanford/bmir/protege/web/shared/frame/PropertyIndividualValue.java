@@ -14,14 +14,19 @@ public final class PropertyIndividualValue extends ObjectPropertyValue {
     private PropertyIndividualValue() {
     }
 
-    public PropertyIndividualValue(OWLObjectProperty property, OWLNamedIndividual value) {
-        super(property, value);
+    public PropertyIndividualValue(OWLObjectProperty property, OWLNamedIndividual value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
 
     @Override
     public OWLNamedIndividual getValue() {
         return (OWLNamedIndividual) super.getValue();
+    }
+
+    @Override
+    public boolean isValueMostSpecific() {
+        return true;
     }
 
     @Override
@@ -54,5 +59,10 @@ public final class PropertyIndividualValue extends ObjectPropertyValue {
         }
         PropertyIndividualValue other = (PropertyIndividualValue) obj;
         return this.getProperty().equals(other.getProperty()) && this.getValue().equals(other.getValue());
+    }
+
+    @Override
+    protected PropertyValue duplicateWithState(PropertyValueState state) {
+        return new PropertyIndividualValue(getProperty(), getValue(), state);
     }
 }

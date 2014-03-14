@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -28,7 +29,8 @@ public class OntologySubsetPropertyFrameTranslator {
         AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
         final OWLOntology rootOntology = OWLAPIProjectManager.getProjectManager().getProject(projectId).getRootOntology();
         for(OWLAxiom ax : rootOntology.getAnnotationAssertionAxioms(property.getIRI())) {
-            for(PropertyValue propertyValue : translator.getPropertyValues(property, ax, rootOntology)) {
+            for(PropertyValue propertyValue : translator.getPropertyValues(property, ax, rootOntology,
+                    PropertyValueState.ASSERTED)) {
                 builder.addPropertyValue((PropertyAnnotationValue) propertyValue);
             }
         }
