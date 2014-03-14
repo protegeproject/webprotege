@@ -18,13 +18,18 @@ public final class PropertyAnnotationValue extends PropertyValue {
     private PropertyAnnotationValue() {
     }
 
-    public PropertyAnnotationValue(OWLAnnotationProperty property, OWLAnnotationValue value) {
-        super(property, value);
+    public PropertyAnnotationValue(OWLAnnotationProperty property, OWLAnnotationValue value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
-    public PropertyAnnotationValue(OWLAnnotationProperty property, OWLEntity entityValue) {
-        super(property, entityValue.getIRI());
+    public PropertyAnnotationValue(OWLAnnotationProperty property, OWLEntity entityValue, PropertyValueState propertyValueState) {
+        super(property, entityValue.getIRI(), propertyValueState);
         this.entity = entityValue;
+    }
+
+    @Override
+    public boolean isValueMostSpecific() {
+        return true;
     }
 
     @Override
@@ -54,6 +59,11 @@ public final class PropertyAnnotationValue extends PropertyValue {
     @Override
     public boolean isLogical() {
         return false;
+    }
+
+    @Override
+    protected PropertyValue duplicateWithState(PropertyValueState state) {
+        return new PropertyAnnotationValue(getProperty(), getValue(), state);
     }
 
     @Override

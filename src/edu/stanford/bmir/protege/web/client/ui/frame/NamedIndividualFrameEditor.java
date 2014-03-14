@@ -72,14 +72,15 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     public NamedIndividualFrameEditor(ProjectId projectId) {
         super(projectId);
-        PropertyValueGridGrammar grammar = new PropertyValueGridGrammar();
-        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.LITERAL);
-        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.IRI);
-        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.NAMED_INDIVIDUAL);
-        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.CLASS);
-        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.LITERAL);
-        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.DATA_TYPE);
-        assertions = new PropertyValueListEditor(projectId, grammar);
+//        PropertyValueGridGrammar grammar = new PropertyValueGridGrammar();
+//        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.LITERAL);
+//        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.IRI);
+//        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.NAMED_INDIVIDUAL);
+//        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.CLASS);
+//        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.LITERAL);
+//        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.DATA_TYPE);
+        assertions = new PropertyValueListEditor(projectId);
+        assertions.setGrammar(PropertyValueGridGrammar.getNamedIndividualGrammar());
         types = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
         types.setPlaceholder("Enter class name");
         sameAs = new PrimitiveDataListEditor(projectId, PrimitiveType.NAMED_INDIVIDUAL);

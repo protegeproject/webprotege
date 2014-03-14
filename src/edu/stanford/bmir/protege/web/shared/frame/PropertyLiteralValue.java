@@ -15,32 +15,37 @@ public final class PropertyLiteralValue extends DataPropertyValue {
     private PropertyLiteralValue() {
     }
 
-    public PropertyLiteralValue(OWLDataProperty property, OWLLiteral value) {
-        super(property, value);
+    public PropertyLiteralValue(OWLDataProperty property, OWLLiteral value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
-    public PropertyLiteralValue(OWLDataProperty property, int value) {
-        super(property, DataFactory.getOWLLiteral(value));
-    }
-
-
-    public PropertyLiteralValue(OWLDataProperty property, double value) {
-        super(property, DataFactory.getOWLLiteral(value));
+    public PropertyLiteralValue(OWLDataProperty property, int value, PropertyValueState propertyValueState) {
+        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
     }
 
 
-    public PropertyLiteralValue(OWLDataProperty property, String value) {
-        super(property, DataFactory.getOWLLiteral(value));
+    public PropertyLiteralValue(OWLDataProperty property, double value, PropertyValueState propertyValueState) {
+        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
     }
 
 
-    public PropertyLiteralValue(OWLDataProperty property, boolean value) {
-        super(property, DataFactory.getOWLLiteral(value));
+    public PropertyLiteralValue(OWLDataProperty property, String value, PropertyValueState propertyValueState) {
+        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
+    }
+
+
+    public PropertyLiteralValue(OWLDataProperty property, boolean value, PropertyValueState propertyValueState) {
+        super(property, DataFactory.getOWLLiteral(value), propertyValueState);
     }
 
     @Override
     public OWLLiteral getValue() {
         return (OWLLiteral) super.getValue();
+    }
+
+    @Override
+    public boolean isValueMostSpecific() {
+        return true;
     }
 
     @Override
@@ -73,5 +78,10 @@ public final class PropertyLiteralValue extends DataPropertyValue {
         }
         PropertyLiteralValue other = (PropertyLiteralValue) obj;
         return this.getProperty().equals(other.getProperty()) && this.getValue().equals(other.getValue());
+    }
+
+    @Override
+    protected PropertyValue duplicateWithState(PropertyValueState state) {
+        return new PropertyLiteralValue(getProperty(), getValue(), state);
     }
 }

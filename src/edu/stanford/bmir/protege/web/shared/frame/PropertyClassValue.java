@@ -14,13 +14,18 @@ public final class PropertyClassValue extends ObjectPropertyValue implements Cla
     private PropertyClassValue() {
     }
 
-    public PropertyClassValue(OWLObjectProperty property, OWLClass value) {
-        super(property, value);
+    public PropertyClassValue(OWLObjectProperty property, OWLClass value, PropertyValueState propertyValueState) {
+        super(property, value, propertyValueState);
     }
 
     @Override
     public OWLClass getValue() {
         return (OWLClass) super.getValue();
+    }
+
+    @Override
+    public boolean isValueMostSpecific() {
+        return false;
     }
 
     @Override
@@ -53,5 +58,10 @@ public final class PropertyClassValue extends ObjectPropertyValue implements Cla
         }
         PropertyClassValue other = (PropertyClassValue) obj;
         return this.getProperty().equals(other.getProperty()) && this.getValue().equals(other.getValue());
+    }
+
+    @Override
+    protected PropertyValue duplicateWithState(PropertyValueState state) {
+        return new PropertyClassValue(getProperty(), getValue(), state);
     }
 }

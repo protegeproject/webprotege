@@ -6,9 +6,8 @@ package edu.stanford.bmir.protege.web.client.primitive;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/01/2013
  */
-public enum PrimitiveDataEditorSuggestOracleMode {
+public enum FreshEntitySuggestMode {
 
-    DO_NOT_SUGGEST_CREATE_NEW_ENTITIES,
-
-    SUGGEST_CREATE_NEW_ENTITIES
+    DO_NOT_SUGGEST_CREATE_FRESH_ENTITIES,
+    SUGGEST_CREATE_FRESH_ENTITIES
 }

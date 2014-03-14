@@ -685,3 +685,20 @@ select {
     box-shadow: 0 0 4px 2px rgba(50, 50, 50, 0.2) inset;
     border-color: #a7a7a7;
 }
+
+[asserted=false] textarea {
+    /*background-color: #F4F4FF;*/
+    color: #9d3600;
+
+}
+
+.derived-property-value input {
+}
+
+.derived-property-value textarea {
+}
+
+[disabled] {
+    background-color: #F1EDED !important;
+}
+

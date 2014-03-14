@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
+import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.HashSet;
@@ -44,7 +41,7 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
         Set<PropertyValue> propertyValues = new HashSet<PropertyValue>();
         AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
         for(OWLAxiom ax : propertyValueAxioms) {
-            propertyValues.addAll(translator.getPropertyValues(subject, ax, rootOntology));
+            propertyValues.addAll(translator.getPropertyValues(subject, ax, rootOntology, PropertyValueState.ASSERTED));
         }
 
         PropertyValueList pvl = new PropertyValueList(propertyValues);
