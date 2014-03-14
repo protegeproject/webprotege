@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
+import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -7,13 +8,12 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasTextRendering;
-import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxMode;
+import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.Collection;
-import java.util.SortedSet;
 
 /**
  * Author: Matthew Horridge<br>
@@ -206,13 +206,15 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
     void coerceToEntityType(EntityType<?> type);
 
     /**
-     * Specifies whether or not the editor should offer the possibility of creating new types of entities for unrecognised
-     * names, or whether the editor should only allow entities for recognised names.
-     * @param mode The mode.  Not {@code null}.
-     * @see PrimitiveDataEditorSuggestOracleMode
+     * Sets the suggest strategy for fresh (or unrecognised) names.  Unrecognised names usually suggest the create of
+     * fresh entities with those names.
+     * @param suggestStrategy The suggest strategy.  Not {@code null}.
      */
-    void setSuggestMode(PrimitiveDataEditorSuggestOracleMode mode);
+    void setFreshEntitiesSuggestStrategy(FreshEntitySuggestStrategy suggestStrategy);
 
+//    void setFreshEntitySuggestionSelectedHandler(FreshEntitySuggestionSelectedHandler handler);
+
+    Optional<EntitySuggestion> getSelectedSuggestion();
 
     /**
      * Sets the FreshEntitiesHandler for this editor.

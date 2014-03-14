@@ -3,6 +3,9 @@ package edu.stanford.bmir.protege.web.shared.frame;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import org.semanticweb.owlapi.model.OWLAxiom;
+
+import java.util.Set;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
@@ -18,14 +21,14 @@ public class PropertyValueDescriptor {
 
     private boolean mostSpecific;
 
-    private Optional<OWLPrimitiveData> auxiliaryData;
+    private Set<OWLAxiom> additionalAxioms;
 
-    public PropertyValueDescriptor(OWLPropertyData property, OWLPrimitiveData value, PropertyValueState state, boolean mostSpecific, Optional<OWLPrimitiveData> auxiliaryData) {
+    public PropertyValueDescriptor(OWLPropertyData property, OWLPrimitiveData value, PropertyValueState state, boolean mostSpecific, Set<OWLAxiom> additionalAxioms) {
         this.property = property;
         this.value = value;
         this.state = state;
         this.mostSpecific = mostSpecific;
-        this.auxiliaryData = auxiliaryData;
+        this.additionalAxioms = additionalAxioms;
     }
 
     @Override
@@ -62,13 +65,13 @@ public class PropertyValueDescriptor {
 
     public boolean isMostSpecific() { return mostSpecific; }
 
-    public Optional<OWLPrimitiveData> getAuxiliaryData() {
-        return auxiliaryData;
+    public Set<OWLAxiom> getAdditionalAxioms() {
+        return additionalAxioms;
     }
 
     public Optional<PropertyValue> toPropertyValue() {
-        if(auxiliaryData.isPresent()) {
-            GWT.log("The auxiliary data is " + auxiliaryData.get());
+        for(OWLAxiom ax : additionalAxioms) {
+            GWT.log("Additional axiom: " + ax);
         }
             return property.accept(new OWLPrimitiveDataVisitorAdapter<Optional<PropertyValue>, RuntimeException>() {
                 @Override

@@ -24,9 +24,11 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -49,7 +51,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
                         PropertyValueDescriptorEditorImpl propertyValueEditor = new PropertyValueDescriptorEditorImpl();
                         PropertyValueDescriptorEditorPresenter presenter = new PropertyValueDescriptorEditorPresenter(propertyValueEditor);
                         presenter.setGrammar(grammar);
-                        return propertyValueEditor;
+                        return presenter;
                     }
                 }
         );
@@ -106,7 +108,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
             valueRendering = new IRIData((IRI) propertyValue.getValue());
         }
         if(propRendering.isPresent()) {
-            return Optional.of(new PropertyValueDescriptor((OWLPropertyData) propRendering.get(), valueRendering, propertyValue.getState(), propertyValue.isValueMostSpecific(), Optional.<OWLPrimitiveData>absent()));
+            return Optional.of(new PropertyValueDescriptor((OWLPropertyData) propRendering.get(), valueRendering, propertyValue.getState(), propertyValue.isValueMostSpecific(), Collections.<OWLAxiom>emptySet()));
         }
         else {
             return Optional.absent();

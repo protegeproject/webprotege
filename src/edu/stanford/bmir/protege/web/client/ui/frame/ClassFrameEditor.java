@@ -179,7 +179,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
             return Optional.absent();
         }
         else {
-
             ClassFrame.Builder builder = new ClassFrame.Builder(currentSubject);
             builder.addPropertyValues(annotations.getValue().get().getPropertyValues());
             builder.addPropertyValues(properties.getValue().get().getPropertyValues());
@@ -226,6 +225,9 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     @UiHandler("annotations")
     protected void handleAnnotationsDirtyChanged(DirtyChangedEvent evt) {
         setDirty(true, EventStrategy.FIRE_EVENTS);
+        if(isWellFormed()) {
+            ValueChangeEvent.fire(this, getValue());
+        }
     }
 
     @UiHandler("properties")

@@ -2,12 +2,17 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.primitive.FreshEntitiesPolicy;
-import edu.stanford.bmir.protege.web.client.primitive.MutableFreshEntitiesHandler;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorSuggestOracleMode;
+import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.primitive.*;
+import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.Collection;
@@ -15,7 +20,7 @@ import java.util.Collection;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
  */
-public class PropertyValueDescriptorEditorPresenter {
+public class PropertyValueDescriptorEditorPresenter implements ValueEditor<PropertyValueDescriptor> {
 
     private PropertyValueDescriptorEditor editor;
 
@@ -26,21 +31,18 @@ public class PropertyValueDescriptorEditorPresenter {
         this.editor.addPropertyValueChangedHandler(new PropertyValuePropertyChangedHandler() {
             @Override
             public void handlePropertyChanged(PropertyValuePropertyChangedEvent event) {
-                GWT.log("PropertyValuePropertyChangedHandler.handlingEvent");
                 PropertyValueDescriptorEditorPresenter.this.handlePropertyChanged();
             }
         });
         this.editor.addPropertyValueChangedHandler(new PropertyValueValueChangedHandler() {
             @Override
             public void handlePropertyValueChanged(PropertyValueValueChangedEvent event) {
-                GWT.log("PropertyValueValueChangedHandler.handlingEvent");
                 PropertyValueDescriptorEditorPresenter.this.handleValueChanged();
             }
         });
         this.editor.setPropertyFieldFreshEntitiesHandler(new PropertyFieldFreshEntitiesHandler());
-        this.editor.setPropertyFieldSuggestMode(PrimitiveDataEditorSuggestOracleMode
-                .DO_NOT_SUGGEST_CREATE_NEW_ENTITIES);
-        this.editor.setValueFieldSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
+        this.editor.setPropertyFieldSuggestStrategy(new NullFreshEntitySuggestStrategy());
+        this.editor.setValueFieldSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
         setGrammar(PropertyValueGridGrammar.getClassGrammar());
     }
 
@@ -76,9 +78,8 @@ public class PropertyValueDescriptorEditorPresenter {
             editor.setAllowedValueTypes(grammar.getValueTypes());
         }
         if (!canInferPropertyType()) {
-            editor.setPropertyFieldSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
+            editor.setPropertyFieldSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
         }
-        editor.setValueFieldSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
     }
 
     public PropertyValueGridGrammar getGrammar() {
@@ -181,6 +182,52 @@ public class PropertyValueDescriptorEditorPresenter {
             GWT.log("Inferring type as: " + inferredType);
             editor.coercePropertyFieldToType(inferredType);
         }
+    }
+
+    @Override
+    public void setValue(PropertyValueDescriptor object) {
+        editor.setValue(object);
+        editor.setAllowedValueTypes(grammar.getValueTypesForPropertyType(object.getProperty().getType()));
+    }
+
+    @Override
+    public void clearValue() {
+        editor.clearValue();
+    }
+
+    @Override
+    public Optional<PropertyValueDescriptor> getValue() {
+        return editor.getValue();
+    }
+
+    @Override
+    public boolean isDirty() {
+        return editor.isDirty();
+    }
+
+    @Override
+    public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
+        return editor.addDirtyChangedHandler(handler);
+    }
+
+    @Override
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<PropertyValueDescriptor>> handler) {
+        return editor.addValueChangeHandler(handler);
+    }
+
+    @Override
+    public void fireEvent(GwtEvent<?> event) {
+        editor.fireEvent(event);
+    }
+
+    @Override
+    public boolean isWellFormed() {
+        return editor.isWellFormed();
+    }
+
+    @Override
+    public Widget asWidget() {
+        return editor.asWidget();
     }
 
     private static class PropertyFieldFreshEntitiesHandler extends MutableFreshEntitiesHandler {

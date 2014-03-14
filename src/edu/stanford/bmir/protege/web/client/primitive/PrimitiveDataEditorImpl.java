@@ -36,10 +36,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/12/2012
- * <p>
+ *
  * An view for {@link OWLPrimitiveData} objects.  The view supports auto-completion
  * and has an option to allow the creation of new primitives.
- * </p>
+ *
+ * This is really a presenter for the editor view.
  */
 public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataEditor, HasEnabled {
 
@@ -69,6 +70,8 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private Optional<OWLPrimitiveData> primitiveDataPlaceholder = Optional.absent();
 
+    private Optional<EntitySuggestion> selectedSuggestion = Optional.absent();
+
     @Inject
     public PrimitiveDataEditorImpl(ProjectId projectId, PrimitiveDataEditorView editorView, LanguageEditor languageEditor, PrimitiveDataEditorSuggestOracle suggestOracle, PrimitiveDataParser parser, FreshEntitiesHandler freshEntitiesHandler) {
         this.projectId = projectId;
@@ -84,13 +87,14 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             @Override
             public void onSelection(SelectionEvent<EntitySuggestion> event) {
                 EntitySuggestion suggestion = event.getSelectedItem();
+                selectedSuggestion = Optional.of(suggestion);
                 setCurrentData(Optional.<OWLPrimitiveData>of(suggestion.getEntity()), EventStrategy.FIRE_EVENTS);
             }
         });
         view.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
             public void onValueChange(ValueChangeEvent<String> event) {
-                handleEdit();
+                handleValueChanged();
             }
         });
         languageEditor.addValueChangeHandler(new ValueChangeHandler<Optional<String>>() {
@@ -134,12 +138,17 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     @Override
     public Optional<OWLPrimitiveData> getPrimitiveDataPlaceholder() {
-        return null;
+        return primitiveDataPlaceholder;
     }
 
     @Override
-    public void setSuggestMode(PrimitiveDataEditorSuggestOracleMode mode) {
-        entitySuggestOracle.setMode(checkNotNull(mode));
+    public void setFreshEntitiesSuggestStrategy(FreshEntitySuggestStrategy suggestStrategy) {
+        entitySuggestOracle.setFreshEntityStrategy(suggestStrategy);
+    }
+
+    @Override
+    public Optional<EntitySuggestion> getSelectedSuggestion() {
+        return selectedSuggestion;
     }
 
     @Override
@@ -398,7 +407,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         return addHandler(handler, DirtyChangedEvent.TYPE);
     }
 
-    private void handleEdit() {
+    private void handleValueChanged() {
         reparsePrimitiveData();
         dirty = true;
     }
@@ -693,6 +702,14 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 String lang = ((OWLLiteralData) data).getLiteral().getLang();
                 languageEditor.setValue(lang);
             }
+            if(selectedSuggestion.isPresent()) {
+                if(!selectedSuggestion.get().getReplacementString().equals(data.getBrowserText())) {
+                    selectedSuggestion = Optional.absent();
+                }
+            }
+        }
+        else {
+            selectedSuggestion = Optional.absent();
         }
         updateDisplayForCurrentData();
         if (eventStrategy == EventStrategy.FIRE_EVENTS) {

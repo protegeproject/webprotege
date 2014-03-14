@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 import com.google.common.base.Optional;
 import com.google.gwt.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.primitive.FreshEntitiesHandler;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorSuggestOracleMode;
+import edu.stanford.bmir.protege.web.client.primitive.FreshEntitySuggestStrategy;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
@@ -47,9 +47,9 @@ public interface PropertyValueDescriptorEditor extends ValueEditor<PropertyValue
 
     void setValueFieldFreshEntitiesHandler(FreshEntitiesHandler freshEntitiesHandler);
 
-    void setPropertyFieldSuggestMode(PrimitiveDataEditorSuggestOracleMode suggestMode);
+    void setPropertyFieldSuggestStrategy(FreshEntitySuggestStrategy suggestStrategy);
 
-    void setValueFieldSuggestMode(PrimitiveDataEditorSuggestOracleMode suggestMode);
+    void setValueFieldSuggestStrategy(FreshEntitySuggestStrategy suggestStrategy);
 
 
     void coercePropertyFieldToType(EntityType<?> primitiveType);

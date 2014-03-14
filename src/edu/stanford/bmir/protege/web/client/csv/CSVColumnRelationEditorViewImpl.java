@@ -15,7 +15,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
-import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.csv.ColumnType;
@@ -50,7 +49,8 @@ public class CSVColumnRelationEditorViewImpl extends Composite implements CSVCol
 
     public CSVColumnRelationEditorViewImpl() {
         propertyField = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
-        propertyField.setSuggestMode(PrimitiveDataEditorSuggestOracleMode.SUGGEST_CREATE_NEW_ENTITIES);
+        propertyField.setFreshEntitiesSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
+//        propertyField.setSuggestMode(FreshEntitySuggestMode.SUGGEST_CREATE_FRESH_ENTITIES);
 
         propertyField.setFreshEntitiesHandler(new MutableFreshEntitiesHandler());
 

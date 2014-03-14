@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -14,6 +15,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.primitive.*;
+import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
@@ -21,9 +23,12 @@ import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLAxiom;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
@@ -74,15 +79,16 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
 
     @UiHandler("valueField")
     protected void handleValueChanged(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
-        setDirty();
         // Edit made.  Now we are in asserted mode.
         setPropertyValueState(PropertyValueState.ASSERTED);
+        setDirty();
         fireEvent(new PropertyValueValueChangedEvent(getValueFieldValue()));
         handlePossibleValueChange();
     }
 
     @UiHandler("languageField")
     protected void handleLanguageChanged(ValueChangeEvent<Optional<String>> event) {
+        setPropertyValueState(PropertyValueState.ASSERTED);
         setDirty();
         fireEvent(new PropertyValueValueChangedEvent(getValueFieldValue()));
         handlePossibleValueChange();
@@ -91,10 +97,6 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
 
     public PropertyValueState getPropertyValueState() {
         return propertyValueState;
-    }
-
-    private void handlePropertyValueStateChanged() {
-        updatePropertyValueStateStyle();
     }
 
     private void updatePropertyValueStateStyle() {
@@ -108,7 +110,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
 
     public void setPropertyValueState(PropertyValueState propertyValueState) {
         this.propertyValueState = propertyValueState;
-        handlePropertyValueStateChanged();
+        updatePropertyValueStateStyle();
     }
 
     public void setAllowedPropertyTypes(Collection<PrimitiveType> types) {
@@ -145,13 +147,13 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     }
 
     @Override
-    public void setPropertyFieldSuggestMode(PrimitiveDataEditorSuggestOracleMode suggestMode) {
-        propertyField.setSuggestMode(suggestMode);
+    public void setPropertyFieldSuggestStrategy(FreshEntitySuggestStrategy suggestStrategy) {
+        propertyField.setFreshEntitiesSuggestStrategy(suggestStrategy);
     }
 
     @Override
-    public void setValueFieldSuggestMode(PrimitiveDataEditorSuggestOracleMode suggestMode) {
-        valueField.setSuggestMode(suggestMode);
+    public void setValueFieldSuggestStrategy(FreshEntitySuggestStrategy suggestStrategy) {
+        valueField.setFreshEntitiesSuggestStrategy(suggestStrategy);
     }
 
     @Override
@@ -182,18 +184,29 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
         if(propertyValue.getState() == PropertyValueState.ASSERTED) {
             propertyField.setValue(propertyValue.getProperty());
             valueField.setValue(propertyValue.getValue());
+            valueField.setFreshEntitiesSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
         }
         else {
             propertyField.setValue(propertyValue.getProperty());
             if (!propertyValue.isMostSpecific()) {
                 valueField.clearValue();
                 valueField.setPrimitiveDataPlaceholder(Optional.of(propertyValue.getValue()));
+                // TODO: Finish this
+//                if(propertyValue.getValue() instanceof OWLEntityData) {
+//                    valueField.setFreshEntitiesSuggestStrategy(new AugmentedFreshEntitiesSuggestStrategy(Collections
+//                            .singleton((OWLEntityData) propertyValue.getValue())
+//                    ));
+//                }
+//                else {
+                    valueField.setFreshEntitiesSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
+//                }
+
             }
             else {
                 valueField.setValue(propertyValue.getValue());
             }
         }
-        handleEnabledChanged();
+        updateEnabled();
         setPropertyValueState(propertyValue.getState());
         setLanguageEditorVisible(propertyValue.getValue().isOWLLiteral());
     }
@@ -233,8 +246,15 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
         }
         else {
             if(propertyField.getValue().isPresent() && valueField.getValue().isPresent()) {
+                Set<OWLAxiom> augmentingAxioms = Sets.newHashSet();
+                Optional<EntitySuggestion> selectedSuggestion = valueField.getSelectedSuggestion();
+                if(selectedSuggestion.isPresent()) {
+                    if(selectedSuggestion.get() instanceof FreshEntitySuggestion) {
+                        augmentingAxioms.addAll(((FreshEntitySuggestion) selectedSuggestion.get()).getAugmentingAxioms());
+                    }
+                }
                 return Optional.of(new PropertyValueDescriptor((OWLPropertyData) propertyField.getValue().get(),
-                        valueField.getValue().get(), propertyValueState, false, valueField.getPrimitiveDataPlaceholder()));
+                        valueField.getValue().get(), propertyValueState, false, augmentingAxioms));
             }
             else {
                 return Optional.absent();
@@ -267,10 +287,10 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        handleEnabledChanged();
+        updateEnabled();
     }
 
-    private void handleEnabledChanged() {
+    private void updateEnabled() {
         propertyField.setEnabled(enabled && (!currentValue.isPresent() || currentValue.get().getState() != PropertyValueState.DERIVED));
 
         boolean valueFieldEditable = !currentValue.isPresent() || currentValue.get().getState() != PropertyValueState.DERIVED ||
@@ -290,7 +310,9 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     }
 
     private void handlePossibleValueChange() {
+        GWT.log("Handling possible value change");
         if(currentValue.equals(getValue())) {
+            GWT.log("    The values are the same.  Not firing event.");
             return;
         }
         currentValue = getValue();
