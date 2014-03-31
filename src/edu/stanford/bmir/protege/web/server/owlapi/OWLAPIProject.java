@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.BrowserTextChangedEventComputer;
 import edu.stanford.bmir.protege.web.shared.*;
+import edu.stanford.bmir.protege.web.shared.HasContainsEntityInSignature;
+import edu.stanford.bmir.protege.web.shared.HasDataFactory;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
@@ -68,7 +70,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/03/2012
  */
-public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI {
+public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasApplyChanges {
 
 
 
@@ -375,6 +377,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
      * @deprecated Use {@link #applyChanges(edu.stanford.bmir.protege.web.shared.user.UserId,
      *             edu.stanford.bmir.protege.web.server.change.ChangeListGenerator, ChangeDescriptionGenerator)}
      */
+    @Deprecated
     public ChangeApplicationResult<?> applyChanges(UserId userId, List<OWLOntologyChange> changes, String changeDescription) {
         return applyChanges(userId, FixedChangeListGenerator.get(changes), FixedMessageChangeDescriptionGenerator.get(changeDescription));
     }
@@ -396,6 +399,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
      * @throws PermissionDeniedException if the user identified by {@code userId} does not have permssion to write to
      *                                   ontologies in this project.
      */
+    @Override
     public <R> ChangeApplicationResult<R> applyChanges(final UserId userId, final ChangeListGenerator<R> changeListGenerator, final ChangeDescriptionGenerator<R> changeDescriptionGenerator) throws PermissionDeniedException {
         checkNotNull(userId);
         checkNotNull(changeListGenerator);

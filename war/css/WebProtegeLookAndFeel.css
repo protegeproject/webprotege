@@ -397,49 +397,49 @@
     background-image: url(../images/tree/class.png);
     background-repeat: no-repeat;
     background-position: 2px 2px;
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 .object-property-icon-inset {
     background-image: url(../images/tree/property.png);
     background-repeat: no-repeat;
     background-position: 2px 2px;
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 .data-property-icon-inset {
     background-image: url(../images/tree/property.png);
     background-repeat: no-repeat;
     background-position: 2px 2px;
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 .annotation-property-icon-inset {
     background-image: url(../images/tree/annotation-property.png);
     background-repeat: no-repeat;
     background-position: 2px 2px;
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 .individual-icon-inset {
     background-image: url(../images/tree/individual.png);
     background-repeat: no-repeat;
     background-position: 2px 2px;
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 .datatype-icon-inset {
     background-image: url(../images/tree/datatype.png);
     background-repeat: no-repeat;
     background-position: 2px 2px;
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 .literal-icon-inset {
     background-image: url(../images/tree/literal.png);
     background-repeat: no-repeat;
     background-position: 2px 2px;
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 .numeric-literal-icon-inset {
@@ -453,27 +453,27 @@
     background-image: url(../images/tree/iri.png);
     background-repeat: no-repeat;
     background-position: 2px 2px;
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 .date-time-icon-inset {
     background-image: url(../images/tree/date-time.png);
     background-repeat: no-repeat;
     background-position: 2px 2px;
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 .link-icon-inset {
     background-image: url(../images/tree/link.png);
     background-repeat: no-repeat;
     background-position: 2px 2px;
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 
 
 .empty-icon-inset {
-    padding-left: 22px;
+    padding-left: 22px !important;
 }
 
 
@@ -700,5 +700,11 @@ select {
 
 [disabled] {
     background-color: #F1EDED !important;
+}
+
+.error {
+    border-bottom: solid #ff0000 2px;
+    box-sizing: border-box;
+    color: red !important;
 }
 
