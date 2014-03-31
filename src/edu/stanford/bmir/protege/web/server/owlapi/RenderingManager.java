@@ -5,8 +5,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
-import edu.stanford.bmir.protege.web.server.hierarchy.HasGetAncestors;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -60,15 +60,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
 
         shortFormProvider = new WebProtegeBidirectionalShortFormProvider(project);
 
-        ontologyIRIShortFormProvider = new OntologyIRIShortFormProvider() {
-            @Override
-            public String getShortForm(IRI iri) {
-                if (iri.equals(project.getRootOntology().getOntologyID().getOntologyIRI())) {
-                    return "root ontology";
-                }
-                return super.getShortForm(iri);
-            }
-        };
+        ontologyIRIShortFormProvider = new WebProtegeOntologyIRIShortFormProvider(project.getRootOntology());
 
         entityIRIChecker = new ManchesterSyntaxObjectRenderer
                 .EntityIRIChecker() {
@@ -147,6 +139,9 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         return shortFormProvider;
     }
 
+    public OntologyIRIShortFormProvider getOntologyIRIShortFormProvider() {
+        return ontologyIRIShortFormProvider;
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

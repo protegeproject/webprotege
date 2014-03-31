@@ -47,8 +47,6 @@ public class Project implements HasProjectId, HasDispose {
         this.permissionManager = new ProjectPermissionManager(getProjectId());
         this.permissionManager.setUserPermissions(Application.get().getUserId(), checkNotNull(permissionsForCurrentUser));
         this.layoutManager = new LayoutManager(this);
-
-
         this.eventPollingManager = EventPollingManager.get(10 * 1000, projectDetails.getProjectId());
         eventPollingManager.start();
     }
@@ -100,6 +98,10 @@ public class Project implements HasProjectId, HasDispose {
 
     public boolean hasWritePermission() {
         return hasWritePermission(Application.get().getUserId());
+    }
+
+    public boolean hasReadPermission(UserId userId) {
+        return permissionManager.hasPermission(userId, Permission.getReadPermission());
     }
 
     public void dispose() {
