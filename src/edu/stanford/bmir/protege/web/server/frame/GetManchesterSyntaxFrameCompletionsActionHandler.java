@@ -70,14 +70,14 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
 //                    break;
 //                }
 //            }
-            int lastWordIndex = getLastWordIndex(syntax, from);
+            int lastWordStartIndex = getLastWordIndex(syntax, from);
             int lastWordEndIndex = getWordEnd(syntax, from);
 
             int fromLineNumber = action.getFromPos().getLineNumber();
-            int fromColumnNumber = lastWordEndIndex;
+            int fromColumnNumber = (action.getFromPos().getColumnNumber() - (from - lastWordStartIndex));
             EditorPosition fromPos = new EditorPosition(fromLineNumber, fromColumnNumber);
-            EditorPosition toPos = new EditorPosition(fromLineNumber, action.getFromPos().getColumnNumber() + lastWordEndIndex - from);
-            String lastWordPrefix = syntax.substring(lastWordIndex, from).toLowerCase();
+            EditorPosition toPos = new EditorPosition(fromLineNumber, action.getFromPos().getColumnNumber() + (lastWordEndIndex - from));
+            String lastWordPrefix = syntax.substring(lastWordStartIndex, from).toLowerCase();
             List<AutoCompletionChoice> choices = Lists.newArrayList();
 
             List<AutoCompletionChoice> entityChoices = getEntityAutocompletionChoices(action, project, e, fromPos, toPos, lastWordPrefix);
@@ -193,7 +193,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
     }
 
     private boolean isNonWordChar(char ch) {
-        return ch == ' ' || ch == '{' || ch == '}' || ch == '[' || ch == ']' || ch == '(' || ch == ')' || ch == ',' || ch == '\'' || ch == '\t' || ch == '\n' || ch == '\r';
+        return ch == ' ' || ch == '{' || ch == '}' || ch == '[' || ch == ']' || ch == '(' || ch == ')' || ch == ',' || ch == '\'' || ch == '\t' || ch == '\n' || ch == '\r' || ch == '^';
     }
 
 
