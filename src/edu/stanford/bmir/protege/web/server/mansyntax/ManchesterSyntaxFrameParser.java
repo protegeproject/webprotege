@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseError;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxFramesParser;
+import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxTokenizer;
 import org.coode.owlapi.manchesterowlsyntax.OntologyAxiomPair;
 import org.semanticweb.owlapi.expression.OWLEntityChecker;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
@@ -55,7 +56,8 @@ public class ManchesterSyntaxFrameParser {
 
     public static ManchesterSyntaxFrameParseError getParseError(ParserException e) {
         List<EntityType<?>> expectedEntityTypes = getExpectedEntityTypes(e);
-        return new ManchesterSyntaxFrameParseError(e.getMessage(),
+        String message = e.getMessage().replace(ManchesterOWLSyntaxTokenizer.EOF, "end of description");
+        return new ManchesterSyntaxFrameParseError(message,
                 e.getColumnNumber(),
                 e.getLineNumber(),
                 e.getCurrentToken(),
@@ -65,6 +67,9 @@ public class ManchesterSyntaxFrameParser {
     public static List<EntityType<?>> getExpectedEntityTypes(ParserException e) {
         String currentToken = e.getCurrentToken();
         if (isManchesterSyntaxKeyword(currentToken)) {
+            return Collections.emptyList();
+        }
+        if(e.getCurrentToken().equals(ManchesterOWLSyntaxTokenizer.EOF)) {
             return Collections.emptyList();
         }
         List<EntityType<?>> expectedEntityTypes = Lists.newArrayList();
