@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.XSDVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
@@ -216,6 +217,10 @@ public class DataFactory {
         return dataFactory.getOWLDatatype(XSDVocabulary.DOUBLE.getIRI());
     }
 
+    public static OWLDatatype getXSDDecimal() {
+        return dataFactory.getOWLDatatype(XSDVocabulary.DECIMAL.getIRI());
+    }
+
     public static OWLDatatype getXSDDateTime() {
         return dataFactory.getOWLDatatype(XSDVocabulary.DATE_TIME.getIRI());
     }
@@ -256,10 +261,17 @@ public class DataFactory {
             catch (NumberFormatException e3) {
                 try {
                     Double value = Double.parseDouble(trimmedContent);
-                    return DataFactory.getOWLLiteral(value);
+                    return DataFactory.getOWLLiteral(trimmedContent, DataFactory.getXSDDecimal());
                 }
                 catch (NumberFormatException e4) {
-                    return DataFactory.getOWLLiteral(lexicalValue);
+                    try {
+                        Float value = Float.parseFloat(trimmedContent);
+                        return DataFactory.getOWLLiteral(trimmedContent, DataFactory.getOWLDatatype(OWL2Datatype.XSD_FLOAT.getIRI()));
+                    }
+                    catch (NumberFormatException e5) {
+                        return DataFactory.getOWLLiteral(lexicalValue);
+                    }
+
                 }
             }
 
