@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
+import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -84,9 +85,11 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
         GWT.log("Filling the editor");
         List<PropertyValueDescriptor> vals = Lists.newArrayList();
         for (PropertyValue propertyValue : propertyValueList.getPropertyValues()) {
-            Optional<PropertyValueDescriptor> val =    addRelationship(propertyValue, provider);
-            if (val.isPresent()) {
-                vals.add(val.get());
+            if (propertyValue.getState() == PropertyValueState.ASSERTED) {
+                Optional<PropertyValueDescriptor> val =    addRelationship(propertyValue, provider);
+                if (val.isPresent()) {
+                    vals.add(val.get());
+                }
             }
         }
         editor.setValue(vals);

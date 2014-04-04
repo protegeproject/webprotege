@@ -21,6 +21,8 @@
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
 
+    <inherits name="edu.stanford.bmir.gwtcodemirror.GWTCodeMirrorModule"/>
+
 	<entry-point class="edu.stanford.bmir.protege.web.client.Authenticate"/> 
     
 </module>

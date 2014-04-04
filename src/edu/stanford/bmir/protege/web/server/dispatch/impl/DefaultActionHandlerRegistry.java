@@ -147,6 +147,12 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         register(new GetEntityCrudKitsActionHandler(), GetEntityCrudKitsAction.class);
         register(new SetEntityCrudKitSettingsActionHandler(), SetEntityCrudKitSettingsAction.class);
         register(new GetEntityCrudKitSettingsActionHandler(), GetEntityCrudKitSettingsAction.class);
+
+
+        register(new GetManchesterSyntaxFrameActionHandler(), GetManchesterSyntaxFrameAction.class);
+        register(new SetManchesterSyntaxFrameActionHandler(), SetManchesterSyntaxFrameAction.class);
+        register(new CheckManchesterSyntaxFrameActionHandler(), CheckManchesterSyntaxFrameAction.class);
+        register(new GetManchesterSyntaxFrameCompletionsActionHandler(), GetManchesterSyntaxFrameCompletionsAction.class);
     }
 
 
