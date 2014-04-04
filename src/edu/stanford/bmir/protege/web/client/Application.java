@@ -10,10 +10,12 @@ import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitManagerInitializat
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
+import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.place.PlaceManager;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
+import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesResult;
@@ -38,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Matthew Horridge
  *
  */
-public class Application {
+public class Application implements HasUserId, PermissionChecker {
 
     private static final Application instance = new Application();
 
@@ -380,8 +382,18 @@ public class Application {
         }
     }
 
+    @Override
+    public boolean hasWritePermissionForProject(UserId userId, ProjectId projectId) {
+        Optional<Project> project = ProjectManager.get().getProject(projectId);
+        return project.isPresent() && project.get().hasWritePermission(userId);
+    }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public boolean hasReadPermissionForProject(UserId userId, ProjectId projectId) {
+        Optional<Project> project = ProjectManager.get().getProject(projectId);
+        return project.isPresent() && project.get().hasReadPermission(userId);
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

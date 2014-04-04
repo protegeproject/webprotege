@@ -37,7 +37,7 @@ public class OntologyAnnotationsSectionRenderer extends AbstractSectionRenderer<
 
     @Override
     public List<OWLObject> getRenderablesForItem(OWLOntology subject, OWLAnnotation item, OWLOntology ontology) {
-        return Lists.newArrayList(item.getProperty(), item.getValue());
+        return Lists.<OWLObject>newArrayList(item.getProperty(), item.getValue());
     }
 
     @Override

@@ -21,10 +21,13 @@
     <inherits name="com.google.gwt.http.HTTP"/>
     <inherits name="com.google.gwt.json.JSON"/>
     <inherits name="com.google.gwt.inject.Inject"/>
+    <inherits name="edu.stanford.bmir.gwtcodemirror.GWTCodeMirrorModule"/>
 
 	<inherits name='com.googlecode.gwt.crypto.Crypto'/>
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
+
+
 
 	<inherits name='com.gwtext.GwtExt' />
 	
