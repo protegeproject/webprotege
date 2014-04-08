@@ -1,0 +1,78 @@
+.web-protege-form-layout-editor-group {
+    display: block;
+}
+
+.web-protege-term-editor {
+    border-top: 1px dotted silver;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    clear: both;
+}
+
+.web-protege-form-layout-editor-group-form {
+    display: inline-block;
+    vertical-align: top;
+    width: 69%;
+    overflow: visible;
+}
+
+.web-protege-form-layout-editor-group-sidebar {
+    display: inline-block;
+    vertical-align: top;
+    width: 30%;
+    float: right;
+}
+
+
+.web-protege-form-layout-labelled-editor {
+    display: block;
+    padding-top: 5px;
+    overflow: visible;
+}
+
+.web-protege-form-layout-label {
+    display: inline-block;
+    padding-right: 10px;
+    text-align: right;
+    vertical-align: top;
+    width: 15%;
+}
+
+.web-protege-form-layout-editor-input {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    width: 100%;
+}
+
+
+
+.web-protege-form-layout-editor {
+    display: inline-block;
+    width: 80%;
+    overflow: visible;
+}
+
+.web-protege-form-layout-editor table {
+    /*border: #ff00ff dashed 1px;*/
+    width: 100%;
+}
+.web-protege-form-layout-editor * table td + td {
+    padding-left: 1px;
+    padding-top: 1px;
+}
+
+.web-protege-term-editor * table td + td {
+    padding-left: 1px;
+    padding-top: 1px;
+}
+
+.web-protege-term-editor * table td {
+    padding-left: 1px;
+    padding-top: 1px;
+}
+
+.web-protege-form-layout-margin {
+    margin: 1px;
+}
+

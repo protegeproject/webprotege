@@ -1,0 +1,12 @@
+.web-protege-table-cell {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: silver;
+}
+
+.web-protege-table-row {
+    padding: 5px;
+    font-size: 12px;
+}
