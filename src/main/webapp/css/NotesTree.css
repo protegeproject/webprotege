@@ -1,0 +1,325 @@
+
+/** Contains the CSS rules for the Notes Tree panel */
+.custom-gwt-DisclosurePanel {
+    max-width:100%;
+    min-width:100%;
+    width:auto;
+    width:expression(this.width > document.body.clientWidth ? "100%" : "auto");
+}
+
+.custom-gwt-DisclosurePanel .header {
+    background-color: #eeeeee;
+    text-decoration: none;
+    /*color: #0000FF;*/
+    /*color: #327BAA;*/
+    color: #15428B !important;
+    cursor: pointer;
+    max-width:100%;
+    min-width:100%;
+    width:expression(this.width > document.body.clientWidth ? "100%" : "auto");
+    width:auto;
+}
+
+
+.custom-gwt-DisclosurePanel .content {
+    padding:0px;
+    max-width:100%;
+    min-width:100%;
+    width:expression(this.width > document.body.clientWidth ? "100%" : "auto");
+}
+
+.gwt-HTML{
+    width:auto; 
+}
+
+.gwt-HTMLSubject{
+    width:auto;
+    font-weight:bold;
+    margin: 0 1px 0 1px; 
+}
+
+.gwt-HTMLTimeStamp{
+    min-width:100%;
+    max-width:100%;
+        width:75px !important;
+        margin: 0 1px 0 1px;
+}
+
+.gwt-HTMLNumReplies{
+    min-width:100%;
+    max-width:100%;
+        width:75px;
+        margin: 0 1px 0 1px;
+}
+
+.gwt-HTMLAuthor{
+    min-width:100%;
+    max-width:100%;
+        width:75px;
+        margin: 0 1px 0 1px;
+}
+
+.gwt-HTMLArchive{
+	min-width:100%;
+    max-width:100%;
+        width:50px;
+        margin: 0 1px 0 1px;
+}
+
+.gwt-HTMLType{
+    min-width:100%;
+    max-width:100%;
+    width:75px;
+    font-weight: bold;  
+    margin: 0 1px 0 1px; 
+}
+
+.customArchived-gwt-HTML{
+    width:auto;
+    color: #999999 !important;
+    margin: 0 1px 0 1px;
+}
+
+.custom-NotesTreePortlet{
+	border:1px solid #99BBE8;
+    margin-bottom:10px;
+}
+
+.custom-NotesTreePortlet .x-panel-body{
+	overflow: auto;	
+}
+
+.customArchived-gwt-HTMLSubject{
+    width:auto;
+    font-weight:bold;
+    color: #999999 !important;
+    margin: 0 1px 0 1px;
+}
+
+.customArchived-gwt-HTMLTimeStamp{
+    min-width:100%;
+    max-width:100%;
+        width:75px !important;
+        color: #999999 !important;
+        margin: 0 1px 0 1px;
+}
+
+.customArchived-gwt-HTMLNumReplies{
+    min-width:100%;
+    max-width:100%;
+        width:75px;
+        color: #999999 !important;
+        margin: 0 1px 0 1px;
+}
+
+.customArchived-gwt-HTMLAuthor{
+    min-width:100%;
+    max-width:100%;
+        width:75px;
+        color: #999999 !important;
+        margin: 0 1px 0 1px;
+}
+
+.customArchived-gwt-HTMLArchive{
+    min-width:100%;
+    max-width:100%;
+        width:50px;
+       color: #999999 !important;
+       margin: 0 1px 0 1px;
+}
+
+.customArchived-gwt-HTMLType{
+    min-width:100%;
+    max-width:100%;
+    width:75px;
+    font-weight: bold;
+    color: #999999 !important;
+    margin: 0 1px 0 1px;
+}
+
+.custom-ScrollPanel {
+    /*min-height:100%;
+    max-height:100%;*/
+    min-width: 650px;
+    overflow : visible !important;
+    /*height:auto !important;*/
+}
+
+.custom-windowScrollPanel {
+	height:auto;
+	width:auto;
+	background-color:white;
+}
+
+.custom-VerticalPanel {
+    /*max-width:100%;
+    min-width:100%;
+    min-height:0%;
+    max-height:100%;*/
+    width:auto;
+    height:auto;
+}
+
+.custom-VerticalPanel tr{
+    padding:0px 0px 0px 0px;
+    margin:	0px;
+}
+
+.x-panel-mr {
+	min-height:100%;
+	max-height:100%;
+}
+
+.x-panel-bwrap {
+    height:auto;
+}
+
+/*.x-panel-body{*/
+	/*overflow:auto;*/
+/*}*/
+
+.x-panel .x-portlet {
+	/*min-height:150px;*/
+}
+
+.custom-VerticalPanel td{
+    padding:0px 0px 0px 0px;
+    margin: 0px;
+}
+
+.custom-FlexTableHeader {
+  border: 1px solid #BBBBBB;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+.custom-FlexTable-buttonPanel td {
+  border: 0px;
+}
+
+.custom-FlexTableRepliesPanel {
+    max-width:100% !important;
+    min-width:100% !important;
+}
+
+.custom-FlexTableContentPanel {
+    border-left: 3px solid #E3E3E3;
+    margin-left: 6px;
+    min-width:98%;
+    max-width:99%;
+    width:auto;
+    overflow:scroll;
+}
+
+.custom-FlexTableContentPanelWrapper {
+    width:100%;
+}
+
+.custom-FlexTableActionsPanel {
+    width:auto;
+	height:20px !important;
+	background-color: #ECF4FD;
+	margin:0px 0px;
+}
+
+.custom-NotesTreePortletHeader {
+    border-bottom: 1px solid #88BBE8;
+    min-width:650px;
+    /*max-height:100%;
+    min-height:100%;*/
+    height:25px !important;
+    margin:0 0 0 0;
+    /*margin-right:auto !important;*/
+    color:#15428B !important;
+    max-width:100%;
+}
+
+.custom-NotesTreePortletInnerHeader {
+    height:25px !important;
+    margin:0 0 0 0;
+    color:#15428B !important;
+}
+
+.custom-NotesTreePortletHeader td {
+	    margin:0 auto 0 0;
+    width:auto !important;
+}
+
+.custom-FlexTableActionsWrapperPanel {
+    min-width:100%;
+    max-width:100%;
+    height:20px !important;
+    background-color: #ECF4FD;
+    margin: 5px 0px;
+    
+}
+
+.custom-ActionAnchor {
+    height:15px !important;
+    min-width:100%;
+    max-width:100%;
+    font-weight:bold;
+    border:medium none;
+    color:#15428B !important;
+}
+
+.custom-NewPostActionAnchor {
+    height:15px !important;
+    min-width:100%;
+    max-width:100%;
+    font-weight:bold;
+    margin: 0 0 0 15px;
+    border:medium none;
+    color:#15428B !important;
+    text-decoration: underline;
+}
+.custom-NewPostActionAnchor:hover {
+    color:#DC7317 !important;
+}
+
+
+.custom-ExpandAllActionAnchor {
+    height:15px !important;
+    min-width:100%;
+    max-width:100%;
+    font-weight:bold;
+    margin: 0 0 0 15px;
+    border:medium none;
+    color:#15428B !important;
+    text-decoration: underline;
+}
+
+.custom-ExpandAllActionAnchor:hover {
+    color:#DC7317 !important;
+}
+
+.custom-CollapseAllActionAnchor {
+    height:15px !important;
+    min-width:100%;
+    max-width:100%;
+    font-weight:bold;
+    margin: 0 0 0 15px;
+    border:medium none;
+    color:#15428B !important;
+    text-decoration: underline;
+}
+
+.custom-CollapseAllActionAnchor:hover {
+    color:#DC7317 !important;
+}
+
+.custom-CreationTimestampHTML{
+    color:#15428B !important;	
+}
+
+.custom-ActionAnchor:hover {
+	color:#DC7317 !important;
+}
+
+.custom-FlexTablePortlet {
+    /*max-width:100% !important;
+    min-width:100% !important;
+    height: auto !important;*/
+    /*min-height:150px;*/
+    min-width:650px;
+}

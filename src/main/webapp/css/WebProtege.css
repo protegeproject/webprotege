@@ -1,0 +1,737 @@
+/*
+ * Cascading Style Sheet for WebProtege - contains global styles and 
+ * styles used in application entry point WebProtege.java.
+ *
+ * Note: try to use GWT naming conventions of projectname-component when possible
+ */ /* 
+ * Specifying a default font family for the body. This will help to make 
+ * fonts look consistent across the application. This can be overridden in 
+ *	individual styles. 
+ */
+body {
+    font-family: tahoma, sans-serif;
+}
+
+/******************************************************************
+ Non-specific Global styles
+ *****************************************************************/
+.centeredImage
+{
+    text-align:center;
+    margin-top:0px;
+    margin-bottom:0px;
+    padding:0px;
+}
+
+/******************************************************************
+ Global styles for hyperlinks
+ *****************************************************************/
+a {
+    text-decoration: none;
+}
+
+a:link {
+    color: #327BAA;
+}  /* medium blue */
+a:visited {
+    color: #6F1488;
+}  /* purple */
+a:hover {
+    color: #DC7317;
+}  /* bright orange */
+
+/******************************************************************
+ Style for panels
+ *****************************************************************/
+
+.x-panel {
+    border: none;
+}
+
+.x-panel .x-portlet {
+    border: 1px solid #99BBE8;
+}
+
+.x-panel-mr {
+    background: none;
+    padding: 0px;
+}
+
+.x-panel-ml {
+    background: none;
+    padding: 0px;
+}
+
+.x-panel-mc {
+    background: none;
+    padding: 0px;
+}
+
+.x-panel-br {
+    background: none;
+    padding: 0px;
+}
+
+.x-panel-bl {
+    background: none;
+    padding: 0px;
+}
+
+.x-panel-bc {
+    background: none;
+    padding: 0px;
+}
+
+/* .x-panel-nofooter .x-panel-bc {
+	height:0px;
+} */
+
+.x-panel-tr {
+    background: none;
+    padding: 0px;
+}
+
+.x-panel-tl {
+    background: none;
+    padding: 0px;
+}
+
+.x-panel-tc {
+    background: #ECF4FD;
+    padding-left: 6px;
+}
+
+.x-toolbar {
+    background: #DBEBF0;
+}
+
+
+/*Tabs*/
+
+ul.x-tab-strip li {
+    background: #C5DAF0;
+    margin-bottom: 2px;
+}
+
+.x-tab-strip-top .x-tab-right {
+    background: none;
+}
+
+.x-tab-strip-top .x-tab-left {
+    background: none;
+}
+
+.x-tab-strip-active span.x-tab-strip-text {
+    color:#0000FF;
+    cursor:default;
+    font-weight:bold;
+    text-decoration:underline;
+}
+
+.x-tab-strip-top .x-tab-strip-inner {
+    background: none;
+}
+
+.x-tab-strip span.x-tab-strip-text {
+    color: #224499;
+}
+
+ul.x-tab-strip li {
+    background: #BDCAD8;
+}
+
+.x-tab-panel-header,.x-tab-panel-footer {
+    background: none;
+    border: none;
+}
+
+.x-tab-panel-header .x-unselectable {
+    border: none;
+}
+
+/*
+* Examples for special tab header styles
+*/
+
+.spec-tab-header-green {
+    background-color:#D7DEBD !important;
+}
+.spec-tab-header-green span.x-tab-strip-text {
+    color: #4A4A00;
+}
+
+.spec-tab-header-orange {
+    background-color:#EED8C1 !important;
+}
+.spec-tab-header-orange span.x-tab-strip-text {
+    color: #EB5321;
+}
+
+/*
+* Multi row and single row support for the tab panel
+*/
+
+.tabpanel-onerow ul.x-tab-strip {
+    width: 10000px !important;
+}
+
+.tabpanel-multirow ul.x-tab-strip {
+    width: auto !important;
+}
+
+/* Border*/
+
+.x-panel-body-noheader,.x-panel-mc .x-panel-body {
+    border: none;
+}
+
+/******************************************************************
+ Global styles for buttons
+ *****************************************************************/
+.toolbar-button .x-btn-text {
+    font-size: 90%;
+    color: #15428B;
+    background-position: 0 2px;
+    background-repeat: no-repeat;
+    padding: 3px 0 2px 18px;
+}
+
+.toolbar-button .x-btn-text-icon .x-btn-center .x-btn-text {
+    font-size: 90%;
+    color: #15428B;
+    background-position: 0 2px;
+    background-repeat: no-repeat;
+    padding: 3px 0 2px 18px;
+}
+
+/******************************************************************
+ Global styles checkboxes
+ *****************************************************************/
+/* .checkbox {
+	text-align: center;
+	padding: 0px 10px 0px 10px;
+} */
+
+/******************************************************************
+ Global styles for TreePanel objects
+ *****************************************************************/
+.x-tree .x-panel-body {
+    background-color: #FFFFFF;
+}
+
+/******************************************************************
+General white background
+ *****************************************************************/
+.white-bg {
+    background-color: #FFFFFF;
+}
+
+ul.x-tab-strip-top {
+    background-color: #FFFFFF;
+    background-image: none;
+}
+
+/******************************************************************
+ Style for WebProtege.java - the application entry point.
+ *****************************************************************/
+.footer {
+    color: #AE5B12; /* burnt orange */
+    font-size: 70%; ! important;
+    text-align: center;
+}
+
+/******************************************************************
+ Style for TopPanel.java - the header portion in the main layout
+ *****************************************************************/
+.top-panel {
+    height: 50px;
+    border: 1px solid cyan;
+}
+
+.header-right {
+    right: 5px;
+    top: 5px;
+    font-size: 70%; ! important;
+    vertical-align: top;
+    text-align: right;
+}
+
+.header-left {
+    right: 5px;
+    top: 5px;
+    font-size: 70%; ! important;
+    vertical-align: top;
+    text-align: left;
+}
+
+/****************************************************************
+Styles for the ontology container
+*****************************************************************/
+
+
+/******************************************************************
+ Style for LoginFormPanel.java - the login screen and welcome page
+ *****************************************************************/
+.login-welcome-msg {
+    color: #686D78;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.userName {
+    right: 5px;
+    top: 5px;
+    font-size: 70%; ! important;
+    vertical-align: top;
+    text-align: right;
+    font-weight: bold;
+}
+
+/******************************************************************
+ Styles for components that make up Metadata tab
+ *****************************************************************/
+#annotations-grid .x-grid3-cell-inner {
+    overflow: visible;
+    white-space: normal !important;
+}
+
+/******************************************************************
+ Styles for components that make up MyWebProtege tab
+ *****************************************************************/
+#ontologies-grid .x-grid3-cell-inner {
+    overflow: visible;
+    white-space: normal !important;
+}
+
+.jnlpPanel {
+    background-color: #ECF4FD;
+    padding: 5px;
+    border: 1px solid #99BBE8;
+    margin: 5px;
+}
+
+.html-portlet {
+    font-size: larger;
+}
+
+.html-portlet .x-panel-body{
+    overflow: auto;
+}
+
+/******************************************************************
+Styles for HTML restrictions table
+*****************************************************************/
+.restriction_panel {
+    background-color: #FFFFFF;
+}
+
+.restriction_table {
+    font-family: arial, tahoma, helvetica, sans-serif;
+    background-color: #FFFFFF; !
+	important padding: 5px 5px 5px 5px;
+}
+
+.restiction_title {
+    font-weight: bold;
+    color: #1542bb;
+}
+
+.restriction_delim {
+    color: maroon;
+    font-style: italic;
+}
+
+.restriction_separator {
+    color: gray;
+    font-style: italic;
+    font-size: 90%;
+}
+
+/******************************************************************
+ Styles for Ontologies grid
+ *****************************************************************/
+.x-grid3-header-offset {
+    width: auto;
+}
+
+.gwt-ListBox {
+    font-family: tahoma, sans-serif;
+}
+
+/******************************************************************
+ Styles for Form widgets
+ *****************************************************************/
+ul.disc {
+    list-style-type: disc;
+    padding: 15px;
+}
+
+.x-form-item-label, .form_label {
+    clear: left;
+    display: block;
+    float: left;
+    padding: 3px 3px 3px 0;
+    position: relative;
+    width: 100px;
+    z-index: 2;
+    color: #1542bb;
+    font-family: tahoma, sans-serif;
+    font-size: 11px;
+    font-size-adjust: none;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    line-height: normal;
+}
+
+.x-form-item-label, .action_link {
+    width: 100px;
+}
+/* use these styles to increase label width for regular fields. 
+   Warning: Left end of field will be unfortunatelly cut! 
+   * /
+.x-form-item label {
+	width: 105px !important;
+}
+
+.x-form-element {
+	padding-left: 110px !important;
+}
+/ * */
+
+.note_message,.stats_message {
+    clear: left;
+    display: block;
+    float: left;
+    padding: 3px 3px 6px;
+    position: relative;
+    /*	color: #1542bb;*/
+    font-family: tahoma, sans-serif;
+    font-size: 11px;
+    font-size-adjust: none;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    line-height: normal;
+}
+
+.form_grid {
+    padding: 1px 3px;
+}
+
+.form_html_panel {
+    height: 150px;
+    font-family: tahoma, sans-serif;
+    font-size: 12px;
+}
+
+.instance-checkbox input {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    /*top: -1px;*/
+    *overflow: hidden;
+
+}
+
+.instance-checkbox label {
+    /*display: block;*/
+    padding-left: 10px;
+    text-indent: -10px;
+
+}
+
+/******************************************************************
+ Styles for ChangeSummaryPortlet.java
+ *****************************************************************/
+#changes-grid .x-grid3-cell-inner {
+    overflow: visible;
+    white-space: normal !important;
+}
+
+.manage-button {
+    color: #15428B;
+    cursor: pointer;
+    font-size: 100%;
+    font-weight: bold;
+    text-decoration: underline;
+    padding: 7px;
+}
+
+/*****************
+Styles for the hierarchy management tab
+********************/
+.hierarchy-title {
+    font-size: 120%;
+    font-weight: bold;
+    padding: 5px;
+    background-color: #BDCAD8;
+    color: #15428B;
+    margin-bottom: 5px;
+}
+
+.select-link {
+    background-image: url(../images/add.png) !important;
+    border-style: none !important;
+    border-width: 0px;
+    margin-left: 5px;
+    margin-top: 5px;
+    border-width: 0px;
+    background-position: 0px 0 !important;
+}
+
+.explanation {
+    background-color: #faf59b;
+    border: 1px solid #15428B;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+    padding: 5px 5px 5px 8px;
+}
+
+.parents {
+    background: #FFFFFF url(../images/default/form/text-bg.gif) repeat-x scroll 0 0;
+    border: 1px solid #B5B8C8;
+    padding: 2px 3px;
+    overflow: auto;
+    margin: 0px !important;
+}
+
+.parents-no-border {
+    background: #FFFFFF url(../images/default/form/text-bg.gif) repeat-x scroll 0 0;
+    padding: 2px 3px;
+}
+
+.parents-label {
+    width: 100px;
+    clear: left;
+    display: block;
+    float: left;
+    padding: 3px 0px 3px 0px;
+    margin-right: 6px;
+    position: relative;
+    z-index: 2;
+    color: #1542BB;
+    font-family: tahoma, sans-serif;
+    font-size: 11px;
+    font-size-adjust: none;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    line-height: normal;
+}
+
+.parent-column-right {
+    font-family: tahoma, sans-serif;
+    background-color: #FFFFFF; !
+	important padding: 5px 5px 5px 5px;
+    text-align: right;
+}
+
+/* hack - should fix */
+.ext-gecko .x-window-body .x-form-item {
+    overflow: hidden;
+}
+.menuBar {
+    cursor: pointer;
+    padding: 0px;
+    margin-top: -2px;
+}
+
+.menuBar .gwt-MenuItem
+{
+    cursor: pointer;
+    padding: 0px;
+    margin-top: -2px;
+}
+
+.menuBar .gwt-MenuItem-selected
+{
+    color : #DC7317;
+}
+
+.menuBar .gwt-MenuItem-visited
+{
+    cursor: pointer;
+    padding: 0px;
+    margin-top: -2px;
+}
+
+.subMenuBar {
+    color: #327BAA;
+    font-size:75%;
+    text-decoration:underline;
+    cursor: pointer;
+    background-color: #FFFFFF;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #AAAAAA;
+}
+
+.subMenuBar
+{
+    color: #327BAA;
+    font-size:75%;
+    text-decoration:underline;
+    cursor: pointer;
+    margin: 3px;
+    padding: 6px;
+}
+.subMenuBar .gwt-MenuItem
+{
+
+}
+.subMenuBar .gwt-MenuItem-selected
+{
+    background-color : #327BAA;
+    color: white;
+}
+
+.label {
+    color: #003399;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.gwt-PopupPanel {
+    border: 3px thin #C3D9FF;
+    padding: 3px;
+
+    border-color:#329ab3;
+    border-width:20px;
+    background-color : #CEDBEC;
+    z-index: 20;
+}
+
+.gwt-PopupPanel .popupContent {
+    background-color : #DFE8F6;
+}
+
+.loginpanel {
+}
+
+.loginpanel .x-panel-body {
+    background-color: #DFE8F7;
+}
+
+.links-blue {
+    color: #003399;
+    font-size: 11px;
+    font-weight: bold;
+
+    cursor: pointer;
+    padding: 0px;
+    margin-top: -2px;
+}
+
+.loading-img {
+    margin-left: 3px;
+}
+
+.bp-search-rec-type {
+    font-size: 90%;
+    color: gray;
+}
+
+.bp-search-pref-name {
+    font-weight: bold;
+}
+
+.bp-search-contents {
+    color: gray;
+}
+
+/*****************
+Radio box widget
+********************/
+
+.instance-radio {
+    padding: 5px;
+}
+
+/*********************
+Export/Import portlet
+***********************/
+
+.export_import_anchor {
+    font-weight: bold;
+    font-size: 120%;
+    text-decoration:underline;
+}
+
+.export-import-separator {
+    padding:10px 15px;
+}
+
+/********************
+Restriction editing
+*********************/
+.condition_editor {
+    font-size: 11px;
+}
+
+.hint_color_red {
+    background-color: #EFB4B2;
+}
+
+.hint_color_green {
+    background-color: #B7FFB7;
+}
+
+/********************
+Portlets
+*********************/
+.ctrl_portlet {
+    background-image: url(../images/transmit_blue.png) !important;
+}
+
+
+/**********************
+GWT popup list
+************************/
+
+/*.gwt-DropDown {*/
+    /*margin-top: -4px;*/
+    /*border: 3px solid #e7e7e7;*/
+    /*background: white;*/
+    /*font: 11px tahoma,arial,helvetica,sans-serif;*/
+    /*color: #15428B;*/
+    /*font-weight: bold;*/
+/*}*/
+
+.html-editor {
+    font: 11px tahoma, sans-serif;
+}
+
+.x-grid3-cell-inner {
+    overflow: visible;
+    white-space: normal !important;
+}
+
+.webprotege-revision-summary-style {
+    border-bottom: dotted;
+    border-bottom-color: silver;
+    border-bottom-width: 1px;
+    margin-bottom: 5px;
+    padding: 4px;
+}
+
+.webprotege-revision-summary-revision-number-style {
+    font-weight: bold;
+}
+
+.webprotege-revision-summary-userid-style {
+    font-weight: normal;
+}
+
+
+
+/*Scrollbar for vertical menues*/
+ul.x-menu-list {
+    height: expression( this.scrollHeight > 350 ? "350px" : "auto" ); /* sets max-height for IE */
+    max-height: 350px;
+    overflow-y: auto;
+}

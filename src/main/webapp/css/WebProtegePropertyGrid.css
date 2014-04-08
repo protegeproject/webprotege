@@ -1,0 +1,18 @@
+*.web-protege-property-grid table {
+    width: 100%;
+}
+
+*.web-protege-property-grid td {
+    vertical-align: top;
+    /*padding: 2px;*/
+    /*margin: 2px;*/
+}
+
+*.web-protege-property-grid * tr {
+    border-bottom: solid silver 1px;
+}
+
+.web-protege-property-grid-editor {
+    min-height: 1.3em;
+    width: 100%;
+}
