@@ -145,13 +145,6 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        dumpHeaders(req);
-        super.service(req, resp);
-    }
-
     @Override
     public String processCall(String payload) throws SerializationException {
         // TODO: Log timing in here
@@ -173,23 +166,22 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
         //apache reverse proxy with rewrite on the header can work
 
         String moduleBaseURLHdr = request.getHeader("X-GWT-Module-Base");
-        dumpHeaders(request);
         if(moduleBaseURLHdr != null){
             moduleBaseURL = moduleBaseURLHdr;
         }
         return super.doGetSerializationPolicy(request, moduleBaseURL, strongName);
     }
 
-    private void dumpHeaders(HttpServletRequest request) {
-        System.out.println("Headers");
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while(headerNames.hasMoreElements()) {
-            String s = headerNames.nextElement();
-            System.out.print(s);
-            System.out.print("  --->  ");
-            System.out.println(request.getHeader(s));
-        }
-        System.out.println();
-        System.out.println();
-    }
+//    private void dumpHeaders(HttpServletRequest request) {
+//        System.out.println("Headers");
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//        while(headerNames.hasMoreElements()) {
+//            String s = headerNames.nextElement();
+//            System.out.print(s);
+//            System.out.print("  --->  ");
+//            System.out.println(request.getHeader(s));
+//        }
+//        System.out.println();
+//        System.out.println();
+//    }
 }
