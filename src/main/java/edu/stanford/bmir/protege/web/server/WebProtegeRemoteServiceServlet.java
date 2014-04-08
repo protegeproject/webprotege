@@ -149,7 +149,6 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         dumpHeaders(req);
-        Pattern p = Pattern.compile("^(.*)/wp/(.*)$");
         super.service(req, resp);
     }
 
@@ -174,7 +173,6 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
         //apache reverse proxy with rewrite on the header can work
 
         String moduleBaseURLHdr = request.getHeader("X-GWT-Module-Base");
-        System.out.println("Passed in module base URL: " + moduleBaseURL);
         dumpHeaders(request);
         if(moduleBaseURLHdr != null){
             moduleBaseURL = moduleBaseURLHdr;

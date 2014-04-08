@@ -18,12 +18,35 @@
         <!-- GWT needs at least java 1.5 -->
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <application.name>WebProtégé</application.name>
-        <application.host>localhost</application.host>
-        <data.directory>/data/webprotege</data.directory>
-        <admin.email/>
+        <application.name>WebProtege</application.name>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>development</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <application.host>localhost</application.host>
+            </properties>
+        </profile>
+        <profile>
+            <id>general.release</id>
+            <properties>
+                <data.directory>/data/webprotege</data.directory>
+            </properties>
+        </profile>
+        <profile>
+            <!-- Deployment to webprotege.stanford.edu -->
+            <id>webprotege.stanford.edu</id>
+            <properties>
+                <application.host>webprotege.stanford.edu</application.host>
+                <data.directory>/apps/bmir.apps/web-protege-data</data.directory>
+                <admin.email>matthew.horridge@stanford.edu</admin.email>
+            </properties>
+        </profile>
+    </profiles>
 
     <repositories>
         <repository>
@@ -241,19 +264,20 @@
         <!-- Generate compiled stuff in the folder used for developing mode -->
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
-        <!--<resources>-->
-            <!--<resource>-->
-                <!--<directory>src/main/resources</directory>-->
-                <!--<filtering>true</filtering>-->
-            <!--</resource>-->
-            <!--<resource>-->
-                <!--<directory>src/main/webapp</directory>-->
-                <!--<filtering>true</filtering>-->
-                <!--<targetPath>${webappDirectory}</targetPath>-->
-            <!--</resource>-->
-        <!--</resources>-->
-
         <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>2.16</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
 
             <!-- GWT Maven Plugin -->
             <plugin>
