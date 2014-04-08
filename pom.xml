@@ -215,7 +215,6 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>1.0.0.GA</version>
-            <!--<scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -295,12 +294,9 @@
                         </goals>
                     </execution>
                 </executions>
-                <!-- Plugin configuration. There are many available options, see
-                  gwt-maven-plugin documentation at codehaus.org -->
                 <configuration>
                     <runTarget>WebProtege.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <!--<i18nMessagesBundle>edu.stanford.bmir.protege.web.client.Messages</i18nMessagesBundle>-->
                     <extraJvmArgs>-Xms1000M -Xmx2000M -XX:MaxPermSize=256M -XX:PermSize=128M</extraJvmArgs>
                 </configuration>
             </plugin>
@@ -321,7 +317,6 @@
                     <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
                     <webResources>
                         <resource>
-                            <!-- this is relative to the pom.xml directory -->
                             <directory>src/main/configuration</directory>
                             <filtering>true</filtering>
                         </resource>
