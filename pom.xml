@@ -289,8 +289,7 @@
                             <goal>compile</goal>
                             <goal>test</goal>
                             <!--<goal>i18n</goal>-->
-                            <!-- TODO: Enable this when we have cleaned up the async interfaces -->
-                            <!--<goal>generateAsync</goal>-->
+                            <goal>generateAsync</goal>
                         </goals>
                     </execution>
                 </executions>
