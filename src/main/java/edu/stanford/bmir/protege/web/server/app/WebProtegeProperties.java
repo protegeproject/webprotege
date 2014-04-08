@@ -43,7 +43,7 @@ public class WebProtegeProperties implements Serializable {
         ImmutableMap.Builder<WebProtegePropertyName, Optional<String>> builder = ImmutableMap.builder();
         for (WebProtegePropertyName propertyName : values()) {
             final String value = properties.getProperty(propertyName.getPropertyName(), null);
-            if (value != null) {
+            if (value != null  && !isPlaceholder(propertyName, value)) {
                 builder.put(propertyName, Optional.<String>of(value));
             }
             else {
@@ -62,6 +62,17 @@ public class WebProtegeProperties implements Serializable {
             }
         }
         propertyValueMap = builder.build();
+    }
+
+    /**
+     * Determines whether or not the value of the property is a placeholder for the property.  The value is a placeholder
+     * if for a given property name, propname it is equal to "${propname}".
+     * @param propertyName The name of the property.
+     * @param value The value.
+     * @return {@code true} if the value of the property is a placeholder of the property value, otherwise {@code false}.
+     */
+    private static boolean isPlaceholder(WebProtegePropertyName propertyName, String value) {
+        return ("${" + propertyName.name() + "}").equals(value);
     }
 
     /**

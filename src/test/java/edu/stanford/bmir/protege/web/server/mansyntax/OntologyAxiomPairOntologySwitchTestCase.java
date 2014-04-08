@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.server.mansyntax;
 import org.coode.owlapi.manchesterowlsyntax.OntologyAxiomPair;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -22,6 +24,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/03/2014
  */
+@RunWith(MockitoJUnitRunner.class)
 public class OntologyAxiomPairOntologySwitchTestCase {
 
     @Mock

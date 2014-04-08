@@ -47,7 +47,7 @@ public class ZipArchiveProjectSourcesExtractor_TestCase {
 
     @Before
     public void setUp() throws IOException {
-        outputFolder = temporaryFolder.newFolder("ziptest");
+        outputFolder = temporaryFolder.newFolder();
         when(tempFileFactory.createTempDirectory()).thenReturn(outputFolder);
 
     }
@@ -75,7 +75,7 @@ public class ZipArchiveProjectSourcesExtractor_TestCase {
 
 
     public File createZipFile(String document) throws IOException {
-        File zipFile = temporaryFolder.newFile("ziptest");
+        File zipFile = temporaryFolder.newFile();
         OutputStream out = new FileOutputStream(zipFile);
         ZipOutputStream zipOutputStream = new ZipOutputStream(out);
         ZipEntry entryA = new ZipEntry(document);
