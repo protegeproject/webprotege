@@ -12,10 +12,14 @@
         .createAsPanel {
             padding: 2px;
         }
+        .errorMessage {
+            max-height: 32px;
+            overflow-x: auto;
+        }
     </ui:style>
 
     <g:HTMLPanel>
-        <g:HTML ui:field="errorMessageView"/>
+        <g:HTML ui:field="errorMessageView" addStyleNames="{style.errorMessage}"/>
         <g:HTMLPanel ui:field="createAsPanel" addStyleNames="{style.createAsPanel}">
             Create
             <g:InlineLabel ui:field="currentTokenNameField" addStyleNames="{style.tokenStyle}"/>
