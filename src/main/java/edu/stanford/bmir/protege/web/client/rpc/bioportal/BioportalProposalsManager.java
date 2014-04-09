@@ -6,11 +6,11 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 public class BioportalProposalsManager {
 
-    private static BioportalProposalsAsync proxy;
+    private static BioportalProposalsServiceAsync proxy;
     private static BioportalProposalsManager instance;
 
     private BioportalProposalsManager() {
-        proxy = (BioportalProposalsAsync) GWT.create(BioportalProposals.class);
+        proxy = (BioportalProposalsServiceAsync) GWT.create(BioportalProposalsService.class);
     }
 
     public static BioportalProposalsManager getBioportalProposalsManager() {
