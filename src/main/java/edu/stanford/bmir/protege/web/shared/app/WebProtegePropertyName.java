@@ -28,13 +28,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public enum WebProtegePropertyName {
 
-    @WebProtegePropertiesDocumentation(description = "The name of the webprotege application that appears in the browser title bar", example = "WebProtege")
+    @WebProtegePropertiesDocumentation(description = "The name of the WebProtégé application that appears in the browser title bar", example = "WebProtege")
     APPLICATION_NAME("application.name", PropertyValue.ofString("WebProt\u00E9g\u00E9"), ClientVisibility.VISIBLE),
 
-    @WebProtegePropertiesDocumentation(description = "The host name that webprotege runs on", example = "webprotege.stanford.edu")
+    @WebProtegePropertiesDocumentation(description = "The version of the WebProtégé application", example = "2.5.0")
+    APPLICATION_VERSION("application.version", ClientVisibility.VISIBLE),
+
+    @WebProtegePropertiesDocumentation(description = "The host name that WebProtégé runs on", example = "webprotege.stanford.edu")
     APPLICATION_HOST("application.host", ClientVisibility.VISIBLE),
 
-    @WebProtegePropertiesDocumentation(description = "The directory where webprotege data is stored", example = "/src/webprotege")
+    @WebProtegePropertiesDocumentation(description = "The directory where WebProtégé data is stored", example = "/src/webprotege")
     DATA_DIRECTORY("data.directory", ClientVisibility.HIDDEN),
 
     @WebProtegePropertiesDocumentation(description = "The host name of the mongodb server", example = "localhost")
@@ -43,16 +46,16 @@ public enum WebProtegePropertyName {
     @WebProtegePropertiesDocumentation(description = "The port number of the mongodb server", example = "27017")
     MONGO_DB_PORT("mongodb.port", PropertyValue.ofInteger(27017), ClientVisibility.HIDDEN),
 
-    @WebProtegePropertiesDocumentation(description = "Specifies whether webprotege uses https rather than http as a protocol", example = "false")
+    @WebProtegePropertiesDocumentation(description = "Specifies whether WebProtégé uses https rather than http as a protocol", example = "false")
     HTTPS_ENABLED("https.enabled", PropertyValue.ofBoolean(false), ClientVisibility.VISIBLE),
 
     @WebProtegePropertiesDocumentation(description = "Specifies the port used for https communication", example = "443")
     HTTPS_PORT("https.port", PropertyValue.ofInteger(443), ClientVisibility.VISIBLE),
 
-    @WebProtegePropertiesDocumentation(description = "The email address of the webprotege administrator", example = "john.doe@stanford.edu")
+    @WebProtegePropertiesDocumentation(description = "The email address of the WebProtégé administrator", example = "john.doe@stanford.edu")
     ADMIN_EMAIL("admin.email", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
 
-    @WebProtegePropertiesDocumentation(description = "Specifies whether or not WebProtege should support authentication with Open Id", example = "false")
+    @WebProtegePropertiesDocumentation(description = "Specifies whether or not WebProtégé should support authentication with Open Id", example = "false")
     OPEN_ID_ENABLED("openid.enabled", PropertyValue.ofBoolean(true), ClientVisibility.VISIBLE);
 
 
