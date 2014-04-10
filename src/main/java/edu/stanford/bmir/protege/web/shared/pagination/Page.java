@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/09/2013
  */
-public class Page<T extends Serializable> implements Serializable, Iterable<T> {
+public class Page<T> implements Serializable, Iterable<T> {
 
     private int pageNumber;
 
