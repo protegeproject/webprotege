@@ -18,7 +18,7 @@ import java.util.Set;
  *     Represents data about some object.  This data includes browser text for the object.
  * </p>
  */
-public abstract class ObjectData<O> implements Serializable, HasBrowserText, HasSignature, IsSerializable {
+public abstract class ObjectData<O> implements HasBrowserText, HasSignature {
 
     private final O object;
 

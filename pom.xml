@@ -20,65 +20,6 @@
         <application.name>WebProtege</application.name>
     </properties>
 
-    <profiles>
-        <!-- Profile for local development of WebProtege -->
-        <profile>
-            <id>development</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <application.host>localhost</application.host>
-            </properties>
-        </profile>
-        <!-- Profile for producing a release of WebProtege that people can download and install locally -->
-        <profile>
-            <id>general.release</id>
-            <properties>
-                <data.directory>/data/webprotege</data.directory>
-            </properties>
-        </profile>
-        <!-- Profile for deployment of WebProtege to webprotege.stanford.edu -->
-        <profile>
-            <id>webprotege.stanford.edu</id>
-            <properties>
-                <application.host>webprotege.stanford.edu</application.host>
-                <data.directory>/apps/bmir.apps/web-protege-data</data.directory>
-                <mail.smtp.from.wp.personalName>WebProtege</mail.smtp.from.wp.personalName>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>1.3.1</version>
-                        <executions>
-                            <execution>
-                                <id>enforce-versions</id>
-                                <goals>
-                                    <goal>enforce</goal>
-                                </goals>
-                                <configuration>
-                                    <rules>
-                                        <requireProperty>
-                                            <property>admin.email</property>
-                                            <message>"admin.email must be specified."</message>
-                                        </requireProperty>
-                                        <requireProperty>
-                                            <property>mail.smtp.host</property>
-                                            <message>"mail.smtp.host must be specified.</message>
-                                        </requireProperty>
-                                    </rules>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
     <repositories>
         <repository>
             <id>oss-sonatype</id>
@@ -313,6 +254,8 @@
                     <runTarget>WebProtege.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <extraJvmArgs>-Xms1000M -Xmx2000M -XX:MaxPermSize=256M -XX:PermSize=128M</extraJvmArgs>
+                    <logLevel>WARN</logLevel>
+                    <htmlunit>true</htmlunit>
                 </configuration>
             </plugin>
 
@@ -397,5 +340,65 @@
             </plugin>
         </plugins>
     </reporting>
+
+
+    <profiles>
+        <!-- Profile for local development of WebProtege -->
+        <profile>
+            <id>development</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <application.host>localhost</application.host>
+            </properties>
+        </profile>
+        <!-- Profile for producing a release of WebProtege that people can download and install locally -->
+        <profile>
+            <id>general.release</id>
+            <properties>
+                <data.directory>/data/webprotege</data.directory>
+            </properties>
+        </profile>
+        <!-- Profile for deployment of WebProtege to webprotege.stanford.edu -->
+        <profile>
+            <id>webprotege.stanford.edu</id>
+            <properties>
+                <application.host>webprotege.stanford.edu</application.host>
+                <data.directory>/apps/bmir.apps/web-protege-data</data.directory>
+                <mail.smtp.from.wp.personalName>WebProtege</mail.smtp.from.wp.personalName>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>1.3.1</version>
+                        <executions>
+                            <execution>
+                                <id>enforce-versions</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireProperty>
+                                            <property>admin.email</property>
+                                            <message>"admin.email must be specified."</message>
+                                        </requireProperty>
+                                        <requireProperty>
+                                            <property>mail.smtp.host</property>
+                                            <message>"mail.smtp.host must be specified.</message>
+                                        </requireProperty>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.*;
  *     A utility for creating pages of data.
  * </p>
  */
-public class Pager<T extends Serializable> implements Serializable {
+public class Pager<T> implements Serializable {
 
     private List<List<T>> partition;
 
@@ -40,7 +40,7 @@ public class Pager<T extends Serializable> implements Serializable {
 
     }
 
-    public static <T extends Serializable> Pager<T> getPagerForPageSize(List<T> sourceData, int pageSize) {
+    public static <T> Pager<T> getPagerForPageSize(List<T> sourceData, int pageSize) {
         return new Pager<T>(sourceData, pageSize);
     }
 
