@@ -1,0 +1,37 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:style>
+        .createEntityButton {
+            font-size: 10px;
+            display: inline;
+        }
+        .tokenStyle {
+            font-weight: bold;
+        }
+        .createAsPanel {
+            padding: 2px;
+        }
+        .errorMessage {
+            max-height: 32px;
+            overflow-x: auto;
+        }
+    </ui:style>
+
+    <g:HTMLPanel>
+        <g:HTML ui:field="errorMessageView" addStyleNames="{style.errorMessage}"/>
+        <g:HTMLPanel ui:field="createAsPanel" addStyleNames="{style.createAsPanel}">
+            Create
+            <g:InlineLabel ui:field="currentTokenNameField" addStyleNames="{style.tokenStyle}"/>
+            as:
+            <g:Button ui:field="createAsClass" text="Class" addStyleNames="{style.createEntityButton}"/>
+            <g:Button ui:field="createAsObjectProperty" text="Object property"
+                      addStyleNames="{style.createEntityButton}"/>
+            <g:Button ui:field="createAsDataProperty" text="Data property" addStyleNames="{style.createEntityButton}"/>
+            <g:Button ui:field="createAsAnnotationProperty" text="Annotation property"
+                      addStyleNames="{style.createEntityButton}"/>
+            <g:Button ui:field="createAsIndividual" text="Individual" addStyleNames="{style.createEntityButton}"/>
+            <g:Button ui:field="createAsDatatype" text="Datatype" addStyleNames="{style.createEntityButton}"/>
+        </g:HTMLPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>
