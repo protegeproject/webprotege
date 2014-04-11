@@ -13,7 +13,7 @@
     <name>GWT Maven Archetype</name>
 
     <properties>
-        <gwtVersion>2.6.0</gwtVersion>
+        <gwtVersion>2.5.1</gwtVersion>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gwt.test.mode>htmlunit</gwt.test.mode>
