@@ -1,16 +1,20 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.IRIData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
+
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,7 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/01/2013
  */
-public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiteralParser {
+public class DefaultPrimitiveDataParser implements PrimitiveDataParser {
 
 
     private EntityDataLookupHandler entityDataLookupHandler;
@@ -28,12 +32,6 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
     @Inject
     public DefaultPrimitiveDataParser(EntityDataLookupHandler entityDataLookupHandler) {
         this.entityDataLookupHandler = entityDataLookupHandler;
-    }
-
-
-    @Override
-    public OWLLiteral parseLiteral(String text, Optional<String> language) {
-        return DataFactory.parseLiteral(checkNotNull(text), checkNotNull(language));
     }
 
     /**
@@ -44,29 +42,24 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
      *         null}.
      */
     private OWLLiteralData parseLiteralData(String trimmedContent, Optional<String> language) {
-        OWLLiteral literal = parseLiteral(trimmedContent, language);
+        OWLLiteral literal = DataFactory.parseLiteral(trimmedContent, language);
         return new OWLLiteralData(literal);
     }
 
-
     @Override
-    public void parsePrimitiveData(String content, Optional<String> lang, final PrimitiveDataParsingContext context, final PrimitiveDataParserCallback callback) {
-        final String trimmedContent = checkNotNull(content).trim();
-        parsePrimitiveDataFromTrimmedContent(trimmedContent, checkNotNull(lang), checkNotNull(context), checkNotNull(callback));
+    public void parsePrimitiveData(String text, Optional<String> language, Set<PrimitiveType> allowedTypes, PrimitiveDataParserCallback callback) {
+        final String trimmedContent = checkNotNull(text).trim();
+        parsePrimitiveDataFromTrimmedContent(trimmedContent, checkNotNull(language), checkNotNull(allowedTypes), checkNotNull(callback));
     }
 
-
-
-
-
-    private void parsePrimitiveDataFromTrimmedContent(final String trimmedContent, final Optional<String> lang, final PrimitiveDataParsingContext context, final PrimitiveDataParserCallback callback) {
+    private void parsePrimitiveDataFromTrimmedContent(final String trimmedContent, final Optional<String> lang, Set<PrimitiveType> allowedTypes, final PrimitiveDataParserCallback callback) {
         if (trimmedContent.isEmpty()) {
             callback.onSuccess(Optional.<OWLPrimitiveData>absent());
             return;
         }
 
         if (lang.isPresent()) {
-            if (context.isLiteralAllowed()) {
+            if (allowedTypes.contains(PrimitiveType.LITERAL)) {
                 OWLLiteralData literalData = parseLiteralData(trimmedContent, lang);
                 callback.onSuccess(Optional.<OWLPrimitiveData>of(literalData));
             }
@@ -76,18 +69,17 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
             }
             return;
         }
-
-        if (context.isRegisteredFreshEntity(trimmedContent)) {
-            Optional<OWLEntity> registeredFreshEntity = context.getRegisteredFreshEntity(trimmedContent);
-            OWLPrimitiveData parsedData = DataFactory.getOWLEntityData(registeredFreshEntity.get(), trimmedContent);
-            callback.onSuccess(Optional.<OWLPrimitiveData>of(parsedData));
-            return;
+        Set<EntityType<?>> allowedEntityTypes = Sets.newHashSet();
+        for(PrimitiveType primitiveType : allowedTypes) {
+            if(primitiveType.isEntityType()) {
+                allowedEntityTypes.add(primitiveType.getEntityType());
+            }
         }
-        parseEntityDataIRIOrLiteral(trimmedContent, lang, context, callback);
+        parseEntityDataIRIOrLiteral(trimmedContent, lang, allowedEntityTypes, allowedTypes, callback);
     }
 
-    private void parseEntityDataIRIOrLiteral(final String trimmedContent, final Optional<String> lang, final PrimitiveDataParsingContext context, final PrimitiveDataParserCallback callback) {
-        entityDataLookupHandler.lookupEntity(trimmedContent, context, new AsyncCallback<Optional<OWLEntityData>>() {
+    private void parseEntityDataIRIOrLiteral(final String trimmedContent, final Optional<String> lang, final Set<EntityType<?>> allowedEntityTypes, final Set<PrimitiveType> allowedTypes, final PrimitiveDataParserCallback callback) {
+        entityDataLookupHandler.lookupEntity(trimmedContent, allowedEntityTypes, new AsyncCallback<Optional<OWLEntityData>>() {
             @Override
             public void onFailure(Throwable caught) {
                 callback.parsingFailure();
@@ -95,20 +87,20 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
 
             @Override
             public void onSuccess(Optional<OWLEntityData> result) {
-                handleEntityDataParsingResult(result, callback, context, trimmedContent, lang);
+                handleEntityDataParsingResult(result, callback, trimmedContent, lang, allowedTypes);
             }
         });
     }
 
-    private void handleEntityDataParsingResult(Optional<OWLEntityData> result, PrimitiveDataParserCallback callback, PrimitiveDataParsingContext context, String trimmedContent, Optional<String> lang) {
+    private void handleEntityDataParsingResult(Optional<OWLEntityData> result, PrimitiveDataParserCallback callback, String trimmedContent, Optional<String> lang, Set<PrimitiveType> allowedTypes) {
         if (result.isPresent()) {
             callback.onSuccess(Optional.<OWLPrimitiveData>of(result.get()));
         }
-        else if (context.isIRIAllowed() && isAbsoluteIRI(trimmedContent)) {
+        else if (allowedTypes.contains(PrimitiveType.IRI) && isAbsoluteIRI(trimmedContent)) {
             IRIData iriData = new IRIData(IRI.create(trimmedContent));
             callback.onSuccess(Optional.<OWLPrimitiveData>of(iriData));
         }
-        else if (context.isLiteralAllowed()) {
+        else if (allowedTypes.contains(PrimitiveType.LITERAL)) {
             OWLLiteralData literalData = parseLiteralData(trimmedContent, lang);
             callback.onSuccess(Optional.<OWLPrimitiveData>of(literalData));
         }
@@ -121,6 +113,7 @@ public class DefaultPrimitiveDataParser implements PrimitiveDataParser, OWLLiter
         var pattern = /(\w+):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
         return pattern.test(url);
     }-*/;
+
 
 
 

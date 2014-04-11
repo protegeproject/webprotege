@@ -4,11 +4,13 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.entity.EntityLookupResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -21,20 +23,33 @@ import java.util.Set;
  */
 public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
 
-    private DispatchServiceManager dispatchServiceManager;
+    private final DispatchServiceManager dispatchServiceManager;
+
+    private final FreshEntitiesHandler freshEntitiesHandler;
+
+    private final ProjectId projectId;
 
     @Inject
-    public EntityDataLookupHandlerImpl(DispatchServiceManager dispatchServiceManager) {
+    public EntityDataLookupHandlerImpl(ProjectId projectId, FreshEntitiesHandler freshEntitiesHandler, DispatchServiceManager dispatchServiceManager) {
         this.dispatchServiceManager = dispatchServiceManager;
+        this.freshEntitiesHandler = freshEntitiesHandler;
+        this.projectId = projectId;
     }
 
     @Override
-    public void lookupEntity(String displayName, final EntityDataLookupContext lookupContext, final AsyncCallback<Optional<OWLEntityData>> callback) {
+    public void lookupEntity(String displayName, final Set<EntityType<?>> allowedEntityTypes, final AsyncCallback<Optional<OWLEntityData>> callback) {
         final String trimmedContent = displayName.trim();
-        final ProjectId projectId = lookupContext.getProjectId();
-        final Set<EntityType<?>> allowedEntityTypes = lookupContext.getAllowedEntityTypes();
         if(allowedEntityTypes.isEmpty()) {
             callback.onSuccess(Optional.<OWLEntityData>absent());
+            return;
+        }
+        if(freshEntitiesHandler.isRegisteredFreshEntity(displayName)) {
+            Optional<OWLEntity> freshEntity = freshEntitiesHandler.getRegisteredFreshEntity(displayName);
+            if (freshEntity.isPresent()) {
+                OWLEntityData entityData = DataFactory.getOWLEntityData(freshEntity.get(), displayName);
+                callback.onSuccess(Optional.of(entityData));
+                return;
+            }
         }
         final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, SearchType.EXACT_MATCH_IGNORE_CASE, 1, allowedEntityTypes);
         dispatchServiceManager.execute(new LookupEntitiesAction(projectId, entityLookupRequest), new AsyncCallback<LookupEntitiesResult>() {
@@ -46,7 +61,7 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
             @Override
             public void onSuccess(LookupEntitiesResult result) {
                 List<EntityLookupResult> results = result.getEntityLookupResults();
-                Optional<OWLEntityData> entityData = getMatchingEntity(results, trimmedContent, lookupContext);
+                Optional<OWLEntityData> entityData = getMatchingEntity(results, trimmedContent, projectId, allowedEntityTypes);
                 callback.onSuccess(entityData);
             }
         });
@@ -59,14 +74,14 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
      * @param text
      * @return
      */
-    private Optional<OWLEntityData> getMatchingEntity(List<EntityLookupResult> result, String text, EntityDataLookupContext context) {
+    private Optional<OWLEntityData> getMatchingEntity(List<EntityLookupResult> result, String text, ProjectId projectId, Set<EntityType<?>> allowedEntityTypes) {
         if (result.isEmpty()) {
             return Optional.absent();
         }
         EntityLookupResult lookupResult = result.get(0);
         final OWLEntityData lookedUpEntityData = lookupResult.getOWLEntityData();
         EntityType<?> entityType = lookedUpEntityData.getEntity().getEntityType();
-        if (lookedUpEntityData.getBrowserText().equalsIgnoreCase(text) && context.getAllowedEntityTypes().contains(entityType)) {
+        if (lookedUpEntityData.getBrowserText().equalsIgnoreCase(text) && allowedEntityTypes.contains(entityType)) {
             return Optional.of(lookedUpEntityData);
         }
         else {

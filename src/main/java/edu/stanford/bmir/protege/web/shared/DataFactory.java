@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
@@ -10,6 +12,7 @@ import org.semanticweb.owlapi.vocab.XSDVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -261,7 +264,7 @@ public class DataFactory {
                         return DataFactory.getOWLLiteral(trimmedContent, DataFactory.getXSDDecimal());
                     }
                 } catch (NumberFormatException e1) {
-                    return DataFactory.getOWLLiteral(trimmedContent);
+                    return DataFactory.getOWLLiteral(trimmedContent, dataFactory.getRDFPlainLiteral());
                 }
             }
 
@@ -270,68 +273,47 @@ public class DataFactory {
 
 
     /**
-     * Parses the specified lexical value into a datetime literal.
+     * Parses the specified lexical value into a datetime literal.  The parser will parse dateTime according to the
+     * xsd:dateTime pattern.  If the time information is not present, the end of the day will automatically be assumed.
      * @param lexicalValue The lexical value to be parsed.  Not {@code null}.
      * @return The literal representing the specified datetime.
      * @throws IllegalArgumentException if the lexical value cannot be parsed into a date-time format.
      */
     public static OWLLiteral parseDateTimeFormat(final String lexicalValue) throws IllegalArgumentException {
+        final String yearFrag = "-?(?:[1-9][0-9]{3,}|0[0-9]{3})";
+        final String monthFrag = "-(?:0[1-9]|1[0-2])";
+        final String dayFrag = "-(?:0[1-9]|[12][0-9]|3[01])";
+        final String yearMonthDayFrag = "(" + yearFrag + monthFrag + dayFrag + ")"; // Group 1
+        // Slight modification to make input easier
+        final String timeFrag = "((?:T| )(?:(?:[01][0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][0-9])(?:\\.[0-9]+)?|(?:24:00:00(?:\\.0+)?)))?"; // Group 2
+        final String timeZoneFrag = "(Z|(?:\\+|-)(?:(?:0[0-9]|1[0-3]):[0-5][0-9]|14:00))?"; // Group 3
 
-        final DateTimeFormat DATE_TIME_FORMAT = DateTimeFormat.getFormat("yyyy'-'MM'-'dd 'T' hh':'mm':'ss ZZZ");
-
-        final DateTimeFormat DATE_TIME_FORMAT_NO_TIME_ZONE = DateTimeFormat.getFormat("yyyy'-'MM'-'dd 'T' hh':'mm':'ss");
-
-        final DateTimeFormat DATE_TIME_FORMAT_NO_TIME = DateTimeFormat.getFormat("yyyy'-'MM'-'dd");
-
-
-        if (isNow(lexicalValue)) {
-            DateTimeFormat longFormat = DATE_TIME_FORMAT;
-            return DataFactory.getDateTime(longFormat.format(new Date()));
+        String pattern = "^" + yearMonthDayFrag + timeFrag + timeZoneFrag + "$";
+        RegExp regExp = RegExp.compile(pattern);
+        MatchResult matchResult = regExp.exec(lexicalValue);
+        if(matchResult == null) {
+            throw new IllegalArgumentException();
         }
+        String matchedYearMonthDay = matchResult.getGroup(1);
+        String matchedTime = matchResult.getGroup(2);
+        String matchedTimeZone = matchResult.getGroup(3);
 
-
-
-        String strippedContent = lexicalValue.replace("st", "").replace("nd", "").replace("rd", "").replace("th", "");
-        List<DateTimeFormat> formats = new ArrayList<DateTimeFormat>();
-
-
-
-
-        formats.add(DATE_TIME_FORMAT);
-        formats.add(DATE_TIME_FORMAT_NO_TIME_ZONE);
-        formats.add(DATE_TIME_FORMAT_NO_TIME);
-//        formats.add(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_LONG));
-//        formats.add(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_MEDIUM));
-//        formats.add(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT));
-//        formats.add(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_TIME_SHORT));
-//        formats.add(DateTimeFormat.getFormat(DateTimeFormat.PredefinedFormat.DATE_SHORT));
-        formats.add(DateTimeFormat.getFormat("dd/MM/yyyy"));
-        formats.add(DateTimeFormat.getFormat("dd/MM/yy"));
-        formats.add(DateTimeFormat.getFormat("dd/MMM/yyyy"));
-        formats.add(DateTimeFormat.getFormat("MMM/dd/yyyy"));
-        formats.add(DateTimeFormat.getFormat("dd MMM yyyy"));
-        formats.add(DateTimeFormat.getFormat("dd MMM yyyy HH:mm"));
-        formats.add(DateTimeFormat.getFormat("dd MMM yyyy hh:mm aaa"));
-        formats.add(DateTimeFormat.getFormat("MMM dd yyyy"));
-        formats.add(DateTimeFormat.getFormat("MMM dd yyyy hh:mm aaa"));
-        for (DateTimeFormat format : formats) {
-            try {
-                Date date = format.parse(strippedContent);
-                return getOWLLiteral(date);
+        String properLexicalValue = matchedYearMonthDay;
+        if(matchedTime != null) {
+            if (!matchedTime.startsWith("T")) {
+                properLexicalValue += "T" + matchedTime.trim();
             }
-            catch (IllegalArgumentException e) {
-                try {
-                    DateTimeFormat formatNoSpace = DateTimeFormat.getFormat(format.getPattern().replaceAll(" ", ""));
-                    Date date = formatNoSpace.parse(strippedContent);
-                    return getOWLLiteral(date);
-                }
-                catch (IllegalArgumentException e1) {
-                    // Contine
-                }
+            else {
+                properLexicalValue += matchedTime;
             }
-
         }
-        throw new IllegalArgumentException();
+        else {
+            properLexicalValue += "T00:00:00";
+        }
+        if(matchedTimeZone != null) {
+            properLexicalValue += matchedTimeZone;
+        }
+        return dataFactory.getOWLLiteral(properLexicalValue, OWL2Datatype.XSD_DATE_TIME);
     }
 
     private static boolean isNow(String trimmedContent) {

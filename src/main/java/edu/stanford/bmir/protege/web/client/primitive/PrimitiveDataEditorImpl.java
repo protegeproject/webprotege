@@ -446,9 +446,8 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         if (isCurrentDataRendered()) {
             return;
         }
-        PrimitiveDataParsingContext context = new PrimitiveDataParsingContext(projectId, allowedTypes, freshEntitiesHandler);
         final String trimmedText = getTrimmedText();
-        primitiveDataParser.parsePrimitiveData(trimmedText, languageEditor.getValue(), context, new PrimitiveDataParserCallback() {
+        primitiveDataParser.parsePrimitiveData(trimmedText, languageEditor.getValue(), allowedTypes, new PrimitiveDataParserCallback() {
             @Override
             public void parsingFailure() {
                 setCurrentData(Optional.<OWLPrimitiveData>absent(), EventStrategy.FIRE_EVENTS);

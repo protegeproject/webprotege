@@ -93,20 +93,20 @@ public class GwtTest_DataFactory extends GWTTestCase {
         finishTest();
     }
 
-    public void test_shouldParseNowAsDateTime() {
-        OWLLiteral literal = DataFactory.parseLiteral("now", Optional.<String>absent());
-        assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_DATE_TIME.getIRI());
-        finishTest();
-    }
-
     public void test_shouldParseYYYYMMDDAsDateTime() {
         OWLLiteral literal = DataFactory.parseLiteral("2014-04-30", Optional.<String>absent());
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_DATE_TIME.getIRI());
         finishTest();
     }
 
-    public void test_shouldParseDDMMYYAsDateTime() {
-        OWLLiteral literal = DataFactory.parseLiteral("30/04/2014", Optional.<String>absent());
+    public void test_shouldParseYYYYMMDDTHHColonMMAsDateTime() {
+        OWLLiteral literal = DataFactory.parseLiteral("2014-04-30T12:15:00", Optional.<String>absent());
+        assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_DATE_TIME.getIRI());
+        finishTest();
+    }
+
+    public void test_shouldParseYYYYMMDDSpaceHHColonMMAsDateTime() {
+        OWLLiteral literal = DataFactory.parseLiteral("2014-04-30 12:15:00", Optional.<String>absent());
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_DATE_TIME.getIRI());
         finishTest();
     }
