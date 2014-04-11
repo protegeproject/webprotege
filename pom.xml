@@ -13,9 +13,10 @@
     <name>GWT Maven Archetype</name>
 
     <properties>
-        <gwtVersion>2.5.1</gwtVersion>
+        <gwtVersion>2.6.0</gwtVersion>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <gwt.test.mode>htmlunit</gwt.test.mode>
         <!-- Properties common to all build profiles -->
         <application.name>WebProtege</application.name>
     </properties>
@@ -40,6 +41,19 @@
     </repositories>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwtVersion}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>${gwtVersion}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -153,11 +167,6 @@
             <artifactId>markdown4j</artifactId>
             <version>2.2-cj-1.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.openid4java</groupId>
-            <artifactId>openid4java</artifactId>
-            <version>0.9.8</version>
-        </dependency>
 
         <dependency>
             <groupId>com.gwt-ext</groupId>
@@ -169,18 +178,7 @@
             <artifactId>gwt-crypto</artifactId>
             <version>2.3.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>${gwtVersion}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwtVersion}</version>
-            <scope>provided</scope>
-        </dependency>
+
 
         <dependency>
             <groupId>javax.validation</groupId>
@@ -212,6 +210,30 @@
             <version>3.1</version>
         </dependency>
 
+        <!--
+            openid4java includes some funky dependencies that break compilation and GWT test cases so
+            we need to exclude them.
+            nekohtml - doesn't specify a version, but the resolved version is too old and GWT test cases rely on a
+            newer version
+            guice - a non-standard guice dependency is used.  We use the com.google.inject guice dep instead.
+        -->
+        <dependency>
+            <groupId>org.openid4java</groupId>
+            <artifactId>openid4java-consumer</artifactId>
+            <version>0.9.6</version>
+            <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.sourceforge.nekohtml</groupId>
+                    <artifactId>nekohtml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.code.guice</groupId>
+                    <artifactId>guice</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
@@ -239,7 +261,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>${gwtVersion}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -255,7 +277,7 @@
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <extraJvmArgs>-Xms1000M -Xmx2000M -XX:MaxPermSize=256M -XX:PermSize=128M</extraJvmArgs>
                     <logLevel>WARN</logLevel>
-                    <htmlunit>true</htmlunit>
+                    <htmlunit>FF17</htmlunit>
                 </configuration>
             </plugin>
 
