@@ -372,14 +372,53 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
+                <data.directory>/data/webprotege</data.directory>
                 <application.host>localhost</application.host>
+                <!-- No admin email by default -->
+                <admin.email/>
             </properties>
+        </profile>
+        <!-- Profile for producing a deployment on a particular machine -->
+        <profile>
+            <id>deployment</id>
+            <properties>
+                <data.directory>/data/webprotege</data.directory>
+                <!-- No admin email by default -->
+                <admin.email/>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>1.3.1</version>
+                        <executions>
+                            <execution>
+                                <id>enforce-versions</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireProperty>
+                                            <property>application.host</property>
+                                            <message>"application.host must be specified."</message>
+                                        </requireProperty>
+                                    </rules>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <!-- Profile for producing a release of WebProtege that people can download and install locally -->
         <profile>
-            <id>general.release</id>
+            <id>webprotege.release</id>
             <properties>
                 <data.directory>/data/webprotege</data.directory>
+                <!-- No admin email by default -->
+                <admin.email/>
             </properties>
         </profile>
         <!-- Profile for deployment of WebProtege to webprotege.stanford.edu -->
