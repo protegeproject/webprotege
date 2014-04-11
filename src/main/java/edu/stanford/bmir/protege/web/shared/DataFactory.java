@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.model.*;
@@ -21,15 +22,6 @@ import java.util.List;
 public class DataFactory {
 
     public static final String FRESH_ENTITY_SCHEME = "wptmp";
-
-
-
-//    public static final DateTimeFormat DATE_TIME_FORMAT = DateTimeFormat.getFormat("yyyy'-'MM'-'dd 'T' hh':'mm':'ss ZZZ");
-//
-//    public static final DateTimeFormat DATE_TIME_FORMAT_NO_TIME_ZONE = DateTimeFormat.getFormat("yyyy'-'MM'-'dd 'T' hh':'mm':'ss");
-//
-//    public static final DateTimeFormat DATE_TIME_FORMAT_NO_TIME = DateTimeFormat.getFormat("yyyy'-'MM'-'dd");
-
 
     private static OWLDataFactory dataFactory = new OWLDataFactoryImpl();
 
@@ -260,18 +252,16 @@ public class DataFactory {
             }
             catch (NumberFormatException e3) {
                 try {
-                    Double value = Double.parseDouble(trimmedContent);
-                    return DataFactory.getOWLLiteral(trimmedContent, DataFactory.getXSDDecimal());
-                }
-                catch (NumberFormatException e4) {
-                    try {
-                        Float value = Float.parseFloat(trimmedContent);
+                    if(trimmedContent.endsWith("f") || trimmedContent.endsWith("F")) {
+                        Float.parseFloat(trimmedContent);
                         return DataFactory.getOWLLiteral(trimmedContent, DataFactory.getOWLDatatype(OWL2Datatype.XSD_FLOAT.getIRI()));
                     }
-                    catch (NumberFormatException e5) {
-                        return DataFactory.getOWLLiteral(lexicalValue);
+                    else {
+                        Double value = Double.parseDouble(trimmedContent);
+                        return DataFactory.getOWLLiteral(trimmedContent, DataFactory.getXSDDecimal());
                     }
-
+                } catch (NumberFormatException e1) {
+                    return DataFactory.getOWLLiteral(trimmedContent);
                 }
             }
 
