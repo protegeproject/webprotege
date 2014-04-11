@@ -277,7 +277,6 @@
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <extraJvmArgs>-Xms1000M -Xmx2000M -XX:MaxPermSize=256M -XX:PermSize=128M</extraJvmArgs>
                     <logLevel>WARN</logLevel>
-                    <htmlunit>FF17</htmlunit>
                 </configuration>
             </plugin>
 
