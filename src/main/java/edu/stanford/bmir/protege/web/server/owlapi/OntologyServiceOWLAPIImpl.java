@@ -707,7 +707,14 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         Collections.sort(result, new Comparator<EntityData>() {
             @Override
             public int compare(EntityData o1, EntityData o2) {
-                return o1.getName().compareToIgnoreCase(o2.getName());
+                String browserText1 = o1.getBrowserText();
+                String browserText2 = o2.getBrowserText();
+                if (browserText1 != null && browserText2 != null) {
+                    return browserText1.compareToIgnoreCase(browserText2);
+                }
+                else {
+                    return o1.getName().compareToIgnoreCase(o2.getName());
+                }
             }
         });
     }
