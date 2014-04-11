@@ -8,3 +8,5 @@ target/
 .settings/
 out/
 
+logs/
+
