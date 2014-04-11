@@ -38,56 +38,63 @@ for WebProtege, please read the information below.
 Dependencies
 ------------
 
-1)  Google Web Toolkit (GWT)
-    URL: http://code.google.com/webtoolkit/
-    
-2)  mongoDB
+1)  mongoDB
     URL: http://www.mongodb.org/
 
-You also need Java (1.6 or later), Ant, and a servlet container, such as tomcat.
+You also need Java (1.6 or later), Maven, and a servlet container, such as tomcat.
 
 
-Building
---------
+Building WebProtege for Use on Local Host
+-----------------------------------------
 
-Copy local.properties.template to local.properties, and edit local.properties to match your file paths.
-All properties are well documented. Make sure that you set the property gwt.dir to point to your local installation 
-of GWT. Usually, there is no need to touch any of the other properties.
+Open a terminal in the webprotege directory and type
 
-If you want to change the default setup properties for WebProtege, copy the etc/webprotege.properties.template
-to war/webprotege.properties, and edit the properties, which are well documented in the file.
+    mvn package
 
-To build the webprotege WAR file, run
+WebProtege will be built as a .war file in the ```target``` directory.  By default, the WebProtege data directory
+(where WebProtege stores project data etc.) is ```/data/webprotege```.  If you want to change this location you
+can specify a different location at build time using ```-Ddata.directory=<YOURPATH>```.  For example,
 
-         ant war
-         
-This command will create the webprotege.war file in build/webprotege.war. You can either copy this file manually to
-your servlet container (e.g. tomcat/webapps), or use "ant deploy" (see below). 
+    mvn -Ddata.directory=/mypath/mydirectory package
 
+or on Windows
+
+    mvn -Ddata.directory=C:\mypath\mydirectory package
+
+```data.directory``` is a configuration property.  You may want to change some of the other WebProtege configuration
+properties.  You can do this when building by specifying the relevant property as a command line argument as above.
+
+For a detailed list of supported properties please see ```webprotege.properties```
 
 Running
 -------
 
-DevMode can be started with: 
+DevMode can be started with:
 
-          ant devmode
+    mvn gwt:run
 
-Note that OSX users must modify the extra.hosted.jvm.arg setting in the local.properties file in order to run the devmode.
-
-Web Protege can also be deployed into into tomcat by running 
-
-          ant deploy
-
-and then starting tomcat. You need to set the CATALINA_HOME environment variable in local.properties.
+WebProtege can also be deployed into into tomcat by copying the .war file to the webapps folder in your tomcat
+installation.
 
 Note: you need mongodb to run WebProtege. Please make sure mongodb is running. Find more information at:
 http://protegewiki.stanford.edu/wiki/WebProtegeAdminGuide#Install_mongoDB
 
 
+Building WebProtege for Deployment on your Servers
+--------------------------------------------------
+
+The above steps build WebProtege for local testing on your machine (localhost).  For deployment to another machine for
+production use you should active the ```deployment``` profile.  To do this include ```-Pdeployment``` as an argument.
+You MUST also include a value for the property ```application.host```, which is the domain name where you will deploy
+WebProtege.  If you do not include this property value the build will fail with an error message.  For example,
+
+    mvn -Pdeployment -Dapplication.host=mycompany.com package
+
 Configuration
 -------------
 
-WebProtege can be configured and customized in different ways, e.g. UI layout, email, etc. Please find more information here:
+WebProtege can be configured and customized in different ways, e.g. UI layout, email, etc.
+Please find more information here:
 http://protegewiki.stanford.edu/wiki/WebProtegeAdminGuide#Configuration_and_Customization_.28optional.29
 
 
