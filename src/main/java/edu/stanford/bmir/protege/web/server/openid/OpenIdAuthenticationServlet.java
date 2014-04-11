@@ -7,13 +7,13 @@ import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationCon
 import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import org.openid4java.consumer.ConsumerManager;
-import org.openid4java.consumer.InMemoryConsumerAssociationStore;
-import org.openid4java.consumer.InMemoryNonceVerifier;
-import org.openid4java.discovery.DiscoveryInformation;
-import org.openid4java.message.AuthRequest;
-import org.openid4java.message.ax.FetchRequest;
-import org.openid4java.message.sreg.SRegRequest;
+//import org.openid4java.consumer.ConsumerManager;
+//import org.openid4java.consumer.InMemoryConsumerAssociationStore;
+//import org.openid4java.consumer.InMemoryNonceVerifier;
+//import org.openid4java.discovery.DiscoveryInformation;
+//import org.openid4java.message.AuthRequest;
+//import org.openid4java.message.ax.FetchRequest;
+//import org.openid4java.message.sreg.SRegRequest;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -55,39 +55,39 @@ public class OpenIdAuthenticationServlet extends HttpServlet {
         }
 
         try {
-            ConsumerManager manager = new ConsumerManager();
-            manager.setAssociations(new InMemoryConsumerAssociationStore());
-            manager.setNonceVerifier(new InMemoryNonceVerifier(5000));
-            manager.getRealmVerifier().setEnforceRpId(false);
-            // perform discovery on the user-supplied identifier
-
-            List<?> discoveries = manager.discover(openId);
-
-            // attempt to associate with the OpenID provider
-            // and retrieve one service endpoint for authentication
-            DiscoveryInformation discovered = manager.associate(discoveries);
-
-            HttpSession httpSession = httpServletRequest.getSession(true);
-            httpSession.setAttribute("openid-disc", discovered);
-            httpSession.setAttribute("discovered", discovered);
-            httpSession.setAttribute("manager", manager);
-            httpSession.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, openIdProvider);
-
-            // obtain a AuthRequest message to be sent to the OpenID provider
-            AuthRequest authReq = manager.authenticate(discovered, returnUrl);
-
-            FetchRequest fetch = FetchRequest.createFetchRequest();
-            fetch.addAttribute("email" // attribute alias
-                    , "http://schema.openid.net/contact/email" // type URI
-                    , true); // required
-            fetch.addAttribute("email", "http://axschema.org/contact/email", true);
-            authReq.addExtension(fetch);
-
-            SRegRequest sregReq = SRegRequest.createFetchRequest();
-            sregReq.addAttribute("email", true);
-            authReq.addExtension(sregReq);
-
-            httpResp.sendRedirect(authReq.getDestinationUrl(true));
+//            ConsumerManager manager = new ConsumerManager();
+//            manager.setAssociations(new InMemoryConsumerAssociationStore());
+//            manager.setNonceVerifier(new InMemoryNonceVerifier(5000));
+//            manager.getRealmVerifier().setEnforceRpId(false);
+//            // perform discovery on the user-supplied identifier
+//
+//            List<?> discoveries = manager.discover(openId);
+//
+//            // attempt to associate with the OpenID provider
+//            // and retrieve one service endpoint for authentication
+//            DiscoveryInformation discovered = manager.associate(discoveries);
+//
+//            HttpSession httpSession = httpServletRequest.getSession(true);
+//            httpSession.setAttribute("openid-disc", discovered);
+//            httpSession.setAttribute("discovered", discovered);
+//            httpSession.setAttribute("manager", manager);
+//            httpSession.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, openIdProvider);
+//
+//            // obtain a AuthRequest message to be sent to the OpenID provider
+//            AuthRequest authReq = manager.authenticate(discovered, returnUrl);
+//
+//            FetchRequest fetch = FetchRequest.createFetchRequest();
+//            fetch.addAttribute("email" // attribute alias
+//                    , "http://schema.openid.net/contact/email" // type URI
+//                    , true); // required
+//            fetch.addAttribute("email", "http://axschema.org/contact/email", true);
+//            authReq.addExtension(fetch);
+//
+//            SRegRequest sregReq = SRegRequest.createFetchRequest();
+//            sregReq.addAttribute("email", true);
+//            authReq.addExtension(sregReq);
+//
+//            httpResp.sendRedirect(authReq.getDestinationUrl(true));
 
         } catch (Exception e) {
             log.severe(e);
