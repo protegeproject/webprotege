@@ -180,6 +180,11 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     }
 
     @Override
+    public void addProjectData(ProjectDetails details) {
+        projectListView.addListData(details);
+    }
+
+    @Override
     public void setViewCategoryChangedHandler(ViewCategoryChangedHandler handler) {
         this.viewCategoryChangedHandler = handler;
     }
@@ -231,48 +236,4 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
         }
 
     }
-
-//
-//    private class HomeItem extends MySideBarItem {
-//
-//        private HomeItem() {
-//            super("Home");
-//        }
-//
-//        @Override
-//        public boolean isIncluded(ProjectDetails projectDetails) {
-//            return !projectDetails.isInTrash();
-//        }
-//
-//
-//    }
-//
-//
-//    private class OwnedByMeItem extends MySideBarItem {
-//
-//        private OwnedByMeItem() {
-//            super("Owned by me");
-//        }
-//
-//        @Override
-//        public boolean isIncluded(ProjectDetails projectDetails) {
-//            return !projectDetails.isInTrash() && isLoggedInUserOwner(projectDetails);
-//        }
-//    }
-//
-//    private boolean isLoggedInUserOwner(ProjectDetails projectDetails) {
-//        return projectDetails.getOwner().equals(Application.get().getUserId());
-//    }
-//
-//    private class InTrashItem extends MySideBarItem {
-//
-//        private InTrashItem() {
-//            super("Trash");
-//        }
-//
-//        @Override
-//        public boolean isIncluded(ProjectDetails projectDetails) {
-//            return projectDetails.isInTrash() && isLoggedInUserOwner(projectDetails);
-//        }
-//    }
 }

@@ -21,6 +21,8 @@ public interface ProjectManagerView extends HasLoadProjectRequestHandler, HasCre
 
     void setProjectListData(List<ProjectDetails> data);
 
+    void addProjectData(ProjectDetails details);
+
     void setCreateProjectEnabled(boolean enabled);
 
     void setUploadProjectEnabled(boolean enabled);

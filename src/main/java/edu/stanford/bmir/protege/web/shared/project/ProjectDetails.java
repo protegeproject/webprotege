@@ -23,12 +23,9 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
 
     private UserId owner;
 
-
     private String displayName;
 
     private String description;
-
-
 
     private boolean inTrash;
 
@@ -141,5 +138,83 @@ public class ProjectDetails implements Serializable, Comparable<ProjectDetails>,
                 .add("description", description)
                 .add("owner", owner)
                 .add("inTrash", inTrash).toString();
+    }
+
+
+    public static Builder builder(ProjectId projectId, UserId owner, String displayName, String description) {
+        return new Builder(projectId, owner, displayName, description);
+    }
+
+    public Builder builder() {
+        return new Builder(projectId, owner, displayName, description, inTrash);
+    }
+
+
+    public static class Builder {
+
+        private ProjectId projectId;
+
+        private UserId owner;
+
+        private String displayName;
+
+        private String description;
+
+        private boolean inTrash;
+
+        public Builder(ProjectId projectId, UserId owner, String displayName, String description) {
+            this.projectId = projectId;
+            this.owner = owner;
+            this.displayName = displayName;
+            this.description = description;
+        }
+
+        public Builder(ProjectId projectId, UserId owner, String displayName, String description, boolean inTrash) {
+            this.projectId = projectId;
+            this.owner = owner;
+            this.displayName = displayName;
+            this.description = description;
+            this.inTrash = inTrash;
+        }
+
+        public UserId getOwner() {
+            return owner;
+        }
+
+        public Builder setOwner(UserId owner) {
+            this.owner = owner;
+            return this;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public Builder setDisplayName(String displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public boolean isInTrash() {
+            return inTrash;
+        }
+
+        public Builder setInTrash(boolean inTrash) {
+            this.inTrash = inTrash;
+            return this;
+        }
+
+        public ProjectDetails build() {
+            return new ProjectDetails(projectId, displayName, description, owner, inTrash);
+        }
     }
 }

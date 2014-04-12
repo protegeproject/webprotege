@@ -74,17 +74,7 @@ public class OWLAPIProjectMetadataManager {
     }
     
     private void save() {
-        try {
-            WRITE_LOCK.lock();
-            List<?> errors = new ArrayList();
-            getMetaProject().save(errors);
-            for(Object o : errors) {
-                System.out.println(o);
-            }
-        }
-        finally {
-            WRITE_LOCK.unlock();
-        }
+        OWLAPIMetaProjectStore.getStore().saveMetaProject(MetaProjectManager.getManager());
     }
 
     private MetaProject getMetaProject() {
