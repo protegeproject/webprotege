@@ -20,5 +20,7 @@ public interface ProjectListView extends IsWidget, HasSelectionHandlers<ProjectI
 
     void setListData(List<ProjectDetails> projectDetails);
 
+    void addListData(ProjectDetails projectDetails);
+
     void setSelectedProject(ProjectId project);
 }

@@ -41,7 +41,7 @@ public class WebProtegeInitializer implements ServletContextListener {
 
     public void contextDestroyed(ServletContextEvent sce) {
         try {
-            OWLAPIMetaProjectStore.getStore().saveMetaProject(MetaProjectManager.getManager());
+            OWLAPIMetaProjectStore.getStore().saveMetaProjectNow(MetaProjectManager.getManager());
         }
         catch (Throwable e) {
             WebProtegeLoggerManager.get(WebProtegeInitializer.class).severe(e);

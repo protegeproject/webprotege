@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
@@ -35,6 +36,8 @@ public class ProjectManagerPresenter {
     private final ProjectListFilter includeAllFilter;
 
     private ProjectManagerViewCategory currentViewCategory = ProjectManagerViewCategory.HOME;
+
+    private ProjectDetailsCache projectDetailsCache = new ProjectDetailsCache();
 
     public ProjectManagerPresenter(LoadProjectRequestHandler loadProjectRequestHandler) {
         this.projectManagerView = new ProjectManagerViewImpl();
@@ -86,7 +89,9 @@ public class ProjectManagerPresenter {
         EventBusManager.getManager().registerHandler(ProjectCreatedEvent.TYPE, new ProjectCreatedHandler() {
             @Override
             public void handleProjectCreated(ProjectCreatedEvent event) {
-                reload(Optional.of(event.getProjectId()));
+                projectDetailsCache.add(event.getProjectDetails());
+                projectManagerView.addProjectData(event.getProjectDetails());
+                projectManagerView.setSelectedProject(event.getProjectId());
             }
         });
 
@@ -94,7 +99,7 @@ public class ProjectManagerPresenter {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {
                 handleUserChange();
-                reload();
+                reloadFromServer();
             }
         });
 
@@ -102,25 +107,29 @@ public class ProjectManagerPresenter {
             @Override
             public void handleUserLoggedOut(UserLoggedOutEvent event) {
                 handleUserChange();
-                reload();
+                reloadFromServer();
             }
         });
 
         EventBusManager.getManager().registerHandler(ProjectMovedToTrashEvent.TYPE, new ProjectMovedToTrashHandler() {
             @Override
             public void handleProjectMovedToTrash(ProjectMovedToTrashEvent event) {
-                reload(Optional.of(event.getProjectId()));
+                if(projectDetailsCache.setInTrash(event.getProjectId(), true)) {
+                    reloadFromClientCache();
+                }
             }
         });
 
         EventBusManager.getManager().registerHandler(ProjectMovedFromTrashEvent.TYPE, new ProjectMovedFromTrashHandler() {
             @Override
             public void handleProjectMovedFromTrash(ProjectMovedFromTrashEvent event) {
-                reload(Optional.of(event.getProjectId()));
+                if(projectDetailsCache.setInTrash(event.getProjectId(), false)) {
+                    reloadFromClientCache();
+                }
             }
         });
         handleUserChange();
-        reload();
+        reloadFromServer();
     }
 
     private void setSelectedViewCategory(ProjectManagerViewCategory selectedCategory) {
@@ -132,7 +141,7 @@ public class ProjectManagerPresenter {
         if(selectedFilter == null) {
             selectedFilter = includeAllFilter;
         }
-        reload();
+        reloadFromClientCache();
     }
 
     public ProjectManagerView getProjectManagerView() {
@@ -140,13 +149,12 @@ public class ProjectManagerPresenter {
     }
 
 
-    private void reload() {
-        reload(Optional.<ProjectId>absent());
+    private void reloadFromServer() {
+        reloadFromServer(Optional.<ProjectId>absent());
     }
 
-    private void reload(final Optional<ProjectId> selectId) {
+    private void reloadFromServer(final Optional<ProjectId> selectId) {
         GWT.log("Reloading project view");
-
 
         GetAvailableProjectsAction action = new GetAvailableProjectsAction();
         DispatchServiceManager.get().execute(action, new AsyncCallback<GetAvailableProjectsResult>() {
@@ -158,19 +166,27 @@ public class ProjectManagerPresenter {
 
             @Override
             public void onSuccess(GetAvailableProjectsResult result) {
-                final List<ProjectDetails> projectDetails = result.getDetails();
-                List<ProjectDetails> entries = new ArrayList<ProjectDetails>(projectDetails.size());
-                for(ProjectDetails pd : projectDetails) {
-                    if (selectedFilter.isIncluded(pd)) {
-                        entries.add(pd);
-                    }
-                }
-                projectManagerView.setProjectListData(entries);
+                projectDetailsCache.setProjectDetails(result.getDetails());
+                displayProjectDetails();
                 if(selectId.isPresent()) {
                     projectManagerView.setSelectedProject(selectId.get());
                 }
             }
         });
+    }
+
+    private void reloadFromClientCache() {
+        displayProjectDetails();
+    }
+
+    private void displayProjectDetails() {
+        List<ProjectDetails> entries = Lists.newArrayList();
+        for(ProjectDetails pd : projectDetailsCache.getProjectDetailsList()) {
+            if (selectedFilter.isIncluded(pd)) {
+                entries.add(pd);
+            }
+        }
+        projectManagerView.setProjectListData(entries);
     }
 
     private void handleUserChange() {

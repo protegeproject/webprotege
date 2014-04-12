@@ -41,7 +41,6 @@ public class MoveProjectsToTrashActionHandler implements ActionHandler<MoveProje
             OWLAPIProjectMetadataManager.getManager().setInTrash(projectId, true);
             events.add(new ProjectMovedToTrashEvent(projectId));
         }
-
         return new MoveProjectsToTrashResult(new EventList<ProjectMovedToTrashEvent>(EventTag.getFirst(), events, EventTag.getFirst()));
     }
 }

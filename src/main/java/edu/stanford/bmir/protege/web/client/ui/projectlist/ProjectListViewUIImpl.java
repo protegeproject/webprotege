@@ -162,8 +162,7 @@ public class ProjectListViewUIImpl extends Composite implements ProjectListView 
         initWidget(rootElement);
 
 
-        projectTable.setPageSize(100);
-//        projectTablePager.setPageSize(100);
+        projectTable.setPageSize(500);
         projectTablePager.setDisplay(projectTable);
 
     }
@@ -212,6 +211,10 @@ public class ProjectListViewUIImpl extends Composite implements ProjectListView 
         listDataProvider.getList().addAll(entries);
     }
 
+    @Override
+    public void addListData(ProjectDetails projectDetails) {
+        listDataProvider.getList().add(0, new ProjectListEntry(projectDetails));
+    }
 
     private class ProjectDisplayNameColumn extends Column<ProjectListEntry, String> {
 
