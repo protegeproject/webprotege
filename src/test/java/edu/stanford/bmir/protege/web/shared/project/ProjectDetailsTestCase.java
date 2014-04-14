@@ -2,9 +2,14 @@ package edu.stanford.bmir.protege.web.shared.project;
 
 import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
 
 /**
  * Author: Matthew Horridge<br>
@@ -14,72 +19,119 @@ import static junit.framework.Assert.assertEquals;
  */
 public class ProjectDetailsTestCase {
 
+    public static final boolean IN_TRASH = true;
+
     private ProjectId projectId = ProjectId.get("0d8f03d4-d9bb-496d-a78c-146868af8265");
+
+    private UserId userId;
+    private String displayName;
+    private String description;
+    private ProjectDetails projectDetails;
+
+    @Before
+    public void setUp() throws Exception {
+        userId = MockingUtils.mockUserId();
+        displayName = "A";
+        description = "B";
+        projectDetails = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH);
+    }
 
     @Test(expected = NullPointerException.class)
     public void nullProjectIdInConstructorThrowsNullPointerException() {
-        new ProjectDetails(null, "", "", UserId.getGuest(), false);
+        new ProjectDetails(null, displayName, description, userId, IN_TRASH);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullDisplayNameInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, null, "", UserId.getGuest(), false);
+        new ProjectDetails(projectId, null, displayName, userId, IN_TRASH);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullProjectDescriptionInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, "", null, UserId.getGuest(), false);
+        new ProjectDetails(projectId, displayName, null, userId, IN_TRASH);
     }
 
     @Test(expected = NullPointerException.class)
     public void nullUserIdInConstructorThrowsNullPointerException() {
-        new ProjectDetails(projectId, "", "", null, false);
+        new ProjectDetails(projectId, displayName, "", null, IN_TRASH);
     }
 
     @Test
     public void emptyDisplayNameInConstructorIsOK() {
-        ProjectDetails projectDetails = new ProjectDetails(projectId, "", "", UserId.getGuest(), false);
-        assertEquals(projectDetails.getDisplayName(), "");
+        assertEquals(projectDetails.getDisplayName(), displayName);
     }
 
     @Test
     public void emptyDescriptionInConstructorIsOK() {
-        ProjectDetails projectDetails = new ProjectDetails(projectId, "", "", UserId.getGuest(), false);
-        assertEquals(projectDetails.getDescription(), "");
+        assertEquals(projectDetails.getDescription(), description);
     }
 
     @Test
     public void suppliedProjectIdIsReturnedByAccessor() {
-        ProjectDetails projectDetails = new ProjectDetails(projectId, "", "", UserId.getGuest(), false);
         assertEquals(projectDetails.getProjectId(), projectId);
     }
 
     @Test
     public void suppliedUserIdIsReturnedByAccessor() {
-        ProjectDetails projectDetails = new ProjectDetails(projectId, "", "", UserId.getGuest(), false);
-        assertEquals(projectDetails.getOwner(), UserId.getGuest());
+        assertEquals(projectDetails.getOwner(), userId);
     }
 
     @Test
     public void suppliedTrashValueIsReturnedByAccessor() {
-        ProjectDetails projectDetails = new ProjectDetails(projectId, "", "", UserId.getGuest(), true);
-        assertEquals(projectDetails.isInTrash(), true);
+        assertEquals(projectDetails.isInTrash(), IN_TRASH);
     }
 
     @Test
     public void equalValuesMeansEqualProjectDetails() {
-        UserId userId = MockingUtils.mockUserId();
-        ProjectDetails projectDetailsA = new ProjectDetails(projectId, "A", "B", userId, true);
-        ProjectDetails projectDetailsB = new ProjectDetails(projectId, "A", "B", userId, true);
+        ProjectDetails projectDetailsA = projectDetails;
+        ProjectDetails projectDetailsB = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH);
         assertEquals(projectDetailsA, projectDetailsB);
     }
 
     @Test
     public void equalValuesMeansEqualHashCodes() {
-        UserId userId = MockingUtils.mockUserId();
-        ProjectDetails projectDetailsA = new ProjectDetails(projectId, "A", "B", userId, true);
-        ProjectDetails projectDetailsB = new ProjectDetails(projectId, "A", "B", userId, true);
+        ProjectDetails projectDetailsA = projectDetails;
+        ProjectDetails projectDetailsB = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH);
         assertEquals(projectDetailsA.hashCode(), projectDetailsB.hashCode());
+    }
+    
+    
+    @Test
+    public void buildBuildsEqualObject() {
+        ProjectDetails details = projectDetails.builder().build();
+        assertThat(details, is(equalTo(projectDetails)));
+    }
+
+    @Test
+    public void buildBuildsCorrectDetails() {
+        ProjectDetails details = ProjectDetails.builder(projectId, userId, displayName, description)
+                .setInTrash(IN_TRASH).build();
+        assertThat(details, is(equalTo(projectDetails)));
+    }
+
+    @Test
+    public void builderSetDisplayNameChangesDisplayName() {
+        ProjectDetails details = projectDetails.builder().setDisplayName("Hello").build();
+        assertThat(details.getDisplayName(), is(equalTo("Hello")));
+    }
+
+    @Test
+    public void builderSetDescriptionChangesDescriptionName() {
+        ProjectDetails details = projectDetails.builder().setDescription("Hello").build();
+        assertThat(details.getDescription(), is(equalTo("Hello")));
+    }
+
+    @Test
+    public void builderSetInTrashChangesInTrash() {
+        ProjectDetails details = projectDetails.builder().setInTrash(true).build();
+        assertThat(details.isInTrash(), is(true));
+    }
+
+    @Test
+    public void builderSetOwnerChangesOwner() {
+        UserId userId = mock(UserId.class);
+        ProjectDetails details = projectDetails.builder().setOwner(userId).build();
+        assertThat(details.getOwner(), is(equalTo(userId)));
     }
 
 }
