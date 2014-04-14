@@ -275,8 +275,9 @@
                 <configuration>
                     <runTarget>WebProtege.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <extraJvmArgs>-Xms1000M -Xmx3000M -XX:MaxPermSize=500M -XX:PermSize=128M</extraJvmArgs>
+                    <extraJvmArgs>-Xms1000M -Xmx2000M -XX:MaxPermSize=500M -XX:PermSize=128M</extraJvmArgs>
                     <logLevel>INFO</logLevel>
+                    <localWorkers>1</localWorkers>
                 </configuration>
             </plugin>
 
