@@ -2,18 +2,13 @@ package edu.stanford.bmir.protege.web.server.render;
 
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
-import org.markdown4j.Markdown4jProcessor;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax.*;
 
