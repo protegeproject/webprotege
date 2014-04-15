@@ -149,6 +149,7 @@
     border: 1px solid rgba(0, 0, 0, .333);
     font-size: 12px;
     line-height: 15px;
+    z-index: 10;
 }
 
 .gwt-SuggestBoxPopup .item {
