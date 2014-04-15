@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
-import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -17,22 +19,27 @@ import static org.mockito.Mockito.mock;
  * Bio-Medical Informatics Research Group<br>
  * Date: 17/10/2013
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsTestCase {
 
     public static final boolean IN_TRASH = true;
 
-    private ProjectId projectId = ProjectId.get("0d8f03d4-d9bb-496d-a78c-146868af8265");
+    @Mock
+    private ProjectId projectId;
 
+    @Mock
     private UserId userId;
+
     private String displayName;
+
     private String description;
+
     private ProjectDetails projectDetails;
 
     @Before
     public void setUp() throws Exception {
-        userId = MockingUtils.mockUserId();
-        displayName = "A";
-        description = "B";
+        displayName = "DisplayName";
+        description = "Description";
         projectDetails = new ProjectDetails(projectId, displayName, description, userId, IN_TRASH);
     }
 
