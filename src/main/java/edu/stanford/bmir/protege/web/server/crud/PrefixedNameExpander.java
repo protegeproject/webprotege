@@ -4,6 +4,7 @@ import com.beust.jcommander.internal.Maps;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.vocab.Namespaces;
 
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class PrefixedNameExpander {
     private ImmutableMap<String, String> prefixName2PrefixMap;
 
     private PrefixedNameExpander(ImmutableMap<String, String> prefixName2PrefixMap) {
-        this.prefixName2PrefixMap = prefixName2PrefixMap;
+        this.prefixName2PrefixMap = checkNotNull(prefixName2PrefixMap);
     }
 
     public Optional<IRI> getExpandedPrefixName(String suppliedName) {
@@ -68,6 +69,13 @@ public class PrefixedNameExpander {
             return this;
         }
 
+        public Builder withNamespaces(Namespaces [] namespaces) {
+            checkNotNull(namespaces);
+            for(Namespaces ns : namespaces) {
+                withPrefixNamePrefix(ns.getPrefixName() + ":", ns.getPrefixIRI());
+            }
+            return this;
+        }
 
         private void checkPrefixNameContainsExactlyOneColon(String prefixName, String prefix) {
             checkArgument(prefixName.indexOf(":") == prefixName.length() - 1, "prefixName must only contain one colon");
