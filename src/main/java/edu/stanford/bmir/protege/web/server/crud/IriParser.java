@@ -11,9 +11,9 @@ import java.net.URISyntaxException;
  */
 public class IRIParser {
 
-    public static final String IRI_START_CHAR = "<";
+    private static final String IRI_START_CHAR = "<";
 
-    public static final String IRI_END_CHAR = ">";
+    private static final String IRI_END_CHAR = ">";
 
     /**
      * Parses the specified lexical form into an IRI.  The lexical form must match the production for a complete IRI.
