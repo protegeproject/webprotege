@@ -74,6 +74,10 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
     }
 
     private IRI createEntityIRI(EntityShortForm shortForm, PrefixedNameExpander prefixedNameExpander) {
+        String suppliedName = shortForm.getShortForm();
+        if(suppliedName.startsWith("<") && suppliedName.endsWith(">") && suppliedName.length() > 2) {
+            return IRI.create(suppliedName.substring(1, suppliedName.length() - 1));
+        }
         try {
             WhiteSpaceTreatment whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
             String transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
