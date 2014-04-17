@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
 import org.semanticweb.owlapi.io.XMLUtils;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityRenamer;
+import org.semanticweb.owlapi.vocab.Namespaces;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -72,6 +73,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
 
     private IRI createEntityIRI(EntityShortForm shortForm) {
         try {
+
             WhiteSpaceTreatment whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
             String transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
             String escapedShortForm = URLEncoder.encode(transformedShortForm, "UTF-8");
