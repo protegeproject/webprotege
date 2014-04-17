@@ -2,15 +2,12 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
-import edu.stanford.bmir.protege.web.server.crud.BrowserTextChangedEventComputer;
+import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.HasContainsEntityInSignature;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.change.*;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
-import edu.stanford.bmir.protege.web.server.crud.ProjectEntityCrudKitHandlerCache;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepositoryManager;
 import edu.stanford.bmir.protege.web.server.events.EventLifeTime;
@@ -48,6 +45,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.NonMappingOntologyIRIMapper;
 import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 import org.semanticweb.owlapi.util.OWLOntologyChangeVisitorAdapterEx;
+import org.semanticweb.owlapi.vocab.Namespaces;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.EmptyInMemOWLOntologyFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -338,7 +336,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
         if (!entity.isPresent()) {
             OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
-            E ent = getEntityCrudKitHandler().create(entityType, EntityShortForm.get(shortName), new EntityCrudContext(getRootOntology(), getDataFactory()), builder);
+            E ent = getEntityCrudKitHandler().create(entityType, EntityShortForm.get(shortName), getEntityCrudContext(), builder);
             return new OWLEntityCreator<E>(ent, builder.build().getChanges());
         }
         else {
@@ -354,6 +352,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     public EntityCrudKitHandler<?> getEntityCrudKitHandler() {
         return entityCrudKitHandlerCache.getHandler();
+    }
+
+    public EntityCrudContext getEntityCrudContext() {
+        PrefixedNameExpander expander = PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build();
+        return new EntityCrudContext(getRootOntology(), getDataFactory(), expander);
     }
 
     @SuppressWarnings("unchecked")

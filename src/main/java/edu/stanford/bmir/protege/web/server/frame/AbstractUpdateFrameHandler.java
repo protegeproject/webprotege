@@ -77,7 +77,7 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
             // Set changes
             EntityCrudKitHandler<?> entityEditorKit = project.getEntityCrudKitHandler();
             OntologyChangeList.Builder<S> changeListBuilder = new OntologyChangeList.Builder<S>();
-            entityEditorKit.update(to.getFrame().getSubject(), EntityShortForm.get(to.getDisplayName()), new EntityCrudContext(project.getRootOntology(), project.getDataFactory()), changeListBuilder);
+            entityEditorKit.update(to.getFrame().getSubject(), EntityShortForm.get(to.getDisplayName()), project.getEntityCrudContext(), changeListBuilder);
             FixedChangeListGenerator<S> changeListGenerator = FixedChangeListGenerator.get(changeListBuilder.build().getChanges());
             FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator = FixedMessageChangeDescriptionGenerator.get("Renamed entity");
             project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);

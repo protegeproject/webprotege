@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.server.crud.uuid;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -78,7 +80,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     public <E extends OWLEntity> E create(EntityType<E> entityType, final EntityShortForm shortForm, final EntityCrudContext context, final OntologyChangeList.Builder<E> builder) {
         OWLDataFactory dataFactory = context.getDataFactory();
         final OWLOntology targetOntology = context.getTargetOntology();
-        final IRI iri = createIRI(prefixSettings.getIRIPrefix(), targetOntology);
+        final IRI iri = getIRI(prefixSettings.getIRIPrefix(), shortForm.getShortForm(), targetOntology, context.getPrefixedNameExpander());
         final E entity =  dataFactory.getOWLEntity(entityType, iri);
         builder.addAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity));
         final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, context);
@@ -92,7 +94,6 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
         final OWLDataFactory df = context.getDataFactory();
         OWLLiteral browserTextLiteral = getLabellingLiteral(shortForm, context);
         OntologyChangeList.Builder<E> builder = new OntologyChangeList.Builder<E>();
-
         OWLAxiom freshAx = df.getOWLAnnotationAssertionAxiom(df.getRDFSLabel(), entity.getIRI(), browserTextLiteral);
         final OWLOntology targetOntology = context.getTargetOntology();
         for(OWLOntology ont : targetOntology.getImportsClosure()) {
@@ -107,6 +108,15 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
             builder.addAxiom(targetOntology, freshAx);
         }
     }
+
+    private static IRI getIRI(String prefix, String suppliedName, OWLOntology ontology, PrefixedNameExpander prefixedNameExpander) {
+        Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(suppliedName);
+        if(expandedPrefixName.isPresent()) {
+            return expandedPrefixName.get();
+        }
+        return createIRI(prefix, ontology);
+    }
+
 
     private static IRI createIRI(String base, OWLOntology ontology) {
         while (true) {
