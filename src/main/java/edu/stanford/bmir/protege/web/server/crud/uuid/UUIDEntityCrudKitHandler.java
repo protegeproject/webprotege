@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.crud.IRIParser;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
@@ -110,8 +111,9 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
     private static IRI getIRI(String prefix, String suppliedName, OWLOntology ontology, PrefixedNameExpander prefixedNameExpander) {
-        if(suppliedName.startsWith("<") && suppliedName.endsWith(">") && suppliedName.length() > 2) {
-            return IRI.create(suppliedName.substring(1, suppliedName.length() - 1));
+        Optional<IRI> parsedIRI = new IRIParser().parseIRI(suppliedName);
+        if(parsedIRI.isPresent()) {
+           return parsedIRI.get();
         }
         Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(suppliedName);
         if(expandedPrefixName.isPresent()) {
