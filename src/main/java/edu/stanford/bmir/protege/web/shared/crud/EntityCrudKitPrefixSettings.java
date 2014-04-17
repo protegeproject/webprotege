@@ -13,7 +13,7 @@ import java.io.Serializable;
  * Date: 14/08/2013
  */
 @TypeAlias("EntityCrudKitPrefixSettings")
-public final class EntityCrudKitPrefixSettings implements HasIRIPrefix, Serializable {
+public class EntityCrudKitPrefixSettings implements HasIRIPrefix, Serializable {
 
     private static final String DEFAULT_IRI_PREFIX = "http://webprotege.stanford.edu/";
 

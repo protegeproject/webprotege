@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
+import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -63,7 +65,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
 
     @Override
     public <E extends OWLEntity> E create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
-        IRI iri = createEntityIRI(shortForm);
+        IRI iri = createEntityIRI(shortForm, context.getPrefixedNameExpander());
         final OWLDataFactory dataFactory = context.getDataFactory();
         E entity = dataFactory.getOWLEntity(entityType, iri);
         OWLDeclarationAxiom ax = dataFactory.getOWLDeclarationAxiom(entity);
@@ -71,11 +73,14 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         return entity;
     }
 
-    private IRI createEntityIRI(EntityShortForm shortForm) {
+    private IRI createEntityIRI(EntityShortForm shortForm, PrefixedNameExpander prefixedNameExpander) {
         try {
-
             WhiteSpaceTreatment whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
             String transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
+            Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(transformedShortForm);
+            if(expandedPrefixName.isPresent()) {
+                return expandedPrefixName.get();
+            }
             String escapedShortForm = URLEncoder.encode(transformedShortForm, "UTF-8");
             return IRI.create(prefixSettings.getIRIPrefix() + escapedShortForm);
         } catch (UnsupportedEncodingException e) {
@@ -86,7 +91,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
     @Override
     public <E extends OWLEntity> void update(E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
         OWLEntityRenamer renamer = new OWLEntityRenamer(context.getTargetOntology().getOWLOntologyManager(), context.getTargetOntology().getImportsClosure());
-        List<OWLOntologyChange> changeList = renamer.changeIRI(entity, createEntityIRI(shortForm));
+        List<OWLOntologyChange> changeList = renamer.changeIRI(entity, createEntityIRI(shortForm, context.getPrefixedNameExpander()));
         changeListBuilder.addAll(changeList);
     }
 

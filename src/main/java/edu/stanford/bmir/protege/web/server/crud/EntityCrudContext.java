@@ -17,9 +17,12 @@ public class EntityCrudContext implements HasDataFactory {
 
     private OWLDataFactory dataFactory;
 
-    public EntityCrudContext(OWLOntology targetOntology, OWLDataFactory dataFactory) {
+    private PrefixedNameExpander prefixedNameExpander;
+
+    public EntityCrudContext(OWLOntology targetOntology, OWLDataFactory dataFactory, PrefixedNameExpander prefixedNameExpander) {
         this.targetOntology = targetOntology;
         this.dataFactory = dataFactory;
+        this.prefixedNameExpander = prefixedNameExpander;
     }
 
     public OWLOntology getTargetOntology() {
@@ -28,6 +31,10 @@ public class EntityCrudContext implements HasDataFactory {
 
     public OWLDataFactory getDataFactory() {
         return dataFactory;
+    }
+
+    public PrefixedNameExpander getPrefixedNameExpander() {
+        return prefixedNameExpander;
     }
 
     public Optional<String> getTargetLanguage() {
