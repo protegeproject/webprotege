@@ -110,6 +110,9 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
     private static IRI getIRI(String prefix, String suppliedName, OWLOntology ontology, PrefixedNameExpander prefixedNameExpander) {
+        if(suppliedName.startsWith("<") && suppliedName.endsWith(">") && suppliedName.length() > 2) {
+            return IRI.create(suppliedName.substring(1, suppliedName.length() - 1));
+        }
         Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(suppliedName);
         if(expandedPrefixName.isPresent()) {
             return expandedPrefixName.get();

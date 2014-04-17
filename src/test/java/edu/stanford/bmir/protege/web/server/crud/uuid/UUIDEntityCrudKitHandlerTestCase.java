@@ -14,10 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.Namespaces;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -53,23 +50,32 @@ public class UUIDEntityCrudKitHandlerTestCase {
     @Mock
     protected OntologyChangeList.Builder<OWLClass> builder;
     private OWLDataFactoryImpl dataFactory;
+    private UUIDEntityCrudKitHandler handler;
 
     @Before
     public void setUp() throws Exception {
         dataFactory = new OWLDataFactoryImpl();
-    }
-
-    @Test
-    public void shouldCreatedExpandedPrefixName() {
         when(prefixSettings.getIRIPrefix()).thenReturn(PREFIX);
-        when(entityShortForm.getShortForm()).thenReturn("owl:Thing");
         when(crudContext.getDataFactory()).thenReturn(dataFactory);
         when(crudContext.getTargetOntology()).thenReturn(ontology);
         when(crudContext.getPrefixedNameExpander()).thenReturn(PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build());
         when(crudContext.getTargetLanguage()).thenReturn(Optional.<String>absent());
         when(ontology.containsEntityInSignature(any(OWLEntity.class))).thenReturn(true);
-        UUIDEntityCrudKitHandler handler = new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings);
+        handler = new UUIDEntityCrudKitHandler(prefixSettings, suffixSettings);
+    }
+
+    @Test
+    public void shouldCreatedExpandedPrefixName() {
+        when(entityShortForm.getShortForm()).thenReturn("owl:Thing");
         OWLClass cls = handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
         assertThat(cls.getIRI(), is(equalTo(OWLRDFVocabulary.OWL_THING.getIRI())));
+    }
+
+    @Test
+    public void shouldCreateEntityWithAbsoluteIRIIfSpecified() {
+        String shortForm = "<http://stuff.com/A>";
+        when(entityShortForm.getShortForm()).thenReturn(shortForm);
+        OWLClass cls = handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
+        assertThat(cls.getIRI(), is(equalTo(IRI.create(shortForm.substring(1, shortForm.length() - 1)))));
     }
 }
