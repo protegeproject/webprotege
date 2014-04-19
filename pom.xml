@@ -138,7 +138,7 @@
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege</artifactId>
-            <version>3.5.0</version>
+            <version>3.5.1</version>
         </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
