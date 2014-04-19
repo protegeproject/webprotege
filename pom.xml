@@ -19,6 +19,7 @@
         <gwt.test.mode>htmlunit</gwt.test.mode>
         <!-- Properties common to all build profiles -->
         <application.name>WebProtege</application.name>
+        <openid.enabled>true</openid.enabled>
     </properties>
 
     <repositories>
