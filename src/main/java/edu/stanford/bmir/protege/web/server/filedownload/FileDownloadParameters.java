@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
+import edu.stanford.bmir.protege.web.shared.project.ProjectIdFormatException;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -24,10 +25,21 @@ public class FileDownloadParameters {
 
     /**
      * Determines if this is a request for a project download.
-     * @return <code>true</code> if this is a request for a project download, otherwise <code>false</code>
+     * @return <code>true</code> if this is a request for a project download and the projectId is specified and the
+     * id is well-formed, otherwise <code>false</code>.
      */
     public boolean isProjectDownload() {
-        return getRawProjectNameParameter() != null;
+        String rawProjectNameParameter = getRawProjectNameParameter();
+        boolean projectParamPresent = rawProjectNameParameter != null;
+        if(!projectParamPresent) {
+            return false;
+        }
+        try {
+            ProjectId.get(rawProjectNameParameter);
+            return true;
+        } catch (ProjectIdFormatException e) {
+            return false;
+        }
     }
 
 
