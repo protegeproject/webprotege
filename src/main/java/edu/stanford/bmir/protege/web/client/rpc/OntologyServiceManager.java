@@ -90,30 +90,6 @@ public class OntologyServiceManager {
         proxy.moveCls(projectId.getId(), clsName, oldParentName, newParentName, checkForCycles, userId.getUserName(), operationDescription, cb);
     }
 
-    public void getClassConditions(ProjectId projectId, String className, AsyncCallback<List<ConditionItem>> cb) {
-        proxy.getClassConditions(projectId.getId(), className, cb);
-    }
-
-    public void deleteCondition(ProjectId projectId, String className, ConditionItem conditionItem, int row, String operationDescription,
-            AsyncCallback<List<ConditionItem>> cb) {
-        proxy.deleteCondition(projectId.getId(), className, conditionItem, row, operationDescription, cb);
-    }
-
-    public  void replaceCondition(ProjectId projectId, String className, ConditionItem conditionItem, int row,
-            String newCondition, String operationDescription, AsyncCallback<List<ConditionItem>> callback) {
-        proxy.replaceCondition(projectId.getId(), className, conditionItem, row, newCondition, operationDescription, callback);
-    }
-
-    public void addCondition(ProjectId projectId, String className, int row, String newCondition, boolean isNS,
-            String operationDescription, AsyncCallback<List<ConditionItem>> callback) {
-        proxy.addCondition(projectId.getId(), className, row, newCondition, isNS, operationDescription, callback);
-    }
-
-    public void getConditionAutocompleteSuggestions(ProjectId projectId, String condition, int cursorPosition,
-            AsyncCallback<ConditionSuggestion> callback) {
-        proxy.getConditionAutocompleteSuggestions(projectId.getId(), condition, cursorPosition, callback);
-    }
-
     public void getParents(ProjectId projectId, String className, boolean direct, AsyncCallback<List<EntityData>> cb) {
         proxy.getParents(projectId.getId(), className, direct, cb);
     }

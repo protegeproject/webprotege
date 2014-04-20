@@ -63,19 +63,6 @@ public interface OntologyService extends RemoteService {
 
     public PaginationData<EntityData> getIndividuals(String projectName, String className, int start, int limit, String sort, String dir);
 
-    public List<ConditionItem> getClassConditions(String projectName, String className);
-
-    public List<ConditionItem> deleteCondition(String projectName, String className, ConditionItem conditionItem, int row,
-            String operationDescription);
-
-    public List<ConditionItem> replaceCondition(String projectName, String className, ConditionItem conditionItem, int row, String newCondition,
-            String operationDescription);
-
-    public List<ConditionItem> addCondition(String projectName, String className, int row, String newCondition, boolean isNS,
-            String operationDescription);
-
-    public ConditionSuggestion getConditionAutocompleteSuggestions(String projectName, String condition, int cursorPosition);
-
     public List<EntityData> getParents(String projectName, String className, boolean direct);
 
     /**
