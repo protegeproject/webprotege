@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
+import static edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher.declarationFor;
 import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.*;
 import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueMatcher.rdfsLabelWithLexicalValue;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
@@ -12,8 +14,6 @@ import static org.mockito.Mockito.when;
 
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher;
-import edu.stanford.bmir.protege.web.server.OWLEntityMatcher;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,7 +86,7 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         ArgumentCaptor<OWLDeclarationAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLDeclarationAxiom.class);
         verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
         List<OWLDeclarationAxiom> addedAxioms = addAxiomCaptor.getAllValues();
-        assertThat(addedAxioms, hasItem(is(OWLDeclarationAxiomMatcher.declarationFor(cls))));
+        assertThat(addedAxioms, (Matcher) hasItem(is(declarationFor(cls))));
     }
 
     @Test
@@ -100,7 +101,7 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
     public void shouldCreatedExpandedPrefixName() {
         when(entityShortForm.getShortForm()).thenReturn("owl:Thing");
         OWLClass cls = handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
-        assertThat(cls, is(OWLEntityMatcher.owlThing()));
+        assertThat(cls, is(owlThing()));
     }
 
     @Test
@@ -117,7 +118,7 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         String shortForm = "<" + expectedIRI + ">";
         when(entityShortForm.getShortForm()).thenReturn(shortForm);
         OWLClass cls = handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
-        assertThat(cls, hasIRI(expectedIRI));
+        assertThat(cls.getIRI(), is(equalTo(IRI.create(expectedIRI))));
         verifyHasLabelEqualTo(expectedIRI);
     }
 
@@ -126,6 +127,6 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
         ArgumentCaptor<OWLAnnotationAssertionAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLAnnotationAssertionAxiom.class);
         verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
         List<OWLAnnotationAssertionAxiom> addedAxioms = addAxiomCaptor.getAllValues();
-        assertThat(addedAxioms, hasItem(rdfsLabelWithLexicalValue(label)));
+        assertThat(addedAxioms, (Matcher) hasItem(rdfsLabelWithLexicalValue(label)));
     }
 }

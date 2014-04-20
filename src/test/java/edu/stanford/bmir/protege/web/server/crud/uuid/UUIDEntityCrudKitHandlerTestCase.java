@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +24,8 @@ import static edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher.de
 import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.hasIRI;
 import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.owlThing;
 import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueMatcher.rdfsLabelWithLexicalValue;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeast;
@@ -77,7 +78,7 @@ public class UUIDEntityCrudKitHandlerTestCase {
         ArgumentCaptor<OWLDeclarationAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLDeclarationAxiom.class);
         verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
         List<OWLDeclarationAxiom> addedAxioms = addAxiomCaptor.getAllValues();
-        assertThat(addedAxioms, hasItem(is(declarationFor(cls))));
+        assertThat(addedAxioms, (Matcher) hasItem(is(declarationFor(cls))));
     }
 
     @Test
@@ -118,7 +119,7 @@ public class UUIDEntityCrudKitHandlerTestCase {
         ArgumentCaptor<OWLAnnotationAssertionAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLAnnotationAssertionAxiom.class);
         verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
         List<OWLAnnotationAssertionAxiom> addedAxioms = addAxiomCaptor.getAllValues();
-        assertThat(addedAxioms, hasItem(rdfsLabelWithLexicalValue(label)));
+        assertThat(addedAxioms, (Matcher) hasItem(rdfsLabelWithLexicalValue(label)));
     }
 
 
