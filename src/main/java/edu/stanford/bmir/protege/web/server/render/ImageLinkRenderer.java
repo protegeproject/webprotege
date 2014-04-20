@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.server.render;
 
+import com.google.common.collect.Sets;
+
+import java.util.Set;
+
 /**
  * @author Matthew Horridge,
  *         Stanford University,
@@ -8,17 +12,35 @@ package edu.stanford.bmir.protege.web.server.render;
  */
 public class ImageLinkRenderer implements LinkRendererPlugin {
 
+    private static Set<String> extensions = Sets.newHashSet();
+
+    static {
+        extensions.add(".png");
+        extensions.add(".jpg");
+        extensions.add(".jpeg");
+        extensions.add(".gif");
+        extensions.add(".svg");
+        extensions.add(".bmp");
+        extensions.add(".png");
+    }
+
     @Override
     public boolean isRenderableAsLink(String link) {
-        return isHttpLink(link) && hasImageExtension(link);
+        String lowerCaseLink = link.toLowerCase();
+        return isHttpLink(lowerCaseLink) && hasImageExtension(lowerCaseLink);
     }
 
     private boolean isHttpLink(String link) {
-        return link.startsWith("http://");
+        return link.startsWith("http://") || link.startsWith("https://");
     }
 
     private boolean hasImageExtension(String link) {
-        return link.endsWith(".png") || link.endsWith(".svg") || link.endsWith(".jpg") || link.endsWith(".gif");
+        int lastDotIndex = link.lastIndexOf('.');
+        if(lastDotIndex == -1) {
+            return false;
+        }
+        String extension = link.substring(lastDotIndex);
+        return extensions.contains(extension);
     }
 
     @Override
