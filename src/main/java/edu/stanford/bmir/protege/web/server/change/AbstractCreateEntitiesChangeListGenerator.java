@@ -82,10 +82,10 @@ public abstract class AbstractCreateEntitiesChangeListGenerator<E extends OWLEnt
             }
             else {
                 freshEntity = DataFactory.getFreshOWLEntity(entityType, browserText);
-                builder.add(new AddAxiom(project.getRootOntology(), project.getDataFactory().getOWLDeclarationAxiom(freshEntity)));
+                builder.addAxiom(project.getRootOntology(), project.getDataFactory().getOWLDeclarationAxiom(freshEntity));
             }
             for(OWLAxiom axiom : createParentPlacementAxioms(freshEntity, project, context, parent)) {
-                builder.add(new AddAxiom(project.getRootOntology(), axiom));
+                builder.addAxiom(project.getRootOntology(), axiom);
             }
             freshEntities.add(freshEntity);
         }

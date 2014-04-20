@@ -66,20 +66,31 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
 
     @Override
     public <E extends OWLEntity> E create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
-        IRI iri = createEntityIRI(shortForm, context.getPrefixedNameExpander());
         final OWLDataFactory dataFactory = context.getDataFactory();
+        final IRI iri;
+        String suppliedName = shortForm.getShortForm();
+        String label;
+        Optional<IRI> parsedIRI = new IRIParser().parseIRI(suppliedName);
+        if(parsedIRI.isPresent()) {
+            iri = parsedIRI.get();
+            label = suppliedName.substring(1, suppliedName.length() - 1);
+        }
+        else {
+            iri = createEntityIRI(shortForm, context.getPrefixedNameExpander());
+            label = suppliedName;
+        }
         E entity = dataFactory.getOWLEntity(entityType, iri);
         OWLDeclarationAxiom ax = dataFactory.getOWLDeclarationAxiom(entity);
         changeListBuilder.addAxiom(context.getTargetOntology(), ax);
+        changeListBuilder.addAxiom(context.getTargetOntology(), dataFactory.getOWLAnnotationAssertionAxiom(
+                dataFactory.getRDFSLabel(),
+                iri,
+                dataFactory.getOWLLiteral(label, "")
+        ));
         return entity;
     }
 
     private IRI createEntityIRI(EntityShortForm shortForm, PrefixedNameExpander prefixedNameExpander) {
-        String suppliedName = shortForm.getShortForm();
-        Optional<IRI> parsedIRI = new IRIParser().parseIRI(suppliedName);
-        if(parsedIRI.isPresent()) {
-            return parsedIRI.get();
-        }
         try {
             WhiteSpaceTreatment whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
             String transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
