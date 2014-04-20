@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.primitive.*;
@@ -20,7 +21,7 @@ import java.util.Collection;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 27/02/2014
  */
-public class PropertyValueDescriptorEditorPresenter implements ValueEditor<PropertyValueDescriptor> {
+public class PropertyValueDescriptorEditorPresenter implements ValueEditor<PropertyValueDescriptor>, HasEnabled {
 
     private PropertyValueDescriptorEditor editor;
 
@@ -55,6 +56,16 @@ public class PropertyValueDescriptorEditorPresenter implements ValueEditor<Prope
         if (!editor.getPropertyFieldValue().isPresent() && !editor.getPropertyFieldLexicalValue().isEmpty()) {
             inferPropertyTypeFromFiller();
         }
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return editor.isEnabled();
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        editor.setEnabled(enabled);
     }
 
     public IsWidget getWidget() {

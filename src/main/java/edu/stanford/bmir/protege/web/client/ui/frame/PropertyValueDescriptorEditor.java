@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.primitive.FreshEntitiesHandler;
 import edu.stanford.bmir.protege.web.client.primitive.FreshEntitySuggestStrategy;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
@@ -20,7 +21,7 @@ import java.util.Collection;
  * Bio-Medical Informatics Research Group<br>
  * Date: 04/12/2012
  */
-public interface PropertyValueDescriptorEditor extends ValueEditor<PropertyValueDescriptor> {
+public interface PropertyValueDescriptorEditor extends ValueEditor<PropertyValueDescriptor>, HasEnabled {
 
     HandlerRegistration addPropertyValueChangedHandler(PropertyValuePropertyChangedHandler handler);
 

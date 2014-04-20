@@ -43,6 +43,8 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
 
     private boolean dirty = false;
 
+    private boolean enabled = false;
+
     @UiField
     protected FlexTable tableField;
 
@@ -66,6 +68,7 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
         tableField.setCellPadding(0);
         tableField.setCellSpacing(0);
         ensureBlank();
+        updateEnabled();
     }
 
 
@@ -84,6 +87,7 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
             editor.setValue(value);
         }
         ensureBlank();
+        updateEnabled();
         dirty = false;
     }
 
@@ -134,6 +138,25 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
     }
 
     @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        updateEnabled();
+    }
+
+    private void updateEnabled() {
+        for(ValueEditor<O> editor : currentEditors) {
+            if(editor instanceof HasEnabled) {
+                ((HasEnabled) editor).setEnabled(enabled);
+            }
+        }
+    }
+
+    @Override
     public HandlerRegistration addDirtyChangedHandler(DirtyChangedHandler handler) {
         return addHandler(handler, DirtyChangedEvent.TYPE);
     }
@@ -179,6 +202,9 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
         editor.addDirtyChangedHandler(dirtyChangedHandler);
         editor.addValueChangeHandler(valueChangeHandler);
         deleteButton.setVisible(deleteVisible);
+        if(editor instanceof HasEnabled) {
+            ((HasEnabled) editor).setEnabled(enabled);
+        }
         return editor;
     }
 
