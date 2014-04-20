@@ -142,12 +142,12 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
     @Override
     public boolean isEnabled() {
-        return ((HasEnabled) editor).isEnabled();
+        return editor.isEnabled();
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-
+        editor.setEnabled(enabled);
     }
 
     @Override
