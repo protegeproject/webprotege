@@ -1,34 +1,38 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
+import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.*;
+import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueMatcher.rdfsLabelWithLexicalValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher;
+import edu.stanford.bmir.protege.web.server.OWLEntityMatcher;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
-import edu.stanford.bmir.protege.web.server.crud.uuid.UUIDEntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.supplied.WhiteSpaceTreatment;
-import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.Namespaces;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
-import java.net.URI;
+import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 16/04/2014
@@ -75,17 +79,53 @@ public class SuppliedNameSuffixEntityCrudKitHandlerTestCase {
     }
 
     @Test
-    public void shouldCreatedExpandedPrefixName() {
-        when(entityShortForm.getShortForm()).thenReturn("owl:Thing");
+    public void shouldAddDeclaration() {
+        when(entityShortForm.getShortForm()).thenReturn("A");
         OWLClass cls = handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
-        assertThat(cls.getIRI(), is(equalTo(OWLRDFVocabulary.OWL_THING.getIRI())));
+        ArgumentCaptor<OWLDeclarationAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLDeclarationAxiom.class);
+        verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
+        List<OWLDeclarationAxiom> addedAxioms = addAxiomCaptor.getAllValues();
+        assertThat(addedAxioms, hasItem(is(OWLDeclarationAxiomMatcher.declarationFor(cls))));
     }
 
     @Test
-    public void shouldCreateEntityWithAbsoluteIRIIfSpecified() {
-        String shortForm = "<http://stuff.com/A>";
+    public void shouldAddLabelEqualToSuppliedName() {
+        String suppliedName = "MyLabel";
+        when(entityShortForm.getShortForm()).thenReturn(suppliedName);
+        handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
+        verifyHasLabelEqualTo(suppliedName);
+    }
+
+    @Test
+    public void shouldCreatedExpandedPrefixName() {
+        when(entityShortForm.getShortForm()).thenReturn("owl:Thing");
+        OWLClass cls = handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
+        assertThat(cls, is(OWLEntityMatcher.owlThing()));
+    }
+
+    @Test
+    public void shouldAddLabelEqualToPrefixedName() {
+        String suppliedName = "owl:Thing";
+        when(entityShortForm.getShortForm()).thenReturn(suppliedName);
+        handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
+        verifyHasLabelEqualTo(suppliedName);
+    }
+
+    @Test
+    public void shouldCreateEntityWithAbsoluteIriIfSpecified() {
+        String expectedIRI = "http://stuff.com/A";
+        String shortForm = "<" + expectedIRI + ">";
         when(entityShortForm.getShortForm()).thenReturn(shortForm);
         OWLClass cls = handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
-        assertThat(cls.getIRI(), is(equalTo(IRI.create(shortForm.substring(1, shortForm.length() - 1)))));
+        assertThat(cls, hasIRI(expectedIRI));
+        verifyHasLabelEqualTo(expectedIRI);
+    }
+
+
+    private void verifyHasLabelEqualTo(String label) {
+        ArgumentCaptor<OWLAnnotationAssertionAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLAnnotationAssertionAxiom.class);
+        verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
+        List<OWLAnnotationAssertionAxiom> addedAxioms = addAxiomCaptor.getAllValues();
+        assertThat(addedAxioms, hasItem(rdfsLabelWithLexicalValue(label)));
     }
 }

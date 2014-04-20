@@ -332,16 +332,16 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     }
 
     private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(UserId userId, String shortName, EntityType<E> entityType) {
-        // TODO: SWAP
         Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
-        if (!entity.isPresent()) {
-            OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
-            E ent = getEntityCrudKitHandler().create(entityType, EntityShortForm.get(shortName), getEntityCrudContext(), builder);
-            return new OWLEntityCreator<E>(ent, builder.build().getChanges());
-        }
-        else {
+        if(entity.isPresent()) {
             return new OWLEntityCreator<E>(entity.get(), Collections.<OWLOntologyChange>emptyList());
         }
+        // TODO: Fully specified IRI
+        // TODO: Built in entity with prefix
+        OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
+        E ent = getEntityCrudKitHandler().create(entityType, EntityShortForm.get(shortName), getEntityCrudContext(), builder);
+        return new OWLEntityCreator<E>(ent, builder.build().getChanges());
+
     }
 
     public void setEntityCrudKitSettings(EntityCrudKitSettings<?> entityCrudKitSettings) {

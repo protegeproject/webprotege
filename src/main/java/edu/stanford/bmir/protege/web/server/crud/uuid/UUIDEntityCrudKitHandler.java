@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.IRIShortFormProvider;
+import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
 
 /**
  * Author: Matthew Horridge<br>
@@ -81,11 +83,21 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     public <E extends OWLEntity> E create(EntityType<E> entityType, final EntityShortForm shortForm, final EntityCrudContext context, final OntologyChangeList.Builder<E> builder) {
         OWLDataFactory dataFactory = context.getDataFactory();
         final OWLOntology targetOntology = context.getTargetOntology();
-        final IRI iri = getIRI(prefixSettings.getIRIPrefix(), shortForm.getShortForm(), targetOntology, context.getPrefixedNameExpander());
-        final E entity =  dataFactory.getOWLEntity(entityType, iri);
+        String suppliedName = shortForm.getShortForm();
+        Optional<IRI> parsedIRI = new IRIParser().parseIRI(suppliedName);
+        final IRI entityIRI;
+        final OWLLiteral labellingLiteral;
+        if(parsedIRI.isPresent()) {
+            entityIRI = parsedIRI.get();
+            labellingLiteral = getLabellingLiteral(entityIRI.toString(), context);
+        }
+        else {
+            entityIRI = getIRI(prefixSettings.getIRIPrefix(), suppliedName, targetOntology, context.getPrefixedNameExpander());
+            labellingLiteral = getLabellingLiteral(suppliedName, context);
+        }
+        final E entity =  dataFactory.getOWLEntity(entityType, entityIRI);
         builder.addAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity));
-        final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, context);
-        OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getRDFSLabel(), entity.getIRI(), labellingLiteral);
+        OWLAnnotationAssertionAxiom ax = dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getRDFSLabel(), entityIRI, labellingLiteral);
         builder.addAxiom(targetOntology, ax);
         return entity;
     }
@@ -93,7 +105,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     @Override
     public <E extends OWLEntity> void update(E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
         final OWLDataFactory df = context.getDataFactory();
-        OWLLiteral browserTextLiteral = getLabellingLiteral(shortForm, context);
+        OWLLiteral browserTextLiteral = getLabellingLiteral(shortForm.getShortForm(), context);
         OntologyChangeList.Builder<E> builder = new OntologyChangeList.Builder<E>();
         OWLAxiom freshAx = df.getOWLAnnotationAssertionAxiom(df.getRDFSLabel(), entity.getIRI(), browserTextLiteral);
         final OWLOntology targetOntology = context.getTargetOntology();
@@ -111,10 +123,6 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
     private static IRI getIRI(String prefix, String suppliedName, OWLOntology ontology, PrefixedNameExpander prefixedNameExpander) {
-        Optional<IRI> parsedIRI = new IRIParser().parseIRI(suppliedName);
-        if(parsedIRI.isPresent()) {
-           return parsedIRI.get();
-        }
         Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(suppliedName);
         if(expandedPrefixName.isPresent()) {
             return expandedPrefixName.get();
@@ -138,9 +146,9 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
 
-    private static OWLLiteral getLabellingLiteral(EntityShortForm shortForm, EntityCrudContext context) {
+    private static OWLLiteral getLabellingLiteral(String suppliedName, EntityCrudContext context) {
         OWLDataFactory dataFactory = context.getDataFactory();
-        return dataFactory.getOWLLiteral(shortForm.getShortForm(), context.getTargetLanguage().or(""));
+        return dataFactory.getOWLLiteral(suppliedName, context.getTargetLanguage().or(""));
     }
 
 }

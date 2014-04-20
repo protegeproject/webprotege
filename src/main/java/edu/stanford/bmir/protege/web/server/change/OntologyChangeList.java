@@ -67,7 +67,7 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
         public Builder() {
         }
 
-        public void add(OWLOntologyChange change) {
+        private void add(OWLOntologyChange change) {
             changes.add(change);
         }
 
@@ -76,27 +76,29 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
         }
 
         public void addAxiom(OWLOntology ontology, OWLAxiom axiom) {
-            changes.add(new AddAxiom(ontology, axiom));
+            add(new AddAxiom(ontology, axiom));
         }
 
-        public void addAxioms(OWLOntology ontology, Set<? extends OWLAxiom> axioms) {
-            for(OWLAxiom axiom : axioms) {
-                addAxiom(ontology, axiom);
-            }
-        }
+//        public void addAxioms(OWLOntology ontology, Set<? extends OWLAxiom> axioms) {
+//            for(OWLAxiom axiom : axioms) {
+//                addAxiom(ontology, axiom);
+//            }
+//        }
 
         public void removeAxiom(OWLOntology ontology, OWLAxiom axiom) {
-            changes.add(new RemoveAxiom(ontology, axiom));
+            add(new RemoveAxiom(ontology, axiom));
         }
-
-        public void removeAxioms(OWLOntology ontology, Set<? extends OWLAxiom> axioms) {
-            for(OWLAxiom axiom : axioms) {
-                removeAxiom(ontology, axiom);
-            }
-        }
+//
+//        public void removeAxioms(OWLOntology ontology, Set<? extends OWLAxiom> axioms) {
+//            for(OWLAxiom axiom : axioms) {
+//                removeAxiom(ontology, axiom);
+//            }
+//        }
 
         public void addAll(List<OWLOntologyChange> changes) {
-            this.changes.addAll(changes);
+            for(OWLOntologyChange change : changes) {
+                add(change);
+            }
         }
 
         public OntologyChangeList<R> build(R subject) {
