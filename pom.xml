@@ -20,6 +20,10 @@
         <!-- Properties common to all build profiles -->
         <application.name>WebProtege</application.name>
         <openid.enabled>true</openid.enabled>
+        <!-- Mail properties empty by default -->
+        <mail.smtp.host/>
+        <mail.smtp.auth/>
+        <mail.smtp.port/>
     </properties>
 
     <repositories>
@@ -457,6 +461,9 @@
                 <application.host>webprotege.stanford.edu</application.host>
                 <data.directory>/apps/bmir.apps/web-protege-data</data.directory>
                 <mail.smtp.from.wp.personalName>WebProtege</mail.smtp.from.wp.personalName>
+                <mail.smtp.host>smtp-unencrypted.stanford.edu</mail.smtp.host>
+                <mail.smtp.auth>false</mail.smtp.auth>
+                <mail.smtp.port>25</mail.smtp.port>
             </properties>
             <build>
                 <plugins>
@@ -474,11 +481,7 @@
                                     <rules>
                                         <requireProperty>
                                             <property>admin.email</property>
-                                            <message>"admin.email must be specified."</message>
-                                        </requireProperty>
-                                        <requireProperty>
-                                            <property>mail.smtp.host</property>
-                                            <message>"mail.smtp.host must be specified.</message>
+                                            <message>"admin.email must be specified"</message>
                                         </requireProperty>
                                     </rules>
                                 </configuration>
