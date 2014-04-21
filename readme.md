@@ -16,23 +16,23 @@ It provides the following features:
 - Support for editing OBO ontologies
 - Multiple file formats for upload and download of ontologies (supported formats: RDF/XML, Turtle, OWL/XML, OBO, and others)
 
-WebProtégé runs as a Web application. End users access it through their Web browsers. 
+WebProtégé runs as a Web application. End users access it through their Web browsers.
 They do not need to download nor install any software. We encourage end users to use our hosted solution at:
-http://webprotege.stanford.edu 
+http://webprotege.stanford.edu
 
 
 This README file
 ----------------
 
 This README file describes how to build and run WebProtege. This file is intended for developers or administrators
-who want to use WebProtege locally. 
+who want to use WebProtege locally.
 
 If you have downloaded the webprotege war file from GitHub, and would like to deploy it on your own server,
 please follow the instructions at:
 http://protegewiki.stanford.edu/wiki/WebProtegeAdminGuide
 
 If you would like to build WebProtege yourself, or if you are developing a plugin
-for WebProtege, please read the information below. 
+for WebProtege, please read the information below.
 
 
 Dependencies
@@ -73,6 +73,11 @@ DevMode can be started with:
 
     mvn gwt:run
 
+Note that, if you need to override any default property values then you must specify these as arguments
+(otherwise default values will be used).  For example,
+
+    mvn -Ddata.directory=/mypath/mydirectory gwt:run
+
 WebProtege can also be deployed into into tomcat by copying the .war file to the webapps folder in your tomcat
 installation.
 
@@ -100,5 +105,5 @@ http://protegewiki.stanford.edu/wiki/WebProtegeAdminGuide#Configuration_and_Cust
 
 Documentation
 -------------
-More documentation at: 
+More documentation at:
 http://protegewiki.stanford.edu/wiki/WebProtege
