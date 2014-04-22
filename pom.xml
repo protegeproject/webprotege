@@ -143,6 +143,13 @@
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-gwt</artifactId>
             <version>3.4.9</version>
+            <exclusions>
+                <exclusion>
+                    <!-- Temporary exclusion until this lib doesn't include supersource dep -->
+                    <groupId>net.sourceforge.owlapi</groupId>
+                    <artifactId>owlapi-gwt-supersource</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
