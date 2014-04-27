@@ -1,16 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.metrics;
 
-import edu.stanford.bmir.protege.web.server.owlapi.metrics.*;
+import edu.stanford.bmir.protege.web.server.metrics.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 
-import java.lang.annotation.Annotation;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
