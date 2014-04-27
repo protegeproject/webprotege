@@ -81,13 +81,11 @@ public class MetricsGrid extends GridPanel {
                 Record record = recordDef.createRecord(new Object[]{data.getMetricName(), data.getMetricValue()});
                 store.add(record);
             }
-
             /*
                 * Metrics grid will not refresh properly w/out these lines.
                 */
-            store.commitChanges();
+//            store.commitChanges();
             //TODO: - throws exception
-            //reconfigure(store, columnModel);
         }
     }
 }

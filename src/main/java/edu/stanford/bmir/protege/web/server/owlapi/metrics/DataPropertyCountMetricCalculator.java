@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi.metrics;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 /**
  * Author: Matthew Horridge<br>
@@ -9,14 +9,14 @@ import org.semanticweb.owlapi.model.EntityType;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/06/2012
  */
-public class OWLAPIProjectDataPropertyCountMetric extends OWLAPIProjectEntityCountMetric {
+public class DataPropertyCountMetricCalculator extends EntityCountMetricCalculator {
 
-    public OWLAPIProjectDataPropertyCountMetric(OWLAPIProject project) {
+    public DataPropertyCountMetricCalculator(OWLOntology project) {
         super(project, EntityType.DATA_PROPERTY);
     }
 
     @Override
     protected int getEntityCount() {
-        return getRootOntology().getDataPropertiesInSignature().size();
+        return getRootOntology().getDataPropertiesInSignature(true).size();
     }
 }

@@ -1,17 +1,22 @@
 package edu.stanford.bmir.protege.web.server.owlapi.metrics;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLException;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
-import org.semanticweb.owlapi.profiles.OWL2DLProfile;
-import org.semanticweb.owlapi.profiles.OWL2ELProfile;
-import org.semanticweb.owlapi.profiles.OWL2QLProfile;
-import org.semanticweb.owlapi.profiles.OWL2RLProfile;
+import com.beust.jcommander.internal.Lists;
+import com.beust.jcommander.internal.Maps;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.Sets;
+import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
+import edu.stanford.bmir.protege.web.shared.metrics.MetricsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.*;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -24,10 +29,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class OWLAPIProjectMetricsManager {
 
-    private OWLAPIProject project;
+    public final WebProtegeLogger logger;
 
-    private List<OWLAPIProjectMetric> metrics = new ArrayList<OWLAPIProjectMetric>();
-
+    private List<MetricCalculator> metrics = Lists.newArrayList();
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -35,105 +39,95 @@ public class OWLAPIProjectMetricsManager {
 
     private final Lock writeLock = readWriteLock.writeLock();
 
-    public OWLAPIProjectMetricsManager(OWLAPIProject project) {
-        this.project = project;
+    private Map<MetricCalculator, MetricValue> valueCache = Maps.newLinkedHashMap();
+
+    private Set<MetricCalculator> dirtyMetrics = Sets.newHashSet();
+
+    private HasPostEvents<ProjectEvent<?>> eventBus;
+
+    private ProjectId projectId;
+
+    public OWLAPIProjectMetricsManager(ProjectId projectId, List<MetricCalculator> metrics, HasPostEvents<ProjectEvent<?>> eventBus, WebProtegeLogger logger) {
+        this.projectId = projectId;
+        this.logger = logger;
+        this.eventBus = eventBus;
+        this.metrics.addAll(metrics);
+        markAllAsDirty();
     }
 
-    private void initialiseMetrics(OWLAPIProject project) {
-        if(!metrics.isEmpty()) {
-            return;
-        }
-        writeLock.lock();
-        try {
-            metrics.add(new OWLAPIProjectClassCountMetric(project));
-            metrics.add(new OWLAPIProjectObjectPropertyCountMetric(project));
-            metrics.add(new OWLAPIProjectDataPropertyCountMetric(project));
-            metrics.add(new OWLAPIProjectAnnotationPropertyCountMetric(project));
-            metrics.add(new OWLAPIProjectNamedIndividualCountMetric(project));
-
-
-            metrics.add(new OWLAPIProjectAxiomCountMetric(project));
-            metrics.add(new OWLAPIProjectLogicalAxiomCount(project));
-            metrics.add(new OWLAPIProjectAnnotationAxiomCountMetric(project));
-
-
-            metrics.add(new OWLAPIProjectProfileMetric(project, new OWL2DLProfile()));
-            metrics.add(new OWLAPIProjectProfileMetric(project, new OWL2ELProfile()));
-            metrics.add(new OWLAPIProjectProfileMetric(project, new OWL2QLProfile()));
-            metrics.add(new OWLAPIProjectProfileMetric(project, new OWL2RLProfile()));
-
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.SUBCLASS_OF));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.EQUIVALENT_CLASSES));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.EQUIVALENT_CLASSES));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.DISJOINT_CLASSES));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.DISJOINT_UNION));
-
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.CLASS_ASSERTION));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.OBJECT_PROPERTY_ASSERTION));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.DATA_PROPERTY_ASSERTION));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.NEGATIVE_OBJECT_PROPERTY_ASSERTION));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.NEGATIVE_DATA_PROPERTY_ASSERTION));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.SAME_INDIVIDUAL));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.DIFFERENT_INDIVIDUALS));
-
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.SUB_OBJECT_PROPERTY));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.SUB_PROPERTY_CHAIN_OF));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.EQUIVALENT_OBJECT_PROPERTIES));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.DISJOINT_OBJECT_PROPERTIES));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.OBJECT_PROPERTY_DOMAIN));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.OBJECT_PROPERTY_RANGE));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.TRANSITIVE_OBJECT_PROPERTY));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.FUNCTIONAL_OBJECT_PROPERTY));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.INVERSE_FUNCTIONAL_OBJECT_PROPERTY));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.SYMMETRIC_OBJECT_PROPERTY));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.ASYMMETRIC_OBJECT_PROPERTY));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.REFLEXIVE_OBJECT_PROPERTY));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.IRREFLEXIVE_OBJECT_PROPERTY));
-
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.SUB_DATA_PROPERTY));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.EQUIVALENT_DATA_PROPERTIES));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.DISJOINT_DATA_PROPERTIES));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.DATA_PROPERTY_DOMAIN));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.DATA_PROPERTY_RANGE));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.FUNCTIONAL_DATA_PROPERTY));
-
-
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.SUB_ANNOTATION_PROPERTY_OF));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.ANNOTATION_PROPERTY_DOMAIN));
-            metrics.add(new OWLAPIProjectAxiomTypeCountMetric(project, AxiomType.ANNOTATION_PROPERTY_RANGE));
-
-
-            project.getRootOntology().getOWLOntologyManager().addOntologyChangeListener(new OWLOntologyChangeListener() {
-                public void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws OWLException {
-                    handleOntologyChanges(new ArrayList<OWLOntologyChange>(changes));
-                }
-            });
-        }
-        finally {
-            writeLock.unlock();
-        }
+    private void markAllAsDirty() {
+        dirtyMetrics.addAll(metrics);
     }
 
+    // TODO:
+//    public void bind(EventBus eventBus) {
+//
+//    }
 
-    private void handleOntologyChanges(List<OWLOntologyChange> changes) {
+//    TODO:
+//    public void unbind(EventBus eventBus) {
+//
+//    }
+
+    // TODO: EventBUS
+    public void handleOntologyChanges(List<? extends OWLOntologyChange> changes) {
         try {
             writeLock.lock();
-            for(OWLAPIProjectMetric metric : metrics) {
-                metric.handleChanges(changes);
+            for(MetricCalculator metric : metrics) {
+                if(metric.getStateAfterChanges(changes) == OWLAPIProjectMetricState.DIRTY) {
+                    dirtyMetrics.add(metric);
+                }
+            }
+            if(!dirtyMetrics.isEmpty()) {
+                eventBus.postEvent(new MetricsChangedEvent(projectId));
             }
         }
         finally {
             writeLock.unlock();
         }
     }
-    
-    public List<OWLAPIProjectMetric> getMetrics() {
+
+    private void recomputeDirtyMetrics() {
+        try {
+            writeLock.lock();
+            for(Iterator<MetricCalculator> metricIt = dirtyMetrics.iterator(); metricIt.hasNext(); ) {
+                MetricCalculator metric = metricIt.next();
+                metricIt.remove();
+                try {
+                    MetricValue metricValue = metric.computeValue();
+                    valueCache.put(metric, metricValue);
+                } catch (Exception e) {
+                    logger.severe(e);
+                    // Mark as not computed
+                    valueCache.put(metric, null);
+                }
+            }
+        } finally {
+            writeLock.lock();
+        }
+    }
+
+    public List<MetricValue> getMetrics() {
+        logger.info("getMetrics()");
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        recomputeDirtyMetrics();
+        List<MetricValue> result = readMetrics();
+        long ms = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+        logger.info("getMetrics().  Retrieved metrics in %d ms", ms);
+        return result;
+    }
+
+    private List<MetricValue> readMetrics() {
         readLock.lock();
         try {
-            if(metrics.isEmpty()) {
-                initialiseMetrics(project);
+            List<MetricValue> result = Lists.newArrayList();
+            for(MetricCalculator metric : metrics) {
+                MetricValue value = valueCache.get(metric);
+                if (value != null) {
+                    result.add(value);
+                }
             }
-            return new ArrayList<OWLAPIProjectMetric>(metrics);
+            return result;
         }
         finally {
             readLock.unlock();

@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.owlapi.metrics;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.shared.metrics.IntegerMetricValue;
+import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
  *     An abstract base class for different kinds of entity count.
  * </P>
  */
-public abstract class OWLAPIProjectEntityCountMetric extends OWLAPIProjectMetric {
+public abstract class EntityCountMetricCalculator extends MetricCalculator {
 
     private EntityType<?> entityType;
 
@@ -24,11 +26,11 @@ public abstract class OWLAPIProjectEntityCountMetric extends OWLAPIProjectMetric
     
     /**
      * Constructs an entity count metric that counts entities of the specified type.
-     * @param project The project over which the value for the metric is computed.
+     * @param rootOntology The project over which the value for the metric is computed.
      * @param entityType The entity type.
      */
-    public OWLAPIProjectEntityCountMetric(OWLAPIProject project, EntityType<?> entityType) {
-        super(project);
+    public EntityCountMetricCalculator(OWLOntology rootOntology, EntityType<?> entityType) {
+        super(rootOntology);
         this.entityType = entityType;
         StringBuilder sb = new StringBuilder();
         String typeName = entityType.getName();
@@ -43,16 +45,15 @@ public abstract class OWLAPIProjectEntityCountMetric extends OWLAPIProjectMetric
     }
 
     @Override
-    protected final OWLAPIProjectMetricValue computeValue() {
+    public final IntegerMetricValue computeValue() {
         int entityCount = getEntityCount();
-        
-        return new OWLAPIProjectMetricIntValue(metricName, entityCount);
+        return new IntegerMetricValue(metricName, entityCount);
     }
     
     protected abstract int getEntityCount();
 
     @Override
-    protected OWLAPIProjectMetricState getStateAfterChanges(List<OWLOntologyChange> changes) {
+    public OWLAPIProjectMetricState getStateAfterChanges(List<? extends OWLOntologyChange> changes) {
         for(OWLOntologyChange change : changes) {
             for(OWLEntity entity : change.getSignature()) {
                 if(entity.isType(entityType)) {

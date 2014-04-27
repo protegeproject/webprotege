@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.owlapi.metrics.DefaultMetricsCalculators;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.HasContainsEntityInSignature;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
@@ -227,7 +228,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         annotationPropertyHierarchyProvider = new OWLAnnotationPropertyHierarchyProvider(manager);
         annotationPropertyHierarchyProvider.setOntologies(manager.getOntologies());
 
-        metricsManager = new OWLAPIProjectMetricsManager(this);
+        metricsManager = new OWLAPIProjectMetricsManager(
+                getProjectId(),
+                DefaultMetricsCalculators.getDefaultMetrics(getRootOntology()),
+                projectEventManager,
+                WebProtegeLoggerManager.get(OWLAPIProjectMetadataManager.class));
 
     }
 
@@ -262,6 +267,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private void handleOntologiesChanged(List<? extends OWLOntologyChange> changes) {
         documentStore.saveOntologyChanges(Collections.unmodifiableList(changes));
+        metricsManager.handleOntologyChanges(changes);
     }
 
 

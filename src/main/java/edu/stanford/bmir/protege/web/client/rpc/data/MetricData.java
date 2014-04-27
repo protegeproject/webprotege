@@ -9,7 +9,7 @@ public class MetricData implements Serializable {
 	private String metricName;
 	private String metricValue;
 
-	public MetricData() {
+	private MetricData() {
 	}
 
 	public MetricData(String metricName, String metricValue) {

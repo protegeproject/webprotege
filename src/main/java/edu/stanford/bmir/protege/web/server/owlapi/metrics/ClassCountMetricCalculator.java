@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.server.owlapi.metrics;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLOntology;
+
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -9,9 +13,9 @@ import org.semanticweb.owlapi.model.EntityType;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/06/2012
  */
-public class OWLAPIProjectClassCountMetric extends OWLAPIProjectEntityCountMetric {
+public class ClassCountMetricCalculator extends EntityCountMetricCalculator {
 
-    public OWLAPIProjectClassCountMetric(OWLAPIProject project) {
+    public ClassCountMetricCalculator(OWLOntology project) {
         super(project, EntityType.CLASS);
     }
 
