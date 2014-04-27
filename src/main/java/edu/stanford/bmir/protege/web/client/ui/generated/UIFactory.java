@@ -69,9 +69,6 @@ public class UIFactory {
         else if (tabJavaClassName.equals(IndividualsTab.class.getName())) {
             return new IndividualsTab(project);
         }
-        else if (tabJavaClassName.equals(MetadataTab.class.getName())) {
-            return new MetadataTab(project);
-        }
         else if (tabJavaClassName.equals(NotesTab.class.getName())) {
             return new NotesTab(project);
         }
