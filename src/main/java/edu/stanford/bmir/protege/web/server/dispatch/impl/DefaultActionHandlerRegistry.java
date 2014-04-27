@@ -22,7 +22,7 @@ import edu.stanford.bmir.protege.web.server.notes.AddNoteToEntityActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddReplyToNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.DeleteNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
-import edu.stanford.bmir.protege.web.server.owlapi.metrics.GetMetricsActionHandler;
+import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
