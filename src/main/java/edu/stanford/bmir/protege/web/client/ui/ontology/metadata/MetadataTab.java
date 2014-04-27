@@ -14,7 +14,6 @@ public class MetadataTab extends AbstractTab {
 
 	protected AnnotationsPortlet annotationsPortlet;
 	protected ImportsTreePortlet importsPortlet;
-	protected MetricsPortlet metricsPortlet;
 
 	public MetadataTab(Project project) {
 		super(project);		
@@ -28,10 +27,6 @@ public class MetadataTab extends AbstractTab {
 	}
 	
 	protected void buildUI() {
-		/*
-		metricsPortlet = new MetricsPortlet(project);
-		addPortlet(metricsPortlet, 0);
-*/
 		importsPortlet = new ImportsTreePortlet(project);
 		addPortlet(importsPortlet, 0);
 		
