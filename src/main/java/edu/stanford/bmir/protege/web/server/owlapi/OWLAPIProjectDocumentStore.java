@@ -635,7 +635,7 @@ public class OWLAPIProjectDocumentStore {
 //        }
 //
 //        @Override
-//        public void handleChanges(OntologyChangeDataList changesList) {
+//        public void getValueStateAfterChanges(OntologyChangeDataList changesList) {
 //            for(OWLOntologyChangeData changeData : changesList) {
 //                if(changeData instanceof SetOntologyIDData) {
 //                    ontologyID = ((SetOntologyIDData) changeData).getNewId();

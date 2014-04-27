@@ -22,6 +22,7 @@ import edu.stanford.bmir.protege.web.server.notes.AddNoteToEntityActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddReplyToNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.DeleteNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
+import edu.stanford.bmir.protege.web.server.owlapi.metrics.GetMetricsActionHandler;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
@@ -40,6 +41,7 @@ import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.individualslist.GetIndividualsAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
+import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteAction;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteAction;
@@ -142,6 +144,9 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         register(new GetIndividualsActionHandler(), GetIndividualsAction.class);
 
         register(new GetEntityRenderingActionHandler(), GetEntityRenderingAction.class);
+
+        // Metrics
+        register(new GetMetricsActionHandler(), GetMetricsAction.class);
 
         // TODO: Plugin
         register(new GetEntityCrudKitsActionHandler(), GetEntityCrudKitsAction.class);

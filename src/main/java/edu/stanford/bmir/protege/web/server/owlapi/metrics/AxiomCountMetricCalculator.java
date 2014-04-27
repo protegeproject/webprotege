@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi.metrics;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.shared.metrics.IntegerMetricValue;
+import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
@@ -12,23 +13,23 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/06/2012
  */
-public class OWLAPIProjectAxiomCountMetric extends OWLAPIProjectMetric {
+public class AxiomCountMetricCalculator extends MetricCalculator {
 
-    public OWLAPIProjectAxiomCountMetric(OWLAPIProject project) {
+    public AxiomCountMetricCalculator(OWLOntology project) {
         super(project);
     }
 
     @Override
-    protected OWLAPIProjectMetricValue computeValue() {
+    public MetricValue computeValue() {
         int count = 0;
         for(OWLOntology ontology : getRootOntology().getImportsClosure()) {
             count += ontology.getAxiomCount();
         }
-        return new OWLAPIProjectMetricIntValue("Axiom count (statement count)", count);
+        return new IntegerMetricValue("Axioms", count);
     }
 
     @Override
-    protected OWLAPIProjectMetricState getStateAfterChanges(List<OWLOntologyChange> changes) {
+    public OWLAPIProjectMetricState getStateAfterChanges(List<? extends OWLOntologyChange> changes) {
         for(OWLOntologyChange change : changes) {
             if(change.isAxiomChange()) {
                 return OWLAPIProjectMetricState.DIRTY;

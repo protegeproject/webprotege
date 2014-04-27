@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.generated;
 
 import com.google.gwt.core.client.GWT;
+import edu.stanford.bmir.protege.web.client.metrics.MetricsPortlet;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.renderer.EntityDescriptionPortlet;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet;
@@ -21,7 +22,6 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsT
 import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.AnnotationsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.ImportsTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.MetadataTab;
-import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.MetricsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;

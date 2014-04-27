@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi.metrics;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.shared.metrics.IntegerMetricValue;
+import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
 import org.semanticweb.owlapi.model.OWLAnnotationAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -13,23 +14,23 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/06/2012
  */
-public class OWLAPIProjectAnnotationAxiomCountMetric extends OWLAPIProjectMetric {
+public class AnnotationAxiomCountMetricCalculator extends MetricCalculator {
 
-    public OWLAPIProjectAnnotationAxiomCountMetric(OWLAPIProject project) {
+    public AnnotationAxiomCountMetricCalculator(OWLOntology project) {
         super(project);
     }
 
     @Override
-    protected OWLAPIProjectMetricValue computeValue() {
+    public MetricValue computeValue() {
         int count = 0;
         for(OWLOntology ontology : getRootOntology().getImportsClosure()) {
             count += (ontology.getAxiomCount() - ontology.getLogicalAxiomCount());
         }
-        return new OWLAPIProjectMetricIntValue("Annotation axiom count (annotation statement count)", count);
+        return new IntegerMetricValue("Annotation axioms", count);
     }
 
     @Override
-    protected OWLAPIProjectMetricState getStateAfterChanges(List<OWLOntologyChange> changes) {
+    public OWLAPIProjectMetricState getStateAfterChanges(List<? extends OWLOntologyChange> changes) {
         for(OWLOntologyChange change : changes) {
             if(change.isAxiomChange()) {
                 if(change.getAxiom() instanceof OWLAnnotationAxiom) {

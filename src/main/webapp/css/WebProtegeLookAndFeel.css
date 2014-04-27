@@ -709,3 +709,11 @@ select {
     color: red !important;
 }
 
+.non-empty-metric {
+    /*font-weight: bold;*/
+}
+
+.empty-metric {
+    color: #dadada;
+}
+

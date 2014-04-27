@@ -38,18 +38,21 @@ import java.util.Map;
  */
 public class DispatchServiceManager {
 
-    private static final DispatchServiceManager instance = new DispatchServiceManager();
+    private static DispatchServiceManager instance;
 
 
-    private DispatchServiceAsync async = GWT.create(DispatchService.class);
+    private DispatchServiceAsync async;
 
 
     private DispatchServiceManager() {
-
+        async = GWT.create(DispatchService.class);
     }
 
 
     public static DispatchServiceManager get() {
+        if(instance == null) {
+            instance = new DispatchServiceManager();
+        }
         return instance;
     }
 
