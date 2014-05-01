@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.init;
 
 import edu.stanford.bmir.protege.web.server.app.App;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
@@ -54,7 +55,10 @@ public class LoadMailProperties implements ConfigurationTask {
                 throw new WebProtegeConfigurationException(MAIL_SMTP_PASSWORD_MISSING_MESSAGE);
             }
         }
-        App.get().setMailManager(new MailManager(mailProperties, new WebProtegeLoggerMessagingExceptionHandler()));
+        String appName = WebProtegeProperties.get().getApplicationName();
+        String hostName = WebProtegeProperties.get().getApplicationHostName();
+        App.get().setMailManager(new MailManager(appName, hostName,
+                mailProperties, new WebProtegeLoggerMessagingExceptionHandler()));
 
     }
 
