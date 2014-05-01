@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -41,18 +41,9 @@ public class MailManager {
 
     private final MessagingExceptionHandler messagingExceptionHandler;
 
-    /**
-     * Constructs a {@code MailManager} using the mail properties specified in the {@link Properties} object.  Note
-     * modification of values in the {@link Properties} object will not modify mail settings after construction.
-     * @param properties The mail properties.  Not {@code null}. These are the same properties as specified in the
-     *                   Java mail spec.  Note that an additional property "mail.smtp.from.personalName" can be
-     *                   used to specify a personal name in the from field of sent messages.  Also, if authentication
-     *                   is required then the "mail.smtp.password" property should be set.
-     * @throws NullPointerException if {@code properties} is {@code null}.
-     */
-    public MailManager(Properties properties) {
-        this(checkNotNull(properties), new ConsoleMessagingExceptionHandler());
-    }
+    private final String applicationName;
+
+    private final String applicationHost;
 
     /**
      * Constructs a {@code MailManager} using the specified {@link Properties} object and the specified exception handler.
@@ -60,6 +51,9 @@ public class MailManager {
      * <a href="https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html">https://javamail.java.net/nonav/docs/api/com/sun/mail/smtp/package-summary.html</a>
      * for more information.    Note
      * modification of values in the {@link Properties} object will not modify mail settings after construction.
+     * @param applicationName The name of the application (e.g. WebProtege).  Not {@code null}.
+     * @param applicationHost The host name that the application is running on (e.g. webprotege.stanford.edu).
+     *                        Not {@code null}.
      * @param properties The mail properties.  Not {@code null}. These are the same properties as specified in the
      *                   Java mail spec.  Note that an additional property "mail.smtp.from.personalName" can be
      *                   used to specify a personal name in the from field of sent messages.  Also, if authentication
@@ -67,7 +61,10 @@ public class MailManager {
      * @param messagingExceptionHandler An exception handler that handles {@link MessagingException}s.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public MailManager(Properties properties, MessagingExceptionHandler messagingExceptionHandler) {
+    public MailManager(String applicationName, String applicationHost,
+                       Properties properties, MessagingExceptionHandler messagingExceptionHandler) {
+        this.applicationName = checkNotNull(applicationName);
+        this.applicationHost = checkNotNull(applicationHost);
         this.properties = new Properties(checkNotNull(properties));
         this.messagingExceptionHandler = checkNotNull(messagingExceptionHandler);
     }
@@ -113,6 +110,7 @@ public class MailManager {
             Transport.send(msg);
         } catch (MessagingException e) {
             exceptionHandler.handleMessagingException(e);
+            LOGGER.severe(e);
         } catch (UnsupportedEncodingException e) {
             LOGGER.severe(e);
         }
@@ -165,11 +163,21 @@ public class MailManager {
      * @throws UnsupportedEncodingException
      */
     private InternetAddress getFromAddress() throws UnsupportedEncodingException {
-        final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + WebProtegeProperties.get().getApplicationHostName();
+        final String defaultFromValue = DEFAULT_FROM_VALUE_PREFIX + applicationHost;
         String from = getPropertyValue(MAIL_SMTP_FROM, defaultFromValue);
-        final String defaultPersonalName = WebProtegeProperties.get().getApplicationName();
+        final String defaultPersonalName = getPropertyValue(WebProtegePropertyName.APPLICATION_NAME, applicationName);
         String personalName = getPropertyValue(MAIL_SMTP_FROM_PERSONALNAME, defaultPersonalName);
         return new InternetAddress(from, personalName, UTF_8);
+    }
+
+    private String getPropertyValue(WebProtegePropertyName propertyName, String defaultValue) {
+        String value = properties.getProperty(propertyName.getPropertyName());
+        if(value != null) {
+            return value;
+        }
+        else {
+            return propertyName.getDefaultValue().or(defaultValue);
+        }
     }
 
     /**

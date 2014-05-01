@@ -71,6 +71,12 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jvnet.mock-javamail</groupId>
+            <artifactId>mock-javamail</artifactId>
+            <version>1.9</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -196,8 +202,8 @@
 
         <dependency>
             <groupId>javax.mail</groupId>
-            <artifactId>mailapi</artifactId>
-            <version>1.4.3</version>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
         </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
