@@ -147,15 +147,6 @@ public class PropertyValueDescriptorEditorPresenter implements ValueEditor<Prope
 
             @Override
             public EntityType<?> visit(OWLLiteralData data) throws RuntimeException {
-                if (data.getLiteral().isRDFPlainLiteral() || data.getLiteral().getDatatype().isString()) {
-                    // TODO:
-//                    if (fillerEditor.isClassesAllowed()) {
-//                        // Here we assume a class name instead of a literal
-//                        fillerEditor.coerceToEntityType(EntityType.CLASS);
-//                        return handleObjectProperty();
-//                    }
-                }
-                // Other type of literal so lets assume a data or annotation property
                 return handleDataProperty();
             }
 
