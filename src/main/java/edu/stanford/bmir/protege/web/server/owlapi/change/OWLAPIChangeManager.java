@@ -23,6 +23,7 @@ import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
 import org.semanticweb.binaryowl.chunk.SkipSetting;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
+import uk.ac.manchester.cs.jfact.datatypes.cardinality;
 
 import java.io.*;
 import java.util.*;
@@ -397,14 +398,18 @@ public class OWLAPIChangeManager {
                 throw new IllegalArgumentException("Unknown revision: " + revision);
             }
             OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
+            final OWLOntologyID singletonOntologyId = new OWLOntologyID();
             for (int index = 0; index < revisionIndex + 1; index++) {
                 Revision rev = revisions.get(index);
-                for (OWLOntologyChangeRecord changeRecord : rev) {
-                    OWLOntologyID ontologyID = changeRecord.getOntologyID();
-                    if (!manager.contains(ontologyID)) {
-                        manager.createOntology(ontologyID);
+                for (OWLOntologyChangeRecord record : rev) {
+                    // Anonymous ontologies are not handled nicely at all.
+                    OWLOntologyChangeRecord normalisedChangeRecord = normaliseChangeRecord(record, singletonOntologyId);
+                    OWLOntologyID ontologyId = normalisedChangeRecord.getOntologyID();
+                    if(!manager.contains(ontologyId)) {
+                        manager.createOntology(ontologyId);
                     }
-                    OWLOntologyChange change = changeRecord.createOntologyChange(manager);
+
+                    OWLOntologyChange change = normalisedChangeRecord.createOntologyChange(manager);
                     manager.applyChange(change);
                 }
             }
@@ -419,6 +424,17 @@ public class OWLAPIChangeManager {
         }
         finally {
             readLock.unlock();
+        }
+    }
+
+    private OWLOntologyChangeRecord normaliseChangeRecord(OWLOntologyChangeRecord changeRecord, OWLOntologyID singletonAnonymousId) {
+        OWLOntologyID ontologyID = changeRecord.getOntologyID();
+        if(ontologyID.isAnonymous()) {
+            return new OWLOntologyChangeRecord(singletonAnonymousId, changeRecord.getData());
+        }
+        else {
+            // As is
+            return changeRecord;
         }
     }
 
