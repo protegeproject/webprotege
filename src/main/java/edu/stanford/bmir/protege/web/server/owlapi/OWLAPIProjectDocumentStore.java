@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.util.DefaultTempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -25,6 +27,7 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.io.FileDocumentSource;
 import org.semanticweb.owlapi.model.*;
+import uk.ac.manchester.cs.jfact.datatypes.ordered;
 
 import java.io.*;
 import java.util.*;
@@ -181,11 +184,40 @@ public class OWLAPIProjectDocumentStore {
         OWLOntologyManager manager = getOntologyManagerForRevision(revisionNumber);
         OWLAPIProject project = OWLAPIProjectManager.getProjectManager().getProject(projectId);
         OWLOntologyID rootOntologyId = project.getRootOntology().getOntologyID();
-        OWLOntology revisionRootOntology = manager.getOntology(rootOntologyId);
-        applyRevisionMetadataAnnotationsToOntology(revisionNumber, revisionRootOntology);
-        saveImportsClosureToStream(revisionRootOntology, format, outputStream, revisionNumber);
+        Optional<OWLOntology> revisionRootOntology = getOntologyFromManager(manager, rootOntologyId);
+        if(revisionRootOntology.isPresent()) {
+            applyRevisionMetadataAnnotationsToOntology(revisionNumber, revisionRootOntology.get());
+            saveImportsClosureToStream(revisionRootOntology.get(), format, outputStream, revisionNumber);
+        }
+        else {
+            // An error - no flipping ontology!
+            throw new RuntimeException("The ontology could not be downloaded from " + WebProtegeProperties.get().getApplicationHostName() + ".  Please contact the administrator.");
+        }
     }
 
+    /**
+     * Gets an ontology from the manager specified manager.  This method is a workaround for
+     *  https://github.com/owlcs/owlapi/issues/215
+     *  https://github.com/protegeproject/webprotege/issues/143
+     * @param manager The manager.  Not {@code null}.
+     * @param rootOntologyId The OntologyId.  Not {@code null}.
+     * @return The ontology or an absent value if the manager does not contain the ontology.
+     */
+    private static Optional<OWLOntology> getOntologyFromManager(OWLOntologyManager manager, OWLOntologyID rootOntologyId) {
+        checkNotNull(manager);
+        checkNotNull(rootOntologyId);
+        for(OWLOntology ont : manager.getOntologies()) {
+            if(rootOntologyId.equals(ont.getOntologyID())) {
+                return Optional.of(ont);
+            }
+        }
+        if(rootOntologyId.isAnonymous()) {
+            if(manager.getOntologies().size() == 1) {
+                return Optional.of(manager.getOntologies().iterator().next());
+            }
+        }
+        return Optional.absent();
+    }
 
 
     public void saveOntologyChanges(List<OWLOntologyChange> changeList) {
