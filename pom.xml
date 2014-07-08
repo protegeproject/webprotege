@@ -9,7 +9,7 @@
     <groupId>edu.stanford.protege</groupId>
     <artifactId>webprotege</artifactId>
     <packaging>war</packaging>
-    <version>2.5-SNAPSHOT</version>
+    <version>2.5.0</version>
     <name>GWT Maven Archetype</name>
 
     <properties>
