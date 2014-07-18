@@ -57,9 +57,4 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
         grid.reload();
     }
-
-    public Collection<EntityData> getSelection() {
-        return null;
-    }
-
 }

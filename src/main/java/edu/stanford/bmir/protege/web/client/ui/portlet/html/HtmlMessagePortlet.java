@@ -57,10 +57,6 @@ public class HtmlMessagePortlet extends AbstractOWLEntityPortlet {
         refreshContent();
     }
 
-    public Collection<EntityData> getSelection() {
-        return Collections.emptySet();
-    }
-
     private void initConfiguration() {
         PortletConfiguration config = getPortletConfiguration();
         if (config == null) {

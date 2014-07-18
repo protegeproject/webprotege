@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import java.io.Serializable;
 import java.util.*;
 
+@Deprecated
 public class EntityData implements Serializable {
 
     private static final long serialVersionUID = 8012327979110652428L;

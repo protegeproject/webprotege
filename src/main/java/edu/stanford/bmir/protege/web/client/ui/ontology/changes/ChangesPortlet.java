@@ -85,10 +85,6 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
 
 	}
 
-	public Collection<EntityData> getSelection() {
-		return new ArrayList<EntityData>();
-	}
-
 	private void createGrid() {
 		changesGrid = new GridPanel();
 

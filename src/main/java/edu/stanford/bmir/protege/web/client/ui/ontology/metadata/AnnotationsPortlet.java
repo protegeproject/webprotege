@@ -35,9 +35,4 @@ public class AnnotationsPortlet extends AbstractOWLEntityPortlet {
 		
 		annotationsGrid.setEntity(_currentEntity);
 	}
-
-    @Override
-    public Collection<EntityData> getSelection() {
-        return Collections.emptySet();
-    }
 }

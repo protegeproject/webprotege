@@ -46,9 +46,4 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractOWLEntityPortlet 
         add(editor);
         reload();
     }
-
-    @Override
-    public Collection<EntityData> getSelection() {
-        return null;
-    }
 }

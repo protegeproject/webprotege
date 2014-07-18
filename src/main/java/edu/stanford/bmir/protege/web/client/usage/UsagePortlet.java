@@ -87,10 +87,4 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
             }
         });
     }
-
-
-    @Override
-    public Collection<EntityData> getSelection() {
-        return null;
-    }
 }

@@ -102,8 +102,4 @@ public class EntityDescriptionPortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    @Override
-    public Collection<EntityData> getSelection() {
-        return null;
-    }
 }

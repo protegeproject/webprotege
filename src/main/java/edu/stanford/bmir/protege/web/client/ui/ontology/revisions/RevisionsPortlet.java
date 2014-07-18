@@ -39,10 +39,6 @@ public class RevisionsPortlet extends AbstractOWLEntityPortlet {
         setTitle("Revisions");
     }
 
-    public Collection<EntityData> getSelection() {
-        return Collections.emptyList();
-    }
-
     @Override
     protected void onDestroy() {
         presenter.dispose();

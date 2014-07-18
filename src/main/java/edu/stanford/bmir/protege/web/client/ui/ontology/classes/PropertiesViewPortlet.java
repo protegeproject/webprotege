@@ -100,11 +100,6 @@ public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    public Collection<EntityData> getSelection() {
-        Record selRec = propGrid.getSelectionModel().getSelected();
-        return selRec != null ? UIUtil.createCollection(((EntityData)selRec.getAsObject("prop"))) : null;
-    }
-
     @Override
     protected void onRefresh() {
         reload();

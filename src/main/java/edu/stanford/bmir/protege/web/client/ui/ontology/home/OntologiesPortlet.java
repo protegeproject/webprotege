@@ -45,10 +45,4 @@ public class OntologiesPortlet extends AbstractOWLEntityPortlet implements Refre
     public void refresh() {
     }
 
-    @Override
-    public Collection<EntityData> getSelection() {
-        return null;
-    }
-
-
 }

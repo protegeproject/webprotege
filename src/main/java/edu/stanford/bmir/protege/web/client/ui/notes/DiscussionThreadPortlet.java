@@ -48,11 +48,6 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public Collection<EntityData> getSelection() {
-        return Collections.emptyList();
-    }
-
-    @Override
     protected void onDestroy() {
         presenter.dispose();
         super.onDestroy();

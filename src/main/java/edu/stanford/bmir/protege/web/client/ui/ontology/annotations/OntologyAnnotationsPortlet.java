@@ -48,11 +48,6 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public Collection<EntityData> getSelection() {
-        return null;
-    }
-
-    @Override
     public void reload() {
         if(!loaded) {
             loaded = true;

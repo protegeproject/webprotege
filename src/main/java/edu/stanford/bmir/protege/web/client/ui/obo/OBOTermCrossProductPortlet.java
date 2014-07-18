@@ -99,9 +99,4 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
         }
         setTitle(sb.toString());
     }
-
-
-    public Collection<EntityData> getSelection() {
-        return Collections.emptySet();
-    }
 }

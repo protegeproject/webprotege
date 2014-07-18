@@ -37,9 +37,4 @@ public class BioPortalSearchPortlet extends AbstractOWLEntityPortlet {
         setTitle("BioPortal search results for " + _currentEntity.getBrowserText());
         searchComp.setEntity(_currentEntity);
     }
-
-    public ArrayList<EntityData> getSelection() {
-        return null;
-    }
-
 }
