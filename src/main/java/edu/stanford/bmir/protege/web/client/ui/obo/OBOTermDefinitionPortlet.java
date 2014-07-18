@@ -97,8 +97,4 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
     public void initialize() {
 
     }
-
-    public Collection<EntityData> getSelection() {
-        return Collections.emptySet();
-    }
 }

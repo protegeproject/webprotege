@@ -140,14 +140,6 @@ public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-
-    /*
-     * Returns empty selection for now.
-     */
-    public List<EntityData> getSelection() {
-        return new ArrayList<EntityData>(); //TODO: not clear what it should return
-    }
-
     protected boolean needsNewFormGenerator(EntityData newEntity) {
         try {
             if (_currentEntity != null && newEntity != null) {

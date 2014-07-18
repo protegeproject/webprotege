@@ -95,8 +95,4 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
 //        editor.setValues(synonymList);
 //        editorView.rebuild();
 //    }
-
-    public Collection<EntityData> getSelection() {
-        return Collections.emptySet();
-    }
 }

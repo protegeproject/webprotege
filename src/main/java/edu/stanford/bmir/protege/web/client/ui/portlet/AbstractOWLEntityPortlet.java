@@ -135,4 +135,9 @@ public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
         }
         return Optional.absent();
     }
+
+    @Override
+    public Collection<EntityData> getSelection() {
+        return Collections.emptyList();
+    }
 }

@@ -66,9 +66,4 @@ public class OntologyIdPortlet extends AbstractOWLEntityPortlet {
             onRefresh();
         }
     }
-
-    @Override
-    public Collection<EntityData> getSelection() {
-        return null;
-    }
 }

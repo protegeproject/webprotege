@@ -41,10 +41,6 @@ public class AllPropertiesPortlet extends AbstractOWLEntityPortlet {
         add(propGrid);
     }
 
-    public Collection<EntityData> getSelection() {
-        return propGrid.getSelection();
-    }
-
     @Override
     protected void onRefresh() {
         propGrid.refresh();

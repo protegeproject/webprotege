@@ -77,8 +77,4 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
         editor = new XRefListEditor();
         add(editor);
     }
-
-    public Collection<EntityData> getSelection() {
-        return Collections.emptySet();
-    }
 }

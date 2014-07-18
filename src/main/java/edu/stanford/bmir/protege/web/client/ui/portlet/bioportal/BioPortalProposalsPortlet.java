@@ -267,12 +267,6 @@ public class BioPortalProposalsPortlet extends AbstractOWLEntityPortlet {
         });
     }
 
-    public Collection<EntityData> getSelection() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
     @Override
     public void setPortletConfiguration(PortletConfiguration portletConfiguration) {
         super.setPortletConfiguration(portletConfiguration);

@@ -44,9 +44,4 @@ public class MetricsPortlet extends AbstractOWLEntityPortlet {
         metricsPresenter.bind(this);
         onRefresh();
     }
-
-    @Override
-    public Collection<EntityData> getSelection() {
-        return null;
-    }
 }

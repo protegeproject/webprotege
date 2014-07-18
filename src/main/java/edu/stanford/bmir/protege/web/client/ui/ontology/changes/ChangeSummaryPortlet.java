@@ -76,10 +76,6 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
         add(main);
     }
 
-    public Collection<EntityData> getSelection() {
-        return null;
-    }
-
     @Override
     public void reload() {
         // onRefresh(); //FIXME

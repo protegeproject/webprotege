@@ -79,9 +79,4 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
         editor = new OBOTermRelationshipEditor();
         add(editor.getWidget());
     }
-    
-
-    public Collection<EntityData> getSelection() {
-        return Collections.emptySet();
-    }
 }

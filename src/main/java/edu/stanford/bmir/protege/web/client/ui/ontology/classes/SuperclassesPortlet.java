@@ -43,13 +43,6 @@ public class SuperclassesPortlet extends AbstractOWLEntityPortlet {
         parentsPanel.setClsEntity(getEntity());
     }
 
-    /*
-     * Always returns an empty collection.
-     */
-    public Collection<EntityData> getSelection() {
-        return new ArrayList<EntityData>();
-    }
-
     @Override
     public void setSelection(Collection<EntityData> newSelection) {
         AbstractTab containerTab = getTab();

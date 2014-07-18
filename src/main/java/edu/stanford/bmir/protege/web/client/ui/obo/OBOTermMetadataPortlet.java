@@ -50,8 +50,4 @@ public class OBOTermMetadataPortlet extends AbstractOBOTermPortlet {
     @Override
     public void initialize() {
     }
-
-    public Collection<EntityData> getSelection() {
-        return Collections.emptySet();
-    }
 }

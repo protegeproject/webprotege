@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.rpc.data;
 import java.util.Collection;
 import java.util.List;
 
+@Deprecated
 public class PropertyEntityData extends EntityData {
 
     private List<EntityData> allowedValues;

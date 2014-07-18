@@ -42,8 +42,4 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
         return false;
     }
 
-    @Override
-    public Collection<EntityData> getSelection() {
-        return Collections.emptySet();
-    }
 }

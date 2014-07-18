@@ -63,11 +63,6 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
         add(sp);
     }
 
-    @Override
-    public Collection<EntityData> getSelection() {
-        return null;
-    }
-
     public Optional<EditorCtx> getEditorContext() {
         Optional<OWLEntityData> sel = getSelectedEntityData();
         if(!sel.isPresent()) {
