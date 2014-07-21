@@ -291,12 +291,6 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     }
 
     private void updateEnabled() {
-//        propertyField.setEnabled(enabled && (!currentValue.isPresent() || currentValue.get().getState() != PropertyValueState.DERIVED));
-//
-//        boolean valueFieldEditable = !currentValue.isPresent() || currentValue.get().getState() != PropertyValueState.DERIVED ||
-//                !currentValue.get().isMostSpecific();
-//        valueField.setEnabled(enabled && valueFieldEditable);
-//        languageField.setEnabled(enabled && valueFieldEditable);
         propertyField.setEnabled(enabled);
         valueField.setEnabled(enabled);
         languageField.setEnabled(enabled);

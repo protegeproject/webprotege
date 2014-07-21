@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class ValueListEditorImpl<O> extends Composite implements ValueListEditor<O> {
 
+    public static final int DELETE_BUTTON_COLUMN = 1;
     private final DirtyChangedHandler dirtyChangedHandler;
 
     private final ValueChangeHandler<Optional<O>> valueChangeHandler;
@@ -154,6 +155,10 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
                 ((HasEnabled) editor).setEnabled(enabled);
             }
         }
+        for(int i = 0; i < tableField.getRowCount(); i++) {
+            DeleteButton deleteButton = (DeleteButton) tableField.getWidget(i, DELETE_BUTTON_COLUMN);
+            deleteButton.setEnabled(enabled);
+        }
     }
 
     @Override
@@ -173,9 +178,10 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
             addValueEditor(false);
         }
         for(int i = 0; i < tableField.getRowCount(); i++) {
-            Widget deleteButton = tableField.getWidget(i, 1);
+            DeleteButton deleteButton = (DeleteButton) tableField.getWidget(i, DELETE_BUTTON_COLUMN);
             if(i < tableField.getRowCount() - 1 && !deleteButton.isVisible()) {
                 deleteButton.setVisible(true);
+                deleteButton.setEnabled(enabled);
             }
         }
     }
@@ -202,6 +208,7 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
         editor.addDirtyChangedHandler(dirtyChangedHandler);
         editor.addValueChangeHandler(valueChangeHandler);
         deleteButton.setVisible(deleteVisible);
+        deleteButton.setEnabled(enabled);
         if(editor instanceof HasEnabled) {
             ((HasEnabled) editor).setEnabled(enabled);
         }
