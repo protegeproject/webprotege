@@ -52,7 +52,7 @@ public class WebProtegeOBOFormatParser extends AbstractOWLParser {
 //        catch (OWLOntologyCreationException e) {
 //            throw new OWLRuntimeException(e);
 //        }
-        return null;
+        throw new RuntimeException("Commented Out");
     }
 
 

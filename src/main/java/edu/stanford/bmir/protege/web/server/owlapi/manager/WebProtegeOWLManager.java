@@ -24,20 +24,12 @@ public class WebProtegeOWLManager {
     static {
         // Some HORRIBLE HORRIBLE staticness requires this
         OWLManager.getOWLDataFactory();
-
-        // Set up parser factories.  We want to replace the OBO one with the reference OBO parser.  This OBO parser
-        // must be chosen last (i.e. be added first here) - see https://github.com/protegeproject/webprotege/issues/62
         OWLParserFactoryRegistry parserFactoryRegistry = OWLParserFactoryRegistry.getInstance();
         List<OWLParserFactory> parserFactoryList = new ArrayList<OWLParserFactory>(parserFactoryRegistry.getParserFactories());
         Collections.reverse(parserFactoryList);
         parserFactoryRegistry.clearParserFactories();
-        // Replace the OWL API 3.4.9 OBOFormatParserFactory.  There are some issues with it.
-//        parserFactoryRegistry.registerParserFactory(new WebProtegeOBOFormatParserFactory());
         for(OWLParserFactory parserFactory : parserFactoryList) {
-            if (!(parserFactory instanceof OBOFormatParserFactory)) {
-//                Replace the OBO one with the one above
                 parserFactoryRegistry.registerParserFactory(parserFactory);
-            }
         }
         parserFactoryRegistry.registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
     }
