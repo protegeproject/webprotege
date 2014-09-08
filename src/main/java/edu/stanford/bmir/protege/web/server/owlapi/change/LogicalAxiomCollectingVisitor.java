@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import org.semanticweb.owlapi.change.*;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import java.util.Collection;
