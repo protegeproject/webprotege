@@ -38,6 +38,9 @@ public class DLQueryViewImpl extends Composite implements DLQueryView {
     @UiField
     protected HasText filterField;
 
+    @UiField
+    protected HasText revisionNumberField;
+
     private ExecuteDLQueryHandler executeDLQueryHandler = new ExecuteDLQueryHandler() {
         @Override
         public void handleExecuteQuery(String query) {
@@ -92,19 +95,19 @@ public class DLQueryViewImpl extends Composite implements DLQueryView {
     }
 
     @Override
-    public void setSubClassesResult(Optional<RevisionNumber> revisionNumber,
-                                    List<OWLClassData> subClasses, List<OWLClassData> superClasses) {
+    public void setAnswers(
+            Optional<RevisionNumber> revisionNumber, List<OWLClassData> subClasses, List<OWLClassData> superClasses) {
+
         StringBuilder sb = new StringBuilder();
-        sb.append("<div>Revision: ");
-        if (revisionNumber.isPresent()) {
-            sb.append(revisionNumber.get().getValue());
+        if(!revisionNumber.isPresent()) {
+            revisionNumberField.setText("Reasoning not yet available");
         }
         else {
-            sb.append("None");
+            revisionNumberField.setText("Answers for revision number " + revisionNumber.get().getValue());
+            sb.append("</div>");
+            renderResultsSection("Direct SubClassOf", superClasses, superClasses.size(), sb);
+            renderResultsSection("Direct SuperClassOf", subClasses, subClasses.size(), sb);
         }
-        sb.append("</div>");
-        renderResultsSection("Direct SubClassOf", superClasses, superClasses.size(), sb);
-        renderResultsSection("Direct SuperClassOf", subClasses, subClasses.size(), sb);
         resultsDisplay.setHTML(sb.toString());
     }
 

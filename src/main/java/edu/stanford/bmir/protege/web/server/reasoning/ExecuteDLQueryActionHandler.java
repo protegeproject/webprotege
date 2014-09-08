@@ -100,6 +100,7 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
             }
             ImmutableList.Builder<OWLClassData> superClassesBuilder = ImmutableList.builder();
             if(superClasses.isPresent()) {
+                revisionNumberOfDigest = project.getChangeManager().getRevisionNumberOfDigest(response.getKbDigest());
                 for(OWLClass superClass : superClasses.get().getValue().getFlattened()) {
                     OWLClassData rendering = project.getRenderingManager().getRendering(superClass);
                     if (pattern.matcher(rendering.getBrowserText()).find()) {
