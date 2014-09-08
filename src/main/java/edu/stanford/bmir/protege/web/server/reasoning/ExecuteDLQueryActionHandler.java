@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.server.reasoning;
 
+import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -13,8 +16,8 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
-import edu.stanford.bmir.protege.web.shared.reasoning.ExecuteDLQueryAction;
-import edu.stanford.bmir.protege.web.shared.reasoning.ExecuteDLQueryResult;
+import edu.stanford.bmir.protege.web.shared.reasoning.*;
+import edu.stanford.bmir.protege.web.shared.reasoning.Consistency;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.protege.reasoning.KbId;
 import edu.stanford.protege.reasoning.KbQueryResult;
@@ -28,6 +31,7 @@ import org.semanticweb.owlapi.reasoner.NodeSet;
 
 import javax.inject.Inject;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
@@ -69,47 +73,31 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
                     })
             );
             project.synchronizeReasoner();
+
             OWLClassExpression ce = classExpressionParser.parse(action.getEnteredClassExpression());
             KbId kbId = new KbId(project.getProjectId().getId());
-            ListenableFuture<GetSubClassesResponse> subClassesResponse = reasoningService.execute(new GetSubClassesAction(kbId, ce));
-            ListenableFuture<GetSuperClassesResponse> superClassesResponse = reasoningService.execute(new GetSuperClassesAction(kbId, ce,
-                                                                                                                                HierarchyQueryType.DIRECT));
 
-            GetSubClassesResponse response = subClassesResponse.get();
-            Optional<KbQueryResult<NodeSet<OWLClass>>> subClasses = response.getResult();
-            Optional<KbQueryResult<NodeSet<OWLClass>>> superClasses = superClassesResponse.get().getResult();
+            List<DLQueryResultsSectionHandler<?,?,?,?>> handlers = Lists.newArrayList();
+            handlers.add(new EquivalentClassesSectionHandler());
+            handlers.add(new DirectSuperClassesSectionHandler());
+            handlers.add(new DirectSubClassesSectionHandler());
+            handlers.add(new DirectInstancesSectionHandler());
 
-            final Pattern pattern;
-            if(action.getFilter().isPresent()) {
-                pattern = Pattern.compile(Pattern.quote(action.getFilter().get()));
+            List<ListenableFuture<DLQueryEntitySetResult>> resultFutures = Lists.newArrayList();
+            for(DLQueryResultsSectionHandler<?,?,?,?> handler : handlers) {
+                ListenableFuture<DLQueryEntitySetResult> future = handler.executeQuery(kbId, ce, reasoningService, project);
+                resultFutures.add(future);
             }
-            else {
-                pattern = Pattern.compile(".");
+            ListenableFuture<List<DLQueryEntitySetResult>> futures = Futures.allAsList(resultFutures);
+            List<DLQueryEntitySetResult> results = futures.get();
+
+            ImmutableList.Builder<DLQueryEntitySetResult> resultList = ImmutableList.builder();
+            for(DLQueryEntitySetResult result : results) {
+                   resultList.add(result);
             }
-            ImmutableList.Builder<OWLClassData> subClassesBuilder = ImmutableList.builder();
-            Optional<RevisionNumber> revisionNumberOfDigest = Optional.absent();
-            if(subClasses.isPresent()) {
-                revisionNumberOfDigest = project.getChangeManager().getRevisionNumberOfDigest(response.getKbDigest());
-                Set<OWLClass> subClassesFlattened = subClasses.get().getValue().getFlattened();
-                for(OWLClass subClass : subClassesFlattened) {
-                    OWLClassData rendering = project.getRenderingManager().getRendering(subClass);
-                    if (pattern.matcher(rendering.getBrowserText()).find()) {
-                        subClassesBuilder.add(rendering);
-                    }
-                }
-            }
-            ImmutableList.Builder<OWLClassData> superClassesBuilder = ImmutableList.builder();
-            if(superClasses.isPresent()) {
-                revisionNumberOfDigest = project.getChangeManager().getRevisionNumberOfDigest(response.getKbDigest());
-                for(OWLClass superClass : superClasses.get().getValue().getFlattened()) {
-                    OWLClassData rendering = project.getRenderingManager().getRendering(superClass);
-                    if (pattern.matcher(rendering.getBrowserText()).find()) {
-                        superClassesBuilder.add(rendering);
-                    }
-                }
-            }
-            return new ExecuteDLQueryResult(revisionNumberOfDigest,
-                                            subClassesBuilder.build(), superClassesBuilder.build());
+            Optional<RevisionNumber> revisionNumber = results.get(0).getRevisionNumber();
+            Optional<Consistency> consistency = results.get(0).getConsistency();
+            return new ExecuteDLQueryResult(Optional.of(new DLQueryResult(revisionNumber, consistency, resultList.build())));
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

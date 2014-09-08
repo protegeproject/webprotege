@@ -837,6 +837,40 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         }
     }
 
+    public OWLEntityData getRendering(OWLEntity entity) {
+        return entity.accept(new OWLEntityVisitorEx<OWLEntityData>() {
+            @Override
+            public OWLEntityData visit(OWLClass cls) {
+                return getRendering(cls);
+            }
+
+            @Override
+            public OWLEntityData visit(OWLObjectProperty property) {
+                return getRendering(property);
+            }
+
+            @Override
+            public OWLEntityData visit(OWLDataProperty property) {
+                return getRendering(property);
+            }
+
+            @Override
+            public OWLEntityData visit(OWLNamedIndividual individual) {
+                return getRendering(individual);
+            }
+
+            @Override
+            public OWLEntityData visit(OWLDatatype datatype) {
+                return getRendering(datatype);
+            }
+
+            @Override
+            public OWLEntityData visit(OWLAnnotationProperty property) {
+                return getRendering(property);
+            }
+        });
+    }
+
     public OWLClassData getRendering(OWLClass cls) {
         return new OWLClassData(cls, getShortForm(cls));
     }
@@ -860,9 +894,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
     public OWLDatatypeData getRendering(OWLDatatype datatype) {
         return new OWLDatatypeData(datatype, getShortForm(datatype));
     }
-    
-    
-    
+
     public Map<OWLEntity, OWLEntityData> getRendering(Set<OWLEntity> entities) {
         final Map<OWLEntity, OWLEntityData> result = new HashMap<OWLEntity, OWLEntityData>();
         for(OWLEntity entity : entities) {

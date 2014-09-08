@@ -28,6 +28,7 @@ public class DLQueryPortlet extends AbstractOWLEntityPortlet {
                 getProjectId(),
                 DispatchServiceManager.get(), dlQueryView
         );
+        setTitle("DL Query");
         dlQueryView.setWidth("100%");
         dlQueryView.setHeight("100%");
         add(presenter.getView().asWidget());

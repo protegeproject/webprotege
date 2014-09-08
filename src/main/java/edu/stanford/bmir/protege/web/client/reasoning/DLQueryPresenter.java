@@ -52,7 +52,7 @@ public class DLQueryPresenter {
             @Override
             public void onSuccess(ExecuteDLQueryResult result) {
                 GWT.log("Got result to query: " + result);
-                view.setAnswers(result.getRevisionNumber(), result.getSubClasses(), result.getSuperClasses());
+                view.setResult(result.getResult());
                 view.setMode(DLQueryViewMode.READY);
             }
         });
