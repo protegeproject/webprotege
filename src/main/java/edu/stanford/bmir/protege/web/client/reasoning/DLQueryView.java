@@ -5,9 +5,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.reasoning.DLQueryResult;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
-import java.util.Collection;
-import java.util.List;
-
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 06/09/2014
  */

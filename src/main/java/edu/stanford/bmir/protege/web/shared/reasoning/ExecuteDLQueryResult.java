@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.reasoning;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 06/09/2014
  */

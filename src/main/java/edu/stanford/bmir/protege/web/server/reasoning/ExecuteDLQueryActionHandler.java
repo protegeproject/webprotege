@@ -95,6 +95,7 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
             List<DLQueryResultsSectionHandler<?,?,?,?>> handlers = Lists.newArrayList();
             handlers.add(new DirectSuperClassesSectionHandler());
             handlers.add(new EquivalentClassesSectionHandler());
+
             handlers.add(new DirectSubClassesSectionHandler());
             handlers.add(new DirectInstancesSectionHandler());
 
@@ -106,18 +107,15 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
             ListenableFuture<List<DLQueryEntitySetResult>> futures = Futures.allAsList(resultFutures);
             List<DLQueryEntitySetResult> results = futures.get();
 
-
             ImmutableList.Builder<DLQueryEntitySetResult> resultList = ImmutableList.builder();
             for(DLQueryEntitySetResult result : results) {
                    resultList.add(result);
             }
             Optional<RevisionNumber> revisionNumber = results.get(0).getRevisionNumber();
-
             return new ExecuteDLQueryResult(projectId,
                                             new ReasonerQueryResult<DLQueryResult>(
                                                     revisionNumber.get(),
                                                     new DLQueryResult(resultList.build())));
-
         } catch (InterruptedException e) {
             return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>("Reasoning was interrupted."));
         } catch (ExecutionException e) {
