@@ -31,8 +31,6 @@
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
 
-
-
 	<inherits name='com.gwtext.GwtExt' />
 	
     <!--<generate-with class="edu.stanford.bmir.protege.web.server.generated.UIFactoryGenerator">-->

@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
-import com.google.common.collect.Interner;
-import com.google.common.collect.Interners;
+import com.google.common.base.Optional;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -15,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
 import edu.stanford.bmir.protege.web.shared.watches.HierarchyBranchWatch;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
+import edu.stanford.protege.reasoning.KbDigest;
 import org.semanticweb.binaryowl.BinaryOWLChangeLogHandler;
 import org.semanticweb.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.binaryowl.BinaryOWLOntologyChangeLog;
@@ -29,6 +31,7 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -69,6 +72,9 @@ public class OWLAPIChangeManager {
 
     private ExecutorService changeSerializationExucutor = Executors.newSingleThreadExecutor();
 
+    private BiMap<KbDigest, RevisionNumber> digestRevisionNumberMap = HashBiMap.create();
+
+
     public OWLAPIChangeManager(OWLAPIProject project) {
         this.project = project;
         read();
@@ -91,6 +97,7 @@ public class OWLAPIChangeManager {
             final Interner<OWLAxiom> axiomInterner = getAxiomInterner();
             final Interner<String> metadataInterner = Interners.newStrongInterner();
             final Interner<OWLOntologyID> ontologyIDInterner = Interners.newStrongInterner();
+            final TreeSet<OWLAxiom> axioms = Sets.newTreeSet();
             changeLog.readChanges(inputStream, project.getDataFactory(), new BinaryOWLChangeLogHandler() {
                 public void handleChangesRead(OntologyChangeRecordList list, SkipSetting skipSetting, long l) {
 
@@ -105,7 +112,18 @@ public class OWLAPIChangeManager {
 
                     final UserId userId = UserId.getUserId(userName);
                     final List<OWLOntologyChangeRecord> changeRecords = internChangeRecords(list, axiomInterner, ontologyIDInterner);
-
+                    LogicalAxiomCollectingVisitor visitor = new LogicalAxiomCollectingVisitor(axioms);
+                    for(OWLOntologyChangeRecord record : changeRecords) {
+                        record.getData().accept(visitor);
+                    }
+                    Stopwatch digestStopwatch = Stopwatch.createStarted();
+                    KbDigest digest = KbDigest.getDigest(axioms);
+                    digestStopwatch.stop();
+                    LOGGER.info(project.getProjectId(),
+                                "Computed digest of revision in %d ms (%s -> %s)", digestStopwatch.elapsed(TimeUnit.MILLISECONDS),
+                                digest,
+                                revisionNumber);
+                    digestRevisionNumberMap.put(digest, revisionNumber);
                     Revision revision = new Revision(userId, revisionNumber, changeRecords, list.getTimestamp(), description, type);
                     addRevision(revision);
                 }
@@ -203,7 +221,6 @@ public class OWLAPIChangeManager {
         return result;
     }
 
-
     /**
      * Adds a revision and performs the associated indexing.
      * @param revision The revision to be added.  Not {@code null}.
@@ -212,28 +229,25 @@ public class OWLAPIChangeManager {
         try {
             writeLock.lock();
             revisions.add(revision);
-//            indexRevision(revision);
+            if(!digestRevisionNumberMap.containsValue(revision.getRevisionNumber())) {
+                computeAndIndexDigest(revision);
+            }
         }
         finally {
             writeLock.unlock();
         }
     }
 
-//    /**
-//     * Performs indexing of a revision (against its signature etc.).
-//     * @param revision The revision.
-//     */
-//    private void indexRevision(Revision revision) {
-//        try {
-//            writeLock.lock();
-//            for(OWLEntity entity : revision.getEntities(project)) {
-//                entity2Revisions.put(entity, revision);
-//            }
-//        }
-//        finally {
-//            writeLock.unlock();
-//        }
-//    }
+    private void computeAndIndexDigest(Revision revision) {
+        try {
+            writeLock.lock();
+            TreeSet<OWLAxiom> logicalAxioms = getLogicalAxioms(revision.getRevisionNumber());
+            KbDigest digest = KbDigest.getDigest(logicalAxioms);
+            digestRevisionNumberMap.put(digest, revision.getRevisionNumber());
+        } finally {
+            writeLock.unlock();
+        }
+    }
 
     private void persistBaseline() {
         try {
@@ -388,6 +402,36 @@ public class OWLAPIChangeManager {
         finally {
             readLock.unlock();
         }
+    }
+
+    public KbDigest getLogicalAxiomsDigest() {
+        try {
+            readLock.lock();
+            RevisionNumber revisionNumber = getCurrentRevision();
+            return getLogicalAxiomsDigest(revisionNumber);
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    public KbDigest getLogicalAxiomsDigest(RevisionNumber revisionNumber) {
+        try {
+            readLock.lock();
+            return digestRevisionNumberMap.inverse().get(revisionNumber);
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+
+    public Optional<RevisionNumber> getRevisionNumberOfDigest(KbDigest kbDigest) {
+        try {
+            readLock.lock();
+            return Optional.fromNullable(digestRevisionNumberMap.get(kbDigest));
+        } finally {
+            readLock.unlock();
+        }
+
     }
 
     public OWLOntologyManager getOntologyManagerForRevision(RevisionNumber revision) {
@@ -683,6 +727,31 @@ public class OWLAPIChangeManager {
 
     private RevisionSummary getRevisionSummaryFromRevision(Revision revision) {
         return new RevisionSummary(revision.getRevisionNumber(), revision.getUserId(), revision.getTimestamp(), revision.getSize());
+    }
+
+
+
+
+    private TreeSet<OWLAxiom> getLogicalAxioms(RevisionNumber revisionNumber) {
+        final TreeSet<OWLAxiom> axioms = Sets.newTreeSet();
+        try {
+            readLock.lock();
+            int revisionIndex = getRevisionIndexForRevision(revisionNumber);
+            if (revisionIndex == -1) {
+                throw new IllegalArgumentException("Unknown revision: " + revisionNumber);
+            }
+            LogicalAxiomCollectingVisitor visitor = new LogicalAxiomCollectingVisitor(axioms);
+            for(int i = 0; i < revisionIndex; i++) {
+                Revision revision = revisions.get(i);
+                for(OWLOntologyChangeRecord rec : revision) {
+                    OWLOntologyChangeData changeData = rec.getData();
+                    changeData.accept(visitor);
+                }
+            }
+        } finally {
+            readLock.unlock();
+        }
+        return axioms;
     }
 
 }
