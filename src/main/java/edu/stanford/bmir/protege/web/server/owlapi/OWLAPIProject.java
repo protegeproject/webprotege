@@ -284,7 +284,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     private void handleOntologiesChanged(List<? extends OWLOntologyChange> changes) {
         documentStore.saveOntologyChanges(Collections.unmodifiableList(changes));
         metricsManager.handleOntologyChanges(changes);
-        reasoningServiceSynchronizer.handleOntologyChanges(changes);
     }
 
     public void synchronizeReasoner() {
@@ -584,7 +583,9 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 Optional<R> renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
                 finalResult = new ChangeApplicationResult<R>(renamedResult, appliedChanges, renameMap);
                 if (!appliedChanges.isEmpty()) {
+                    LOGGER.info(getProjectId(), "%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
                     logAppliedChanges(userId, finalResult, changeDescriptionGenerator);
+                    passOntologyChangesToReasoner(appliedChanges);
                 }
                 revisionNumber = changeManager.getCurrentRevision();
             } finally {
@@ -592,7 +593,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 projectChangeWriteLock.unlock();
             }
 
-            LOGGER.info(getProjectId(), "%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
 
             if (!(changeListGenerator instanceof SilentChangeListGenerator)) {
                 List<ProjectEvent<?>> highLevelEvents = new ArrayList<ProjectEvent<?>>();
@@ -615,6 +615,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         return finalResult;
 
 
+    }
+
+    private void passOntologyChangesToReasoner(List<OWLOntologyChange> changes) {
+        LOGGER.info(getProjectId(), "Passing changes to reasoner");
+        reasoningServiceSynchronizer.handleOntologyChanges(changes);
     }
 
     private List<HierarchyChangeComputer<?>> createHierarchyChangeComputers() {

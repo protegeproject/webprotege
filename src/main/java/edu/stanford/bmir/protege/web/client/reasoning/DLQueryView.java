@@ -19,8 +19,8 @@ public interface DLQueryView extends IsWidget {
 
     void clearResults();
 
-    void setSubClassesResult(Optional<RevisionNumber> revisionNumber,
-                             List<OWLClassData> subClasses, List<OWLClassData> superClasses);
+    void setAnswers(
+            Optional<RevisionNumber> revisionNumber, List<OWLClassData> subClasses, List<OWLClassData> superClasses);
 
     Optional<String> getFilter();
 

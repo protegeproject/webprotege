@@ -3,14 +3,9 @@ package edu.stanford.bmir.protege.web.client.reasoning;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
-import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
-import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
-import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.reasoning.ExecuteDLQueryAction;
 import edu.stanford.bmir.protege.web.shared.reasoning.ExecuteDLQueryResult;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
 import javax.inject.Inject;
 
@@ -57,7 +52,7 @@ public class DLQueryPresenter {
             @Override
             public void onSuccess(ExecuteDLQueryResult result) {
                 GWT.log("Got result to query: " + result);
-                view.setSubClassesResult(result.getRevisionNumber(), result.getSubClasses(), result.getSuperClasses());
+                view.setAnswers(result.getRevisionNumber(), result.getSubClasses(), result.getSuperClasses());
                 view.setMode(DLQueryViewMode.READY);
             }
         });

@@ -25,7 +25,6 @@ import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
 import org.semanticweb.binaryowl.chunk.SkipSetting;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
-import uk.ac.manchester.cs.jfact.datatypes.cardinality;
 
 import java.io.*;
 import java.util.*;
@@ -230,7 +229,7 @@ public class OWLAPIChangeManager {
             writeLock.lock();
             revisions.add(revision);
             if(!digestRevisionNumberMap.containsValue(revision.getRevisionNumber())) {
-                computeAndIndexDigest(revision);
+                computeAndIndexDigest();
             }
         }
         finally {
@@ -238,12 +237,12 @@ public class OWLAPIChangeManager {
         }
     }
 
-    private void computeAndIndexDigest(Revision revision) {
+    private void computeAndIndexDigest() {
         try {
             writeLock.lock();
-            TreeSet<OWLAxiom> logicalAxioms = getLogicalAxioms(revision.getRevisionNumber());
+            TreeSet<OWLAxiom> logicalAxioms = getLogicalAxioms();
             KbDigest digest = KbDigest.getDigest(logicalAxioms);
-            digestRevisionNumberMap.put(digest, revision.getRevisionNumber());
+            digestRevisionNumberMap.forcePut(digest, getCurrentRevision());
         } finally {
             writeLock.unlock();
         }
@@ -732,16 +731,16 @@ public class OWLAPIChangeManager {
 
 
 
-    private TreeSet<OWLAxiom> getLogicalAxioms(RevisionNumber revisionNumber) {
+    private TreeSet<OWLAxiom> getLogicalAxioms() {
         final TreeSet<OWLAxiom> axioms = Sets.newTreeSet();
         try {
             readLock.lock();
-            int revisionIndex = getRevisionIndexForRevision(revisionNumber);
-            if (revisionIndex == -1) {
-                throw new IllegalArgumentException("Unknown revision: " + revisionNumber);
-            }
+//            int revisionIndex = getRevisionIndexForRevision(revisionNumber);
+//            if (revisionIndex == -1) {
+//                throw new IllegalArgumentException("Unknown revision: " + revisionNumber);
+//            }
             LogicalAxiomCollectingVisitor visitor = new LogicalAxiomCollectingVisitor(axioms);
-            for(int i = 0; i < revisionIndex; i++) {
+            for(int i = 0; i < revisions.size(); i++) {
                 Revision revision = revisions.get(i);
                 for(OWLOntologyChangeRecord rec : revision) {
                     OWLOntologyChangeData changeData = rec.getData();
