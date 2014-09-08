@@ -1,8 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:gwtcodemirror="urn:import:edu.stanford.bmir.gwtcodemirror.client"
-             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text"
-             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text">
     <ui:style>
         .main {
             position: absolute;
@@ -58,8 +57,6 @@
             box-sizing: border-box;
             border-top: 1px solid #f1f1f1;
         }
-
-
 
     </ui:style>
 

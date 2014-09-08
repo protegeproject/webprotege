@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.client.reasoning;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.user.client.Timer;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 06/09/2014

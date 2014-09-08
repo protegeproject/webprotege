@@ -728,8 +728,6 @@ public class OWLAPIChangeManager {
     }
 
 
-
-
     public Set<OWLLogicalAxiom> getLogicalAxioms() {
         final TreeSet<OWLLogicalAxiom> axioms = Sets.newTreeSet();
         try {

@@ -1,31 +1,20 @@
 package edu.stanford.bmir.protege.web.server.reasoning;
 
 import com.beust.jcommander.internal.Lists;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.eventbus.EventBus;
 import com.google.common.util.concurrent.*;
-import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.reasoning.ReasonerReadyEvent;
 import edu.stanford.protege.reasoning.KbDigest;
 import edu.stanford.protege.reasoning.KbId;
 import edu.stanford.protege.reasoning.ReasoningService;
 import edu.stanford.protege.reasoning.util.MinimizedLogicalAxiomChanges;
 import edu.stanford.protege.reasoning.util.ReasonerSynchronizer;
-import org.semanticweb.owlapi.change.AxiomChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 

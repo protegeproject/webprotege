@@ -94,6 +94,9 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
     // basic maps are safe for multiple readers
     private Map<Class<?>, ActionHandler<?, ?>> registry = new HashMap<Class<?>, ActionHandler<?, ?>>();
 
+    @Inject
+    private ExecuteDLQueryActionHandler executeDLQueryActionHandler;
+
     public DefaultActionHandlerRegistry() {
 
         register(new GetClientApplicationPropertiesActionHandler(), GetClientApplicationPropertiesAction.class);

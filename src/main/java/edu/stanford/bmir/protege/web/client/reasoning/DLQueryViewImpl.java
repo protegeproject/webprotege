@@ -156,7 +156,5 @@ public class DLQueryViewImpl extends Composite implements DLQueryView {
             }
         }
         sb.append("</div>");
-
-
     }
 }

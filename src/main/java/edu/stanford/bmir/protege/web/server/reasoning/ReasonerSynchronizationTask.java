@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.reasoning;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -13,19 +12,9 @@ import edu.stanford.protege.reasoning.KbDigest;
 import edu.stanford.protege.reasoning.KbId;
 import edu.stanford.protege.reasoning.ReasoningService;
 import edu.stanford.protege.reasoning.action.*;
-import org.semanticweb.binaryowl.BinaryOWLVersion;
-import org.semanticweb.binaryowl.owlobject.OWLObjectBinaryType;
-import org.semanticweb.binaryowl.stream.BinaryOWLOutputStream;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.change.AxiomChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.model.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
@@ -72,7 +61,6 @@ public class ReasonerSynchronizationTask implements Callable<KbDigest> {
         sortedLogicalAxioms.addAll(expectedLogicalAxioms);
         this.expectedDigest = KbDigest.getDigest(sortedLogicalAxioms);
     }
-
 
     @Override
     public KbDigest call() throws Exception {
