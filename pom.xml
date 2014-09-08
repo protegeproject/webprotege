@@ -47,7 +47,6 @@
     </repositories>
 
     <dependencies>
-
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
@@ -108,11 +107,23 @@
             <artifactId>gin</artifactId>
             <version>2.1.2</version>
         </dependency>
+
         <dependency>
-            <groupId>com.google.code.guice</groupId>
+            <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>1.0</version>
+            <version>4.0-beta4</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assistedinject</artifactId>
+            <version>4.0-beta4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-multibindings</artifactId>
+            <version>4.0-beta4</version>
+        </dependency>
+
         <dependency>
             <groupId>net.tanesha.recaptcha4j</groupId>
             <artifactId>recaptcha4j</artifactId>
@@ -276,6 +287,12 @@
                     <artifactId>guice</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>edu.stanford.protege</groupId>
+            <artifactId>owl-reasoning-server</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

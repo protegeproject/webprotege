@@ -23,7 +23,8 @@ public class WebProtegeConfigurationChecker {
             new CheckDataDirectoryIsReadableAndWritable(),
             new CheckMetaProjectExists(),
             new CheckUIConfigurationDataExists(),
-            new CheckMongoDBConnectionTask()
+            new CheckMongoDBConnectionTask(),
+            new StartReasoningServerTask()
     );
 
     public boolean performConfiguration(ServletContext servletContext) throws WebProtegeConfigurationException {
