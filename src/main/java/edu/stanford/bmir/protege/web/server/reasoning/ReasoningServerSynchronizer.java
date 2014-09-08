@@ -66,7 +66,6 @@ public class ReasoningServerSynchronizer {
             MinimizedLogicalAxiomChanges changes = MinimizedLogicalAxiomChanges.fromOntologyChanges(ontologyChanges);
             ImmutableSortedSet<OWLLogicalAxiom> expectedLogicalAxioms = ImmutableSortedSet.copyOf(hasLogicalAxioms
                                                                                                     .getLogicalAxioms());
-
             return reasonerSynchronizer.synchronizeReasoner(changes, expectedLogicalAxioms);
         } finally {
             lock.unlock();

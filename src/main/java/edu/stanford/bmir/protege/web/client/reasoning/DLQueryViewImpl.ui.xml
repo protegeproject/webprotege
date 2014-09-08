@@ -71,6 +71,9 @@
         <g:HTMLPanel addStyleNames="{style.answersSummaryBar}">
             <g:Label ui:field="revisionNumberField"/>
         </g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{style.answersSummaryBar}">
+            <g:Label ui:field="revisionNumberField"/>
+        </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.results}">
             <g:ScrollPanel width="100%" height="100%">
                 <g:HTML ui:field="resultsDisplay"/>
