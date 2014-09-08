@@ -42,16 +42,18 @@
         .answersSummaryBar {
             position: absolute;
             top: 7em;
-            height: 1.5em;
+            height: 2em;
             left: 0;
             right: 0;
+            color: #5F5F5F;
+            padding-left: 5px;
         }
 
         .results {
             position: absolute;
             left: 10px;
             right: 2px;
-            top: 8.5em;
+            top: 9em;
             bottom: 0;
             box-sizing: border-box;
             border-top: 1px solid #f1f1f1;

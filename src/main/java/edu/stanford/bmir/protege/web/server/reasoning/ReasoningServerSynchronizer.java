@@ -76,7 +76,6 @@ public class ReasoningServerSynchronizer {
         try {
             writeLock.lock();
             ImmutableList<AxiomChangeData> changesToApply = ImmutableList.copyOf(currentChangeList);
-            logger.info(projectId, "Flushing changes to reasoner: %s", changesToApply);
 
             ImmutableSet<OWLLogicalAxiom> expectedLogicalAxioms = ImmutableSet.copyOf(hasLogicalAxioms
                                                                                               .getLogicalAxioms());

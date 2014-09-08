@@ -11,16 +11,14 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import java.util.Collection;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 06/09/2014
  */
 public class ExecuteDLQueryResult implements Result {
 
-    private Optional<RevisionNumber> revisionNumber;
-
-    private ImmutableList<OWLClassData> subClasses;
-
-    private ImmutableList<OWLClassData> superClasses;
+    private Optional<DLQueryResult> result;
 
     /**
      * For serialization purposes only
@@ -28,27 +26,18 @@ public class ExecuteDLQueryResult implements Result {
     private ExecuteDLQueryResult() {
     }
 
-    public ExecuteDLQueryResult(Optional<RevisionNumber> revisionNumber, ImmutableList<OWLClassData> subClasses, ImmutableList<OWLClassData> superClasses) {
-        this.subClasses = subClasses;
-        this.superClasses = superClasses;
-        this.revisionNumber = revisionNumber;
+    public ExecuteDLQueryResult(Optional<DLQueryResult> result) {
+        this.result = checkNotNull(result);
     }
 
-    public Optional<RevisionNumber> getRevisionNumber() {
-        return revisionNumber;
+    public Optional<DLQueryResult> getResult() {
+        return result;
     }
 
-    public ImmutableList<OWLClassData> getSubClasses() {
-        return subClasses;
-    }
-
-    public ImmutableList<OWLClassData> getSuperClasses() {
-        return superClasses;
-    }
 
     @Override
     public String toString() {
         return Objects.toStringHelper("ExecuteDLQueryResult")
-                      .addValue(subClasses).toString();
+                      .addValue(result).toString();
     }
 }
