@@ -19,7 +19,7 @@ public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings> ext
 
     EntityCrudKitSettings<S> getSettings();
 
-    <E extends OWLEntity> E create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder);
+    <E extends OWLEntity> E create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) throws CannotGenerateFreshEntityIdException;
 
     <E extends OWLEntity> void update(E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder);
 

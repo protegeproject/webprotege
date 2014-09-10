@@ -342,10 +342,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         if(entity.isPresent()) {
             return new OWLEntityCreator<E>(entity.get(), Collections.<OWLOntologyChange>emptyList());
         }
-        // TODO: Fully specified IRI
-        // TODO: Built in entity with prefix
         OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
-        E ent = getEntityCrudKitHandler().create(entityType, EntityShortForm.get(shortName), getEntityCrudContext(), builder);
+        E ent = getEntityCrudKitHandler().create(entityType, EntityShortForm.get(shortName), getEntityCrudContext(userId), builder);
         return new OWLEntityCreator<E>(ent, builder.build().getChanges());
 
     }
@@ -360,9 +358,9 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         return entityCrudKitHandlerCache.getHandler();
     }
 
-    public EntityCrudContext getEntityCrudContext() {
+    public EntityCrudContext getEntityCrudContext(UserId userId) {
         PrefixedNameExpander expander = PrefixedNameExpander.builder().withNamespaces(Namespaces.values()).build();
-        return new EntityCrudContext(getRootOntology(), getDataFactory(), expander);
+        return new EntityCrudContext(userId, getRootOntology(), getDataFactory(), expander);
     }
 
     @SuppressWarnings("unchecked")

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.crud;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 
@@ -13,13 +14,16 @@ import org.semanticweb.owlapi.model.OWLOntology;
  */
 public class EntityCrudContext implements HasDataFactory {
 
-    private OWLOntology targetOntology;
+    private final OWLOntology targetOntology;
 
-    private OWLDataFactory dataFactory;
+    private final OWLDataFactory dataFactory;
 
-    private PrefixedNameExpander prefixedNameExpander;
+    private final PrefixedNameExpander prefixedNameExpander;
 
-    public EntityCrudContext(OWLOntology targetOntology, OWLDataFactory dataFactory, PrefixedNameExpander prefixedNameExpander) {
+    private final UserId userId;
+
+    public EntityCrudContext(UserId userId, OWLOntology targetOntology, OWLDataFactory dataFactory, PrefixedNameExpander prefixedNameExpander) {
+        this.userId = userId;
         this.targetOntology = targetOntology;
         this.dataFactory = dataFactory;
         this.prefixedNameExpander = prefixedNameExpander;
@@ -27,6 +31,10 @@ public class EntityCrudContext implements HasDataFactory {
 
     public OWLOntology getTargetOntology() {
         return targetOntology;
+    }
+
+    public UserId getUserId() {
+        return userId;
     }
 
     public OWLDataFactory getDataFactory() {
