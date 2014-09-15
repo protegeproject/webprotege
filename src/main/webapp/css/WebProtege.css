@@ -735,3 +735,118 @@ ul.x-menu-list {
     max-height: 350px;
     overflow-y: auto;
 }
+
+
+.protege-class-icon {
+    background-image: url(../images/tree/class.png) !important;
+}
+
+.protege-deprecated-class-icon {
+    background-image: url("../images/tree/class.png") !important;
+    opacity: 0.5;
+}
+
+.protege-class-create-icon {
+    background-image: url(../images/tree/class.create.gif) !important;
+}
+
+.protege-class-delete-icon {
+    background-image: url(../images/tree/class.delete.gif) !important;
+}
+
+/* Styles for NotesPortlet */
+.x-grid3-td-topic b {
+    font-family: tahoma, verdana;
+    display: block;
+}
+
+.x-grid3-td-topic b i {
+    font-weight: normal;
+    font-style: normal;
+    color: #000000;
+}
+
+.x-grid3-td-topic .x-grid3-cell-inner {
+    white-space: normal;
+}
+
+.x-grid3-td-topic a {
+    color: #385F95;
+    text-decoration: none;
+}
+
+.x-grid3-td-topic a:hover {
+    text-decoration: underline;
+}
+
+.details .x-btn-text {
+    background-image: url(images/details.gif);
+}
+
+.discussion-link {
+    color: #0000FF !important;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 3px;
+}
+
+.discussion-link-inactive a {
+    color: #BBBBBB !important;
+}
+
+.p-button {
+    font-size: 70%;
+    color: #15428B;
+}
+
+
+.individualsView-Banner {
+    background-color: #660066; /* Web safe version of Protege's "instance" color */
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 11px;
+    margin: 0 0 10px 0;
+    padding: 5px 0px 5px 5px;
+    width: 100%;
+}
+
+/* Styles for Individuals List */
+.protege-individuals-icon {
+    background-image: url(../images/tree/individual.png) !important;
+}
+
+.propertiesView-Banner {
+    background-color: #336699; /* Web safe version of Protege's "slot" color */
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 11px;
+    margin: 0 0 10px 0;
+    padding: 5px 0px 5px 5px;
+    width: 100%;
+}
+
+/* Styles for PropertyTreePortlet */
+.protege-slot-icon {
+    background-image: url(../images/tree/slot.gif) !important;
+}
+
+.protege-slot-create-icon {
+    background-image: url(../images/tree/slot.create.gif) !important;
+}
+
+.protege-slot-delete-icon {
+    background-image: url(../images/tree/slot.delete.gif) !important;
+}
+
+.protege-object-property-icon {
+    background-image: url(../images/tree/property.png) !important;
+}
+
+.protege-datatype-property-icon {
+    background-image: url(../images/tree/property.png) !important;
+}
+
+.protege-annotation-property-icon {
+    background-image: url(../images/tree/annotation-property.png) !important;
+}
