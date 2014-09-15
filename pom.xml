@@ -483,6 +483,7 @@
                 <mail.smtp.host>smtp-unencrypted.stanford.edu</mail.smtp.host>
                 <mail.smtp.auth>false</mail.smtp.auth>
                 <mail.smtp.port>25</mail.smtp.port>
+                <!-- Insert the code for google analytics.  This code is not inserted by default. -->
                 <application.analytics>
                     <![CDATA[
                     <!-- Google Analytics -->
