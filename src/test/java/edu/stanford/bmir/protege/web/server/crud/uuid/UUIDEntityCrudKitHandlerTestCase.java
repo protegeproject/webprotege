@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.crud.uuid;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
 import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
@@ -57,6 +58,9 @@ public class UUIDEntityCrudKitHandlerTestCase {
     @Mock
     protected OntologyChangeList.Builder<OWLClass> builder;
 
+    @Mock
+    protected ChangeSetEntityCrudSession session;
+
     private UUIDEntityCrudKitHandler handler;
 
     @Before
@@ -74,7 +78,7 @@ public class UUIDEntityCrudKitHandlerTestCase {
     @Test
     public void shouldAddDeclaration() {
         when(entityShortForm.getShortForm()).thenReturn("A");
-        OWLClass cls = handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
+        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
         ArgumentCaptor<OWLDeclarationAxiom> addAxiomCaptor = ArgumentCaptor.forClass(OWLDeclarationAxiom.class);
         verify(builder, atLeast(1)).addAxiom(any(OWLOntology.class), addAxiomCaptor.capture());
         List<OWLDeclarationAxiom> addedAxioms = addAxiomCaptor.getAllValues();
@@ -85,14 +89,14 @@ public class UUIDEntityCrudKitHandlerTestCase {
     public void shouldAddLabelEqualToSuppliedName() {
         String suppliedName = "MyLabel";
         when(entityShortForm.getShortForm()).thenReturn(suppliedName);
-        handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
+        handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
         verifyHasLabelEqualTo(suppliedName);
     }
 
     @Test
     public void shouldCreatedExpandedPrefixName() {
         when(entityShortForm.getShortForm()).thenReturn("owl:Thing");
-        OWLClass cls = handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
+        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
         assertThat(cls, is(owlThing()));
     }
 
@@ -100,7 +104,7 @@ public class UUIDEntityCrudKitHandlerTestCase {
     public void shouldAddLabelEqualToPrefixedName() {
         String suppliedName = "owl:Thing";
         when(entityShortForm.getShortForm()).thenReturn(suppliedName);
-        handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
+        handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
         verifyHasLabelEqualTo(suppliedName);
     }
 
@@ -109,7 +113,7 @@ public class UUIDEntityCrudKitHandlerTestCase {
         String expectedIRI = "http://stuff.com/A";
         String shortForm = "<" + expectedIRI + ">";
         when(entityShortForm.getShortForm()).thenReturn(shortForm);
-        OWLClass cls = handler.create(EntityType.CLASS, entityShortForm, crudContext, builder);
+        OWLClass cls = handler.create(session, EntityType.CLASS, entityShortForm, crudContext, builder);
         assertThat(cls, hasIRI(expectedIRI));
         verifyHasLabelEqualTo(expectedIRI);
     }

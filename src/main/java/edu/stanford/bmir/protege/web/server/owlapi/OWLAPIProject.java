@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.HasContainsEntityInSignature;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettings;
@@ -337,13 +338,19 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         }
     }
 
-    private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(UserId userId, String shortName, EntityType<E> entityType) {
+    private <E extends OWLEntity> OWLEntityCreator<E> getEntityCreator(ChangeSetEntityCrudSession session, UserId userId, String shortName, EntityType<E> entityType) {
         Optional<E> entity = getEntityOfTypeIfPresent(entityType, shortName);
         if(entity.isPresent()) {
             return new OWLEntityCreator<E>(entity.get(), Collections.<OWLOntologyChange>emptyList());
         }
         OntologyChangeList.Builder<E> builder = OntologyChangeList.builder();
-        E ent = getEntityCrudKitHandler().create(entityType, EntityShortForm.get(shortName), getEntityCrudContext(userId), builder);
+        EntityCrudKitHandler<EntityCrudKitSuffixSettings, ChangeSetEntityCrudSession> handler =
+                getEntityCrudKitHandler();
+        handler.createChangeSetSession();
+        E ent = handler.create(session, entityType,
+                                              EntityShortForm.get(shortName),
+                                              getEntityCrudContext(userId),
+                                              builder);
         return new OWLEntityCreator<E>(ent, builder.build().getChanges());
 
     }
@@ -354,8 +361,9 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     }
 
 
-    public EntityCrudKitHandler<?> getEntityCrudKitHandler() {
-        return entityCrudKitHandlerCache.getHandler();
+    @SuppressWarnings("unchecked")
+    public <S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> EntityCrudKitHandler<S, C> getEntityCrudKitHandler() {
+        return (EntityCrudKitHandler<S, C>) entityCrudKitHandlerCache.getHandler();
     }
 
     public EntityCrudContext getEntityCrudContext(UserId userId) {
@@ -440,6 +448,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             // the fragment
             final Map<IRI, IRI> iriRenameMap = new HashMap<IRI, IRI>();
 
+            final ChangeSetEntityCrudSession session = getEntityCrudKitHandler().createChangeSetSession();
             Set<OWLOntologyChange> changesToRename = new HashSet<OWLOntologyChange>();
             List<OWLOntologyChange> freshEntityChanges = new ArrayList<OWLOntologyChange>();
             for (OWLOntologyChange change : changes) {
@@ -449,7 +458,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                         IRI currentIRI = entity.getIRI();
                         if (!iriRenameMap.containsKey(currentIRI)) {
                             String shortName = DataFactory.getFreshEntityShortName(entity);
-                            OWLEntityCreator<? extends OWLEntity> creator = getEntityCreator(userId, shortName, (EntityType<? extends OWLEntity>) entity.getEntityType());
+                            OWLEntityCreator<? extends OWLEntity> creator = getEntityCreator(session, userId, shortName, (EntityType<? extends OWLEntity>) entity.getEntityType());
                             freshEntityChanges.addAll(creator.getChanges());
                             IRI replacementIRI = creator.getEntity().getIRI();
                             iriRenameMap.put(currentIRI, replacementIRI);

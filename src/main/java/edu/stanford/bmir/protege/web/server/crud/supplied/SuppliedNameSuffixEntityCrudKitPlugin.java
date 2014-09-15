@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
+import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitPlugin;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
@@ -13,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixSett
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<SuppliedNameSuffixEntityCrudKitHandler, SuppliedNameSuffixSettings> {
+public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<SuppliedNameSuffixEntityCrudKitHandler, SuppliedNameSuffixSettings, ChangeSetEntityCrudSession> {
 
     @Override
     public EntityCrudKit<SuppliedNameSuffixSettings> getEntityCrudKit() {
@@ -21,12 +22,12 @@ public class SuppliedNameSuffixEntityCrudKitPlugin implements EntityCrudKitPlugi
     }
 
     @Override
-    public EntityCrudKitHandler<SuppliedNameSuffixSettings> getEntityCrudKitHandler() {
+    public EntityCrudKitHandler<SuppliedNameSuffixSettings, ChangeSetEntityCrudSession> getEntityCrudKitHandler() {
         return new SuppliedNameSuffixEntityCrudKitHandler();
     }
 
     @Override
-    public EntityCrudKitHandler<SuppliedNameSuffixSettings> getEntityCrudKitHandler(EntityCrudKitSettings<SuppliedNameSuffixSettings> settings) {
+    public EntityCrudKitHandler<SuppliedNameSuffixSettings, ChangeSetEntityCrudSession> getEntityCrudKitHandler(EntityCrudKitSettings<SuppliedNameSuffixSettings> settings) {
         return new SuppliedNameSuffixEntityCrudKitHandler(settings.getPrefixSettings(), settings.getSuffixSettings());
     }
 

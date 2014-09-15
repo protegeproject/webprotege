@@ -14,19 +14,19 @@ import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOIdSuffixEntityCrudKitHandler, OBOIdSuffixSettings> {
+public class OBOIdSuffixEntityCrudKitPlugin implements EntityCrudKitPlugin<OBOIdSuffixEntityCrudKitHandler, OBOIdSuffixSettings, OBOIdSession> {
     @Override
     public EntityCrudKit<OBOIdSuffixSettings> getEntityCrudKit() {
         return OBOIdSuffixKit.get();
     }
 
     @Override
-    public EntityCrudKitHandler<OBOIdSuffixSettings> getEntityCrudKitHandler() {
+    public EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler() {
         return new OBOIdSuffixEntityCrudKitHandler(new EntityCrudKitPrefixSettings(), new OBOIdSuffixSettings());
     }
 
     @Override
-    public EntityCrudKitHandler<OBOIdSuffixSettings> getEntityCrudKitHandler(EntityCrudKitSettings<OBOIdSuffixSettings> settings) {
+    public EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> getEntityCrudKitHandler(EntityCrudKitSettings<OBOIdSuffixSettings> settings) {
         return new OBOIdSuffixEntityCrudKitHandler(settings.getPrefixSettings(), settings.getSuffixSettings());
     }
 

@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.smi.protege.server.Session;
 import org.semanticweb.owlapi.model.*;
 
 import java.text.DecimalFormat;
@@ -25,7 +26,7 @@ import java.util.Map;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBOIdSuffixSettings> {
+public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBOIdSuffixSettings, OBOIdSession> {
 
 
     private long currentId = 0;
@@ -67,15 +68,20 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
     }
 
     @Override
+    public OBOIdSession createChangeSetSession() {
+        return new OBOIdSession();
+    }
+
+    @Override
     public EntityCrudKitSettings<OBOIdSuffixSettings> getSettings() {
         return new EntityCrudKitSettings<OBOIdSuffixSettings>(prefixSettings, suffixSettings);
     }
 
     @Override
-    public <E extends OWLEntity> E create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> builder) {
+    public <E extends OWLEntity> E create(OBOIdSession session, EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> builder) {
         OWLDataFactory dataFactory = context.getDataFactory();
         final OWLOntology targetOntology = context.getTargetOntology();
-        final IRI iri = getNextIRI(targetOntology, context.getUserId());
+        final IRI iri = getNextIRI(session, targetOntology, context.getUserId());
         final E entity = dataFactory.getOWLEntity(entityType, iri);
         builder.addAxiom(targetOntology, dataFactory.getOWLDeclarationAxiom(entity));
         final OWLLiteral labellingLiteral = getLabellingLiteral(shortForm, context);
@@ -86,7 +92,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
 
 
 
-    private synchronized IRI getNextIRI(OWLOntology rootOntology, UserId userId) {
+    private synchronized IRI getNextIRI(OBOIdSession session, OWLOntology rootOntology, UserId userId) {
         StringBuilder formatStringBuilder = new StringBuilder();
         for (int i = 0; i < suffixSettings.getTotalDigits(); i++) {
             formatStringBuilder.append("0");
@@ -95,11 +101,14 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
         long currentId = getCurrentId(userId);
         while (true) {
             currentId++;
-            String shortName = numberFormat.format(currentId);
-            IRI iri = IRI.create(prefixSettings.getIRIPrefix() + shortName);
-            if (!rootOntology.containsEntityInSignature(iri, true)) {
-                setCurrentId(userId, currentId);
-                return iri;
+            if(!session.isSessionId(currentId)) {
+                String shortName = numberFormat.format(currentId);
+                IRI iri = IRI.create(prefixSettings.getIRIPrefix() + shortName);
+                if (!rootOntology.containsEntityInSignature(iri, true)) {
+                    session.addSessionId(currentId);
+                    setCurrentId(userId, currentId);
+                    return iri;
+                }
             }
         }
     }
@@ -129,7 +138,7 @@ public class OBOIdSuffixEntityCrudKitHandler implements EntityCrudKitHandler<OBO
     }
 
     @Override
-    public <E extends OWLEntity> void update(E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
+    public <E extends OWLEntity> void update(OBOIdSession session, E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
         final OWLDataFactory df = context.getDataFactory();
         OWLLiteral browserTextLiteral = getLabellingLiteral(shortForm, context);
         OntologyChangeList.Builder<E> builder = new OntologyChangeList.Builder<E>();
