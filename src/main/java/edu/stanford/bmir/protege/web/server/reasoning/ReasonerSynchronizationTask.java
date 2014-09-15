@@ -13,16 +13,25 @@ import edu.stanford.protege.reasoning.KbDigest;
 import edu.stanford.protege.reasoning.KbId;
 import edu.stanford.protege.reasoning.ReasoningService;
 import edu.stanford.protege.reasoning.action.*;
+import org.semanticweb.binaryowl.BinaryOWLVersion;
+import org.semanticweb.binaryowl.owlobject.OWLObjectBinaryType;
+import org.semanticweb.binaryowl.stream.BinaryOWLOutputStream;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLLogicalAxiom;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.model.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 08/09/2014
@@ -62,7 +71,35 @@ public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>>
         TreeSet<OWLAxiom> sortedLogicalAxioms = Sets.newTreeSet();
         sortedLogicalAxioms.addAll(expectedLogicalAxioms);
         this.expectedDigest = KbDigest.getDigest(sortedLogicalAxioms);
+        System.out.println("COMPUTED DIGEST: " + expectedDigest);
+        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+        try {
+            OWLOntology o = manager.createOntology(new HashSet<OWLAxiom>(expectedLogicalAxioms));
+            KbDigest d = KbDigest.getDigest(new TreeSet<OWLAxiom>(o.getLogicalAxioms()));
+            System.out.println("ONTOLOGY COMPUTED DIGEST: " + d);
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                BinaryOWLOutputStream boos = new BinaryOWLOutputStream(bos, BinaryOWLVersion.getVersion(1));
+                for (OWLAxiom ax : sortedLogicalAxioms) {
+                    OWLObjectBinaryType.write(ax, boos);
+                }
+                MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+                sha1.update(bos.toByteArray());
+                byte[] digestArray = sha1.digest();
+                KbDigest digest = KbDigest.fromByteArray(digestArray);
+            System.out.println("INLINE DIGEST: " + digest);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (OWLOntologyCreationException e) {
+            e.printStackTrace();
+        }
+
     }
+
 
     @Override
     public Optional<KbDigest> call() throws Exception {

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import java.util.Collection;
 
@@ -12,16 +13,16 @@ public class LogicalAxiomCollectingVisitor implements OWLOntologyChangeDataVisit
 
     private static final Void VOID = null;
 
-    private Collection<OWLAxiom> axioms;
+    private Collection<OWLLogicalAxiom> axioms;
 
-    public LogicalAxiomCollectingVisitor(Collection<OWLAxiom> axioms) {
+    public LogicalAxiomCollectingVisitor(Collection<OWLLogicalAxiom> axioms) {
         this.axioms = axioms;
     }
 
     @Override
     public Void visit(AddAxiomData data) throws RuntimeException {
         if (data.getAxiom().isLogicalAxiom()) {
-            axioms.add(data.getAxiom());
+            axioms.add((OWLLogicalAxiom) data.getAxiom());
         }
         return VOID;
     }
@@ -29,7 +30,7 @@ public class LogicalAxiomCollectingVisitor implements OWLOntologyChangeDataVisit
     @Override
     public Void visit(RemoveAxiomData data) throws RuntimeException {
         if (data.getAxiom().isLogicalAxiom()) {
-            axioms.remove(data.getAxiom());
+            axioms.remove((OWLLogicalAxiom) data.getAxiom());
         }
         return VOID;
     }

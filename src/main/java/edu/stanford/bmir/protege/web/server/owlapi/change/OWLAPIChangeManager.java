@@ -96,7 +96,7 @@ public class OWLAPIChangeManager {
             final Interner<OWLAxiom> axiomInterner = getAxiomInterner();
             final Interner<String> metadataInterner = Interners.newStrongInterner();
             final Interner<OWLOntologyID> ontologyIDInterner = Interners.newStrongInterner();
-            final TreeSet<OWLAxiom> axioms = Sets.newTreeSet();
+            final TreeSet<OWLLogicalAxiom> axioms = Sets.newTreeSet();
             changeLog.readChanges(inputStream, project.getDataFactory(), new BinaryOWLChangeLogHandler() {
                 public void handleChangesRead(OntologyChangeRecordList list, SkipSetting skipSetting, long l) {
 
@@ -130,7 +130,6 @@ public class OWLAPIChangeManager {
             inputStream.close();
             long t1 = System.currentTimeMillis();
             LOGGER.info(project.getProjectId(), "Change history loading complete.  Loaded %d revisions in %d ms", revisions.size(), (t1 - t0));
-
         }
         catch (BinaryOWLParseException e) {
             handleCorruptChangeLog(e);
@@ -240,7 +239,7 @@ public class OWLAPIChangeManager {
     private void computeAndIndexDigest() {
         try {
             writeLock.lock();
-            TreeSet<OWLAxiom> logicalAxioms = getLogicalAxioms();
+            Set<OWLLogicalAxiom> logicalAxioms = getLogicalAxioms();
             KbDigest digest = KbDigest.getDigest(logicalAxioms);
             digestRevisionNumberMap.forcePut(digest, getCurrentRevision());
         } finally {
@@ -731,18 +730,13 @@ public class OWLAPIChangeManager {
 
 
 
-    private TreeSet<OWLAxiom> getLogicalAxioms() {
-        final TreeSet<OWLAxiom> axioms = Sets.newTreeSet();
+    public Set<OWLLogicalAxiom> getLogicalAxioms() {
+        final TreeSet<OWLLogicalAxiom> axioms = Sets.newTreeSet();
         try {
             readLock.lock();
-//            int revisionIndex = getRevisionIndexForRevision(revisionNumber);
-//            if (revisionIndex == -1) {
-//                throw new IllegalArgumentException("Unknown revision: " + revisionNumber);
-//            }
             LogicalAxiomCollectingVisitor visitor = new LogicalAxiomCollectingVisitor(axioms);
-            for(int i = 0; i < revisions.size(); i++) {
-                Revision revision = revisions.get(i);
-                for(OWLOntologyChangeRecord rec : revision) {
+            for (Revision revision : revisions) {
+                for (OWLOntologyChangeRecord rec : revision) {
                     OWLOntologyChangeData changeData = rec.getData();
                     changeData.accept(visitor);
                 }

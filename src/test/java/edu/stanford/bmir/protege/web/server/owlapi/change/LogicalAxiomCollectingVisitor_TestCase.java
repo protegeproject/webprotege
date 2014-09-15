@@ -8,6 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.RemoveAxiomData;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
 
 import java.util.Collection;
 
@@ -20,10 +21,10 @@ import static org.mockito.Mockito.*;
 public class LogicalAxiomCollectingVisitor_TestCase {
 
     @Mock
-    private Collection<OWLAxiom> axiomCollection;
+    private Collection<OWLLogicalAxiom> axiomCollection;
 
     @Mock
-    private OWLAxiom axiom;
+    private OWLLogicalAxiom axiom;
 
     private AddAxiomData addAxiomData;
 
