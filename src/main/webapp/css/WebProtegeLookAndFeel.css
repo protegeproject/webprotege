@@ -14,8 +14,6 @@
 
 *.web-protege-laf *:after, *:before {
     box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
 }
 
 .web-protege-laf {
@@ -135,14 +133,10 @@
 
 .gwt-SuggestBoxPopup {
     font-size: 12px;
-    border-style: solid;
     font-family: tahoma, sans-serif;
-    border-width: 1px;
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
-    border: 1px solid rgba(0, 0, 0, .333);
-    font-size: 12px;
     line-height: 15px;
     z-index: 10;
 }
@@ -482,7 +476,6 @@
     box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
     line-height: 15px;
     color: #000000;
-    font-size: 12px;
     margin: 0;
 }
 
@@ -515,12 +508,9 @@ select {
 }
 
 .gwt-MenuBar-vertical {
-    border-style: solid;
-    border-width: 1px;
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
-    border: 1px solid rgba(0, 0, 0, .333);
     padding: 20px;
 }
 
@@ -530,12 +520,9 @@ select {
 }
 
 .gwt-PopupPanel {
-    border-style: solid;
-    border-width: 1px;
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
-    border: 1px solid rgba(0, 0, 0, .333);
 }
 
 .glass {
@@ -552,12 +539,9 @@ select {
 }
 
 .web-protege-popup-menu {
-    border-style: solid;
-    border-width: 1px;
     background: white;
     box-shadow: 0 4px 5px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
-    border: 1px solid rgba(0, 0, 0, .333);
     margin-top: 5px;
     border-radius: 3px;
 }
@@ -689,12 +673,9 @@ select {
 }
 
 .gwt-DialogBox {
-    border-style: solid;
-    border-width: 1px;
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
-    border: 1px solid rgba(0, 0, 0, .333);
     padding: 20px;
     z-index: 5;
 }
@@ -870,8 +851,6 @@ select {
 
 .web-protege-form-layout-editor-input {
     box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     width: 100%;
 }
 
@@ -909,9 +888,6 @@ select {
     border-color: #ff00ff;
     border-style: solid;
     border-width: 1px;
-
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -947,12 +923,9 @@ select {
 }
 
 .web-protege-drop-down-popup {
-    border-style: solid;
-    border-width: 1px;
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
-    border: 1px solid rgba(0, 0, 0, .333);
     font-size: 12px;
 }
 
@@ -1034,8 +1007,6 @@ select {
 }
 
 .web-protege-sharing-add-people {
-    padding-top: 10px;
-    padding-bottom: 10px;
     background: rgba(245, 245, 245, 1.0);
     border-style: solid;
     border-color: rgba(230, 230, 230, 1.0);
