@@ -24,6 +24,7 @@
         <mail.smtp.host/>
         <mail.smtp.auth/>
         <mail.smtp.port/>
+        <application.analytics/>
     </properties>
 
     <repositories>
@@ -328,6 +329,10 @@
                             <directory>src/main/configuration</directory>
                             <filtering>true</filtering>
                         </resource>
+                        <resource>
+                            <directory>src/main/webapp</directory>
+                            <filtering>true</filtering>
+                        </resource>
                     </webResources>
                 </configuration>
             </plugin>
@@ -478,6 +483,21 @@
                 <mail.smtp.host>smtp-unencrypted.stanford.edu</mail.smtp.host>
                 <mail.smtp.auth>false</mail.smtp.auth>
                 <mail.smtp.port>25</mail.smtp.port>
+                <application.analytics>
+                    <![CDATA[
+                    <!-- Google Analytics -->
+                    <script type="text/javascript">
+                        var _gaq = _gaq || [];
+                        _gaq.push(['_setAccount', 'UA-32498293-1']);
+                        _gaq.push(['_trackPageview']);
+                        (function() {
+                        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                        })();
+                    </script>
+                    ]]>
+                </application.analytics>
             </properties>
             <build>
                 <plugins>
