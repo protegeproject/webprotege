@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import com.beust.jcommander.internal.Lists;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;

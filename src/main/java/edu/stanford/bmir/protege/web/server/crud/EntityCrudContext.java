@@ -29,12 +29,12 @@ public class EntityCrudContext implements HasDataFactory {
         this.prefixedNameExpander = prefixedNameExpander;
     }
 
-    public OWLOntology getTargetOntology() {
-        return targetOntology;
-    }
-
     public UserId getUserId() {
         return userId;
+    }
+
+    public OWLOntology getTargetOntology() {
+        return targetOntology;
     }
 
     public OWLDataFactory getDataFactory() {
