@@ -13,14 +13,13 @@ public class DeleteButton extends Button {
 
     private static final String TEXT = "\u2716";
 
-    public static final String WEB_PROTEGE_DELETE_BUTTON_STYLE_NAME = "web-protege-delete-button";
 
     public DeleteButton() {
         super(TEXT);
         Label deleteLabel = new Label(TEXT);
-        deleteLabel.addStyleName(WEB_PROTEGE_DELETE_BUTTON_STYLE_NAME);
-//        add(deleteLabel);
+        addStyleName("button-style");
+        addStyleName("delete-button");
         setTitle("Delete");
-        addStyleName("web-protege-dialog-button-compact");
+//        addStyleName("web-protege-dialog-button-compact");
     }
 }
