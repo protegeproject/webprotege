@@ -3,10 +3,7 @@ package edu.stanford.bmir.protege.web.server.crud.uuid;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
-import edu.stanford.bmir.protege.web.server.crud.IRIParser;
-import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
+import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -22,7 +19,7 @@ import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
  * Bio-Medical Informatics Research Group<br>
  * Date: 13/08/2013
  */
-public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffixSettings> {
+public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffixSettings, ChangeSetEntityCrudSession> {
 
     /**
      * A start char for local names.  Some UUIDs might start with a number.  Unfortunately, NCNames (non-colonised names)
@@ -49,6 +46,11 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     @Override
     public EntityCrudKitId getKitId() {
         return suffixSettings.getKitId();
+    }
+
+    @Override
+    public ChangeSetEntityCrudSession createChangeSetSession() {
+        return EmptyChangeSetEntityCrudSession.get();
     }
 
     @Override
@@ -80,7 +82,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
     @Override
-    public <E extends OWLEntity> E create(EntityType<E> entityType, final EntityShortForm shortForm, final EntityCrudContext context, final OntologyChangeList.Builder<E> builder) {
+    public <E extends OWLEntity> E create(ChangeSetEntityCrudSession session, EntityType<E> entityType, final EntityShortForm shortForm, final EntityCrudContext context, final OntologyChangeList.Builder<E> builder) {
         OWLDataFactory dataFactory = context.getDataFactory();
         final OWLOntology targetOntology = context.getTargetOntology();
         String suppliedName = shortForm.getShortForm();
@@ -103,7 +105,7 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     }
 
     @Override
-    public <E extends OWLEntity> void update(E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
+    public <E extends OWLEntity> void update(ChangeSetEntityCrudSession session, E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
         final OWLDataFactory df = context.getDataFactory();
         OWLLiteral browserTextLiteral = getLabellingLiteral(shortForm.getShortForm(), context);
         OntologyChangeList.Builder<E> builder = new OntologyChangeList.Builder<E>();

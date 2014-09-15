@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.crud.supplied;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
-import edu.stanford.bmir.protege.web.server.crud.IRIParser;
-import edu.stanford.bmir.protege.web.server.crud.PrefixedNameExpander;
+import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitPrefixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -29,7 +26,8 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/08/2013
  */
-public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHandler<SuppliedNameSuffixSettings> {
+public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHandler<SuppliedNameSuffixSettings,
+        ChangeSetEntityCrudSession> {
 
     private SuppliedNameSuffixSettings suffixSettings;
 
@@ -39,7 +37,9 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         this(new EntityCrudKitPrefixSettings(), new SuppliedNameSuffixSettings());
     }
 
-    public SuppliedNameSuffixEntityCrudKitHandler(EntityCrudKitPrefixSettings prefixSettings, SuppliedNameSuffixSettings settings) {
+    public SuppliedNameSuffixEntityCrudKitHandler(
+            EntityCrudKitPrefixSettings prefixSettings,
+            SuppliedNameSuffixSettings settings) {
         this.prefixSettings = prefixSettings;
         this.suffixSettings = settings;
     }
@@ -65,13 +65,23 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
     }
 
     @Override
-    public <E extends OWLEntity> E create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
+    public ChangeSetEntityCrudSession createChangeSetSession() {
+        return EmptyChangeSetEntityCrudSession.get();
+    }
+
+    @Override
+    public <E extends OWLEntity> E create(
+            ChangeSetEntityCrudSession session,
+            EntityType<E> entityType,
+            EntityShortForm shortForm,
+            EntityCrudContext context,
+            OntologyChangeList.Builder<E> changeListBuilder) {
         final OWLDataFactory dataFactory = context.getDataFactory();
         final IRI iri;
         String suppliedName = shortForm.getShortForm();
         String label;
         Optional<IRI> parsedIRI = new IRIParser().parseIRI(suppliedName);
-        if(parsedIRI.isPresent()) {
+        if (parsedIRI.isPresent()) {
             iri = parsedIRI.get();
             label = suppliedName.substring(1, suppliedName.length() - 1);
         }
@@ -82,11 +92,10 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
         E entity = dataFactory.getOWLEntity(entityType, iri);
         OWLDeclarationAxiom ax = dataFactory.getOWLDeclarationAxiom(entity);
         changeListBuilder.addAxiom(context.getTargetOntology(), ax);
-        changeListBuilder.addAxiom(context.getTargetOntology(), dataFactory.getOWLAnnotationAssertionAxiom(
-                dataFactory.getRDFSLabel(),
-                iri,
-                dataFactory.getOWLLiteral(label, "")
-        ));
+        changeListBuilder.addAxiom(context.getTargetOntology(),
+                                   dataFactory.getOWLAnnotationAssertionAxiom(dataFactory.getRDFSLabel(),
+                                                                              iri,
+                                                                              dataFactory.getOWLLiteral(label, "")));
         return entity;
     }
 
@@ -95,7 +104,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
             WhiteSpaceTreatment whiteSpaceTreatment = suffixSettings.getWhiteSpaceTreatment();
             String transformedShortForm = whiteSpaceTreatment.transform(shortForm.getShortForm());
             Optional<IRI> expandedPrefixName = prefixedNameExpander.getExpandedPrefixName(transformedShortForm);
-            if(expandedPrefixName.isPresent()) {
+            if (expandedPrefixName.isPresent()) {
                 return expandedPrefixName.get();
             }
             String escapedShortForm = URLEncoder.encode(transformedShortForm, "UTF-8");
@@ -106,9 +115,17 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
     }
 
     @Override
-    public <E extends OWLEntity> void update(E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
-        OWLEntityRenamer renamer = new OWLEntityRenamer(context.getTargetOntology().getOWLOntologyManager(), context.getTargetOntology().getImportsClosure());
-        List<OWLOntologyChange> changeList = renamer.changeIRI(entity, createEntityIRI(shortForm, context.getPrefixedNameExpander()));
+    public <E extends OWLEntity> void update(
+            ChangeSetEntityCrudSession session,
+            E entity,
+            EntityShortForm shortForm,
+            EntityCrudContext context,
+            OntologyChangeList.Builder<E> changeListBuilder) {
+        OWLEntityRenamer renamer = new OWLEntityRenamer(context.getTargetOntology().getOWLOntologyManager(),
+                                                        context.getTargetOntology().getImportsClosure());
+        List<OWLOntologyChange> changeList = renamer.changeIRI(entity,
+                                                               createEntityIRI(shortForm,
+                                                                               context.getPrefixedNameExpander()));
         changeListBuilder.addAll(changeList);
     }
 
@@ -118,7 +135,7 @@ public class SuppliedNameSuffixEntityCrudKitHandler implements EntityCrudKitHand
             String iriString = entity.getIRI().toString();
             final String iriPrefix = prefixSettings.getIRIPrefix();
             String name = XMLUtils.getNCNameSuffix(iriPrefix);
-            if(name == null) {
+            if (name == null) {
                 return iriString;
             }
             return URLDecoder.decode(name, "UTF-8");

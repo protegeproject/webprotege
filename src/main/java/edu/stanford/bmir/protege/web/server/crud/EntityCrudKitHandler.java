@@ -11,7 +11,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/08/2013
  */
-public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings> extends HasKitId {
+public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession>
+        extends HasKitId {
 
     EntityCrudKitPrefixSettings getPrefixSettings();
 
@@ -19,9 +20,31 @@ public interface EntityCrudKitHandler<S extends EntityCrudKitSuffixSettings> ext
 
     EntityCrudKitSettings<S> getSettings();
 
-    <E extends OWLEntity> E create(EntityType<E> entityType, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) throws CannotGenerateFreshEntityIdException;
+    /**
+     * Creates a fresh change set session.  Each time a set of changes is applied to an ontology a session is created
+     * and passes to the {@link #create(ChangeSetEntityCrudSession, EntityType, EntityShortForm, EntityCrudContext,
+     * OntologyChangeList.Builder)}
+     * and {@link #update(ChangeSetEntityCrudSession, OWLEntity, EntityShortForm, EntityCrudContext,
+     * OntologyChangeList.Builder)}
+     * methods.  The session can be used to persist things like counters over multiple entity creations.
+     *
+     * @return A {@link C}.  Not {@code null}.
+     */
+    C createChangeSetSession();
 
-    <E extends OWLEntity> void update(E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder);
+    <E extends OWLEntity> E create(
+            C session,
+            EntityType<E> entityType,
+            EntityShortForm shortForm,
+            EntityCrudContext context,
+            OntologyChangeList.Builder<E> changeListBuilder) throws CannotGenerateFreshEntityIdException;
+
+    <E extends OWLEntity> void update(
+            C session,
+            E entity,
+            EntityShortForm shortForm,
+            EntityCrudContext context,
+            OntologyChangeList.Builder<E> changeListBuilder);
 
     <E extends OWLEntity> String getShortForm(E entity, EntityCrudContext context);
 

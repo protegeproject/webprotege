@@ -19,7 +19,7 @@ public class ProjectEntityCrudKitHandlerCache {
 
     private ProjectId projectId;
 
-    private EntityCrudKitHandler<?> cachedHandler;
+    private EntityCrudKitHandler<?, ?> cachedHandler;
 
     public ProjectEntityCrudKitHandlerCache(ProjectId projectId) {
         this.projectId = projectId;
@@ -29,7 +29,7 @@ public class ProjectEntityCrudKitHandlerCache {
      * Gets the current {@link EntityCrudKitHandler}.
      * @return The current {@link EntityCrudKitHandler}.  Not {@code null}.
      */
-    public synchronized EntityCrudKitHandler<?> getHandler() {
+    public synchronized EntityCrudKitHandler<?, ?> getHandler() {
         EntityCrudKitSettings<?> settings = getCurrentSettings();
         if (isCachedHandlerStale(settings)) {
             cachedHandler = EntityCrudKitRegistry.get().getHandler(settings);

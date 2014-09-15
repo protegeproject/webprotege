@@ -5,12 +5,10 @@ import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
-import edu.stanford.bmir.protege.web.server.crud.EntityCrudContext;
+import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
-import edu.stanford.bmir.protege.web.server.frame.FrameChangeGenerator;
-import edu.stanford.bmir.protege.web.server.frame.FrameTranslator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
@@ -75,9 +73,14 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
         project.applyChanges(userId, changeGenerator, descGenerator);
         if(!from.getDisplayName().equals(to.getDisplayName())) {
             // Set changes
-            EntityCrudKitHandler<?> entityEditorKit = project.getEntityCrudKitHandler();
+
+            EntityCrudKitHandler<?, ChangeSetEntityCrudSession> entityEditorKit = project.getEntityCrudKitHandler();
+            ChangeSetEntityCrudSession session = entityEditorKit.createChangeSetSession();
             OntologyChangeList.Builder<S> changeListBuilder = new OntologyChangeList.Builder<S>();
-            entityEditorKit.update(to.getFrame().getSubject(), EntityShortForm.get(to.getDisplayName()), project.getEntityCrudContext(executionContext.getUserId()), changeListBuilder);
+            entityEditorKit.update(session, to.getFrame().getSubject(),
+                                     EntityShortForm.get(to.getDisplayName()),
+                                     project.getEntityCrudContext(executionContext.getUserId()),
+                                     changeListBuilder);
             FixedChangeListGenerator<S> changeListGenerator = FixedChangeListGenerator.get(changeListBuilder.build().getChanges());
             FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator = FixedMessageChangeDescriptionGenerator.get("Renamed entity");
             project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
@@ -91,6 +94,4 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
     protected abstract FrameTranslator<F, S> createTranslator();
 
     protected abstract String getChangeDescription(LabelledFrame<F> from, LabelledFrame<F> to);
-
-
 }

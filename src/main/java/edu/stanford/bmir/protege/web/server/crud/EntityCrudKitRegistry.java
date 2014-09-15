@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.crud;
 
+import com.beust.jcommander.internal.Maps;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKit;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitId;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -26,13 +27,13 @@ public class EntityCrudKitRegistry {
 
     private final Map<EntityCrudKitId, EntityCrudKit<?>> id2CrudKit = new HashMap<EntityCrudKitId, EntityCrudKit<?>>();
 
-    private final Map<EntityCrudKitId, EntityCrudKitPlugin<?,?>> id2Plugin = new HashMap<EntityCrudKitId, EntityCrudKitPlugin<?, ?>>();
+    private final Map<EntityCrudKitId, EntityCrudKitPlugin<?,?, ?>> id2Plugin = Maps.newHashMap();
 
 
     private EntityCrudKitRegistry() {
         EntityCrudKitPluginManager pluginManager = EntityCrudKitPluginManager.get();
-        List<EntityCrudKitPlugin<?,?>> plugins = pluginManager.getPlugins();
-        for(EntityCrudKitPlugin<?,?> plugin : plugins) {
+        List<EntityCrudKitPlugin<?,?,?>> plugins = pluginManager.getPlugins();
+        for(EntityCrudKitPlugin<?,?,?> plugin : plugins) {
             EntityCrudKit<?> kit = plugin.getEntityCrudKit();
             kits.add(kit);
             id2CrudKit.put(kit.getKitId(), kit);
@@ -68,20 +69,20 @@ public class EntityCrudKitRegistry {
 
 
     @SuppressWarnings("unchecked")
-    private <H extends EntityCrudKitHandler<S>, S extends EntityCrudKitSuffixSettings> EntityCrudKitPlugin<H, S> getPlugin(EntityCrudKitId kitId) {
+    private <H extends EntityCrudKitHandler<S, C>, S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> EntityCrudKitPlugin<H, S, C> getPlugin(EntityCrudKitId kitId) {
         checkValidKitId(kitId);
-        return (EntityCrudKitPlugin<H, S>) id2Plugin.get(kitId);
+        return (EntityCrudKitPlugin<H, S, C>) id2Plugin.get(kitId);
     }
 
     @SuppressWarnings("unchecked")
-    public <S extends EntityCrudKitSuffixSettings> EntityCrudKitHandler<S> getHandler(EntityCrudKitId id) {
+    public <S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> EntityCrudKitHandler<S, C> getHandler(EntityCrudKitId id) {
         EntityCrudKit<S> kit = getKit(id);
         return getHandler(new EntityCrudKitSettings<S>(kit.getDefaultPrefixSettings(), kit.getDefaultSuffixSettings()));
     }
 
-    public <S extends EntityCrudKitSuffixSettings> EntityCrudKitHandler<S> getHandler(EntityCrudKitSettings<S> settings) {
+    public <H extends EntityCrudKitHandler<S, C>, S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> EntityCrudKitHandler<S, C> getHandler(EntityCrudKitSettings<S> settings) {
         EntityCrudKitId kitId = settings.getSuffixSettings().getKitId();
-        EntityCrudKitPlugin<?, S> plugin = getPlugin(kitId);
+        EntityCrudKitPlugin<H, S, C> plugin = getPlugin(kitId);
         return plugin.getEntityCrudKitHandler(settings);
     }
 

@@ -10,13 +10,13 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
  * Bio-Medical Informatics Research Group<br>
  * Date: 8/19/13
  */
-public interface EntityCrudKitPlugin<H extends EntityCrudKitHandler<S>, S extends EntityCrudKitSuffixSettings> {
+public interface EntityCrudKitPlugin<H extends EntityCrudKitHandler<S, C>, S extends EntityCrudKitSuffixSettings, C extends ChangeSetEntityCrudSession> {
 
     EntityCrudKit<S> getEntityCrudKit();
 
-    EntityCrudKitHandler<S> getEntityCrudKitHandler();
+    EntityCrudKitHandler<S, C> getEntityCrudKitHandler();
 
-    EntityCrudKitHandler<S> getEntityCrudKitHandler(EntityCrudKitSettings<S> settings);
+    EntityCrudKitHandler<S, C> getEntityCrudKitHandler(EntityCrudKitSettings<S> settings);
 
     S getDefaultSettings();
 }
