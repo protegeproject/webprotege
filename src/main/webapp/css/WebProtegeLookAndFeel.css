@@ -989,3 +989,21 @@ select {
     margin: 1px;
 }
 
+.web-protege-delete-button {
+    color: #757575;
+    /*width: 3em;*/
+    /*font-size: large;*/
+    border-color: #ff00ff;
+    border-style: solid;
+    border-width: 1px;
+
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.web-protege-delete-button:hover {
+    color: #db0002;
+    /*height: 3em;*/
+    /*font-size: large;*/
+}
