@@ -4,9 +4,6 @@
     box-sizing: border-box;
 }
 
-/*
-    A marker style for new components that use non-gwtext styling
-*/
 .web-protege-laf {
     font-size: 12px;
     font-family: tahoma,sans-serif;
@@ -42,7 +39,6 @@
     -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
     -webkit-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
     line-height: 15px;
-    /*color: #000000;*/
 }
 
 [contenteditable=true] {
@@ -133,7 +129,6 @@
     line-height: 16px;
     font-family: tahoma,sans-serif;
     color: #000000;
-    /*height: 16px;*/
 }
 
 .gwt-SuggestBoxPopup {
@@ -218,12 +213,10 @@
 
 .web-protege-button-red:hover {
     border: 1px solid rgba(150, 150, 150, 1.0);
-    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
     box-shadow: 0px 0px 2px 1px rgba(20, 20, 20, 0.2);
 }
 
 .web-protege-button-red:active {
-    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
     box-shadow: 0px 0px 2px 3px rgba(150, 50, 50, 0.5) inset;
 }
 
@@ -256,12 +249,10 @@
 
 .web-protege-button:hover {
     border: 1px solid #96B9E6;
-    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
     box-shadow: 0px 0px 2px 1px rgba(50, 50, 50, 0.2);
 }
 
 .web-protege-button:active {
-    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
     box-shadow: 0px 0px 2px 3px #87A6CF inset;
 }
 
@@ -294,9 +285,6 @@
     cursor: default;
     font-size: 9px;
     font-weight: bold;
-    /*height: 14px;*/
-    /*line-height: 12px;*/
-    /*min-width: 10px;*/
     outline: 0 none;
     padding: 0 2px;
     text-align: center;
@@ -317,12 +305,10 @@
 
 .web-protege-button-small:hover {
     border: 1px solid #96B9E6;
-    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
     box-shadow: 0px 0px 2px 1px rgba(50, 50, 50, 0.2);
 }
 
 .web-protege-button-small:active {
-    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
     box-shadow: 0px 0px 2px 3px #87A6CF inset;
 }
 
@@ -331,9 +317,6 @@
     cursor: default;
     font-size: 9px;
     font-weight: bold;
-    /*height: 14px;*/
-    /*line-height: 12px;*/
-    /*min-width: 10px;*/
     outline: 0 none;
     padding: 0 2px;
     text-align: center;
@@ -561,7 +544,6 @@ select {
     -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     -moz-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
-    /*background-clip: padding-box;*/
     border: 1px solid #ACACAC;
     border: 1px solid rgba(0, 0, 0, .333);
     padding: 20px;
@@ -688,7 +670,6 @@ select {
 }
 
 [asserted=false] textarea {
-    /*background-color: #F4F4FF;*/
     color: #9d3600;
 
 }
@@ -710,7 +691,6 @@ select {
 }
 
 .non-empty-metric {
-    /*font-weight: bold;*/
 }
 
 .empty-metric {
@@ -749,7 +729,6 @@ select {
     -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     -moz-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
-    /*background-clip: padding-box;*/
     border: 1px solid #ACACAC;
     border: 1px solid rgba(0, 0, 0, .333);
     padding: 20px;
@@ -768,8 +747,6 @@ select {
 
 .web-protege-dialog-main-panel {
     font-size: 12px;
-    /*outline: 0;*/
-    /*position: absolute;*/
 }
 
 .web-protege-dialog-label {
@@ -788,19 +765,11 @@ select {
     cursor: default;
     font-size: 14px;
     font-weight: bold;
-    /*height: 15px;*/
-    /*line-height: 15px;*/
-    /*margin-left: 0;*/
-    /*min-width: 15px;*/
-    /*outline: 0 none;*/
     padding: 0;
     text-align: center;
     color: rgba(50, 50, 50, 1.0);
 
-    /*background-color: #F5F5F5;*/
-    /*background-image: -moz-linear-gradient(center top , #F5F5F5, #F1F1F1);*/
     border: 1px solid rgba(200, 200, 200, 1.0);
-    /*color: #444444;*/
 
     /* IE10 */
     background-image: -ms-linear-gradient(top, #F5F5F5 0%, #CCCCCC 100%);
@@ -823,12 +792,10 @@ select {
 
 .web-protege-dialog-button-compact:hover {
     border: 1px solid rgba(150, 150, 150, 1.0);
-    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
     box-shadow: 0px 0px 2px 1px rgba(20, 20, 20, 0.2);
 }
 
 .web-protege-dialog-button-compact:active {
-    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
     box-shadow: 0px 0px 1px 2px rgba(220, 220, 220, 1.0) inset;
 }
 
@@ -847,8 +814,6 @@ select {
     text-align: center;
     color: rgba(50, 50, 50, 1.0);
 
-    /*background-color: #F5F5F5;*/
-    /*background-image: -moz-linear-gradient(center top , #F5F5F5, #F1F1F1);*/
     border: 1px solid rgba(200, 200, 200, 1.0);
     /*color: #444444;*/
 
@@ -873,12 +838,10 @@ select {
 
 .web-protege-dialog-button:hover {
     border: 1px solid rgba(150, 150, 150, 1.0);
-    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
     box-shadow: 0px 0px 2px 1px rgba(20, 20, 20, 0.2);
 }
 
 .web-protege-dialog-button:active {
-    /*box-shadow: h-shadow v-shadow blur spread color inset;*/
     box-shadow: 0px 0px 1px 2px rgba(220, 220, 220, 1.0) inset;
 }
 
@@ -897,17 +860,11 @@ select {
 }
 
 .gwt-RadioButton label > div {
-    /*display: inline-block;*/
-    /*padding-left: 10px;*/
     padding-top: 5px;
-    /*padding-bottom: 5px;*/
 }
 
 .gwt-RadioButton > label {
-    /*display: inline-block;*/
-    /*padding-left: 10px;*/
     padding-left: 5px;
-    /*padding-bottom: 5px;*/
 }
 
 
@@ -967,7 +924,6 @@ select {
 }
 
 .web-protege-form-layout-editor table {
-    /*border: #ff00ff dashed 1px;*/
     width: 100%;
 }
 .web-protege-form-layout-editor * table td + td {
@@ -991,8 +947,6 @@ select {
 
 .web-protege-delete-button {
     color: #757575;
-    /*width: 3em;*/
-    /*font-size: large;*/
     border-color: #ff00ff;
     border-style: solid;
     border-width: 1px;
@@ -1004,8 +958,6 @@ select {
 
 .web-protege-delete-button:hover {
     color: #db0002;
-    /*height: 3em;*/
-    /*font-size: large;*/
 }
 
 
@@ -1060,9 +1012,6 @@ select {
 
 
 
-/**********************************************************************************
- * SideBar
- **********************************************************************************/
 
 .web-protege-sidebar {
     border: 8px;
@@ -1079,11 +1028,6 @@ select {
 .web-protege-sidebar-item-base {
     height: 40px;
     cursor: pointer;
-    /*border-bottom: silver;*/
-    /*border-bottom-style: solid;*/
-    /*border-bottom-width: 1px;*/
-
-
 }
 
 .web-protege-sidebar-item-base:hover {
@@ -1094,26 +1038,16 @@ select {
 }
 
 .web-protege-sidebar-item-selected {
-    /*background: #bec8dc;*/
     color: #757575;
-    /*background: #89a5d1;*/
     background: #D7E6FA;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-
-    /*border-left-style: solid;*/
-    /*border-left-width: 4px;*/
-    /*border-left-color: #4779be;*/
-
 }
 
 .web-protege-sidebar-item-deselected {
     color: #808080;
     background: #ffffff;
-    /*border-left-style: solid;*/
-    /*border-left-width: 4px;*/
-    /*border-left-color: transparent;*/
 }
 
 .web-protege-sidebar-item-label {
@@ -1143,17 +1077,10 @@ select {
 
 
 
-/*
-  The upper panel containing the radio buttons (public | private) for controlling overall visibility.
-*/
 .web-protege-sharing-settings-visibility-selector-panel {
 
 }
 
-/*
-    A summary panel that appears below the radio buttons to summarise what has been selected.  The summary panel can
-    contain more controls for modifying settings.
-*/
 .web-protege-sharing-settings-visibility-summary-box {
     padding-top: 12px;
     padding-bottom: 15px;
@@ -1181,8 +1108,6 @@ select {
 
 *.web-protege-property-grid td {
     vertical-align: top;
-    /*padding: 2px;*/
-    /*margin: 2px;*/
 }
 
 *.web-protege-property-grid * tr {
