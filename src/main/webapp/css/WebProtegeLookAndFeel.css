@@ -905,16 +905,12 @@ select {
 
 .web-protege-sidebar-item-base:hover {
     background: #e8e8e8;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
 }
 
 .web-protege-sidebar-item-selected {
     color: #757575;
     background: #d7e6fa;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
 }
 
