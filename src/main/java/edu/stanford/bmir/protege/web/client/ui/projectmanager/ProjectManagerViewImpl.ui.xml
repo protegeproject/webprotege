@@ -100,8 +100,8 @@
 
         </g:FlowPanel>
         <g:FlowPanel addStyleNames="{style.top-button-bar-position}">
-            <g:Button ui:field="createProjectButton" text="&#x2600; Create Project ..." enabled="false" addStyleNames="web-protege-button"/>
-            <g:Button ui:field="uploadProjectButton" text="&#x21ea; Upload Project ..." addStyleNames="web-protege-button web-protege-button-margin-left"/>
+            <g:Button ui:field="createProjectButton" text="&#x2600; Create Project ..." enabled="false" addStyleNames="button-style"/>
+            <g:Button ui:field="uploadProjectButton" text="&#x21ea; Upload Project ..." addStyleNames="button-style"/>
         </g:FlowPanel>
 
 

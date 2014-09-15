@@ -33,8 +33,6 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
     private static final String WEB_PROTEGE_DIALOG_BUTTON_BAR = "web-protege-dialog-button-bar";
 
-    private static final String WEB_PROTEGE_DIALOG_BUTTON = "web-protege-dialog-button";
-
     private WebProtegeDialogController<D> controller;
 
     private final FlowPanel mainPanel;
@@ -84,7 +82,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
             Button button = dlgButton.createButton();
             button.addClickHandler(new WebProtegeDialogButtonClickHandler(dlgButton));
             buttonBar.add(button);
-            button.addStyleName(WEB_PROTEGE_DIALOG_BUTTON);
+            button.addStyleName("button-style");
             button.setWidth("70px");
         }
         SimplePanel buttonBarWrapper = new SimplePanel();

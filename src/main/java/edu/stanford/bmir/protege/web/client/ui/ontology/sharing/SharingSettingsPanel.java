@@ -93,7 +93,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
                 handleAdd(suggestBox, lb, addPeopleTextArea);
             }   
         });
-        add.addStyleName("web-protege-dialog-button");
+        add.addStyleName("button-style");
         addPeoplePanel.add(add);
         
 
