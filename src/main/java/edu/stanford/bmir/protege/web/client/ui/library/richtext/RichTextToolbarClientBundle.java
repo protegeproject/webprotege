@@ -14,9 +14,9 @@ public interface RichTextToolbarClientBundle extends ClientBundle {
 
     public static RichTextToolbarClientBundle instance = GWT.create(RichTextToolbarClientBundle.class);
 
-    @Source("bulleted-list.png")
+    @Source("../../../../../../../../../../webapp/images/bulleted-list.png")
     ImageResource bulletedList();
 
-    @Source("numbered-list.png")
+    @Source("../../../../../../../../../../webapp/images/numbered-list.png")
     ImageResource numberedList();
 }
