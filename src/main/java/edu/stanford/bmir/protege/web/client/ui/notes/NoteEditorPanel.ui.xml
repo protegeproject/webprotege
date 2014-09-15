@@ -48,6 +48,5 @@
             <span style="position: absolute; right: 0px;"><g:Anchor text="Reply" addStyleNames="{style.links}" ui:field="replyAnchor"/></span>
         </div>
         <n:ReplyEditorPanel ui:field="replyEditor" visible="false"/>
-        <!--<t:ExpandingTextBox mode="MULTI_LINE" anchorVisible="false" ui:field="body"/>-->
     </g:HTMLPanel>
 </ui:UiBinder>
