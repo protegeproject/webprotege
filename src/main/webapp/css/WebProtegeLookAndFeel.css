@@ -116,6 +116,7 @@
     line-height: 16px;
     font-family: tahoma, sans-serif;
     color: #000000;
+    background: #ffffff;
 }
 
 .gwt-SuggestBoxPopup {
@@ -189,95 +190,8 @@
     box-shadow: 0 0 2px 3px rgba(150, 50, 50, 0.5) inset;
 }
 
-.web-protege-button {
-    border-radius: 3px 3px 3px 3px;
-    cursor: default;
-    font-size: 11px;
-    font-weight: bold;
-    height: 30px;
-    line-height: 27px;
-    min-width: 54px;
-    outline: 0 none;
-    padding: 0 8px;
-    text-align: center;
-    color: white;
-    border: 1px solid #96b9e6;
-    background-image: linear-gradient(top, #96b9e6, #87a6cf);
-}
-
 .web-protege-button-margin-left {
     margin-left: 16px;
-}
-
-.web-protege-button:hover {
-    border: 1px solid #96b9e6;
-    box-shadow: 0 0 2px 1px rgba(50, 50, 50, 0.2);
-}
-
-.web-protege-button:active {
-    box-shadow: 0 0 2px 3px #87a6cf inset;
-}
-
-.web-protege-button:disabled {
-    border-radius: 3px 3px 3px 3px;
-    cursor: default;
-    font-size: 11px;
-    font-weight: bold;
-    height: 30px;
-    line-height: 27px;
-    min-width: 54px;
-    outline: 0 none;
-    padding: 0 8px;
-    text-align: center;
-    color: white;
-    background: rgba(220, 220, 220, 0.7);
-
-    border: 1px solid #d3d3d3;
-
-    box-shadow: none;
-}
-
-.web-protege-button-small {
-    border-radius: 2px 2px 2px 2px;
-    cursor: default;
-    font-size: 9px;
-    font-weight: bold;
-    outline: 0 none;
-    padding: 0 2px;
-    text-align: center;
-    color: white;
-    border: 1px solid #96b9e6;
-    background-image: linear-gradient(top, #96b9e6, #87a6cf);
-}
-
-.web-protege-button-small-margin-left {
-    margin-left: 16px;
-}
-
-.web-protege-button-small:hover {
-    border: 1px solid #96b9e6;
-    box-shadow: 0 0 2px 1px rgba(50, 50, 50, 0.2);
-}
-
-.web-protege-button-small:active {
-    box-shadow: 0 0 2px 3px #87a6cf inset;
-}
-
-.web-protege-button-small:disabled {
-    border-radius: 2px 2px 2px 2px;
-    cursor: default;
-    font-size: 9px;
-    font-weight: bold;
-    outline: 0 none;
-    padding: 0 2px;
-    text-align: center;
-    color: white;
-
-    background: rgba(220, 220, 220, 0.7);
-
-    border: 1px solid #d3d3d3;
-
-    box-shadow: none;
 }
 
 .web-protege-error-background {
@@ -532,12 +446,12 @@ select {
     color: #444444;
     box-shadow: 0 0 4px 2px rgba(50, 50, 50, 0.2) inset;
     border-color: #a7a7a7;
-    background: #cecece;
 }
 
 .button-style:disabled {
     box-shadow: none;
     color: #b0b0b0;
+    background: #cecece;
     border-color: #dddddd;
 }
 
