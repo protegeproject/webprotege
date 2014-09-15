@@ -1126,3 +1126,18 @@ select {
     position: relative;
 }
 
+.web-protege-annotated-radio-button-label {
+
+}
+
+
+.web-protege-annotated-radio-button-main-label {
+
+}
+
+
+.web-protege-annotated-radio-button-description-label {
+    font-size: 10px;
+    color: silver;
+}
+
