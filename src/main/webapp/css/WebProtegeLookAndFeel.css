@@ -190,11 +190,6 @@
     color: white;
 
     border: 1px solid #dd4b39;
-
-    background-image: -webkit-linear-gradient(top, #dd4b39, #d14836);
-    background-image: -moz-linear-gradient(top, #dd4b39, #d14836);
-    background-image: -ms-linear-gradient(top, #dd4b39, #d14836);
-    background-image: -o-linear-gradient(top, #dd4b39, #d14836);
     background-image: linear-gradient(top, #dd4b39, #d14836);
 }
 
@@ -222,10 +217,6 @@
 
     border: 1px solid #96b9e6;
 
-    background-image: -webkit-linear-gradient(top, #96b9e6, #87a6cf);
-    background-image: -moz-linear-gradient(top, #96b9e6, #87a6cf);
-    background-image: -ms-linear-gradient(top, #96b9e6, #87a6cf);
-    background-image: -o-linear-gradient(top, #96b9e6, #87a6cf);
     background-image: linear-gradient(top, #96b9e6, #87a6cf);
 }
 
@@ -273,10 +264,6 @@
 
     border: 1px solid #96b9e6;
 
-    background-image: -webkit-linear-gradient(top, #96b9e6, #87a6cf);
-    background-image: -moz-linear-gradient(top, #96b9e6, #87a6cf);
-    background-image: -ms-linear-gradient(top, #96b9e6, #87a6cf);
-    background-image: -o-linear-gradient(top, #96b9e6, #87a6cf);
     background-image: linear-gradient(top, #96b9e6, #87a6cf);
 }
 
@@ -597,8 +584,6 @@ select {
 
 .button-style-red {
     background: linear-gradient(#dd4545, #c80202) repeat scroll 0 0 #b72130;
-    background: -webkit-linear-gradient(#dd4545, #c80202) repeat scroll 0 0 #b72130;
-    background: -moz-linear-gradient(#dd4545, #c80202) repeat scroll 0 0 #b72130;
     border: 1px solid #b2151e;
     border-radius: 3px 3px 3px 3px;
     color: #ffffff;
@@ -716,22 +701,6 @@ select {
 
     border: 1px solid rgba(200, 200, 200, 1.0);
 
-    /* IE10 */
-    background-image: -ms-linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
-
-    /* Mozilla Firefox */
-    background-image: -moz-linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
-
-    /* Opera */
-    background-image: -o-linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
-
-    /* Webkit (Safari/Chrome 10) */
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f5f5f5), color-stop(1, #cccccc));
-
-    /* Webkit (Chrome 11+) */
-    background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
-
-    /* Proposed W3C Markup */
     background-image: linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
 }
 
@@ -759,24 +728,7 @@ select {
     color: rgba(50, 50, 50, 1.0);
 
     border: 1px solid rgba(200, 200, 200, 1.0);
-    /*color: #444444;*/
 
-    /* IE10 */
-    background-image: -ms-linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
-
-    /* Mozilla Firefox */
-    background-image: -moz-linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
-
-    /* Opera */
-    background-image: -o-linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
-
-    /* Webkit (Safari/Chrome 10) */
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #f5f5f5), color-stop(1, #cccccc));
-
-    /* Webkit (Chrome 11+) */
-    background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
-
-    /* Proposed W3C Markup */
     background-image: linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
 }
 
