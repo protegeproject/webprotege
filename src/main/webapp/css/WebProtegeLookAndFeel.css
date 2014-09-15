@@ -532,6 +532,7 @@ select {
     color: #444444;
     box-shadow: 0 0 4px 2px rgba(50, 50, 50, 0.2) inset;
     border-color: #a7a7a7;
+    background: #cecece;
 }
 
 .button-style:disabled {
