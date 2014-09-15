@@ -557,8 +557,6 @@ select {
 
 .button-style {
     background: linear-gradient(#fafafa, #eaeaea) repeat scroll 0 0 #cecece;
-    background: -webkit-linear-gradient(#fafafa, #eaeaea) repeat scroll 0 0 #cecece;
-    background: -moz-linear-gradient(#fafafa, #eaeaea) repeat scroll 0 0 #cecece;
     border: 1px solid #dddddd;
     border-radius: 3px 3px 3px 3px;
     color: #555555;
