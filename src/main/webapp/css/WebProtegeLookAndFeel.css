@@ -21,9 +21,9 @@
     font-size: 12px;
     font-family: tahoma,sans-serif;
     padding: 2px;
-    box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
-    -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
-    -webkit-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -moz-box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -webkit-box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
     line-height: 15px;
     color: #000000;
 }
@@ -35,9 +35,9 @@
     font-size: 12px;
     font-family: tahoma,sans-serif;
     padding: 2px;
-    box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
-    -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
-    -webkit-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -moz-box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -webkit-box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
     line-height: 15px;
 }
 
@@ -48,9 +48,9 @@
     font-size: 12px;
     padding: 2px;
     font-family: tahoma,sans-serif;
-    box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
-    -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
-    -webkit-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -moz-box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -webkit-box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
     height: 100%
 }
 
@@ -80,9 +80,9 @@
     font-size: 12px;
     font-family: tahoma,sans-serif;
     padding: 2px;
-    box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
-    -moz-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
-    -webkit-box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -moz-box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    -webkit-box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
 }
 
 .web-protege-form-horizontal-padding {
@@ -125,7 +125,7 @@
     border-color: silver;
     font-size: 12px;
     padding: 2px;
-    box-shadow: 0px 0px 3px 1px rgba(240, 240, 240, 1.0) inset;
+    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
     line-height: 16px;
     font-family: tahoma,sans-serif;
     color: #000000;
@@ -213,11 +213,11 @@
 
 .web-protege-button-red:hover {
     border: 1px solid rgba(150, 150, 150, 1.0);
-    box-shadow: 0px 0px 2px 1px rgba(20, 20, 20, 0.2);
+    box-shadow: 0 0 2px 1px rgba(20, 20, 20, 0.2);
 }
 
 .web-protege-button-red:active {
-    box-shadow: 0px 0px 2px 3px rgba(150, 50, 50, 0.5) inset;
+    box-shadow: 0 0 2px 3px rgba(150, 50, 50, 0.5) inset;
 }
 
 
@@ -249,11 +249,11 @@
 
 .web-protege-button:hover {
     border: 1px solid #96B9E6;
-    box-shadow: 0px 0px 2px 1px rgba(50, 50, 50, 0.2);
+    box-shadow: 0 0 2px 1px rgba(50, 50, 50, 0.2);
 }
 
 .web-protege-button:active {
-    box-shadow: 0px 0px 2px 3px #87A6CF inset;
+    box-shadow: 0 0 2px 3px #87A6CF inset;
 }
 
 .web-protege-button:disabled {
@@ -305,11 +305,11 @@
 
 .web-protege-button-small:hover {
     border: 1px solid #96B9E6;
-    box-shadow: 0px 0px 2px 1px rgba(50, 50, 50, 0.2);
+    box-shadow: 0 0 2px 1px rgba(50, 50, 50, 0.2);
 }
 
 .web-protege-button-small:active {
-    box-shadow: 0px 0px 2px 3px #87A6CF inset;
+    box-shadow: 0 0 2px 3px #87A6CF inset;
 }
 
 .web-protege-button-small:disabled {
@@ -792,11 +792,11 @@ select {
 
 .web-protege-dialog-button-compact:hover {
     border: 1px solid rgba(150, 150, 150, 1.0);
-    box-shadow: 0px 0px 2px 1px rgba(20, 20, 20, 0.2);
+    box-shadow: 0 0 2px 1px rgba(20, 20, 20, 0.2);
 }
 
 .web-protege-dialog-button-compact:active {
-    box-shadow: 0px 0px 1px 2px rgba(220, 220, 220, 1.0) inset;
+    box-shadow: 0 0 1px 2px rgba(220, 220, 220, 1.0) inset;
 }
 
 
@@ -838,11 +838,11 @@ select {
 
 .web-protege-dialog-button:hover {
     border: 1px solid rgba(150, 150, 150, 1.0);
-    box-shadow: 0px 0px 2px 1px rgba(20, 20, 20, 0.2);
+    box-shadow: 0 0 2px 1px rgba(20, 20, 20, 0.2);
 }
 
 .web-protege-dialog-button:active {
-    box-shadow: 0px 0px 1px 2px rgba(220, 220, 220, 1.0) inset;
+    box-shadow: 0 0 1px 2px rgba(220, 220, 220, 1.0) inset;
 }
 
 
