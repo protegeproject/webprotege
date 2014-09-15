@@ -44,7 +44,7 @@
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.resolved-panel}">
             <g:InlineLabel ui:field="statusLabel" addStyleNames="{style.status-label}"/>
-            <g:Button text="Resolve" ui:field="toggleStatusButton" addStyleNames="web-protege-button-small"/>
+            <g:Button text="Resolve" ui:field="toggleStatusButton" addStyleNames="button-style"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
