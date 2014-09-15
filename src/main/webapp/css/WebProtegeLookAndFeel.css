@@ -11,7 +11,6 @@
     color: rgba(200, 200, 200, 1.0);
 }
 
-
 *.web-protege-laf *:after, *:before {
     box-sizing: border-box;
 }
@@ -26,9 +25,7 @@
 }
 
 *.web-protege-laf * .gwt-TextArea, .gwt-TextArea-readonly {
-    border-style: solid;
-    border-width: 1px;
-    border-color: silver;
+    border: 1px solid silver;
     font-size: 12px;
     font-family: tahoma, sans-serif;
     padding: 2px;
@@ -38,9 +35,7 @@
 }
 
 *.web-protege-laf .gwt-TextBox, .gwt-TextBox-readonly {
-    border-style: solid;
-    border-width: 1px;
-    border-color: silver;
+    border: 1px solid silver;
     font-size: 12px;
     font-family: tahoma, sans-serif;
     padding: 2px;
@@ -49,9 +44,7 @@
 }
 
 [contenteditable=true] {
-    border-style: solid;
-    border-width: 1px;
-    border-color: silver;
+    border: 1px solid silver;
     font-size: 12px;
     padding: 2px;
     font-family: tahoma, sans-serif;
@@ -60,9 +53,7 @@
 }
 
 *.web-protege-laf :focus {
-    border-style: solid;
-    border-width: 1px;
-    border-color: #4779be;
+    border: 1px solid #4779be;
     outline: none;
 }
 
@@ -78,9 +69,7 @@
 }
 
 *.web-protege-laf .gwt-PasswordTextBox {
-    border-style: solid;
-    border-width: 1px;
-    border-color: silver;
+    border: 1px solid silver;
     font-size: 12px;
     font-family: tahoma, sans-serif;
     padding: 2px;
@@ -120,9 +109,7 @@
 }
 
 .gwt-SuggestBox, .gwt-SuggestBox [disabled] {
-    border-style: solid;
-    border-width: 1px;
-    border-color: silver;
+    border: 1px solid silver;
     font-size: 12px;
     padding: 2px;
     box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
@@ -214,9 +201,7 @@
     padding: 0 8px;
     text-align: center;
     color: white;
-
     border: 1px solid #96b9e6;
-
     background-image: linear-gradient(top, #96b9e6, #87a6cf);
 }
 
@@ -261,9 +246,7 @@
     padding: 0 2px;
     text-align: center;
     color: white;
-
     border: 1px solid #96b9e6;
-
     background-image: linear-gradient(top, #96b9e6, #87a6cf);
 }
 
@@ -315,19 +298,13 @@
 }
 
 .web-protege-warning-label {
-    background: #faf6c3;
     border-left: solid 1px #ffe884;
     border-right: solid 1px #ffe884;
     border-bottom: solid 1px #ffe884;
-    background-image: url(../images/warningB.png);
     background-size: 10px 10px;
-    background-repeat: no-repeat;
-    background-position: left 3px top 3px;
+    background: #faf6c3 url(../images/warningB.png) no-repeat left 3px top 3px;
     vertical-align: top;
-    padding-left: 14px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-right: 2px;
+    padding: 2px 2px 2px 14px;
     font-size: 10px;
     font-family: tahoma, sans-serif;
 }
@@ -339,79 +316,57 @@
 }
 
 .class-icon-inset {
-    background-image: url(../images/tree/class.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/class.png) no-repeat 2px 2px;
     padding-left: 22px !important;
 }
 
 .object-property-icon-inset {
-    background-image: url(../images/tree/property.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/property.png) no-repeat 2px 2px;
     padding-left: 22px !important;
 }
 
 .data-property-icon-inset {
-    background-image: url(../images/tree/property.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/property.png) no-repeat 2px 2px;
     padding-left: 22px !important;
 }
 
 .annotation-property-icon-inset {
-    background-image: url(../images/tree/annotation-property.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/annotation-property.png) no-repeat 2px 2px;
     padding-left: 22px !important;
 }
 
 .individual-icon-inset {
-    background-image: url(../images/tree/individual.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/individual.png) no-repeat 2px 2px;
     padding-left: 22px !important;
 }
 
 .datatype-icon-inset {
-    background-image: url(../images/tree/datatype.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/datatype.png) no-repeat 2px 2px;
     padding-left: 22px !important;
 }
 
 .literal-icon-inset {
-    background-image: url(../images/tree/literal.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/literal.png) no-repeat 2px 2px;
     padding-left: 22px !important;
 }
 
 .numeric-literal-icon-inset {
-    background-image: url(../images/tree/number.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/number.png) no-repeat 2px 2px;
     padding-left: 22px;
 }
 
 .iri-icon-inset {
-    background-image: url(../images/tree/iri.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/iri.png) no-repeat 2px 2px;
     padding-left: 22px !important;
 }
 
 .date-time-icon-inset {
-    background-image: url(../images/tree/date-time.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/date-time.png) no-repeat 2px 2px;
     padding-left: 22px !important;
 }
 
 .link-icon-inset {
-    background-image: url(../images/tree/link.png);
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
+    background: url(../images/tree/link.png) no-repeat 2px 2px;
     padding-left: 22px !important;
 }
 
@@ -454,9 +409,7 @@
 }
 
 *.web-protege-laf * .gwt-RichTextArea, .gwt-RichTextArea-readonly {
-    border-style: solid;
-    border-width: 1px;
-    border-color: silver;
+    border: 1px solid silver;
     font-size: 12px;
     font-family: tahoma, sans-serif;
     padding: 2px;
@@ -634,9 +587,7 @@ select {
 .web-protege-table-cell {
     padding-top: 2px;
     padding-bottom: 2px;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-color: silver;
+    border-bottom: 1px solid silver;
 }
 
 .web-protege-table-row {
@@ -696,9 +647,7 @@ select {
     padding: 0;
     text-align: center;
     color: rgba(50, 50, 50, 1.0);
-
     border: 1px solid rgba(200, 200, 200, 1.0);
-
     background-image: linear-gradient(top, #f5f5f5 0%, #cccccc 100%);
 }
 
@@ -835,9 +784,7 @@ select {
 
 .web-protege-delete-button {
     color: #757575;
-    border-color: #ff00ff;
-    border-style: solid;
-    border-width: 1px;
+    border: 1px solid #ff00ff;
     box-sizing: border-box;
 }
 
@@ -888,13 +835,10 @@ select {
 }
 
 .web-protege-sidebar {
-    border: 8px;
-    border-bottom: #f1f1f1;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-top: #f1f1f1;
-    border-top-style: solid;
-    border-top-width: 1px;
+    border-top: 1px solid #f1f1f1;
+    border-right-width: 8px;
+    border-bottom: 1px solid #f1f1f1;
+    border-left-width: 8px;
 
 }
 
@@ -954,9 +898,7 @@ select {
 
 .web-protege-sharing-add-people {
     background: rgba(245, 245, 245, 1.0);
-    border-style: solid;
-    border-color: rgba(230, 230, 230, 1.0);
-    border-width: 1px;
+    border: 1px solid rgba(230, 230, 230, 1.0);
     padding: 10px;
 }
 
