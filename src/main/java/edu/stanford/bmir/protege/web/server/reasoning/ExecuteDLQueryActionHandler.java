@@ -95,7 +95,6 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
             List<DLQueryResultsSectionHandler<?,?,?,?>> handlers = Lists.newArrayList();
             handlers.add(new DirectSuperClassesSectionHandler());
             handlers.add(new EquivalentClassesSectionHandler());
-
             handlers.add(new DirectSubClassesSectionHandler());
             handlers.add(new DirectInstancesSectionHandler());
 
