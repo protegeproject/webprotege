@@ -40,7 +40,7 @@ public class DLQueryPresenter {
     }
 
     public void executeQuery(String query) {
-//        view.setMode(DLQueryViewMode.EXECUTING_QUERY);
+        view.setMode(DLQueryViewMode.EXECUTING_QUERY);
         view.clearResults();
         dispatchServiceManager.execute(new ExecuteDLQueryAction(projectId, query, view.getFilter()), new AsyncCallback<ExecuteDLQueryResult>() {
             @Override
