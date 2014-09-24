@@ -172,7 +172,7 @@
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>binaryowl</artifactId>
-            <version>1.4.2</version>
+            <version>1.4.3</version>
         </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
