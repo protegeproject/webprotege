@@ -69,33 +69,6 @@ public class ReasonerSynchronizationTask implements Callable<KbDigest> {
         TreeSet<OWLAxiom> sortedLogicalAxioms = Sets.newTreeSet();
         sortedLogicalAxioms.addAll(expectedLogicalAxioms);
         this.expectedDigest = KbDigest.getDigest(sortedLogicalAxioms);
-        System.out.println("COMPUTED DIGEST: " + expectedDigest);
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        try {
-            OWLOntology o = manager.createOntology(new HashSet<OWLAxiom>(expectedLogicalAxioms));
-            KbDigest d = KbDigest.getDigest(new TreeSet<OWLAxiom>(o.getLogicalAxioms()));
-            System.out.println("ONTOLOGY COMPUTED DIGEST: " + d);
-
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                BinaryOWLOutputStream boos = new BinaryOWLOutputStream(bos, BinaryOWLVersion.getVersion(1));
-                for (OWLAxiom ax : sortedLogicalAxioms) {
-                    OWLObjectBinaryType.write(ax, boos);
-                }
-                MessageDigest sha1 = MessageDigest.getInstance("SHA1");
-                sha1.update(bos.toByteArray());
-                byte[] digestArray = sha1.digest();
-                KbDigest digest = KbDigest.fromByteArray(digestArray);
-            System.out.println("INLINE DIGEST: " + digest);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (OWLOntologyCreationException e) {
-            e.printStackTrace();
-        }
-
     }
 
 
