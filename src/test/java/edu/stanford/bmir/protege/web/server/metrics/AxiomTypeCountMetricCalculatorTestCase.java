@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.metrics;
 
+import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.metrics.IntegerMetricValue;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,14 +23,16 @@ public class AxiomTypeCountMetricCalculatorTestCase {
     public static final int AXIOM_COUNT = 33;
 
     @Mock
-    protected OWLOntology ontology;
+    protected OWLOntology ontology, importedOntology;
 
     private AxiomType axiomType;
 
     @Before
     public void setUp() {
         axiomType = AxiomType.SUBCLASS_OF;
-        when(ontology.getAxiomCount(axiomType, true)).thenReturn(AXIOM_COUNT);
+        when(ontology.getImportsClosure()).thenReturn(Sets.newHashSet(ontology, importedOntology));
+        when(ontology.getAxiomCount(axiomType)).thenReturn(AXIOM_COUNT - 5);
+        when(importedOntology.getAxiomCount(axiomType)).thenReturn(5);
     }
 
     @Test
