@@ -48,6 +48,7 @@ public class DefaultMetricsCalculators {
         metrics.add(new AxiomTypeCountMetricCalculator(rootOntology, AxiomType.SUB_OBJECT_PROPERTY));
         metrics.add(new AxiomTypeCountMetricCalculator(rootOntology, AxiomType.SUB_PROPERTY_CHAIN_OF));
         metrics.add(new AxiomTypeCountMetricCalculator(rootOntology, AxiomType.EQUIVALENT_OBJECT_PROPERTIES));
+        metrics.add(new AxiomTypeCountMetricCalculator(rootOntology, AxiomType.INVERSE_OBJECT_PROPERTIES));
         metrics.add(new AxiomTypeCountMetricCalculator(rootOntology, AxiomType.DISJOINT_OBJECT_PROPERTIES));
         metrics.add(new AxiomTypeCountMetricCalculator(rootOntology, AxiomType.OBJECT_PROPERTY_DOMAIN));
         metrics.add(new AxiomTypeCountMetricCalculator(rootOntology, AxiomType.OBJECT_PROPERTY_RANGE));
