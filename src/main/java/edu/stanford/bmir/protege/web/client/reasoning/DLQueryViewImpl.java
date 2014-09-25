@@ -107,7 +107,7 @@ public class DLQueryViewImpl extends Composite implements DLQueryView {
         for (DLQueryEntitySetResult section : result.getSections()) {
             renderResultsSection(section, sb);
         }
-
+        resultsDisplay.setHTML(sb.toString());
     }
 
     @Override

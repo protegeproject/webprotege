@@ -7,6 +7,7 @@ import edu.stanford.protege.reasoning.inject.ReasoningServerModule;
 import edu.stanford.protege.reasoning.protocol.ReasoningClient;
 import edu.stanford.protege.reasoning.protocol.ReasoningClientFactory;
 
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 
 /**
