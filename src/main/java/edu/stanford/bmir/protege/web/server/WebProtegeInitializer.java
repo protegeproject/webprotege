@@ -29,7 +29,7 @@ public class WebProtegeInitializer implements ServletContextListener {
             loggerEx.logMemoryUsage();
         }
         catch (WebProtegeConfigurationException e) {
-            LOGGER.severe(e);
+            LOGGER.info(e.getMessage());
             WebProtegeWebAppFilter.setConfigError(e);
         }
         catch (Throwable t) {

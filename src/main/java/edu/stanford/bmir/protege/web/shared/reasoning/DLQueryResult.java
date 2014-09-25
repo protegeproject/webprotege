@@ -12,30 +12,14 @@ import java.io.Serializable;
  */
 public class DLQueryResult implements Serializable {
 
-    private Optional<RevisionNumber> revisionNumber;
-
-    private Optional<Consistency> consistency;
-
     private ImmutableList<DLQueryEntitySetResult> sections;
 
     private DLQueryResult() {
     }
 
     public DLQueryResult(
-            Optional<RevisionNumber> revisionNumber,
-            Optional<Consistency> consistency,
             ImmutableList<DLQueryEntitySetResult> sections) {
-        this.revisionNumber = revisionNumber;
-        this.consistency = consistency;
         this.sections = sections;
-    }
-
-    public Optional<RevisionNumber> getRevisionNumber() {
-        return revisionNumber;
-    }
-
-    public Optional<Consistency> getConsistency() {
-        return consistency;
     }
 
     public ImmutableList<DLQueryEntitySetResult> getSections() {

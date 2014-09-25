@@ -69,7 +69,7 @@
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.buttonPanel}">
             <text:PlaceholderTextBox placeholder="Filter" visibleLength="20" ui:field="filterField" visible="false"/>
-            <g:Button text="Execute query" ui:field="executeQueryButton" addStyleNames="{style.executeButton}" styleName="web-protege-button"/>
+            <g:Button text="Execute query" ui:field="executeQueryButton" addStyleNames="{style.executeButton}" styleName="button-style"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.answersSummaryBar}">
             <g:Label ui:field="revisionNumberField"/>

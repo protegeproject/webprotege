@@ -10,17 +10,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.gwtcodemirror.client.GWTCodeMirror;
-import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
-import edu.stanford.bmir.protege.web.shared.reasoning.Consistency;
-import edu.stanford.bmir.protege.web.shared.reasoning.DLQueryEntitySetResult;
-import edu.stanford.bmir.protege.web.shared.reasoning.DLQueryResult;
-import edu.stanford.bmir.protege.web.shared.reasoning.DLQueryResultSection;
+import edu.stanford.bmir.protege.web.shared.reasoning.*;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -77,7 +70,7 @@ public class DLQueryViewImpl extends Composite implements DLQueryView {
 
     @Override
     public void setMode(DLQueryViewMode mode) {
-        editor.setEnabled(mode == DLQueryViewMode.READY);
+        executeQueryButton.setEnabled(mode == DLQueryViewMode.READY);
     }
 
     @Override
@@ -102,30 +95,34 @@ public class DLQueryViewImpl extends Composite implements DLQueryView {
     }
 
     @Override
-    public void setResult(Optional<DLQueryResult> r) {
+    public void setResult(DLQueryResult result, RevisionNumber revisionNumber) {
+        revisionNumberField.setText("Results (revision " + revisionNumber.getValue() + ")");
         StringBuilder sb = new StringBuilder();
-        if (r.isPresent()) {
-            DLQueryResult result = r.get();
-            Optional<RevisionNumber> revisionNumber = result.getRevisionNumber();
-            if (revisionNumber.isPresent()) {
-                revisionNumberField.setText("Results (revision " + revisionNumber.get().getValue() + ")");
-                if (result.getConsistency().isPresent()) {
-                    if (result.getConsistency().get() == Consistency.CONSISTENT) {
-                        for (DLQueryEntitySetResult section : result.getSections()) {
-                            renderResultsSection(section, sb);
-                        }
-                    }
-                    else {
-                        sb.append("The query has no results because the ontology is inconsistent");
-                    }
-                }
-                resultsDisplay.setHTML(sb.toString());
-            }
-        }
-        else {
-            sb.append("Query results are not currently available");
-        }
 
+        for (DLQueryEntitySetResult section : result.getSections()) {
+            renderResultsSection(section, sb);
+        }
+        resultsDisplay.setHTML(sb.toString());
+    }
+
+    @Override
+    public void setReasoningUnavailable() {
+        resultsDisplay.setHTML("Reasoning is not available for this project");
+    }
+
+    @Override
+    public void setReasonerBusy() {
+        resultsDisplay.setHTML("The reasoner is busy");
+    }
+
+    @Override
+    public void setProjectInconsistent() {
+        resultsDisplay.setHTML("The query has no results because the ontology is inconsistent");
+    }
+
+    @Override
+    public void setReasonerError(String reasonerErrorMessage) {
+        resultsDisplay.setHTML(reasonerErrorMessage);
     }
 
     private void renderResultsSection(DLQueryEntitySetResult result, StringBuilder sb) {

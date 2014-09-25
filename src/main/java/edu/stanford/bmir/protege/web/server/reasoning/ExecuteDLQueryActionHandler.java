@@ -11,26 +11,32 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLEntityChecker;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import edu.stanford.bmir.protege.web.shared.reasoning.*;
-import edu.stanford.bmir.protege.web.shared.reasoning.Consistency;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
+import edu.stanford.protege.reasoning.KbDigest;
 import edu.stanford.protege.reasoning.KbId;
 import edu.stanford.protege.reasoning.KbQueryResult;
 import edu.stanford.protege.reasoning.ReasoningService;
 import edu.stanford.protege.reasoning.action.*;
+import edu.stanford.protege.reasoning.action.Consistency;
+import org.apache.http.concurrent.FutureCallback;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxClassExpressionParser;
 import org.semanticweb.owlapi.expression.OWLExpressionParser;
+import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 
 import javax.inject.Inject;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -43,9 +49,12 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
 
     private ReasoningService reasoningService;
 
+    private final WebProtegeLogger logger;
+
     @Inject
     public ExecuteDLQueryActionHandler(ReasoningService reasoningService) {
         this.reasoningService = reasoningService;
+        logger = WebProtegeLoggerManager.get(ExecuteDLQueryActionHandler.class);
     }
 
     @Override
@@ -60,8 +69,37 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
     protected ExecuteDLQueryResult execute(ExecuteDLQueryAction action,
                                                   OWLAPIProject project,
                                                   ExecutionContext executionContext) {
-
         try {
+            final KbId kbId = new KbId(project.getProjectId().getId());
+
+            ListenableFuture<GetKbDigestResponse> digestFuture = reasoningService.execute(new GetKbDigestAction(kbId));
+            KbDigest kbDigest = digestFuture.get().getKbDigest();
+            logger.info(project.getProjectId(), "I've been asked to execute a DL query (%s).  " +
+                    "I'm checking to see if the reasoner is empty.", action.getEnteredClassExpression());
+            if(kbDigest.equals(KbDigest.emptyDigest())) {
+                logger.info(project.getProjectId(), "The reasoner is empty and needs synchronizing. Going to do this.  Returning an empty result.");
+                project.synchronizeReasoner();
+                return new ExecuteDLQueryResult(project.getProjectId(), new ReasonerBusy<DLQueryResult>());
+            }
+            else {
+                logger.info(project.getProjectId(), "The reasoner is not empty.");
+            }
+
+            ListenableFuture<IsConsistentResponse> consFuture = reasoningService.execute(new IsConsistentAction(kbId));
+            Optional<edu.stanford.protege.reasoning.action.Consistency> consistency = consFuture.get()
+                                                                                                 .getConsistency();
+            if(!consistency.isPresent()) {
+                return new ExecuteDLQueryResult(project.getProjectId(), new ReasonerBusy<DLQueryResult>());
+            }
+            Consistency cons = consistency.get();
+            if(cons == Consistency.INCONSISTENT) {
+                return new ExecuteDLQueryResult(
+                        project.getProjectId(),
+                        new ProjectInconsistent<DLQueryResult>()
+                );
+            }
+
+
             OWLExpressionParser<OWLClassExpression> classExpressionParser = new ManchesterOWLSyntaxClassExpressionParser(
                     project.getDataFactory(),
                     new WebProtegeOWLEntityChecker(project.getRenderingManager().getShortFormProvider(), new HasFreshEntities() {
@@ -72,10 +110,13 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
                         }
                     })
             );
-            project.synchronizeReasoner();
 
-            OWLClassExpression ce = classExpressionParser.parse(action.getEnteredClassExpression());
-            KbId kbId = new KbId(project.getProjectId().getId());
+            OWLClassExpression ce = null;
+            try {
+                ce = classExpressionParser.parse(action.getEnteredClassExpression());
+            } catch (ParserException e) {
+                return new ExecuteDLQueryResult(project.getProjectId(), new ReasonerError<DLQueryResult>());
+            }
 
             List<DLQueryResultsSectionHandler<?,?,?,?>> handlers = Lists.newArrayList();
             handlers.add(new DirectSuperClassesSectionHandler());
@@ -96,12 +137,17 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
                    resultList.add(result);
             }
             Optional<RevisionNumber> revisionNumber = results.get(0).getRevisionNumber();
-            Optional<Consistency> consistency = results.get(0).getConsistency();
-            return new ExecuteDLQueryResult(Optional.of(new DLQueryResult(revisionNumber, consistency, resultList.build())));
+
+            return new ExecuteDLQueryResult(project.getProjectId(),
+                                            new ReasonerQueryResult<DLQueryResult>(
+                                                    revisionNumber.get(),
+                                                    new DLQueryResult(resultList.build())));
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (ConcurrentModificationException e) {
             throw new RuntimeException(e);
         }
     }
@@ -110,6 +156,6 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
 
     @Override
     public Class<ExecuteDLQueryAction> getActionClass() {
-        return null;
+        return ExecuteDLQueryAction.class;
     }
 }
