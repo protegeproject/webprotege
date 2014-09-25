@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.gwtext.client.data.*;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsManager;
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalConstants;
 
 import java.util.HashMap;
 import java.util.Map;

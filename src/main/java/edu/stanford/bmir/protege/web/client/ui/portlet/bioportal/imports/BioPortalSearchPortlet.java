@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.ontology.search;
+package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports;
 
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;

@@ -4,7 +4,7 @@ import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalOntologyId;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalUserId;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalConstants;
 import edu.stanford.bmir.protege.web.server.filedownload.DownloadFormat;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

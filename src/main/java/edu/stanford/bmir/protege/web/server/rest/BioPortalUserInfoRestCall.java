@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.rest;
 
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalConstants;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalUserInfoBean;
 
 

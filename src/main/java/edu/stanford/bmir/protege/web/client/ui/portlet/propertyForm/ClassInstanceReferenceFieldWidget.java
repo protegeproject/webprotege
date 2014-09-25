@@ -21,7 +21,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalConstants;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 

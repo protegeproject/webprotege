@@ -7,7 +7,7 @@ package edu.stanford.bmir.protege.web.server.bioportal;
  * Date: 09/10/2012
  */
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalUpload;
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalConstants;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 
 

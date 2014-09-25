@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.ontology.search;
+package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports;
 
 public enum DefaultSearchStringTypeEnum {
     None("@none@"), Entity("@entity@"), Property("@property@");

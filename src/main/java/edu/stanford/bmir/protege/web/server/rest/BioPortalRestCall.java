@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.rest;
 
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalConstants;
 
 import java.io.IOException;
 import java.io.InputStream;

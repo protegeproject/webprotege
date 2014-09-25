@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.bioportal;
 
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsService;
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalConstants;
 import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.notes.BioPortalNoteConstants;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
