@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal;
+package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.notes;
 
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.data.*;

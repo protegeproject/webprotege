@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal;
+package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.notes;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 

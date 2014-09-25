@@ -2,9 +2,10 @@ package edu.stanford.bmir.protege.web.server.bioportal;
 
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsService;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
-import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.BioPortalNoteConstants;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.notes.BioPortalNoteConstants;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
+
 import org.ncbo.stanford.util.BioPortalServerConstants;
 
 public class BioPortalProposalsServiceImpl extends WebProtegeRemoteServiceServlet implements BioportalProposalsService {
