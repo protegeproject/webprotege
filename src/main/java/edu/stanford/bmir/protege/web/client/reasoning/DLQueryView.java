@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.reasoning.DLQueryResult;
+import edu.stanford.bmir.protege.web.shared.reasoning.ReasonerError;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
 import java.util.Collection;
@@ -20,7 +21,15 @@ public interface DLQueryView extends IsWidget {
 
     void clearResults();
 
-    void setResult(Optional<DLQueryResult> result);
+    void setResult(DLQueryResult result, RevisionNumber revisionNumber);
+
+    void setReasoningUnavailable();
+
+    void setReasonerBusy();
+
+    void setProjectInconsistent();
+
+    void setReasonerError(String reasonerErrorMessage);
 
     Optional<String> getFilter();
 

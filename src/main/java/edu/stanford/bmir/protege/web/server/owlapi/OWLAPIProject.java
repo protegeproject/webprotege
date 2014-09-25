@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.ListenableFuture;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
@@ -246,7 +248,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         reasoningServiceSynchronizer = new ReasoningServerSynchronizer(getProjectId(),
                                                                        this,
                                                                        ReasoningServerManager.get()
-                                                                                             .getReasoningService());
+                                                                                             .getReasoningService(),
+                                                                       projectEventManager);
 
     }
 
@@ -285,8 +288,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         metricsManager.handleOntologyChanges(changes);
     }
 
-    public void synchronizeReasoner() {
-        reasoningServiceSynchronizer.synchronizeReasoner();
+    public ListenableFuture<KbDigest> synchronizeReasoner() {
+        return reasoningServiceSynchronizer.synchronizeReasoner();
     }
 
 

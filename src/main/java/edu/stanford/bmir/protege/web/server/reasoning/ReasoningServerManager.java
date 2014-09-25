@@ -5,7 +5,9 @@ import com.google.inject.Injector;
 import edu.stanford.protege.reasoning.ReasoningService;
 import edu.stanford.protege.reasoning.inject.ReasoningServerModule;
 import edu.stanford.protege.reasoning.protocol.ReasoningClient;
+import edu.stanford.protege.reasoning.protocol.ReasoningClientFactory;
 
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 
 /**
@@ -24,8 +26,9 @@ public class ReasoningServerManager {
     private void bind() {
         try {
             Injector injector = Guice.createInjector(new ReasoningServerModule());
-            client = injector.getInstance(ReasoningClient.class);
-            client.connect(new InetSocketAddress(3456));
+            ReasoningClientFactory clientFactory = injector.getInstance(ReasoningClientFactory.class);
+            client = clientFactory.createReasoningClient(new InetSocketAddress(3456));
+            client.connect();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

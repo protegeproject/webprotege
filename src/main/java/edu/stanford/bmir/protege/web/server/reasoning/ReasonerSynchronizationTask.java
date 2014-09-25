@@ -36,7 +36,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 08/09/2014
  */
-public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>> {
+public class ReasonerSynchronizationTask implements Callable<KbDigest> {
 
     private final WebProtegeLogger logger = WebProtegeLoggerManager.get(ReasonerSynchronizationTask.class);
 
@@ -75,7 +75,7 @@ public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>>
 
 
     @Override
-    public Optional<KbDigest> call() throws Exception {
+    public KbDigest call() throws Exception {
         return synchronizeReasoner();
     }
 
@@ -85,7 +85,7 @@ public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>>
 
     /////////////////////////////////
 
-    private Optional<KbDigest> synchronizeReasoner() {
+    private KbDigest synchronizeReasoner() {
         try {
             logger.info(
                     projectId,
@@ -97,15 +97,15 @@ public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>>
             return synchronizeReasoner(response.getKbDigest());
         } catch (InterruptedException e) {
             logInterruptedException();
-            return Optional.absent();
+            throw new RuntimeException(e);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             logger.info(projectId, "There was a problem getting the reasoner digest: " + cause.getMessage());
-            return Optional.absent();
+            throw new RuntimeException(e);
         }
     }
 
-    private Optional<KbDigest> synchronizeReasoner(final KbDigest reasonerDigest) {
+    private KbDigest synchronizeReasoner(final KbDigest reasonerDigest) {
         final KbDigest expectedDigest = getExpectedDigest();
         if (expectedDigest.equals(reasonerDigest)) {
             logger.info(
@@ -113,7 +113,7 @@ public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>>
                     "The reasoner is up to date.  The reasoner digest is %s.",
                     reasonerDigest
             );
-            return Optional.of(expectedDigest);
+            return expectedDigest;
         }
         logger.info(
                 projectId,
@@ -126,7 +126,7 @@ public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>>
                 return flushChangesToReasoner();
             }
             else {
-                return Optional.of(expectedDigest);
+                return expectedDigest;
             }
         }
         else {
@@ -134,7 +134,7 @@ public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>>
         }
     }
 
-    private Optional<KbDigest> replaceAxiomsInReasoner() {
+    private KbDigest replaceAxiomsInReasoner() {
         logger.info(projectId, "Replacing axioms in reasoner");
         Set<? extends OWLAxiom> logicalAxioms = expectedLogicalAxioms;
         ImmutableList<OWLAxiom> axioms = ImmutableList.copyOf(logicalAxioms);
@@ -147,14 +147,14 @@ public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>>
             ReplaceAxiomsResponse response = future.get();
             logger.info(projectId, "Axioms have been replaced.  The digest is now %s.", response.getKbDigest());
             checkSyncedDigest(response.getKbDigest());
-            return Optional.of(response.getKbDigest());
+            return response.getKbDigest();
         } catch (InterruptedException e) {
             logInterruptedException();
-            return Optional.absent();
+            throw new RuntimeException(e);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             logger.info(projectId, "There was a problem replacing the axioms in the reasoner: %s", cause.getMessage());
-            return Optional.absent();
+            throw new RuntimeException(e);
         }
     }
 
@@ -162,7 +162,7 @@ public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>>
         logger.info(projectId, "Interrupted whilst getting reasoner digest");
     }
 
-    private Optional<KbDigest> flushChangesToReasoner() {
+    private KbDigest flushChangesToReasoner() {
         logger.info(projectId, "Flushing %d changes to reasoner", changesToApplyOnBaseDigest.size());
         ListenableFuture<ApplyChangesResponse> future = reasoningService.execute(
                 new ApplyChangesAction(
@@ -174,14 +174,14 @@ public class ReasonerSynchronizationTask implements Callable<Optional<KbDigest>>
             logger.info(projectId, "Changes have been flushed.  The digest is now %s.", response.getKbDigest());
             KbDigest syncedDigest = response.getKbDigest();
             checkSyncedDigest(syncedDigest);
-            return Optional.of(syncedDigest);
+            return syncedDigest;
         } catch (InterruptedException e) {
             logInterruptedException();
-            return Optional.absent();
+            throw new RuntimeException(e);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             logger.info(projectId, "There was a problem flushing changes to the reasoner: %s", cause.getMessage());
-            return Optional.absent();
+            throw new RuntimeException(e);
         }
     }
 

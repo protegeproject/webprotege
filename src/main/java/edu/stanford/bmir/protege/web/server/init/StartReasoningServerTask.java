@@ -1,26 +1,29 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import edu.stanford.protege.reasoning.inject.ReasoningServerModule;
-import edu.stanford.protege.reasoning.protocol.ReasoningServer;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.reasoning.ReasoningServerManager;
+import edu.stanford.protege.reasoning.KbId;
+import edu.stanford.protege.reasoning.ReasoningService;
+import edu.stanford.protege.reasoning.action.GetKbDigestAction;
 
 import javax.servlet.ServletContext;
-import java.net.InetSocketAddress;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 06/09/2014
  */
 public class StartReasoningServerTask implements ConfigurationTask {
 
+    private final WebProtegeLogger logger = WebProtegeLoggerManager.get(StartReasoningServerTask.class);
+
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
         try {
-            Injector injector = Guice.createInjector(new ReasoningServerModule());
-            ReasoningServer reasoningServer = injector.getInstance(ReasoningServer.class);
-            reasoningServer.start(new InetSocketAddress(3456));
+            ReasoningService reasoningService = ReasoningServerManager.get().getReasoningService();
+            reasoningService.execute(new GetKbDigestAction(new KbId("test")));
         } catch (Exception e) {
-            throw new WebProtegeConfigurationException(e);
+            logger.info(e.getMessage());
+            throw new WebProtegeConfigurationException("WebProtégé could not connect to the reasoning server.  Please check that the reasoning server is running on the default port (3456).", e);
         }
 
     }
