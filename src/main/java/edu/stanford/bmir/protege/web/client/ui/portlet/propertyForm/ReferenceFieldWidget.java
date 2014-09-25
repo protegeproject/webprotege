@@ -19,7 +19,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalConstants;
-import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalSearchComponent;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalImportComponent;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class ReferenceFieldWidget extends InstanceGridWidget {
 
-    private BioPortalSearchComponent bpSearchComponent = null;
+    private BioPortalImportComponent bpImportComponent = null;
 
     protected Map<String, Object> bpSearchProperties;
 
@@ -158,25 +158,25 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         window.setHeight(400);
         window.setLayout(new FitLayout());
 
-        bpSearchComponent = new BioPortalSearchComponent(getProjectId(), !multiValue) {
+        bpImportComponent = new BioPortalImportComponent(getProjectId(), !multiValue) {
             @Override
             protected AbstractAsyncHandler<EntityData> getImportBioPortalConceptHandler() {
                 return new ImportBioPortalConceptHandler(this);
             }
         };
 
-        bpSearchComponent.setProperty(getProperty());
+        bpImportComponent.setProperty(getProperty());
 
         if (store.getRecords() != null && store.getRecords().length > 0) {
-            bpSearchComponent.setReplaceExisting(replaceExisting);
-            bpSearchComponent.setCurrentValue(store.getAt(0).getAsString(INSTANCE_FIELD_NAME));
+            bpImportComponent.setReplaceExisting(replaceExisting);
+            bpImportComponent.setCurrentValue(store.getAt(0).getAsString(INSTANCE_FIELD_NAME));
         }
 
-        window.add(bpSearchComponent);
+        window.add(bpImportComponent);
         window.show();
 
-        bpSearchComponent.setConfigProperties(bpSearchProperties);
-        bpSearchComponent.setEntity(getSubject());
+        bpImportComponent.setConfigProperties(bpSearchProperties);
+        bpImportComponent.setEntity(getSubject());
     }
 
     private void onCreateNewReference() {
@@ -253,19 +253,19 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 
     private void createNewReference(String label, String termId, String ontologyId, String url) {
 //    private void createNewReference(String label, String termId, String ontologyId, String url, final NoteInputPanel noteInputPanel) {
-        bpSearchComponent = new BioPortalSearchComponent(getProjectId(), !multiValue) {
+        bpImportComponent = new BioPortalImportComponent(getProjectId(), !multiValue) {
             @Override
             protected AbstractAsyncHandler<EntityData> getCreateManualreferenceHandler() {
                 return new CreateManualReferenceHandler();
             }
         };
-        bpSearchComponent.setConfigProperties(bpSearchProperties);
-        bpSearchComponent.setEntity(getSubject(), false);//do not reload because bpSearchProperties is not visible
+        bpImportComponent.setConfigProperties(bpSearchProperties);
+        bpImportComponent.setEntity(getSubject(), false);//do not reload because bpSearchProperties is not visible
         if (!isReplace()) {
-            bpSearchComponent.createReference(ontologyId, termId, termId, label, url);
+            bpImportComponent.createReference(ontologyId, termId, termId, label, url);
         }
         else {
-            bpSearchComponent.replaceReference(ontologyId, termId, termId, label, url, store.getAt(0).getAsString(INSTANCE_FIELD_NAME));
+            bpImportComponent.replaceReference(ontologyId, termId, termId, label, url, store.getAt(0).getAsString(INSTANCE_FIELD_NAME));
         }
     }
 
@@ -313,22 +313,22 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 
     class ImportBioPortalConceptHandler extends AbstractAsyncHandler<EntityData> {
 
-        private BioPortalSearchComponent bpSearchComponent;
+        private BioPortalImportComponent bpImportComponent;
 
-        public ImportBioPortalConceptHandler(BioPortalSearchComponent bioPortalSearchComponent) {
-            this.bpSearchComponent = bioPortalSearchComponent;
+        public ImportBioPortalConceptHandler(BioPortalImportComponent bioPortalSearchComponent) {
+            this.bpImportComponent = bioPortalSearchComponent;
         }
 
         @Override
         public void handleFailure(Throwable caught) {
-            bpSearchComponent.getEl().unmask();
+            bpImportComponent.getEl().unmask();
             GWT.log("Could not import BioPortal concept ", null);
             MessageBox.alert("Import operation failed!");
         }
 
         @Override
         public void handleSuccess(EntityData refInstance) {
-            bpSearchComponent.getEl().unmask();
+            bpImportComponent.getEl().unmask();
             if (refInstance != null) {
                 //activate this code if we need it in the future
                 //addUserCommentOnReference(getProject(), refInstance);

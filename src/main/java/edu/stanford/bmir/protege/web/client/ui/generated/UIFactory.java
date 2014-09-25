@@ -27,7 +27,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.notes.NotesTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.revisions.RevisionsPortlet;
-import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalSearchPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalImportPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.OtherTerminologiesTab;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.notes.BioPortalProposalsPortlet;
@@ -115,8 +115,8 @@ public class UIFactory {
             else if (portletJavaClassName.equals(PropertyFieldPortlet.class.getName())) {
                 return new PropertyFieldPortlet(project);
             }
-            else if (portletJavaClassName.equals(BioPortalSearchPortlet.class.getName())) {
-                return new BioPortalSearchPortlet(project);
+            else if (portletJavaClassName.equals(BioPortalImportPortlet.class.getName())) {
+                return new BioPortalImportPortlet(project);
             }
             else if (portletJavaClassName.equals(ChangeSummaryPortlet.class.getName())) {
                 return new ChangeSummaryPortlet(project);
@@ -218,7 +218,7 @@ public class UIFactory {
          * ChangeTreePortlet.class.getName(), ChangeSummaryPortlet.class.getName(), ChangeTablePortlet.class.getName(),
          * NotesPortlet.class.getName(),
          */
-        String[] portlets = {OWLEntityDescriptionEditorPortlet.class.getName(), EntityDescriptionPortlet.class.getName(), UsagePortlet.class.getName(), OntologyIdPortlet.class.getName(), OntologyAnnotationsPortlet.class.getName(), EditorPortlet.class.getName(), DiscussionThreadPortlet.class.getName(), ChangeSummaryPortlet.class.getName(), ProjectFeedPortlet.class.getName(), AnnotationsPortlet.class.getName(), AllPropertiesPortlet.class.getName(), PropertiesViewPortlet.class.getName(), ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(), IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(), OntologiesPortlet.class.getName(), PropertiesTreePortlet.class.getName(), BioPortalSearchPortlet.class.getName(), SuperclassesPortlet.class.getName(), ChangesPortlet.class.getName(), WatchedEntitiesPortlet.class.getName(), BioPortalProposalsPortlet.class.getName(), OBOTermCrossProductPortlet.class.getName(), OBOTermRelationshipPortlet.class.getName(), OBOTermSynonymsPortlet.class.getName(), OBOTermMetadataPortlet.class.getName(), OBOTermIdEditorPortlet.class.getName(), OBOTermDefinitionPortlet.class.getName(), OBOTermXRefsEditorPortlet.class.getName(), RevisionsPortlet.class.getName()};
+        String[] portlets = {OWLEntityDescriptionEditorPortlet.class.getName(), EntityDescriptionPortlet.class.getName(), UsagePortlet.class.getName(), OntologyIdPortlet.class.getName(), OntologyAnnotationsPortlet.class.getName(), EditorPortlet.class.getName(), DiscussionThreadPortlet.class.getName(), ChangeSummaryPortlet.class.getName(), ProjectFeedPortlet.class.getName(), AnnotationsPortlet.class.getName(), AllPropertiesPortlet.class.getName(), PropertiesViewPortlet.class.getName(), ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(), IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(), OntologiesPortlet.class.getName(), PropertiesTreePortlet.class.getName(), BioPortalImportPortlet.class.getName(), SuperclassesPortlet.class.getName(), ChangesPortlet.class.getName(), WatchedEntitiesPortlet.class.getName(), BioPortalProposalsPortlet.class.getName(), OBOTermCrossProductPortlet.class.getName(), OBOTermRelationshipPortlet.class.getName(), OBOTermSynonymsPortlet.class.getName(), OBOTermMetadataPortlet.class.getName(), OBOTermIdEditorPortlet.class.getName(), OBOTermDefinitionPortlet.class.getName(), OBOTermXRefsEditorPortlet.class.getName(), RevisionsPortlet.class.getName()};
 
         List<String> portletsList = Arrays.asList(portlets);
         Collections.sort(portletsList, new Comparator<String>() {

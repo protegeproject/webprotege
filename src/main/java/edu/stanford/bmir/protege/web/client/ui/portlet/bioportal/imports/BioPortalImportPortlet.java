@@ -7,26 +7,26 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 
 import java.util.ArrayList;
 
-public class BioPortalSearchPortlet extends AbstractOWLEntityPortlet {
+public class BioPortalImportPortlet extends AbstractOWLEntityPortlet {
 
-    private BioPortalSearchComponent searchComp;
+    private BioPortalImportComponent importComp;
 
-    public BioPortalSearchPortlet(Project project) {
+    public BioPortalImportPortlet(Project project) {
         super(project);
     }
 
     @Override
     public void initialize() {
         setTitle("BioPortal Search");
-        searchComp = new BioPortalSearchComponent(getProjectId(), false);
-        add(searchComp);
+        importComp = new BioPortalImportComponent(getProjectId(), false);
+        add(importComp);
         reload();
     }
 
     @Override
     public void setPortletConfiguration(PortletConfiguration portletConfiguration) {
         super.setPortletConfiguration(portletConfiguration);
-        searchComp.setConfigProperties(portletConfiguration.getProperties());
+        importComp.setConfigProperties(portletConfiguration.getProperties());
     }
 
     @Override
@@ -35,6 +35,6 @@ public class BioPortalSearchPortlet extends AbstractOWLEntityPortlet {
             return;
         }
         setTitle("BioPortal search results for " + _currentEntity.getBrowserText());
-        searchComp.setEntity(_currentEntity);
+        importComp.setEntity(_currentEntity);
     }
 }
