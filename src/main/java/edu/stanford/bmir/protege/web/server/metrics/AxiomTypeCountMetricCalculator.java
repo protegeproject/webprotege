@@ -27,7 +27,11 @@ public class AxiomTypeCountMetricCalculator extends MetricCalculator {
 
     @Override
     public IntegerMetricValue computeValue() {
-        return new IntegerMetricValue(metricName, getRootOntology().getAxiomCount(type, true));
+        int count = 0;
+        for(OWLOntology ontology : getRootOntology().getImportsClosure()) {
+            count += ontology.getAxiomCount(type);
+        }
+        return new IntegerMetricValue(metricName, count);
     }
 
     @Override
