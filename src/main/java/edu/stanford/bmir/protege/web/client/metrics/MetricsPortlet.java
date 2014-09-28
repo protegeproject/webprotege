@@ -28,6 +28,7 @@ public class MetricsPortlet extends AbstractOWLEntityPortlet {
             GWT.log("MetricsPresenter is not initialized");
         }
         setTitle("Metrics");
+        setHeight(500);
         metricsPresenter.reload();
     }
 
