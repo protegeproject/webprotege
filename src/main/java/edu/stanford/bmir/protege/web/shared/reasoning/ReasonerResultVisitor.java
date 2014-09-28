@@ -18,4 +18,6 @@ public interface ReasonerResultVisitor<R extends Serializable> {
     void visit(ReasonerTimeOut<R> result);
 
     void visit(ReasonerError<R> result);
+
+    void visit(MalformedQuery<R> result);
 }

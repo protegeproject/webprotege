@@ -112,6 +112,11 @@ public class DLQueryPresenter {
             public void visit(ReasonerTimeOut<DLQueryResult> result) {
                 view.setReasonerError("The reasoner timed out");
             }
+
+            @Override
+            public void visit(MalformedQuery<DLQueryResult> result) {
+                view.setReasonerError("The query is malformed:<br>" + result.getErrorMessage());
+            }
         });
     }
 

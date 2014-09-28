@@ -33,6 +33,7 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.reasoner.NodeSet;
 import org.semanticweb.owlapi.reasoner.TimeOutException;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.net.ConnectException;
 import java.util.Collections;
@@ -115,7 +116,7 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
             try {
                 ce = classExpressionParser.parse(action.getEnteredClassExpression());
             } catch (ParserException e) {
-                return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
+                return new ExecuteDLQueryResult(projectId, new MalformedQuery<DLQueryResult>(e.getMessage()));
             }
 
             List<DLQueryResultsSectionHandler<?,?,?,?>> handlers = Lists.newArrayList();
@@ -143,16 +144,16 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
                                                     revisionNumber.get(),
                                                     new DLQueryResult(resultList.build())));
 
+        } catch (ReasonerInternalErrorException e) {
+            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>(e.getMessage()));
+        } catch (TimeOutException e) {
+            return new ExecuteDLQueryResult(projectId, new ReasonerTimeOut<DLQueryResult>());
         } catch (InterruptedException e) {
-            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
+            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>("Reasoning was interrupted."));
         } catch (ExecutionException e) {
             return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
         } catch (ConcurrentModificationException e) {
             return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
-        } catch (InternalReasonerException e) {
-            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
-        } catch (TimeOutException e) {
-            return new ExecuteDLQueryResult(projectId, new ReasonerTimeOut<DLQueryResult>());
         } catch (RuntimeException e) {
             return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
         }
