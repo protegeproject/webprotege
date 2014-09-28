@@ -44,6 +44,7 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractOWLEntityPortlet 
         presenter = new ManchesterSyntaxFrameEditorPresenter(editor, getProjectId(), Application.get(), Application.get(), DispatchServiceManager.get());
         presenter.attach(this);
         add(editor);
+        setHeight(500);
         reload();
     }
 }
