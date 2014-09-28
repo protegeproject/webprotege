@@ -107,6 +107,11 @@ public class DLQueryPresenter {
                 view.setReasonerError("An error occurred with the reasoner and the result could not be computed");
                 waitingForReasoner = false;
             }
+
+            @Override
+            public void visit(ReasonerTimeOut<DLQueryResult> result) {
+                view.setReasonerError("The reasoner timed out");
+            }
         });
     }
 
