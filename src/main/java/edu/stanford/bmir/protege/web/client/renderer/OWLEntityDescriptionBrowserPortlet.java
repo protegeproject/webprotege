@@ -23,15 +23,15 @@ import java.util.Collection;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
  */
-public class EntityDescriptionPortlet extends AbstractOWLEntityPortlet {
+public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet {
 
     private HTML html;
 
-    public EntityDescriptionPortlet(Project project) {
+    public OWLEntityDescriptionBrowserPortlet(Project project) {
         super(project);
     }
 
-    public EntityDescriptionPortlet(Project project, boolean initialize) {
+    public OWLEntityDescriptionBrowserPortlet(Project project, boolean initialize) {
         super(project, initialize);
     }
 
