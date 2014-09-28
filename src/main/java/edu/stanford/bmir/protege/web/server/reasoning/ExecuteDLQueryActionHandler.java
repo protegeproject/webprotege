@@ -18,12 +18,10 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.reasoning.*;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.protege.reasoning.KbDigest;
-import edu.stanford.protege.reasoning.KbId;
-import edu.stanford.protege.reasoning.KbQueryResult;
-import edu.stanford.protege.reasoning.ReasoningService;
+import edu.stanford.protege.reasoning.*;
 import edu.stanford.protege.reasoning.action.*;
 import edu.stanford.protege.reasoning.action.Consistency;
 import org.apache.http.concurrent.FutureCallback;
@@ -33,8 +31,10 @@ import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.reasoner.NodeSet;
+import org.semanticweb.owlapi.reasoner.TimeOutException;
 
 import javax.inject.Inject;
+import java.net.ConnectException;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -69,32 +69,32 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
     protected ExecuteDLQueryResult execute(ExecuteDLQueryAction action,
                                                   OWLAPIProject project,
                                                   ExecutionContext executionContext) {
+        final ProjectId projectId = project.getProjectId();
         try {
-            final KbId kbId = new KbId(project.getProjectId().getId());
+            final KbId kbId = new KbId(projectId.getId());
 
             ListenableFuture<GetKbDigestResponse> digestFuture = reasoningService.execute(new GetKbDigestAction(kbId));
             KbDigest kbDigest = digestFuture.get().getKbDigest();
-            logger.info(project.getProjectId(), "I've been asked to execute a DL query (%s).  " +
+            logger.info(projectId, "I've been asked to execute a DL query (%s).  " +
                     "I'm checking to see if the reasoner is empty.", action.getEnteredClassExpression());
             if(kbDigest.equals(KbDigest.emptyDigest())) {
-                logger.info(project.getProjectId(), "The reasoner is empty and needs synchronizing. Going to do this.  Returning an empty result.");
+                logger.info(projectId, "The reasoner is empty and needs synchronizing. Going to do this.  Returning an empty result.");
                 project.synchronizeReasoner();
-                return new ExecuteDLQueryResult(project.getProjectId(), new ReasonerBusy<DLQueryResult>());
+                return new ExecuteDLQueryResult(projectId, new ReasonerBusy<DLQueryResult>());
             }
             else {
-                logger.info(project.getProjectId(), "The reasoner is not empty.");
+                logger.info(projectId, "The reasoner is not empty.");
             }
 
             ListenableFuture<IsConsistentResponse> consFuture = reasoningService.execute(new IsConsistentAction(kbId));
             Optional<edu.stanford.protege.reasoning.action.Consistency> consistency = consFuture.get()
                                                                                                  .getConsistency();
             if(!consistency.isPresent()) {
-                return new ExecuteDLQueryResult(project.getProjectId(), new ReasonerBusy<DLQueryResult>());
+                return new ExecuteDLQueryResult(projectId, new ReasonerBusy<DLQueryResult>());
             }
             Consistency cons = consistency.get();
             if(cons == Consistency.INCONSISTENT) {
-                return new ExecuteDLQueryResult(
-                        project.getProjectId(),
+                return new ExecuteDLQueryResult(projectId,
                         new ProjectInconsistent<DLQueryResult>()
                 );
             }
@@ -115,7 +115,7 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
             try {
                 ce = classExpressionParser.parse(action.getEnteredClassExpression());
             } catch (ParserException e) {
-                return new ExecuteDLQueryResult(project.getProjectId(), new ReasonerError<DLQueryResult>());
+                return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
             }
 
             List<DLQueryResultsSectionHandler<?,?,?,?>> handlers = Lists.newArrayList();
@@ -138,17 +138,23 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
             }
             Optional<RevisionNumber> revisionNumber = results.get(0).getRevisionNumber();
 
-            return new ExecuteDLQueryResult(project.getProjectId(),
+            return new ExecuteDLQueryResult(projectId,
                                             new ReasonerQueryResult<DLQueryResult>(
                                                     revisionNumber.get(),
                                                     new DLQueryResult(resultList.build())));
 
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
         } catch (ConcurrentModificationException e) {
-            throw new RuntimeException(e);
+            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
+        } catch (InternalReasonerException e) {
+            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
+        } catch (TimeOutException e) {
+            return new ExecuteDLQueryResult(projectId, new ReasonerTimeOut<DLQueryResult>());
+        } catch (RuntimeException e) {
+            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
         }
     }
 

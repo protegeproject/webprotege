@@ -15,5 +15,7 @@ public interface ReasonerResultVisitor<R extends Serializable> {
 
     void visit(ReasonerQueryResult<R> result);
 
+    void visit(ReasonerTimeOut<R> result);
+
     void visit(ReasonerError<R> result);
 }
