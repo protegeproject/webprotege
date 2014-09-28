@@ -28,6 +28,7 @@ import org.semanticweb.owlapi.expression.OWLExpressionParser;
 import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.net.ConnectException;
 import java.util.Collections;
