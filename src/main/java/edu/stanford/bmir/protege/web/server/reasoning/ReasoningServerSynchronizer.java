@@ -109,6 +109,7 @@ public class ReasoningServerSynchronizer {
                     logger.info(projectId, "There was an error when synchronizing the reasoner: ", t.getMessage());
                     setLastSyncedDigest(Optional.<KbDigest>absent());
                     syncResult.setException(t);
+                    postEvents.postEvent(new ReasonerReadyEvent(projectId));
                 }
             });
             return syncResult;
