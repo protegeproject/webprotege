@@ -72,7 +72,6 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm implements HasIni
 
         addDialogValidator(new EmptyProjectNameValidator());
         addDialogValidator(new ExistingProjectNameValidator());
-        addDialogValidator(new ProjectDescriptionValidator());
     }
 
 
@@ -164,18 +163,6 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm implements HasIni
 
         public String getValidationMessage() {
             return getValidationState() == ValidationState.INVALID ? "A project named " + getProjectName() + " already exists.  Please enter different name." : "";
-        }
-    }
-
-
-    private class ProjectDescriptionValidator implements WebProtegeDialogValidator {
-
-        public ValidationState getValidationState() {
-            return getProjectDescription().isEmpty() ? ValidationState.INVALID : ValidationState.VALID;
-        }
-
-        public String getValidationMessage() {
-            return "Please enter a description for the project.";
         }
     }
 }
