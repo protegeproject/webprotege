@@ -48,13 +48,10 @@ import java.util.regex.Pattern;
  */
 public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler<ExecuteDLQueryAction, ExecuteDLQueryResult> {
 
-    private ReasoningService reasoningService;
-
     private final WebProtegeLogger logger;
 
     @Inject
-    public ExecuteDLQueryActionHandler(ReasoningService reasoningService) {
-        this.reasoningService = reasoningService;
+    public ExecuteDLQueryActionHandler() {
         logger = WebProtegeLoggerManager.get(ExecuteDLQueryActionHandler.class);
     }
 
@@ -70,34 +67,19 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
     protected ExecuteDLQueryResult execute(ExecuteDLQueryAction action,
                                                   OWLAPIProject project,
                                                   ExecutionContext executionContext) {
+        ProjectReasoningService reasoningService = project.getReasoningService();
+
         final ProjectId projectId = project.getProjectId();
         try {
             final KbId kbId = new KbId(projectId.getId());
 
-            ListenableFuture<GetKbDigestResponse> digestFuture = reasoningService.execute(new GetKbDigestAction(kbId));
-            KbDigest kbDigest = digestFuture.get().getKbDigest();
-            logger.info(projectId, "I've been asked to execute a DL query (%s).  " +
-                    "I'm checking to see if the reasoner is empty.", action.getEnteredClassExpression());
-            if(kbDigest.equals(KbDigest.emptyDigest())) {
-                logger.info(projectId, "The reasoner is empty and needs synchronizing. Going to do this.  Returning an empty result.");
-                project.synchronizeReasoner();
-                return new ExecuteDLQueryResult(projectId, new ReasonerBusy<DLQueryResult>());
-            }
-            else {
-                logger.info(projectId, "The reasoner is not empty.");
-            }
+            logger.info(projectId, "DL query submitted (%s).", action.getEnteredClassExpression());
 
-            ListenableFuture<IsConsistentResponse> consFuture = reasoningService.execute(new IsConsistentAction(kbId));
-            Optional<edu.stanford.protege.reasoning.action.Consistency> consistency = consFuture.get()
-                                                                                                 .getConsistency();
-            if(!consistency.isPresent()) {
-                return new ExecuteDLQueryResult(projectId, new ReasonerBusy<DLQueryResult>());
-            }
+            ListenableFuture<IsConsistentResponse> consFuture = reasoningService.executeQuery(new IsConsistentAction(kbId));
+            Optional<Consistency> consistency = consFuture.get().getConsistency();
             Consistency cons = consistency.get();
             if(cons == Consistency.INCONSISTENT) {
-                return new ExecuteDLQueryResult(projectId,
-                        new ProjectInconsistent<DLQueryResult>()
-                );
+                return new ExecuteDLQueryResult(projectId, new ProjectInconsistent<DLQueryResult>());
             }
 
 
