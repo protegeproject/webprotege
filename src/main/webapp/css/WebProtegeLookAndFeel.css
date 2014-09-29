@@ -230,62 +230,74 @@
 }
 
 .class-icon-inset {
-    background: url(../images/tree/class.png) no-repeat 2px 2px;
+    background: url(../images/tree/class.png) no-repeat 2px;
+    background-color: inherit;
     padding-left: 22px !important;
 }
 
 .object-property-icon-inset {
-    background: url(../images/tree/property.png) no-repeat 2px 2px;
+    background: url(../images/tree/property.png) no-repeat 2px;
+    background-color: inherit;
     padding-left: 22px !important;
 }
 
 .data-property-icon-inset {
-    background: url(../images/tree/property.png) no-repeat 2px 2px;
+    background: url(../images/tree/property.png) no-repeat 2px;
+    background-color: inherit;
     padding-left: 22px !important;
 }
 
 .annotation-property-icon-inset {
-    background: url(../images/tree/annotation-property.png) no-repeat 2px 2px;
     padding-left: 22px !important;
+    background: url(../images/tree/annotation-property.png) no-repeat 2px 2px;
+    background-color: inherit;
 }
 
 .individual-icon-inset {
     background: url(../images/tree/individual.png) no-repeat 2px 2px;
+    background-color: inherit;
     padding-left: 22px !important;
 }
 
 .datatype-icon-inset {
     background: url(../images/tree/datatype.png) no-repeat 2px 2px;
+    background-color: inherit;
     padding-left: 22px !important;
 }
 
 .literal-icon-inset {
     background: url(../images/tree/literal.png) no-repeat 2px 2px;
+    background-color: inherit;
     padding-left: 22px !important;
 }
 
 .numeric-literal-icon-inset {
     background: url(../images/tree/number.png) no-repeat 2px 2px;
+    background-color: inherit;
     padding-left: 22px;
 }
 
 .iri-icon-inset {
     background: url(../images/tree/iri.png) no-repeat 2px 2px;
+    background-color: inherit;
     padding-left: 22px !important;
 }
 
 .date-time-icon-inset {
     background: url(../images/tree/date-time.png) no-repeat 2px 2px;
+    background-color: inherit;
     padding-left: 22px !important;
 }
 
 .link-icon-inset {
     background: url(../images/tree/link.png) no-repeat 2px 2px;
+    background-color: inherit;
     padding-left: 22px !important;
 }
 
 .empty-icon-inset {
     padding-left: 22px !important;
+    background-color: inherit;
 }
 
 .gwt-ToggleButton {
