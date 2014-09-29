@@ -12,6 +12,8 @@ import edu.stanford.bmir.protege.web.shared.reasoning.DLQueryEntitySetResult;
 import edu.stanford.bmir.protege.web.shared.reasoning.DLQueryResultSection;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.protege.reasoning.*;
+import edu.stanford.protege.reasoning.action.ActionHandler;
+import edu.stanford.protege.reasoning.action.KbQueryAction;
 import edu.stanford.protege.reasoning.action.KbQueryResultResponse;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -35,10 +37,10 @@ public abstract class DLQueryResultsSectionHandler<A extends Action<R, ?>,
     public ListenableFuture<DLQueryEntitySetResult> executeQuery(
             KbId kbId,
             OWLClassExpression classExpression,
-            ReasoningService reasoningService,
+            ProjectReasoningService reasoningService,
             final OWLAPIProject project) {
-        Action action = createAction(kbId, classExpression);
-        ListenableFuture<R> response = reasoningService.execute(action);
+        A action = createAction(kbId, classExpression);
+        ListenableFuture<R> response = reasoningService.executeQuery(action);
 
         return Futures.transform(response, new Function<R, DLQueryEntitySetResult>() {
             @Override

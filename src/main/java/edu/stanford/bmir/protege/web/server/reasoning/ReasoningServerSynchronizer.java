@@ -39,8 +39,6 @@ public class ReasoningServerSynchronizer {
 
     private final List<AxiomChangeData> currentChangeList = Lists.newArrayList();
 
-    private final HasPostEvents<ProjectEvent<?>> postEvents;
-
     private final ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors
                                                                                                       .newSingleThreadExecutor());
 
@@ -51,27 +49,34 @@ public class ReasoningServerSynchronizer {
     public ReasoningServerSynchronizer(
             ProjectId projectId,
             HasLogicalAxioms hasLogicalAxioms,
-            ReasoningService reasoningService,
-            HasPostEvents<ProjectEvent<?>> postEvents) {
+            ReasoningService reasoningService) {
         this.projectId = projectId;
         this.hasLogicalAxioms = hasLogicalAxioms;
         this.reasoningService = reasoningService;
-        this.postEvents = postEvents;
     }
 
-    public void handleOntologyChanges(List<? extends OWLOntologyChange> changes) {
+    public ListenableFuture<KbDigest> handleOntologyChanges(List<? extends OWLOntologyChange> changes) {
         try {
             writeLock.lock();
-            for (OWLOntologyChange change : changes) {
-                if (change.isAxiomChange()) {
-                    OWLAxiom ax = change.getAxiom();
-                    if (ax.isLogicalAxiom()) {
-                        currentChangeList.add((AxiomChangeData) change.getChangeData());
+
+            if(lastSyncedDigest.isPresent()) {
+                for (OWLOntologyChange change : changes) {
+                    if (change.isAxiomChange()) {
+                        OWLAxiom ax = change.getAxiom();
+                        if (ax.isLogicalAxiom()) {
+                            currentChangeList.add((AxiomChangeData) change.getChangeData());
+                        }
                     }
                 }
+                if(currentChangeList.isEmpty()) {
+                    return Futures.immediateFuture(lastSyncedDigest.get());
+                }
+                else {
+                    return synchronizeReasoner();
+                }
             }
-            if (!currentChangeList.isEmpty()) {
-                synchronizeReasoner();
+            else {
+                return synchronizeReasoner();
             }
         } finally {
             writeLock.unlock();
@@ -101,7 +106,7 @@ public class ReasoningServerSynchronizer {
                 public void onSuccess(KbDigest result) {
                     setLastSyncedDigest(Optional.of(result));
                     syncResult.set(result);
-                    postEvents.postEvent(new ReasonerReadyEvent(projectId));
+//                    postEvents.postEvent(new ReasonerReadyEvent(projectId));
                 }
 
                 @Override
@@ -109,7 +114,7 @@ public class ReasoningServerSynchronizer {
                     logger.info(projectId, "There was an error when synchronizing the reasoner: ", t.getMessage());
                     setLastSyncedDigest(Optional.<KbDigest>absent());
                     syncResult.setException(t);
-                    postEvents.postEvent(new ReasonerReadyEvent(projectId));
+//                    postEvents.postEvent(new ReasonerReadyEvent(projectId));
                 }
             });
             return syncResult;

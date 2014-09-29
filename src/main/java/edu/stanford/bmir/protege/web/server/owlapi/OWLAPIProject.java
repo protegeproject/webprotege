@@ -7,6 +7,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
+import edu.stanford.bmir.protege.web.server.reasoning.ProjectReasoningService;
+import edu.stanford.bmir.protege.web.server.reasoning.ProjectReasoningServiceImpl;
 import edu.stanford.bmir.protege.web.server.reasoning.ReasoningServerManager;
 import edu.stanford.bmir.protege.web.server.reasoning.ReasoningServerSynchronizer;
 import edu.stanford.bmir.protege.web.shared.*;
@@ -39,6 +41,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundExcep
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.reasoning.KbDigest;
+import edu.stanford.protege.reasoning.ReasoningService;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
 import org.coode.owlapi.rdf.rdfxml.RDFXMLOntologyStorer;
@@ -129,7 +132,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private final ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache;
 
-    private ReasoningServerSynchronizer reasoningServiceSynchronizer;
+    private ProjectReasoningService projectReasoningService;
 
     private String defaultLanguage = "en";
 
@@ -245,11 +248,12 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                                                                                              .class));
 
         // TODO: Inject
-        reasoningServiceSynchronizer = new ReasoningServerSynchronizer(getProjectId(),
-                                                                       this,
-                                                                       ReasoningServerManager.get()
-                                                                                             .getReasoningService(),
-                                                                       projectEventManager);
+        ReasoningService reasoningService = ReasoningServerManager.get()
+                                                                  .getReasoningService();
+        projectReasoningService = new ProjectReasoningServiceImpl(
+                getProjectId(),
+                reasoningService,
+                new ReasoningServerSynchronizer(getProjectId(), this, reasoningService));
 
     }
 
@@ -288,10 +292,9 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         metricsManager.handleOntologyChanges(changes);
     }
 
-    public ListenableFuture<KbDigest> synchronizeReasoner() {
-        return reasoningServiceSynchronizer.synchronizeReasoner();
+    public ProjectReasoningService getReasoningService() {
+        return projectReasoningService;
     }
-
 
     public EventManager<ProjectEvent<?>> getEventManager() {
         return projectEventManager;
@@ -620,8 +623,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     }
 
     private void passOntologyChangesToReasoner(List<OWLOntologyChange> changes) {
-        LOGGER.info(getProjectId(), "Passing changes to reasoner");
-        reasoningServiceSynchronizer.handleOntologyChanges(changes);
+        projectReasoningService.processOntologyChanges(changes);
     }
 
     private List<HierarchyChangeComputer<?>> createHierarchyChangeComputers() {

@@ -85,9 +85,6 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
     // basic maps are safe for multiple readers
     private Map<Class<?>, ActionHandler<?, ?>> registry = new HashMap<Class<?>, ActionHandler<?, ?>>();
 
-    @Inject
-    private ExecuteDLQueryActionHandler executeDLQueryActionHandler;
-
     public DefaultActionHandlerRegistry() {
 
         register(new GetClientApplicationPropertiesActionHandler(), GetClientApplicationPropertiesAction.class);
@@ -179,8 +176,7 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         register(new ResetPasswordActionHandler(metaProjectManager,
                                                 new ResetPasswordMailer(mailManager)), ResetPasswordAction.class);
         // Reasoning
-        executeDLQueryActionHandler = new ExecuteDLQueryActionHandler(ReasoningServerManager.get().getReasoningService());
-        register(executeDLQueryActionHandler, ExecuteDLQueryAction.class);
+        register(new ExecuteDLQueryActionHandler(), ExecuteDLQueryAction.class);
     }
 
 
