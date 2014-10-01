@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
+import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
+import edu.stanford.bmir.protege.web.server.chgpwd.ResetPasswordActionHandler;
+import edu.stanford.bmir.protege.web.server.chgpwd.ResetPasswordMailer;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionHandler;
@@ -17,6 +21,7 @@ import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.mail.GetEmailAddressActionHandler;
+import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.server.mail.SetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddNoteToEntityActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddReplyToNoteActionHandler;
@@ -28,6 +33,7 @@ import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesAction;
+import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.SetEntityCrudKitSettingsAction;
@@ -66,6 +72,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Date: 20/01/2013
  */
 public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
+
+    private final MailManager mailManager = App.get().getMailManager();
+
+    private final MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
 
     // NOT a concurrent map.  This is only written to in the constructor. At runtime it's essentially immutable and the
     // basic maps are safe for multiple readers
@@ -158,6 +168,9 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         register(new SetManchesterSyntaxFrameActionHandler(), SetManchesterSyntaxFrameAction.class);
         register(new CheckManchesterSyntaxFrameActionHandler(), CheckManchesterSyntaxFrameAction.class);
         register(new GetManchesterSyntaxFrameCompletionsActionHandler(), GetManchesterSyntaxFrameCompletionsAction.class);
+
+        register(new ResetPasswordActionHandler(metaProjectManager,
+                                                new ResetPasswordMailer(mailManager)), ResetPasswordAction.class);
     }
 
 

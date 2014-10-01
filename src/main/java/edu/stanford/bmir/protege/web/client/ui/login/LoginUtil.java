@@ -19,6 +19,9 @@ import com.gwtext.client.widgets.event.WindowListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
+import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
@@ -111,7 +114,7 @@ public class LoginUtil {
             }
         });
 
-        ClickHandler forgotPassClickListener = forgotPasswordClickListener(win, userNameField, isLoginWithHttps);
+        ClickHandler forgotPassClickListener = getForgotPasswordClickListener();
         Anchor forgotPasswordLink = new Anchor("Forgot username or password");
         forgotPasswordLink.addClickHandler(forgotPassClickListener);
 
@@ -203,32 +206,28 @@ public class LoginUtil {
         return UIUtil.getHelpImageHtml("http://protegewiki.stanford.edu/wiki/WebProtegeOpenId", "Click here to learn how to log in with Open ID");
     }
 
-    /**
-     * @param win
-     * @param userNameField
-     * @param isLoginWithHttps
-     * @return
-     */
-    private ClickHandler forgotPasswordClickListener(final Window win, final TextBox userNameField, final boolean isLoginWithHttps) {
-        ClickHandler forgotPassClickListener = new ClickHandler() {
+
+    private ClickHandler getForgotPasswordClickListener() {
+        return new ClickHandler() {
             public void onClick(ClickEvent event) {
-                String user = userNameField.getText();
-                if (user == null || user.length() == 0) {
-                    MessageBox.setMaxWidth(350);
-                    MessageBox.alert("Warning", "If you forgot your username, please send an email to the administrator.<br /><br />" + "If you forgot your password, please enter a user name in the user name field first and we will reset the password.");
-                }
-                else {
-                    UIUtil.mask(win.getEl(), "Please wait until we reset your password and send you an email", true, 1);
-                    if (isLoginWithHttps) {
-                        AuthenticateServiceManager.getInstance().sendPasswordReminder(UserId.getUserId(userNameField.getText().trim()), new ForgotPassHandler(win, userNameField.getText().trim()));
-                    }
-                    else {
-                        AdminServiceManager.getInstance().sendPasswordReminder(UserId.getUserId(userNameField.getText()), new ForgotPassHandler(win, userNameField.getText().trim()));
-                    }
-                }
+                ResetPasswordPresenter presenter = new ResetPasswordPresenter(DispatchServiceManager.get(), new ResetPasswordViewImpl());
+                presenter.resetPassword();
+//                String user = userNameField.getText();
+//                if (user == null || user.length() == 0) {
+//                    MessageBox.setMaxWidth(350);
+//                    MessageBox.alert("Warning", "If you forgot your username, please send an email to the administrator.<br /><br />" + "If you forgot your password, please enter a user name in the user name field first and we will reset the password.");
+//                }
+//                else {
+//                    UIUtil.mask(win.getEl(), "Please wait until we reset your password and send you an email", true, 1);
+//                    if (isLoginWithHttps) {
+//                        AuthenticateServiceManager.getInstance().sendPasswordReminder(UserId.getUserId(userNameField.getText().trim()), new ForgotPassHandler(win, userNameField.getText().trim()));
+//                    }
+//                    else {
+//                        AdminServiceManager.getInstance().sendPasswordReminder(UserId.getUserId(userNameField.getText()), new ForgotPassHandler(win, userNameField.getText().trim()));
+//                    }
+//                }
             }
         };
-        return forgotPassClickListener;
     }
 
     private void performSignIn(final boolean isLoginWithHttps, final Window win, final TextBox userNameField, final TextBox passwordField) {
