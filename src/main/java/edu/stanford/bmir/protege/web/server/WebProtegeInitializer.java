@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
+import edu.stanford.bmir.protege.web.server.reasoning.ReasoningServerManager;
+import edu.stanford.protege.reasoning.ReasoningService;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
 import edu.stanford.smi.protege.util.Log;
@@ -52,7 +54,6 @@ public class WebProtegeInitializer implements ServletContextListener {
         catch (Throwable e) {
             WebProtegeLoggerManager.get(WebProtegeInitializer.class).severe(e);
         }
-
         Log.getLogger(WebProtegeInitializer.class).info("WebProtege cleanly disposed");
     }
 

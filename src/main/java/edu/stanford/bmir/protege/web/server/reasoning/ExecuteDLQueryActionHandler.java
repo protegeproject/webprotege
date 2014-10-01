@@ -41,6 +41,7 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
 
 /**
@@ -115,6 +116,7 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
             ListenableFuture<List<DLQueryEntitySetResult>> futures = Futures.allAsList(resultFutures);
             List<DLQueryEntitySetResult> results = futures.get();
 
+
             ImmutableList.Builder<DLQueryEntitySetResult> resultList = ImmutableList.builder();
             for(DLQueryEntitySetResult result : results) {
                    resultList.add(result);
@@ -126,20 +128,20 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
                                                     revisionNumber.get(),
                                                     new DLQueryResult(resultList.build())));
 
-        } catch (ReasonerInternalErrorException e) {
-            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>(e.getMessage()));
-        } catch (TimeOutException e) {
-            return new ExecuteDLQueryResult(projectId, new ReasonerTimeOut<DLQueryResult>());
         } catch (InterruptedException e) {
             return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>("Reasoning was interrupted."));
         } catch (ExecutionException e) {
-            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
-        } catch (ConcurrentModificationException e) {
-            return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
-        } catch (RuntimeException e) {
+            logger.info(projectId, "A problem occurred when trying to execute the DL query.  The cause is: %s.", e.getCause().getMessage());
+            if(e.getCause() instanceof ReasonerTimeOutException) {
+                return new ExecuteDLQueryResult(projectId, new ReasonerTimeOut<DLQueryResult>());
+            }
+            else if(e.getCause() instanceof ReasonerInternalErrorException) {
+                return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>(e.getCause().getMessage()));
+            }
             return new ExecuteDLQueryResult(projectId, new ReasonerError<DLQueryResult>());
         }
     }
+
 
 
 

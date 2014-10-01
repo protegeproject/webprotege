@@ -85,7 +85,7 @@ public class ReasonerSynchronizationTask implements Callable<KbDigest> {
 
     /////////////////////////////////
 
-    private KbDigest synchronizeReasoner() {
+    private KbDigest synchronizeReasoner() throws Exception {
         try {
             logger.info(
                     projectId,
@@ -101,11 +101,16 @@ public class ReasonerSynchronizationTask implements Callable<KbDigest> {
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             logger.info(projectId, "There was a problem getting the reasoner digest: " + cause.getMessage());
-            throw new RuntimeException(e);
+            if (cause instanceof Exception) {
+                throw (Exception) cause;
+            }
+            else {
+                throw new RuntimeException(cause);
+            }
         }
     }
 
-    private KbDigest synchronizeReasoner(final KbDigest reasonerDigest) {
+    private KbDigest synchronizeReasoner(final KbDigest reasonerDigest) throws Exception {
         final KbDigest expectedDigest = getExpectedDigest();
         if (expectedDigest.equals(reasonerDigest)) {
             logger.info(
@@ -134,7 +139,7 @@ public class ReasonerSynchronizationTask implements Callable<KbDigest> {
         }
     }
 
-    private KbDigest replaceAxiomsInReasoner() {
+    private KbDigest replaceAxiomsInReasoner() throws Exception {
         logger.info(projectId, "Replacing axioms in reasoner");
         Set<? extends OWLAxiom> logicalAxioms = expectedLogicalAxioms;
         ImmutableList<OWLAxiom> axioms = ImmutableList.copyOf(logicalAxioms);
@@ -154,7 +159,12 @@ public class ReasonerSynchronizationTask implements Callable<KbDigest> {
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             logger.info(projectId, "There was a problem replacing the axioms in the reasoner: %s", cause.getMessage());
-            throw new RuntimeException(e);
+            if(cause instanceof Exception) {
+                throw (Exception) cause;
+            }
+            else {
+                throw new RuntimeException(cause);
+            }
         }
     }
 
@@ -162,7 +172,7 @@ public class ReasonerSynchronizationTask implements Callable<KbDigest> {
         logger.info(projectId, "Interrupted whilst getting reasoner digest");
     }
 
-    private KbDigest flushChangesToReasoner() {
+    private KbDigest flushChangesToReasoner() throws Exception {
         logger.info(projectId, "Flushing %d changes to reasoner", changesToApplyOnBaseDigest.size());
         ListenableFuture<ApplyChangesResponse> future = reasoningService.execute(
                 new ApplyChangesAction(
@@ -181,7 +191,12 @@ public class ReasonerSynchronizationTask implements Callable<KbDigest> {
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             logger.info(projectId, "There was a problem flushing changes to the reasoner: %s", cause.getMessage());
-            throw new RuntimeException(e);
+            if(cause instanceof Exception) {
+                throw (Exception) cause;
+            }
+            else {
+                throw new RuntimeException(cause);
+            }
         }
     }
 
