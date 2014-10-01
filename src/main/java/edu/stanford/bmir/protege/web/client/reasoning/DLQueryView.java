@@ -15,6 +15,8 @@ import java.util.List;
  */
 public interface DLQueryView extends IsWidget {
 
+    void setQueryString(String queryString);
+
     void setMode(DLQueryViewMode mode);
 
     void setExecuteDLQueryHandler(ExecuteDLQueryHandler handler);

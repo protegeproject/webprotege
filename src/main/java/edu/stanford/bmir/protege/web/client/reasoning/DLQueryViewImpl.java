@@ -84,6 +84,11 @@ public class DLQueryViewImpl extends Composite implements DLQueryView {
     }
 
     @Override
+    public void setQueryString(String queryString) {
+        editor.setValue(queryString);
+    }
+
+    @Override
     public Optional<String> getFilter() {
         String filterText = filterField.getText().trim();
         if (filterText.isEmpty()) {

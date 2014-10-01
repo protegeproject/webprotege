@@ -18,7 +18,7 @@ public class DLQueryPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     public void reload() {
-
+        presenter.setQueryString("owl:Thing");
     }
 
     @Override
@@ -32,5 +32,6 @@ public class DLQueryPortlet extends AbstractOWLEntityPortlet {
         dlQueryView.setWidth("100%");
         dlQueryView.setHeight("100%");
         add(presenter.getView().asWidget());
+        reload();
     }
 }

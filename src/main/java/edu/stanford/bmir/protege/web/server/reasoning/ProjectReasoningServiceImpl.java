@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.protege.reasoning.*;
 import edu.stanford.protege.reasoning.action.ReasonerState;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
-import sun.launcher.resources.launcher;
 
 import javax.annotation.Nullable;
 import java.util.List;

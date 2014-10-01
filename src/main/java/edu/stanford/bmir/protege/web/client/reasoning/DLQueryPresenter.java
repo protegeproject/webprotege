@@ -51,6 +51,10 @@ public class DLQueryPresenter {
         });
     }
 
+    public void setQueryString(String query) {
+        view.setQueryString(query);
+    }
+
     public DLQueryView getView() {
         return view;
     }
