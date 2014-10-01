@@ -68,7 +68,9 @@ public class Project implements HasProjectId, HasDispose {
     }
 
     public void forceGetEvents() {
-//        eventPollingManager.pollForProjectEvents();
+    	eventPollingManager.stop();
+        eventPollingManager.pollForProjectEvents();
+        eventPollingManager.start();
     }
 
 

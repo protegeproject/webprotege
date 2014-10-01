@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalSearchResultsBean;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -167,7 +169,7 @@ public class OntologyServiceManager {
      */
 
     public void getBioPortalSearchContent(ProjectId projectId, String entityName, BioPortalSearchData bpSearchData,
-            AsyncCallback<String> cb) {
+            AsyncCallback<BioPortalSearchResultsBean> cb) {
         proxy.getBioPortalSearchContent(projectId.getId(), entityName, bpSearchData, cb);
     }
 

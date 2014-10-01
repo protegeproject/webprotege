@@ -158,7 +158,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         window.setHeight(400);
         window.setLayout(new FitLayout());
 
-        bpImportComponent = new BioPortalImportComponent(getProjectId(), !multiValue) {
+        bpImportComponent = new BioPortalImportComponent(getProject(), !multiValue) {
             @Override
             protected AbstractAsyncHandler<EntityData> getImportBioPortalConceptHandler() {
                 return new ImportBioPortalConceptHandler(this);
@@ -253,7 +253,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 
     private void createNewReference(String label, String termId, String ontologyId, String url) {
 //    private void createNewReference(String label, String termId, String ontologyId, String url, final NoteInputPanel noteInputPanel) {
-        bpImportComponent = new BioPortalImportComponent(getProjectId(), !multiValue) {
+        bpImportComponent = new BioPortalImportComponent(getProject(), !multiValue) {
             @Override
             protected AbstractAsyncHandler<EntityData> getCreateManualreferenceHandler() {
                 return new CreateManualReferenceHandler();

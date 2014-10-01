@@ -17,10 +17,10 @@ public class BioPortalImportPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     public void initialize() {
-        setTitle("BioPortal Search");
-        importComp = new BioPortalImportComponent(getProjectId(), false);
+        setTitle("BioPortal Import");
+        importComp = new BioPortalImportComponent(super.getProject(), false);
         add(importComp);
-        reload();
+        //reload();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class BioPortalImportPortlet extends AbstractOWLEntityPortlet {
         if (_currentEntity == null) {
             return;
         }
-        setTitle("BioPortal search results for " + _currentEntity.getBrowserText());
+        //setTitle("BioPortal search results for " + _currentEntity.getBrowserText());
         importComp.setEntity(_currentEntity);
     }
 }

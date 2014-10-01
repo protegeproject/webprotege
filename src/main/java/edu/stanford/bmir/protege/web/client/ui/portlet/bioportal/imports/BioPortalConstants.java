@@ -6,18 +6,34 @@ import java.util.Map;
 
 public class BioPortalConstants {
 
-    public static final String RECORD_TYPE_PREFERRED_NAME = "apreferredname";
-    public static final String RECORD_TYPE_CONCEPT_ID = "bconceptid";
-    public static final String RECORD_TYPE_SYNONYM = "csynonym";
-    public static final String RECORD_TYPE_PROPERTY = "dproperty";
+//    public static final String RECORD_TYPE_PREFERRED_NAME = "apreferredname";
+//    public static final String RECORD_TYPE_CONCEPT_ID = "bconceptid";
+//    public static final String RECORD_TYPE_SYNONYM = "csynonym";
+//    public static final String RECORD_TYPE_PROPERTY = "dproperty";
+	public static final String RECORD_TYPE_CONCEPT_ID = "id";
+	public static final String RECORD_TYPE_PREFERRED_NAME = "prefLabel";
+	public static final String RECORD_TYPE_SYNONYM = "synonym";	
+	public static final String RECORD_TYPE_PROPERTY = "property";	
+	public static final String RECORD_TYPE_NOTATION = "notation";
+	public static final String RECORD_TYPE_CUI = "cui";
+	public static final String RECORD_TYPE_SEMANTIC_TYPE = "semanticType";
+	
 
     private static Map<String, String> recordType2PrintName = new HashMap<String, String>();
 
     static {
-        recordType2PrintName.put(RECORD_TYPE_PROPERTY, "In property");
-        recordType2PrintName.put(RECORD_TYPE_SYNONYM, "In synonym");
-        recordType2PrintName.put(RECORD_TYPE_PREFERRED_NAME, "In preferred term");
-        recordType2PrintName.put(RECORD_TYPE_CONCEPT_ID, "In ID");
+//        recordType2PrintName.put(RECORD_TYPE_PROPERTY, "In property");
+//        recordType2PrintName.put(RECORD_TYPE_SYNONYM, "In synonym");
+//        recordType2PrintName.put(RECORD_TYPE_PREFERRED_NAME, "In preferred term");
+//        recordType2PrintName.put(RECORD_TYPE_CONCEPT_ID, "In ID");
+        recordType2PrintName.put(RECORD_TYPE_CONCEPT_ID, "Class Id");
+		recordType2PrintName.put(RECORD_TYPE_PREFERRED_NAME, "Preferred name");
+		recordType2PrintName.put(RECORD_TYPE_SYNONYM, "Synonym");	
+		recordType2PrintName.put(RECORD_TYPE_PROPERTY, "Property value");	
+		recordType2PrintName.put(RECORD_TYPE_NOTATION, "Notation");	
+		recordType2PrintName.put(RECORD_TYPE_CUI, "Cui");
+		recordType2PrintName.put(RECORD_TYPE_SEMANTIC_TYPE, "Semantic type");
+			
     }
 
 
@@ -29,10 +45,10 @@ public class BioPortalConstants {
     public static String DEFAULT_BIOPORTAL_URL =  "http://bioportal.bioontology.org/";   //production
     //public static String DEFAULT_BIOPORTAL_URL = "http://stage.bioontology.org/";    //stage
 
-    public static final String BP_ONTOLOGY_STR = "ontologies";
-    public static final String BP_VISUALIZE_STR = "visualize";
-    static String DEFAULT_BIOPORTAL_VISUALIZE_URL = DEFAULT_BIOPORTAL_URL + BP_VISUALIZE_STR + "/";
-    static String DEFAULT_BIOPORTAL_ONTOLOGY_URL = DEFAULT_BIOPORTAL_URL + BP_ONTOLOGY_STR + "/";
+    //public static final String BP_ONTOLOGY_STR = "ontologies";
+    //public static final String BP_VISUALIZE_STR = "visualize";
+    //static String DEFAULT_BIOPORTAL_VISUALIZE_URL = DEFAULT_BIOPORTAL_URL + BP_VISUALIZE_STR + "/";
+    //static String DEFAULT_BIOPORTAL_ONTOLOGY_URL = DEFAULT_BIOPORTAL_URL + BP_ONTOLOGY_STR + "/";
 
     public static String DEFAULT_BIOPORTAL_REST_BASE_URL = "http://rest.bioontology.org/bioportal/";   //production
     //public static String DEFAULT_BIOPORTAL_REST_BASE_URL = "http://stagerest.bioontology.org/bioportal/";    //stage
@@ -73,14 +89,16 @@ public class BioPortalConstants {
 
     static String CONFIG_PROPERTY_IMPORT_FROM_ORIGINAL_ONTOLOGY = "import_from_original_ontology";
 
-    static final String SHOW_ALL_BUTTON_TEXT = "Show all search results";
-    static final String DNF_BUTTON_TEXT = "Did not find it. Leave a comment";
-    static final String DNF_CONCEPT_ID = "Did-Not-Find";
-    static final String DNF_CONCEPT_ID_SHORT = "DNF";
-    static final String DNF_CONCEPT_LABEL = "(Did Not Find Concept)";
-    static final String XML_ELEMENT_NUM_PAGES = "numPages";
-    static final String XML_ELEMENT_NUM_RESULTS_TOTAL = "numResultsTotal";
-
+    //static final String SHOW_ALL_BUTTON_TEXT = "Show all search results";
+    //static final String DNF_BUTTON_TEXT = "Did not find it. Leave a comment";
+    //static final String DNF_CONCEPT_ID = "Did-Not-Find";
+    //static final String DNF_CONCEPT_ID_SHORT = "DNF";
+    //static final String DNF_CONCEPT_LABEL = "(Did Not Find Concept)";
+    //static final String XML_ELEMENT_NUM_PAGES = "numPages";
+    //static final String XML_ELEMENT_NUM_RESULTS_TOTAL = "numResultsTotal";
+    public static final String PREVIOUS_BUTTON_TEXT = "< Prev";
+	public static final String NEXT_BUTTON_TEXT = "Next >";
+	public static final int PAGE_SIZE = 25; 
 
     public static String getRecordTypePrintText(String recType) {
         String text = recordType2PrintName.get(recType);

@@ -2,7 +2,10 @@ package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.BioPortalSearchResultsBean;
+import edu.stanford.bmir.protege.web.client.ui.portlet.bioportal.imports.exceptions.DetailsNotFoundException;
 
 import java.util.List;
 
@@ -112,10 +115,10 @@ public interface OntologyService extends RemoteService {
      * Util methods
      */
 
-    public String getBioPortalSearchContent(String projectName, String entityName, BioPortalSearchData bpSearchData);
+    public BioPortalSearchResultsBean getBioPortalSearchContent(String projectName, String entityName, BioPortalSearchData bpSearchData);
 
     public String getBioPortalSearchContentDetails(String projectName, BioPortalSearchData bpSearchData,
-            BioPortalReferenceData bpRefData);
+            BioPortalReferenceData bpRefData) throws DetailsNotFoundException;
 
     public EntityData createExternalReference(String projectName, String entityName, BioPortalReferenceData bpRefData,
             String user, String operationDescription);
