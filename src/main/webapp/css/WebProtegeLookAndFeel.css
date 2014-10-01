@@ -553,7 +553,7 @@ select {
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
     padding: 20px;
-    z-index: 5;
+    z-index: 12000;  /* Necessary because GWT-EXT sets the z-index to something rather large! */
 }
 
 .gwt-DialogBox .Caption {
