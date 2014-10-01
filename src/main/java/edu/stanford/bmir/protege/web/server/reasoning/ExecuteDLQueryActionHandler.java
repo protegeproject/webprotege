@@ -35,6 +35,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+<<<<<<< HEAD
+=======
+import java.util.concurrent.TimeoutException;
+import java.util.regex.Pattern;
+>>>>>>> Updated to cleaner synchronizer
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 04/09/2014
@@ -106,6 +111,7 @@ public class ExecuteDLQueryActionHandler extends AbstractHasProjectActionHandler
             }
             ListenableFuture<List<DLQueryEntitySetResult>> futures = Futures.allAsList(resultFutures);
             List<DLQueryEntitySetResult> results = futures.get();
+
 
             ImmutableList.Builder<DLQueryEntitySetResult> resultList = ImmutableList.builder();
             for(DLQueryEntitySetResult result : results) {
