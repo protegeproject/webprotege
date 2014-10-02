@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
 import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
+import edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -90,6 +91,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
                                              PrimitiveType.ANNOTATION_PROPERTY,
                                              PrimitiveType.NAMED_INDIVIDUAL);
         ranges.setPlaceholder("Enter an entity name");
+        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         iriField.setEnabled(false);

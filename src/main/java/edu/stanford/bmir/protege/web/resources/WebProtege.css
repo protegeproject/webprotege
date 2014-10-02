@@ -1,0 +1,44 @@
+@external web-protege-laf;
+
+.webProtegeLaf {
+
+}
+
+.formMain {
+    padding: 20px;
+    padding-top: 13px;
+}
+
+.formGroup {
+    padding-bottom: 10px;
+}
+
+.formLabel {
+    color: #000000;
+    font-weight: bold;
+    font-size: 12px;
+    padding-bottom: 2px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/*.valueList {*/
+
+/*}*/
+
+/*.valueList > table > tbody > tr > td {*/
+    /*border-bottom: 1px solid rgb(240, 240, 240);*/
+/*}*/
+
+/*.valueList .gwt-SuggestBox {*/
+    /*border: 1px solid transparent;*/
+/*}*/
+
+/*.valueList .gwt-TextBox {*/
+    /*border: 1px solid transparent;*/
+/*}*/
+
+/*.valueList .gwt-TextArea {*/
+    /*border: 1px solid transparent;*/
+/*}*/
+
+
