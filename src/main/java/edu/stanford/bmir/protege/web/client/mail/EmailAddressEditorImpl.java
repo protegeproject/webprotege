@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
@@ -49,6 +50,7 @@ public class EmailAddressEditorImpl extends Composite implements EmailAddressEdi
     }
 
     public EmailAddressEditorImpl() {
+        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
