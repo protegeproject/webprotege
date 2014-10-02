@@ -1,16 +1,19 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
-        .value-list-editor {
+        .main table {
             border-collapse: collapse;
-            border: 0;
+            border: none;
+            padding: 0;
         }
-        .value-list-editor td {
-            padding-bottom: 1px;
+        .main td {
+            border-collapse: collapse;
+            border: none;
+            padding: 0;
         }
     </ui:style>
 
-    <g:HTMLPanel>
-        <g:FlexTable ui:field="tableField" width="100%" addStyleNames="{style.value-list-editor}"/>
+    <g:HTMLPanel addStyleNames="{style.main} web-protege-value-list">
+        <g:FlexTable ui:field="tableField" width="100%"/>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -25,21 +25,21 @@
 }
 
 *.web-protege-laf * .gwt-TextArea, .gwt-TextArea-readonly {
-    border: 1px solid silver;
+    border: 1px solid rgb(198, 198, 198);
     font-size: 12px;
     font-family: tahoma, sans-serif;
     padding: 2px;
-    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    /*box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;*/
     line-height: 15px;
     color: #000000;
 }
 
 *.web-protege-laf .gwt-TextBox, .gwt-TextBox-readonly {
-    border: 1px solid silver;
+    border: 1px solid rgb(198, 198, 198);
     font-size: 12px;
     font-family: tahoma, sans-serif;
     padding: 2px;
-    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    /*box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;*/
     line-height: 15px;
 }
 
@@ -62,10 +62,11 @@
 }
 
 .web-protege-form-label {
-    color: #4779be;
-    text-align: right;
+    color: #000000;
+    font-weight: bold;
     font-size: 12px;
-    padding-right: 2px;
+    padding-bottom: 2px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 *.web-protege-laf .gwt-PasswordTextBox {
@@ -109,10 +110,10 @@
 }
 
 .gwt-SuggestBox, .gwt-SuggestBox [disabled] {
-    border: 1px solid silver;
+    border: 1px solid rgb(198, 198, 198);
     font-size: 12px;
     padding: 2px;
-    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
+    /*box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;*/
     line-height: 16px;
     font-family: tahoma, sans-serif;
     color: #000000;
@@ -230,68 +231,79 @@
 }
 
 .class-icon-inset {
-    background: url(../images/tree/class.png) no-repeat 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/class.png);
     padding-left: 22px !important;
 }
 
 .object-property-icon-inset {
-    background: url(../images/tree/property.png) no-repeat 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/property.png);
     padding-left: 22px !important;
 }
 
 .data-property-icon-inset {
-    background: url(../images/tree/property.png) no-repeat 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/property.png);
     padding-left: 22px !important;
 }
 
 .annotation-property-icon-inset {
     padding-left: 22px !important;
-    background: url(../images/tree/annotation-property.png) no-repeat 2px 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/annotation-property.png);
 }
 
 .individual-icon-inset {
-    background: url(../images/tree/individual.png) no-repeat 2px 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/individual.png);
     padding-left: 22px !important;
 }
 
 .datatype-icon-inset {
-    background: url(../images/tree/datatype.png) no-repeat 2px 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/datatype.png);
     padding-left: 22px !important;
 }
 
 .literal-icon-inset {
-    background: url(../images/tree/literal.png) no-repeat 2px 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/literal.png);
     padding-left: 22px !important;
 }
 
 .numeric-literal-icon-inset {
-    background: url(../images/tree/number.png) no-repeat 2px 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/number.png);
     padding-left: 22px;
 }
 
 .iri-icon-inset {
-    background: url(../images/tree/iri.png) no-repeat 2px 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/iri.png);
     padding-left: 22px !important;
 }
 
 .date-time-icon-inset {
-    background: url(../images/tree/date-time.png) no-repeat 2px 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/date-time.png);
     padding-left: 22px !important;
 }
 
 .link-icon-inset {
-    background: url(../images/tree/link.png) no-repeat 2px 2px;
-    background-color: inherit;
+    background-repeat: no-repeat;
+    background-position: 2px 2px;
+    background-image: url(../images/tree/link.png);
     padding-left: 22px !important;
 }
 
@@ -471,7 +483,6 @@ select {
     width: 20px;
     height: 20px;
     padding: 0;
-    margin-top: 2px;
 }
 
 .button-style-red {
@@ -825,4 +836,27 @@ select {
 .web-protege-property-grid-editor {
     min-height: 1.3em;
     width: 100%;
+}
+
+.web-protege-value-list {
+
+}
+
+.web-protege-value-list > table > tbody > tr > td {
+    border-bottom: 1px solid rgb(240, 240, 240);
+}
+
+.web-protege-value-list .gwt-SuggestBox {
+    border: 1px solid transparent;
+}
+
+.web-protege-value-list .gwt-SuggestBox {
+    border: 1px solid transparent;
+}
+
+.web-protege-value-list .gwt-TextBox {
+    border: 1px solid transparent;
+}
+.web-protege-value-list .gwt-TextArea {
+    border: 1px solid transparent;
 }
