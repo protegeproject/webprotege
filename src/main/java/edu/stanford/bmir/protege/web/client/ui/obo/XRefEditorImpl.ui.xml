@@ -32,7 +32,7 @@
     <g:HTMLPanel addStyleNames="{style.xref-editor}">
         <table width="100%" cellspacing="0px" cellpadding="1px" style="border-collapse: collapse; table-layout: fixed;">
             <colgroup>
-                <col width="60px"/>
+                <col width="80px"/>
                 <col width="120px"/>
                 <col width="*%"/>
             </colgroup>

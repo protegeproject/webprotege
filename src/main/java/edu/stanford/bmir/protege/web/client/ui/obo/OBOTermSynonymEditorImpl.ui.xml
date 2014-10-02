@@ -2,46 +2,37 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text"
              xmlns:obo="urn:import:edu.stanford.bmir.protege.web.client.ui.obo">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle"/>
+
     <ui:style>
-        .synonym-style {
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
+        .topBlock {
+            display: inline-block;
         }
-        .synonym-name-style {
-            font-weight: bold;
+        .topBlockLeft {
+            padding-right: 20px;
+        }
+        .textBox {
+            border: solid 1px silver !important;
         }
     </ui:style>
+
     <g:HTMLPanel>
-        <table cellpadding="0" cellspacing="0">
-            <col width="30px"/>
-            <col width="100%"/>
-            <tr>
-                <td>
-                    <g:ListBox ui:field="synonymTypeField" visibleItemCount="1" addStyleNames="{style.synonym-style}"/>
-                </td>
-                <td>
-                    <text:PlaceholderTextBox ui:field="synonymField" placeholder="Synonym" width="100%" addStyleNames="{style.synonym-style} {style.synonym-name-style}"/>
-                </td>
-            </tr>
-            <tr>
-                <td/>
-                <td>
-                    <table style="padding-left: 10px;" cellpadding="0" cellspacing="0">
-                        <col width="15px"/>
-                        <col width="100%"/>
-                        <tr>
-                            <td valign="top">
-                                <g:Label text="XRefs" addStyleNames="web-protege-form-label {style.synonym-style}"/>
-                            </td>
-                            <td>
-                                <obo:XRefListEditor ui:field="xrefListField" addStyleNames="{style.synonym-style}"/>
-                            </td>
-                        </tr>
+        <div class="{wp.style.formGroup}">
+            <div class="{style.topBlock} {style.topBlockLeft}">
+                <g:Label text="Synonym type" addStyleNames="{wp.style.formLabel}"/>
+                <g:ListBox ui:field="synonymTypeField" visibleItemCount="1"/>
+            </div>
+            <div class="{style.topBlock}">
+                <g:Label text="Synonym" addStyleNames="{wp.style.formLabel}"/>
+                <text:PlaceholderTextBox ui:field="synonymField" placeholder="Enter synonym" visibleLength="100"
+                        addStyleNames="{style.textBox}"/>
+            </div>
+        </div>
 
-                    </table>
-                </td>
-            </tr>
-        </table>
-
+        <div class="{wp.style.formGroup}">
+            <g:Label text="XRefs" addStyleNames="{wp.style.formLabel}"/>
+            <obo:XRefListEditor ui:field="xrefListField"/>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder>
