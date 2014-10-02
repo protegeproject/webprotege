@@ -36,7 +36,7 @@ public class ChangePasswordViewImpl extends Composite implements ChangePasswordV
 
 
     public ChangePasswordViewImpl() {
-        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
+        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

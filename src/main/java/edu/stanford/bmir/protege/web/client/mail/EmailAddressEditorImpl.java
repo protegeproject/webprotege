@@ -50,7 +50,7 @@ public class EmailAddressEditorImpl extends Composite implements EmailAddressEdi
     }
 
     public EmailAddressEditorImpl() {
-        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
+        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

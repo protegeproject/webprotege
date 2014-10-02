@@ -3,14 +3,14 @@
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle"/>
 
-    <g:HTMLPanel addStyleNames="{wp.css.formMain}">
-        <g:HTMLPanel addStyleNames="{wp.css.formGroup}">
-            <g:Label text="Email address" addStyleNames="{wp.css.formLabel}"/>
+    <g:HTMLPanel addStyleNames="{wp.style.formMain}">
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="Email address" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="emailAddressField" visibleLength="60"/>
         </g:HTMLPanel>
 
-        <g:HTMLPanel addStyleNames="{wp.css.formGroup}">
-            <g:Label text="Confirm email address" addStyleNames="{wp.css.formLabel}"/>
+        <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
+            <g:Label text="Confirm email address" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="confirmEmailAddressField" visibleLength="60"/>
         </g:HTMLPanel>
     </g:HTMLPanel>

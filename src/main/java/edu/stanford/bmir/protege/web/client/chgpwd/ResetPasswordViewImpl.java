@@ -33,7 +33,7 @@ public class ResetPasswordViewImpl extends Composite implements ResetPasswordVie
     private boolean dirty = false;
 
     public ResetPasswordViewImpl() {
-        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
+        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
