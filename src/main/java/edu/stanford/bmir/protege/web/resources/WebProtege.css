@@ -21,6 +21,14 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+.dlgLabel {
+    color: rgb(70, 120, 200);
+    font-weight: bold;
+    font-size: 10pt;
+    padding-bottom: 4px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 /*.valueList {*/
 
 /*}*/

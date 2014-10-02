@@ -5,12 +5,12 @@
 
     <g:HTMLPanel addStyleNames="{wp.style.formMain}">
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label text="Email address" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="Email address" addStyleNames="{wp.style.dlgLabel}"/>
             <g:TextBox ui:field="emailAddressField" visibleLength="60"/>
         </g:HTMLPanel>
 
         <g:HTMLPanel addStyleNames="{wp.style.formGroup}">
-            <g:Label text="Confirm email address" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="Confirm email address" addStyleNames="{wp.style.dlgLabel}"/>
             <g:TextBox ui:field="confirmEmailAddressField" visibleLength="60"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
