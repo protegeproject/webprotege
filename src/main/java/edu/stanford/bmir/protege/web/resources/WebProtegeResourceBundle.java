@@ -12,7 +12,7 @@ public interface WebProtegeResourceBundle extends ClientBundle {
     public static final WebProtegeResourceBundle INSTANCE = GWT.create(WebProtegeResourceBundle.class);
 
     @ClientBundle.Source("WebProtege.css")
-    public WebProtegeCss css();
+    public WebProtegeCss style();
 
 
     public static interface WebProtegeCss extends CssResource {

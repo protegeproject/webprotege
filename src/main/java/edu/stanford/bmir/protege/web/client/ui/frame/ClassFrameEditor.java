@@ -72,7 +72,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
         this.projectId = projectId;
         this.annotations = annotations;
         this.properties = properties;
-        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
+        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
 

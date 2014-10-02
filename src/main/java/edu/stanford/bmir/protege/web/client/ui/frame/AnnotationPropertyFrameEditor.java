@@ -24,7 +24,6 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
-import edu.stanford.bmir.protege.web.shared.frame.OWLPrimitiveDataList;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -32,7 +31,6 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -91,7 +89,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
                                              PrimitiveType.ANNOTATION_PROPERTY,
                                              PrimitiveType.NAMED_INDIVIDUAL);
         ranges.setPlaceholder("Enter an entity name");
-        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
+        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         iriField.setEnabled(false);

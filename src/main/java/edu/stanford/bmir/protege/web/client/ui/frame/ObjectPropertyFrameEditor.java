@@ -70,7 +70,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     private ProjectId projectId;
 
     public ObjectPropertyFrameEditor(ProjectId projectId) {
-        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
+        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
         this.projectId = projectId;
         annotations = new PropertyValueListEditor(projectId);
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());

@@ -24,10 +24,8 @@ import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
-import edu.stanford.bmir.protege.web.shared.frame.OWLPrimitiveDataList;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
@@ -79,7 +77,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
         types.setPlaceholder("Enter class name");
         sameAs = new PrimitiveDataListEditor(PrimitiveType.NAMED_INDIVIDUAL);
         sameAs.setPlaceholder("Enter individual name");
-        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
+        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
         iriField.setEnabled(false);
