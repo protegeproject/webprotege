@@ -18,8 +18,6 @@
             border: #e6e6e6 solid 1px;
             background: #FAFAFA;
 
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
             box-sizing: border-box;
 
         }

@@ -32,8 +32,6 @@
             margin	: 18px;
             margin-top: 2px;
             margin-left: 46px;
-            -webkit-box-shadow: 1px 3px 9px 0 rgba(100, 100, 100, 0.82);
-            -moz-box-shadow:    1px 3px 9px 0 rgba(100, 100, 100, 0.82);
             box-shadow:         1px 3px 9px 0 rgba(100, 100, 100, 0.82);
         }
 

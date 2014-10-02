@@ -3,8 +3,6 @@
              xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.ui.editor">
     <ui:style>
         .table-style {
-            -moz-box-sizing: border-box;
-            -webkit-box-sizing: border-box;
             width: 100%;
             padding: 2px;
             padding-right: 3px;

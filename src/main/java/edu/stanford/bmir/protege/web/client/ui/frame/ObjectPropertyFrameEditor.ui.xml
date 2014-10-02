@@ -2,76 +2,35 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.primitive'
              xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.ui.frame">
-    <ui:style>
-        .section-label {
-            text-align: left;
-        }
-    </ui:style>
 
-    <g:HTMLPanel styleName="web-protege-laf">
+    <ui:style src="Frame.css"/>
 
-        <table width="95%">
-            <col width="100px" align="right"/>
-            <tr>
-                <td align="right">
-                    <g:Label text="Display name" styleName="web-protege-form-label" addStyleNames="web-protege-form-layout-editor-input"/>
-                </td>
-                <td valign="top">
-                    <g:TextBox ui:field="displayNameField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
-                </td>
-            </tr>
-            <tr>
-                <td valign="top">
-                    <g:Label text="IRI" addStyleNames="web-protege-form-label web-protege-form-layout-editor-input"/>
-                </td>
-                <td valign="top">
-                    <g:TextBox ui:field="iriField" width="100%" addStyleNames="web-protege-form-layout-editor-input"/>
-                </td>
-            </tr>
-        </table>
+    <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{style.main}">
+
+        <div class="{style.form-group}">
+            <g:Label text="Display name" styleName="{style.form-label}"/>
+            <g:TextBox ui:field="displayNameField" width="100%"/>
+        </div>
+
+        <div class="{style.form-group}">
+            <g:Label text="IRI" addStyleNames="{style.form-label}"/>
+            <g:TextBox ui:field="iriField" width="100%"/>
+        </div>
 
         <div style="height: 30px;"/>
 
-        <table width="95%">
-            <col width="100px" align="right"/>
-            <tr>
-                <td align="right" valign="top">
-                    <g:Label text="Annotations" addStyleNames="web-protege-form-label"/>
-                </td>
-                <td valign="top">
-                    <!--<g:TextBox ui:field="iriField" width="100%"/>-->
-                    <frame:PropertyValueListEditor ui:field="annotations"/>
-                </td>
-            </tr>
-        </table>
+        <g:Label text="Annotations" addStyleNames="{style.form-label}"/>
+        <frame:PropertyValueListEditor ui:field="annotations"/>
 
         <div style="height: 30px;"/>
 
-        <table width="95%">
-            <col width="100px" align="right"/>
-            <tr>
-                <td align="right" valign="top">
-                    <g:Label text="Domain" addStyleNames="web-protege-form-label"/>
-                </td>
-                <td valign="top">
-                    <wp:PrimitiveDataListEditor ui:field="domains"/>
-                </td>
-            </tr>
-        </table>
+        <g:Label text="Domain" addStyleNames="{style.form-label}"/>
+        <wp:PrimitiveDataListEditor ui:field="domains"/>
 
         <div style="height: 30px;"/>
 
-        <table width="95%">
-            <col width="100px" align="right"/>
-            <tr>
-                <td align="right" valign="top">
-                    <g:Label text="Range" addStyleNames="web-protege-form-label"/>
-                </td>
-                <td valign="top">
-                    <wp:PrimitiveDataListEditor ui:field="ranges"/>
-                </td>
-            </tr>
-        </table>
+        <g:Label text="Range" addStyleNames="{style.form-label}"/>
+        <wp:PrimitiveDataListEditor ui:field="ranges"/>
 
     </g:HTMLPanel>
 </ui:UiBinder>
