@@ -371,7 +371,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     @Override
     public boolean isWellFormed() {
-        return currentData.isPresent();
+        return getTrimmedText().isEmpty() || currentData.isPresent();
     }
 
     /**
