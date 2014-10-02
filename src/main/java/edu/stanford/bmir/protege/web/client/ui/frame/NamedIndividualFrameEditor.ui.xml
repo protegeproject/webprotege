@@ -3,34 +3,34 @@
              xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.primitive'
              xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.ui.frame">
 
-    <ui:style src="Frame.css"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle"/>
 
-    <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{style.main}">
+    <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{wp.css.formMain}">
 
-        <div class="{style.form-group}">
-            <g:Label text="Display name" styleName="{style.form-label}"/>
+        <div class="{wp.css.formGroup}">
+            <g:Label text="Display name" styleName="{wp.css.formLabel}"/>
             <g:TextBox ui:field="displayNameField" width="100%"/>
         </div>
 
-        <div class="{style.form-group}">
-            <g:Label text="IRI" addStyleNames="{style.form-label}"/>
+        <div class="{wp.css.formGroup}">
+            <g:Label text="IRI" addStyleNames="{wp.css.formLabel}"/>
             <g:TextBox ui:field="iriField" width="100%"/>
         </div>
 
         <div style="height: 30px;"/>
 
 
-        <g:Label text="Types" addStyleNames="{style.form-label}"/>
+        <g:Label text="Types" addStyleNames="{wp.css.formLabel}"/>
         <wp:PrimitiveDataListEditor ui:field="types"/>
 
         <div style="height: 30px;"/>
 
-        <g:Label text="Properties" addStyleNames="{style.form-label}"/>
+        <g:Label text="Properties" addStyleNames="{wp.css.formLabel}"/>
         <frame:PropertyValueListEditor ui:field="assertions"/>
 
         <div style="height: 30px;"/>
 
-        <g:Label text="Same As" addStyleNames="{style.form-label}"/>
+        <g:Label text="Same As" addStyleNames="{wp.css.formLabel}"/>
         <wp:PrimitiveDataListEditor ui:field="sameAs"/>
 
     </g:HTMLPanel>

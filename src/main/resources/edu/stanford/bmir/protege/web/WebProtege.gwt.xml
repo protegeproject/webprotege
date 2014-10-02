@@ -11,6 +11,7 @@
 
     <source path="client"/>
     <source path="shared"/>
+    <source path="resources"/>
 
 
     <inherits name='com.google.gwt.junit.JUnit'/>

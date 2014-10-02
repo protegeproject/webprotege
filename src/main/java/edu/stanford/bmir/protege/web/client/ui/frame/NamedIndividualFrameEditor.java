@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
+import edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
@@ -72,19 +73,13 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     public NamedIndividualFrameEditor(ProjectId projectId) {
         super(projectId);
-//        PropertyValueGridGrammar grammar = new PropertyValueGridGrammar();
-//        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.LITERAL);
-//        grammar.addProduction(PrimitiveType.ANNOTATION_PROPERTY, PrimitiveType.IRI);
-//        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.NAMED_INDIVIDUAL);
-//        grammar.addProduction(PrimitiveType.OBJECT_PROPERTY, PrimitiveType.CLASS);
-//        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.LITERAL);
-//        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.DATA_TYPE);
         assertions = new PropertyValueListEditor(projectId);
         assertions.setGrammar(PropertyValueGridGrammar.getNamedIndividualGrammar());
         types = new PrimitiveDataListEditor(PrimitiveType.CLASS);
         types.setPlaceholder("Enter class name");
         sameAs = new PrimitiveDataListEditor(PrimitiveType.NAMED_INDIVIDUAL);
         sameAs.setPlaceholder("Enter individual name");
+        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
         iriField.setEnabled(false);

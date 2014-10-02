@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
+import edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
@@ -69,6 +70,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     private ProjectId projectId;
 
     public ObjectPropertyFrameEditor(ProjectId projectId) {
+        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
         this.projectId = projectId;
         annotations = new PropertyValueListEditor(projectId);
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());

@@ -16,13 +16,11 @@
             padding: 0;
         }
         .property-field {
-            /*width: 200px;*/
             min-width: 200px;
             max-width: 200px;
             box-sizing: border-box;
         }
         .value-field {
-            /*width: 100%;*/
             box-sizing: border-box;
         }
         .language-field {
