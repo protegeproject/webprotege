@@ -14,13 +14,13 @@
     <g:HTMLPanel>
 
         <div class="{wp.style.formGroup}">
-            <g:Label text="IRI Prefix" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="IRI Prefix" addStyleNames="{wp.style.dlgLabel}"/>
             <g:TextBox ui:field="iriPrefixEditor" visibleLength="90"/>
             <g:HTML ui:field="prefixValidatorMessage" visible="false" addStyleNames="{style.validator}"/>
         </div>
 
         <div class="{wp.style.formGroup}">
-            <g:Label text="IRI Suffix" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="IRI Suffix" addStyleNames="{wp.style.dlgLabel}"/>
             <g:ListBox ui:field="suffixSelectorListBox" visibleItemCount="1"/>
         </div>
 

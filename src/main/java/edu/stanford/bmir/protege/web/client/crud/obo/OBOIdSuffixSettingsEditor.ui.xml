@@ -20,14 +20,14 @@
         }
     </ui:style>
 
-    <g:HTMLPanel>
+    <g:HTMLPanel addStyleNames="{wp.style.formMain}">
         <div class="{wp.style.formGroup}">
-            <g:Label text="Digit count" addStyleNames="{wp.style.formLabel}"/>
+            <g:Label text="Digit count" addStyleNames="{wp.style.dlgLabel}"/>
             <g:TextBox ui:field="totalDigitsEditor"/>
         </div>
         <div style="height: 10px;"/>
 
-        <g:Label text="User specific ranges" addStyleNames="{wp.style.formLabel}"/>
+        <g:Label text="User specific ranges" addStyleNames="{wp.style.dlgLabel}"/>
         <g:ScrollPanel height="200px" width="400px" addStyleNames="{style.scroll-panel-style}">
             <g:HTMLPanel addStyleNames="{style.table-style}">
                 <editor:ValueListEditorImpl ui:field="userRangeTable"/>
@@ -35,7 +35,5 @@
         </g:ScrollPanel>
 
         <div style="height: 10px;"/>
-
-
     </g:HTMLPanel>
 </ui:UiBinder>
