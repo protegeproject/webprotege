@@ -7,6 +7,8 @@ import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 
+import java.util.Arrays;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -15,12 +17,12 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
  */
 public class PrimitiveDataListEditor extends ValueListEditorImpl<OWLPrimitiveData> implements HasEnabled  {
 
-    public PrimitiveDataListEditor(final PrimitiveType allowedType) {
+    public PrimitiveDataListEditor(final PrimitiveType ... allowedTypes) {
         super(new ValueEditorFactory<OWLPrimitiveData>() {
             @Override
             public ValueEditor<OWLPrimitiveData> createEditor() {
                 PrimitiveDataEditorImpl editor = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
-                editor.setAllowedType(allowedType, true);
+                editor.setAllowedTypes(Arrays.asList(allowedTypes));
                 editor.setFreshEntitiesSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
                 return editor;
             }
