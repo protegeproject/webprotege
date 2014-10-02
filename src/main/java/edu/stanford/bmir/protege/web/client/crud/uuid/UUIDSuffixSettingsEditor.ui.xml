@@ -1,26 +1,5 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-        >
-    <ui:style>
-        .optional-style {
-            color: silver;
-            padding-left: 5px;
-        }
-    </ui:style>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <g:HTMLPanel>
-        <!--<table>-->
-            <!--<colgroup>-->
-                <!--<col width="100px"/>-->
-            <!--</colgroup>-->
-            <!--<tr>-->
-                <!--<td>-->
-                    <!--<g:Label text="Language" addStyleNames="web-protege-form-label"/>-->
-                <!--</td>-->
-                <!--<td>-->
-                    <!--<text:PlaceholderTextBox ui:field="labelLangEditor" visibleLength="8" placeholder="e.g. en"/><g:InlineLabel text=" (optional)" addStyleNames="{style.optional-style}"/>-->
-                <!--</td>-->
-            <!--</tr>-->
-        <!--</table>-->
-
     </g:HTMLPanel>
 </ui:UiBinder>
