@@ -8,6 +8,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
@@ -50,6 +51,7 @@ public class OBOTermIdEditorImpl extends Composite implements OBOTermIdEditor {
 
     public OBOTermIdEditorImpl() {
         namespaceField = new SuggestBox(new NamespaceSuggestOracle());
+        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
