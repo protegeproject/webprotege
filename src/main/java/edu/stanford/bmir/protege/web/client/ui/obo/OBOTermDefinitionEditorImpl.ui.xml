@@ -1,13 +1,14 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-             xmlns:obo="urn:import:edu.stanford.bmir.protege.web.client.ui.obo">
+             xmlns:obo="urn:import:edu.stanford.bmir.protege.web.client.ui.obo"
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text">
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle"/>
 
     <g:HTMLPanel addStyleNames="{wp.style.formMain}">
         <div class="{wp.style.formGroup}">
             <g:Label text="Definition" addStyleNames="{wp.style.formLabel}"/>
-            <g:TextArea ui:field="definitionField" width="100%" visibleLines="3"/>
+            <text:ExpandingTextBoxImpl ui:field="definitionField" width="100%" placeholder="Enter definition"/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="XRefs" addStyleNames="{wp.style.formLabel}"/>
