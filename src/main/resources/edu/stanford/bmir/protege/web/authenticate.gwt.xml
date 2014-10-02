@@ -10,6 +10,7 @@
 
     <source path="client"/>
     <source path="shared"/>
+    <source path="resources"/>
 
 	<inherits name="com.google.gwt.user.User"/>
 	<inherits name="com.google.gwt.place.Place"/>
@@ -18,6 +19,7 @@
     <inherits name="com.google.common.collect.Collect"/>
     <inherits name="com.google.gwt.inject.Inject"/>
 	<inherits name='com.gwtext.GwtExt' />
+	<inherits name='com.google.gwt.resources.Resources' />
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
 
