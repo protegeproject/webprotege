@@ -77,7 +77,9 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
         annotations = new PropertyValueListEditor(projectId);
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(PrimitiveType.CLASS);
+        domains.setPlaceholder("Enter an entity name");
         ranges = new PrimitiveDataListEditor(PrimitiveType.DATA_TYPE);
+        ranges.setPlaceholder("Enter an entity name");
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         iriField.setEnabled(false);
