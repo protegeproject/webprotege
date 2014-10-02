@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
@@ -32,6 +33,7 @@ public class ResetPasswordViewImpl extends Composite implements ResetPasswordVie
     private boolean dirty = false;
 
     public ResetPasswordViewImpl() {
+        WebProtegeResourceBundle.INSTANCE.css().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
