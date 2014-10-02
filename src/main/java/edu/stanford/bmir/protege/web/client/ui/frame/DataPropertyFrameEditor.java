@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -19,6 +20,8 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLDatatypeData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
@@ -78,8 +81,8 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
 
         annotations = new PropertyValueListEditor(projectId);
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        domains = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
-        ranges = new PrimitiveDataListEditor(projectId, PrimitiveType.DATA_TYPE);
+        domains = new PrimitiveDataListEditor(PrimitiveType.CLASS);
+        ranges = new PrimitiveDataListEditor(PrimitiveType.DATA_TYPE);
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         iriField.setEnabled(false);
@@ -99,13 +102,13 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
     }
 
     @UiHandler("domains")
-    protected void handleDomainsChanged(ValueChangeEvent<Optional<OWLPrimitiveDataList>> event) {
+    protected void handleDomainsChanged(ValueChangeEvent<Optional<List<OWLPrimitiveData>>> event) {
         fireValueChangedIfWellFormed();
     }
 
 
     @UiHandler("ranges")
-    protected void handleRangesChanged(ValueChangeEvent<Optional<OWLPrimitiveDataList>> event) {
+    protected void handleRangesChanged(ValueChangeEvent<Optional<List<OWLPrimitiveData>>> event) {
         fireValueChangedIfWellFormed();
     }
 
@@ -151,7 +154,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
                         primitiveDatas.add(entityData.get());
                     }
                 }
-                domains.setValue(new OWLPrimitiveDataList(primitiveDatas));
+                domains.setValue(primitiveDatas);
             }
         });
         RenderingServiceManager.getManager().execute(new GetRendering(projectId, frame.getRanges()), new AsyncCallback<GetRenderingResponse>() {
@@ -168,7 +171,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
                         primitiveDatas.add(entityData.get());
                     }
                 }
-                ranges.setValue(new OWLPrimitiveDataList(primitiveDatas));
+                ranges.setValue(primitiveDatas);
             }
         });
         functionalCheckBox.setValue(frame.isFunctional());
@@ -188,8 +191,18 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
     @Override
     public Optional<LabelledFrame<DataPropertyFrame>> getValue() {
         OWLDataProperty property = DataFactory.getOWLDataProperty(getIRIString());
-        final Set<OWLClass> domainsClasses = new HashSet<OWLClass>(domains.getValue().get().getEntitiesOfType(EntityType.CLASS));
-        final Set<OWLDatatype> rangeTypes = new HashSet<OWLDatatype>(ranges.getValue().get().getEntitiesOfType(EntityType.DATATYPE));
+        final Set<OWLClass> domainsClasses = Sets.newHashSet();
+        if (domains.getValue().isPresent()) {
+            for(OWLPrimitiveData primitiveData : domains.getValue().get()) {
+                domainsClasses.add(((OWLClassData) primitiveData).getEntity());
+            }
+        }
+        final Set<OWLDatatype> rangeTypes = Sets.newHashSet();
+        if (ranges.getValue().isPresent()) {
+            for(OWLPrimitiveData primitiveData : ranges.getValue().get()) {
+                rangeTypes.add(((OWLDatatypeData) primitiveData).getEntity());
+            }
+        }
         DataPropertyFrame frame = new DataPropertyFrame(property, annotations.getValue().get(), domainsClasses, rangeTypes, functionalCheckBox.getValue());
         return Optional.of(new LabelledFrame<DataPropertyFrame>(getDisplayName(), frame));
     }

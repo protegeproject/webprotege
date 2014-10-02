@@ -12,11 +12,14 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.library.button.DeleteButton;
+import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,7 +27,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/06/2013
  */
-public class ValueListEditorImpl<O> extends Composite implements ValueListEditor<O> {
+public class ValueListEditorImpl<O> extends Composite implements ValueListEditor<O>, HasPlaceholder {
 
     public static final int DELETE_BUTTON_COLUMN = 1;
     private final DirtyChangedHandler dirtyChangedHandler;
@@ -45,6 +48,8 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
     private boolean dirty = false;
 
     private boolean enabled = false;
+
+    private String placeholder = "";
 
     @UiField
     protected FlexTable tableField;
@@ -72,7 +77,15 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
         updateEnabled();
     }
 
+    @Override
+    public String getPlaceholder() {
+        return placeholder;
+    }
 
+    @Override
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = checkNotNull(placeholder);
+    }
 
     @Override
     public Widget getWidget() {
@@ -211,6 +224,9 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
         deleteButton.setEnabled(enabled);
         if(editor instanceof HasEnabled) {
             ((HasEnabled) editor).setEnabled(enabled);
+        }
+        if(editor instanceof HasPlaceholder) {
+            ((HasPlaceholder) editor).setPlaceholder(placeholder);
         }
         return editor;
     }

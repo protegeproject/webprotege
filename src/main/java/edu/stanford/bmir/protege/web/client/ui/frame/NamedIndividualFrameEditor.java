@@ -81,9 +81,9 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 //        grammar.addProduction(PrimitiveType.DATA_PROPERTY, PrimitiveType.DATA_TYPE);
         assertions = new PropertyValueListEditor(projectId);
         assertions.setGrammar(PropertyValueGridGrammar.getNamedIndividualGrammar());
-        types = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
+        types = new PrimitiveDataListEditor(PrimitiveType.CLASS);
         types.setPlaceholder("Enter class name");
-        sameAs = new PrimitiveDataListEditor(projectId, PrimitiveType.NAMED_INDIVIDUAL);
+        sameAs = new PrimitiveDataListEditor(PrimitiveType.NAMED_INDIVIDUAL);
         sameAs.setPlaceholder("Enter individual name");
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
@@ -133,8 +133,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
                 dataList.add(rendering.get());
             }
         }
-        OWLPrimitiveDataList list = new OWLPrimitiveDataList(dataList);
-        types.setValue(list);
+        types.setValue(dataList);
 
         List<OWLPrimitiveData> sameAsList = new ArrayList<OWLPrimitiveData>();
         for (OWLNamedIndividual individual : editedFrame.getSameIndividuals()) {
@@ -143,7 +142,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
                 sameAsList.add(individualRendering.get());
             }
         }
-        sameAs.setValue(new OWLPrimitiveDataList(sameAsList));
+        sameAs.setValue(sameAsList);
     }
 
     @Override
@@ -170,18 +169,22 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     private Set<OWLClass> getRawTypes() {
         Set<OWLClass> rawTypes = new HashSet<OWLClass>();
-        Optional<OWLPrimitiveDataList> typesList = types.getValue();
+        Optional<List<OWLPrimitiveData>> typesList = types.getValue();
         if(typesList.isPresent()) {
-            rawTypes.addAll(typesList.get().getEntitiesOfType(EntityType.CLASS));
+            for(OWLPrimitiveData data : typesList.get()) {
+                rawTypes.add((OWLClass) data.getObject());
+            }
         }
         return rawTypes;
     }
 
     private Set<OWLNamedIndividual> getRawSameAs() {
         Set<OWLNamedIndividual> rawSameAs = new HashSet<OWLNamedIndividual>();
-        Optional<OWLPrimitiveDataList> sameAsList = sameAs.getValue();
+        Optional<List<OWLPrimitiveData>> sameAsList = sameAs.getValue();
         if(sameAsList.isPresent()) {
-            rawSameAs.addAll(sameAsList.get().getEntitiesOfType(EntityType.NAMED_INDIVIDUAL));
+            for(OWLPrimitiveData data : sameAsList.get()) {
+                rawSameAs.add((OWLNamedIndividual) data.getObject());
+            }
         }
         return rawSameAs;
     }
@@ -216,7 +219,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
     }
 
     @UiHandler("types")
-    protected void handleTypesChanged(ValueChangeEvent<Optional<OWLPrimitiveDataList>> event) {
+    protected void handleTypesChanged(ValueChangeEvent<Optional<List<OWLPrimitiveData>>> event) {
         if(isWellFormed()) {
             ValueChangeEvent.fire(this, getValue());
         }
@@ -228,7 +231,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
     }
 
     @UiHandler("sameAs")
-    protected void handleSameAsChanged(ValueChangeEvent<Optional<OWLPrimitiveDataList>> event) {
+    protected void handleSameAsChanged(ValueChangeEvent<Optional<List<OWLPrimitiveData>>> event) {
         if(isWellFormed()) {
             ValueChangeEvent.fire(this, getValue());
         }

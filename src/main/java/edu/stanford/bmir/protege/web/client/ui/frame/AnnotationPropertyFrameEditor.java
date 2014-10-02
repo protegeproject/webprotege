@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -26,6 +27,7 @@ import edu.stanford.bmir.protege.web.shared.frame.OWLPrimitiveDataList;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
@@ -74,8 +76,8 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
         this.projectId = projectId;
         annotations = new PropertyValueListEditor(projectId);
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        domains = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
-        ranges = new PrimitiveDataListEditor(projectId, PrimitiveType.DATA_TYPE);
+        domains = new PrimitiveDataListEditor(PrimitiveType.CLASS);
+        ranges = new PrimitiveDataListEditor(PrimitiveType.DATA_TYPE);
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         iriField.setEnabled(false);
@@ -93,13 +95,13 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     }
 
     @UiHandler("domains")
-    protected void handleDomainsChanged(ValueChangeEvent<Optional<OWLPrimitiveDataList>> event) {
+    protected void handleDomainsChanged(ValueChangeEvent<Optional<List<OWLPrimitiveData>>> event) {
         fireValueChangedIfWellFormed();
     }
 
 
     @UiHandler("ranges")
-    protected void handleRangesChanged(ValueChangeEvent<Optional<OWLPrimitiveDataList>> event) {
+    protected void handleRangesChanged(ValueChangeEvent<Optional<List<OWLPrimitiveData>>> event) {
         fireValueChangedIfWellFormed();
     }
 
@@ -136,7 +138,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
                         primitiveDatas.add(entityData.get());
                     }
                 }
-                domains.setValue(new OWLPrimitiveDataList(primitiveDatas));
+                domains.setValue(primitiveDatas);
             }
         });
         RenderingServiceManager.getManager().execute(new GetRendering(projectId, frame.getRanges()), new AsyncCallback<GetRenderingResponse>() {
@@ -153,7 +155,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
                         primitiveDatas.add(entityData.get());
                     }
                 }
-                ranges.setValue(new OWLPrimitiveDataList(primitiveDatas));
+                ranges.setValue(primitiveDatas);
             }
         });
 
@@ -172,8 +174,14 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     @Override
     public Optional<LabelledFrame<AnnotationPropertyFrame>> getValue() {
         OWLAnnotationProperty property = DataFactory.getOWLAnnotationProperty(getIRIString());
-        final Set<OWLEntity> domainsClasses = new HashSet<OWLEntity>(domains.getValue().get().getSignature());
-        final Set<OWLEntity> rangeTypes = new HashSet<OWLEntity>(ranges.getValue().get().getSignature());
+        final Set<OWLEntity> domainsClasses = Sets.newHashSet();
+        for(OWLPrimitiveData data : domains.getValue().get()) {
+            domainsClasses.add((OWLClass) data.getObject());
+        }
+        final Set<OWLEntity> rangeTypes = Sets.newHashSet();
+        for(OWLPrimitiveData data : ranges.getValue().get()) {
+            rangeTypes.add((OWLEntity) data.getObject());
+        }
         AnnotationPropertyFrame frame = new AnnotationPropertyFrame(property, annotations.getValue().get().getAnnotationPropertyValues(), domainsClasses, rangeTypes);
         return Optional.of(new LabelledFrame<AnnotationPropertyFrame>(getDisplayName(), frame));
     }
