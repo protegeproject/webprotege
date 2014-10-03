@@ -31,10 +31,10 @@ public class BioPortalSearchPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     public void reload() {
-        if (_currentEntity == null) {
+        if (getEntity() == null) {
             return;
         }
-        setTitle("BioPortal search results for " + _currentEntity.getBrowserText());
-        searchComp.setEntity(_currentEntity);
+        setTitle("BioPortal search results for " + getEntity().getBrowserText());
+        searchComp.setEntity(getEntity());
     }
 }

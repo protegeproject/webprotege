@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
@@ -8,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -33,31 +35,21 @@ public abstract class AbstractOBOTermPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    final public void setEntity(EntityData newEntityData) {
-        try {
-//            if(_currentEntity == newEntityData && newEntityData != null) {
-//                clearDisplay();
-//                return;
-//            }
-            OWLEntity entity = getCurrentEntity();
-            if (entity != null && isDirty()) {
-                commitChangesForEntity(entity);
-            }
-            _currentEntity = newEntityData;
-            if (_currentEntity != null) {
-                OWLEntity newEntity = getCurrentEntity();
-                if (newEntity != null) {
-                    displayEntity(newEntity);
-                }
-            }
-            else {
-                clearDisplay();
-            }
-            updateTitle();
+    protected void handleBeforeSetEntity(Optional<OWLEntityData> entityData) {
+        if(entityData.isPresent() && isDirty()) {
+            commitChangesForEntity(entityData.get().getEntity());
         }
-        catch (RuntimeException e) {
-            GWT.log(e.getMessage(), e);
+    }
+
+    @Override
+    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
+        if(entityData.isPresent()) {
+            displayEntity(entityData.get().getEntity());
         }
+        else {
+//            clearDisplay();
+        }
+        updateTitle();
     }
 
     @Override

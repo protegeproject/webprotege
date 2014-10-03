@@ -91,11 +91,11 @@ public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     public void reload() {
-        setTitle("Related properties" + (_currentEntity == null ? " (nothing selected)" : " for " + _currentEntity.getBrowserText()));
+        setTitle("Related properties" + (getEntity() == null ? " (nothing selected)" : " for " + getEntity().getBrowserText()));
 
         store.removeAll();
-        if (_currentEntity != null) {
-            OntologyServiceManager.getInstance().getRelatedProperties(getProject().getProjectId(), _currentEntity.getName(),
+        if (getEntity() != null) {
+            OntologyServiceManager.getInstance().getRelatedProperties(getProject().getProjectId(), getEntity().getName(),
                 new GetTriplesHandler());
         }
     }
@@ -113,8 +113,8 @@ public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
 
         @Override
         public void handleFailure(Throwable caught) {
-           GWT.log("Error at retrieving props in domain for " + _currentEntity, caught);
-           propGrid.setTitle("Error at retrieving the related properties for " + _currentEntity.getBrowserText());
+           GWT.log("Error at retrieving props in domain for " + getEntity(), caught);
+           propGrid.setTitle("Error at retrieving the related properties for " + getEntity().getBrowserText());
         }
 
         @Override

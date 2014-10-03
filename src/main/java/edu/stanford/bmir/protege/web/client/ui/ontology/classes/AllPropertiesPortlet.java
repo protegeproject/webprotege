@@ -21,17 +21,12 @@ public class AllPropertiesPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public void setEntity(EntityData newEntity) {
-        super.setEntity(newEntity);
-    }
-
-    @Override
     public void reload() {
-        if (_currentEntity != null) {
-            setTitle("Properties for " + _currentEntity.getBrowserText());
+        if (getEntity() != null) {
+            setTitle("Properties for " + getEntity().getBrowserText());
         }
 
-        propGrid.setEntity(_currentEntity);
+        propGrid.setEntity(getEntity());
     }
 
     @Override

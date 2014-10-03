@@ -65,26 +65,6 @@ public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
         }
     }
 
-    public Optional<OWLEntityData> getSelectedEntityData() {
-        Collection<EntityData> selection = getSelection();
-        // Not sure what the difference is here
-        if(selection == null || selection.isEmpty()) {
-            EntityData entityData = getEntity();
-            if(entityData != null) {
-                selection = Collections.singleton(entityData);
-            }
-        }
-
-        if(selection == null) {
-            return Optional.absent();
-        }
-        if(selection.isEmpty()) {
-            return Optional.absent();
-        }
-        EntityData entityData = selection.iterator().next();
-        return toOWLEntityData(entityData);
-    }
-
     protected Optional<OWLEntity> toOWLEntity(EntityData entityData) {
         Optional<OWLEntityData> ed = toOWLEntityData(entityData);
         if(ed.isPresent()) {
@@ -105,35 +85,6 @@ public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
         }
         IRI iri = IRI.create(name);
         return Optional.of(DataFactory.getOWLClass(iri));
-    }
-
-    protected Optional<OWLEntityData> toOWLEntityData(EntityData entityData) {
-        if(entityData instanceof PropertyEntityData) {
-            PropertyEntityData propertyEntityData = (PropertyEntityData) entityData;
-            PropertyType propertyType = propertyEntityData.getPropertyType();
-            if (propertyType != null) {
-                switch(propertyType) {
-                    case OBJECT:
-                        return Optional.<OWLEntityData>of(new OWLObjectPropertyData(DataFactory.getOWLObjectProperty(entityData.getName()), entityData.getBrowserText()));
-                    case DATATYPE:
-                        return Optional.<OWLEntityData>of(new OWLDataPropertyData(DataFactory.getOWLDataProperty(entityData.getName()), entityData.getBrowserText()));
-                    case ANNOTATION:
-                        return Optional.<OWLEntityData>of(new OWLAnnotationPropertyData(DataFactory.getOWLAnnotationProperty(entityData.getName()), entityData.getBrowserText()));
-
-                }
-            }
-        }
-        else if(entityData.getValueType() == ValueType.Cls) {
-            return Optional.<OWLEntityData>of(new OWLClassData(DataFactory.getOWLClass(entityData.getName()), entityData.getBrowserText()));
-        }
-        else if(entityData.getValueType() == ValueType.Instance) {
-            return Optional.<OWLEntityData>of(new OWLNamedIndividualData(DataFactory.getOWLNamedIndividual(entityData.getName()), entityData.getBrowserText()));
-        }
-
-        else if(entityData.getValueType() == ValueType.Property) {
-            return Optional.absent();
-        }
-        return Optional.absent();
     }
 
     @Override
