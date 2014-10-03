@@ -175,7 +175,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
      *
      * @see edu.stanford.bmir.protege.web.client.ui.EntityPortlet#getEntity()
      */
-    public EntityData getEntity() {
+    public final EntityData getEntity() {
         return _currentEntity;
     }
 
