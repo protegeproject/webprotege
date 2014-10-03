@@ -25,14 +25,14 @@ public class AnnotationsPortlet extends AbstractOWLEntityPortlet {
 	}
 
 	public void reload() { 
-		if (_currentEntity != null) {
-			String title = _currentEntity.getBrowserText();
+		if (getEntity() != null) {
+			String title = getEntity().getBrowserText();
 			if (title.length() > 20) {
 				title = "   ..." + title.substring(title.length() - 20, title.length());
 			}
 			setTitle("Ontology Annotations for " + title);
 		}
 		
-		annotationsGrid.setEntity(_currentEntity);
+		annotationsGrid.setEntity(getEntity());
 	}
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.PlaceChangeEvent;
@@ -24,12 +25,17 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
+import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.util.AbstractValidatableTab;
 import edu.stanford.bmir.protege.web.client.ui.util.ValidatableTab;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
@@ -39,6 +45,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -56,7 +63,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     private Project project;
 
-    protected EntityData _currentEntity;
+    private EntityData _currentEntity;
 
     private AbstractTab tab;
 
@@ -148,10 +155,21 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
      * edu.stanford.bmir.protege.web.client.ui.EntityPortlet#setEntity(edu.stanford
      * .bmir.protege.web.client.util.EntityData)
      */
-    public void setEntity(EntityData newEntity) {
+    public final void setEntity(EntityData newEntity) {
+        handleBeforeSetEntity(getSelectedEntityData());
         _currentEntity = newEntity;
+        handleAfterSetEntity(getSelectedEntityData());
+        System.out.println("TODO: MOVE RELOAD");
         reload();
         // doLayout();
+    }
+
+    protected void handleBeforeSetEntity(Optional<OWLEntityData> entityData) {
+
+    }
+
+    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
+
     }
 
     /*
@@ -508,5 +526,54 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         for (HandlerRegistration reg : handlerRegistrations) {
             reg.removeHandler();
         }
+    }
+
+    public Optional<OWLEntityData> getSelectedEntityData() {
+        Collection<EntityData> selection = getSelection();
+        // Not sure what the difference is here
+        if(selection == null || selection.isEmpty()) {
+            EntityData entityData = getEntity();
+            if(entityData != null) {
+                selection = Collections.singleton(entityData);
+            }
+        }
+
+        if(selection == null) {
+            return Optional.absent();
+        }
+        if(selection.isEmpty()) {
+            return Optional.absent();
+        }
+        EntityData entityData = selection.iterator().next();
+        return toOWLEntityData(entityData);
+    }
+
+    protected Optional<OWLEntityData> toOWLEntityData(EntityData entityData) {
+        if(entityData instanceof PropertyEntityData) {
+            PropertyEntityData propertyEntityData = (PropertyEntityData) entityData;
+            PropertyType propertyType = propertyEntityData.getPropertyType();
+            if (propertyType != null) {
+                switch(propertyType) {
+                    case OBJECT:
+                        return Optional.<OWLEntityData>of(new OWLObjectPropertyData(DataFactory.getOWLObjectProperty(entityData.getName()), entityData.getBrowserText()));
+                    case DATATYPE:
+                        return Optional.<OWLEntityData>of(new OWLDataPropertyData(DataFactory.getOWLDataProperty(entityData.getName()), entityData.getBrowserText()));
+                    case ANNOTATION:
+                        return Optional.<OWLEntityData>of(new OWLAnnotationPropertyData(DataFactory.getOWLAnnotationProperty(entityData.getName()), entityData.getBrowserText()));
+
+                }
+            }
+        }
+        else if(entityData.getValueType() == ValueType.Cls) {
+            return Optional.<OWLEntityData>of(new OWLClassData(DataFactory.getOWLClass(entityData.getName()), entityData.getBrowserText()));
+        }
+        else if(entityData.getValueType() == ValueType.Instance) {
+            return Optional.<OWLEntityData>of(new OWLNamedIndividualData(DataFactory.getOWLNamedIndividual(entityData.getName()), entityData.getBrowserText()));
+        }
+
+        else if(entityData.getValueType() == ValueType.Property) {
+            return Optional.absent();
+        }
+        return Optional.absent();
     }
 }

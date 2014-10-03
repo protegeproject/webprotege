@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
+import com.google.common.base.Optional;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.event.PanelListener;
@@ -9,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidget;
 import edu.stanford.bmir.protege.web.client.ui.portlet.PropertyWidget;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -94,18 +96,19 @@ public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public void setEntity(EntityData newEntity) {
-        checkFormGenerator(newEntity);
+    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
+        if(entityData.isPresent()) {
+            setTitle("Details for " + entityData.get().getBrowserText());
+        }
+        else {
+            setTitle("Details: nothing selected");
+        }
+        checkFormGenerator(getEntity());
 
-        setTitle(newEntity == null ? "Details: nothing selected" : "Details for " + newEntity.getBrowserText());
-
-        _currentEntity = newEntity;
-
-        setSubject(_currentEntity);
+        setSubject(getEntity());
 
         fillWidgetValues();
     }
-
 
     protected void fillWidgetValues() {
         //set the subject and fill values only for widgets in the active tab
@@ -142,8 +145,8 @@ public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
 
     protected boolean needsNewFormGenerator(EntityData newEntity) {
         try {
-            if (_currentEntity != null && newEntity != null) {
-                Collection<EntityData> currentTypes = _currentEntity.getTypes();
+            if (getEntity() != null && newEntity != null) {
+                Collection<EntityData> currentTypes = getEntity().getTypes();
                 Collection<EntityData> newTypes = newEntity.getTypes();
 
                 if (currentTypes == null || newTypes == null) {
