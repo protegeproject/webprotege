@@ -30,11 +30,6 @@ public interface EntityPortlet extends Selectable {
     public EntityData getEntity();
 
     /**
-     * Called to reload the UI with the content of the current entity.
-     */
-    public void reload();
-
-    /**
      * Called in the constructor of the portlet to initialize any needed GUI.
      */
     public void initialize();

@@ -53,7 +53,7 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
         lastRevisionNumber = event.getRevisionNumber();
         for(OWLEntityData entityData : event.getSubjects()) {
             if(isSelected(entityData.getEntity())) {
-                reload();
+                updateDisplayForSelectedEntity();
                 return;
             }
         }
@@ -61,6 +61,10 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
+        updateDisplayForSelectedEntity();
+    }
+
+    private void updateDisplayForSelectedEntity() {
         store.removeAll();
 
         String entityName = "";
