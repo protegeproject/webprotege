@@ -33,26 +33,4 @@ public interface EntityPortlet extends Selectable {
      * Called in the constructor of the portlet to initialize any needed GUI.
      */
     public void initialize();
-//
-//    /**
-//     * Called when a user logs in.
-//     *
-//     * @param userName
-//     *            - the name of the user who logged in.
-//     */
-//    public void onLogin(String userName);
-//
-//    /**
-//     * Called when a user logs out.
-//     *
-//     * @param userName
-//     *            - the name of the user who logged out.
-//     */
-//    public void onLogout(String userName);
-
-//    /**
-//     * Called when the permissions for the project and user of the portlet have
-//     * changed
-//     */
-//    public void onPermissionsChanged(Collection<String> permissions);
 }
