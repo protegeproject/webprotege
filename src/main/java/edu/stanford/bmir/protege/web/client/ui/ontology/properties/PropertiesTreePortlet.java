@@ -59,15 +59,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public void reload() {
-        Node[] nodes = treePanel.getRootNode().getChildNodes();
-        for (Node node : nodes) {
-            node.remove();
-        }
-        getSubProperties(null, true);
-    }
-
-    @Override
     public void initialize() {
         setLayout(new FitLayout());
         setTitle("Properties Tree");
@@ -165,9 +156,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
                 }
             }
         });
-
-
-
     }
 
     private void selectNode(TreeNode node) {

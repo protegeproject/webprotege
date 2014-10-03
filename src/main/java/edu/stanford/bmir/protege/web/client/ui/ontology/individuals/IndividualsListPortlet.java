@@ -128,14 +128,6 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
     }
 
     @Override
-    public void reload() {
-        if (getEntity() != null) {
-            setTitle("Individuals for " + getEntity().getBrowserText());
-        }
-        setEntity(getEntity());
-    }
-
-    @Override
     protected void handleBeforeSetEntity(Optional<OWLEntityData> entityData) {
         super.handleBeforeSetEntity(entityData);
     }

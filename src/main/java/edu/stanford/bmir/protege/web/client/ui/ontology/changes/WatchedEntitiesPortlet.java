@@ -38,10 +38,6 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public void reload() {
-    }
-
-    @Override
     public void onLogin(UserId userId) {
         onRefresh();
     }

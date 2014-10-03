@@ -36,18 +36,17 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
     }
 
     @Override
-    public void reload() {
-        Optional<OWLEntityData> entity = getSelectedEntityData();
-        if(entity.isPresent()) {
-            DispatchServiceManager.get().execute(new GetEntityRenderingAction(getProjectId(), entity.get().getEntity()),
-                    new AbstractWebProtegeAsyncCallback<GetEntityRenderingResult>() {
-                        @Override
-                        public void onSuccess(GetEntityRenderingResult result) {
-                            html.setHTML(result.getRendering());
-                        }
-                    });
+    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
+        if(entityData.isPresent()) {
+            DispatchServiceManager.get().execute(new GetEntityRenderingAction(getProjectId(), entityData.get().getEntity()),
+                                                 new AbstractWebProtegeAsyncCallback<GetEntityRenderingResult>() {
+                                                     @Override
+                                                     public void onSuccess(GetEntityRenderingResult result) {
+                                                         html.setHTML(result.getRendering());
+                                                     }
+                                                 });
 
-            setTitle(entity.get().getBrowserText());
+            setTitle(entityData.get().getBrowserText());
         }
     }
 

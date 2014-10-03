@@ -21,14 +21,6 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
         super(project);
     }
 
-    public ProjectFeedPortlet(Project project, boolean initialize) {
-        super(project, initialize);
-    }
-
-    @Override
-    public void reload() {
-    }
-
     @Override
     public void initialize() {
         basePanel = new ProjectFeedBasePanel(getProjectId(), this);

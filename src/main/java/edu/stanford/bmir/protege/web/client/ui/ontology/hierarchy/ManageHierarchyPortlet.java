@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy;
 
+import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
@@ -14,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import java.util.Collection;
 import java.util.Map;
@@ -192,13 +194,8 @@ public class ManageHierarchyPortlet extends AbstractOWLEntityPortlet {
         doLayout();
     }
 
-
-    /*
-     * Misc
-     */
-
     @Override
-    public void reload() {
+    protected void handleAfterSetEntity(Optional<OWLEntityData> ed) {
         EntityData entityData = getEntity();
         if (selectable != null) {
             selectable.setSelection(UIUtil.createCollection(entityData));

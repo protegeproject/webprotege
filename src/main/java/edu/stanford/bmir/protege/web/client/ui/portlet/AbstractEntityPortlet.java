@@ -204,13 +204,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     /*
      * (non-Javadoc)
      *
-     * @see edu.stanford.bmir.protege.web.client.ui.EntityPortlet#reload()
-     */
-    public abstract void reload();
-
-    /*
-     * (non-Javadoc)
-     *
      * @see edu.stanford.bmir.protege.web.client.ui.EntityPortlet#intialize()
      */
     public abstract void initialize();
@@ -575,5 +568,10 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
             return Optional.absent();
         }
         return Optional.absent();
+    }
+
+    @Override
+    final public void reload() {
+
     }
 }

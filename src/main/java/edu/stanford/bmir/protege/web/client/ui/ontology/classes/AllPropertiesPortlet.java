@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import java.util.Collection;
 
@@ -21,19 +23,18 @@ public class AllPropertiesPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public void reload() {
-        if (getEntity() != null) {
-            setTitle("Properties for " + getEntity().getBrowserText());
-        }
-
-        propGrid.setEntity(getEntity());
-    }
-
-    @Override
     public void initialize() {
         setTitle("Properties");
         this.propGrid = new AllPropertiesGrid(getProject());
         add(propGrid);
+    }
+
+    @Override
+    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
+        if (entityData.isPresent()) {
+            setTitle("Properties for " + entityData.get().getBrowserText());
+        }
+        propGrid.setEntity(getEntity());
     }
 
     @Override

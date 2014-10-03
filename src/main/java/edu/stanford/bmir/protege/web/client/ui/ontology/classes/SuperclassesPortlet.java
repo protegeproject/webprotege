@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
+import com.google.common.base.Optional;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -8,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ParentsPanel;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +36,7 @@ public class SuperclassesPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public void reload() {
+    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
         String entityDisplayText = UIUtil.getDisplayText(getEntity());
         if (entityDisplayText.length() > 63) {
             entityDisplayText = entityDisplayText.substring(0, 60) + "...";

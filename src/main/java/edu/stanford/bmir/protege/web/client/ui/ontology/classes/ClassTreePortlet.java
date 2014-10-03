@@ -300,10 +300,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public void reload() {
-    }
-
-    @Override
     public void initialize() {
         setLayout(new FitLayout());
 

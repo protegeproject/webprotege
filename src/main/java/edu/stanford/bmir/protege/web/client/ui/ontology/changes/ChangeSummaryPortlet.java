@@ -77,16 +77,6 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public void reload() {
-        // onRefresh(); //FIXME
-    }
-
-    @Override
-    protected void afterRender() {
-        // onRefresh();
-    }
-
-    @Override
     protected void onRefresh() {
         refreshContent();
     }

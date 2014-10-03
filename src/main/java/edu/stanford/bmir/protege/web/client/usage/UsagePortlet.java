@@ -54,11 +54,10 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public void reload() {
+    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
         final Optional<OWLEntityData> sel = getSelectedEntityData();
         if(sel.isPresent()) {
-            final OWLEntityData entityData = sel.get();
-            showUsageForEntity(entityData);
+            showUsageForEntity(entityData.get());
         }
         else {
             setTitle("No entity selected");

@@ -37,15 +37,10 @@ public class OntologyIdPortlet extends AbstractOWLEntityPortlet {
         add(editor.asWidget());
         setTitle("Ontology Id");
         editor.setEnabled(false);
+        updateDisplay();
     }
 
-    @Override
-    public void onPermissionsChanged() {
-//        editor.setEnabled(hasWritePermission());
-    }
-
-    @Override
-    protected void onRefresh() {
+    private void updateDisplay() {
         DispatchServiceManager.get().execute(new GetRootOntologyIdAction(getProjectId()), new AsyncCallback<GetRootOntologyIdResult>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -57,13 +52,5 @@ public class OntologyIdPortlet extends AbstractOWLEntityPortlet {
                 editor.setValue(result.getObject());
             }
         });
-    }
-
-    @Override
-    public void reload() {
-        if(!loaded) {
-            loaded = true;
-            onRefresh();
-        }
     }
 }
