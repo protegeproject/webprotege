@@ -184,21 +184,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         return project;
     }
 
-
-//    public int getRevision() {
-//        return revision;
-//    }
-//
-//    /**
-//     * Should only be called after an event has been processed and
-//     * the portlet shows a new revision.
-//     *
-//     * @param revision
-//     */
-//    public void setRevision(int revision) {
-//        this.revision = revision;
-//    }
-
     /*
      * (non-Javadoc)
      *
@@ -496,14 +481,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         Object source = event.getSource();
         return source instanceof ProjectId && source.equals(getProjectId());
     }
-
-
-//     public <T> void addEventHandlerToProject(ProjectId projectId, Event.Type<T> type, T handler) {
-//         final EventBusManager manager = EventBusManager.getManager();
-//         HandlerRegistration reg = manager.registerHandlerToProject(projectId, type, handler);
-//         handlerRegistrations.add(reg);
-//     }
-
 
     @Override
     public void destroy() {
