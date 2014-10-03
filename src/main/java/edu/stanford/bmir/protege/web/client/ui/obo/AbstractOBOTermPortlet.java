@@ -52,11 +52,6 @@ public abstract class AbstractOBOTermPortlet extends AbstractOWLEntityPortlet {
         updateTitle();
     }
 
-    @Override
-    final public void reload() {
-
-    }
-
     /**
      * Called to determined whether or not any edits have been made to the current entity via the UI
      * @return <code>true</code> if edits have been made, otherwise <code>false</code>.

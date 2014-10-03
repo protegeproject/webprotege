@@ -21,23 +21,6 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractOWLEntityPortlet 
         super(project);
     }
 
-    public OWLEntityDescriptionEditorPortlet(Project project, boolean initialize) {
-        super(project, initialize);
-    }
-
-    @Override
-    public void reload() {
-        Optional<OWLEntityData> selectedEntityData = getSelectedEntityData();
-        if (selectedEntityData.isPresent()) {
-            OWLEntityData entityData = selectedEntityData.get();
-            presenter.setSubject(entityData.getEntity());
-            setTitle("Description for " + entityData.getBrowserText());
-        }
-        else {
-            presenter.clearSubject();
-        }
-    }
-
     @Override
     public void initialize() {
         ManchesterSyntaxFrameEditorImpl editor = new ManchesterSyntaxFrameEditorImpl();
@@ -45,6 +28,18 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractOWLEntityPortlet 
         presenter.attach(this);
         add(editor);
         setHeight(500);
-        reload();
     }
+
+    @Override
+    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
+        Optional<OWLEntityData> selectedEntityData = getSelectedEntityData();
+        if (selectedEntityData.isPresent()) {
+            presenter.setSubject(entityData.get().getEntity());
+            setTitle("Description for " + entityData.get().getBrowserText());
+        }
+        else {
+            presenter.clearSubject();
+        }
+    }
+
 }

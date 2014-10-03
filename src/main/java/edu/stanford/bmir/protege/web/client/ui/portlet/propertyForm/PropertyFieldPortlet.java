@@ -108,6 +108,15 @@ public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
         setSubject(getEntity());
 
         fillWidgetValues();
+
+        Panel activeTab = wrappingPanel.getActiveTab();
+        if (activeTab != null) {
+            Collection<PropertyWidget> widgets = formGenerator.getWidgetsInTab(activeTab);
+            if (widgets == null) { return; }
+            for (PropertyWidget widget : widgets) {
+                widget.refresh();
+            }
+        }
     }
 
     protected void fillWidgetValues() {
@@ -130,18 +139,6 @@ public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-
-    @Override
-    public void reload() {
-        Panel activeTab = wrappingPanel.getActiveTab();
-        if (activeTab != null) {
-            Collection<PropertyWidget> widgets = formGenerator.getWidgetsInTab(activeTab);
-            if (widgets == null) { return; }
-            for (PropertyWidget widget : widgets) {
-                widget.refresh();
-            }
-        }
-    }
 
     protected boolean needsNewFormGenerator(EntityData newEntity) {
         try {

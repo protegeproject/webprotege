@@ -22,8 +22,16 @@ public class MetricsPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    protected void onRefresh() {
-        super.onRefresh();
+    public void initialize() {
+        view = new MetricsViewImpl();
+        add(view.asWidget());
+        metricsPresenter = new MetricsPresenter(getProjectId(), view, DispatchServiceManager.get());
+        metricsPresenter.bind(this);
+        setHeight(500);
+        updateDisplay();
+    }
+
+    private void updateDisplay() {
         if(metricsPresenter == null) {
             GWT.log("MetricsPresenter is not initialized");
         }
@@ -31,18 +39,4 @@ public class MetricsPortlet extends AbstractOWLEntityPortlet {
         metricsPresenter.reload();
     }
 
-    @Override
-    public void reload() {
-
-    }
-
-    @Override
-    public void initialize() {
-        view = new MetricsViewImpl();
-        add(view.asWidget());
-        metricsPresenter = new MetricsPresenter(getProjectId(), view, DispatchServiceManager.get());
-        metricsPresenter.bind(this);
-        setHeight(500);
-        onRefresh();
-    }
 }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.grid.ColumnConfig;
@@ -13,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import java.util.Collection;
 import java.util.List;
@@ -90,22 +92,16 @@ public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    public void reload() {
+    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
         setTitle("Related properties" + (getEntity() == null ? " (nothing selected)" : " for " + getEntity().getBrowserText()));
 
         store.removeAll();
         if (getEntity() != null) {
             OntologyServiceManager.getInstance().getRelatedProperties(getProject().getProjectId(), getEntity().getName(),
-                new GetTriplesHandler());
+                                                                      new GetTriplesHandler());
         }
     }
-
-    @Override
-    protected void onRefresh() {
-        reload();
-    }
-
-    /*
+/*
      * Remote calls
      */
 

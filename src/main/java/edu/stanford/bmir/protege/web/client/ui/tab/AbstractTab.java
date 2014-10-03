@@ -211,7 +211,6 @@ public abstract class AbstractTab extends Portal {
         addPortletToColumn(portlet, col, portletConfiguration == null ? project.getLayoutManager().createPortletConfiguration(portlet) : portletConfiguration, true);
         if (getControllingPortlet() != null) {
             portlet.setEntity(getControllingPortlet().getEntity());
-            portlet.reload();
         }
 
     }

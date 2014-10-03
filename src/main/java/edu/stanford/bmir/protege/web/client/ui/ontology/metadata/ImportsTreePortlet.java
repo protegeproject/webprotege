@@ -28,9 +28,6 @@ public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 		super(project);
 	}
 
-	public void reload() {
-	}
-
 	public void initialize() {
 		setLayout(new FitLayout());
 		setTitle("Imported Ontologies");

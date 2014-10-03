@@ -43,20 +43,25 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
         super(project);
     }
 
-    public OntologyAnnotationsPortlet(Project project, boolean initialize) {
-        super(project, initialize);
-    }
-
     @Override
-    public void reload() {
-        if(!loaded) {
-            loaded = true;
-            onRefresh();
-        }
-    }
-
-    @Override
-    protected void onRefresh() {
+    public void initialize() {
+        setTitle("Ontology annotations");
+        annotationsView = new AnnotationsViewImpl(getProjectId());
+        add(new ScrollPanel(annotationsView.asWidget()));
+        annotationsView.addValueChangeHandler(new ValueChangeHandler<Optional<Set<OWLAnnotation>>>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Optional<Set<OWLAnnotation>>> event) {
+                handleOntologyAnnotationsChanged();
+            }
+        });
+        setHeight(DEFAULT_HEIGHT);
+        addProjectEventHandler(OntologyFrameChangedEvent.TYPE, new OntologyFrameChangedEventHandler() {
+            @Override
+            public void ontologyFrameChanged(OntologyFrameChangedEvent event) {
+                updateView();
+            }
+        });
+        updateState();
         updateView();
     }
 
@@ -78,27 +83,6 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
         });
     }
 
-    @Override
-    public void initialize() {
-        setTitle("Ontology annotations");
-        annotationsView = new AnnotationsViewImpl(getProjectId());
-        add(new ScrollPanel(annotationsView.asWidget()));
-        annotationsView.addValueChangeHandler(new ValueChangeHandler<Optional<Set<OWLAnnotation>>>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<Optional<Set<OWLAnnotation>>> event) {
-                handleOntologyAnnotationsChanged();
-            }
-        });
-        setHeight(DEFAULT_HEIGHT);
-        addProjectEventHandler(OntologyFrameChangedEvent.TYPE, new OntologyFrameChangedEventHandler() {
-            @Override
-            public void ontologyFrameChanged(OntologyFrameChangedEvent event) {
-                updateView();
-            }
-        });
-        updateState();
-
-    }
 
     private void updateState() {
         annotationsView.setEnabled(hasWritePermission());
