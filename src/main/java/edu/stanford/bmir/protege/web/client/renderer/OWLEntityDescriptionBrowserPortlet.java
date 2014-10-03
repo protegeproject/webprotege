@@ -31,10 +31,6 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
         super(project);
     }
 
-    public OWLEntityDescriptionBrowserPortlet(Project project, boolean initialize) {
-        super(project, initialize);
-    }
-
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
         if(entityData.isPresent()) {
@@ -97,7 +93,7 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
 
     private void handleEntityChange(OWLEntity entity) {
         if(Optional.of(entity).equals(getSelectedEntity())) {
-            reload();
+            handleAfterSetEntity(getSelectedEntityData());
         }
     }
 

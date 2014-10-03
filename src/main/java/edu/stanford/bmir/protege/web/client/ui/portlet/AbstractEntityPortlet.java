@@ -159,8 +159,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         handleBeforeSetEntity(getSelectedEntityData());
         _currentEntity = newEntity;
         handleAfterSetEntity(getSelectedEntityData());
-        System.out.println("TODO: MOVE RELOAD");
-        reload();
         // doLayout();
     }
 
@@ -244,7 +242,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     }
 
     protected void onRefresh() {
-        reload();
     }
 
     public void commitChanges() {
@@ -568,10 +565,5 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
             return Optional.absent();
         }
         return Optional.absent();
-    }
-
-    @Override
-    final public void reload() {
-
     }
 }
