@@ -202,6 +202,7 @@ public abstract class AbstractTab extends Portal {
     }
 
     public void addPortlet(final EntityPortlet portlet, final int column) {
+        GWT.log("Adding portlet to tab: " + portlet.getClass().getName());
         final TabColumnConfiguration col = getTabColumnConfigurationAt(column);
         if (col == null) {
             GWT.log("Column does not exist: " + column, null);
@@ -209,10 +210,6 @@ public abstract class AbstractTab extends Portal {
         }
         final PortletConfiguration portletConfiguration = ((AbstractEntityPortlet) portlet).getPortletConfiguration();
         addPortletToColumn(portlet, col, portletConfiguration == null ? project.getLayoutManager().createPortletConfiguration(portlet) : portletConfiguration, true);
-        if (getControllingPortlet() != null) {
-            portlet.setEntity(getControllingPortlet().getEntity());
-        }
-
     }
 
     public void removePortlet(final EntityPortlet portlet) {

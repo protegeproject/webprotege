@@ -149,9 +149,6 @@ public class UIFactory {
             else if (portletJavaClassName.equals(OBOTermIdEditorPortlet.class.getName())) {
                 return new OBOTermIdEditorPortlet(project);
             }
-            else if (portletJavaClassName.equals(OBOTermMetadataPortlet.class.getName())) {
-                return new OBOTermMetadataPortlet(project);
-            }
             else if (portletJavaClassName.equals(OBOTermSynonymsPortlet.class.getName())) {
                 return new OBOTermSynonymsPortlet(project);
             }
@@ -226,7 +223,7 @@ public class UIFactory {
                 ChangesPortlet.class.getName(), WatchedEntitiesPortlet.class.getName(),
                 OBOTermCrossProductPortlet.class.getName(),
                 OBOTermRelationshipPortlet.class.getName(), OBOTermSynonymsPortlet.class.getName(),
-                OBOTermMetadataPortlet.class.getName(), OBOTermIdEditorPortlet.class.getName(),
+                OBOTermIdEditorPortlet.class.getName(),
                 OBOTermDefinitionPortlet.class.getName(), OBOTermXRefsEditorPortlet.class.getName(),
                 RevisionsPortlet.class.getName()};
 
