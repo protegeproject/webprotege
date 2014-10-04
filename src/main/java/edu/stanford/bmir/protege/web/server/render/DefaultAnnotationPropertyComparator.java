@@ -13,31 +13,29 @@ public class DefaultAnnotationPropertyComparator implements Comparator<OWLAnnota
 
     private ShortFormProvider shortFormProvider;
 
+    private static final AnnotationPropertyIndexProvider indexProvider = new AnnotationPropertyIndexProvider();
+
     public DefaultAnnotationPropertyComparator(ShortFormProvider shortFormProvider) {
         this.shortFormProvider = shortFormProvider;
     }
 
     @Override
     public int compare(OWLAnnotationProperty property1, OWLAnnotationProperty property2) {
-        if(property1.isLabel()) {
-            return -1;
-        }
-        if(property2.isLabel()) {
-            return 1;
-        }
-        String sf1 = shortFormProvider.getShortForm(property1);
-        String sf2 = shortFormProvider.getShortForm(property2);
-        if(sf1.toLowerCase().contains("label")) {
-            return -1;
-        }
-        if(sf2.toLowerCase().contains("label")) {
-            return 1;
+        int index1 = indexProvider.getIndex(property1);
+        int index2 = indexProvider.getIndex(property2);
+        if(index1 != index2) {
+            return index1 - index2;
         }
 
-        if(property1.getIRI().equals(DublinCoreVocabulary.TITLE.getIRI())) {
+        String sf1 = shortFormProvider.getShortForm(property1);
+        String sf2 = shortFormProvider.getShortForm(property2);
+        // Some other label
+        boolean sf1containsLabel = sf1.toLowerCase().contains("label");
+        boolean sf2containsLabel = sf2.toLowerCase().contains("label");
+        if(sf1containsLabel && !sf2containsLabel) {
             return -1;
         }
-        if(property2.getIRI().equals(DublinCoreVocabulary.TITLE.getIRI())) {
+        if(sf2containsLabel && !sf1containsLabel) {
             return 1;
         }
         if(sf1.endsWith("definition")) {
@@ -46,13 +44,7 @@ public class DefaultAnnotationPropertyComparator implements Comparator<OWLAnnota
         if(sf2.endsWith("definition")) {
             return 1;
         }
-        if(property1.getIRI().equals(DublinCoreVocabulary.DESCRIPTION.getIRI())) {
-            return 1;
-        }
-        if(property2.getIRI().equals(DublinCoreVocabulary.DESCRIPTION.getIRI())) {
-            return -1;
-        }
-        return sf1.compareTo(sf2);
+        return sf1.compareToIgnoreCase(sf2);
     }
 
 }
