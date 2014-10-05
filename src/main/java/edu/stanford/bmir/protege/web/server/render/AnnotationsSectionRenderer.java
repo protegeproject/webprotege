@@ -44,10 +44,9 @@ public class AnnotationsSectionRenderer<S extends OWLEntity> extends AbstractOWL
             @Override
             public int compare(OWLAnnotationAssertionAxiom owlAnnotationAssertionAxiom,
                                OWLAnnotationAssertionAxiom owlAnnotationAssertionAxiom2) {
-                return new DefaultAnnotationPropertyComparator(shortFormProvider).compare(
-                        owlAnnotationAssertionAxiom.getProperty(),
-                        owlAnnotationAssertionAxiom2.getProperty()
-                );
+                IRIIndexProvider iriIndexProvider = IRIIndexProvider.withDefaultAnnotationPropertyOrdering();
+                return new DefaultAnnotationPropertyComparator(shortFormProvider, iriIndexProvider).compare
+                        (owlAnnotationAssertionAxiom.getProperty(), owlAnnotationAssertionAxiom2.getProperty());
             }
         });
         return sorted;

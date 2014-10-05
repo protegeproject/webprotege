@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.render;
 
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.util.ShortFormProvider;
-import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 
 import java.util.Comparator;
 
@@ -13,16 +12,17 @@ public class DefaultAnnotationPropertyComparator implements Comparator<OWLAnnota
 
     private ShortFormProvider shortFormProvider;
 
-    private static final AnnotationPropertyIndexProvider indexProvider = new AnnotationPropertyIndexProvider();
+    private final IRIIndexProvider indexProvider;
 
-    public DefaultAnnotationPropertyComparator(ShortFormProvider shortFormProvider) {
+    public DefaultAnnotationPropertyComparator(ShortFormProvider shortFormProvider, IRIIndexProvider iriIndexProvider) {
         this.shortFormProvider = shortFormProvider;
+        this.indexProvider = iriIndexProvider;
     }
 
     @Override
     public int compare(OWLAnnotationProperty property1, OWLAnnotationProperty property2) {
-        int index1 = indexProvider.getIndex(property1);
-        int index2 = indexProvider.getIndex(property2);
+        int index1 = indexProvider.getIndex(property1.getIRI());
+        int index2 = indexProvider.getIndex(property2.getIRI());
         if(index1 != index2) {
             return index1 - index2;
         }
