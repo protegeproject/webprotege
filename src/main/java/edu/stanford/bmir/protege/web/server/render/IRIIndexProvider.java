@@ -12,16 +12,18 @@ import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 03/10/2014
+ *
+ * Provides a predefined index of IRIs for tasks such as ordering.
  */
-public class AnnotationPropertyIndexProvider {
+public class IRIIndexProvider {
 
-    private static final ImmutableMap<IRI, Integer> indexMap;
+    private final ImmutableMap<IRI, Integer> indexMap;
 
-    static {
-
-        ImmutableList<IRI> defaultOrdering = ImmutableList.<IRI>builder().add(
+    private static final ImmutableList<IRI> DEFAULT_ANNOTATION_PROPERTY_ORDERING = ImmutableList.<IRI>builder().add(
                 // Labels
                 OWLRDFVocabulary.RDFS_LABEL.getIRI(),
                 SKOSVocabulary.PREFLABEL.getIRI(),
@@ -64,28 +66,31 @@ public class AnnotationPropertyIndexProvider {
                 Obo2OWLConstants.Obo2OWLVocabulary.IRI_OIO_Subset.getIRI()
         ).build();
 
-        Map<IRI, Integer> map = Maps.newLinkedHashMap();
-        for(IRI iri : defaultOrdering) {
-            addProperty(iri, map);
+    private static final IRIIndexProvider INDEX_WITH_DEFAULT_ORDERING =
+            new IRIIndexProvider(DEFAULT_ANNOTATION_PROPERTY_ORDERING);
+
+    /**
+     * Constructs an index provider for the specified list of IRIs.
+     * @param iris The list of IRIs.  Not {@code null}.
+     * @throws NullPointerException if the list is {@code null}.
+     */
+    public IRIIndexProvider(ImmutableList<IRI> iris) {
+        checkNotNull(iris);
+        Map<IRI, Integer> map = Maps.newHashMap();
+        for(IRI iri : iris) {
+            map.put(iri, map.size());
         }
         indexMap = ImmutableMap.copyOf(map);
     }
 
-
-    private static void addProperty(IRI property, Map<IRI, Integer> map) {
-        int index = map.size();
-        map.put(property, index);
-    }
-
-
-
-    public AnnotationPropertyIndexProvider() {
-
-    }
-
-
-    public int getIndex(OWLAnnotationProperty property) {
-        Integer index = indexMap.get(property.getIRI());
+    /**
+     * Gets the index of the specified IRI.
+     * @param iri The IRI whose index should be retrieved.
+     * @return A non-negative integer that represents the IRI index.  If the IRI was not specified in the IRI list in
+     * the constructor for this object then the returned index will be the size of the specified list.
+     */
+    public int getIndex(IRI iri) {
+        Integer index = indexMap.get(iri);
         if(index == null) {
             return indexMap.size();
         }
@@ -93,4 +98,15 @@ public class AnnotationPropertyIndexProvider {
             return index;
         }
     }
+
+    /**
+     * Gets the index based on a predefined default ordering for annotation property IRIs.
+     * @return The IRIIndexProvider for the default annotation property IRI ordering.  Not {@code null}.
+     */
+    public static IRIIndexProvider withDefaultAnnotationPropertyOrdering() {
+        return INDEX_WITH_DEFAULT_ORDERING;
+    }
+
+
+
 }

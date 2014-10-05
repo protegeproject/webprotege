@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.server.render.DefaultAnnotationPropertyComparator;
+import edu.stanford.bmir.protege.web.server.render.IRIIndexProvider;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -30,7 +31,8 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
     public PropertyValueComparator(OWLAPIProject project) {
         this.project = project;
         this.annotationPropertyComparator = new DefaultAnnotationPropertyComparator(
-                project.getRenderingManager().getShortFormProvider()
+                project.getRenderingManager().getShortFormProvider(),
+                IRIIndexProvider.withDefaultAnnotationPropertyOrdering()
         );
     }
 
