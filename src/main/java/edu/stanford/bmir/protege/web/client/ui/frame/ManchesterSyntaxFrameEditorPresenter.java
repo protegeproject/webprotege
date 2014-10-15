@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Timer;
@@ -130,6 +129,34 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         updateState();
     }
 
+    public void clearSubject() {
+        editor.clearValue();
+        currentSubject = Optional.absent();
+        freshEntities.clear();
+    }
+
+    public void setSubject(final OWLEntity subject) {
+        applyChangesWithoutCommitMessage();
+        replaceTextWithFrameRendering(subject);
+    }
+
+    public void refresh() {
+        if (currentSubject.isPresent()) {
+            replaceTextWithFrameRendering(currentSubject.get());
+        }
+    }
+    
+    @Override
+    public Set<OWLEntityData> getFreshEntities() {
+        return Sets.newHashSet(freshEntities);
+    }
+
+    @Override
+    public OWLEntity getSubject() {
+        return currentSubject.orNull();
+    }
+
+
     private void updateState() {
         UserId userId = hasUserId.getUserId();
         boolean writePermission = permissionChecker.hasWritePermissionForProject(userId, projectId);
@@ -170,14 +197,47 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
     }
 
-    public void clearSubject() {
-        editor.clearValue();
-        currentSubject = Optional.absent();
-        freshEntities.clear();
+    private void applyChangesWithoutCommitMessage() {
+        applyChanges(Optional.<String>absent(), false);
     }
 
-    public void setSubject(final OWLEntity subject) {
-        applyChangesWithoutCommitMessage();
+    private void applyChangesWithCommitMessage(String input) {
+        applyChanges(Optional.of(input), false);
+    }
+
+    private void applyChangesWithCommitMessage() {
+        InputBox.showDialog("Enter commit message", new InputBoxHandler() {
+            @Override
+            public void handleAcceptInput(String input) {
+                applyChangesWithCommitMessage(input);
+            }
+        });
+    }
+
+    private void applyChanges(Optional<String> commitMessage, final boolean reformatText) {
+        editor.setApplyChangesViewVisible(false);
+        final Optional<String> editorText = editor.getValue();
+        if(!editorText.equals(pristineValue) && pristineValue.isPresent() && editorText.isPresent() && currentSubject.isPresent()) {
+            String text = editorText.get();
+            dispatchService.execute(new SetManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new AsyncCallback<SetManchesterSyntaxFrameResult>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    MessageBox.showAlert("A problem has occurred and the changes could not be applied.  Please try again.");
+                }
+
+                @Override
+                public void onSuccess(SetManchesterSyntaxFrameResult result) {
+                    if(reformatText) {
+                        editor.setValue(result.getFrameText());
+                    }
+                }
+            });
+        }
+    }
+
+
+    private void replaceTextWithFrameRendering(final OWLEntity subject) {
+        editor.setApplyChangesViewVisible(false);
         freshEntities.clear();
         dispatchService.execute(new GetManchesterSyntaxFrameAction(projectId, subject), new AsyncCallback<GetManchesterSyntaxFrameResult>() {
             @Override
@@ -192,51 +252,5 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
                 currentSubject = Optional.of(subject);
             }
         });
-    }
-
-    private void applyChangesWithoutCommitMessage() {
-        applyChanges(Optional.<String>absent());
-    }
-
-    private void applyChangesWithCommitMessage(String input) {
-        applyChanges(Optional.of(input));
-    }
-
-    private void applyChangesWithCommitMessage() {
-        InputBox.showDialog("Enter commit message", new InputBoxHandler() {
-            @Override
-            public void handleAcceptInput(String input) {
-                applyChangesWithCommitMessage(input);
-            }
-        });
-    }
-
-    private void applyChanges(Optional<String> commitMessage) {
-        editor.setApplyChangesViewVisible(false);
-        final Optional<String> editorText = editor.getValue();
-        if(!editorText.equals(pristineValue) && pristineValue.isPresent() && editorText.isPresent() && currentSubject.isPresent()) {
-            String text = editorText.get();
-            dispatchService.execute(new SetManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new AsyncCallback<SetManchesterSyntaxFrameResult>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    MessageBox.showAlert("A problem has occurred and the changes could not be applied.  Please try again.");
-                }
-
-                @Override
-                public void onSuccess(SetManchesterSyntaxFrameResult result) {
-
-                }
-            });
-        }
-    }
-
-    @Override
-    public Set<OWLEntityData> getFreshEntities() {
-        return Sets.newHashSet(freshEntities);
-    }
-
-    @Override
-    public OWLEntity getSubject() {
-        return currentSubject.orNull();
     }
 }
