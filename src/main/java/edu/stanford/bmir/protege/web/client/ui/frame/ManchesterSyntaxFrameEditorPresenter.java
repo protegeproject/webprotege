@@ -19,9 +19,7 @@ import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
-import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
+import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -101,12 +99,8 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
             }
         });
         editor.setCreateAsEntityTypeHandler(createAsEntityTypeHandler);
-        editor.setAutoCompletionHandler(new ManchesterSyntaxFrameAutoCompletionHandler(
-                DispatchServiceManager.get(),
-                projectId,
-                this,
-                this
-        ));
+        editor.setAutoCompletionHandler(new ManchesterSyntaxFrameAutoCompletionHandler(DispatchServiceManager.get(),
+                                                                                       projectId, this, this));
         editor.setApplyChangesHandler(applyChangesActionHandler);
         management.addProjectEventHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
@@ -126,7 +120,17 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
                 updateState();
             }
         });
+        management.addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
+            @Override
+            public void handleProjectChanged(ProjectChangedEvent event) {
+                refreshIfPristine();
+            }
+        });
         updateState();
+    }
+
+    private boolean isPristine() {
+        return editor.getValue().equals(pristineValue);
     }
 
     public void clearSubject() {
@@ -145,7 +149,13 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
             replaceTextWithFrameRendering(currentSubject.get());
         }
     }
-    
+
+    private void refreshIfPristine() {
+        if(isPristine()) {
+            refresh();
+        }
+    }
+
     @Override
     public Set<OWLEntityData> getFreshEntities() {
         return Sets.newHashSet(freshEntities);
@@ -217,7 +227,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     private void applyChanges(Optional<String> commitMessage, final boolean reformatText) {
         editor.setApplyChangesViewVisible(false);
         final Optional<String> editorText = editor.getValue();
-        if(!editorText.equals(pristineValue) && pristineValue.isPresent() && editorText.isPresent() && currentSubject.isPresent()) {
+        if(!isPristine() && pristineValue.isPresent() && editorText.isPresent() && currentSubject.isPresent()) {
             String text = editorText.get();
             dispatchService.execute(new SetManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new AsyncCallback<SetManchesterSyntaxFrameResult>() {
                 @Override
