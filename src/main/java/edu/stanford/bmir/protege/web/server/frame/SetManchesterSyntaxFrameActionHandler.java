@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
+import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameAction;
+import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.SetManchesterSyntaxFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.SetManchesterSyntaxFrameResult;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxFramesParser;
@@ -54,7 +56,12 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
 
     @Override
     protected SetManchesterSyntaxFrameResult createActionResult(ChangeApplicationResult<Void> changeApplicationResult, SetManchesterSyntaxFrameAction action, OWLAPIProject project, ExecutionContext executionContext, EventList<ProjectEvent<?>> eventList) {
-        return new SetManchesterSyntaxFrameResult(eventList);
+        GetManchesterSyntaxFrameActionHandler handler = new GetManchesterSyntaxFrameActionHandler();
+        GetManchesterSyntaxFrameResult result = handler.execute(new GetManchesterSyntaxFrameAction(action.getProjectId(),
+                                                                                          action.getSubject()),
+                                                       project, executionContext);
+        String reformattedFrame = result.getManchesterSyntax();
+        return new SetManchesterSyntaxFrameResult(eventList, reformattedFrame);
     }
 
     @Override

@@ -42,4 +42,8 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractOWLEntityPortlet 
         }
     }
 
+    @Override
+    protected void onRefresh() {
+        presenter.refresh();
+    }
 }
