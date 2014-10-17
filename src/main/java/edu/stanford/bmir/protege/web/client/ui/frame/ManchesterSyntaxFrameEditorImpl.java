@@ -2,7 +2,11 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -110,7 +114,7 @@ public class ManchesterSyntaxFrameEditorImpl extends Composite implements Manche
 
     @Override
     public void clearError() {
-        errorMessageView.setVisible(false);
+        hideErrorMessageView();
         editor.clearErrorRange();
     }
 
@@ -122,7 +126,7 @@ public class ManchesterSyntaxFrameEditorImpl extends Composite implements Manche
         errorMessageView.setErrorMessage(error.getMessage());
         errorMessageView.setCurrentToken(error.getToken());
         errorMessageView.setExpectedEntityTypes(error.getExpectedEntityTypes());
-        errorMessageView.setVisible(true);
+        showErrorMessageView();
     }
 
     @Override
@@ -143,5 +147,17 @@ public class ManchesterSyntaxFrameEditorImpl extends Composite implements Manche
     @Override
     public void setApplyChangesHandler(ApplyChangesActionHandler handler) {
         applyChangesActionView.setHandler(handler);
+    }
+
+    private void showErrorMessageView() {
+        errorMessageView.setVisible(true);
+        Element errorMessageElement = errorMessageView.getElement();
+        Element editorElement = editor.getElement();
+        editorElement.getStyle().setBottom(errorMessageElement.getOffsetHeight() + 5, Style.Unit.PX);
+    }
+
+    private void hideErrorMessageView() {
+        errorMessageView.setVisible(false);
+        editor.getElement().getStyle().setBottom(0, Style.Unit.PX);
     }
 }
