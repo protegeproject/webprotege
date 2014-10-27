@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBox;
 import edu.stanford.bmir.protege.web.client.ui.library.text.ExpandingTextBoxMode;
 import org.semanticweb.owlapi.model.EntityType;
 
+import javax.inject.Provider;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -32,18 +33,17 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
     private ExpandingTextBox delegate;
 
-    private PrimitiveDataEditorFreshEntityView errorView;
+    private Provider<PrimitiveDataEditorFreshEntityView> errorViewProvider;
 
     private Optional<String> lastStyleName = Optional.absent();
+    private final FlowPanel holder;
 
     @Inject
-    public PrimitiveDataEditorViewImpl(ExpandingTextBox delegate, PrimitiveDataEditorFreshEntityView errorView) {
-        FlowPanel holder = new FlowPanel();
+    public PrimitiveDataEditorViewImpl(ExpandingTextBox delegate, Provider<PrimitiveDataEditorFreshEntityView> errorViewProvider) {
+        holder = new FlowPanel();
         this.delegate = delegate;
         holder.add(delegate);
-        this.errorView = errorView;
-        this.errorView.asWidget().setVisible(false);
-        holder.add(errorView);
+        this.errorViewProvider = errorViewProvider;
         initWidget(holder);
     }
 
@@ -157,12 +157,19 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
 
     @Override
     public void showErrorMessage(SafeHtml errorMessage, Set<EntityType<?>> expectedTypes) {
-        errorView.setExpectedTypes(errorMessage, expectedTypes);
-        errorView.asWidget().setVisible(true);
+        if(holder.getWidgetCount() > 1) {
+            clearErrorMessage();
+        }
+        PrimitiveDataEditorFreshEntityView error = errorViewProvider.get();
+        error.setExpectedTypes(errorMessage, expectedTypes);
+        holder.add(error);
     }
 
     @Override
     public void clearErrorMessage() {
-        errorView.asWidget().setVisible(false);
+        if(holder.getWidgetCount() == 1) {
+            return;
+        }
+        holder.remove(1);
     }
 }
