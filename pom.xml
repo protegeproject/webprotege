@@ -486,7 +486,6 @@
                 <!-- Insert the code for google analytics.  This code is not inserted by default. -->
                 <application.analytics>
                     <![CDATA[
-                    <!-- Google Analytics -->
                     <script type="text/javascript">
                         var _gaq = _gaq || [];
                         _gaq.push(['_setAccount', 'UA-32498293-1']);
