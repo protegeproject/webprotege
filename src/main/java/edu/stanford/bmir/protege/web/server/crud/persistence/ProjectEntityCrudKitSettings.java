@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.crud.persistence;
 
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
+import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
@@ -22,7 +23,7 @@ public class ProjectEntityCrudKitSettings {
     @Id
     private ProjectId projectId;
 
-    private EntityCrudKitSettings<?> settings;
+    private EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> settings;
 
     /**
      * Constructs a {@link ProjectEntityCrudKitSettings}, which specifies the {@link EntityCrudKitSettings} for a
@@ -31,7 +32,7 @@ public class ProjectEntityCrudKitSettings {
      * @param settings The settings that apply to the project.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public ProjectEntityCrudKitSettings(ProjectId projectId, EntityCrudKitSettings<?> settings) {
+    public ProjectEntityCrudKitSettings(ProjectId projectId, EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> settings) {
         this.projectId = checkNotNull(projectId);
         this.settings = checkNotNull(settings);
     }
@@ -48,7 +49,7 @@ public class ProjectEntityCrudKitSettings {
      * Gets the {@link EntityCrudKitSettings} for the project.
      * @return The settings.  Not {@code null}.
      */
-    public EntityCrudKitSettings<?> getSettings() {
+    public EntityCrudKitSettings<? extends EntityCrudKitSuffixSettings> getSettings() {
         return settings;
     }
 
