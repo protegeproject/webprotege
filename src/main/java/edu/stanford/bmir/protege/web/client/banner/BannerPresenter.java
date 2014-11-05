@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.banner;
 
+import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.actionbar.application.*;
 import edu.stanford.bmir.protege.web.client.actionbar.project.ProjectActionBar;
@@ -12,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedHandler;
+import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -41,6 +44,10 @@ public class BannerPresenter {
         w.setShowAboutBoxHandler(new ShowAboutBoxHandlerImpl());
         w.setShowUserGuideHandler(new ShowUserGuideHandlerImpl());
 
+        Boolean accountCreationEnabled = Application.get().getClientApplicationProperty(
+                WebProtegePropertyName.USER_ACCOUNT_CREATION_ENABLED, true);
+        GWT.log("Account creation enabled: " + accountCreationEnabled);
+        w.setSignUpForAccountVisible(accountCreationEnabled);
 
         EventBusManager.getManager().registerHandler(ActiveProjectChangedEvent.TYPE, new ActiveProjectChangedHandler() {
             @Override

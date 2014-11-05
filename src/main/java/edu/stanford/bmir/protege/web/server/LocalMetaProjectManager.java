@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.server;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
+import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
+import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
@@ -229,6 +233,8 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
 
 
     public boolean allowsCreateUser() {
-        return ServerProperties.getAllowsCreateUsers();
+        ClientApplicationProperties clientApplicationProperties = WebProtegeProperties.get().getClientApplicationProperties();
+        Optional<String> propertyValue = clientApplicationProperties.getPropertyValue(WebProtegePropertyName.USER_ACCOUNT_CREATION_ENABLED);
+        return "true".equalsIgnoreCase(propertyValue.or("true"));
     }
 }

@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
+import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
 import edu.stanford.smi.protege.server.metaproject.Operation;
 import edu.stanford.smi.protege.server.metaproject.User;
 
@@ -187,18 +188,22 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     //used only for https
     public UserData registerUser(String userName, String password, String email) {
         MetaProjectManager mpm = MetaProjectManager.getManager();
+        throwUserRegistrationExceptionIfAccountCreationIsDisabled(mpm);
         UserData userData = mpm.registerUser(userName, email, password);
         OWLAPIMetaProjectStore.getStore().saveMetaProject(mpm);
         return userData;
     }
 
-    public UserData registerUserViaEncrption(String name, String hashedPassword, String emailId) throws UserNameAlreadyExistsException, UserNameAlreadyExistsException {
+    public UserData registerUserViaEncrption(String name, String hashedPassword, String emailId) throws UserRegistrationException {
+        MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
+
+        throwUserRegistrationExceptionIfAccountCreationIsDisabled(metaProjectManager);
+
         HttpServletRequest request = this.getThreadLocalRequest();
         HttpSession session = request.getSession();
         String salt = (String) session.getAttribute(AuthenticationConstants.NEW_SALT);
         String emptyPassword = "";
 
-        MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
         UserData userData = metaProjectManager.registerUser(name, emailId, emptyPassword);
 
         User user = metaProjectManager.getMetaProject().getUser(name);
@@ -208,5 +213,11 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProjectManager);
 
         return userData;
+    }
+
+    private void throwUserRegistrationExceptionIfAccountCreationIsDisabled(MetaProjectManager metaProjectManager) {
+        if(!metaProjectManager.allowsCreateUser()) {
+            throw new UserRegistrationException("Account creation is disabled");
+        }
     }
 }
