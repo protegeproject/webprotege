@@ -79,6 +79,11 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
         this.signUpForAccountHandler = signUpForAccountHandler;
     }
 
+    @Override
+    public void setSignUpForAccountVisible(boolean visible) {
+        signUpForAccountItem.setVisible(visible);
+    }
+
     interface ApplicationBarImplUiBinder extends UiBinder<HTMLPanel, ApplicationBarImpl> {
 
     }

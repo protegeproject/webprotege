@@ -56,7 +56,10 @@ public enum WebProtegePropertyName {
     ADMIN_EMAIL("admin.email", PropertyValue.absentByDefault(), ClientVisibility.HIDDEN),
 
     @WebProtegePropertiesDocumentation(description = "Specifies whether or not WebProtégé should support authentication with Open Id", example = "false")
-    OPEN_ID_ENABLED("openid.enabled", PropertyValue.ofBoolean(true), ClientVisibility.VISIBLE);
+    OPEN_ID_ENABLED("openid.enabled", PropertyValue.ofBoolean(true), ClientVisibility.VISIBLE),
+
+    @WebProtegePropertiesDocumentation(description = "Specifies whether or not users should be allowed to sign up for accounts", example = "false")
+    USER_ACCOUNT_CREATION_ENABLED("user.account.creation.enabled", PropertyValue.ofBoolean(true), ClientVisibility.VISIBLE);
 
 
     private static class PropertyValue {
