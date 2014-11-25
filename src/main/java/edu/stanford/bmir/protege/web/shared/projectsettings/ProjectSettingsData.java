@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.projectsettings;
+package edu.stanford.bmir.protege.web.shared.projectsettings;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
