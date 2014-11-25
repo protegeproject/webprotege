@@ -165,11 +165,11 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         mdm.setProjectType(projectId, new OWLAPIProjectType(projectType.getName()));
     }
 
-    public ProjectSettings getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException {
-        ProjectType projectType = getProjectType(projectId);
-        String description = OWLAPIProjectMetadataManager.getManager().getDescription(projectId);
-        return new ProjectSettings(projectId, projectType, description);
-    }
+//    public ProjectSettings getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException {
+//        ProjectType projectType = getProjectType(projectId);
+//        String description = OWLAPIProjectMetadataManager.getManager().getDescription(projectId);
+//        return new ProjectSettings(projectId, projectType, description);
+//    }
 
     public void setProjectConfiguration(ProjectSettings configuration) throws ProjectNotRegisteredException, NotProjectOwnerException {
         ProjectId projectId = configuration.getProjectId();

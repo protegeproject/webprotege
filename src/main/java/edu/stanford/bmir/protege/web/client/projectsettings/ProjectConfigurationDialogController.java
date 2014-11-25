@@ -5,6 +5,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
@@ -13,6 +15,8 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButto
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
+import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 
 import java.util.List;
@@ -62,14 +66,12 @@ public class ProjectConfigurationDialogController extends WebProtegeOKCancelDial
             }
 
             public void onSuccess(final List<ProjectType> projectTypes) {
-                projectManagerService.getProjectConfiguration(projectId, new AsyncCallback<ProjectSettings>() {
-                    public void onFailure(Throwable caught) {
-                        GWT.log("Problem with retrieving project configuration: " + caught.getMessage());
-                    }
-
-                    public void onSuccess(ProjectSettings projectSettings) {
+                DispatchServiceManager.get().execute(new GetProjectSettingsAction(projectId),
+                        new AbstractWebProtegeAsyncCallback<GetProjectSettingsResult>() {
+                    @Override
+                    public void onSuccess(GetProjectSettingsResult result) {
                         dialogForm.setAllowedProjectTypes(projectTypes);
-                        dialogForm.setData(projectSettings);
+                        dialogForm.setData(result.getProjectSettings());
                     }
                 });
             }
