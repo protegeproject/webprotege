@@ -20,7 +20,7 @@ import static org.hamcrest.core.Is.is;
  * 25/11/14
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectSettingsDataTestCase {
+public class ProjectSettingsTestCase {
 
     @Mock
     private ProjectId projectId;
@@ -32,27 +32,27 @@ public class ProjectSettingsDataTestCase {
 
 
 
-    private ProjectSettingsData data;
+    private ProjectSettings data;
 
 
     @Before
     public void setUp() throws Exception {
-        data = new ProjectSettingsData(projectId, projectType, projectDescription);
+        data = new ProjectSettings(projectId, projectType, projectDescription);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfProjectIdIsNull() {
-        new ProjectSettingsData(null, projectType, projectDescription);
+        new ProjectSettings(null, projectType, projectDescription);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfProjectTypeIsNull() {
-        new ProjectSettingsData(projectId, null, projectDescription);
+        new ProjectSettings(projectId, null, projectDescription);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfProjectDescriptionIsNull() {
-        new ProjectSettingsData(projectId, projectType, null);
+        new ProjectSettings(projectId, projectType, null);
     }
 
     @Test
@@ -67,13 +67,13 @@ public class ProjectSettingsDataTestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        ProjectSettingsData other = new ProjectSettingsData(projectId, projectType, projectDescription);
+        ProjectSettings other = new ProjectSettings(projectId, projectType, projectDescription);
         assertThat(data, is(equalTo(other)));
     }
 
     @Test
     public void shouldHaveSameHashCode() {
-        ProjectSettingsData other = new ProjectSettingsData(projectId, projectType, projectDescription);
+        ProjectSettings other = new ProjectSettings(projectId, projectType, projectDescription);
         assertThat(data.hashCode(), is(other.hashCode()));
     }
 

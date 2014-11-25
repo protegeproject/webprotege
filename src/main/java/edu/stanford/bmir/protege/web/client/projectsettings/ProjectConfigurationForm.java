@@ -11,7 +11,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDown;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDownModel;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsData;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/07/2012
  */
-public class ProjectConfigurationForm extends FlowPanel implements HasFormData<ProjectSettingsData>, HasInitialFocusable {
+public class ProjectConfigurationForm extends FlowPanel implements HasFormData<ProjectSettings>, HasInitialFocusable {
 
     public static final String PROJECT_TYPE_DROPDOWN_FIELD_NAME = "Type";
 
@@ -78,7 +78,7 @@ public class ProjectConfigurationForm extends FlowPanel implements HasFormData<P
         projectTypeDropDown.setModel(new ProjectTypeDropDownModel(projectTypes));
     }
 
-    public void setData(ProjectSettingsData info) {
+    public void setData(ProjectSettings info) {
         projectTypeDropDown.setSelectedItem(info.getProjectType());
         projectDescriptionTextBox.setText(info.getProjectDescription());
 //        defaultLanguageBox.setText(info.getDefaultLanguage());
@@ -86,9 +86,9 @@ public class ProjectConfigurationForm extends FlowPanel implements HasFormData<P
 
 
 
-    public ProjectSettingsData getData() {
+    public ProjectSettings getData() {
         // TODO: DEF LANG
-        return new ProjectSettingsData(projectId, getProjectType(), getProjectDescription());
+        return new ProjectSettings(projectId, getProjectType(), getProjectDescription());
     }
 
 //    private String getDefaultLanguage() {
