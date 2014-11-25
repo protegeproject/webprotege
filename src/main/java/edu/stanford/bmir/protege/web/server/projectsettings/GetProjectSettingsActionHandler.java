@@ -1,18 +1,14 @@
 package edu.stanford.bmir.protege.web.server.projectsettings;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,10 +19,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHandler<GetProjectSettingsAction, GetProjectSettingsResult> {
 
-    private OWLAPIProjectMetadataManager mdm;
+    private ProjectSettingsManager settings;
 
-    public GetProjectSettingsActionHandler(OWLAPIProjectMetadataManager mdm) {
-        this.mdm = checkNotNull(mdm);
+    public GetProjectSettingsActionHandler(ProjectSettingsManager settings) {
+        this.settings = checkNotNull(settings);
     }
 
     @Override
@@ -42,14 +38,7 @@ public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     @Override
     protected GetProjectSettingsResult execute(GetProjectSettingsAction action, OWLAPIProject project, ExecutionContext executionContext) {
         ProjectId projectId = action.getProjectId();
-        OWLAPIProjectType projectType = mdm.getType(projectId);
-        ProjectType type = new ProjectType(projectType.getProjectTypeName());
-        ProjectSettings projectSettings = new ProjectSettings(
-                projectId,
-                type,
-                mdm.getDescription(projectId)
-        );
-        return new GetProjectSettingsResult(projectSettings);
+        return new GetProjectSettingsResult(settings.getProjectSettings(projectId));
     }
 
 }
