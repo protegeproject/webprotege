@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDialo
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -22,7 +23,9 @@ public class ShowProjectDetailsHandlerImpl implements ShowProjectDetailsHandler 
         if(!projectId.isPresent()) {
             return;
         }
-        ProjectSettingsPresenter presenter = new ProjectSettingsPresenter(new ProjectSettingsViewImpl());
+        ProjectSettingsPresenter presenter = new ProjectSettingsPresenter(
+                new ProjectSettingsViewImpl(),
+                EventBusManager.getManager());
         presenter.showDialog(projectId.get());
     }
 }

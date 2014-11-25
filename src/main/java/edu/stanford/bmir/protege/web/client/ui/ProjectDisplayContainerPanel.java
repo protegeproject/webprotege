@@ -27,6 +27,9 @@ import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequest
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedHandler;
 
 import java.util.LinkedHashMap;
 
@@ -76,6 +79,15 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             @Override
             public void onPlaceChange(PlaceChangeEvent event) {
                 displayCurrentPlace();
+            }
+        });
+
+        EventBusManager.getManager().registerHandler(ProjectSettingsChangedEvent.getType(), new ProjectSettingsChangedHandler() {
+            @Override
+            public void handleProjectSettingsChanged(ProjectSettingsChangedEvent event) {
+                ProjectSettings projectSettings = event.getProjectSettings();
+                ProjectDisplayImpl projectDisplay = projectId2ProjectPanelMap.get(projectSettings.getProjectId());
+                projectDisplay.setTitle(projectSettings.getProjectDisplayName());
             }
         });
 

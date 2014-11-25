@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
+import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.*;
 
@@ -18,8 +19,11 @@ public class ProjectSettingsPresenter {
 
     private ProjectSettingsView projectSettingsView;
 
-    public ProjectSettingsPresenter(ProjectSettingsView projectSettingsView) {
+    private EventBusManager eventBusManager;
+
+    public ProjectSettingsPresenter(ProjectSettingsView projectSettingsView, EventBusManager eventBusManager) {
         this.projectSettingsView = projectSettingsView;
+        this.eventBusManager = eventBusManager;
     }
 
     public void showDialog(ProjectId projectId) {
@@ -51,11 +55,12 @@ public class ProjectSettingsPresenter {
     }
 
 
-    private void hideDialogAndSaveSettings(ProjectSettings data, final WebProtegeDialogCloser closer) {
+    private void hideDialogAndSaveSettings(final ProjectSettings data, final WebProtegeDialogCloser closer) {
         DispatchServiceManager.get().execute(new SetProjectSettingsAction(data), new AbstractWebProtegeAsyncCallback<SetProjectSettingsResult>() {
             @Override
             public void onSuccess(SetProjectSettingsResult setProjectSettingsResult) {
                 closer.hide();
+                eventBusManager.postEvent(new ProjectSettingsChangedEvent(data));
             }
         });
     }
