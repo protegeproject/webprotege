@@ -88,7 +88,7 @@ public class ProjectConfigurationForm extends FlowPanel implements HasFormData<P
 
     public ProjectSettingsData getData() {
         // TODO: DEF LANG
-        return new ProjectSettingsData(projectId, getProjectType(), "en", getProjectDescription());
+        return new ProjectSettingsData(projectId, getProjectType(), getProjectDescription());
     }
 
 //    private String getDefaultLanguage() {
