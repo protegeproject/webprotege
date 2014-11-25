@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsData;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsData;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
