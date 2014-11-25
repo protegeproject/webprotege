@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server;
 
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsData;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectConfigurationInfo;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
@@ -165,13 +165,13 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         mdm.setProjectType(projectId, new OWLAPIProjectType(projectType.getName()));
     }
 
-    public ProjectConfigurationInfo getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException {
+    public ProjectSettingsData getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException {
         ProjectType projectType = getProjectType(projectId);
         String description = OWLAPIProjectMetadataManager.getManager().getDescription(projectId);
-        return new ProjectConfigurationInfo(projectId, projectType, "en", description);
+        return new ProjectSettingsData(projectId, projectType, "en", description);
     }
 
-    public void setProjectConfiguration(ProjectConfigurationInfo configuration) throws ProjectNotRegisteredException, NotProjectOwnerException {
+    public void setProjectConfiguration(ProjectSettingsData configuration) throws ProjectNotRegisteredException, NotProjectOwnerException {
         ProjectId projectId = configuration.getProjectId();
         if(!isSignedInUserProjectOwner(projectId)) {
             throw new NotProjectOwnerException(projectId);
