@@ -168,7 +168,7 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
     public ProjectSettingsData getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException {
         ProjectType projectType = getProjectType(projectId);
         String description = OWLAPIProjectMetadataManager.getManager().getDescription(projectId);
-        return new ProjectSettingsData(projectId, projectType, "en", description);
+        return new ProjectSettingsData(projectId, projectType, description);
     }
 
     public void setProjectConfiguration(ProjectSettingsData configuration) throws ProjectNotRegisteredException, NotProjectOwnerException {
