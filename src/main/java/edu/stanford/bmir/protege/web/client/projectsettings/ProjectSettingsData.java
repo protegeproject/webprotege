@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.io.Serializable;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -26,11 +28,19 @@ public class ProjectSettingsData implements Serializable {
 
     }
 
+    /**
+     * Constructs a ProjectSettingsData object.
+     * @param projectId The projectId.  Not {@code null}.
+     * @param projectType The ProjectType.  Not {@code null}.
+     * @param defaultLanguage The default language. Not {@code null}.
+     * @param projectDescription The project description. Not {@code null}.
+     * @throws java.lang.NullPointerException if any parameters are {@code null}.
+     */
     public ProjectSettingsData(ProjectId projectId, ProjectType projectType, String defaultLanguage, String projectDescription) {
-        this.projectId = projectId;
-        this.projectType = projectType;
-        this.defaultLanguage = defaultLanguage;
-        this.projectDescription = projectDescription;
+        this.projectId = checkNotNull(projectId);
+        this.projectType = checkNotNull(projectType);
+        this.defaultLanguage = checkNotNull(defaultLanguage);
+        this.projectDescription = checkNotNull(projectDescription);
     }
 
 
