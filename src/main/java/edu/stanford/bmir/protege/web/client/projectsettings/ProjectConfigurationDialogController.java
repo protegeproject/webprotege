@@ -22,7 +22,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/07/2012
  */
-public class ProjectConfigurationDialogController extends WebProtegeOKCancelDialogController<ProjectConfigurationInfo> {
+public class ProjectConfigurationDialogController extends WebProtegeOKCancelDialogController<ProjectSettingsData> {
 
     public static final String DIALOG_TITLE = "Project configuration";
 
@@ -36,8 +36,8 @@ public class ProjectConfigurationDialogController extends WebProtegeOKCancelDial
         projectManagerService = GWT.create(ProjectManagerService.class);
         dataToForm(projectId);
 
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectConfigurationInfo>() {
-            public void handleHide(ProjectConfigurationInfo data, final WebProtegeDialogCloser closer) {
+        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectSettingsData>() {
+            public void handleHide(ProjectSettingsData data, final WebProtegeDialogCloser closer) {
 
                 ProjectManagerServiceAsync pms = GWT.create(ProjectManagerService.class);
                 pms.setProjectConfiguration(data, new AsyncCallback<Void>() {
@@ -61,14 +61,14 @@ public class ProjectConfigurationDialogController extends WebProtegeOKCancelDial
             }
 
             public void onSuccess(final List<ProjectType> projectTypes) {
-                projectManagerService.getProjectConfiguration(projectId, new AsyncCallback<ProjectConfigurationInfo>() {
+                projectManagerService.getProjectConfiguration(projectId, new AsyncCallback<ProjectSettingsData>() {
                     public void onFailure(Throwable caught) {
                         GWT.log("Problem with retrieving project configuration: " + caught.getMessage());
                     }
 
-                    public void onSuccess(ProjectConfigurationInfo projectConfigurationInfo) {
+                    public void onSuccess(ProjectSettingsData projectSettingsData) {
                         dialogForm.setAllowedProjectTypes(projectTypes);
-                        dialogForm.setData(projectConfigurationInfo);
+                        dialogForm.setData(projectSettingsData);
                     }
                 });
             }
@@ -97,7 +97,7 @@ public class ProjectConfigurationDialogController extends WebProtegeOKCancelDial
     }
 
     @Override
-    public ProjectConfigurationInfo getData() {
+    public ProjectSettingsData getData() {
         return dialogForm.getData();
     }
 }

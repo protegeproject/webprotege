@@ -21,7 +21,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/07/2012
  */
-public class ProjectConfigurationForm extends FlowPanel implements HasFormData<ProjectConfigurationInfo>, HasInitialFocusable {
+public class ProjectConfigurationForm extends FlowPanel implements HasFormData<ProjectSettingsData>, HasInitialFocusable {
 
     public static final String PROJECT_TYPE_DROPDOWN_FIELD_NAME = "Type";
 
@@ -77,7 +77,7 @@ public class ProjectConfigurationForm extends FlowPanel implements HasFormData<P
         projectTypeDropDown.setModel(new ProjectTypeDropDownModel(projectTypes));
     }
 
-    public void setData(ProjectConfigurationInfo info) {
+    public void setData(ProjectSettingsData info) {
         projectTypeDropDown.setSelectedItem(info.getProjectType());
         projectDescriptionTextBox.setText(info.getProjectDescription());
 //        defaultLanguageBox.setText(info.getDefaultLanguage());
@@ -85,9 +85,9 @@ public class ProjectConfigurationForm extends FlowPanel implements HasFormData<P
 
 
 
-    public ProjectConfigurationInfo getData() {
+    public ProjectSettingsData getData() {
         // TODO: DEF LANG
-        return new ProjectConfigurationInfo(projectId, getProjectType(), "en", getProjectDescription());
+        return new ProjectSettingsData(projectId, getProjectType(), "en", getProjectDescription());
     }
 
 //    private String getDefaultLanguage() {

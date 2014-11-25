@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/07/2012
  */
-public class ProjectConfigurationInfo implements Serializable {
+public class ProjectSettingsData implements Serializable {
 
     private ProjectId projectId;
     
@@ -22,11 +22,11 @@ public class ProjectConfigurationInfo implements Serializable {
     private String defaultLanguage;
 
     // For serialization
-    private ProjectConfigurationInfo() {
+    private ProjectSettingsData() {
 
     }
 
-    public ProjectConfigurationInfo(ProjectId projectId, ProjectType projectType, String defaultLanguage, String projectDescription) {
+    public ProjectSettingsData(ProjectId projectId, ProjectType projectType, String defaultLanguage, String projectDescription) {
         this.projectId = projectId;
         this.projectType = projectType;
         this.defaultLanguage = defaultLanguage;
@@ -60,10 +60,10 @@ public class ProjectConfigurationInfo implements Serializable {
         if(obj == this) {
             return true;
         }
-        if(!(obj instanceof ProjectConfigurationInfo)) {
+        if(!(obj instanceof ProjectSettingsData)) {
             return false;
         }
-        ProjectConfigurationInfo other = (ProjectConfigurationInfo) obj;
+        ProjectSettingsData other = (ProjectSettingsData) obj;
         return this.projectType.equals(other.projectType) && this.projectDescription.equals(other.projectDescription) && this.projectId.equals(other.projectId) && this.defaultLanguage.equals(other.defaultLanguage);
     }
 
