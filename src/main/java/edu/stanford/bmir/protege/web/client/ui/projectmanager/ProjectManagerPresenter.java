@@ -16,6 +16,8 @@ import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedHandler;
 
 import java.util.*;
 
@@ -128,6 +130,14 @@ public class ProjectManagerPresenter {
                 }
             }
         });
+
+        EventBusManager.getManager().registerHandler(ProjectSettingsChangedEvent.getType(), new ProjectSettingsChangedHandler() {
+            @Override
+            public void handleProjectSettingsChanged(ProjectSettingsChangedEvent event) {
+                reloadFromServer();
+            }
+        });
+
         handleUserChange();
         reloadFromServer();
     }
