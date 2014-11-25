@@ -21,7 +21,6 @@ public class ProjectSettingsData implements Serializable {
     
     private String projectDescription;
 
-    private String defaultLanguage;
 
     // For serialization
     private ProjectSettingsData() {
@@ -32,14 +31,12 @@ public class ProjectSettingsData implements Serializable {
      * Constructs a ProjectSettingsData object.
      * @param projectId The projectId.  Not {@code null}.
      * @param projectType The ProjectType.  Not {@code null}.
-     * @param defaultLanguage The default language. Not {@code null}.
      * @param projectDescription The project description. Not {@code null}.
      * @throws java.lang.NullPointerException if any parameters are {@code null}.
      */
-    public ProjectSettingsData(ProjectId projectId, ProjectType projectType, String defaultLanguage, String projectDescription) {
+    public ProjectSettingsData(ProjectId projectId, ProjectType projectType, String projectDescription) {
         this.projectId = checkNotNull(projectId);
         this.projectType = checkNotNull(projectType);
-        this.defaultLanguage = checkNotNull(defaultLanguage);
         this.projectDescription = checkNotNull(projectDescription);
     }
 
@@ -56,13 +53,10 @@ public class ProjectSettingsData implements Serializable {
         return projectType;
     }
 
-    public String getDefaultLanguage() {
-        return defaultLanguage;
-    }
 
     @Override
     public int hashCode() {
-        return projectType.hashCode() + projectDescription.hashCode() + projectId.hashCode() + defaultLanguage.hashCode();
+        return projectType.hashCode() + projectDescription.hashCode() + projectId.hashCode();
     }
 
     @Override
@@ -74,11 +68,11 @@ public class ProjectSettingsData implements Serializable {
             return false;
         }
         ProjectSettingsData other = (ProjectSettingsData) obj;
-        return this.projectType.equals(other.projectType) && this.projectDescription.equals(other.projectDescription) && this.projectId.equals(other.projectId) && this.defaultLanguage.equals(other.defaultLanguage);
+        return this.projectType.equals(other.projectType) && this.projectDescription.equals(other.projectDescription) && this.projectId.equals(other.projectId);
     }
 
     @Override
     public String toString() {
-        return "ProjectConfigurationInfo(" + projectId + " Type(" + projectType + ") Description(" + projectDescription + ")" + " DefaultLanguage(" + defaultLanguage + ")";
+        return "ProjectSettingsData(" + projectId + " Type(" + projectType + ") Description(" + projectDescription + ")";
     }
 }
