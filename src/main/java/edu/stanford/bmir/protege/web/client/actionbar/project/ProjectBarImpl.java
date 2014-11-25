@@ -70,7 +70,7 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
     @UiHandler("projectSettingsItem")
     protected void handleProjectSettingsItemClicked(ClickEvent clickEvent) {
         PopupMenu popupMenu = new PopupMenu();
-        popupMenu.addItem("Project details...", new ClickHandler() {
+        popupMenu.addItem("Project settings...", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 showProjectDetailsHandler.handleShowProjectDetails();

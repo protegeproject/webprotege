@@ -64,5 +64,4 @@ public interface ProjectManagerService extends RemoteService {
 
     void setProjectType(ProjectId projectId, ProjectType projectType) throws NotProjectOwnerException, ProjectNotRegisteredException;
 
-    void setProjectConfiguration(ProjectSettings configuration) throws ProjectNotRegisteredException, NotProjectOwnerException;
 }

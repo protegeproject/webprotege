@@ -30,6 +30,7 @@ import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
+import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
@@ -58,6 +59,7 @@ import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
 import edu.stanford.bmir.protege.web.shared.project.MoveProjectsToTrashAction;
 import edu.stanford.bmir.protege.web.shared.project.RemoveProjectsFromTrashAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
+import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
 import edu.stanford.bmir.protege.web.shared.watches.AddWatchAction;
@@ -97,6 +99,7 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
         register(new GetProjectEventsActionHandler(), GetProjectEventsAction.class);
 
         register(new GetProjectSettingsActionHandler(projectMetadataManager), GetProjectSettingsAction.class);
+        register(new SetProjectSettingsActionHandler(projectMetadataManager), SetProjectSettingsAction.class);
 
         register(new GetClassFrameActionHandler(), GetClassFrameAction.class);
         register(new UpdateClassFrameActionHandler(), UpdateClassFrameAction.class);

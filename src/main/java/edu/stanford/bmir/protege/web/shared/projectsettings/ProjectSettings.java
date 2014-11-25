@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -16,6 +17,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ProjectSettings implements Serializable {
 
     private ProjectId projectId;
+
+    private String projectDisplayName;
     
     private ProjectType projectType;
     
@@ -34,8 +37,9 @@ public class ProjectSettings implements Serializable {
      * @param projectDescription The project description. Not {@code null}.
      * @throws java.lang.NullPointerException if any parameters are {@code null}.
      */
-    public ProjectSettings(ProjectId projectId, ProjectType projectType, String projectDescription) {
+    public ProjectSettings(ProjectId projectId, ProjectType projectType, String projectDisplayName, String projectDescription) {
         this.projectId = checkNotNull(projectId);
+        this.projectDisplayName = checkNotNull(projectDisplayName);
         this.projectType = checkNotNull(projectType);
         this.projectDescription = checkNotNull(projectDescription);
     }
@@ -46,6 +50,14 @@ public class ProjectSettings implements Serializable {
      */
     public ProjectId getProjectId() {
         return projectId;
+    }
+
+    /**
+     * Gets the project display name.
+     * @return The project display name.  Not {@code null}.
+     */
+    public String getProjectDisplayName() {
+        return projectDisplayName;
     }
 
     /**
@@ -67,7 +79,7 @@ public class ProjectSettings implements Serializable {
 
     @Override
     public int hashCode() {
-        return projectType.hashCode() + projectDescription.hashCode() + projectId.hashCode();
+        return Objects.hashCode(projectId, projectType, projectDisplayName, projectDescription);
     }
 
     @Override
@@ -79,11 +91,20 @@ public class ProjectSettings implements Serializable {
             return false;
         }
         ProjectSettings other = (ProjectSettings) obj;
-        return this.projectType.equals(other.projectType) && this.projectDescription.equals(other.projectDescription) && this.projectId.equals(other.projectId);
+        return this.projectType.equals(other.projectType)
+                && this.projectDisplayName.equals(other.projectDisplayName)
+                && this.projectDescription.equals(other.projectDescription)
+                && this.projectId.equals(other.projectId);
     }
+
 
     @Override
     public String toString() {
-        return "ProjectSettingsData(" + projectId + " Type(" + projectType + ") Description(" + projectDescription + ")";
+        return Objects.toStringHelper("ProjectSettings")
+                .addValue(projectId)
+                .addValue(projectType)
+                .add("displayName", projectDisplayName)
+                .add("description", projectDescription)
+                .toString();
     }
 }
