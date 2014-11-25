@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotProjectOwnerException;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
-import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationInfo;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectConfigurationInfo;
 import edu.stanford.bmir.protege.web.shared.project.*;
 
 import java.util.List;

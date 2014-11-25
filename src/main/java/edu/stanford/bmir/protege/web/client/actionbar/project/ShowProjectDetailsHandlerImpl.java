@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.actionbar.project;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.ui.projectconfig.ProjectConfigurationDialogController;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectConfigurationDialogController;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**

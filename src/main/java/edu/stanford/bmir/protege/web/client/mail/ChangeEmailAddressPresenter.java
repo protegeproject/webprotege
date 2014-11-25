@@ -32,6 +32,7 @@ public class ChangeEmailAddressPresenter {
             return;
         }
         ProgressMonitor.get().showProgressMonitor("Retrieving email address", "Please wait.");
+
         DispatchServiceManager.get().execute(new GetEmailAddressAction(userId), new AbstractWebProtegeAsyncCallback<GetEmailAddressResult>() {
             @Override
             public void onSuccess(GetEmailAddressResult result) {
