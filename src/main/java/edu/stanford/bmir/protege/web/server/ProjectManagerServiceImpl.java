@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsData;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
@@ -165,13 +165,13 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         mdm.setProjectType(projectId, new OWLAPIProjectType(projectType.getName()));
     }
 
-    public ProjectSettingsData getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException {
+    public ProjectSettings getProjectConfiguration(ProjectId projectId) throws ProjectNotRegisteredException {
         ProjectType projectType = getProjectType(projectId);
         String description = OWLAPIProjectMetadataManager.getManager().getDescription(projectId);
-        return new ProjectSettingsData(projectId, projectType, description);
+        return new ProjectSettings(projectId, projectType, description);
     }
 
-    public void setProjectConfiguration(ProjectSettingsData configuration) throws ProjectNotRegisteredException, NotProjectOwnerException {
+    public void setProjectConfiguration(ProjectSettings configuration) throws ProjectNotRegisteredException, NotProjectOwnerException {
         ProjectId projectId = configuration.getProjectId();
         if(!isSignedInUserProjectOwner(projectId)) {
             throw new NotProjectOwnerException(projectId);
@@ -180,10 +180,6 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         OWLAPIProjectType projectType = OWLAPIProjectType.getProjectType(configuration.getProjectType().getName());
         mdm.setProjectType(projectId, projectType);
         mdm.setDescription(projectId, configuration.getProjectDescription());
-//        if(!mdm.getDefaultLanguage(projectId).equals(configuration.getDefaultLanguage())) {
-//            mdm.setDefaultLanguage(projectId, configuration.getDefaultLanguage());
-//        }
-
     }
 
 

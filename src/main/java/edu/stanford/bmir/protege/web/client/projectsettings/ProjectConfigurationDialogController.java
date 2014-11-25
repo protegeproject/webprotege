@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButto
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsData;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/07/2012
  */
-public class ProjectConfigurationDialogController extends WebProtegeOKCancelDialogController<ProjectSettingsData> {
+public class ProjectConfigurationDialogController extends WebProtegeOKCancelDialogController<ProjectSettings> {
 
     public static final String DIALOG_TITLE = "Project configuration";
 
@@ -37,8 +37,8 @@ public class ProjectConfigurationDialogController extends WebProtegeOKCancelDial
         projectManagerService = GWT.create(ProjectManagerService.class);
         dataToForm(projectId);
 
-        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectSettingsData>() {
-            public void handleHide(ProjectSettingsData data, final WebProtegeDialogCloser closer) {
+        setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectSettings>() {
+            public void handleHide(ProjectSettings data, final WebProtegeDialogCloser closer) {
 
                 ProjectManagerServiceAsync pms = GWT.create(ProjectManagerService.class);
                 pms.setProjectConfiguration(data, new AsyncCallback<Void>() {
@@ -62,14 +62,14 @@ public class ProjectConfigurationDialogController extends WebProtegeOKCancelDial
             }
 
             public void onSuccess(final List<ProjectType> projectTypes) {
-                projectManagerService.getProjectConfiguration(projectId, new AsyncCallback<ProjectSettingsData>() {
+                projectManagerService.getProjectConfiguration(projectId, new AsyncCallback<ProjectSettings>() {
                     public void onFailure(Throwable caught) {
                         GWT.log("Problem with retrieving project configuration: " + caught.getMessage());
                     }
 
-                    public void onSuccess(ProjectSettingsData projectSettingsData) {
+                    public void onSuccess(ProjectSettings projectSettings) {
                         dialogForm.setAllowedProjectTypes(projectTypes);
-                        dialogForm.setData(projectSettingsData);
+                        dialogForm.setData(projectSettings);
                     }
                 });
             }
@@ -98,7 +98,7 @@ public class ProjectConfigurationDialogController extends WebProtegeOKCancelDial
     }
 
     @Override
-    public ProjectSettingsData getData() {
+    public ProjectSettings getData() {
         return dialogForm.getData();
     }
 }

@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/07/2012
  */
-public class ProjectSettingsData implements Serializable {
+public class ProjectSettings implements Serializable {
 
     private ProjectId projectId;
     
@@ -25,7 +25,7 @@ public class ProjectSettingsData implements Serializable {
     /**
      * For serialization purposes only
      */
-    private ProjectSettingsData() {}
+    private ProjectSettings() {}
 
     /**
      * Constructs a ProjectSettingsData object.
@@ -34,7 +34,7 @@ public class ProjectSettingsData implements Serializable {
      * @param projectDescription The project description. Not {@code null}.
      * @throws java.lang.NullPointerException if any parameters are {@code null}.
      */
-    public ProjectSettingsData(ProjectId projectId, ProjectType projectType, String projectDescription) {
+    public ProjectSettings(ProjectId projectId, ProjectType projectType, String projectDescription) {
         this.projectId = checkNotNull(projectId);
         this.projectType = checkNotNull(projectType);
         this.projectDescription = checkNotNull(projectDescription);
@@ -75,10 +75,10 @@ public class ProjectSettingsData implements Serializable {
         if(obj == this) {
             return true;
         }
-        if(!(obj instanceof ProjectSettingsData)) {
+        if(!(obj instanceof ProjectSettings)) {
             return false;
         }
-        ProjectSettingsData other = (ProjectSettingsData) obj;
+        ProjectSettings other = (ProjectSettings) obj;
         return this.projectType.equals(other.projectType) && this.projectDescription.equals(other.projectDescription) && this.projectId.equals(other.projectId);
     }
 
