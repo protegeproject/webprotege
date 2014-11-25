@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.server.projectsettings;
 
-import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,10 +24,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetProjectSettingsActionHandler_TestCase {
 
-    public static final String DISPLAY_NAME = "MyDisplayName";
-
-    public static final String DESCRIPTION = "MyDescription";
-    public static final String PROJECT_TYPE_NAME = "MyType";
 
     private GetProjectSettingsActionHandler actionHandler;
 
@@ -38,10 +31,11 @@ public class GetProjectSettingsActionHandler_TestCase {
     @Mock
     private ProjectId projectId;
 
-    private OWLAPIProjectType projectType = new OWLAPIProjectType("MyType");
+    @Mock
+    private ProjectSettings projectSettings;
 
     @Mock
-    private OWLAPIProjectMetadataManager mdm;
+    private ProjectSettingsManager mdm;
 
     @Mock
     private GetProjectSettingsAction action;
@@ -57,17 +51,13 @@ public class GetProjectSettingsActionHandler_TestCase {
         actionHandler = new GetProjectSettingsActionHandler(mdm);
 
         when(action.getProjectId()).thenReturn(projectId);
-
-        when(mdm.getDisplayName(projectId)).thenReturn(DISPLAY_NAME);
-        when(mdm.getDescription(projectId)).thenReturn(DESCRIPTION);
-        when(mdm.getType(projectId)).thenReturn(projectType);
+        when(mdm.getProjectSettings(projectId)).thenReturn(projectSettings);
 
     }
 
     @Test
     public void shouldReturnSettings() {
         GetProjectSettingsResult result = actionHandler.execute(action, project, executionContext);
-        assertThat(result.getProjectSettings().getProjectType().getName(), is(PROJECT_TYPE_NAME));
-        assertThat(result.getProjectSettings().getProjectDescription(), is(DESCRIPTION));
+        assertThat(result.getProjectSettings(), is(projectSettings));
     }
 }

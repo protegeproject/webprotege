@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.projectsettings.ProjectSettingsManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
@@ -24,7 +27,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/08/2012
  */
-public class OWLAPIProjectMetadataManager {
+public class OWLAPIProjectMetadataManager implements ProjectSettingsManager {
 
     private static final OWLAPIProjectMetadataManager instance = new OWLAPIProjectMetadataManager();
 
@@ -53,8 +56,29 @@ public class OWLAPIProjectMetadataManager {
         return instance;
     }
 
+    @Override
+    public void setProjectSettings(ProjectSettings projectSettings) {
+        try {
+            WRITE_LOCK.lock();
+            setDescription(projectSettings.getProjectId(), projectSettings.getProjectDescription());
+            setProjectType(projectSettings.getProjectId(), new OWLAPIProjectType(projectSettings.getProjectType().getName()));
+        } finally {
+            WRITE_LOCK.unlock();
+        }
 
-    // ProjectData
+    }
+
+    @Override
+    public ProjectSettings getProjectSettings(ProjectId projectId) throws UnknownProjectException{
+        try {
+            READ_LOCK.lock();
+            return new ProjectSettings(projectId, new ProjectType(getType(projectId).getProjectTypeName()), getDescription(projectId));
+        } finally {
+            READ_LOCK.unlock();
+        }
+    }
+
+// ProjectData
     
     public synchronized Set<ProjectId> getProjects() {
         try {
