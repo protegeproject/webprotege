@@ -22,10 +22,10 @@ public class ProjectSettingsData implements Serializable {
     private String projectDescription;
 
 
-    // For serialization
-    private ProjectSettingsData() {
-
-    }
+    /**
+     * For serialization purposes only
+     */
+    private ProjectSettingsData() {}
 
     /**
      * Constructs a ProjectSettingsData object.
@@ -40,15 +40,26 @@ public class ProjectSettingsData implements Serializable {
         this.projectDescription = checkNotNull(projectDescription);
     }
 
-
+    /**
+     * Gets the projectId.
+     * @return The projectId.  Not {@code null}.
+     */
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    /**
+     * Gets the project description.
+     * @return The project description as a string.  May be empty. Not {@code null}.
+     */
     public String getProjectDescription() {
         return projectDescription;
     }
 
+    /**
+     * Gets the project type.
+     * @return The project type.  Not {@code null}.
+     */
     public ProjectType getProjectType() {
         return projectType;
     }
