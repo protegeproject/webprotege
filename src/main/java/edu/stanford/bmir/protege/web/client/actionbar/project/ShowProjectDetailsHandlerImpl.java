@@ -2,8 +2,10 @@ package edu.stanford.bmir.protege.web.client.actionbar.project;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDialogController;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectConfigurationDialogController;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -20,6 +22,7 @@ public class ShowProjectDetailsHandlerImpl implements ShowProjectDetailsHandler 
         if(!projectId.isPresent()) {
             return;
         }
-        WebProtegeDialog.showDialog(new ProjectConfigurationDialogController(projectId.get()));
+        ProjectSettingsPresenter presenter = new ProjectSettingsPresenter(new ProjectSettingsViewImpl());
+        presenter.showDialog(projectId.get());
     }
 }

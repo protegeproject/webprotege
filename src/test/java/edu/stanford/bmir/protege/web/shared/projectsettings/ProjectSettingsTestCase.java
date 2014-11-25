@@ -8,9 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -30,6 +28,7 @@ public class ProjectSettingsTestCase {
 
     private String projectDescription = "DESCRIPTION";
 
+    private String projectDisplayName = "DISPLAY_NAME";
 
 
     private ProjectSettings data;
@@ -37,22 +36,27 @@ public class ProjectSettingsTestCase {
 
     @Before
     public void setUp() throws Exception {
-        data = new ProjectSettings(projectId, projectType, projectDescription);
+        data = new ProjectSettings(projectId, projectType, projectDisplayName, projectDescription);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfProjectIdIsNull() {
-        new ProjectSettings(null, projectType, projectDescription);
+        new ProjectSettings(null, projectType, projectDisplayName, projectDescription);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfProjectTypeIsNull() {
-        new ProjectSettings(projectId, null, projectDescription);
+        new ProjectSettings(projectId, null, projectDisplayName, projectDescription);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIfProjectDisplayNameIsNull() {
+        new ProjectSettings(projectId, projectType, null, projectDescription);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfProjectDescriptionIsNull() {
-        new ProjectSettings(projectId, projectType, null);
+        new ProjectSettings(projectId, projectType, projectDisplayName, null);
     }
 
     @Test
@@ -67,13 +71,13 @@ public class ProjectSettingsTestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        ProjectSettings other = new ProjectSettings(projectId, projectType, projectDescription);
+        ProjectSettings other = new ProjectSettings(projectId, projectType, projectDisplayName, projectDescription);
         assertThat(data, is(equalTo(other)));
     }
 
     @Test
     public void shouldHaveSameHashCode() {
-        ProjectSettings other = new ProjectSettings(projectId, projectType, projectDescription);
+        ProjectSettings other = new ProjectSettings(projectId, projectType, projectDisplayName, projectDescription);
         assertThat(data.hashCode(), is(other.hashCode()));
     }
 
@@ -89,12 +93,19 @@ public class ProjectSettingsTestCase {
     }
 
     @Test
+    public void shouldReturnSuppliedDisplayName() {
+        assertThat(data.getProjectDisplayName(), is(projectDisplayName));
+    }
+
+    @Test
     public void shouldReturnSuppliedProjectDescription() {
         assertThat(data.getProjectDescription(), is(projectDescription));
     }
 
     @Test
     public void shouldGenerateToString() {
-        assertThat(data.toString(), startsWith("ProjectSettingsData"));
+        assertThat(data.toString(), startsWith("ProjectSettings"));
+        assertThat(data.toString(), containsString(projectDisplayName));
+        assertThat(data.toString(), containsString(projectDescription));
     }
 }

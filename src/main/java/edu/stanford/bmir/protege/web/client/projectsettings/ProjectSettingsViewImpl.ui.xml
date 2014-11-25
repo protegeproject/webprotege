@@ -1,0 +1,17 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle"/>
+
+    <g:HTMLPanel>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Display name" addStyleNames="{wp.style.dlgLabel}"/>
+            <g:TextBox ui:field="displayNameField" visibleLength="60"/>
+        </div>
+        <div class="{wp.style.formGroup}">
+            <g:Label text="Description" addStyleNames="{wp.style.dlgLabel}"/>
+            <g:TextArea ui:field="descriptionField" visibleLines="5" characterWidth="61"/>
+        </div>
+
+    </g:HTMLPanel>
+</ui:UiBinder>

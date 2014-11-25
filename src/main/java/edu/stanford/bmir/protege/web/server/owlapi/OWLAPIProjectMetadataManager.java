@@ -21,6 +21,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -60,8 +62,10 @@ public class OWLAPIProjectMetadataManager implements ProjectSettingsManager {
     public void setProjectSettings(ProjectSettings projectSettings) {
         try {
             WRITE_LOCK.lock();
-            setDescription(projectSettings.getProjectId(), projectSettings.getProjectDescription());
-            setProjectType(projectSettings.getProjectId(), new OWLAPIProjectType(projectSettings.getProjectType().getName()));
+            ProjectId projectId = projectSettings.getProjectId();
+            setProjectType(projectId, new OWLAPIProjectType(projectSettings.getProjectType().getName()));
+            setDescription(projectId, projectSettings.getProjectDescription());
+            setDisplayName(projectId, projectSettings.getProjectDisplayName());
         } finally {
             WRITE_LOCK.unlock();
         }
@@ -72,7 +76,9 @@ public class OWLAPIProjectMetadataManager implements ProjectSettingsManager {
     public ProjectSettings getProjectSettings(ProjectId projectId) throws UnknownProjectException{
         try {
             READ_LOCK.lock();
-            return new ProjectSettings(projectId, new ProjectType(getType(projectId).getProjectTypeName()), getDescription(projectId));
+            return new ProjectSettings(projectId,
+                    new ProjectType(getType(projectId).getProjectTypeName()), getDisplayName(projectId),
+                    getDescription(projectId));
         } finally {
             READ_LOCK.unlock();
         }
@@ -141,6 +147,16 @@ public class OWLAPIProjectMetadataManager implements ProjectSettingsManager {
         }
         else {
             return pi.getProtegeInstance().getDirectOwnSlotValue(displayNameSlot).toString();
+        }
+    }
+
+    public void setDisplayName(ProjectId projectId, String displayName) {
+        checkNotNull(displayName);
+        ProjectInstance pi = getProjectInstance(projectId);
+        Slot displayNameSlot = pi.getProtegeInstance().getKnowledgeBase().getSlot("displayName");
+        if(displayNameSlot != null) {
+            // If it's not present then it's some really old version of the metaproject
+            pi.getProtegeInstance().setDirectOwnSlotValue(displayNameSlot, displayName);
         }
     }
 
