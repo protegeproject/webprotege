@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.entitieslist;
 import com.google.common.base.Optional;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -11,12 +13,14 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.res.WebProtegeCellListResources;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.*;
@@ -93,6 +97,12 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
                 SelectionEvent.fire(EntitiesListImpl.this, selectionModel.getSelectedObject());
             }
         });
+        cellList.addDomHandler(new MouseUpHandler() {
+            @Override
+            public void onMouseUp(MouseUpEvent mouseUpEvent) {
+                SelectionEvent.fire(EntitiesListImpl.this, selectionModel.getSelectedObject());
+            }
+        }, MouseUpEvent.getType());
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
