@@ -171,7 +171,8 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
         for(int i = 0; i < tableField.getRowCount(); i++) {
             DeleteButton deleteButton = (DeleteButton) tableField.getWidget(i, DELETE_BUTTON_COLUMN);
             deleteButton.setEnabled(enabled);
-            if (i < tableField.getRowCount() - 1) {
+            // Don't enabled the delete button for the last row if it is a blank row
+            if (i < tableField.getRowCount() - 1 || !enabled) {
                 deleteButton.setVisible(enabled);
             }
         }
@@ -190,8 +191,10 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
 
 
     private void ensureBlank() {
-        if(currentEditors.isEmpty() || currentEditors.get(currentEditors.size() - 1).getValue().isPresent()) {
-            addValueEditor(false);
+        if (isEnabled()) {
+            if(currentEditors.isEmpty() || currentEditors.get(currentEditors.size() - 1).getValue().isPresent()) {
+                addValueEditor(false);
+            }
         }
         for(int i = 0; i < tableField.getRowCount(); i++) {
             DeleteButton deleteButton = (DeleteButton) tableField.getWidget(i, DELETE_BUTTON_COLUMN);
