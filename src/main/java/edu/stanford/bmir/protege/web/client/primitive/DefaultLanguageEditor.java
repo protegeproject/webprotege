@@ -25,6 +25,8 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
 
     private boolean dirty = false;
 
+    private String placeholder = "";
+
     @Inject
     public DefaultLanguageEditor(SuggestBox baseBox) {
         suggestBox = baseBox;
@@ -60,6 +62,12 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
     @Override
     public void setEnabled(boolean enabled) {
         suggestBox.getTextBox().setEnabled(enabled);
+        if(enabled) {
+            setPlaceholderInternal(placeholder);
+        }
+        else {
+            setPlaceholderInternal("");
+        }
     }
 
     /**
@@ -115,6 +123,11 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
 
     @Override
     public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
+        setPlaceholderInternal(placeholder);
+    }
+
+    private void setPlaceholderInternal(String placeholder) {
         suggestBox.getElement().setAttribute("placeholder", placeholder);
     }
 
