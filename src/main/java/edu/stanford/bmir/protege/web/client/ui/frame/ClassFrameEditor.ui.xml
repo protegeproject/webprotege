@@ -8,7 +8,7 @@
 
         <div class="{wp.style.formGroup}">
             <g:Label text="Display name" addStyleNames="{wp.style.formLabel}"/>
-            <g:TextBox ui:field="displayNameField" width="100%"/>
+            <g:TextBox ui:field="displayNameField" width="100%" addStyleNames="{wp.style.formField}"/>
         </div>
 
         <div class="{wp.style.formGroup}">
