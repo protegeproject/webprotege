@@ -27,6 +27,8 @@ public interface WebProtegeResourceBundle extends ClientBundle {
 
         String dlgLabel();
 
+        String formField();
+
 //        String valueList();
     }
 }

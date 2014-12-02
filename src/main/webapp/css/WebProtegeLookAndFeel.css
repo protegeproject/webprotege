@@ -35,7 +35,7 @@
 }
 
 *.web-protege-laf .gwt-TextBox, .gwt-TextBox-readonly {
-    border: 1px solid rgb(198, 198, 198);
+    /*border: 1px solid rgb(198, 198, 198);*/
     font-size: 12px;
     font-family: tahoma, sans-serif;
     padding: 2px;

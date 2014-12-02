@@ -9,6 +9,10 @@
     padding-top: 13px;
 }
 
+.formMain [disabled] {
+    background-color: #ffffff !important;
+}
+
 .formGroup {
     padding-bottom: 10px;
 }
@@ -29,24 +33,15 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-/*.valueList {*/
-
-/*}*/
-
-/*.valueList > table > tbody > tr > td {*/
-    /*border-bottom: 1px solid rgb(240, 240, 240);*/
-/*}*/
-
-/*.valueList .gwt-SuggestBox {*/
-    /*border: 1px solid transparent;*/
-/*}*/
-
-/*.valueList .gwt-TextBox {*/
-    /*border: 1px solid transparent;*/
-/*}*/
-
-/*.valueList .gwt-TextArea {*/
-    /*border: 1px solid transparent;*/
-/*}*/
-
-
+.formField {
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: transparent;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: transparent;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: transparent;
+    border-bottom: 1px solid #f0f0f0;
+}
