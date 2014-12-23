@@ -356,21 +356,6 @@ ul.disc
     padding:5px 5px 5px 8px;
 }
 
-.parents
-{
-    background:#FFF url(../images/default/form/text-bg.gif) repeat-x scroll 0 0;
-    border:1px solid #B5B8C8;
-    margin:0!important;
-    overflow:auto;
-    padding:2px 3px;
-}
-
-.parents-no-border
-{
-    background:#FFF url(../images/default/form/text-bg.gif) repeat-x scroll 0 0;
-    padding:2px 3px;
-}
-
 .parents-label
 {
     clear:left;
