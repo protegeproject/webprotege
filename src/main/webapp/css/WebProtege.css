@@ -145,26 +145,6 @@ ul.x-tab-strip li
     border:none;
 }
 
-.spec-tab-header-green
-{
-    background-color:#D7DEBD!important;
-}
-
-.spec-tab-header-green span.x-tab-strip-text
-{
-    color:#4A4A00;
-}
-
-.spec-tab-header-orange
-{
-    background-color:#EED8C1!important;
-}
-
-.spec-tab-header-orange span.x-tab-strip-text
-{
-    color:#EB5321;
-}
-
 .tabpanel-onerow ul.x-tab-strip
 {
     width:10000px!important;
