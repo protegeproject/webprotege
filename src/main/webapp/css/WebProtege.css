@@ -292,35 +292,11 @@ ul.x-tab-strip-top
     overflow:auto;
 }
 
-.restriction_panel
-{
-    background-color:#FFF;
-}
-
 .restriction_table
 {
     background-color:#FFF;
     font-family:arial, tahoma, helvetica, sans-serif;
     importantpadding:5px 5px 5px 5px;
-}
-
-.restiction_title
-{
-    color:#1542bb;
-    font-weight:700;
-}
-
-.restriction_delim
-{
-    color:maroon;
-    font-style:italic;
-}
-
-.restriction_separator
-{
-    color:gray;
-    font-size:90%;
-    font-style:italic;
 }
 
 .x-grid3-header-offset
