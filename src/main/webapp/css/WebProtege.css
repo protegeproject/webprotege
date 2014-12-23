@@ -339,22 +339,6 @@ ul.disc
     width:100px;
 }
 
-.note_message,.stats_message
-{
-    clear:left;
-    display:block;
-    float:left;
-    font-family:tahoma, sans-serif;
-    font-size:11px;
-    font-size-adjust:none;
-    font-style:normal;
-    font-variant:normal;
-    font-weight:700;
-    line-height:normal;
-    padding:3px 3px 6px;
-    position:relative;
-}
-
 .form_grid
 {
     padding:1px 3px;
