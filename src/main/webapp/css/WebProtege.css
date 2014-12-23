@@ -627,26 +627,6 @@ ul.x-menu-list
     background-image:url(images/details.gif);
 }
 
-.discussion-link
-{
-    color:#00F!important;
-    font-weight:700;
-    padding-bottom:5px;
-    padding-left:3px;
-    padding-top:5px;
-}
-
-.discussion-link-inactive a
-{
-    color:#BBB!important;
-}
-
-.p-button
-{
-    color:#15428B;
-    font-size:70%;
-}
-
 .individualsView-Banner
 {
     background-color:#606;
