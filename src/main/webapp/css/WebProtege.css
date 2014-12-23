@@ -201,30 +201,6 @@ ul.x-tab-strip-top
     text-align:center;
 }
 
-.top-panel
-{
-    border:1px solid #0FF;
-    height:50px;
-}
-
-.header-right
-{
-    font-size:70%;
-    right:5px;
-    text-align:right;
-    top:5px;
-    vertical-align:top;
-}
-
-.header-left
-{
-    font-size:70%;
-    right:5px;
-    text-align:left;
-    top:5px;
-    vertical-align:top;
-}
-
 .login-welcome-msg
 {
     color:#686D78;
@@ -246,20 +222,6 @@ ul.x-tab-strip-top
 {
     overflow:visible;
     white-space:normal!important;
-}
-
-#ontologies-grid .x-grid3-cell-inner
-{
-    overflow:visible;
-    white-space:normal!important;
-}
-
-.jnlpPanel
-{
-    background-color:#ECF4FD;
-    border:1px solid #99BBE8;
-    margin:5px;
-    padding:5px;
 }
 
 .html-portlet
@@ -566,16 +528,6 @@ ul.disc
 .condition_editor
 {
     font-size:11px;
-}
-
-.hint_color_red
-{
-    background-color:#EFB4B2;
-}
-
-.hint_color_green
-{
-    background-color:#B7FFB7;
 }
 
 .ctrl_portlet
