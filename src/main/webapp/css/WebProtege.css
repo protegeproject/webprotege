@@ -1,852 +1,813 @@
-/*
- * Cascading Style Sheet for WebProtege - contains global styles and 
- * styles used in application entry point WebProtege.java.
- *
- * Note: try to use GWT naming conventions of projectname-component when possible
- */ /* 
- * Specifying a default font family for the body. This will help to make 
- * fonts look consistent across the application. This can be overridden in 
- *	individual styles. 
- */
-body {
-    font-family: tahoma, sans-serif;
+body
+{
+    font-family:tahoma, sans-serif;
 }
 
-/******************************************************************
- Non-specific Global styles
- *****************************************************************/
 .centeredImage
 {
+    margin-bottom:0;
+    margin-top:0;
+    padding:0;
     text-align:center;
-    margin-top:0px;
-    margin-bottom:0px;
-    padding:0px;
 }
 
-/******************************************************************
- Global styles for hyperlinks
- *****************************************************************/
-a {
-    text-decoration: none;
+a
+{
+    text-decoration:none;
 }
 
-a:link {
-    color: #327BAA;
-}  /* medium blue */
-a:visited {
-    color: #6F1488;
-}  /* purple */
-a:hover {
-    color: #DC7317;
-}  /* bright orange */
-
-/******************************************************************
- Style for panels
- *****************************************************************/
-
-.x-panel {
-    border: none;
+a:link
+{
+    color:#327BAA;
 }
 
-.x-panel .x-portlet {
-    border: 1px solid #99BBE8;
+a:visited
+{
+    color:#6F1488;
 }
 
-.x-panel-mr {
-    background: none;
-    padding: 0px;
+a:hover
+{
+    color:#DC7317;
 }
 
-.x-panel-ml {
-    background: none;
-    padding: 0px;
+.x-panel
+{
+    border:none;
 }
 
-.x-panel-mc {
-    background: none;
-    padding: 0px;
+.x-panel .x-portlet
+{
+    border:1px solid #99BBE8;
 }
 
-.x-panel-br {
-    background: none;
-    padding: 0px;
+.x-panel-mr
+{
+    background:none;
+    padding:0;
 }
 
-.x-panel-bl {
-    background: none;
-    padding: 0px;
+.x-panel-ml
+{
+    background:none;
+    padding:0;
 }
 
-.x-panel-bc {
-    background: none;
-    padding: 0px;
+.x-panel-mc
+{
+    background:none;
+    padding:0;
 }
 
-/* .x-panel-nofooter .x-panel-bc {
-	height:0px;
-} */
-
-.x-panel-tr {
-    background: none;
-    padding: 0px;
+.x-panel-br
+{
+    background:none;
+    padding:0;
 }
 
-.x-panel-tl {
-    background: none;
-    padding: 0px;
+.x-panel-bl
+{
+    background:none;
+    padding:0;
 }
 
-.x-panel-tc {
-    background: #ECF4FD;
-    padding-left: 6px;
+.x-panel-bc
+{
+    background:none;
+    padding:0;
 }
 
-.x-toolbar {
-    background: #DBEBF0;
+.x-panel-tr
+{
+    background:none;
+    padding:0;
 }
 
-
-/*Tabs*/
-
-ul.x-tab-strip li {
-    background: #C5DAF0;
-    margin-bottom: 2px;
+.x-panel-tl
+{
+    background:none;
+    padding:0;
 }
 
-.x-tab-strip-top .x-tab-right {
-    background: none;
+.x-panel-tc
+{
+    background:#ECF4FD;
+    padding-left:6px;
 }
 
-.x-tab-strip-top .x-tab-left {
-    background: none;
+.x-toolbar
+{
+    background:#DBEBF0;
 }
 
-.x-tab-strip-active span.x-tab-strip-text {
-    color:#0000FF;
+ul.x-tab-strip li
+{
+    background:#BDCAD8;
+    margin-bottom:2px;
+}
+
+.x-tab-strip-top .x-tab-right
+{
+    background:none;
+}
+
+.x-tab-strip-top .x-tab-left
+{
+    background:none;
+}
+
+.x-tab-strip-active span.x-tab-strip-text
+{
+    color:#00F;
     cursor:default;
-    font-weight:bold;
+    font-weight:700;
     text-decoration:underline;
 }
 
-.x-tab-strip-top .x-tab-strip-inner {
-    background: none;
+.x-tab-strip-top .x-tab-strip-inner
+{
+    background:none;
 }
 
-.x-tab-strip span.x-tab-strip-text {
-    color: #224499;
+.x-tab-strip span.x-tab-strip-text
+{
+    color:#249;
 }
 
-ul.x-tab-strip li {
-    background: #BDCAD8;
+.x-tab-panel-header,.x-tab-panel-footer
+{
+    background:none;
+    border:none;
 }
 
-.x-tab-panel-header,.x-tab-panel-footer {
-    background: none;
-    border: none;
+.x-tab-panel-header .x-unselectable
+{
+    border:none;
 }
 
-.x-tab-panel-header .x-unselectable {
-    border: none;
+.spec-tab-header-green
+{
+    background-color:#D7DEBD!important;
 }
 
-/*
-* Examples for special tab header styles
-*/
-
-.spec-tab-header-green {
-    background-color:#D7DEBD !important;
-}
-.spec-tab-header-green span.x-tab-strip-text {
-    color: #4A4A00;
+.spec-tab-header-green span.x-tab-strip-text
+{
+    color:#4A4A00;
 }
 
-.spec-tab-header-orange {
-    background-color:#EED8C1 !important;
-}
-.spec-tab-header-orange span.x-tab-strip-text {
-    color: #EB5321;
+.spec-tab-header-orange
+{
+    background-color:#EED8C1!important;
 }
 
-/*
-* Multi row and single row support for the tab panel
-*/
-
-.tabpanel-onerow ul.x-tab-strip {
-    width: 10000px !important;
+.spec-tab-header-orange span.x-tab-strip-text
+{
+    color:#EB5321;
 }
 
-.tabpanel-multirow ul.x-tab-strip {
-    width: auto !important;
+.tabpanel-onerow ul.x-tab-strip
+{
+    width:10000px!important;
 }
 
-/* Border*/
-
-.x-panel-body-noheader,.x-panel-mc .x-panel-body {
-    border: none;
+.tabpanel-multirow ul.x-tab-strip
+{
+    width:auto!important;
 }
 
-/******************************************************************
- Global styles for buttons
- *****************************************************************/
-.toolbar-button .x-btn-text {
-    font-size: 90%;
-    color: #15428B;
-    background-position: 0 2px;
-    background-repeat: no-repeat;
-    padding: 3px 0 2px 18px;
+.x-panel-body-noheader,.x-panel-mc .x-panel-body
+{
+    border:none;
 }
 
-.toolbar-button .x-btn-text-icon .x-btn-center .x-btn-text {
-    font-size: 90%;
-    color: #15428B;
-    background-position: 0 2px;
-    background-repeat: no-repeat;
-    padding: 3px 0 2px 18px;
+.toolbar-button .x-btn-text
+{
+    background-position:0 2px;
+    background-repeat:no-repeat;
+    color:#15428B;
+    font-size:90%;
+    padding:3px 0 2px 18px;
 }
 
-/******************************************************************
- Global styles checkboxes
- *****************************************************************/
-/* .checkbox {
-	text-align: center;
-	padding: 0px 10px 0px 10px;
-} */
-
-/******************************************************************
- Global styles for TreePanel objects
- *****************************************************************/
-.x-tree .x-panel-body {
-    background-color: #FFFFFF;
+.toolbar-button .x-btn-text-icon .x-btn-center .x-btn-text
+{
+    background-position:0 2px;
+    background-repeat:no-repeat;
+    color:#15428B;
+    font-size:90%;
+    padding:3px 0 2px 18px;
 }
 
-/******************************************************************
-General white background
- *****************************************************************/
-.white-bg {
-    background-color: #FFFFFF;
+.x-tree .x-panel-body
+{
+    background-color:#FFF;
 }
 
-ul.x-tab-strip-top {
-    background-color: #FFFFFF;
-    background-image: none;
+.white-bg
+{
+    background-color:#FFF;
 }
 
-/******************************************************************
- Style for WebProtege.java - the application entry point.
- *****************************************************************/
-.footer {
-    color: #AE5B12; /* burnt orange */
-    font-size: 70%; ! important;
-    text-align: center;
+ul.x-tab-strip-top
+{
+    background-color:#FFF;
+    background-image:none;
 }
 
-/******************************************************************
- Style for TopPanel.java - the header portion in the main layout
- *****************************************************************/
-.top-panel {
-    height: 50px;
-    border: 1px solid cyan;
+.footer
+{
+    color:#AE5B12;
+    font-size:70%;
+    text-align:center;
 }
 
-.header-right {
-    right: 5px;
-    top: 5px;
-    font-size: 70%; ! important;
-    vertical-align: top;
-    text-align: right;
+.top-panel
+{
+    border:1px solid #0FF;
+    height:50px;
 }
 
-.header-left {
-    right: 5px;
-    top: 5px;
-    font-size: 70%; ! important;
-    vertical-align: top;
-    text-align: left;
+.header-right
+{
+    font-size:70%;
+    right:5px;
+    text-align:right;
+    top:5px;
+    vertical-align:top;
 }
 
-/****************************************************************
-Styles for the ontology container
-*****************************************************************/
-
-
-/******************************************************************
- Style for LoginFormPanel.java - the login screen and welcome page
- *****************************************************************/
-.login-welcome-msg {
-    color: #686D78;
-    font-size: 11px;
-    font-weight: bold;
+.header-left
+{
+    font-size:70%;
+    right:5px;
+    text-align:left;
+    top:5px;
+    vertical-align:top;
 }
 
-.userName {
-    right: 5px;
-    top: 5px;
-    font-size: 70%; ! important;
-    vertical-align: top;
-    text-align: right;
-    font-weight: bold;
+.login-welcome-msg
+{
+    color:#686D78;
+    font-size:11px;
+    font-weight:700;
 }
 
-/******************************************************************
- Styles for components that make up Metadata tab
- *****************************************************************/
-#annotations-grid .x-grid3-cell-inner {
-    overflow: visible;
-    white-space: normal !important;
+.userName
+{
+    font-size:70%;
+    font-weight:700;
+    right:5px;
+    text-align:right;
+    top:5px;
+    vertical-align:top;
 }
 
-/******************************************************************
- Styles for components that make up MyWebProtege tab
- *****************************************************************/
-#ontologies-grid .x-grid3-cell-inner {
-    overflow: visible;
-    white-space: normal !important;
+#annotations-grid .x-grid3-cell-inner
+{
+    overflow:visible;
+    white-space:normal!important;
 }
 
-.jnlpPanel {
-    background-color: #ECF4FD;
-    padding: 5px;
-    border: 1px solid #99BBE8;
-    margin: 5px;
+#ontologies-grid .x-grid3-cell-inner
+{
+    overflow:visible;
+    white-space:normal!important;
 }
 
-.html-portlet {
-    font-size: larger;
+.jnlpPanel
+{
+    background-color:#ECF4FD;
+    border:1px solid #99BBE8;
+    margin:5px;
+    padding:5px;
 }
 
-.html-portlet .x-panel-body{
-    overflow: auto;
+.html-portlet
+{
+    font-size:larger;
 }
 
-/******************************************************************
-Styles for HTML restrictions table
-*****************************************************************/
-.restriction_panel {
-    background-color: #FFFFFF;
+.html-portlet .x-panel-body
+{
+    overflow:auto;
 }
 
-.restriction_table {
-    font-family: arial, tahoma, helvetica, sans-serif;
-    background-color: #FFFFFF; !
-	important padding: 5px 5px 5px 5px;
+.restriction_panel
+{
+    background-color:#FFF;
 }
 
-.restiction_title {
-    font-weight: bold;
-    color: #1542bb;
+.restriction_table
+{
+    background-color:#FFF;
+    font-family:arial, tahoma, helvetica, sans-serif;
+    importantpadding:5px 5px 5px 5px;
 }
 
-.restriction_delim {
-    color: maroon;
-    font-style: italic;
+.restiction_title
+{
+    color:#1542bb;
+    font-weight:700;
 }
 
-.restriction_separator {
-    color: gray;
-    font-style: italic;
-    font-size: 90%;
+.restriction_delim
+{
+    color:maroon;
+    font-style:italic;
 }
 
-/******************************************************************
- Styles for Ontologies grid
- *****************************************************************/
-.x-grid3-header-offset {
-    width: auto;
+.restriction_separator
+{
+    color:gray;
+    font-size:90%;
+    font-style:italic;
 }
 
-.gwt-ListBox {
-    font-family: tahoma, sans-serif;
+.x-grid3-header-offset
+{
+    width:auto;
 }
 
-/******************************************************************
- Styles for Form widgets
- *****************************************************************/
-ul.disc {
-    list-style-type: disc;
-    padding: 15px;
+.gwt-ListBox
+{
+    font-family:tahoma, sans-serif;
 }
 
-.x-form-item-label, .form_label {
-    clear: left;
-    display: block;
-    float: left;
-    padding: 3px 3px 3px 0;
-    position: relative;
-    width: 100px;
-    z-index: 2;
-    color: #1542bb;
-    font-family: tahoma, sans-serif;
-    font-size: 11px;
-    font-size-adjust: none;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: bold;
-    line-height: normal;
+ul.disc
+{
+    list-style-type:disc;
+    padding:15px;
 }
 
-.x-form-item-label, .action_link {
-    width: 100px;
-}
-/* use these styles to increase label width for regular fields. 
-   Warning: Left end of field will be unfortunatelly cut! 
-   * /
-.x-form-item label {
-	width: 105px !important;
-}
-
-.x-form-element {
-	padding-left: 110px !important;
-}
-/ * */
-
-.note_message,.stats_message {
-    clear: left;
-    display: block;
-    float: left;
-    padding: 3px 3px 6px;
-    position: relative;
-    /*	color: #1542bb;*/
-    font-family: tahoma, sans-serif;
-    font-size: 11px;
-    font-size-adjust: none;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: bold;
-    line-height: normal;
+.x-form-item-label,.form_label
+{
+    clear:left;
+    color:#1542bb;
+    display:block;
+    float:left;
+    font-family:tahoma, sans-serif;
+    font-size:11px;
+    font-size-adjust:none;
+    font-style:normal;
+    font-variant:normal;
+    font-weight:700;
+    line-height:normal;
+    padding:3px 3px 3px 0;
+    position:relative;
+    width:100px;
+    z-index:2;
 }
 
-.form_grid {
-    padding: 1px 3px;
+.x-form-item-label,.action_link
+{
+    width:100px;
 }
 
-.form_html_panel {
-    height: 150px;
-    font-family: tahoma, sans-serif;
-    font-size: 12px;
+.note_message,.stats_message
+{
+    clear:left;
+    display:block;
+    float:left;
+    font-family:tahoma, sans-serif;
+    font-size:11px;
+    font-size-adjust:none;
+    font-style:normal;
+    font-variant:normal;
+    font-weight:700;
+    line-height:normal;
+    padding:3px 3px 6px;
+    position:relative;
 }
 
-.instance-checkbox input {
-    width: 13px;
-    height: 13px;
-    padding: 0;
+.form_grid
+{
+    padding:1px 3px;
+}
+
+.form_html_panel
+{
+    font-family:tahoma, sans-serif;
+    font-size:12px;
+    height:150px;
+}
+
+.instance-checkbox input
+{
+    height:13px;
     margin:0;
-    vertical-align: bottom;
-    position: relative;
-    /*top: -1px;*/
-    *overflow: hidden;
-
+    overflow:hidden;
+    padding:0;
+    position:relative;
+    vertical-align:bottom;
+    width:13px;
 }
 
-.instance-checkbox label {
-    /*display: block;*/
-    padding-left: 10px;
-    text-indent: -10px;
-
+.instance-checkbox label
+{
+    padding-left:10px;
+    text-indent:-10px;
 }
 
-/******************************************************************
- Styles for ChangeSummaryPortlet.java
- *****************************************************************/
-#changes-grid .x-grid3-cell-inner {
-    overflow: visible;
-    white-space: normal !important;
+#changes-grid .x-grid3-cell-inner
+{
+    overflow:visible;
+    white-space:normal!important;
 }
 
-.manage-button {
-    color: #15428B;
-    cursor: pointer;
-    font-size: 100%;
-    font-weight: bold;
-    text-decoration: underline;
-    padding: 7px;
+.manage-button
+{
+    color:#15428B;
+    cursor:pointer;
+    font-size:100%;
+    font-weight:700;
+    padding:7px;
+    text-decoration:underline;
 }
 
-/*****************
-Styles for the hierarchy management tab
-********************/
-.hierarchy-title {
-    font-size: 120%;
-    font-weight: bold;
-    padding: 5px;
-    background-color: #BDCAD8;
-    color: #15428B;
-    margin-bottom: 5px;
+.hierarchy-title
+{
+    background-color:#BDCAD8;
+    color:#15428B;
+    font-size:120%;
+    font-weight:700;
+    margin-bottom:5px;
+    padding:5px;
 }
 
-.select-link {
-    background-image: url(../images/add.png) !important;
-    border-style: none !important;
-    border-width: 0px;
-    margin-left: 5px;
-    margin-top: 5px;
-    border-width: 0px;
-    background-position: 0px 0 !important;
+.select-link
+{
+    background-image:url(../images/add.png)!important;
+    background-position:0 0!important;
+    border-style:none!important;
+    border-width:0;
+    margin-left:5px;
+    margin-top:5px;
 }
 
-.explanation {
-    background-color: #faf59b;
-    border: 1px solid #15428B;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    margin-right: 10px;
-    padding: 5px 5px 5px 8px;
+.explanation
+{
+    background-color:#faf59b;
+    border:1px solid #15428B;
+    margin-bottom:10px;
+    margin-right:10px;
+    margin-top:10px;
+    padding:5px 5px 5px 8px;
 }
 
-.parents {
-    background: #FFFFFF url(../images/default/form/text-bg.gif) repeat-x scroll 0 0;
-    border: 1px solid #B5B8C8;
-    padding: 2px 3px;
-    overflow: auto;
-    margin: 0px !important;
+.parents
+{
+    background:#FFF url(../images/default/form/text-bg.gif) repeat-x scroll 0 0;
+    border:1px solid #B5B8C8;
+    margin:0!important;
+    overflow:auto;
+    padding:2px 3px;
 }
 
-.parents-no-border {
-    background: #FFFFFF url(../images/default/form/text-bg.gif) repeat-x scroll 0 0;
-    padding: 2px 3px;
+.parents-no-border
+{
+    background:#FFF url(../images/default/form/text-bg.gif) repeat-x scroll 0 0;
+    padding:2px 3px;
 }
 
-.parents-label {
-    width: 100px;
-    clear: left;
-    display: block;
-    float: left;
-    padding: 3px 0px 3px 0px;
-    margin-right: 6px;
-    position: relative;
-    z-index: 2;
-    color: #1542BB;
-    font-family: tahoma, sans-serif;
-    font-size: 11px;
-    font-size-adjust: none;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: bold;
-    line-height: normal;
+.parents-label
+{
+    clear:left;
+    color:#1542BB;
+    display:block;
+    float:left;
+    font-family:tahoma, sans-serif;
+    font-size:11px;
+    font-size-adjust:none;
+    font-style:normal;
+    font-variant:normal;
+    font-weight:700;
+    line-height:normal;
+    margin-right:6px;
+    padding:3px 0;
+    position:relative;
+    width:100px;
+    z-index:2;
 }
 
-.parent-column-right {
-    font-family: tahoma, sans-serif;
-    background-color: #FFFFFF; !
-	important padding: 5px 5px 5px 5px;
-    text-align: right;
+.parent-column-right
+{
+    background-color:#FFF;
+    font-family:tahoma, sans-serif;
+    importantpadding:5px 5px 5px 5px;
+    text-align:right;
 }
 
-/* hack - should fix */
-.ext-gecko .x-window-body .x-form-item {
-    overflow: hidden;
+.ext-gecko .x-window-body .x-form-item
+{
+    overflow:hidden;
 }
-.menuBar {
-    cursor: pointer;
-    padding: 0px;
-    margin-top: -2px;
+
+.menuBar
+{
+    cursor:pointer;
+    margin-top:-2px;
+    padding:0;
 }
 
 .menuBar .gwt-MenuItem
 {
-    cursor: pointer;
-    padding: 0px;
-    margin-top: -2px;
+    cursor:pointer;
+    margin-top:-2px;
+    padding:0;
 }
 
 .menuBar .gwt-MenuItem-selected
 {
-    color : #DC7317;
+    color:#DC7317;
 }
 
 .menuBar .gwt-MenuItem-visited
 {
-    cursor: pointer;
-    padding: 0px;
-    margin-top: -2px;
-}
-
-.subMenuBar {
-    color: #327BAA;
-    font-size:75%;
-    text-decoration:underline;
-    cursor: pointer;
-    background-color: #FFFFFF;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #AAAAAA;
+    cursor:pointer;
+    margin-top:-2px;
+    padding:0;
 }
 
 .subMenuBar
 {
-    color: #327BAA;
+    background-color:#FFF;
+    border-color:#AAA;
+    border-style:solid;
+    border-width:1px;
+    color:#327BAA;
+    cursor:pointer;
     font-size:75%;
+    margin:3px;
+    padding:6px;
     text-decoration:underline;
-    cursor: pointer;
-    margin: 3px;
-    padding: 6px;
 }
-.subMenuBar .gwt-MenuItem
-{
 
-}
 .subMenuBar .gwt-MenuItem-selected
 {
-    background-color : #327BAA;
-    color: white;
+    background-color:#327BAA;
+    color:#FFF;
 }
 
-.label {
-    color: #003399;
-    font-size: 11px;
-    font-weight: bold;
+.label
+{
+    color:#039;
+    font-size:11px;
+    font-weight:700;
 }
 
-.gwt-PopupPanel {
-    border: 3px thin #C3D9FF;
-    padding: 3px;
-
+.gwt-PopupPanel
+{
+    background-color:#CEDBEC;
+    border:3px thin #C3D9FF;
     border-color:#329ab3;
     border-width:20px;
-    background-color : #CEDBEC;
-    z-index: 20;
+    padding:3px;
+    z-index:20;
 }
 
-.gwt-PopupPanel .popupContent {
-    background-color : #DFE8F6;
+.gwt-PopupPanel .popupContent
+{
+    background-color:#DFE8F6;
 }
 
-.loginpanel {
+.loginpanel .x-panel-body
+{
+    background-color:#DFE8F7;
 }
 
-.loginpanel .x-panel-body {
-    background-color: #DFE8F7;
+.links-blue
+{
+    color:#039;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:700;
+    margin-top:-2px;
+    padding:0;
 }
 
-.links-blue {
-    color: #003399;
-    font-size: 11px;
-    font-weight: bold;
-
-    cursor: pointer;
-    padding: 0px;
-    margin-top: -2px;
+.loading-img
+{
+    margin-left:3px;
 }
 
-.loading-img {
-    margin-left: 3px;
+.bp-search-rec-type
+{
+    color:gray;
+    font-size:90%;
 }
 
-.bp-search-rec-type {
-    font-size: 90%;
-    color: gray;
+.bp-search-pref-name
+{
+    font-weight:700;
 }
 
-.bp-search-pref-name {
-    font-weight: bold;
+.bp-search-contents
+{
+    color:gray;
 }
 
-.bp-search-contents {
-    color: gray;
+.instance-radio
+{
+    padding:5px;
 }
 
-/*****************
-Radio box widget
-********************/
-
-.instance-radio {
-    padding: 5px;
-}
-
-/*********************
-Export/Import portlet
-***********************/
-
-.export_import_anchor {
-    font-weight: bold;
-    font-size: 120%;
+.export_import_anchor
+{
+    font-size:120%;
+    font-weight:700;
     text-decoration:underline;
 }
 
-.export-import-separator {
+.export-import-separator
+{
     padding:10px 15px;
 }
 
-/********************
-Restriction editing
-*********************/
-.condition_editor {
-    font-size: 11px;
+.condition_editor
+{
+    font-size:11px;
 }
 
-.hint_color_red {
-    background-color: #EFB4B2;
+.hint_color_red
+{
+    background-color:#EFB4B2;
 }
 
-.hint_color_green {
-    background-color: #B7FFB7;
+.hint_color_green
+{
+    background-color:#B7FFB7;
 }
 
-/********************
-Portlets
-*********************/
-.ctrl_portlet {
-    background-image: url(../images/transmit_blue.png) !important;
+.ctrl_portlet
+{
+    background-image:url(../images/transmit_blue.png)!important;
 }
 
-
-/**********************
-GWT popup list
-************************/
-
-/*.gwt-DropDown {*/
-    /*margin-top: -4px;*/
-    /*border: 3px solid #e7e7e7;*/
-    /*background: white;*/
-    /*font: 11px tahoma,arial,helvetica,sans-serif;*/
-    /*color: #15428B;*/
-    /*font-weight: bold;*/
-/*}*/
-
-.html-editor {
-    font: 11px tahoma, sans-serif;
+.html-editor
+{
+    font:11px tahoma, sans-serif;
 }
 
-.x-grid3-cell-inner {
-    overflow: visible;
-    white-space: normal !important;
+.x-grid3-cell-inner
+{
+    overflow:visible;
+    white-space:normal!important;
 }
 
-.webprotege-revision-summary-style {
-    border-bottom: dotted;
-    border-bottom-color: silver;
-    border-bottom-width: 1px;
-    margin-bottom: 5px;
-    padding: 4px;
+.webprotege-revision-summary-style
+{
+    border-bottom:dotted;
+    border-bottom-color:silver;
+    border-bottom-width:1px;
+    margin-bottom:5px;
+    padding:4px;
 }
 
-.webprotege-revision-summary-revision-number-style {
-    font-weight: bold;
+.webprotege-revision-summary-revision-number-style
+{
+    font-weight:700;
 }
 
-.webprotege-revision-summary-userid-style {
-    font-weight: normal;
+.webprotege-revision-summary-userid-style
+{
+    font-weight:400;
 }
 
-
-
-/*Scrollbar for vertical menues*/
-ul.x-menu-list {
-    height: expression( this.scrollHeight > 350 ? "350px" : "auto" ); /* sets max-height for IE */
-    max-height: 350px;
-    overflow-y: auto;
+ul.x-menu-list
+{
+    height:expression(this.scrollHeight>350?"350px":"auto");
+    max-height:350px;
+    overflow-y:auto;
 }
 
-
-.protege-class-icon {
-    background-image: url(../images/tree/class.png) !important;
+.protege-class-icon
+{
+    background-image:url(../images/tree/class.png)!important;
 }
 
-.protege-deprecated-class-icon {
-    background-image: url("../images/tree/class.png") !important;
-    opacity: 0.5;
+.protege-deprecated-class-icon
+{
+    background-image:url(../images/tree/class.png)!important;
+    opacity:0.5;
 }
 
-.protege-class-create-icon {
-    background-image: url(../images/tree/class.create.gif) !important;
+.protege-class-create-icon
+{
+    background-image:url(../images/tree/class.create.gif)!important;
 }
 
-.protege-class-delete-icon {
-    background-image: url(../images/tree/class.delete.gif) !important;
+.protege-class-delete-icon
+{
+    background-image:url(../images/tree/class.delete.gif)!important;
 }
 
-/* Styles for NotesPortlet */
-.x-grid3-td-topic b {
-    font-family: tahoma, verdana;
-    display: block;
+.x-grid3-td-topic b
+{
+    display:block;
+    font-family:tahoma, verdana;
 }
 
-.x-grid3-td-topic b i {
-    font-weight: normal;
-    font-style: normal;
-    color: #000000;
+.x-grid3-td-topic b i
+{
+    color:#000;
+    font-style:normal;
+    font-weight:400;
 }
 
-.x-grid3-td-topic .x-grid3-cell-inner {
-    white-space: normal;
+.x-grid3-td-topic .x-grid3-cell-inner
+{
+    white-space:normal;
 }
 
-.x-grid3-td-topic a {
-    color: #385F95;
-    text-decoration: none;
+.x-grid3-td-topic a
+{
+    color:#385F95;
+    text-decoration:none;
 }
 
-.x-grid3-td-topic a:hover {
-    text-decoration: underline;
+.x-grid3-td-topic a:hover
+{
+    text-decoration:underline;
 }
 
-.details .x-btn-text {
-    background-image: url(images/details.gif);
+.details .x-btn-text
+{
+    background-image:url(images/details.gif);
 }
 
-.discussion-link {
-    color: #0000FF !important;
-    font-weight: bold;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 3px;
+.discussion-link
+{
+    color:#00F!important;
+    font-weight:700;
+    padding-bottom:5px;
+    padding-left:3px;
+    padding-top:5px;
 }
 
-.discussion-link-inactive a {
-    color: #BBBBBB !important;
+.discussion-link-inactive a
+{
+    color:#BBB!important;
 }
 
-.p-button {
-    font-size: 70%;
-    color: #15428B;
+.p-button
+{
+    color:#15428B;
+    font-size:70%;
 }
 
-
-.individualsView-Banner {
-    background-color: #660066; /* Web safe version of Protege's "instance" color */
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 11px;
-    margin: 0 0 10px 0;
-    padding: 5px 0px 5px 5px;
-    width: 100%;
+.individualsView-Banner
+{
+    background-color:#606;
+    color:#FFF;
+    font-size:11px;
+    font-weight:700;
+    margin:0 0 10px;
+    padding:5px 0 5px 5px;
+    width:100%;
 }
 
-/* Styles for Individuals List */
-.protege-individuals-icon {
-    background-image: url(../images/tree/individual.png) !important;
+.protege-individuals-icon
+{
+    background-image:url(../images/tree/individual.png)!important;
 }
 
-.propertiesView-Banner {
-    background-color: #336699; /* Web safe version of Protege's "slot" color */
-    color: #FFFFFF;
-    font-weight: bold;
-    font-size: 11px;
-    margin: 0 0 10px 0;
-    padding: 5px 0px 5px 5px;
-    width: 100%;
+.propertiesView-Banner
+{
+    background-color:#369;
+    color:#FFF;
+    font-size:11px;
+    font-weight:700;
+    margin:0 0 10px;
+    padding:5px 0 5px 5px;
+    width:100%;
 }
 
-/* Styles for PropertyTreePortlet */
-.protege-slot-icon {
-    background-image: url(../images/tree/slot.gif) !important;
+.protege-slot-icon
+{
+    background-image:url(../images/tree/slot.gif)!important;
 }
 
-.protege-slot-create-icon {
-    background-image: url(../images/tree/slot.create.gif) !important;
+.protege-slot-create-icon
+{
+    background-image:url(../images/tree/slot.create.gif)!important;
 }
 
-.protege-slot-delete-icon {
-    background-image: url(../images/tree/slot.delete.gif) !important;
+.protege-slot-delete-icon
+{
+    background-image:url(../images/tree/slot.delete.gif)!important;
 }
 
-.protege-object-property-icon {
-    background-image: url(../images/tree/property.png) !important;
+.protege-object-property-icon
+{
+    background-image:url(../images/tree/property.png)!important;
 }
 
-.protege-datatype-property-icon {
-    background-image: url(../images/tree/property.png) !important;
+.protege-datatype-property-icon
+{
+    background-image:url(../images/tree/property.png)!important;
 }
 
-.protege-annotation-property-icon {
-    background-image: url(../images/tree/annotation-property.png) !important;
+.protege-annotation-property-icon
+{
+    background-image:url(../images/tree/annotation-property.png)!important;
 }
