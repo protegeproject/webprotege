@@ -162,8 +162,7 @@ ul.x-tab-strip li
 
 .toolbar-button .x-btn-text
 {
-    background-position:0 2px;
-    background-repeat:no-repeat;
+    background: no-repeat 0 2px;
     color:#15428B;
     font-size:90%;
     padding:3px 0 2px 18px;
@@ -171,8 +170,7 @@ ul.x-tab-strip li
 
 .toolbar-button .x-btn-text-icon .x-btn-center .x-btn-text
 {
-    background-position:0 2px;
-    background-repeat:no-repeat;
+    background: no-repeat 0 2px;
     color:#15428B;
     font-size:90%;
     padding:3px 0 2px 18px;
@@ -190,8 +188,7 @@ ul.x-tab-strip li
 
 ul.x-tab-strip-top
 {
-    background-color:#FFF;
-    background-image:none;
+    background: #FFF none;
 }
 
 .footer
@@ -338,8 +335,7 @@ ul.disc
 
 .select-link
 {
-    background-image:url(../images/add.png)!important;
-    background-position:0 0!important;
+    background: url(../images/add.png) 0 0 !important;
     border-style:none!important;
     border-width:0;
     margin-left:5px;
@@ -418,9 +414,7 @@ ul.disc
 .subMenuBar
 {
     background-color:#FFF;
-    border-color:#AAA;
-    border-style:solid;
-    border-width:1px;
+    border: 1px solid #AAA;
     color:#327BAA;
     cursor:pointer;
     font-size:75%;
@@ -445,9 +439,7 @@ ul.disc
 .gwt-PopupPanel
 {
     background-color:#CEDBEC;
-    border:3px thin #C3D9FF;
-    border-color:#329ab3;
-    border-width:20px;
+    border: 20px #329ab3;
     padding:3px;
     z-index:20;
 }
@@ -533,9 +525,7 @@ ul.disc
 
 .webprotege-revision-summary-style
 {
-    border-bottom:dotted;
-    border-bottom-color:silver;
-    border-bottom-width:1px;
+    border-bottom: 1px dotted silver;
     margin-bottom:5px;
     padding:4px;
 }
@@ -581,7 +571,7 @@ ul.x-menu-list
 .x-grid3-td-topic b
 {
     display:block;
-    font-family:tahoma, verdana;
+    font-family:tahoma, verdana,serif;
 }
 
 .x-grid3-td-topic b i
