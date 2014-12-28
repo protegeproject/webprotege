@@ -17,7 +17,6 @@
 		<url-pattern>*</url-pattern>
 	</filter-mapping>
 
-
 	<!-- Listener for initializing and disposing WebProtege -->
 	
 	<listener>
@@ -27,7 +26,7 @@
 
 	<!-- WebProtege servlets -->
 
-	<servlet>
+    <servlet>
 		<servlet-name>DispatchService</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceImpl</servlet-class>
 	</servlet>
@@ -141,7 +140,7 @@
 
 	<!-- Servlet mappings -->
 
-	<servlet-mapping>
+    <servlet-mapping>
 		<servlet-name>DispatchService</servlet-name>
 		<url-pattern>/webprotege/dispatchservice</url-pattern>
 	</servlet-mapping>
@@ -256,7 +255,7 @@
 	<!-- Default page to serve -->
 	
 	<welcome-file-list>
-		<welcome-file>WebProtege.html</welcome-file>
+		<welcome-file>WebProtege.jsp</welcome-file>
 	</welcome-file-list>
 
 

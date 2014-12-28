@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.*;
+import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -97,24 +99,24 @@ public class LoggedInUserManager {
     }
 
     private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AsyncCallback<GetCurrentUserInSessionResult>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("Problem getting user details for user " + userId, caught);
-                if(callback.isPresent()) {
-                    callback.get().onFailure(caught);
+            DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AsyncCallback<GetCurrentUserInSessionResult>() {
+                @Override
+                public void onFailure(Throwable caught) {
+                    GWT.log("Problem getting user details for user " + userId, caught);
+                    if(callback.isPresent()) {
+                        callback.get().onFailure(caught);
+                    }
                 }
-            }
 
-            @Override
-            public void onSuccess(GetCurrentUserInSessionResult result) {
-                replaceUserAndBroadcastChanges(result.getUserDetails(), result.getUserGroupIds());
-                if(callback.isPresent()) {
-                    callback.get().onSuccess(result.getUserDetails());
+                @Override
+                public void onSuccess(GetCurrentUserInSessionResult result) {
+                    replaceUserAndBroadcastChanges(result.getUserDetails(), result.getUserGroupIds());
+                    if(callback.isPresent()) {
+                        callback.get().onSuccess(result.getUserDetails());
+                    }
                 }
-            }
 
-        });
+            });
     }
 
     public String getLoggedInUserDisplayName() {
