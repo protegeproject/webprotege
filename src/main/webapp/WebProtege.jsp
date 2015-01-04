@@ -27,7 +27,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="Content-Language" content="en-us">
 
-    <title><%WebProtegeProperties.get().getApplicationName();%></title>
+    <title><%writeApplicationName();%></title>
 
     <link rel="stylesheet" href="js/ext/resources/css/ext-all.css" type="text/css">
 
@@ -36,34 +36,13 @@
 
     <script>
         <%
-            ClientApplicationProperties props = WebProtegeProperties.get().getClientApplicationProperties();
-            ClientObjectWriter<ClientApplicationProperties> writer =
-                    new ClientObjectWriter<ClientApplicationProperties>("clientApplicationProperties", new ClientApplicationPropertiesEncoder());
-            writer.writeVariableDeclaration(props, out);
+            writeClientApplicationProperties(out);
+        %>
+    </script>
 
-
-            UserId userId = SessionConstants.getUserId(session);
-            final UserInSession userInSession;
-            final ImmutableList.Builder<GroupId> builder = ImmutableList.builder();
-            if(userId.isGuest()) {
-                userInSession = new UserInSession(
-                    UserDetails.getGuestUserDetails(),
-                    ImmutableList.<GroupId>of()
-                );
-            }
-            else {
-                final MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
-                User user = metaProject.getUser(userId.getUserName());
-                for(Group group : user.getGroups()) {
-                    builder.add(GroupId.get(group.getName()));
-                }
-                userInSession = new UserInSession(
-                    UserDetails.getUserDetails(userId, userId.getUserName(), Optional.fromNullable(user.getEmail())),
-                    builder.build()
-                );
-            }
-            ClientObjectWriter<UserInSession> w = new ClientObjectWriter<UserInSession>("userInSession", new UserInSessionEncoder());
-            w.writeVariableDeclaration(userInSession, out);
+    <script>
+        <%
+            writeUserInSession(session, out);
         %>
     </script>
 
@@ -84,3 +63,41 @@
 </body>
 </html>
 
+<%!
+    private void writeApplicationName() {
+        WebProtegeProperties.get().getApplicationName();
+    }
+
+    private void writeClientApplicationProperties(JspWriter out) {
+        ClientApplicationProperties props = WebProtegeProperties.get().getClientApplicationProperties();
+        ClientObjectWriter<ClientApplicationProperties> writer =
+                new ClientObjectWriter<ClientApplicationProperties>("clientApplicationProperties", new ClientApplicationPropertiesEncoder());
+        writer.writeVariableDeclaration(props, out);
+    }
+
+    private void writeUserInSession(HttpSession session, JspWriter out) {
+        UserId userId = SessionConstants.getUserId(session);
+        final UserInSession userInSession;
+        final ImmutableList.Builder<GroupId> builder = ImmutableList.builder();
+        if(userId.isGuest()) {
+            userInSession = new UserInSession(
+                UserDetails.getGuestUserDetails(),
+                ImmutableList.<GroupId>of()
+            );
+        }
+        else {
+            final MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
+            User user = metaProject.getUser(userId.getUserName());
+            for(Group group : user.getGroups()) {
+                builder.add(GroupId.get(group.getName()));
+            }
+            userInSession = new UserInSession(
+                UserDetails.getUserDetails(userId, userId.getUserName(), Optional.fromNullable(user.getEmail())),
+                builder.build()
+            );
+        }
+        ClientObjectWriter<UserInSession> w = new ClientObjectWriter<UserInSession>("userInSession", new UserInSessionEncoder());
+        w.writeVariableDeclaration(userInSession, out);
+    }
+
+%>
