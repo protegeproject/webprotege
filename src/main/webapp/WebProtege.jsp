@@ -2,6 +2,20 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.app.WebProtegeProperties" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ClientObjectWriter" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ClientApplicationPropertiesEncoder" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.user.UserId" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.SessionConstants" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.app.UserInSessionEncoder" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.user.UserDetails" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.permissions.GroupId" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="java.util.HashSet" %>
+<%@ page import="edu.stanford.smi.protege.server.metaproject.MetaProject" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.MetaProjectManager" %>
+<%@ page import="edu.stanford.smi.protege.server.metaproject.User" %>
+<%@ page import="edu.stanford.smi.protege.server.metaproject.Group" %>
+<%@ page import="com.google.common.base.Optional" %>
+<%@ page import="edu.stanford.bmir.protege.web.shared.app.UserInSession" %>
+<%@ page import="com.google.common.collect.ImmutableList" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -27,6 +41,30 @@
             ClientObjectWriter<ClientApplicationProperties> writer =
                     new ClientObjectWriter<ClientApplicationProperties>("clientApplicationProperties", new ClientApplicationPropertiesEncoder());
             writer.writeVariableDeclaration(props, out);
+
+
+            UserId userId = SessionConstants.getUserId(session);
+            final UserInSession userInSession;
+            final ImmutableList.Builder<GroupId> builder = ImmutableList.builder();
+            if(userId.isGuest()) {
+                userInSession = new UserInSession(
+                    UserDetails.getGuestUserDetails(),
+                    ImmutableList.<GroupId>of()
+                );
+            }
+            else {
+                final MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
+                User user = metaProject.getUser(userId.getUserName());
+                for(Group group : user.getGroups()) {
+                    builder.add(GroupId.get(group.getName()));
+                }
+                userInSession = new UserInSession(
+                    UserDetails.getUserDetails(userId, userId.getUserName(), Optional.fromNullable(user.getEmail())),
+                    builder.build()
+                );
+            }
+            ClientObjectWriter<UserInSession> w = new ClientObjectWriter<UserInSession>("userInSession", new UserInSessionEncoder());
+            w.writeVariableDeclaration(userInSession, out);
         %>
     </script>
 

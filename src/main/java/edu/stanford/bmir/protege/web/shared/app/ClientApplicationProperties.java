@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.app;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -59,6 +60,14 @@ public class ClientApplicationProperties implements IsSerializable {
         }
         sb.append("}");
         return sb.toString();
+    }
+
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("ClientApplicationProperties")
+                .addValue(propertyMap)
+                .toString();
     }
 
     public static class Builder {

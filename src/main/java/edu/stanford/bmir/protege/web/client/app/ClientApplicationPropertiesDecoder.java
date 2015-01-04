@@ -25,7 +25,7 @@ public class ClientApplicationPropertiesDecoder implements ClientObjectDecoder<C
             if(propertyName.isClientProperty()) {
                 JSONValue propertyValue = object.get(propertyName.getPropertyName());
                 if (propertyValue != null) {
-                    builder.setPropertyValue(propertyName, propertyValue.toString());
+                    builder.setPropertyValue(propertyName, propertyValue.isString().stringValue());
                 }
             }
         }
