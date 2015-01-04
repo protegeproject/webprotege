@@ -1,9 +1,14 @@
 package edu.stanford.bmir.protege.web.server.filter;
 
+import edu.stanford.bmir.protege.web.server.app.GwtResourceCachingStrategy;
+import edu.stanford.bmir.protege.web.server.app.ResourceCachingManager;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,6 +20,7 @@ public class WebProtegeWebAppFilter implements Filter {
 
     private static RuntimeException configError;
 
+    public ResourceCachingManager cachingManager = new ResourceCachingManager(new GwtResourceCachingStrategy());
 
     public static void setConfigError(WebProtegeConfigurationException configError) {
         WebProtegeWebAppFilter.configError = configError;
@@ -63,6 +69,15 @@ public class WebProtegeWebAppFilter implements Filter {
             throw configError;
         }
         chain.doFilter(request, response);
+        if(request instanceof HttpServletRequest) {
+            HttpServletRequest httpReq = (HttpServletRequest) request;
+            HttpServletResponse httpRes = (HttpServletResponse) response;
+            doHttpFilter(httpReq, httpRes);
+        }
+    }
+
+    private void doHttpFilter(HttpServletRequest httpReq, HttpServletResponse httpRes) {
+        cachingManager.setAppropriateResponseHeaders(httpReq, httpRes);
     }
 
     /**
