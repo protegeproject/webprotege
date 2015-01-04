@@ -7,6 +7,8 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -19,8 +21,8 @@ public class ClientObjectWriter<T>  {
     private final ClientObjectEncoder<T> encoder;
 
     public ClientObjectWriter(String variableName, ClientObjectEncoder<T> encoder) {
-        this.variableName = variableName;
-        this.encoder = encoder;
+        this.variableName = checkNotNull(variableName);
+        this.encoder = checkNotNull(encoder);
     }
 
     public static <T> ClientObjectWriter<T> get(String variableName, ClientObjectEncoder<T> encoder) {
