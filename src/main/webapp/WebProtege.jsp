@@ -27,8 +27,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="Content-Language" content="en-us">
 
-    <!-- The title is copied in by maven -->
-    <title>${application.name}</title>
+    <title><%WebProtegeProperties.get().getApplicationName();%></title>
 
     <link rel="stylesheet" href="js/ext/resources/css/ext-all.css" type="text/css">
 
