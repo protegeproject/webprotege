@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.app;
 
+import com.google.common.collect.ImmutableMap;
+
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
 import java.io.PrintWriter;
@@ -15,6 +17,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 23/12/14
  */
 public class ClientObjectWriter<T>  {
+
+    private static final ImmutableMap<String, Object> WRITER_PROPERTIES = ImmutableMap.<String, Object>of(
+            JsonGenerator.PRETTY_PRINTING, true
+    );
 
     private final String variableName;
 
@@ -34,9 +40,7 @@ public class ClientObjectWriter<T>  {
         pw.print("var ");
         pw.print(variableName);
         pw.print(" = ");
-        Map<String, Object> properties = new HashMap<String, Object>(1);
-        properties.put(JsonGenerator.PRETTY_PRINTING, true);
-        Json.createWriterFactory(properties).createWriter(pw).writeObject(encoder.encode(object));
+        Json.createWriterFactory(WRITER_PROPERTIES).createWriter(pw).writeObject(encoder.encode(object));
         pw.println(";");
         pw.flush();
     }
