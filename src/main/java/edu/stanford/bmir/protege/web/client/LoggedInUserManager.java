@@ -1,11 +1,16 @@
 package edu.stanford.bmir.protege.web.client;
 
+import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.*;
 import com.google.gwt.i18n.client.Dictionary;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.app.ClientObjectDecoder;
+import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
+import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
@@ -13,6 +18,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
+import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
@@ -52,7 +58,7 @@ public class LoggedInUserManager {
      */
     public static LoggedInUserManager getAndRestoreFromServer(Optional<AsyncCallback<UserDetails>> initCompleteCallback) {
         LoggedInUserManager manager = new LoggedInUserManager();
-        manager.restoreUserFromServerSideSession(initCompleteCallback);
+        manager.readUserInSession(initCompleteCallback);
         return manager;
     }
 
@@ -99,7 +105,7 @@ public class LoggedInUserManager {
     }
 
     private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-            DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AsyncCallback<GetCurrentUserInSessionResult>() {
+        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AsyncCallback<GetCurrentUserInSessionResult>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     GWT.log("Problem getting user details for user " + userId, caught);
@@ -117,6 +123,16 @@ public class LoggedInUserManager {
                 }
 
             });
+    }
+
+    private void readUserInSession(Optional<AsyncCallback<UserDetails>> callback) {
+        UserInSessionDecoder decoder = new UserInSessionDecoder();
+        UserInSession userInSession  = ClientObjectReader.create("userInSession", decoder).read();
+        UserDetails userDetails = userInSession.getUserDetails();
+        replaceUserAndBroadcastChanges(userDetails, new HashSet<GroupId>(userInSession.getGroups()));
+        if(callback.isPresent()) {
+            callback.get().onSuccess(userDetails);
+        }
     }
 
     public String getLoggedInUserDisplayName() {

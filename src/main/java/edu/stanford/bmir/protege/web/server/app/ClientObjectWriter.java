@@ -32,5 +32,6 @@ public class ClientObjectWriter<T>  {
         properties.put(JsonGenerator.PRETTY_PRINTING, true);
         Json.createWriterFactory(properties).createWriter(pw).writeObject(encoder.encode(object));
         pw.println(";");
+        pw.flush();
     }
 }

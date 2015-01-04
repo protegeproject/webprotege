@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.i18n.client.Dictionary;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.gwtext.client.widgets.MessageBox;
@@ -410,10 +411,9 @@ public class Application implements HasUserId, PermissionChecker {
 
         @Override
         public void run(final ApplicationInitManager.ApplicationInitTaskCallback taskFinishedCallback) {
-            ClientObjectReader<ClientApplicationProperties> reader = ClientObjectReader.create(
+            clientApplicationProperties = ClientObjectReader.create(
                     "clientApplicationProperties", new ClientApplicationPropertiesDecoder()
-            );
-            clientApplicationProperties = reader.read();
+            ).read();
             taskFinishedCallback.taskComplete();
 
 //            DispatchServiceManager.get().execute(new GetClientApplicationPropertiesAction(), new AsyncCallback<GetClientApplicationPropertiesResult>() {

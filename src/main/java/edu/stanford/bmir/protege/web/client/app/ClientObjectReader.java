@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.app;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 
 /**
  * Matthew Horridge
@@ -26,11 +28,12 @@ public class ClientObjectReader<T> {
     }
 
     public T read() {
-        JavaScriptObject object = readVariable(variableName);
-        return decoder.decode(new JSONObject(object));
+        JavaScriptObject value = readVariable(variableName);
+        return decoder.decode(new JSONObject(value));
     }
 
-    public native JavaScriptObject readVariable(String name)/*-{
-        return $wnd.name;
+
+    private native JavaScriptObject readVariable(String name)/*-{
+        return $wnd[name];
     }-*/;
 }
