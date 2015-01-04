@@ -70,9 +70,9 @@
 
     private void writeClientApplicationProperties(JspWriter out) {
         ClientApplicationProperties props = WebProtegeProperties.get().getClientApplicationProperties();
-        ClientObjectWriter<ClientApplicationProperties> writer =
-                new ClientObjectWriter<ClientApplicationProperties>("clientApplicationProperties", new ClientApplicationPropertiesEncoder());
-        writer.writeVariableDeclaration(props, out);
+        ClientObjectWriter.get(
+                "clientApplicationProperties",
+                new ClientApplicationPropertiesEncoder()).writeVariableDeclaration(props, out);
     }
 
     private void writeUserInSession(HttpSession session, JspWriter out) {
@@ -96,8 +96,8 @@
                 builder.build()
             );
         }
-        ClientObjectWriter<UserInSession> w = new ClientObjectWriter<UserInSession>("userInSession", new UserInSessionEncoder());
-        w.writeVariableDeclaration(userInSession, out);
+        ClientObjectWriter.get("userInSession", new UserInSessionEncoder())
+                .writeVariableDeclaration(userInSession, out);
     }
 
 %>

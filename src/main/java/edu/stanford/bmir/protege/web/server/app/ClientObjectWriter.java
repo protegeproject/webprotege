@@ -23,6 +23,10 @@ public class ClientObjectWriter<T>  {
         this.encoder = encoder;
     }
 
+    public static <T> ClientObjectWriter<T> get(String variableName, ClientObjectEncoder<T> encoder) {
+        return new ClientObjectWriter<T>(variableName, encoder);
+    }
+
     public void writeVariableDeclaration(T object, Writer ps) {
         PrintWriter pw = new PrintWriter(ps);
         pw.print("var ");
