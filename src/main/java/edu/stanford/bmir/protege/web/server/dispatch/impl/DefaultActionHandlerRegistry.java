@@ -33,6 +33,7 @@ import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsAc
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
+import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesAction;
@@ -62,6 +63,7 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAc
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
+import edu.stanford.bmir.protege.web.shared.user.GetUserIdsAction;
 import edu.stanford.bmir.protege.web.shared.watches.AddWatchAction;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesAction;
 
@@ -91,6 +93,8 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
     public DefaultActionHandlerRegistry() {
 
         register(new GetClientApplicationPropertiesActionHandler(), GetClientApplicationPropertiesAction.class);
+
+        register(new GetUserIdsActionHandler(metaProjectManager.getMetaProject()), GetUserIdsAction.class);
 
         register(new GetAvailableProjectsHandler(), GetAvailableProjectsAction.class);
 
