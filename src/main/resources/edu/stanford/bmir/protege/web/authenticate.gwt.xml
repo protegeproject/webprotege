@@ -8,6 +8,8 @@
 
 <module rename-to="authenticate">
 
+    <set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
+
     <source path="client"/>
     <source path="shared"/>
     <source path="resources"/>
@@ -23,7 +25,7 @@
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
 
-    <inherits name="edu.stanford.bmir.gwtcodemirror.GWTCodeMirrorModule"/>
+    <inherits name="edu.stanford.bmir.gwtcodemirror.CodeMirror"/>
 
 	<entry-point class="edu.stanford.bmir.protege.web.client.Authenticate"/> 
     
