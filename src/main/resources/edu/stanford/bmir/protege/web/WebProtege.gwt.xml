@@ -25,7 +25,7 @@
     <inherits name="com.google.gwt.http.HTTP"/>
     <inherits name="com.google.gwt.json.JSON"/>
     <inherits name="com.google.gwt.inject.Inject"/>
-    <inherits name="edu.stanford.bmir.gwtcodemirror.GWTCodeMirrorModule"/>
+    <inherits name="edu.stanford.bmir.gwtcodemirror.CodeMirror"/>
 
 	<inherits name='com.googlecode.gwt.crypto.Crypto'/>
 
