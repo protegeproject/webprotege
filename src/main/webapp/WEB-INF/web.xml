@@ -129,11 +129,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>UserProfileManagerService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.UserProfileManagerServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>ProjectUploadServlet</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.filesubmission.FileUploadServlet</servlet-class>
 	</servlet>
@@ -218,11 +213,6 @@
 	<servlet-mapping>
 		<servlet-name>ProjectManagerService</servlet-name>
 		<url-pattern>/webprotege/projectmanager</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>UserProfileManagerService</servlet-name>
-		<url-pattern>/webprotege/userprofilemanager</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.library.itemarea;
 
-import com.google.gwt.core.shared.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.UserProfileManagerServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.UserProfileManagerServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
+import edu.stanford.bmir.protege.web.shared.user.GetUserIdsAction;
+import edu.stanford.bmir.protege.web.shared.user.GetUserIdsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.ArrayList;
@@ -26,14 +26,12 @@ public class UserIdSuggestOracle implements ItemProvider<UserId> {
     }
 
     public UserIdSuggestOracle(final List<UserId> exclude) {
-        UserProfileManagerServiceAsync service = UserProfileManagerServiceManager.getService();
-        service.getUserIds(new AsyncCallback<List<UserId>>() {
-            public void onFailure(Throwable caught) {
-                GWT.log("Failed to get user ids: " + caught.getMessage());
-            }
-
-            public void onSuccess(List<UserId> result) {
-                data = new ArrayList<UserId>(result);
+        DispatchServiceManager dispatchServiceManager = DispatchServiceManager.get();
+        dispatchServiceManager.execute(new GetUserIdsAction(), new AbstractWebProtegeAsyncCallback<GetUserIdsResult>() {
+            @Override
+            public void onSuccess(GetUserIdsResult result) {
+                data.clear();
+                data.addAll(result.getUserIds());
                 data.removeAll(exclude);
             }
         });
