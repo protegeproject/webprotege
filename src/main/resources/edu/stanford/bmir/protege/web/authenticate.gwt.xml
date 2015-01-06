@@ -8,8 +8,6 @@
 
 <module rename-to="authenticate">
 
-    <set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
-
     <source path="client"/>
     <source path="shared"/>
     <source path="resources"/>
