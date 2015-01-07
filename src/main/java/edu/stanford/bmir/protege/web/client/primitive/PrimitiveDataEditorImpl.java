@@ -668,8 +668,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     private void updateOracle() {
-        Set<EntityType<?>> types = getMatchTypes();
-        entitySuggestOracle.setEntityTypes(types);
+        entitySuggestOracle.setAllowedPrimitiveTypes(allowedTypes);
     }
 
     private Set<EntityType<?>> getMatchTypes() {

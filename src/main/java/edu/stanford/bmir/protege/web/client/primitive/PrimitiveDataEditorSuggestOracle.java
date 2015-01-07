@@ -2,11 +2,13 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestOracle;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
@@ -22,7 +24,7 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
 
     private EntitySuggestOracle delegate;
 
-    private Set<EntityType<?>> allowedPrimitiveTypes = new LinkedHashSet<EntityType<?>>();
+    private Set<PrimitiveType> allowedPrimitiveTypes = new LinkedHashSet<PrimitiveType>();
 
 //    private FreshEntitySuggestMode mode;
 
@@ -34,18 +36,29 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
                                             @EntitySuggestOracleSuggestMode FreshEntitySuggestMode mode) {
         this.delegate = delegate;
 //        this.mode = mode;
-        allowedPrimitiveTypes.add(EntityType.CLASS);
-        allowedPrimitiveTypes.add(EntityType.NAMED_INDIVIDUAL);
+        allowedPrimitiveTypes.add(PrimitiveType.CLASS);
+        allowedPrimitiveTypes.add(PrimitiveType.NAMED_INDIVIDUAL);
     }
 
     public void setFreshEntityStrategy(FreshEntitySuggestStrategy strategy) {
         this.freshEntityStrategy = strategy;
     }
 
-    public void setEntityTypes(Set<EntityType<?>> entityTypes) {
+    public void setAllowedPrimitiveTypes(Set<PrimitiveType> primitiveTypes) {
         allowedPrimitiveTypes.clear();
-        allowedPrimitiveTypes.addAll(entityTypes);
+        allowedPrimitiveTypes.addAll(primitiveTypes);
+        Set<EntityType<?>> entityTypes = getAllowedEntityTypes();
         delegate.setEntityTypes(entityTypes);
+    }
+
+    private Set<EntityType<?>> getAllowedEntityTypes() {
+        Set<EntityType<?>> entityTypes = Sets.newHashSet();
+        for(PrimitiveType primitiveType : allowedPrimitiveTypes) {
+            if(primitiveType.isEntityType()) {
+                entityTypes.add(primitiveType.getEntityType());
+            }
+        }
+        return entityTypes;
     }
 
 //    public FreshEntitySuggestMode getMode() {
@@ -86,9 +99,9 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
 
     private List<EntityType<?>> getSuggestedTypesForQuery(String query) {
         if(query.length() == 0) {
-            return Lists.newArrayList(allowedPrimitiveTypes);
+            return Lists.newArrayList(getAllowedEntityTypes());
         }
-        List<EntityType<?>> result = Lists.newArrayList(allowedPrimitiveTypes);
+        List<EntityType<?>> result = Lists.newArrayList(getAllowedEntityTypes());
         if(Character.isLowerCase(query.charAt(0))) {
             if(result.remove(EntityType.NAMED_INDIVIDUAL)) {
                 result.add(0, EntityType.NAMED_INDIVIDUAL);
@@ -109,6 +122,9 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
         if(canParseAsNumericLiteral(request)) {
             return false;
         }
+        if(canParseAsStringLiteral(request)) {
+            return false;
+        }
         for(EntitySuggestion existingSuggestion : existingSuggestions) {
             if(existingSuggestion.getEntity().getBrowserText().equalsIgnoreCase(request.getQuery())) {
                 return false;
@@ -118,8 +134,15 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
     }
 
     private boolean canParseAsNumericLiteral(Request request) {
+        if(!allowedPrimitiveTypes.contains(PrimitiveType.LITERAL)) {
+            return false;
+        }
         OWLLiteral lit = DataFactory.parseLiteral(request.getQuery(), Optional.<String>absent());
         return !(lit.getDatatype().isString() || lit.getDatatype().isRDFPlainLiteral());
+    }
+
+    private boolean canParseAsStringLiteral(Request request) {
+        return allowedPrimitiveTypes.contains(PrimitiveType.LITERAL);
     }
 
     /**
