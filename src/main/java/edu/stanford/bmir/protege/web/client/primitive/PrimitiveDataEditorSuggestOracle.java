@@ -142,7 +142,9 @@ public class PrimitiveDataEditorSuggestOracle extends SuggestOracle {
     }
 
     private boolean canParseAsStringLiteral(Request request) {
-        return allowedPrimitiveTypes.contains(PrimitiveType.LITERAL);
+        return allowedPrimitiveTypes.contains(PrimitiveType.LITERAL) && (
+                allowedPrimitiveTypes.size() == 1
+                || allowedPrimitiveTypes.contains(PrimitiveType.DATA_TYPE) && allowedPrimitiveTypes.size() == 2);
     }
 
     /**
