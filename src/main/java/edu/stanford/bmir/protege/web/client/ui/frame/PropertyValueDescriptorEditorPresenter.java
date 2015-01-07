@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import org.semanticweb.owlapi.model.EntityType;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -83,7 +84,7 @@ public class PropertyValueDescriptorEditorPresenter implements ValueEditor<Prope
         editor.setAllowedPropertyTypes(grammar.getPropertyTypes());
         Optional<OWLPropertyData> propertyData = editor.getPropertyFieldValue();
         if (propertyData.isPresent()) {
-            editor.setAllowedValueTypes(grammar.getValueTypesForPropertyType(propertyData.get().getType()));
+            setAllowedValuesBasedOnProperty(propertyData);
         }
         else {
             editor.setAllowedValueTypes(grammar.getValueTypes());
@@ -91,6 +92,10 @@ public class PropertyValueDescriptorEditorPresenter implements ValueEditor<Prope
         if (!canInferPropertyType()) {
             editor.setPropertyFieldSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
         }
+    }
+
+    private void setAllowedValuesBasedOnProperty(Optional<OWLPropertyData> propertyData) {
+        editor.setAllowedValueTypes(grammar.getValueTypesForPropertyType(propertyData.get().getType()));
     }
 
     public PropertyValueGridGrammar getGrammar() {
