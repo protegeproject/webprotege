@@ -25,6 +25,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("individual.png")
     ImageResource individualIcon();
 
+    @Source("download.png")
+    ImageResource downloadIcon();
+
+    @Source("warning.png")
+    ImageResource warningIcon();
+
     @Source("warning.png")
     DataResource warningIconBackgroundImage();
 
