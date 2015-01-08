@@ -1,6 +1,9 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:cellview="urn:import:com.google.gwt.user.cellview.client">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
     <ui:style>
         .usage-view {
 
@@ -52,7 +55,7 @@
                         <g:Button text="Filter ..." ui:field="filterButton" height="18px" addStyleNames="web-protege-button-small {style.filter-label}"/>
                     </td>
                     <td>
-                        <g:Label ui:field="filterMessage" visible="false" addStyleNames="web-protege-warning-label" text="Results are filtered"/>
+                        <g:Label ui:field="filterMessage" visible="false" addStyleNames="{wp.style.warningLabel}" text="Results are filtered"/>
                     </td>
                 </tr>
             </table>
