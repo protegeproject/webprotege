@@ -3,7 +3,7 @@
              xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.ui.frame"
              xmlns:primitive="urn:import:edu.stanford.bmir.protege.web.client.primitive">
 
-    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .functional-label {
             display: inline-block;

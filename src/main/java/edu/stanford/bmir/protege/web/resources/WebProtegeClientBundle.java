@@ -1,9 +1,7 @@
-package edu.stanford.bmir.protege.web.client.ui.res;
+package edu.stanford.bmir.protege.web.resources;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.resources.client.TextResource;
+import com.google.gwt.resources.client.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,4 +24,29 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     @Source("individual.png")
     ImageResource individualIcon();
+
+    @Source("warning.png")
+    DataResource warningIconBackgroundImage();
+
+
+    @ClientBundle.Source("webprotege.css")
+    public WebProtegeCss style();
+
+
+    public static interface WebProtegeCss extends CssResource {
+
+        String webProtegeLaf();
+
+        String formMain();
+
+        String formGroup();
+
+        String formLabel();
+
+        String dlgLabel();
+
+        String formField();
+
+        String warningLabel();
+    }
 }

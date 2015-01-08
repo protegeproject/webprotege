@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:editor="urn:import:edu.stanford.bmir.protege.web.client.ui.editor">
 
-    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
         .table-style {

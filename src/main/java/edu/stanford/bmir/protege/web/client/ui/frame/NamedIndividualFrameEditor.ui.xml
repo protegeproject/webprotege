@@ -3,7 +3,7 @@
              xmlns:wp='urn:import:edu.stanford.bmir.protege.web.client.primitive'
              xmlns:frame="urn:import:edu.stanford.bmir.protege.web.client.ui.frame">
 
-    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{wp.style.formMain}">
 
