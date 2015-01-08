@@ -6,7 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.client.ui.res.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 /**
  * Author: Matthew Horridge<br>

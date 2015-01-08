@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
-import edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 /**
  * Author: Matthew Horridge<br>
@@ -36,7 +36,7 @@ public class ChangePasswordViewImpl extends Composite implements ChangePasswordV
 
 
     public ChangePasswordViewImpl() {
-        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
+        WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

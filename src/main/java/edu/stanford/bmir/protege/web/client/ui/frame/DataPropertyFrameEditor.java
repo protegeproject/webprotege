@@ -16,7 +16,7 @@ import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
 import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
-import edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -81,7 +81,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(PrimitiveType.CLASS);
         ranges = new PrimitiveDataListEditor(PrimitiveType.DATA_TYPE);
-        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
+        WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         iriField.setEnabled(false);

@@ -3,7 +3,7 @@
              xmlns:obo="urn:import:edu.stanford.bmir.protege.web.client.ui.obo"
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text">
 
-    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <g:HTMLPanel addStyleNames="{wp.style.formMain}">
         <div class="{wp.style.formGroup}">

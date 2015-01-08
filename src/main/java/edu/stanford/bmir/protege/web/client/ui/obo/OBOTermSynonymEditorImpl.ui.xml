@@ -3,7 +3,7 @@
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text"
              xmlns:obo="urn:import:edu.stanford.bmir.protege.web.client.ui.obo">
 
-    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle"/>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
         .topBlock {

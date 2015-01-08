@@ -1,5 +1,7 @@
 @external web-protege-laf;
 
+@url background warningIconBackgroundImage;
+
 .webProtegeLaf {
 
 }
@@ -44,4 +46,15 @@
     border-left-style: solid;
     border-left-color: transparent;
     border-bottom: 1px solid #f0f0f0;
+}
+
+.warningLabel {
+    border: solid 1px #ffe884;
+    background-size: 10px 10px;
+    background: #faf6c3 no-repeat left 3px top 3px;
+    background-image: background;
+    vertical-align: top;
+    padding: 4px 4px 4px 24px;
+    font-size: 10px;
+    font-family: tahoma, sans-serif;
 }

@@ -2,7 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:project="urn:import:edu.stanford.bmir.protege.web.client.actionbar.project"
              xmlns:application="urn:import:edu.stanford.bmir.protege.web.client.actionbar.application">
-    <ui:with field='res' type='edu.stanford.bmir.protege.web.client.ui.res.WebProtegeClientBundle'/>
+    <ui:with field='res' type='edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle'/>
 
     <ui:style>
         .main {

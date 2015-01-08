@@ -16,7 +16,7 @@ import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
-import edu.stanford.bmir.protege.web.resources.WebProtegeResourceBundle;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
@@ -77,7 +77,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
         types.setPlaceholder("Enter class name");
         sameAs = new PrimitiveDataListEditor(PrimitiveType.NAMED_INDIVIDUAL);
         sameAs.setPlaceholder("Enter individual name");
-        WebProtegeResourceBundle.INSTANCE.style().ensureInjected();
+        WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
         iriField.setEnabled(false);
