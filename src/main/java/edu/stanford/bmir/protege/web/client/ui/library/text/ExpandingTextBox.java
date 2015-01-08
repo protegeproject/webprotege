@@ -195,6 +195,10 @@ public class ExpandingTextBox extends SimplePanel implements Focusable, HasText,
         impl.setSuggestOracle(suggestOracle);
     }
 
+    public void setAutoSelectSuggestions(boolean autoSelectSuggestions) {
+        impl.setAutoSelectSuggestions(autoSelectSuggestions);
+    }
+
     public SuggestBox getSuggestBox() {
         return impl.getSuggestBox();
     }

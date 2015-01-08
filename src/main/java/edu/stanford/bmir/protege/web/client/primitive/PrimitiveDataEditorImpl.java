@@ -158,6 +158,11 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     @Override
+    public void setAutoSelectSuggestions(boolean autoSelectSuggestions) {
+        this.view.setAutoSelectSuggestions(autoSelectSuggestions);
+    }
+
+    @Override
     public void setMode(PrimitiveDataEditorView.Mode mode) {
         checkNotNull(mode);
         view.setMode(mode);

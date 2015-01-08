@@ -223,5 +223,11 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
      */
     void setFreshEntitiesHandler(FreshEntitiesHandler handler);
 
+    /**
+     * Specifies whether popup suggestions should be auto-selected or whether the user must explicitly
+     * select something from the popup list.
+     * @param autoSelectSuggestions {@code true} if the suggestions are auto selected, otherwise {@code false}.
+     */
+    void setAutoSelectSuggestions(boolean autoSelectSuggestions);
 
 }
