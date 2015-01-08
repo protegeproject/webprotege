@@ -869,16 +869,6 @@ ul.x-menu-list
     font-family: tahoma, sans-serif;
 }
 
-.web-protege-warning-label {
-    border: solid 1px #ffe884;
-    background-size: 10px 10px;
-    background: #faf6c3 url(../images/warningB.png) no-repeat left 3px top 3px;
-    vertical-align: top;
-    padding: 4px 4px 4px 24px;
-    font-size: 10px;
-    font-family: tahoma, sans-serif;
-}
-
 * .web-protege-error-label > * a:link {
     text-decoration: underline;
     color: #0055aa;
