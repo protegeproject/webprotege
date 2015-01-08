@@ -63,6 +63,11 @@ public class PrimitiveDataEditorViewImpl extends Composite implements PrimitiveD
     }
 
     @Override
+    public void setAutoSelectSuggestions(boolean autoSelectSuggestions) {
+        delegate.setAutoSelectSuggestions(autoSelectSuggestions);
+    }
+
+    @Override
     public void setPrimitiveDataStyleName(Optional<String> styleName) {
         checkNotNull(styleName);
         if(lastStyleName.isPresent()) {

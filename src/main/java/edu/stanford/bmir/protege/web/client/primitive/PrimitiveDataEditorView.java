@@ -35,6 +35,8 @@ public interface PrimitiveDataEditorView extends IsWidget, HasText, HasValueChan
 
     void setSuggestOracle(SuggestOracle oracle);
 
+    void setAutoSelectSuggestions(boolean autoSelectSuggestions);
+
     void setPrimitiveDataStyleName(Optional<String> styleName);
 
     void setTitle(String title);

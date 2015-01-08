@@ -74,6 +74,7 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
         final TextArea textArea = new TextArea();
         SuggestOracle proxyOracle = createProxySuggestOracle();
         this.suggestBox = new SuggestBox(proxyOracle, textArea);
+        this.suggestBox.setAutoSelectEnabled(false);
 
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
@@ -146,6 +147,10 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
                 anchorClickReg.removeHandler();
             }
         };
+    }
+
+    public void setAutoSelectSuggestions(boolean autoSelect) {
+        suggestBox.setAutoSelectEnabled(autoSelect);
     }
 
     /**
