@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.AbstractDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SingleSelectionModel;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListResources;
@@ -193,7 +194,7 @@ public class RevisionsListViewImpl extends Composite implements RevisionsListVie
 
         @Override
         public void render(Cell.Context context, RevisionSummary object, SafeHtmlBuilder sb) {
-            sb.appendHtmlConstant("<div style=\"width: 100%; height: 100%; cursor: pointer;\" title=\"Download revision " + object.getRevisionNumber().getValueAsInt() + "\"><img style=\"padding-top: 1px; \" src=\"images/download.png\"/></div>");
+            sb.appendHtmlConstant("<div style=\"width: 100%; height: 100%; cursor: pointer;\" title=\"Download revision " + object.getRevisionNumber().getValueAsInt() + "\"><img style=\"padding-top: 1px; \" src=\"" + WebProtegeClientBundle.BUNDLE.downloadIcon().getSafeUri().asString() + "\"/></div>");
         }
     }
 
