@@ -1380,26 +1380,12 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         if (w.isEmpty()) {
             return "";
         }
-//        switch (watchType) {
         if(w.iterator().next() instanceof EntityFrameWatch) {
             return "<img src=\"images/eye.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
-//            return "<img src=\"images/tag_blue.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
         }
         else {
             return "<img src=\"images/eye-down.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
-//            return "<img src=\"images/tag_blue_add.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
         }
-//            case ENTITY_WATCH:
-//
-////                return "<img src=\"images/tag_blue.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
-//            case BRANCH_WATCH:
-//
-////                return "<img src=\"images/tag_blue_add.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
-//            case BOTH:
-//                return "<img src=\"images/tag_blue.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>" + "<img src=\"images/tag_blue_add.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
-//            default:
-//                return "";
-//        }
     }
 
     private void showClassNotes(final Node node) {
