@@ -622,11 +622,6 @@ ul.x-menu-list
     width:100%;
 }
 
-.protege-slot-delete-icon
-{
-    background-image:url(../images/tree/slot.delete.gif)!important;
-}
-
 .protege-object-property-icon
 {
     background-image:url(../images/tree/property.png)!important;
