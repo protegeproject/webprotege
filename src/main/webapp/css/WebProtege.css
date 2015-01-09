@@ -556,11 +556,6 @@ ul.x-menu-list
     opacity:0.5;
 }
 
-.protege-class-delete-icon
-{
-    background-image:url(../images/tree/class.delete.gif)!important;
-}
-
 .x-grid3-td-topic b
 {
     display:block;
