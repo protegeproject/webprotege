@@ -339,7 +339,8 @@ public class ProjectListViewUIImpl extends Composite implements ProjectListView 
         public void render(Cell.Context context, ProjectListEntry object, SafeHtmlBuilder sb) {
             if (isOwnerOfProjectEntry(object)) {
                 final String title = object.getProjectDetails().isInTrash() ? "Remove project from trash" : "Move project to trash";
-                sb.appendHtmlConstant("<div style=\"width: 100%; cursor: pointer;\" title=\"" + title + "\"><img style=\"padding-top: 2px; \" src=\"images/trash.png\"/></div>");
+                String trashIconURI = WebProtegeClientBundle.BUNDLE.trashIcon().getSafeUri().asString();
+                sb.appendHtmlConstant("<div style=\"width: 100%; cursor: pointer;\" title=\"" + title + "\"><img style=\"padding-top: 2px; \" src=\"" + trashIconURI + "\"/></div>");
             }
         }
 

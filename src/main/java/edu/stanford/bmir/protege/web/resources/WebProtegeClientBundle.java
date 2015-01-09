@@ -28,6 +28,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("download.png")
     ImageResource downloadIcon();
 
+    @Source("trash.png")
+    ImageResource trashIcon();
+
     @Source("warning.png")
     ImageResource warningIcon();
 
