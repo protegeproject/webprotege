@@ -362,7 +362,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
                     MenuItem menuShowDirectLink = new MenuItem();
                     menuShowDirectLink.setText("Show direct link");
-                    menuShowDirectLink.setIcon("images/link.png");
                     menuShowDirectLink.addListener(new BaseItemListenerAdapter() {
                         @Override
                         public void onClick(BaseItem item, EventObject event) {
