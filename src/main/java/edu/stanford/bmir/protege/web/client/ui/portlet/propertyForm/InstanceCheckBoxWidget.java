@@ -19,7 +19,6 @@ import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidget;
-import edu.stanford.bmir.protege.web.client.ui.util.UIConstants;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 import java.util.*;
@@ -79,7 +78,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
         int height = UIUtil.getIntegerConfigurationProperty(getWidgetConfiguration(), FormConstants.HEIGHT, 120);
         wrappingPanel.setHeight(height);
 
-        loadingIcon = new HTML("<img src=\"" + UIConstants.ICON_LOADING_PLACEHOLDER + "\"/>");
+        loadingIcon = new HTML("<img src=\"images/loading.gif\"/>");
         loadingIcon.setStyleName("loading-img");
 
         String labelText = UIUtil.getStringConfigurationProperty(getWidgetConfiguration(), FormConstants.LABEL, getProperty().getBrowserText());
@@ -144,13 +143,6 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
 
     @Override
     public void setLoadingStatus(boolean loading) {
-        super.setLoadingStatus(loading);
-        if (loading) {
-            loadingIcon.setHTML("<img src=\"images/loading.gif\"/>");
-        }
-        else {
-            loadingIcon.setHTML("<img src=\"" + UIConstants.ICON_LOADING_PLACEHOLDER + "\"/>");
-        }
     }
 
     @Override
