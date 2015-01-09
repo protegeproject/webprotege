@@ -556,11 +556,6 @@ ul.x-menu-list
     opacity:0.5;
 }
 
-.protege-class-create-icon
-{
-    background-image:url(../images/tree/class.create.gif)!important;
-}
-
 .protege-class-delete-icon
 {
     background-image:url(../images/tree/class.delete.gif)!important;
