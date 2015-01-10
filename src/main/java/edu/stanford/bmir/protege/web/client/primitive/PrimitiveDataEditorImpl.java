@@ -565,7 +565,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             @Override
             public String visit(OWLObjectPropertyData data) throws RuntimeException {
                 setTooltip(data, "owl:ObjectProperty");
-                return "object-property-icon-inset";
+                return WebProtegeClientBundle.BUNDLE.style().objectPropertyIconInset();
             }
 
             @Override

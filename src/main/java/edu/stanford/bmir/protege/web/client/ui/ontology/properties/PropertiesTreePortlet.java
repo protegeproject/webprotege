@@ -25,6 +25,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialo
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
@@ -605,7 +606,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         PropertyEntityData entityData = (PropertyEntityData) node.getUserObject();
         PropertyType type = entityData.getPropertyType();
         if (type == PropertyType.OBJECT) {
-            node.setIconCls("protege-object-property-icon");
+            node.setIconCls(WebProtegeClientBundle.BUNDLE.style().objectPropertyIcon());
         }
         else if (type == PropertyType.DATATYPE) {
             node.setIconCls("protege-datatype-property-icon");

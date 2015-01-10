@@ -25,8 +25,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("class.png")
     ImageResource classIcon();
 
-    @Source("class.png")
-    DataResource classIconBackgroundImage();
+    @Source("property.png")
+    ImageResource propertyIcon();
+
+    @Source("property.png")
+    ImageResource objectPropertyIcon();
+
+    @Source("property.png")
+    ImageResource dataPropertyIcon();
 
     @Source("individual.png")
     ImageResource individualIcon();
@@ -65,5 +71,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String deprecatedClassIcon();
 
         String classIconInset();
+
+        String objectPropertyIcon();
+
+        String deprecatedObjectPropertyIcon();
+
+        String objectPropertyIconInset();
     }
 }
