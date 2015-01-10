@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
 
         textarea, pre {
@@ -88,7 +89,7 @@
 
     <g:HTMLPanel addStyleNames="{style.expandingarea}">
         <!--<div class="{style.expandingarea}">-->
-            <pre class="class-icon-inset"><span/><br/></pre>
+            <pre class="{wp.style.classIconInset}"><span/><br/></pre>
             <g:SuggestBox ui:field="suggestBox"/>
             <g:Anchor addStyleNames="{style.button-loc}" text="&#x25B6;" title="Navigate to entity" ui:field="anchor"/>
         <!--</div>-->

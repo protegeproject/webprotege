@@ -36,6 +36,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -229,12 +231,12 @@ public class UsageViewImpl extends Composite implements UsageView {
                 iconClass = object.getAxiomSubject().get().accept(new OWLEntityVisitorEx<String>() {
                     @Override
                     public String visit(OWLClass cls) {
-                        return "class-icon-inset";
+                        return BUNDLE.style().classIconInset();
                     }
 
                     @Override
                     public String visit(OWLObjectProperty property) {
-                        return WebProtegeClientBundle.BUNDLE.style().objectPropertyIconInset();
+                        return BUNDLE.style().objectPropertyIconInset();
                     }
 
                     @Override

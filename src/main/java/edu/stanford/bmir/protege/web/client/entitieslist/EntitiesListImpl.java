@@ -41,7 +41,7 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
     public static final OWLEntityVisitorEx<String> CSS_CLASS_NAME_VISITOR = new OWLEntityVisitorEx<String>() {
         @Override
         public String visit(OWLClass cls) {
-            return "class-icon-inset";
+            return WebProtegeClientBundle.BUNDLE.style().classIconInset();
         }
 
         @Override
