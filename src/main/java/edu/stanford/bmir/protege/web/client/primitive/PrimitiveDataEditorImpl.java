@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedEvent;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -558,7 +559,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             @Override
             public String visit(OWLClassData data) throws RuntimeException {
                 setTooltip(data, "owl:Class");
-                return "class-icon-inset";
+                return WebProtegeClientBundle.BUNDLE.style().classIconInset();
             }
 
             @Override

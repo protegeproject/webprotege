@@ -50,6 +50,7 @@ import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileDialogController
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.client.ui.util.GlobalSelectionManager;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
@@ -301,6 +302,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     @Override
     public void initialize() {
+        WebProtegeClientBundle.BUNDLE.style().ensureInjected();
+
         setLayout(new FitLayout());
 
         setTools(getTools());
@@ -1092,10 +1095,11 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     public void setTreeNodeIcon(final TreeNode node, EntityData entityData) {
         if(entityData instanceof SubclassEntityData && ((SubclassEntityData) entityData).isDeprecated()) {
-            node.setIconCls("protege-deprecated-class-icon");
+            node.setIconCls(WebProtegeClientBundle.BUNDLE.style().deprecatedClassIcon());
         }
         else {
-            node.setIconCls("protege-class-icon");
+            node.setIconCls(WebProtegeClientBundle.BUNDLE.style().classIcon());
+//            node.setIcon(WebProtegeClientBundle.BUNDLE.classIcon().getSafeUri().asString());
         }
 
     }

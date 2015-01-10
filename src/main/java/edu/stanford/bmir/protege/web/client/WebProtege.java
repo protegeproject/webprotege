@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InvitationConstants;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.InviteUserUtil;
 import edu.stanford.bmir.protege.web.client.workspace.WorkspaceViewImpl;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 
@@ -57,6 +58,7 @@ public class WebProtege implements EntryPoint {
 
 
     protected void buildUI() {
+        WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         RootPanel.get().add(new WorkspaceViewImpl());
 
         final Optional<String> appName = Application.get().getClientApplicationProperty(WebProtegePropertyName.APPLICATION_NAME);
