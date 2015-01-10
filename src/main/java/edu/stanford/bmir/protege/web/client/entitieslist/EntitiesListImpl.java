@@ -68,7 +68,7 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
 
         @Override
         public String visit(OWLAnnotationProperty property) {
-            return "annotation-property-icon-inset";
+            return BUNDLE.style().annotationPropertyIconInset();
         }
     };
 

@@ -256,7 +256,7 @@ public class UsageViewImpl extends Composite implements UsageView {
 
                     @Override
                     public String visit(OWLAnnotationProperty property) {
-                        return "annotation-property-icon-inset";
+                        return BUNDLE.style().annotationPropertyIconInset();
                     }
                 });
             }

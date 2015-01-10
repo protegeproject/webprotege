@@ -605,16 +605,6 @@ ul.x-menu-list
     width:100%;
 }
 
-.protege-annotation-property-icon
-{
-    background-image:url(../images/tree/annotation-property.png)!important;
-}
-
-
-
-
-
-
 ::-webkit-input-placeholder {
     color: rgba(200, 200, 200, 1.0);
 }
@@ -831,13 +821,6 @@ ul.x-menu-list
     text-decoration: underline;
     color: #0055aa;
     padding: 2px;
-}
-
-.annotation-property-icon-inset {
-    padding-left: 22px !important;
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
-    background-image: url(../images/tree/annotation-property.png);
 }
 
 .individual-icon-inset {
@@ -1669,11 +1652,6 @@ td {
 
 .ms-item-ind {
     background: url("../images/tree/individual.png") no-repeat 0 -1px;
-    padding-left: 20px;
-}
-
-.ms-item-anno {
-    background: url("../images/tree/annotation-property.png") no-repeat 0 -1px;
     padding-left: 20px;
 }
 
