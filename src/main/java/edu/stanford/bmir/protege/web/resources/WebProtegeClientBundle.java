@@ -37,6 +37,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("annotation-property.png")
     ImageResource annotationPropertyIcon();
 
+    @Source("datatype.png")
+    ImageResource datatypeIcon();
+
     @Source("individual.png")
     ImageResource individualIcon();
 
@@ -92,5 +95,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String deprecatedAnnotationPropertyIcon();
 
         String annotationPropertyIconInset();
+
+        String datatypeIcon();
+
+        String deprecatedDatatypeIcon();
+
+        String datatypeIconInset();
     }
 }

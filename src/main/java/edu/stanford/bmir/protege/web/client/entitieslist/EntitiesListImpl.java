@@ -63,7 +63,7 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
 
         @Override
         public String visit(OWLDatatype datatype) {
-            return "datatype-icon-inset";
+            return BUNDLE.style().datatypeIconInset();
         }
 
         @Override

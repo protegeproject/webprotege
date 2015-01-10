@@ -590,7 +590,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             @Override
             public String visit(OWLDatatypeData data) throws RuntimeException {
                 setTooltip(data, "owl:Datatype");
-                return "datatype-icon-inset";
+                return BUNDLE.style().datatypeIconInset();
             }
 
             private void setTooltip(OWLEntityData data, String typeName) {

@@ -251,7 +251,7 @@ public class UsageViewImpl extends Composite implements UsageView {
 
                     @Override
                     public String visit(OWLDatatype datatype) {
-                        return "datatype-icon-inset";
+                        return BUNDLE.style().datatypeIconInset();
                     }
 
                     @Override
