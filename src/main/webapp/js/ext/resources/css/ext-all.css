@@ -439,9 +439,12 @@ a.x-grid3-hd-btn:hover{background-position:-14px center;}
 .x-tree-icon,.x-tree-ec-icon,.x-tree-elbow-line,.x-tree-elbow,.x-tree-elbow-end,.x-tree-elbow-plus,.x-tree-elbow-minus,.x-tree-elbow-end-plus,.x-tree-elbow-end-minus{border:0 none;height:18px;margin:0;padding:0;vertical-align:top;width:16px;background-repeat:no-repeat;}
 .x-tree-node-collapsed .x-tree-node-icon,.x-tree-node-expanded .x-tree-node-icon,.x-tree-node-leaf .x-tree-node-icon{border:0 none;height:18px;margin:0;padding:0;vertical-align:top;width:16px;background-position:center;background-repeat:no-repeat;}
 .ext-ie .x-tree-node-indent img,.ext-ie .x-tree-node-icon,.ext-ie .x-tree-ec-icon{vertical-align:middle!important;}
-.x-tree-node-expanded .x-tree-node-icon{background-image:url(../images/default/tree/folder-open.gif);}
-.x-tree-node-leaf .x-tree-node-icon{background-image:url(../images/default/tree/leaf.gif);}
-.x-tree-node-collapsed .x-tree-node-icon{background-image:url(../images/default/tree/folder.gif);}
+/*.x-tree-node-expanded .x-tree-node-icon{background-image:url(../images/default/tree/folder-open.gif);}*/
+.x-tree-node-expanded .x-tree-node-icon{}
+/*.x-tree-node-leaf .x-tree-node-icon{background-image:url(../images/default/tree/leaf.gif);}*/
+.x-tree-node-leaf .x-tree-node-icon{}
+/*.x-tree-node-collapsed .x-tree-node-icon{background-image:url(../images/default/tree/folder.gif);}*/
+.x-tree-node-collapsed .x-tree-node-icon{}
 .ext-ie input.x-tree-node-cb{width:15px;height:15px;}
 input.x-tree-node-cb{margin-left:1px;}
 .ext-ie input.x-tree-node-cb{margin-left:0;}
