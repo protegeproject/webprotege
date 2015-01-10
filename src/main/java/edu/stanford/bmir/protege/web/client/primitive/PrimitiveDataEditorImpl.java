@@ -611,7 +611,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
             @Override
             public String visit(OWLLiteralData data) throws RuntimeException {
-                String styleName = "literal-icon-inset";
+                String styleName = BUNDLE.style().literalIconInset();
                 OWLDatatype datatype = data.getLiteral().getDatatype();
                 if (datatype.isBuiltIn()) {
                     OWL2Datatype owl2Datatype = datatype.getBuiltInDatatype();

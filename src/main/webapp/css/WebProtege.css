@@ -830,13 +830,6 @@ ul.x-menu-list
     padding-left: 22px !important;
 }
 
-.literal-icon-inset {
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
-    background-image: url(../images/tree/literal.png);
-    padding-left: 22px !important;
-}
-
 .numeric-literal-icon-inset {
     background-repeat: no-repeat;
     background-position: 2px 2px;

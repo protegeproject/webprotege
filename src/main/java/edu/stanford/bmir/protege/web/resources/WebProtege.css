@@ -161,3 +161,18 @@
     opacity:0.5;
 }
 
+
+
+@sprite .literalIcon
+{
+    gwt-image: 'literalIcon';
+}
+
+@sprite .literalIconInset {
+    gwt-image: 'literalIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}
+

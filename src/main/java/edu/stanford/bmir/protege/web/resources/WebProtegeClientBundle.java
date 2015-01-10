@@ -43,6 +43,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("individual.png")
     ImageResource individualIcon();
 
+    @Source("literal.png")
+    ImageResource literalIcon();
+
     @Source("download.png")
     ImageResource downloadIcon();
 
@@ -101,5 +104,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String deprecatedDatatypeIcon();
 
         String datatypeIconInset();
+
+        String literalIcon();
+
+        String literalIconInset();
     }
 }
