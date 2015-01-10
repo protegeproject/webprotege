@@ -30,6 +30,7 @@ import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil.SelectionCallback;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -370,7 +371,7 @@ public class AllPropertiesGrid extends EditorGridPanel {
             PropertyEntityData prop = (PropertyEntityData) store.getAt(rowIndex).getAsObject(PROPERTY);
             if (ValueType.Instance.equals(prop.getValueType())) {
                 return Format.format(
-                        "<img src=\"../images/tree/class.png\" /><style type=\"text/css\">.x-grid3-cell-inner, .x-grid3-hd-inner { white-space:normal !important; }</style> {0}",
+                        "<img src=\"" + WebProtegeClientBundle.BUNDLE.classIcon().getSafeUri().asString() + "\" /><style type=\"text/css\">.x-grid3-cell-inner, .x-grid3-hd-inner { white-space:normal !important; }</style> {0}",
                         new String[] { ed.getBrowserText() });
             } else {
                 return Format.format(

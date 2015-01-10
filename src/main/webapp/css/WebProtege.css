@@ -176,6 +176,10 @@ ul.x-tab-strip li
     padding:3px 0 2px 18px;
 }
 
+.x-tree-node-icon {
+    background: inherit;
+}
+
 .x-tree .x-panel-body
 {
     background-color:#FFF;
@@ -545,17 +549,6 @@ ul.x-menu-list
     overflow-y:auto;
 }
 
-.protege-class-icon
-{
-    background-image:url(../images/tree/class.png)!important;
-}
-
-.protege-deprecated-class-icon
-{
-    background-image:url(../images/tree/class.png)!important;
-    opacity:0.5;
-}
-
 .x-grid3-td-topic b
 {
     display:block;
@@ -848,13 +841,6 @@ ul.x-menu-list
     text-decoration: underline;
     color: #0055aa;
     padding: 2px;
-}
-
-.class-icon-inset {
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
-    background-image: url(../images/tree/class.png);
-    padding-left: 22px !important;
 }
 
 .object-property-icon-inset {
@@ -1701,7 +1687,7 @@ td {
 }
 
 .ms-item-ce {
-    background: url("../images/tree/class.png") no-repeat 0 -1px;
+    background: url("../../java/edu/stanford/bmir/protege/web/resources/class.png") no-repeat 0 -1px;
     padding-left: 20px;
 }
 

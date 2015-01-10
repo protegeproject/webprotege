@@ -61,13 +61,6 @@
 
         }
 
-        .class-icon-inset {
-            background-image: url(../images/tree/class.png);
-            background-repeat: no-repeat;
-            background-position: 2px 2px;
-            padding-left: 18px;
-        }
-
         .button-loc {
             /*background: none repeat scroll 0 0 transparent;*/
             /*border: medium none;*/

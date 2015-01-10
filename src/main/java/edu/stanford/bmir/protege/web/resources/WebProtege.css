@@ -1,7 +1,5 @@
 @external web-protege-laf;
 
-@url background warningIconBackgroundImage;
-
 .webProtegeLaf {
 
 }
@@ -48,13 +46,33 @@
     border-bottom: 1px solid #f0f0f0;
 }
 
-.warningLabel {
+@sprite .warningLabel {
+    gwt-image: 'warningIcon';
     border: solid 1px #ffe884;
-    background-size: 10px 10px;
-    background: #faf6c3 no-repeat left 3px top 3px;
-    background-image: background;
+    background-position: 2px 2px;
+    background-color: #faf6c3;
+    width: auto;
+    height: auto;
     vertical-align: top;
     padding: 4px 4px 4px 24px;
     font-size: 10px;
     font-family: tahoma, sans-serif;
+}
+
+
+@sprite .classIconInset {
+    gwt-image: 'classIcon';
+    background-position: 2px 2px;
+    padding-left: 22px !important;
+}
+
+@sprite .classIcon
+{
+    gwt-image: 'classIcon';
+}
+
+@sprite .deprecatedClassIcon
+{
+    gwt-image: 'classIcon';
+    opacity:0.5;
 }

@@ -22,6 +22,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("feedback.html")
     TextResource feedbackBoxText();
 
+    @Source("class.png")
+    ImageResource classIcon();
+
+    @Source("class.png")
+    DataResource classIconBackgroundImage();
+
     @Source("individual.png")
     ImageResource individualIcon();
 
@@ -33,10 +39,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     @Source("warning.png")
     ImageResource warningIcon();
-
-    @Source("warning.png")
-    DataResource warningIconBackgroundImage();
-
 
     @ClientBundle.Source("webprotege.css")
     public WebProtegeCss style();
@@ -57,5 +59,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String formField();
 
         String warningLabel();
+
+        String classIcon();
+
+        String deprecatedClassIcon();
+
+        String classIconInset();
     }
 }
