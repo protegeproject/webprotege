@@ -119,3 +119,24 @@
     opacity:0.5;
 }
 
+
+
+
+@sprite .annotationPropertyIconInset {
+    gwt-image: 'annotationPropertyIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}
+
+@sprite .annotationPropertyIcon
+{
+    gwt-image: 'annotationPropertyIcon';
+}
+
+@sprite .deprecatedAnnotationPropertyIcon
+{
+    gwt-image: 'annotationPropertyIcon';
+    opacity:0.5;
+}

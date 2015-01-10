@@ -578,7 +578,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             @Override
             public String visit(OWLAnnotationPropertyData data) throws RuntimeException {
                 setTooltip(data, "owl:AnnotationProperty");
-                return "annotation-property-icon-inset";
+                return BUNDLE.style().annotationPropertyIconInset();
             }
 
             @Override
