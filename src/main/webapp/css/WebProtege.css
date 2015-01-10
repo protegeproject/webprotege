@@ -605,11 +605,6 @@ ul.x-menu-list
     width:100%;
 }
 
-.protege-object-property-icon
-{
-    background-image:url(../images/tree/property.png)!important;
-}
-
 .protege-datatype-property-icon
 {
     background-image:url(../images/tree/property.png)!important;
@@ -841,13 +836,6 @@ ul.x-menu-list
     text-decoration: underline;
     color: #0055aa;
     padding: 2px;
-}
-
-.object-property-icon-inset {
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
-    background-image: url(../images/tree/property.png);
-    padding-left: 22px !important;
 }
 
 .data-property-icon-inset {

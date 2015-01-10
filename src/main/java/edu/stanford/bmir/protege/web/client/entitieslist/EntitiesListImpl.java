@@ -20,6 +20,7 @@ import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import edu.stanford.bmir.protege.web.resources.WebProtegeCellListResources;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.*;
 
@@ -45,7 +46,7 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
 
         @Override
         public String visit(OWLObjectProperty property) {
-            return "object-property-icon-inset";
+            return WebProtegeClientBundle.BUNDLE.style().objectPropertyIconInset();
         }
 
         @Override

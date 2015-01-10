@@ -63,6 +63,8 @@
 @sprite .classIconInset {
     gwt-image: 'classIcon';
     background-position: 2px 2px;
+    width: auto;
+    height: auto;
     padding-left: 22px !important;
 }
 
@@ -76,3 +78,24 @@
     gwt-image: 'classIcon';
     opacity:0.5;
 }
+
+
+@sprite .objectPropertyIconInset {
+    gwt-image: 'objectPropertyIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}
+
+@sprite .objectPropertyIcon
+{
+    gwt-image: 'objectPropertyIcon';
+}
+
+@sprite .deprecatedObjectPropertyIcon
+{
+    gwt-image: 'objectPropertyIcon';
+    opacity:0.5;
+}
+
