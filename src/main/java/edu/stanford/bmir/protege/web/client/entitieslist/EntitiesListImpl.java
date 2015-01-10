@@ -29,6 +29,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
+
 
 /**
  * Author: Matthew Horridge<br>
@@ -41,17 +43,17 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
     public static final OWLEntityVisitorEx<String> CSS_CLASS_NAME_VISITOR = new OWLEntityVisitorEx<String>() {
         @Override
         public String visit(OWLClass cls) {
-            return WebProtegeClientBundle.BUNDLE.style().classIconInset();
+            return BUNDLE.style().classIconInset();
         }
 
         @Override
         public String visit(OWLObjectProperty property) {
-            return WebProtegeClientBundle.BUNDLE.style().objectPropertyIconInset();
+            return BUNDLE.style().objectPropertyIconInset();
         }
 
         @Override
         public String visit(OWLDataProperty property) {
-            return "data-property-icon-inset";
+            return BUNDLE.style().dataPropertyIconInset();
         }
 
         @Override

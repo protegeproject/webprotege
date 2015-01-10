@@ -31,6 +31,7 @@ import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 /**
  * Author: Matthew Horridge<br>
@@ -559,19 +560,19 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             @Override
             public String visit(OWLClassData data) throws RuntimeException {
                 setTooltip(data, "owl:Class");
-                return WebProtegeClientBundle.BUNDLE.style().classIconInset();
+                return BUNDLE.style().classIconInset();
             }
 
             @Override
             public String visit(OWLObjectPropertyData data) throws RuntimeException {
                 setTooltip(data, "owl:ObjectProperty");
-                return WebProtegeClientBundle.BUNDLE.style().objectPropertyIconInset();
+                return BUNDLE.style().objectPropertyIconInset();
             }
 
             @Override
             public String visit(OWLDataPropertyData data) throws RuntimeException {
                 setTooltip(data, "owl:DataProperty");
-                return "data-property-icon-inset";
+                return BUNDLE.style().dataPropertyIconInset();
             }
 
             @Override

@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
+
 // TODO: add action descriptions and labels in the config similar to the ClassTreePortlet
 public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
@@ -606,10 +608,10 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         PropertyEntityData entityData = (PropertyEntityData) node.getUserObject();
         PropertyType type = entityData.getPropertyType();
         if (type == PropertyType.OBJECT) {
-            node.setIconCls(WebProtegeClientBundle.BUNDLE.style().objectPropertyIcon());
+            node.setIconCls(BUNDLE.style().objectPropertyIcon());
         }
         else if (type == PropertyType.DATATYPE) {
-            node.setIconCls("protege-datatype-property-icon");
+            node.setIconCls(BUNDLE.style().dataPropertyIcon());
         }
         else if (type == PropertyType.ANNOTATION) {
             node.setIconCls("protege-annotation-property-icon");

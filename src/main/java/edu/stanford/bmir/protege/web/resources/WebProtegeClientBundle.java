@@ -77,5 +77,11 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String deprecatedObjectPropertyIcon();
 
         String objectPropertyIconInset();
+
+        String dataPropertyIcon();
+
+        String dataPropertyIconInset();
+
+        String deprecatedDataPropertyIcon();
     }
 }
