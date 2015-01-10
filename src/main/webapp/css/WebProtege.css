@@ -830,13 +830,6 @@ ul.x-menu-list
     padding-left: 22px !important;
 }
 
-.datatype-icon-inset {
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
-    background-image: url(../images/tree/datatype.png);
-    padding-left: 22px !important;
-}
-
 .literal-icon-inset {
     background-repeat: no-repeat;
     background-position: 2px 2px;
@@ -1652,11 +1645,6 @@ td {
 
 .ms-item-ind {
     background: url("../images/tree/individual.png") no-repeat 0 -1px;
-    padding-left: 20px;
-}
-
-.ms-item-dr {
-    background: url("../images/tree/datatype.png") no-repeat 0 -1px;
     padding-left: 20px;
 }
 

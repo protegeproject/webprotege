@@ -140,3 +140,24 @@
     gwt-image: 'annotationPropertyIcon';
     opacity:0.5;
 }
+
+
+@sprite .datatypeIconInset {
+    gwt-image: 'datatypeIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}
+
+@sprite .datatypeIcon
+{
+    gwt-image: 'datatypeIcon';
+}
+
+@sprite .deprecatedDatatypeIcon
+{
+    gwt-image: 'dataPropertyIcon';
+    opacity:0.5;
+}
+
