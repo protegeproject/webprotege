@@ -99,3 +99,23 @@
     opacity:0.5;
 }
 
+
+@sprite .dataPropertyIconInset {
+    gwt-image: 'dataPropertyIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}
+
+@sprite .dataPropertyIcon
+{
+    gwt-image: 'dataPropertyIcon';
+}
+
+@sprite .deprecatedDataPropertyIcon
+{
+    gwt-image: 'dataPropertyIcon';
+    opacity:0.5;
+}
+

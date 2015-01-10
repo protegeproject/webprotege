@@ -241,7 +241,7 @@ public class UsageViewImpl extends Composite implements UsageView {
 
                     @Override
                     public String visit(OWLDataProperty property) {
-                        return "data-property-icon-inset";
+                        return BUNDLE.style().dataPropertyIconInset();
                     }
 
                     @Override
