@@ -109,6 +109,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("comment-small-filled.png")
     ImageResource commentSmallFilledIcon();
 
+    @Source("edit.png")
+    ImageResource editIcon();
 
 
     @Source("webprotege.css")
