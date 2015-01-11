@@ -244,3 +244,8 @@
     height: auto;
     padding-left: 22px !important;
 }
+
+@sprite .eyeIcon {
+    gwt-image: 'eyeIcon';
+    display: inline-block;
+}

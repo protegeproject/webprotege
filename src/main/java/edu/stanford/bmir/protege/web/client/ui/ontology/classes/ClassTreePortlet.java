@@ -66,6 +66,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
+
 /**
  * Portlet for displaying class trees. It can be configured to show only a
  * subtree of an ontology, by setting the portlet property <code>topClass</code>
@@ -302,7 +304,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     @Override
     public void initialize() {
-        WebProtegeClientBundle.BUNDLE.style().ensureInjected();
+        BUNDLE.style().ensureInjected();
 
         setLayout(new FitLayout());
 
@@ -585,7 +587,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         final CheckItem watchItem = new CheckItem();
         watchItem.setText(getWatchClsLabel());
         watchItem.setCls("toolbar-button");
-//        watchItem.setIcon("images/eye.png");
         watchButton.addItem(watchItem);
 
         watchBranchItem = new CheckItem();
@@ -1095,10 +1096,10 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     public void setTreeNodeIcon(final TreeNode node, EntityData entityData) {
         if(entityData instanceof SubclassEntityData && ((SubclassEntityData) entityData).isDeprecated()) {
-            node.setIconCls(WebProtegeClientBundle.BUNDLE.style().deprecatedClassIcon());
+            node.setIconCls(BUNDLE.style().deprecatedClassIcon());
         }
         else {
-            node.setIconCls(WebProtegeClientBundle.BUNDLE.style().classIcon());
+            node.setIconCls(BUNDLE.style().classIcon());
 //            node.setIcon(WebProtegeClientBundle.BUNDLE.classIcon().getSafeUri().asString());
         }
 
@@ -1385,7 +1386,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return "";
         }
         if(w.iterator().next() instanceof EntityFrameWatch) {
-            return "<img src=\"images/eye.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
+            return "<img src=\"" + BUNDLE.eyeIcon().getSafeUri().asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
         }
         else {
             return "<img src=\"images/eye-down.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
