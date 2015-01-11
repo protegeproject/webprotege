@@ -88,8 +88,19 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("question-icon.png")
     ImageResource questionIcon();
 
-    @ClientBundle.Source("webprotege.css")
-    public WebProtegeCss style();
+    @Source("numbered-list.png")
+    ImageResource numberedListIcon();
+
+    @Source("bulleted-list.png")
+    ImageResource bulletedListIcon();
+
+    @Source("link-black.png")
+    ImageResource linkBlackIcon();
+
+    @Source("webprotege.css")
+    WebProtegeCss style();
+
+
 
 
     public static interface WebProtegeCss extends CssResource {

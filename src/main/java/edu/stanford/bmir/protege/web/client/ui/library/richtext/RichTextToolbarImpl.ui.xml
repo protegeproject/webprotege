@@ -1,6 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
     <ui:style>
         .bar-style {
             /*padding: 2px*/
@@ -31,17 +33,14 @@
             text-decoration: underline;
         }
         .bulleted-list-button {
-            background-image: url("images/bulleted-list.png");
             background-position: center center;
             background-repeat: no-repeat;
         }
         .numbered-list-button {
-            background-image: url("images/numbered-list.png");
             background-position: center center;
             background-repeat: no-repeat;
         }
         .insert-link-button {
-            background-image: url("images/link-black.png");
             background-position: center center;
             background-repeat: no-repeat;
         }
@@ -54,9 +53,15 @@
         <g:ToggleButton ui:field="italicButton" text="I" addStyleNames="{style.italic-button} {style.button-style}" title="Toggle Italic"/>
         <g:ToggleButton ui:field="underlineButton" text="U" addStyleNames="{style.underline-button} {style.button-style}" title="Toggle Underline"/>
         <span style="width: 20px"/>
-        <g:Button ui:field="bulletedListButton" addStyleNames="{style.button-style} {style.bulleted-list-button} gwt-ToggleButton" title="Insert Bulleted List"/>
-        <g:Button ui:field="numberedListButton" addStyleNames="{style.button-style} {style.numbered-list-button} gwt-ToggleButton" title="Insert Numbered List"/>
+        <g:Button ui:field="bulletedListButton" addStyleNames="{style.button-style} {style.bulleted-list-button} gwt-ToggleButton" title="Insert Bulleted List">
+            <img alt="Bulleted list" src="{wp.bulletedListIcon.getSafeUri}"/>
+        </g:Button>
+        <g:Button ui:field="numberedListButton" addStyleNames="{style.button-style} {style.numbered-list-button} gwt-ToggleButton" title="Insert Numbered List">
+            <img src="{wp.numberedListIcon.getSafeUri}" alt="Numbered list"/>
+        </g:Button>
         <span style="width: 20px"/>
-        <g:Button ui:field="createLinkButton" addStyleNames="{style.button-style} {style.insert-link-button} gwt-ToggleButton" title="Insert Link"/>
+        <g:Button ui:field="createLinkButton" addStyleNames="{style.button-style} {style.insert-link-button} gwt-ToggleButton" title="Insert Link">
+            <img src="{wp.linkBlackIcon.getSafeUri}" alt="Link"/>
+        </g:Button>
     </g:HTMLPanel>
 </ui:UiBinder>
