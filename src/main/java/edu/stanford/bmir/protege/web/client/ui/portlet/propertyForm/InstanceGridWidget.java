@@ -41,6 +41,7 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidgetWit
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil.SelectionCallback;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import java.util.*;
 
@@ -775,11 +776,11 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
             public String render(Object value, CellMetadata cellMetadata, Record record, int rowIndex, int colNum,
                     Store store) {
                 // TODO: add a css for this
-                String text = "<img src=\"images/comment-small-filled.png\" title=\""
+                String text = "<img src=\"" + WebProtegeClientBundle.BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" title=\""
                     + " Click on the icon to add new note(s).\"></img>";
                 int annotationsCount = (value == null ? 0 : ((Integer) value));
                 if (annotationsCount > 0) {
-                    text = "<img src=\"images/comment-small-filled.png\" title=\""
+                    text = "<img src=\"" + WebProtegeClientBundle.BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" title=\""
                         + UIUtil.getNiceNoteCountText(annotationsCount)
                         + " on this value. \nClick on the icon to see existing or to add new note(s).\"></img>"
                         + "<span style=\"vertical-align:super;font-size:95%;color:#15428B;font-weight:bold;\">"
