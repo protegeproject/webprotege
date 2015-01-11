@@ -231,3 +231,16 @@
     height: auto;
     padding-left: 22px !important;
 }
+
+@sprite .dateTimeIcon
+{
+    gwt-image: 'dateTimeIcon';
+}
+
+@sprite .dateTimeIconInset {
+    gwt-image: 'dateTimeIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}

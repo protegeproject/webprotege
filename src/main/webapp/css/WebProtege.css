@@ -818,13 +818,6 @@ ul.x-menu-list
     padding: 2px;
 }
 
-.date-time-icon-inset {
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
-    background-image: url(../images/tree/date-time.png);
-    padding-left: 22px !important;
-}
-
 .empty-icon-inset {
     padding-left: 22px !important;
     background-color: inherit;
