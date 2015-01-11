@@ -59,15 +59,6 @@
     font-family: tahoma, sans-serif;
 }
 
-
-@sprite .classIconInset {
-    gwt-image: 'classIcon';
-    background-position: 2px 2px;
-    width: auto;
-    height: auto;
-    padding-left: 22px !important;
-}
-
 @sprite .classIcon
 {
     gwt-image: 'classIcon';
@@ -79,6 +70,13 @@
     opacity:0.5;
 }
 
+@sprite .classIconInset {
+    gwt-image: 'classIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}
 
 @sprite .objectPropertyIconInset {
     gwt-image: 'objectPropertyIcon';
@@ -176,3 +174,21 @@
     padding-left: 22px !important;
 }
 
+@sprite .individualIcon
+{
+    gwt-image: 'individualIcon';
+}
+
+@sprite .deprecatedIndividualIcon
+{
+    gwt-image: 'individualIcon';
+    opacity:0.5;
+}
+
+@sprite .individualIconInset {
+    gwt-image: 'individualIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}

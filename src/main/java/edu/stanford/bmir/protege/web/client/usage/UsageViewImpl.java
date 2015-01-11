@@ -246,7 +246,7 @@ public class UsageViewImpl extends Composite implements UsageView {
 
                     @Override
                     public String visit(OWLNamedIndividual individual) {
-                        return "individual-icon-inset";
+                        return BUNDLE.style().individualIconInset();
                     }
 
                     @Override

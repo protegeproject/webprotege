@@ -108,5 +108,13 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String literalIcon();
 
         String literalIconInset();
+
+        String individualIcon();
+
+        String deprecatedIndividualIcon();
+
+        String individualIconInset();
+
+
     }
 }

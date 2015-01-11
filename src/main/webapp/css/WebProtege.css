@@ -589,11 +589,6 @@ ul.x-menu-list
     width:100%;
 }
 
-.protege-individuals-icon
-{
-    background-image:url(../images/tree/individual.png)!important;
-}
-
 .propertiesView-Banner
 {
     background-color:#369;
@@ -821,13 +816,6 @@ ul.x-menu-list
     text-decoration: underline;
     color: #0055aa;
     padding: 2px;
-}
-
-.individual-icon-inset {
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
-    background-image: url(../images/tree/individual.png);
-    padding-left: 22px !important;
 }
 
 .numeric-literal-icon-inset {
@@ -1637,7 +1625,7 @@ td {
 }
 
 .ms-item-ind {
-    background: url("../images/tree/individual.png") no-repeat 0 -1px;
+    /*background: url("../images/tree/individual.png") no-repeat 0 -1px;*/
     padding-left: 20px;
 }
 
