@@ -192,3 +192,16 @@
     height: auto;
     padding-left: 22px !important;
 }
+
+@sprite .linkIcon
+{
+    gwt-image: 'linkIcon';
+}
+
+@sprite .linkIconInset {
+    gwt-image: 'linkIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}

@@ -46,6 +46,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("literal.png")
     ImageResource literalIcon();
 
+    @Source("link.png")
+    ImageResource linkIcon();
+
     @Source("download.png")
     ImageResource downloadIcon();
 
@@ -115,6 +118,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String individualIconInset();
 
+        String linkIcon();
 
+        String linkIconInset();
     }
 }
