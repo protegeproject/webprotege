@@ -592,7 +592,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         watchBranchItem = new CheckItem();
         watchBranchItem.setText(getWatchBranchClsLabel());
         watchBranchItem.setCls("toolbar-button");
-//        watchBranchItem.setIcon("images/eye-down.png");
         watchBranchItem.setChecked(true);
         watchButton.addItem(watchBranchItem);
 
@@ -1389,7 +1388,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return "<img src=\"" + BUNDLE.eyeIcon().getSafeUri().asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched\"></img>";
         }
         else {
-            return "<img src=\"images/eye-down.png\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
+            return "<img src=\"" + BUNDLE.eyeDownIcon().getSafeUri().asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
         }
     }
 
