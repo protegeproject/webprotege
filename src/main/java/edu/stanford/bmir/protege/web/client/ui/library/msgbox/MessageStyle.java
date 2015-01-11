@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.library.msgbox;
 
 import com.google.common.base.Optional;
+import com.google.gwt.resources.client.ImageResource;
+
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,21 +13,21 @@ import com.google.common.base.Optional;
  */
 public enum MessageStyle {
 
-    PLAIN(Optional.<String>absent()),
+    PLAIN(Optional.<ImageResource>absent()),
 
-    MESSAGE(Optional.of("images/message-icon.png")),
+    MESSAGE(Optional.of(BUNDLE.messageIcon())),
 
-    QUESTION(Optional.of("images/question-icon.png")),
+    QUESTION(Optional.of(BUNDLE.questionIcon())),
 
-    ALERT(Optional.of("images/alert-icon.png"));
+    ALERT(Optional.of(BUNDLE.alertIcon()));
 
-    private Optional<String> url;
+    private Optional<ImageResource> image;
 
-    private MessageStyle(Optional<String> url) {
-        this.url = url;
+    private MessageStyle(Optional<ImageResource> image) {
+        this.image = image;
     }
 
-    public Optional<String> getUrl() {
-        return url;
+    public Optional<ImageResource> getImage() {
+        return image;
     }
 }
