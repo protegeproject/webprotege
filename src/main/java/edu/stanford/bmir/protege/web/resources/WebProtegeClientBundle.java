@@ -55,6 +55,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("number.png")
     ImageResource numberIcon();
 
+    @Source("date-time.png")
+    ImageResource dateTimeIcon();
+
     @Source("download.png")
     ImageResource downloadIcon();
 
@@ -135,5 +138,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String numberIcon();
 
         String numberIconInset();
+
+        String dateTimeIcon();
+
+        String dateTimeIconInset();
     }
 }

@@ -618,7 +618,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                     if (owl2Datatype.isNumeric()) {
                         styleName = BUNDLE.style().numberIconInset();
                     } else if (owl2Datatype.equals(OWL2Datatype.XSD_DATE_TIME)) {
-                        styleName = "date-time-icon-inset";
+                        styleName = BUNDLE.style().dateTimeIconInset();
                     }
                 }
                 String datatypeName = datatype.getIRI().getFragment();
