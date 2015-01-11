@@ -76,6 +76,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("note.png")
     ImageResource noteIcon();
 
+    @Source("user.png")
+    ImageResource userIcon();
+
     @ClientBundle.Source("webprotege.css")
     public WebProtegeCss style();
 

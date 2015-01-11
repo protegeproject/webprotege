@@ -1,6 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:p='urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
 
         .panel-style {
@@ -22,7 +24,7 @@
         <table>
             <tr>
                 <td valign="top">
-                    <g:Image url="images/user.png"/>
+                    <g:Image resource="{wp.userIcon}"/>
                 </td>
                 <td valign="top">
                     <div>
