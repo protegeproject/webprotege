@@ -584,7 +584,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             @Override
             public String visit(OWLNamedIndividualData data) throws RuntimeException {
                 setTooltip(data, "owl:NamedIndividual");
-                return "individual-icon-inset";
+                return BUNDLE.style().individualIconInset();
             }
 
             @Override
