@@ -97,6 +97,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("link-black.png")
     ImageResource linkBlackIcon();
 
+    @Source("progress.gif")
+    ImageResource progressAnimation();
+
     @Source("webprotege.css")
     WebProtegeCss style();
 
