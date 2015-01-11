@@ -25,6 +25,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidgetWithNotes;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import java.util.*;
 
@@ -229,12 +230,12 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
     }
 
     protected Anchor createCommentHyperLink() {
-        String text = "<img src=\"images/comment-small-filled.png\" title=\""
+        String text = "<img src=\"" + WebProtegeClientBundle.BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" title=\""
                 + "Add a comment on this value\" " + AbstractPropertyWidgetWithNotes.COMMENT_ICON_STYLE_STRING + "></img>";
         EntityData value = UIUtil.getFirstItem(values);
         int annotationsCount = (value == null ? 0 : value.getLocalAnnotationsCount());
         if (annotationsCount > 0) {
-            text = "<img src=\"images/comment-small-filled.png\" title=\""
+            text = "<img src=\"" + WebProtegeClientBundle.BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" title=\""
                     + UIUtil.getNiceNoteCountText(annotationsCount)
                     + " on this value. \nClick on the icon to see existing or to add new note(s).\" " + AbstractPropertyWidgetWithNotes.COMMENT_ICON_STYLE_STRING + "></img>"
                     + "<span style=\"vertical-align:super;font-size:95%;color:#15428B;font-weight:bold;\">"

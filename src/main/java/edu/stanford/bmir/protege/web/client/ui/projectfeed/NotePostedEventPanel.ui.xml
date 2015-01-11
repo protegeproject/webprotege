@@ -3,6 +3,8 @@
              xmlns:p='urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel'
              xmlns:l='urn:import:edu.stanford.bmir.protege.web.client.ui.library.entitylabel'>
 
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
     <ui:style>
         .change-event-panel {
             border-bottom: solid 1px silver;
@@ -24,7 +26,7 @@
         <table>
             <tr>
                 <td valign="top">
-                    <g:Image url="images/comment.png"/>
+                    <g:Image resource="{wp.commentIcon}"/>
                 </td>
                 <td valign="top">
                     <div>

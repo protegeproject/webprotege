@@ -655,7 +655,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         String text = entityData.getBrowserText();
         int localAnnotationsCount = entityData.getLocalAnnotationsCount();
         if (localAnnotationsCount > 0) {
-            text = text + "<img src=\"images/comment-small-filled.png\" />" + " " + localAnnotationsCount;
+            text = text + "<img src=\"" + WebProtegeClientBundle.BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" />" + " " + localAnnotationsCount;
         }
         int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
         if (childrenAnnotationsCount > 0) {

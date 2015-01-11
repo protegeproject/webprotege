@@ -100,6 +100,17 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("progress.gif")
     ImageResource progressAnimation();
 
+    @Source("comment.png")
+    ImageResource commentIcon();
+
+    @Source("comment-small.png")
+    ImageResource commentSmallIcon();
+
+    @Source("comment-small-filled.png")
+    ImageResource commentSmallFilledIcon();
+
+
+
     @Source("webprotege.css")
     WebProtegeCss style();
 
