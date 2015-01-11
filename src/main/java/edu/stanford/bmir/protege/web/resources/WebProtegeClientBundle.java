@@ -67,6 +67,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("warning.png")
     ImageResource warningIcon();
 
+    @Source("eye.png")
+    ImageResource eyeIcon();
+
     @ClientBundle.Source("webprotege.css")
     public WebProtegeCss style();
 
@@ -142,5 +145,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String dateTimeIcon();
 
         String dateTimeIconInset();
+
+        String eyeIcon();
     }
 }
