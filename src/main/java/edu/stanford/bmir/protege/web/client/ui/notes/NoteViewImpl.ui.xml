@@ -3,13 +3,8 @@
              xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel"
         >
 
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
-
-        .user-image {
-            background-image: url("images/user.png");
-            background-repeat: no-repeat;
-            padding-left: 20px;
-        }
 
         .author {
             padding-bottom: 2px;
@@ -27,6 +22,7 @@
             color: #676767;
             border: none;
         }
+
         .links:hover {
             color: #648dbe !important;
         }
@@ -34,12 +30,11 @@
 
 
     <g:HTMLPanel>
-        <g:HTMLPanel addStyleNames="{style.user-image}">
-            <g:InlineLabel addStyleNames="{style.author}" ui:field="authorField"/>
-            <timelabel:ElapsedTimeLabel addStyleNames="{style.date}" ui:field="dateField"/>
-            <div class="note-content">
-                <g:HTML addStyleNames="{style.body}" ui:field="bodyField"/>
-            </div>
-        </g:HTMLPanel>
+        <g:Image resource="{wp.userIcon}"/>
+        <g:InlineLabel addStyleNames="{style.author}" ui:field="authorField"/>
+        <timelabel:ElapsedTimeLabel addStyleNames="{style.date}" ui:field="dateField"/>
+        <div class="note-content">
+            <g:HTML addStyleNames="{style.body}" ui:field="bodyField"/>
+        </div>
     </g:HTMLPanel>
 </ui:UiBinder>
