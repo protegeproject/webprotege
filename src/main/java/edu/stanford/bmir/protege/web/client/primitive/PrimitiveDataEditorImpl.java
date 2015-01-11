@@ -643,7 +643,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 if (data.isHTTPLink()) {
                     return BUNDLE.style().linkIconInset();
                 } else {
-                    return "iri-icon-inset";
+                    return BUNDLE.style().iriIconInset();
                 }
             }
         });

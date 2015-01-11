@@ -205,3 +205,16 @@
     height: auto;
     padding-left: 22px !important;
 }
+
+@sprite .iriIcon
+{
+    gwt-image: 'iriIcon';
+}
+
+@sprite .iriIconInset {
+    gwt-image: 'iriIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}
