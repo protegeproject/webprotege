@@ -818,13 +818,6 @@ ul.x-menu-list
     padding: 2px;
 }
 
-.numeric-literal-icon-inset {
-    background-repeat: no-repeat;
-    background-position: 2px 2px;
-    background-image: url(../images/tree/number.png);
-    padding-left: 22px;
-}
-
 .date-time-icon-inset {
     background-repeat: no-repeat;
     background-position: 2px 2px;

@@ -218,3 +218,16 @@
     height: auto;
     padding-left: 22px !important;
 }
+
+@sprite .numberIcon
+{
+    gwt-image: 'numberIcon';
+}
+
+@sprite .numberIconInset {
+    gwt-image: 'numberIcon';
+    background-position: 2px 2px;
+    width: auto;
+    height: auto;
+    padding-left: 22px !important;
+}

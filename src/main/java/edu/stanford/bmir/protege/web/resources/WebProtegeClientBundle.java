@@ -52,6 +52,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("iri.png")
     ImageResource iriIcon();
 
+    @Source("number.png")
+    ImageResource numberIcon();
+
     @Source("download.png")
     ImageResource downloadIcon();
 
@@ -128,5 +131,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String iriIcon();
 
         String iriIconInset();
+
+        String numberIcon();
+
+        String numberIconInset();
     }
 }
