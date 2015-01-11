@@ -79,6 +79,15 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("user.png")
     ImageResource userIcon();
 
+    @Source("alert-icon.png")
+    ImageResource alertIcon();
+
+    @Source("message-icon.png")
+    ImageResource messageIcon();
+
+    @Source("question-icon.png")
+    ImageResource questionIcon();
+
     @ClientBundle.Source("webprotege.css")
     public WebProtegeCss style();
 
