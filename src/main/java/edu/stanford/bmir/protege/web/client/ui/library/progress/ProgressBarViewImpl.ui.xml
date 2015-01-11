@@ -1,5 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
     <ui:style>
         .progress-panel {
             width: 400px;
@@ -24,7 +27,7 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.progress-panel}">
         <div style="display: inline-block; vertical-align: middle;">
-            <g:Image url="images/progress.gif" addStyleNames="{style.progress-animation}"/>
+            <g:Image resource="{wp.progressAnimation}" addStyleNames="{style.progress-animation}"/>
         </div>
         <div style="display: inline-block; padding-left: 20px; vertical-align: middle;">
             <g:Label ui:field="titleText" addStyleNames="{style.title-style}"/>
