@@ -1632,12 +1632,27 @@ td {
 }
 
 .ms-item-ce {
-    background: url("../../java/edu/stanford/bmir/protege/web/resources/class.png") no-repeat 0 -1px;
+    /*background: url("../../java/edu/stanford/bmir/protege/web/resources/class.png") no-repeat 0 -1px;*/
     padding-left: 20px;
 }
 
 .ms-item-ind {
     background: url("../images/tree/individual.png") no-repeat 0 -1px;
+    padding-left: 20px;
+}
+
+.ms-item-anno {
+    /*background: url("../images/tree/annotation-property.png") no-repeat 0 -1px;*/
+    padding-left: 20px;
+}
+
+.ms-item-prop {
+    /*background: url("../images/tree/property.png") no-repeat 0 -1px;*/
+    padding-left: 20px;
+}
+
+.ms-item-dr {
+    /*background: url("../images/tree/datatype.png") no-repeat 0 -1px;*/
     padding-left: 20px;
 }
 
