@@ -641,7 +641,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
             @Override
             public String visit(IRIData data) throws RuntimeException {
                 if (data.isHTTPLink()) {
-                    return "link-icon-inset";
+                    return BUNDLE.style().linkIconInset();
                 } else {
                     return "iri-icon-inset";
                 }
