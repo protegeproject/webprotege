@@ -1075,6 +1075,7 @@ select {
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
     padding: 20px;
+    z-index: 10;
 }
 
 .gwt-DialogBox .Caption {
