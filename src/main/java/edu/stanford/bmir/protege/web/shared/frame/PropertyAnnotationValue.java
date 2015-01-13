@@ -11,7 +11,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/11/2012
  */
-public final class PropertyAnnotationValue extends PropertyValue {
+public class PropertyAnnotationValue extends PropertyValue {
 
     private OWLEntity entity;
 
