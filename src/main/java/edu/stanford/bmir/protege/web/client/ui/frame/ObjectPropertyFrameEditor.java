@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -15,6 +16,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
 import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
@@ -68,6 +70,8 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     private static ObjectPropertyFrameEditorUiBinder ourUiBinder = GWT.create(ObjectPropertyFrameEditorUiBinder.class);
 
     private ProjectId projectId;
+
+    private Set<ObjectPropertyCharacteristic> characteristics = Sets.newHashSet();
 
     public ObjectPropertyFrameEditor(ProjectId projectId) {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
@@ -157,11 +161,9 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         final ObjectPropertyFrame frame = object.getFrame();
         iriField.setValue(frame.getSubject().getIRI().toString());
         annotations.setValue(new PropertyValueList(Collections.<PropertyValue>unmodifiableSet(frame.getAnnotationPropertyValues())));
-        RenderingServiceManager.getManager().execute(new GetRendering(projectId, frame.getDomains()), new AsyncCallback<GetRenderingResponse>() {
-            @Override
-            public void onFailure(Throwable caught) {
-            }
-
+        characteristics.clear();
+        characteristics.addAll(object.getFrame().getCharacteristics());
+        RenderingServiceManager.getManager().execute(new GetRendering(projectId, frame.getDomains()), new AbstractWebProtegeAsyncCallback<GetRenderingResponse>() {
             @Override
             public void onSuccess(GetRenderingResponse result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
@@ -174,11 +176,7 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
                 domains.setValue(primitiveDatas);
             }
         });
-        RenderingServiceManager.getManager().execute(new GetRendering(projectId, frame.getRanges()), new AsyncCallback<GetRenderingResponse>() {
-            @Override
-            public void onFailure(Throwable caught) {
-            }
-
+        RenderingServiceManager.getManager().execute(new GetRendering(projectId, frame.getRanges()), new AbstractWebProtegeAsyncCallback<GetRenderingResponse>() {
             @Override
             public void onSuccess(GetRenderingResponse result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
@@ -221,8 +219,12 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         for(OWLPrimitiveData data : ranges.getValue().get()) {
             editedRanges.add((OWLClass) data.getObject());
         }
-        ObjectPropertyFrame frame = new ObjectPropertyFrame(subject, annotationValueSet, new HashSet<OWLClass>(editedDomains), new HashSet<OWLClass>(editedRanges), Collections.<OWLObjectProperty>emptySet());
-        return Optional.of(new LabelledFrame<ObjectPropertyFrame>(displayName, frame));
+        ObjectPropertyFrame frame = new ObjectPropertyFrame(subject, annotationValueSet,
+                new HashSet<>(editedDomains),
+                new HashSet<>(editedRanges),
+                Collections.<OWLObjectProperty>emptySet(),
+                characteristics);
+        return Optional.of(new LabelledFrame<>(displayName, frame));
     }
 
     private String getDisplayName() {

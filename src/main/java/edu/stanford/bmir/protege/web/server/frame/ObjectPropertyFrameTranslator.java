@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyAnnotationValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
+import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Collections;
@@ -24,8 +21,9 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
     public ObjectPropertyFrame getFrame(OWLObjectProperty subject, OWLOntology rootOntology, OWLAPIProject project) {
         Set<OWLAxiom> propertyValueAxioms = new HashSet<OWLAxiom>();
 
-        Set<OWLClass> domains = new HashSet<OWLClass>();
-        Set<OWLClass> ranges = new HashSet<OWLClass>();
+        Set<OWLClass> domains = new HashSet<>();
+        Set<OWLClass> ranges = new HashSet<>();
+        Set<ObjectPropertyCharacteristic> characteristics = new HashSet<>();
         for(OWLOntology ontology : rootOntology.getImportsClosure()) {
             propertyValueAxioms.addAll(ontology.getAnnotationAssertionAxioms(subject.getIRI()));
             for(OWLObjectPropertyDomainAxiom ax : ontology.getObjectPropertyDomainAxioms(subject)) {
@@ -40,9 +38,30 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
                     ranges.add(range.asOWLClass());
                 }
             }
+            if(ontology.getAxiomCount(AxiomType.FUNCTIONAL_OBJECT_PROPERTY) > 1) {
+                characteristics.add(ObjectPropertyCharacteristic.FUNCTIONAL);
+            }
+            if(ontology.getAxiomCount(AxiomType.INVERSE_FUNCTIONAL_OBJECT_PROPERTY) > 1) {
+                characteristics.add(ObjectPropertyCharacteristic.INVERSE_FUNCTIONAL);
+            }
+            if(ontology.getAxiomCount(AxiomType.SYMMETRIC_OBJECT_PROPERTY) > 1) {
+                characteristics.add(ObjectPropertyCharacteristic.SYMMETRIC);
+            }
+            if(ontology.getAxiomCount(AxiomType.ASYMMETRIC_OBJECT_PROPERTY) > 1) {
+                characteristics.add(ObjectPropertyCharacteristic.ASYMMETRIC);
+            }
+            if(ontology.getAxiomCount(AxiomType.REFLEXIVE_OBJECT_PROPERTY) > 1) {
+                characteristics.add(ObjectPropertyCharacteristic.REFLEXIVE);
+            }
+            if(ontology.getAxiomCount(AxiomType.IRREFLEXIVE_OBJECT_PROPERTY) > 1) {
+                characteristics.add(ObjectPropertyCharacteristic.IRREFLEXIVE);
+            }
+            if(ontology.getAxiomCount(AxiomType.TRANSITIVE_OBJECT_PROPERTY) > 1) {
+                characteristics.add(ObjectPropertyCharacteristic.TRANSITIVE);
+            }
         }
         AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
-        Set<PropertyAnnotationValue> propertyValues = new HashSet<PropertyAnnotationValue>();
+        Set<PropertyAnnotationValue> propertyValues = new HashSet<>();
         for(OWLAxiom ax : propertyValueAxioms) {
             Set<PropertyValue> translationResult = translator.getPropertyValues(subject, ax, rootOntology,
                     PropertyValueState.ASSERTED);
@@ -53,7 +72,7 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
             }
 
         }
-        return new ObjectPropertyFrame(subject, propertyValues, domains, ranges, Collections.<OWLObjectProperty>emptySet());
+        return new ObjectPropertyFrame(subject, propertyValues, domains, ranges, Collections.<OWLObjectProperty>emptySet(), characteristics);
     }
 
     @Override
@@ -69,6 +88,10 @@ public class ObjectPropertyFrameTranslator implements FrameTranslator<ObjectProp
         }
         for(OWLClass range : frame.getRanges()) {
             OWLAxiom ax = DataFactory.get().getOWLObjectPropertyRangeAxiom(frame.getSubject(), range);
+            result.add(ax);
+        }
+        for(ObjectPropertyCharacteristic characteristic : frame.getCharacteristics()) {
+            OWLAxiom ax = characteristic.createAxiom(frame.getSubject(), DataFactory.get());
             result.add(ax);
         }
         return result;
