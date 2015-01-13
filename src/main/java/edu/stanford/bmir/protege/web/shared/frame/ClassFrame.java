@@ -7,6 +7,8 @@ import org.semanticweb.owlapi.model.*;
 import java.io.Serializable;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -33,9 +35,9 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
     }
 
     public ClassFrame(OWLClass subject, Set<OWLClass> classes, Set<PropertyValue> propertyValues) {
-        this.subject = subject;
-        this.classEntries = classes;
-        this.propertyValues = propertyValues;
+        this.subject = checkNotNull(subject);
+        this.classEntries = checkNotNull(classes);
+        this.propertyValues = checkNotNull(propertyValues);
     }
 
     /**
@@ -109,7 +111,7 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("SimpleClassFrame");
+        sb.append("ClassFrame");
         sb.append("(");
         sb.append(subject);
         sb.append(" Classes(");
