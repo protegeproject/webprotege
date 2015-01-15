@@ -156,7 +156,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
        PropertyValueList propertyValueList = assertions.getValue().get();
        Set<OWLClass> rawTypes = getRawTypes();
        Set<OWLNamedIndividual> sameAs = getRawSameAs();
-       NamedIndividualFrame reference = new NamedIndividualFrame(editedFrame.getSubject(), rawTypes, propertyValueList.getPropertyValues(), sameAs);
+       NamedIndividualFrame reference = new NamedIndividualFrame(editedFrame.getSubject(), rawTypes, propertyValueList, sameAs);
        return Optional.of(new LabelledFrame<NamedIndividualFrame>(getDisplayName(), reference));
    }
 

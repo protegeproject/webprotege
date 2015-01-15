@@ -8,6 +8,8 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import java.io.Serializable;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -28,11 +30,11 @@ public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividual>, Ha
 
     }
 
-    public NamedIndividualFrame(OWLNamedIndividual subject, Set<OWLClass> namedTypes, Collection<PropertyValue> propertyValueList, Set<OWLNamedIndividual> sameIndividuals) {
-        this.subject = subject;
-        this.namedTypes = new HashSet<OWLClass>(namedTypes);
-        this.propertyValueList = new PropertyValueList(propertyValueList);
-        this.sameIndividuals = new HashSet<OWLNamedIndividual>(sameIndividuals);
+    public NamedIndividualFrame(OWLNamedIndividual subject, Set<OWLClass> namedTypes, PropertyValueList propertyValueList, Set<OWLNamedIndividual> sameIndividuals) {
+        this.subject = checkNotNull(subject);
+        this.namedTypes = new HashSet<>(checkNotNull(namedTypes));
+        this.propertyValueList = checkNotNull(propertyValueList);
+        this.sameIndividuals = new HashSet<>(checkNotNull(sameIndividuals));
     }
 
     public OWLNamedIndividual getSubject() {
@@ -147,7 +149,7 @@ public class NamedIndividualFrame implements EntityFrame<OWLNamedIndividual>, Ha
         }
 
         public NamedIndividualFrame build() {
-            return new NamedIndividualFrame(subject, namedTypes, propertyValues, sameIndividuals);
+            return new NamedIndividualFrame(subject, namedTypes, new PropertyValueList(propertyValues), sameIndividuals);
         }
 
 
