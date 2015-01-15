@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.io.Serializable;
 import java.util.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -21,7 +24,32 @@ public class PropertyValueList implements Serializable, HasSignature, HasPropert
     }
 
     public PropertyValueList(Collection<? extends PropertyValue> propertyValues) {
-        this.propertyValues = new ArrayList<PropertyValue>(propertyValues);
+        this.propertyValues = new ArrayList<>(checkNotNull(propertyValues));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(propertyValues);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof PropertyValueList)) {
+            return false;
+        }
+        PropertyValueList other = (PropertyValueList) obj;
+        return this.propertyValues.equals(other.propertyValues);
+    }
+
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("PropertyValueList")
+                .addValue(propertyValues)
+                .toString();
     }
 
     public Set<PropertyValue> getPropertyValues() {
