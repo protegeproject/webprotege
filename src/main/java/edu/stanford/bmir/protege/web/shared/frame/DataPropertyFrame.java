@@ -1,11 +1,16 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -29,10 +34,10 @@ public class DataPropertyFrame implements EntityFrame<OWLDataProperty>, HasSigna
     }
 
     public DataPropertyFrame(OWLDataProperty dataProperty, PropertyValueList propertyValueList, Set<OWLClass> domains, Set<OWLDatatype> ranges, boolean functional) {
-        this.dataProperty = dataProperty;
-        this.propertyValueList = propertyValueList;
-        this.domains = domains;
-        this.ranges = ranges;
+        this.dataProperty = checkNotNull(dataProperty);
+        this.propertyValueList = checkNotNull(propertyValueList);
+        this.domains = ImmutableSet.copyOf(checkNotNull(domains));
+        this.ranges = ImmutableSet.copyOf(checkNotNull(ranges));
         this.functional = functional;
     }
 
@@ -66,15 +71,17 @@ public class DataPropertyFrame implements EntityFrame<OWLDataProperty>, HasSigna
         Set<OWLEntity> signature = new HashSet<OWLEntity>();
         signature.add(dataProperty);
         signature.addAll(propertyValueList.getSignature());
+        signature.addAll(domains);
+        signature.addAll(ranges);
         return signature;
     }
 
     public Set<OWLClass> getDomains() {
-        return new HashSet<OWLClass>(domains);
+        return domains;
     }
 
     public Set<OWLDatatype> getRanges() {
-        return new HashSet<OWLDatatype>(ranges);
+        return ranges;
     }
 
     public boolean isFunctional() {
@@ -96,6 +103,18 @@ public class DataPropertyFrame implements EntityFrame<OWLDataProperty>, HasSigna
         }
         DataPropertyFrame other = (DataPropertyFrame) obj;
         return this.dataProperty.equals(other.dataProperty) && this.propertyValueList.equals(other.propertyValueList) && this.domains.equals(other.domains) && this.ranges.equals(other.ranges) && this.functional == other.functional;
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("DataPropertyFrame")
+                .addValue(dataProperty)
+                .addValue(propertyValueList)
+                .add("domains", domains)
+                .add("ranges", ranges)
+                .add("functional", functional)
+                .toString();
     }
 
 
