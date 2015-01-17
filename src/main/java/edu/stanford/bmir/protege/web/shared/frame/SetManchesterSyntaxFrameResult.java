@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 
+import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -22,7 +24,7 @@ public class SetManchesterSyntaxFrameResult implements Result, HasEventList<Proj
     }
 
     public SetManchesterSyntaxFrameResult(EventList<ProjectEvent<?>> eventList, String frameText) {
-        this.eventList = eventList;
+        this.eventList = checkNotNull(eventList);
         this.frameText = checkNotNull(frameText);
     }
 
@@ -33,5 +35,31 @@ public class SetManchesterSyntaxFrameResult implements Result, HasEventList<Proj
     @Override
     public EventList<ProjectEvent<?>> getEventList() {
         return eventList;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(eventList, frameText);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof SetManchesterSyntaxFrameResult)) {
+            return false;
+        }
+        SetManchesterSyntaxFrameResult other = (SetManchesterSyntaxFrameResult) obj;
+        return this.frameText.equals(other.frameText) && this.eventList.equals(other.eventList);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("SetManchesterSyntaxFrameResult")
+                .add("frameText", frameText)
+                .addValue(eventList)
+                .toString();
     }
 }
