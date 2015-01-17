@@ -159,33 +159,6 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
         return new Builder(subject);
     }
 
-    public List<ClassFrameChange> getChangesFrom(ClassFrame classFrame) {
-        if(subject.equals(classFrame.getSubject())) {
-            throw new RuntimeException("subject of classFrame must be equal to the subject of caller class frame");
-        }
-
-        List<ClassFrameChange> result = new ArrayList<ClassFrameChange>();
-
-        Set<PropertyValue> addedPropertyValues = new HashSet<PropertyValue>(propertyValues);
-        addedPropertyValues.removeAll(classFrame.getPropertyValues());
-
-        for(PropertyValue addedPropertyValue : addedPropertyValues) {
-            result.add(new AddPropertyValueChange(subject, addedPropertyValue));
-        }
-
-        Set<PropertyValue> removedPropertyValues = new HashSet<PropertyValue>(classFrame.getPropertyValues());
-        removedPropertyValues.removeAll(propertyValues);
-
-        for(PropertyValue removedPropertyValue : removedPropertyValues) {
-            result.add(new RemovePropertyValueChange(subject, removedPropertyValue));
-        }
-
-        return result;
-
-
-    }
-
-
     /**
      * A Builder for SimpleClassFrames.  A builder may be obtained by instantiating one directly (in which case it will
      * be empty) or by instantiating one based on an existing frame where it is populated with classEntries and property
