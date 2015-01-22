@@ -113,7 +113,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
     ImageResource editIcon();
 
 
-    @Source("webprotege.css")
+    @Source("WebProtege.css")
     WebProtegeCss style();
 
 
