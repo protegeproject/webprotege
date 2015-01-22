@@ -12,18 +12,9 @@ import edu.stanford.protege.reasoning.KbDigest;
 import edu.stanford.protege.reasoning.KbId;
 import edu.stanford.protege.reasoning.ReasoningService;
 import edu.stanford.protege.reasoning.action.*;
-import org.semanticweb.binaryowl.BinaryOWLVersion;
-import org.semanticweb.binaryowl.owlobject.OWLObjectBinaryType;
-import org.semanticweb.binaryowl.stream.BinaryOWLOutputStream;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.change.AxiomChangeData;
 import org.semanticweb.owlapi.model.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;

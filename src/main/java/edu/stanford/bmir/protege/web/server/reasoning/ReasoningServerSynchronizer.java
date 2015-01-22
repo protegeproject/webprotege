@@ -12,7 +12,9 @@ import edu.stanford.protege.reasoning.KbId;
 import edu.stanford.protege.reasoning.ReasoningService;
 import edu.stanford.protege.reasoning.util.MinimizedLogicalAxiomChanges;
 import edu.stanford.protege.reasoning.util.ReasonerSynchronizer;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.HasLogicalAxioms;
+import org.semanticweb.owlapi.model.OWLLogicalAxiom;
+import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.util.List;
 import java.util.concurrent.locks.Lock;

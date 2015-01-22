@@ -244,7 +244,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                                                          projectEventManager,
                                                          WebProtegeLoggerManager.get(OWLAPIProjectMetadataManager
                                                                                              .class));
-
         // TODO: Inject
         ReasoningService reasoningService = ReasoningServerManager.get()
                                                                   .getReasoningService();
@@ -289,10 +288,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         metricsManager.handleOntologyChanges(changes);
 //        reasoningServiceSynchronizer.handleOntologyChanges(changes);
     }
-
-//    public void synchronizeReasoner() {
-//        projectReasoningService.synchronizeReasoner();
-//    }
 
     public ProjectReasoningService getReasoningService() {
         return projectReasoningService;

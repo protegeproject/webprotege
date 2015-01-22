@@ -32,7 +32,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.reasoning.ExecuteDLQueryActionHandler;
-import edu.stanford.bmir.protege.web.server.reasoning.ReasoningServerManager;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;

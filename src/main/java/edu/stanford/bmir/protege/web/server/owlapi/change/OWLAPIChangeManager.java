@@ -727,7 +727,6 @@ public class OWLAPIChangeManager {
         return new RevisionSummary(revision.getRevisionNumber(), revision.getUserId(), revision.getTimestamp(), revision.getSize());
     }
 
-
     public Set<OWLLogicalAxiom> getLogicalAxioms() {
         final TreeSet<OWLLogicalAxiom> axioms = Sets.newTreeSet();
         try {
