@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.gwtcodemirror.client.GWTCodeMirror;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import edu.stanford.bmir.protege.web.shared.reasoning.*;
@@ -144,9 +145,9 @@ public class DLQueryViewImpl extends Composite implements DLQueryView {
         sb.append("<div style=\"padding-top: 5px; padding-left: 20px; padding-bottom: 20px; padding-right: 5px;\">");
         if (entityData.isPresent()) {
             for (OWLEntityData data : sortedResults) {
-                String iconName = "class-icon-inset";
+                String iconName = WebProtegeClientBundle.BUNDLE.style().classIconInset();
                 if(data instanceof OWLNamedIndividualData) {
-                    iconName = "individual-icon-inset";
+                    iconName = WebProtegeClientBundle.BUNDLE.style().individualIconInset();
                 }
                 sb.append(
                         "<div class=\"" + iconName + "\" style=\"height: 18px; line-height: 18px; " +
