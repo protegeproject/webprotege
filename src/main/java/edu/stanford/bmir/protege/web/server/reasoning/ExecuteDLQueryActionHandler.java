@@ -28,18 +28,11 @@ import org.semanticweb.owlapi.expression.OWLExpressionParser;
 import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.net.ConnectException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-<<<<<<< HEAD
-=======
-import java.util.concurrent.TimeoutException;
-import java.util.regex.Pattern;
->>>>>>> Updated to cleaner synchronizer
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 04/09/2014
