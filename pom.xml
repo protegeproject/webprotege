@@ -112,11 +112,11 @@
             <artifactId>guava</artifactId>
             <version>16.0.1</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava-gwt</artifactId>
-            <version>15.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.guava</groupId>-->
+            <!--<artifactId>guava-gwt</artifactId>-->
+            <!--<version>15.0</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
