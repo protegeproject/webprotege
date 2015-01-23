@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.rpc.data;
 import java.io.Serializable;
 import java.util.Collection;
 
+@Deprecated
 public class SubclassEntityData extends EntityData implements Serializable {
 
     private static final long serialVersionUID = 9136753213032322411L;
