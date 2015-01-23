@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.rpc.data;
 
 import java.io.Serializable;
 
-
+@Deprecated
 public class Triple implements Serializable {
 	
 	private EntityData entity;
