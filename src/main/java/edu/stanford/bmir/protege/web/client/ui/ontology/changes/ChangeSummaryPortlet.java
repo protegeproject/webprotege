@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.gwtext.client.widgets.Panel;
@@ -9,7 +10,7 @@ import com.gwtext.client.widgets.layout.AnchorLayout;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
@@ -119,7 +120,7 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
       * Remote calls
       */
 
-    class GetNumChangesHandler extends AbstractAsyncHandler<Integer> {
+    class GetNumChangesHandler implements AsyncCallback<Integer> {
 
         private int labelType; // 0 - today, -1 - yesterday
 

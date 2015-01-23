@@ -213,7 +213,7 @@ public class EditProfileUtil {
      * CallBack for Edit Profile process.
      *
      */
-    static class EditProfileHandler extends AbstractAsyncHandler<Void> {
+    static class EditProfileHandler implements AsyncCallback<Void> {
         private Window win;
         private int completions;
 
@@ -248,7 +248,7 @@ public class EditProfileUtil {
         return !reg1.test(email) && reg2.test(email);
     }-*/;
 
-    class RetrieveUserEmailHandler extends AbstractAsyncHandler<String> {
+    class RetrieveUserEmailHandler implements AsyncCallback<String> {
         private Window win;
         private TextBox userEmailTextBox;
 
@@ -273,7 +273,7 @@ public class EditProfileUtil {
         }
     }
 
-    class GetUsersOpenIdHandler extends AbstractAsyncHandler<OpenIdData> {
+    class GetUsersOpenIdHandler implements AsyncCallback<OpenIdData> {
         private Window win;
         private FlexTable editProfTable;
 

@@ -667,7 +667,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     /*
      * Remote procedure calls
      */
-    class GetSubproperties extends AbstractAsyncHandler<List<EntityData>> {
+    class GetSubproperties implements AsyncCallback<List<EntityData>> {
 
         private String propName;
 
@@ -741,7 +741,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class CreatePropertyHandler extends AbstractAsyncHandler<EntityData> {
+    class CreatePropertyHandler implements AsyncCallback<EntityData> {
 
         @Override
         public void onFailure(Throwable caught) {
@@ -761,7 +761,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class DeletePropertyHandler extends AbstractAsyncHandler<DeleteEntityResult> {
+    class DeletePropertyHandler implements AsyncCallback<DeleteEntityResult> {
 
         @Override
         public void onFailure(Throwable caught) {

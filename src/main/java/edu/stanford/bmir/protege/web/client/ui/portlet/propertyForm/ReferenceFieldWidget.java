@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
@@ -14,7 +15,7 @@ import com.gwtext.client.widgets.grid.GridEditor;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
@@ -160,7 +161,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 
         bpSearchComponent = new BioPortalSearchComponent(getProjectId(), !multiValue) {
             @Override
-            protected AbstractAsyncHandler<EntityData> getImportBioPortalConceptHandler() {
+            protected AsyncCallback<EntityData> getImportBioPortalConceptHandler() {
                 return new ImportBioPortalConceptHandler(this);
             }
         };
@@ -255,7 +256,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 //    private void createNewReference(String label, String termId, String ontologyId, String url, final NoteInputPanel noteInputPanel) {
         bpSearchComponent = new BioPortalSearchComponent(getProjectId(), !multiValue) {
             @Override
-            protected AbstractAsyncHandler<EntityData> getCreateManualreferenceHandler() {
+            protected AsyncCallback<EntityData> getCreateManualreferenceHandler() {
                 return new CreateManualReferenceHandler();
             }
         };
@@ -311,7 +312,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
      * Remote calls
      */
 
-    class ImportBioPortalConceptHandler extends AbstractAsyncHandler<EntityData> {
+    class ImportBioPortalConceptHandler implements AsyncCallback<EntityData> {
 
         private BioPortalSearchComponent bpSearchComponent;
 
@@ -341,7 +342,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
     }
 
 
-    class CreateManualReferenceHandler extends AbstractAsyncHandler<EntityData> {
+    class CreateManualReferenceHandler implements AsyncCallback<EntityData> {
 
 //        private NoteInputPanel noteInputPanel;
 

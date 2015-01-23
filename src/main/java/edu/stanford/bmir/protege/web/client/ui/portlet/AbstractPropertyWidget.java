@@ -2,12 +2,13 @@ package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -241,7 +242,7 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
      * Remote calls
      */
 
-    class GetValuesHandler extends AbstractAsyncHandler<List<Triple>> {
+    class GetValuesHandler implements AsyncCallback<List<Triple>> {
 
         private EntityData mySubject;
 

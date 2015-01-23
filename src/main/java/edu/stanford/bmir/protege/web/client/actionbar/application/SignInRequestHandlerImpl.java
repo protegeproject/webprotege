@@ -3,9 +3,10 @@ package edu.stanford.bmir.protege.web.client.actionbar.application;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
@@ -54,7 +55,7 @@ public class SignInRequestHandlerImpl implements SignInRequestHandler {
     }
 
 
-    class ClearLoginAuthDataHandler extends AbstractAsyncHandler<Void> {
+    class ClearLoginAuthDataHandler implements AsyncCallback<Void> {
 
         private final String athnUrl;
 

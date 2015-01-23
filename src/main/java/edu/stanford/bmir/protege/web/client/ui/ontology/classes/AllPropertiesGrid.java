@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.SortDir;
@@ -18,7 +19,7 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -476,7 +477,7 @@ public class AllPropertiesGrid extends EditorGridPanel {
      * Remote calls
      */
 
-    class GetTriplesHandler extends AbstractAsyncHandler<List<Triple>> {
+    class GetTriplesHandler implements AsyncCallback<List<Triple>> {
 
         @Override
         public void onFailure(Throwable caught) {
@@ -521,7 +522,7 @@ public class AllPropertiesGrid extends EditorGridPanel {
 
     }
 
-    class ReplacePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class ReplacePropertyValueHandler implements AsyncCallback<Void> {
 
         @Override
         public void onFailure(Throwable caught) {
@@ -537,7 +538,7 @@ public class AllPropertiesGrid extends EditorGridPanel {
         }
     }
 
-    class RemovePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class RemovePropertyValueHandler implements AsyncCallback<Void> {
 
         @Override
         public void onFailure(Throwable caught) {

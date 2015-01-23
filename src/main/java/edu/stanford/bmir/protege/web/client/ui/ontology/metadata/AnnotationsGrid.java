@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
@@ -8,7 +9,7 @@ import com.gwtext.client.widgets.grid.GridPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetEntityAnnotationsAction;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -115,7 +116,7 @@ public class AnnotationsGrid extends GridPanel implements HasProjectId {
         return projectId;
     }
 
-    class GetAnnotationsHandler extends AbstractAsyncHandler<RenderableGetObjectResult<Set<OWLAnnotation>>> {
+    class GetAnnotationsHandler implements AsyncCallback<RenderableGetObjectResult<Set<OWLAnnotation>>> {
 
 		public void onFailure(Throwable caught) {
 			GWT.log("RPC error getting ontology annotations", caught);

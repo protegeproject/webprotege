@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.data.*;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsManager;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
 
@@ -23,7 +23,7 @@ public class BioPortalUsersCache {
     private static String bpRestBase = null;
 
 
-    public static void initBioPortalUsersMap(final AbstractAsyncHandler<Void> callback, boolean forceInit) {
+    public static void initBioPortalUsersMap(final AsyncCallback<Void> callback, boolean forceInit) {
 
         if (computationInProgress) {
             return;
@@ -40,7 +40,7 @@ public class BioPortalUsersCache {
                                                                                  }));
 
          final Store store = new Store(reader);
-         BioportalProposalsManager.getBioportalProposalsManager().getBioPortalUsers(bpRestBase, new AbstractAsyncHandler<String>() {
+         BioportalProposalsManager.getBioportalProposalsManager().getBioPortalUsers(bpRestBase, new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log("Could not retrieve BP users");

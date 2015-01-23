@@ -11,7 +11,7 @@ import com.gwtext.client.data.Record;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.MessageBox.ConfirmCallback;
 import com.gwtext.client.widgets.Panel;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
@@ -195,7 +195,7 @@ public class BioPortalNotePanel extends Panel{
 
         BioportalProposalsManager.getBioportalProposalsManager().changeNoteStatus(null, bpRestBase,
                 record.getAsString(BioPortalNoteConstants.ONTOLOGY_ID),
-                record.getAsString(BioPortalNoteConstants.ID), newStatus2, new AbstractAsyncHandler<String>() {
+                record.getAsString(BioPortalNoteConstants.ID), newStatus2, new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable caught) {
                 MessageBox.alert("Error", "There was an error at setting the note status. Please try again later.");
@@ -235,7 +235,7 @@ public class BioPortalNotePanel extends Panel{
         BioportalProposalsManager.getBioportalProposalsManager().deleteNote(null, bpRestBase,
                 record.getAsString(BioPortalNoteConstants.ONTOLOGY_ID), true,
                 record.getAsString(BioPortalNoteConstants.ID),
-                new AbstractAsyncHandler<Void>() {
+                new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
                         MessageBox.alert("There was an error deleting this note. Please try again later.");
@@ -272,7 +272,7 @@ public class BioPortalNotePanel extends Panel{
                 record.getAsString(BioPortalNoteConstants.ONTOLOGY_ID), true,
                 record.getAsString(BioPortalNoteConstants.ID),
                 archive, archivethread, unarchive, unarchivethread,
-                null, null, null, null, null, null, null, null, new AbstractAsyncHandler<Void>() {
+                null, null, null, null, null, null, null, null, new AsyncCallback<Void>() {
                     @Override
                     public void onFailure(Throwable caught) {
                        MessageBox.alert("There was an error at changing the archive status. Please try again later.");

@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.model;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -67,7 +67,7 @@ public class PropertyValueUtil {
                 new AddPropertyValueHandler(entityName, propName, asyncCallback));
     }
 
-    abstract class AbstractPropertyHandler<T> extends AbstractAsyncHandler<T> {
+    abstract class AbstractPropertyHandler<T> implements AsyncCallback<T> {
         private AsyncCallback<T> asyncCallback;
         private String subject;
         private String property;

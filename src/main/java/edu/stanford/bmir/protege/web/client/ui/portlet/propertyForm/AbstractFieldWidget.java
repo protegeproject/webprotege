@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Component;
@@ -19,7 +20,6 @@ import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
@@ -406,7 +406,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
     /*
      * Remote calls
      */
-    class RemovePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class RemovePropertyValueHandler implements AsyncCallback<Void> {
 
         protected EntityData subject;
         protected EntityData oldEntityData;
@@ -446,7 +446,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
 
     }
 
-    protected class ReplacePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    protected class ReplacePropertyValueHandler implements AsyncCallback<Void> {
 
         protected EntityData subject;
         protected EntityData oldEntityData;
@@ -490,7 +490,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
     }
 
-    class AddPropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class AddPropertyValueHandler implements AsyncCallback<Void> {
 
         protected EntityData subject;
         protected EntityData newEntityData;

@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.individuals;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
@@ -78,7 +79,7 @@ public class IndividualsTab extends AbstractTab {
         //TODO: support multiple selection
         final EntityData individual = selection.iterator().next();
         OntologyServiceManager.getInstance().getDirectTypes(this.project.getProjectId(), individual.getName(),
-                new AbstractAsyncHandler<List<EntityData>>() {
+                new AsyncCallback<List<EntityData>>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log("Could not select " + individual);

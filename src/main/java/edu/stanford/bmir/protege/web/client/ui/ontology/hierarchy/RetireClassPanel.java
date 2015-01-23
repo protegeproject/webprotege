@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.gwtext.client.core.EventObject;
@@ -15,7 +16,7 @@ import com.gwtext.client.widgets.form.event.CheckboxListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.HierarchyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
@@ -227,7 +228,7 @@ public class RetireClassPanel extends FormPanel implements Selectable {
      * Remote calls
      */
 
-    class RetireHandler extends AbstractAsyncHandler<Void> {
+    class RetireHandler implements AsyncCallback<Void> {
 
         @Override
         public void onFailure(Throwable caught) {

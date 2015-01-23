@@ -2,13 +2,14 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
 import com.gwtext.client.widgets.grid.GridView;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
@@ -105,7 +106,7 @@ public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
      * Remote calls
      */
 
-    class GetTriplesHandler extends AbstractAsyncHandler<List<Triple>> {
+    class GetTriplesHandler implements AsyncCallback<List<Triple>> {
 
         @Override
         public void onFailure(Throwable caught) {

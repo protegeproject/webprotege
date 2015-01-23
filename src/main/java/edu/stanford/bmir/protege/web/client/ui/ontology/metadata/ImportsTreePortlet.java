@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ImportsData;
@@ -75,7 +76,7 @@ public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 	 * Remote calls
 	 */
 
-	class GetImportedOntologies extends AbstractAsyncHandler<ImportsData> {
+	class GetImportedOntologies implements AsyncCallback<ImportsData> {
 
 		public void onFailure(Throwable caught) {
 			GWT.log("RPC error getting imported ontologies ", caught);

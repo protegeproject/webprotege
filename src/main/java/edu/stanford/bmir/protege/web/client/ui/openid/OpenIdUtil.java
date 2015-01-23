@@ -14,7 +14,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
@@ -440,7 +440,7 @@ public class OpenIdUtil {
     }
     }-*/;
 
-    class SignIntoAssocOpenIdWithEncryptHandler extends AbstractAsyncHandler<LoginChallengeData> {
+    class SignIntoAssocOpenIdWithEncryptHandler implements AsyncCallback<LoginChallengeData> {
         private String userName;
         private TextBox passField;
         private com.gwtext.client.widgets.Window win;
@@ -500,7 +500,7 @@ public class OpenIdUtil {
                 new SignIntoAssocOpenIdWithHttpsHandler(win, passField));
     }
 
-    class SignIntoAssocOpenIdWithHttpsHandler extends AbstractAsyncHandler<UserData> {
+    class SignIntoAssocOpenIdWithHttpsHandler implements AsyncCallback<UserData> {
         private com.gwtext.client.widgets.Window win;
         private TextBox passField;
 
@@ -617,7 +617,7 @@ public class OpenIdUtil {
 
     }
 
-    class createNewUserToAssocOpenIdHandler extends AbstractAsyncHandler<UserData> {
+    class createNewUserToAssocOpenIdHandler implements AsyncCallback<UserData> {
 
         private com.gwtext.client.widgets.Window win;
         private String userName;
