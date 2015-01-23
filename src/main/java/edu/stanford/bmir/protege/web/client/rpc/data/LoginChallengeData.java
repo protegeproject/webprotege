@@ -11,7 +11,7 @@ public class LoginChallengeData implements Serializable {
     private String salt;
 	private String challenge;
 	
-	public LoginChallengeData() {
+	private LoginChallengeData() {
 	}
 	
 	public LoginChallengeData(String salt,String challenge) {
