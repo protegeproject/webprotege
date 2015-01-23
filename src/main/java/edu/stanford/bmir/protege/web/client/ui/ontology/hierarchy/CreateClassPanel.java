@@ -15,7 +15,7 @@ import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.EmptySuccessWebProtegeCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchGridPanel;
@@ -256,7 +256,7 @@ public class CreateClassPanel extends FormPanel implements Selectable {
      * Remote calls
      */
 
-    class CreateClassHandler extends AbstractAsyncHandler<EntityData> {
+    class CreateClassHandler implements AsyncCallback<EntityData> {
 
         @Override
         public void onFailure(Throwable caught) {

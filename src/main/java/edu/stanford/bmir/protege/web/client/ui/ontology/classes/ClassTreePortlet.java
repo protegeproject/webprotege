@@ -50,7 +50,6 @@ import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileDialogController
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.client.ui.util.GlobalSelectionManager;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
@@ -970,7 +969,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 //        OntologyServiceManager.getInstance().createCls(projectId, className, superCls, getInheritMetaClasses(), userId, getCreateClsDescription() + " " + className, getCreateClassAsyncHandler(superCls, className));
     }
 
-    protected AbstractAsyncHandler<CreateClassResult> getCreateClassAsyncHandler() {
+    protected AsyncCallback<CreateClassResult> getCreateClassAsyncHandler() {
         return new CreateClassHandler();
     }
 
@@ -1536,7 +1535,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
      * ************ Remote procedure calls *****************
      */
 
-    class GetRootClassHandler extends AbstractAsyncHandler<EntityData> {
+    class GetRootClassHandler implements AsyncCallback<EntityData> {
 
         @Override
         public void onFailure(final Throwable caught) {
@@ -1555,7 +1554,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class GetSubclassesOfClassHandler extends AbstractAsyncHandler<List<SubclassEntityData>> {
+    class GetSubclassesOfClassHandler implements AsyncCallback<List<SubclassEntityData>> {
 
         private final String clsName;
 
@@ -1606,7 +1605,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class GetPropertyHierarchySubclassesOfClassHandler extends AbstractAsyncHandler<List<Triple>> {
+    class GetPropertyHierarchySubclassesOfClassHandler implements AsyncCallback<List<Triple>> {
 
         private final String clsName;
 
@@ -1643,7 +1642,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class CreateClassHandler extends AbstractAsyncHandler<CreateClassResult> {
+    class CreateClassHandler implements AsyncCallback<CreateClassResult> {
 
 
         public CreateClassHandler() {
@@ -1664,7 +1663,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class DeleteClassHandler extends AbstractAsyncHandler<DeleteEntityResult> {
+    class DeleteClassHandler implements AsyncCallback<DeleteEntityResult> {
 
         @Override
         public void onFailure(final Throwable caught) {
@@ -1679,7 +1678,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    public class MoveClassHandler extends AbstractAsyncHandler<List<EntityData>> {
+    public class MoveClassHandler implements AsyncCallback<List<EntityData>> {
 
         private final String clsName;
 
@@ -1717,7 +1716,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class RenameClassHandler extends AbstractAsyncHandler<EntityData> {
+    class RenameClassHandler implements AsyncCallback<EntityData> {
 
         @Override
         public void onFailure(final Throwable caught) {
@@ -1730,7 +1729,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class GetPathToRootHandler extends AbstractAsyncHandler<List<EntityData>> {
+    class GetPathToRootHandler implements AsyncCallback<List<EntityData>> {
 
         @Override
         public void onFailure(final Throwable caught) {
@@ -1754,7 +1753,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class SelectInTreeHandler extends AbstractAsyncHandler<List<SubclassEntityData>> {
+    class SelectInTreeHandler implements AsyncCallback<List<SubclassEntityData>> {
 
         private final TreeNode parentNode;
 

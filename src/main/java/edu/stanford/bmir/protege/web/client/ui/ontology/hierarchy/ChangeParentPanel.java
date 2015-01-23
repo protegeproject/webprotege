@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.gwtext.client.core.EventObject;
@@ -12,7 +13,7 @@ import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextArea;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.HierarchyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
@@ -239,7 +240,7 @@ public class ChangeParentPanel extends FormPanel implements Selectable {
      * Remote methods
      */
 
-    class MoveHandler extends AbstractAsyncHandler<List<EntityData>> {
+    class MoveHandler implements AsyncCallback<List<EntityData>> {
 
         @Override
         public void onFailure(Throwable caught) {

@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -80,7 +80,7 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
      * Remote calls
      */
 
-    class GetTriplesHandler extends AbstractAsyncHandler<List<Triple>> {
+    class GetTriplesHandler implements AsyncCallback<List<Triple>> {
 
         private EntityData mySubject;
 
@@ -216,7 +216,7 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
         }
     }
 
-    class AddInstanceValueWithPropertyValueHandler extends AbstractAsyncHandler<EntityData> {
+    class AddInstanceValueWithPropertyValueHandler implements AsyncCallback<EntityData> {
 
         protected EntityData subject;
         protected EntityData newEntityData;

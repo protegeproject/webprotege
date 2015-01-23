@@ -12,10 +12,11 @@ import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Window;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.login.LoginUtil;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
@@ -340,7 +341,7 @@ public class OpenIdIconPanel extends Composite {
         $wnd.resizeTo(width, height);
     }-*/;
 
-    class clearLoginAuthDataHandler extends AbstractAsyncHandler<Void> {
+    class clearLoginAuthDataHandler implements AsyncCallback<Void> {
         private LoginUtil loginUtil;
         private int providerId;
         private boolean isLoginWithHttps;

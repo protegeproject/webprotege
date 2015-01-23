@@ -6,6 +6,7 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
@@ -24,7 +25,7 @@ import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.ProjectConfigurationServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
@@ -378,7 +379,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
      * Remote calls
      */
 
-    class SaveConfigHandler extends AbstractAsyncHandler<Void> {
+    class SaveConfigHandler implements AsyncCallback<Void> {
         @Override
         public void onFailure(Throwable caught) {
             GWT.log("Error in saving configurations (UI Layout)", caught);
@@ -534,7 +535,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
     }
 
-    class GetProjectConfigurationHandler extends AbstractAsyncHandler<ProjectLayoutConfiguration> {
+    class GetProjectConfigurationHandler implements AsyncCallback<ProjectLayoutConfiguration> {
 
         private long t0 = currentTime();
 

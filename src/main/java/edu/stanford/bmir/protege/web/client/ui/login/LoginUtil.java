@@ -22,7 +22,7 @@ import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
@@ -630,7 +630,7 @@ public class LoginUtil {
     }-*/;
 
 
-    private class GetSaltAndChallengeForLoginHandler extends AbstractAsyncHandler<LoginChallengeData> {
+    private class GetSaltAndChallengeForLoginHandler implements AsyncCallback<LoginChallengeData> {
 
         private UserId userName;
 

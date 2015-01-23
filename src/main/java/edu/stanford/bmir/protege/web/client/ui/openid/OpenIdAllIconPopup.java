@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Window;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.OpenIdData;
@@ -280,7 +280,7 @@ class OpenIdAllIconPopup extends PopupPanel {
         });
     }
 
-    class clearLoginAuthDataHandler extends AbstractAsyncHandler<Void> {
+    class clearLoginAuthDataHandler implements AsyncCallback<Void> {
 
         private int providerId;
 

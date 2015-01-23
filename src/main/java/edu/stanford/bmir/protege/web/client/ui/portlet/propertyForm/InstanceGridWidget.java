@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.*;
@@ -31,7 +32,7 @@ import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityPropertyValues;
@@ -1074,7 +1075,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
      * Remote calls
      */
 
-    protected class GetTriplesHandler extends AbstractAsyncHandler<List<EntityPropertyValues>> {
+    protected class GetTriplesHandler implements AsyncCallback<List<EntityPropertyValues>> {
 
         private EntityData mySubject = null;
 
@@ -1116,7 +1117,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
     }
 
 
-    class RemovePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class RemovePropertyValueHandler implements AsyncCallback<Void> {
         private int removeInd;
 
         public RemovePropertyValueHandler(int removeIndex) {
@@ -1145,7 +1146,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
     }
 
 
-    protected class ReplacePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    protected class ReplacePropertyValueHandler implements AsyncCallback<Void> {
 
         public ReplacePropertyValueHandler(EntityData newEntityData) {
         }
@@ -1167,7 +1168,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
     }
 
 
-    class AddPropertyValueHandler extends AbstractAsyncHandler<EntityData> {
+    class AddPropertyValueHandler implements AsyncCallback<EntityData> {
 
         @Override
         public void onFailure(Throwable caught) {
@@ -1204,7 +1205,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
     }
 
 
-    protected class AddExistingValueHandler extends AbstractAsyncHandler<Void> {
+    protected class AddExistingValueHandler implements AsyncCallback<Void> {
 
         public AddExistingValueHandler(EntityData newEntityData) {
         }

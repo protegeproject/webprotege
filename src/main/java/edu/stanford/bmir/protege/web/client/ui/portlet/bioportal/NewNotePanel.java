@@ -13,7 +13,7 @@ import com.gwtext.client.widgets.form.HtmlEditor;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
@@ -154,7 +154,7 @@ public class NewNotePanel extends FormPanel {
                 BioPortalNoteConstants.NOTE_TYPE_COMMENT,
                 appliesToId, appliesToType,
                 subjectField.getValueAsString(), bodyField.getValueAsString(),
-                BioPortalUsersCache.getCurrentBpUser(), null, new AbstractAsyncHandler<Void>() {
+                BioPortalUsersCache.getCurrentBpUser(), null, new AsyncCallback<Void>() {
 
             @Override
             public void onFailure(Throwable caught) {

@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
@@ -21,7 +22,7 @@ import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedHandler;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.MyWebProtegeTab;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
@@ -274,7 +275,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
 
 
 
-    private class LoadProjectHandler extends AbstractAsyncHandler<Project> {
+    private class LoadProjectHandler implements AsyncCallback<Project> {
 
         private final ProjectId projectId;
 
