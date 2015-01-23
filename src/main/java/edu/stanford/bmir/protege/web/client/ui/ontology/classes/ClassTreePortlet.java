@@ -1539,7 +1539,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     class GetRootClassHandler extends AbstractAsyncHandler<EntityData> {
 
         @Override
-        public void handleFailure(final Throwable caught) {
+        public void onFailure(final Throwable caught) {
             if (getEl() != null) {
                 // getEl().unmask();
             }
@@ -1547,7 +1547,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
 
         @Override
-        public void handleSuccess(final EntityData rootEnitity) {
+        public void onSuccess(final EntityData rootEnitity) {
             if (getEl() != null) {
                 //   getEl().unmask();
             }
@@ -1571,7 +1571,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
 
         @Override
-        public void handleFailure(final Throwable caught) {
+        public void onFailure(final Throwable caught) {
             //getEl().unmask();
             GWT.log("RPC error at getting subclasses of " + clsName, caught);
             if (endCallback != null) {
@@ -1580,7 +1580,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
 
         @Override
-        public void handleSuccess(final List<SubclassEntityData> children) {
+        public void onSuccess(final List<SubclassEntityData> children) {
 //            boolean isFresh = !isSubclassesLoaded(parentNode);
             Set<OWLClass> existingSubclasses = new HashSet<OWLClass>();
             for(Node childNode : parentNode.getChildNodes()) {
@@ -1619,13 +1619,13 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
 
         @Override
-        public void handleFailure(final Throwable caught) {
+        public void onFailure(final Throwable caught) {
             // getEl().unmask();
             GWT.log("RPC error at getting subproperties of " + clsName, caught);
         }
 
         @Override
-        public void handleSuccess(final List<Triple> childTriples) {
+        public void onSuccess(final List<Triple> childTriples) {
             // getEl().unmask();
             if (childTriples != null) {
                 for (final Triple childTriple : childTriples) {
@@ -1650,13 +1650,13 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
 
         @Override
-        public void handleFailure(final Throwable caught) {
+        public void onFailure(final Throwable caught) {
             GWT.log("Error at creating class", caught);
             MessageBox.showErrorMessage("Class not created", caught);
         }
 
         @Override
-        public void handleSuccess(final CreateClassResult result) {
+        public void onSuccess(final CreateClassResult result) {
             onClassCreated(result.getObject(), result.getSuperClasses());
             SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(), result.getBrowserText(result.getObject()).or(""), Collections.<EntityData>emptyList(), 0);
             onSubclassAdded(new EntityData(result.getPathToRoot().getSecondToLastElement().getIRI().toString()), Arrays.<EntityData>asList(subClassData), false);
@@ -1667,13 +1667,13 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     class DeleteClassHandler extends AbstractAsyncHandler<DeleteEntityResult> {
 
         @Override
-        public void handleFailure(final Throwable caught) {
+        public void onFailure(final Throwable caught) {
             GWT.log("Error at deleting class", caught);
             MessageBox.showErrorMessage("Class not deleted", caught);
         }
 
         @Override
-        public void handleSuccess(final DeleteEntityResult result) {
+        public void onSuccess(final DeleteEntityResult result) {
             GWT.log("Delete successfully class ", null);
 
         }
@@ -1688,14 +1688,14 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
 
         @Override
-        public void handleFailure(final Throwable caught) {
+        public void onFailure(final Throwable caught) {
             GWT.log("Error at moving class", caught);
             MessageBox.showErrorMessage("Class not moved", caught);
             // TODO: refresh oldParent and newParent
         }
 
         @Override
-        public void handleSuccess(final List<EntityData> result) {
+        public void onSuccess(final List<EntityData> result) {
             GWT.log("Moved successfully class " + clsName, null);
             if (result == null) {
                 //MessageBox.alert("Success", "Class moved successfully.");
@@ -1720,12 +1720,12 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     class RenameClassHandler extends AbstractAsyncHandler<EntityData> {
 
         @Override
-        public void handleFailure(final Throwable caught) {
+        public void onFailure(final Throwable caught) {
             MessageBox.showErrorMessage("Class not renamed", caught);
         }
 
         @Override
-        public void handleSuccess(final EntityData result) {
+        public void onSuccess(final EntityData result) {
             GWT.log("Rename succeded", null);
         }
     }
@@ -1733,12 +1733,12 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     class GetPathToRootHandler extends AbstractAsyncHandler<List<EntityData>> {
 
         @Override
-        public void handleFailure(final Throwable caught) {
+        public void onFailure(final Throwable caught) {
             GWT.log("Error at finding path to root", caught);
         }
 
         @Override
-        public void handleSuccess(final List<EntityData> result) {
+        public void onSuccess(final List<EntityData> result) {
             GWT.log(result.toString(), null);
             if (result == null || result.size() == 0) {
                 GWT.log("Could not find path in the tree", null);
@@ -1770,13 +1770,13 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
 
         @Override
-        public void handleFailure(final Throwable caught) {
+        public void onFailure(final Throwable caught) {
             //getEl().unmask();
             GWT.log("RPC error at select in tree for " + parentNode.getUserObject(), caught);
         }
 
         @Override
-        public void handleSuccess(final List<SubclassEntityData> children) {
+        public void onSuccess(final List<SubclassEntityData> children) {
             // getEl().unmask();
 
             TreeNode pathTreeNode = null;

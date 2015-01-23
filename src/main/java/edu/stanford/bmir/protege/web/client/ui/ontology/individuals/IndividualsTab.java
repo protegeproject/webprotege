@@ -80,12 +80,12 @@ public class IndividualsTab extends AbstractTab {
         OntologyServiceManager.getInstance().getDirectTypes(this.project.getProjectId(), individual.getName(),
                 new AbstractAsyncHandler<List<EntityData>>() {
             @Override
-            public void handleFailure(Throwable caught) {
+            public void onFailure(Throwable caught) {
                 GWT.log("Could not select " + individual);
             }
 
             @Override
-            public void handleSuccess(final List<EntityData> types) {
+            public void onSuccess(final List<EntityData> types) {
                 clsTreePortlet.setSelection(types);
             }
         });

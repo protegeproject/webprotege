@@ -128,12 +128,12 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("RPC error getting number of changes for the " + getProject().getProjectId() + "ontology", caught);
         }
 
         @Override
-        public void handleSuccess(Integer numChanges) {
+        public void onSuccess(Integer numChanges) {
             if (numChanges == null || numChanges.equals(0)) {
                 setLabelText("no changes detected");
             }

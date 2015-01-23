@@ -419,7 +419,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at removing value for " + getProperty().getBrowserText() + " and "
                     + subject.getBrowserText(), caught);
             Window.alert("There was an error at removing the property value for " + getProperty().getBrowserText()
@@ -430,7 +430,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             if (subject.equals(getSubject())) {
                 Collection<EntityData> newValues;
                 if (oldValues != null && oldValues.contains(oldEntityData)) {
@@ -462,7 +462,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at replace property for " + getProperty().getBrowserText() + " and "
                     + subject.getBrowserText(), caught);
             Window.alert("There was an error at setting the property value for " + subject.getBrowserText() + ".");
@@ -472,7 +472,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             //FIXME: we need a reload method
             if (subject.equals(getSubject())) {
                 Collection<EntityData> newValues;
@@ -504,7 +504,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at add property for " + getProperty().getBrowserText() + " and "
                     + subject.getBrowserText(), caught);
             Window.alert("There was an error at adding the property value for " + subject.getBrowserText() + ".");
@@ -514,7 +514,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             //FIXME: we need a reload method
             if (subject.equals(getSubject())) {
                 Collection<EntityData> newValues;

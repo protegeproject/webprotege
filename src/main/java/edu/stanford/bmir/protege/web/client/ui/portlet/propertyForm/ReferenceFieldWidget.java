@@ -320,14 +320,14 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             bpSearchComponent.getEl().unmask();
             GWT.log("Could not import BioPortal concept ", null);
             MessageBox.alert("Import operation failed!");
         }
 
         @Override
-        public void handleSuccess(EntityData refInstance) {
+        public void onSuccess(EntityData refInstance) {
             bpSearchComponent.getEl().unmask();
             if (refInstance != null) {
                 //activate this code if we need it in the future
@@ -351,13 +351,13 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Could not create manual reference for " + getSubject(), null);
             MessageBox.alert("Reference creation failed!");
         }
 
         @Override
-        public void handleSuccess(EntityData refInstance) {
+        public void onSuccess(EntityData refInstance) {
             refresh();
             if (refInstance != null) {
                 //addUserCommentOnReference(getProject(), refInstance);

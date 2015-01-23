@@ -70,7 +70,7 @@ public class InstanceRadioButtonWidget extends InstanceCheckBoxWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at setting property for " + getProperty().getBrowserText() + " and "
                     + getSubject().getBrowserText(), caught);
             Window.alert("There was an error at setting the property value for " + getSubject().getBrowserText() + ".");
@@ -78,7 +78,7 @@ public class InstanceRadioButtonWidget extends InstanceCheckBoxWidget {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             values = newValues;
         }
     }

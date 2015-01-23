@@ -645,7 +645,7 @@ public class LoginUtil {
         }
 
         @Override
-        public void handleSuccess(LoginChallengeData result) {
+        public void onSuccess(LoginChallengeData result) {
 
             if (result != null) {
                 HashAlgorithm hAlgorithm = new HashAlgorithm();
@@ -678,7 +678,7 @@ public class LoginUtil {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
         }
     }

@@ -380,13 +380,13 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     class SaveConfigHandler extends AbstractAsyncHandler<Void> {
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error in saving configurations (UI Layout)", caught);
             MessageBox.showAlert("Error saving project layout", "There were problems at saving the project layout. Please try again later.");
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             MessageBox.showAlert("Project layout saved", "Project layout saved successfully. This layout will be used the next time you log in.");
         }
     }
@@ -547,14 +547,14 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("There were errors at loading project configuration for " + projectId, caught);
             UIUtil.hideLoadProgessBar();
             MessageBox.showAlert("Could not load the project configuration for this project" + " Message: " + caught.getMessage());
         }
 
         @Override
-        public void handleSuccess(ProjectLayoutConfiguration config) {
+        public void onSuccess(ProjectLayoutConfiguration config) {
             getProject().setProjectLayoutConfiguration(config);
             createOntolgyForm();
             doLayout();

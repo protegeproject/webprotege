@@ -69,12 +69,12 @@ public class SignInRequestHandlerImpl implements SignInRequestHandler {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             loginUtil.openNewWindow(athnUrl, "390", "325", "0");
             loginUtil.getTimeoutAndCheckUserLoggedInMethod(loginUtil, "" + randomNumber);
         }

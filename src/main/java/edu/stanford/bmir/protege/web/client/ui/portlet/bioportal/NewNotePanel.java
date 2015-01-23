@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.bioportal;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.data.Record;
@@ -13,7 +14,6 @@ import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
-import edu.stanford.bmir.protege.web.client.rpc.AsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioportalProposalsManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
@@ -33,7 +33,8 @@ public class NewNotePanel extends FormPanel {
     private HtmlEditor bodyField;
 
     private Window window;
-    private AsyncHandler<Void> noteSentCallback;
+
+    private AsyncCallback<Void> noteSentCallback;
 
     public NewNotePanel() {
         setLabelAlign(Position.TOP);
@@ -76,10 +77,6 @@ public class NewNotePanel extends FormPanel {
 
     public void setOntologyVersionId(String ontologyVersionId) {
         this.ontologyVersionId = ontologyVersionId;
-    }
-
-    public void setNoteSentCallback(AsyncHandler<Void> noteSentCallback) {
-        this.noteSentCallback = noteSentCallback;
     }
 
     public void setBpRestBase(String bpRestBase) {
@@ -160,18 +157,18 @@ public class NewNotePanel extends FormPanel {
                 BioPortalUsersCache.getCurrentBpUser(), null, new AbstractAsyncHandler<Void>() {
 
             @Override
-            public void handleFailure(Throwable caught) {
+            public void onFailure(Throwable caught) {
                 MessageBox.alert("Error", "There was an error sending this note. Please try again later.");
                 if (noteSentCallback != null) {
-                    noteSentCallback.handleFailure(caught);
+                    noteSentCallback.onFailure(caught);
                 }
             }
 
             @Override
-            public void handleSuccess(Void result) {
+            public void onSuccess(Void result) {
                 window.close();
                 if (noteSentCallback != null) {
-                    noteSentCallback.handleSuccess(result);
+                    noteSentCallback.onSuccess(result);
                 }
             }
         });

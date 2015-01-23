@@ -259,7 +259,7 @@ public class CreateClassPanel extends FormPanel implements Selectable {
     class CreateClassHandler extends AbstractAsyncHandler<EntityData> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             getEl().unmask();
             MessageBox.alert("Errot at creating new class", "There was an error at creating the new class.<br />" +
             		"Message: " + caught.getMessage());
@@ -270,7 +270,7 @@ public class CreateClassPanel extends FormPanel implements Selectable {
         }
 
         @Override
-        public void handleSuccess(EntityData entityData) {
+        public void onSuccess(EntityData entityData) {
             getEl().unmask();
             if (entityData != null) {
                 createNote(entityData, getOperationDescription(), getReasonForChange()); //create note

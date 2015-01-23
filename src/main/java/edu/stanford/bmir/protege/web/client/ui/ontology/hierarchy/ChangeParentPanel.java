@@ -242,7 +242,7 @@ public class ChangeParentPanel extends FormPanel implements Selectable {
     class MoveHandler extends AbstractAsyncHandler<List<EntityData>> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             getEl().unmask();
             GWT.log("Error at move in hierarchy for class " + classField.getClsValue(), caught);
             MessageBox.alert("Error", "There was an error at performing the change parents operation.<br />" +
@@ -250,7 +250,7 @@ public class ChangeParentPanel extends FormPanel implements Selectable {
         }
 
         @Override
-        public void handleSuccess(List<EntityData> result) {
+        public void onSuccess(List<EntityData> result) {
             getEl().unmask();
             if (result == null) {
                 MessageBox.alert("Success", "Change in hierarchy operation performed successfully.");

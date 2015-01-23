@@ -222,7 +222,7 @@ public class EditProfileUtil {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at Editing Profile Info", caught);
             win.getEl().unmask();
             MessageBox.alert("Error",
@@ -230,7 +230,7 @@ public class EditProfileUtil {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             synchronized (this){
             completions ++;
             if (completions > 2){
@@ -258,7 +258,7 @@ public class EditProfileUtil {
         }
 
         @Override
-        public void handleSuccess(String emailId) {
+        public void onSuccess(String emailId) {
             win.getEl().unmask();
             if (emailId != null) {
                 userEmailTextBox.setText(emailId);
@@ -266,7 +266,7 @@ public class EditProfileUtil {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             win.getEl().unmask();
             GWT.log("Error at getting user email:", caught);
             win.close();
@@ -283,13 +283,13 @@ public class EditProfileUtil {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             MessageBox.alert("Error in retrieving OpenId list");
 
         }
 
         @Override
-        public void handleSuccess(OpenIdData openIdData) {
+        public void onSuccess(OpenIdData openIdData) {
             OpenIdUtil opIdUtil = new OpenIdUtil();
             opIdUtil.displayUsersOpenIdList(openIdData, editProfTable, win, false, win.getHeight());
 

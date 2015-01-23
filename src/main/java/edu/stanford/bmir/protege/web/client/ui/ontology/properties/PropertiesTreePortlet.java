@@ -680,12 +680,12 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("RPC error at getting subproperties of " + propName, caught);
         }
 
         @Override
-        public void handleSuccess(List<EntityData> children) {
+        public void onSuccess(List<EntityData> children) {
             if (propName == null) {
                 propName = "RootPropertyNode";
             }
@@ -744,13 +744,13 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     class CreatePropertyHandler extends AbstractAsyncHandler<EntityData> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at creating class", caught);
             MessageBox.alert("There were errors at creating the property.<br>" + " Message: " + caught.getMessage());
         }
 
         @Override
-        public void handleSuccess(EntityData entityData) {
+        public void onSuccess(EntityData entityData) {
             if (entityData != null) {
                 GWT.log("Created successfully property " + entityData.getName(), null);
             }
@@ -764,13 +764,13 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     class DeletePropertyHandler extends AbstractAsyncHandler<DeleteEntityResult> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at deleting class", caught);
             MessageBox.alert("There were errors at deleting property.<br>" + " Message: " + caught.getMessage());
         }
 
         @Override
-        public void handleSuccess(DeleteEntityResult result) {
+        public void onSuccess(DeleteEntityResult result) {
             GWT.log("Delete successfully property ", null);
         }
     }
