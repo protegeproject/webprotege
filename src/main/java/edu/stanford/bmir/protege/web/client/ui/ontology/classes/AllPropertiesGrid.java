@@ -479,12 +479,12 @@ public class AllPropertiesGrid extends EditorGridPanel {
     class GetTriplesHandler extends AbstractAsyncHandler<List<Triple>> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at getting triples for " + _currentEntity, caught);
         }
 
         @Override
-        public void handleSuccess(List<Triple> triples) {
+        public void onSuccess(List<Triple> triples) {
             store.removeAll();
             if (triples == null) {return;}
             for (Triple triple : triples) {
@@ -524,14 +524,14 @@ public class AllPropertiesGrid extends EditorGridPanel {
     class ReplacePropertyValueHandler extends AbstractAsyncHandler<Void> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at replace property value for " + _currentEntity, caught);
             Window.alert("There was an error at setting the property value for " + _currentEntity.getBrowserText()
                     + ".<br>Please try again later.");
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             GWT.log("Success at setting property value for " + _currentEntity.getBrowserText(), null);
             refresh();
         }
@@ -540,14 +540,14 @@ public class AllPropertiesGrid extends EditorGridPanel {
     class RemovePropertyValueHandler extends AbstractAsyncHandler<Void> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at removing property value for " + _currentEntity, caught);
             Window.alert("There was an error at removing the property value for " + _currentEntity.getBrowserText()
                     + ".<br>Please try again later.");
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             GWT.log("Success at removing property value for " + _currentEntity.getBrowserText(), null);
             refresh();
         }

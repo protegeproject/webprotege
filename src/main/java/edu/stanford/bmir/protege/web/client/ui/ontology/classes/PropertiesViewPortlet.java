@@ -108,13 +108,13 @@ public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
     class GetTriplesHandler extends AbstractAsyncHandler<List<Triple>> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
            GWT.log("Error at retrieving props in domain for " + getEntity(), caught);
            propGrid.setTitle("Error at retrieving the related properties for " + getEntity().getBrowserText());
         }
 
         @Override
-        public void handleSuccess(List<Triple> triples) {
+        public void onSuccess(List<Triple> triples) {
             for (Triple triple : triples) {
                 int maxCardinality  = triple.getProperty().getMaxCardinality();
                 Record rec = recordDef.createRecord(new Object[] {triple.getProperty(), triple.getValue(),

@@ -77,11 +77,11 @@ public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 
 	class GetImportedOntologies extends AbstractAsyncHandler<ImportsData> {
 
-		public void handleFailure(Throwable caught) {
+		public void onFailure(Throwable caught) {
 			GWT.log("RPC error getting imported ontologies ", caught);
 		}
 
-		public void handleSuccess(ImportsData result) {
+		public void onSuccess(ImportsData result) {
 			TreeNode root = importsTree.getRootNode();
 			addImports(result, root);
 			root.select();

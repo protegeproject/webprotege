@@ -197,12 +197,12 @@ public class BioPortalNotePanel extends Panel{
                 record.getAsString(BioPortalNoteConstants.ONTOLOGY_ID),
                 record.getAsString(BioPortalNoteConstants.ID), newStatus2, new AbstractAsyncHandler<String>() {
             @Override
-            public void handleFailure(Throwable caught) {
+            public void onFailure(Throwable caught) {
                 MessageBox.alert("Error", "There was an error at setting the note status. Please try again later.");
             }
 
             @Override
-            public void handleSuccess(String result) {
+            public void onSuccess(String result) {
                 record.set(BioPortalNoteConstants.STATUS, newStatus2);
             }
         });
@@ -237,7 +237,7 @@ public class BioPortalNotePanel extends Panel{
                 record.getAsString(BioPortalNoteConstants.ID),
                 new AbstractAsyncHandler<Void>() {
                     @Override
-                    public void handleFailure(Throwable caught) {
+                    public void onFailure(Throwable caught) {
                         MessageBox.alert("There was an error deleting this note. Please try again later.");
                         if (updateNotesCallback != null) {
                             updateNotesCallback.onFailure(caught);
@@ -245,7 +245,7 @@ public class BioPortalNotePanel extends Panel{
                     }
 
                     @Override
-                    public void handleSuccess(Void result) {
+                    public void onSuccess(Void result) {
                         record = null;
                         updateUI();
                         if (updateNotesCallback != null) {
@@ -274,11 +274,11 @@ public class BioPortalNotePanel extends Panel{
                 archive, archivethread, unarchive, unarchivethread,
                 null, null, null, null, null, null, null, null, new AbstractAsyncHandler<Void>() {
                     @Override
-                    public void handleFailure(Throwable caught) {
+                    public void onFailure(Throwable caught) {
                        MessageBox.alert("There was an error at changing the archive status. Please try again later.");
                     }
                     @Override
-                    public void handleSuccess(Void result) {
+                    public void onSuccess(Void result) {
                         //TODO - change record
                         updateUI();
                         if (updateNotesCallback != null) {

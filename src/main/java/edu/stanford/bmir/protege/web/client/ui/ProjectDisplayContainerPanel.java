@@ -283,14 +283,14 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("There were errors while loading project " + projectId, caught);
             UIUtil.hideLoadProgessBar();
             MessageBox.alert("Load project " + projectId + " failed.<br>" + " Message: " + caught.getMessage());
         }
 
         @Override
-        public void handleSuccess(Project project) {
+        public void onSuccess(Project project) {
             UIUtil.hideLoadProgessBar();
             addProjectDisplay(projectId);
 

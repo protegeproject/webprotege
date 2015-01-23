@@ -381,13 +381,13 @@ public class ParentsPanel extends Panel {
     class GetParentsHandler extends AbstractAsyncHandler<List<EntityData>> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             MessageBox.alert("Error", "There was an error at retrieving parents of " + UIUtil.getDisplayText(cls) + " from the server.");
             GWT.log("Error at retrieving parents of " + cls.getName() + " from server.", caught);
         }
 
         @Override
-        public void handleSuccess(List<EntityData> parents) {
+        public void onSuccess(List<EntityData> parents) {
             initialParents = new HashSet<EntityData>(parents);
             updatePanel(parents);
         }

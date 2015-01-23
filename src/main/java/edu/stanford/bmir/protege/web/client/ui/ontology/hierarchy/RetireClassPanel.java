@@ -230,7 +230,7 @@ public class RetireClassPanel extends FormPanel implements Selectable {
     class RetireHandler extends AbstractAsyncHandler<Void> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             getEl().unmask();
             GWT.log("Error at retiring classes " + retiredClassesField.getClsValues(), caught);
             MessageBox.alert("Error at retire", "There was an error at performing the retire classes operation.<br />" +
@@ -238,7 +238,7 @@ public class RetireClassPanel extends FormPanel implements Selectable {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             getEl().unmask();
             MessageBox.alert("Success", "Retire classes operation performed successfully.");
             retiredClassesField.setClsValues(new ArrayList<EntityData>());

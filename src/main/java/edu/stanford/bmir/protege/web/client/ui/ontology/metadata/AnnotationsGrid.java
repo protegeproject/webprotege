@@ -117,11 +117,11 @@ public class AnnotationsGrid extends GridPanel implements HasProjectId {
 
     class GetAnnotationsHandler extends AbstractAsyncHandler<RenderableGetObjectResult<Set<OWLAnnotation>>> {
 
-		public void handleFailure(Throwable caught) {
+		public void onFailure(Throwable caught) {
 			GWT.log("RPC error getting ontology annotations", caught);
 		}
 
-		public void handleSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
+		public void onSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
 			for (OWLAnnotation data : result.getObject()) {
                 final OWLAnnotationProperty property = data.getProperty();
                 String name = result.getBrowserTextMap().getBrowserText(property).or(property.getIRI().toQuotedString());

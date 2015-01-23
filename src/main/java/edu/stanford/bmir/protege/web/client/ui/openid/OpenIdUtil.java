@@ -453,7 +453,7 @@ public class OpenIdUtil {
         }
 
         @Override
-        public void handleSuccess(LoginChallengeData result) {
+        public void onSuccess(LoginChallengeData result) {
 
             if (result != null) {
                 HashAlgorithm hAlgorithm = new HashAlgorithm();
@@ -489,7 +489,7 @@ public class OpenIdUtil {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
         }
     }
@@ -510,7 +510,7 @@ public class OpenIdUtil {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at login", caught);
             win.getEl().unmask();
             MessageBox.alert("Login failed. Please try again.");
@@ -525,7 +525,7 @@ public class OpenIdUtil {
         }
 
         @Override
-        public void handleSuccess(UserData userData) {
+        public void onSuccess(UserData userData) {
             win.getEl().unmask();
             Date expireDate = new Date();
             long nowLong = expireDate.getTime();
@@ -628,7 +628,7 @@ public class OpenIdUtil {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at registering new user", caught);
             win.getEl().unmask();
             Date expireDate = new Date();
@@ -641,7 +641,7 @@ public class OpenIdUtil {
         }
 
         @Override
-        public void handleSuccess(UserData userData) {
+        public void onSuccess(UserData userData) {
             win.getEl().unmask();
 
             Date expireDate = new Date();

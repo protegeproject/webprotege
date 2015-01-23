@@ -352,13 +352,13 @@ public class OpenIdIconPanel extends Composite {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
 
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             OpenIdUtil openIdUtil = new OpenIdUtil();
             openIdUtil.openProviderForOpenIdAuth(providerId, isLoginWithHttps);
             loginUtil.getTimeoutAndCheckUserLoggedInMethod(loginUtil, null);

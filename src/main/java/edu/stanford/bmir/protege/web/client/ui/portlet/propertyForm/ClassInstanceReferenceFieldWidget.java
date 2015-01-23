@@ -216,14 +216,14 @@ public class ClassInstanceReferenceFieldWidget extends ReferenceFieldWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             selectWindow.getEl().unmask();
             GWT.log("Could not import Internal reference ", null);
             MessageBox.alert("Internal reference generation failed!");
         }
 
         @Override
-        public void handleSuccess(EntityData refInstance) {
+        public void onSuccess(EntityData refInstance) {
             selectWindow.getEl().unmask();
             getProject().forceGetEvents();
             if (refInstance != null) {

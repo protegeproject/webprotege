@@ -222,7 +222,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at adding property for " + getProperty().getBrowserText() + " and "
                     + getSubject().getBrowserText(), caught);
             Window.alert("There was an error at adding the property value for " + getSubject().getBrowserText() + ".");
@@ -230,7 +230,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             if (values == null) {
                 values = new ArrayList<EntityData>();
             }
@@ -247,7 +247,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at remove property for " + getProperty().getBrowserText() + " and "
                     + getSubject().getBrowserText(), caught);
             Window.alert("There was an error at removing the property value for " + getSubject().getBrowserText() + ".");
@@ -255,7 +255,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             if (values != null) {
                 values.remove(newEntityData);
             }

@@ -250,14 +250,14 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             setLoadingStatus(false);
             GWT.log("Error at getting values for " + mySubject + " and " + getProperty(), caught);
             //TODO: notify the user somehow
         }
 
         @Override
-        public void handleSuccess(List<Triple> triples) { //TODO - make a call to get only the prop values
+        public void onSuccess(List<Triple> triples) { //TODO - make a call to get only the prop values
             /*
              * This check is necessary because of the async nature of the call.
              * We should never add values to a widget, if the subject has already changed.

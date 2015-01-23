@@ -42,7 +42,7 @@ public class BioPortalUsersCache {
          final Store store = new Store(reader);
          BioportalProposalsManager.getBioportalProposalsManager().getBioPortalUsers(bpRestBase, new AbstractAsyncHandler<String>() {
             @Override
-            public void handleFailure(Throwable caught) {
+            public void onFailure(Throwable caught) {
                 GWT.log("Could not retrieve BP users");
                 computationInProgress = false;
                 if (callback != null) {
@@ -50,7 +50,7 @@ public class BioPortalUsersCache {
                 }
             }
             @Override
-            public void handleSuccess(String usersXml) {
+            public void onSuccess(String usersXml) {
                 computationInProgress = false;
                 id2name.clear();
 
