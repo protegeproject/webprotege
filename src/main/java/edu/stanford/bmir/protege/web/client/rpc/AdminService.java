@@ -30,8 +30,6 @@ public interface AdminService extends RemoteService {
 
     String getUserEmail(String userName) throws UnrecognizedUserNameException;
 
-//    void setUserEmail(String userName, String email);
-
     void sendPasswordReminder(String userName) throws UnrecognizedUserNameException;
 
     PermissionsSet getAllowedOperations(String project, String user);
