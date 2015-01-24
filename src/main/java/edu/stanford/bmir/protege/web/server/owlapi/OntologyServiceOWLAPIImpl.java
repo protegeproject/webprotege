@@ -362,21 +362,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
     }
 
-    /**
-     * "Creates a class".  The behaviour of this implementation is defined in the {@link CreateClassChangeFactory}.
-     *
-     * @param projectId
-     * @param className
-     * @param superCls
-     * @param userId
-     * @param operationDescription A high level description.  @return EntityData that represents the newly created class.
-     * */
-    public EntityData createCls(ProjectId projectId, String className, OWLClass superCls, UserId userId, String operationDescription) {
-        OWLAPIProject project = getProject(projectId);
-        CreateClassChangeFactory cf = new CreateClassChangeFactory(project, userId, operationDescription, className, superCls);
-        applyChanges(cf);
-        return getRenderingManager(projectId).getEntityData(className, EntityType.CLASS);
-    }
 
     /**
      * Gets the subclasses of a given entity.  This implementation uses the {@link AssertedClassHierarchyProvider} that
