@@ -8,10 +8,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
-import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
-import edu.stanford.bmir.protege.web.client.rpc.GetRenderingCallback;
-import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
-import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditor;
@@ -73,7 +70,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
     @Override
     public void setValue(final PropertyValueList propertyValueList) {
-        RenderingServiceManager.getManager().execute(new GetRendering(projectId, propertyValueList), new GetRenderingCallback() {
+        RenderingServiceManager.getManager().execute(new GetRendering(projectId, propertyValueList), new AbstractWebProtegeAsyncCallback<GetRenderingResponse>() {
             @Override
             public void onSuccess(GetRenderingResponse result) {
                 fillUp(propertyValueList, result);
