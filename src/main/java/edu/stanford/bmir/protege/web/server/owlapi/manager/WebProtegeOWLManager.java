@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.owlapi.manager;
 
-import edu.stanford.bmir.protege.web.server.obo.WebProtegeOBOFormatParserFactory;
-import org.coode.owlapi.oboformat.OBOFormatParserFactory;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentParserFactory;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
 import org.semanticweb.owlapi.apibinding.OWLManager;
