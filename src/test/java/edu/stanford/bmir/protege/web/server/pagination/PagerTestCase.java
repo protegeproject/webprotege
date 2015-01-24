@@ -27,12 +27,12 @@ public class PagerTestCase {
 
     @Test(expected = IllegalArgumentException.class)
     public void getPagerForPageSizeWithZeroPageSizeThrowsIllegalArgumentException() {
-        Pager.<String>getPagerForPageSize(Collections.<String>emptyList(), 0);
+        Pager.getPagerForPageSize(Collections.<String>emptyList(), 0);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void getPagerForPageSizeWithNegativePageSizeThrowsIllegalArgumentException() {
-        Pager.<String>getPagerForPageSize(Collections.<String>emptyList(), -1);
+        Pager.getPagerForPageSize(Collections.<String>emptyList(), -1);
     }
 
     @Test

@@ -54,7 +54,7 @@ public class IdUtil {
         StringBuilder sb = new StringBuilder();
         while(true) {
             BigInteger mod = value.mod(BASE);
-            sb.insert(0, elements[(int) mod.intValue()]);
+            sb.insert(0, elements[mod.intValue()]);
             value = value.divide(BASE);
             if(value.equals(BigInteger.ZERO)) {
                 break;

@@ -132,7 +132,7 @@ public class NamedIndividualFrame_TestCase {
         OWLEntity property = mock(OWLEntity.class);
         OWLEntity value = mock(OWLEntity.class);
         when(propertyValueList.getSignature()).thenReturn(Sets.newHashSet(property, value));
-        assertThat(namedIndividualFrame.getSignature(), Matchers.<OWLEntity>containsInAnyOrder(
+        assertThat(namedIndividualFrame.getSignature(), Matchers.containsInAnyOrder(
                 subject,
                 typeA, typeB,
                 property, value,

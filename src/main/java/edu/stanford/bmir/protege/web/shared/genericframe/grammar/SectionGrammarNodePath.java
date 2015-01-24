@@ -26,7 +26,7 @@ public class SectionGrammarNodePath implements Serializable {
     }
 
     public SectionGrammarNodePath(SectionGrammarNode... path) {
-        this.path.addAll(Arrays.<SectionGrammarNode>asList(path));
+        this.path.addAll(Arrays.asList(path));
     }
 
     protected SectionGrammarNodePath(List<SectionGrammarNode> path) {

@@ -72,7 +72,7 @@ public class DefaultPrimitiveDataParser_LiteralParsing_TestCase {
 
     @Test
     public void shouldParseStringWithLanguageTagAsRDFPlainLiteral() {
-        parser.parsePrimitiveData("Hello World!", Optional.<String>of("en"), primitiveTypes, primitiveDataParserCallback);
+        parser.parsePrimitiveData("Hello World!", Optional.of("en"), primitiveTypes, primitiveDataParserCallback);
         verifyResult("Hello World!@en", OWL2Datatype.RDF_PLAIN_LITERAL);
     }
 

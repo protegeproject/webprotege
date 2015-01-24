@@ -10,6 +10,6 @@ public enum ValidationResult {
 
     VALID,
 
-    INVALID;
+    INVALID
 }
 

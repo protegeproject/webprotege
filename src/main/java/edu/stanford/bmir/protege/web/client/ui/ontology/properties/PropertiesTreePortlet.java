@@ -84,7 +84,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
 
         // Temporary - to be replaced when ontology is loaded.
-        TreeNode root = new TreeNode((String) null);
+        TreeNode root = new TreeNode(null);
         root.setId("RootPropertyNode");
         root.setHref("");
         root.setUserObject(new PropertyEntityData("RootPropertyNode", "RootPropertyNode", null));

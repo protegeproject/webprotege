@@ -17,7 +17,7 @@ public class AccessPolicyServiceManager {
     private static AccessPolicyServiceManager instance;
 
     private AccessPolicyServiceManager() {
-        proxy = (AccessPolicyServiceAsync) GWT.create(AccessPolicyService.class);
+        proxy = GWT.create(AccessPolicyService.class);
     }
 
     public static AccessPolicyServiceManager getInstance() {

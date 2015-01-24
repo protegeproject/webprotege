@@ -100,13 +100,14 @@ public class HashAlgorithm {
         utftext += String.fromCharCode((c & 63) | 128); 
         } 
         else { 
-        utftext += String.fromCharCode((c >> 12) | 224); 
-        utftext += String.fromCharCode(((c >> 6) & 63) | 128); 
-        utftext += String.fromCharCode((c & 63) | 128); 
+        utftext += String.fromCharCode((c >> 12) | 224);
+
+        utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+            utftext += String.fromCharCode((c & 63) | 128);
         } 
         } 
         return utftext; 
-        }; 
+        }
         var x=Array(); 
         var k,AA,BB,CC,DD,a,b,c,d; 
         var S11=7, S12=12, S13=17, S14=22; 

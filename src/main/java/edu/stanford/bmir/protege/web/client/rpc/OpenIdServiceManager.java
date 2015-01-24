@@ -14,7 +14,7 @@ public class OpenIdServiceManager {
     static OpenIdServiceManager instance;
 
     private OpenIdServiceManager() {
-        proxy = (OpenIdServiceAsync) GWT.create(OpenIdService.class);
+        proxy = GWT.create(OpenIdService.class);
     }
 
     public static OpenIdServiceManager getInstance() {

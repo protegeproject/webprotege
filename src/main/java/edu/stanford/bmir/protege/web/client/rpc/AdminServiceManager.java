@@ -21,7 +21,7 @@ public class AdminServiceManager {
     static AdminServiceManager instance;
 
     private AdminServiceManager() {
-        proxy = (AdminServiceAsync) GWT.create(AdminService.class);
+        proxy = GWT.create(AdminService.class);
     }
 
     public static AdminServiceManager getInstance() {

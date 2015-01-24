@@ -56,7 +56,7 @@ public class DefaultPrimitiveDataParser_EntityParsingTestCase {
             @Override
             public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
                 AsyncCallback<Optional<OWLEntityData>> callback = (AsyncCallback<Optional<OWLEntityData>>) invocationOnMock.getArguments()[2];
-                callback.onSuccess(Optional.of(lookupMap.get((String) invocationOnMock.getArguments()[0])));
+                callback.onSuccess(Optional.of(lookupMap.get(invocationOnMock.getArguments()[0])));
                 return null;
             }
         }).when(lookupHandler).lookupEntity(any(String.class), any(Set.class), any(AsyncCallback.class));

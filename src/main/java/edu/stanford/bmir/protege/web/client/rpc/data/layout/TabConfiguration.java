@@ -63,7 +63,7 @@ public class TabConfiguration extends GenericConfiguration implements Serializab
 		for (TabColumnConfiguration column : columns) {
 			List<PortletConfiguration> portlets = column.getPortlets();
 			for (Iterator<PortletConfiguration> iterator = portlets.iterator(); iterator.hasNext();) {
-				PortletConfiguration portlet = (PortletConfiguration) iterator.next();
+				PortletConfiguration portlet = iterator.next();
 				if (portlet.getName().equals(javaClassName)) {
 					iterator.remove();					
 				}

@@ -519,18 +519,15 @@ Ext.DomQuery = function(){
             n = n.nextSibling;
         }
         return null;
-    };
-
+    }
     function next(n){
         while((n = n.nextSibling) && n.nodeType != 1);
         return n;
-    };
-
+    }
     function prev(n){
         while((n = n.previousSibling) && n.nodeType != 1);
         return n;
-    };
-
+    }
     function children(d){
         var n = d.firstChild, ni = -1;
  	    while(n){
@@ -543,8 +540,7 @@ Ext.DomQuery = function(){
  	        n = nx;
  	    }
  	    return this;
- 	};
-
+    }
     function byClassName(c, a, v){
         if(!v){
             return c;
@@ -556,8 +552,7 @@ Ext.DomQuery = function(){
             }
         }
         return r;
-    };
-
+    }
     function attrValue(n, attr){
         if(!n.tagName && typeof n.length != "undefined"){
             n = n[0];
@@ -573,8 +568,7 @@ Ext.DomQuery = function(){
         }
         return n.getAttribute(attr) || n[attr];
 
-    };
-
+    }
     function getNodes(ns, mode, tagName){
         var result = [], ri = -1, cs;
         if(!ns){
@@ -618,8 +612,7 @@ Ext.DomQuery = function(){
             }
         }
         return result;
-    };
-
+    }
     function concat(a, b){
         if(b.slice){
             return a.concat(b);
@@ -645,8 +638,7 @@ Ext.DomQuery = function(){
             }
         }
         return r;
-    };
-
+    }
     function byId(cs, attr, id){
         if(cs.tagName || cs == document){
             cs = [cs];
@@ -662,8 +654,7 @@ Ext.DomQuery = function(){
             }
         }
         return r;
-    };
-
+    }
     function byAttribute(cs, attr, value, op, custom){
         var r = [], ri = -1, st = custom=="{";
         var f = Ext.DomQuery.operators[op];
@@ -686,15 +677,10 @@ Ext.DomQuery = function(){
             }
         }
         return r;
-    };
-
+    }
     function byPseudo(cs, name, value){
         return Ext.DomQuery.pseudos[name](cs, value);
-    };
-
-    
-    
-    
+    }
     var isIE = window.ActiveXObject ? true : false;
 
     
@@ -1049,7 +1035,7 @@ Ext.DomQuery = function(){
             },
 
             "only-child" : function(c){
-                var r = [], ri = -1;;
+                var r = [], ri = -1;
                 for(var i = 0, ci; ci = c[i]; i++){
                     if(!prev(ci) && !next(ci)){
                         r[++ri] = ci;
@@ -1258,7 +1244,9 @@ Ext.util.Observable.prototype = {
         };
         for(var i = 0, len = events.length; i < len; i++){
             var ename = events[i];
-            if(!this.events[ename]){ this.events[ename] = true; };
+            if (!this.events[ename]) {
+                this.events[ename] = true;
+            }
             o.on(ename, createHandler(ename), this);
         }
     },
@@ -1330,7 +1318,7 @@ Ext.util.Observable.prototype = {
                         returnValue = v;
                     }
                 }
-            }
+            };
 
             this[method] = function(){
                 returnValue = v = undefined; cancel = false;
@@ -4048,7 +4036,7 @@ El.garbageCollect = function(){
             }
         }
     }
-}
+};
 El.collectorThreadId = setInterval(El.garbageCollect, 30000);
 
 var flyFn = function(){};
@@ -4914,7 +4902,7 @@ for(var fnName in Ext.Element.prototype){
     if(typeof Ext.Element.prototype[fnName] == "function"){
         Ext.CompositeElement.createCall(Ext.CompositeElement.prototype, fnName);
     }
-};
+}
 })();
 
 
@@ -5338,11 +5326,21 @@ Ext.extend(Ext.Updater, Ext.util.Observable, {
                 callback = callback || cfg.callback;
                 discardUrl = discardUrl || cfg.discardUrl;
 	            callerScope = cfg.scope;
-                if(typeof cfg.method != "undefined"){method = cfg.method;};
-                if(typeof cfg.nocache != "undefined"){this.disableCaching = cfg.nocache;};
-                if(typeof cfg.text != "undefined"){this.indicatorText = '<div class="loading-indicator">'+cfg.text+"</div>";};
-                if(typeof cfg.scripts != "undefined"){this.loadScripts = cfg.scripts;};
-                if(typeof cfg.timeout != "undefined"){this.timeout = cfg.timeout;};
+                if (typeof cfg.method != "undefined") {
+                    method = cfg.method;
+                }
+                if (typeof cfg.nocache != "undefined") {
+                    this.disableCaching = cfg.nocache;
+                }
+                if (typeof cfg.text != "undefined") {
+                    this.indicatorText = '<div class="loading-indicator">' + cfg.text + "</div>";
+                }
+                if (typeof cfg.scripts != "undefined") {
+                    this.loadScripts = cfg.scripts;
+                }
+                if (typeof cfg.timeout != "undefined") {
+                    this.timeout = cfg.timeout;
+                }
             }
             this.showLoading();
             if(!discardUrl){
@@ -5385,7 +5383,7 @@ Ext.extend(Ext.Updater, Ext.util.Observable, {
             if(typeof url == "function"){
                 url = url.call(this);
             }
-            form = Ext.getDom(form)
+            form = Ext.getDom(form);
             this.transaction = Ext.Ajax.request({
                 form: form,
                 url:url,

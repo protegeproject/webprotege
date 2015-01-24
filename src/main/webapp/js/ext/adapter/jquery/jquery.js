@@ -2153,10 +2153,10 @@ jQuery.event = {
 			setup: function() {
 				// Make sure the ready event is setup
 				bindReady();
-				return;
+
 			},
 			
-			teardown: function() { return; }
+			teardown: function() {  }
 		},
 		
 		mouseenter: {
