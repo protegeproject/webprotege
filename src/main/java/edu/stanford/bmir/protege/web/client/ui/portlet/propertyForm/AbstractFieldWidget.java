@@ -251,9 +251,9 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
 				double eventTime = new Date().getTime(); //take current time since there is no way to get time from a ClickEvent
 				if (eventTime - timeOfLastClick > 500) { //not the second click in a double click
 					onCellClickOrDblClick(event);
-        		};
+        		}
 
-        		//Set new value for timeOfLastClick the time the last click was handled.
+                //Set new value for timeOfLastClick the time the last click was handled.
         		//We use the current time (and not eventTime), because some time may have passed since eventTime
         		//while executing the onCellClickOrDblClick method.
         		timeOfLastClick = new Date().getTime();

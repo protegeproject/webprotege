@@ -457,7 +457,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
                 double eventTime = e.getTime();
                 if (eventTime - timeOfLastClick > 500) { //not the second click in a double click
                     onCellClickOrDblClick(grid, rowIndex, colindex, e);
-                };
+                }
 
                 /*
                  * Set new value for timeOfLastClick the time the last click was handled

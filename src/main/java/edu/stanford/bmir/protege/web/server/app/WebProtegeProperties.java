@@ -44,7 +44,7 @@ public class WebProtegeProperties implements Serializable {
         for (WebProtegePropertyName propertyName : values()) {
             final String value = properties.getProperty(propertyName.getPropertyName(), null);
             if (value != null  && !isPlaceholder(propertyName, value)) {
-                builder.put(propertyName, Optional.<String>of(value));
+                builder.put(propertyName, Optional.of(value));
             }
             else {
                 if (propertyName.hasDefaultValue()) {

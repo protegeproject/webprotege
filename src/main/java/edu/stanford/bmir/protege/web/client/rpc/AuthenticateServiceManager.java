@@ -14,7 +14,7 @@ public class AuthenticateServiceManager {
     static AuthenticateServiceManager instance;
 
     private AuthenticateServiceManager() {
-        proxy = (AuthenticateServiceAsync) GWT.create(AuthenticateService.class);
+        proxy = GWT.create(AuthenticateService.class);
     }
 
     public static AuthenticateServiceManager getInstance() {

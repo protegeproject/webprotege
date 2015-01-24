@@ -53,6 +53,6 @@ var Scriptaculous = {
        function(include) { Scriptaculous.require(path+include+'.js') });
     });
   }
-}
+};
 
 Scriptaculous.load();

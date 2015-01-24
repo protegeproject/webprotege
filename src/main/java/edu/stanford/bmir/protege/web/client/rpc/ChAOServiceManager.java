@@ -21,7 +21,7 @@ public class ChAOServiceManager {
     static ChAOServiceManager instance;
 
     private ChAOServiceManager() {
-        proxy = (ChAOServiceAsync) GWT.create(ChAOService.class);
+        proxy = GWT.create(ChAOService.class);
     }
 
     public static ChAOServiceManager getInstance() {

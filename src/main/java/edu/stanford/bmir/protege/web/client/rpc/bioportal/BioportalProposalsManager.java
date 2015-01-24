@@ -10,7 +10,7 @@ public class BioportalProposalsManager {
     private static BioportalProposalsManager instance;
 
     private BioportalProposalsManager() {
-        proxy = (BioportalProposalsServiceAsync) GWT.create(BioportalProposalsService.class);
+        proxy = GWT.create(BioportalProposalsService.class);
     }
 
     public static BioportalProposalsManager getBioportalProposalsManager() {

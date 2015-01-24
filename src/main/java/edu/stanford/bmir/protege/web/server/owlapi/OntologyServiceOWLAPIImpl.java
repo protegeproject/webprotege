@@ -178,7 +178,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     public Integer loadProject(String projectName) {
         getOntology(projectName);
         OWLAPIProject project = getProject(projectName);
-        return (int) project.getChangeManager().getCurrentRevision().getValueAsInt();
+        return project.getChangeManager().getCurrentRevision().getValueAsInt();
     }
 
 
@@ -278,7 +278,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         for(Triple triple : directValues) {
             EntityData entityData = triple.getValue();
             if(entityData.getValueType() == ValueType.Instance || entityData.getValueType() == ValueType.Cls) {
-                reifiedValues.addAll(getEntityTriples(projectName, Arrays.<String>asList(entityData.getName()), reifiedProps));
+                reifiedValues.addAll(getEntityTriples(projectName, Arrays.asList(entityData.getName()), reifiedProps));
             }
         }
         return reifiedValues;
@@ -292,7 +292,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         for(Triple triple : directValues) {
             EntityData entityData = triple.getValue();
             if(entityData.getValueType() == ValueType.Instance || entityData.getValueType() == ValueType.Cls) {
-                final List<Triple> reifiedTriples = getEntityTriples(projectName, Arrays.<String>asList(entityData.getName()), reifiedProps);
+                final List<Triple> reifiedTriples = getEntityTriples(projectName, Arrays.asList(entityData.getName()), reifiedProps);
                 if (!reifiedTriples.isEmpty()) {
                     EntityPropertyValues reifiedSet = new EntityPropertyValues(entityData);
                     for(Triple reifiedTriple : reifiedTriples) {

@@ -149,7 +149,7 @@ public class EntitiesListImpl<E extends OWLEntityData> extends Composite impleme
     @Override
     public Optional<E> getSelectedEntity() {
         E sel = getSingleSelectionModel().getSelectedObject();
-        return Optional.<E>fromNullable(sel);
+        return Optional.fromNullable(sel);
     }
 
     @SuppressWarnings("unchecked")

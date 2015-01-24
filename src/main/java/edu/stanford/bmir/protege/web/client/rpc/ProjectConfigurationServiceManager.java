@@ -19,7 +19,7 @@ public class ProjectConfigurationServiceManager {
 	}
 
 	private ProjectConfigurationServiceManager() {
-		proxy = (ProjectConfigurationServiceAsync) GWT.create(ProjectConfigurationService.class);
+		proxy = GWT.create(ProjectConfigurationService.class);
 	}
 
 	public void getProjectConfiguration(ProjectId projectId, UserId userId, AsyncCallback<ProjectLayoutConfiguration> cb) {

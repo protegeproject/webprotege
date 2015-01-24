@@ -494,7 +494,7 @@ public class LoginUtil {
 
             public void execute(final String btnID) {
 
-                final Boolean isLoginWithHttps = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_ENABLED, false);;
+                final Boolean isLoginWithHttps = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_ENABLED, false);
                 if (btnID.equalsIgnoreCase("yes")) {
                     if (isLoginWithHttps) {
                         associateCurrentWebProtegeAccount();

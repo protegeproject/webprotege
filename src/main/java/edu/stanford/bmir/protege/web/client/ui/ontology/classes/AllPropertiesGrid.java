@@ -103,7 +103,7 @@ public class AllPropertiesGrid extends EditorGridPanel {
               @Override
             public void onCellDblClick(GridPanel grid, int rowIndex, int colindex, EventObject e) {
                  onCellDoubleClick(rowIndex, colindex);
-              };
+              }
            };
        }
         return gridCellListener;

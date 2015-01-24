@@ -589,7 +589,7 @@ public class BioPortalSearchComponent extends GridPanel {
                 Application.get().getUserId(),
                 UIUtil.getAppliedToTransactionString("Create a 'Did not find' reference on "
                         + getEntity().getBrowserText() + " "
-                        + (String) configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
+                        + configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
                 getCreateDNFConceptHandler(noteContent));
     }
 
@@ -612,7 +612,7 @@ public class BioPortalSearchComponent extends GridPanel {
                 bpRefData,
                 Application.get().getUserId(),
                 UIUtil.getAppliedToTransactionString("Created reference on " + getEntity().getBrowserText() + " "
-                        + (String) configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
+                        + configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
                 getCreateManualreferenceHandler());
     }
 
@@ -638,7 +638,7 @@ public class BioPortalSearchComponent extends GridPanel {
                 oldValueEntityData,
                 Application.get().getUserId(),
                 UIUtil.getAppliedToTransactionString("Created reference on " + getEntity().getBrowserText() + " "
-                        + (String) configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
+                        + configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
                 getCreateManualreferenceHandler());
     }
 
