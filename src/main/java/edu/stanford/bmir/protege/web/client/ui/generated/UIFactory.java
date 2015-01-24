@@ -13,8 +13,6 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPor
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.*;
-import edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ManageHierarchyPortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.hierarchy.ManageHierarchyTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.id.OntologyIdPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsTab;
@@ -77,9 +75,6 @@ public class UIFactory {
         else if (tabJavaClassName.equals(UserDefinedTab.class.getName())) {
             return new UserDefinedTab(project);
         }
-        else if (tabJavaClassName.equals(ManageHierarchyTab.class.getName())) {
-            return new ManageHierarchyTab(project);
-        }
         return null;
     }
 
@@ -121,9 +116,6 @@ public class UIFactory {
             }
             else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
                 return new WatchedEntitiesPortlet(project);
-            }
-            else if (portletJavaClassName.equals(ManageHierarchyPortlet.class.getName())) {
-                return new ManageHierarchyPortlet(project);
             }
             else if (portletJavaClassName.equals(HtmlMessagePortlet.class.getName())) {
                 return new HtmlMessagePortlet(project);
