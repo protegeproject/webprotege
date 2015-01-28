@@ -4,6 +4,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
 import org.semanticweb.owlapi.util.OWLAxiomVisitorAdapter;
+import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -26,18 +27,16 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class WebProtegeBidirectionalShortFormProvider implements BidirectionalShortFormProvider {
 
-//    private OWLAPIProject project;
-
     private OWLOntology rootOntology;
 
     private BidirectionalShortFormProviderAdapter delegate;
 
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    public WebProtegeBidirectionalShortFormProvider(OWLOntology rootOntology, HasLang languageProvider) {
+    public WebProtegeBidirectionalShortFormProvider(OWLOntology rootOntology, ShortFormProvider shortFormProvider) {
         this.rootOntology = rootOntology;
         final Set<OWLOntology> importsClosure = rootOntology.getImportsClosure();
-        delegate = new BidirectionalShortFormProviderAdapter(importsClosure, new WebProtegeShortFormProvider(rootOntology, languageProvider)) {
+        delegate = new BidirectionalShortFormProviderAdapter(importsClosure, shortFormProvider) {
             @Override
             public void remove(OWLEntity entity) {
                 if (!entity.isBuiltIn()) {

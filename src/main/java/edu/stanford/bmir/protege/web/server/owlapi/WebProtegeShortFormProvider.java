@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.QNameShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
 import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
@@ -12,6 +12,7 @@ import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
+import java.util.jar.Attributes;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -23,7 +24,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class WebProtegeShortFormProvider implements ShortFormProvider {
 
-    private OWLOntology rootOntology;
+
+    private final HasAnnotationAssertionAxioms annotationAssertionAxiomProvider;
 
     private HasLang languageProvider;
 
@@ -31,20 +33,14 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
 
     private final Map<String, String> builtinPrefixes = new HashMap<String, String>();
 
-
-
-    public WebProtegeShortFormProvider(OWLOntology rootOntology, HasLang languageProvider) {
-        this.rootOntology = checkNotNull(rootOntology);
+    public WebProtegeShortFormProvider(HasAnnotationAssertionAxioms annotationAssertionAxiomProvider, HasLang languageProvider) {
+        this.annotationAssertionAxiomProvider = checkNotNull(annotationAssertionAxiomProvider);
         this.languageProvider = checkNotNull(languageProvider);
-        builtinPrefixes.put("owl", Namespaces.OWL.toString());
-        builtinPrefixes.put("rdfs", Namespaces.RDFS.toString());
-        builtinPrefixes.put("rdf", Namespaces.RDF.toString());
-        builtinPrefixes.put("xsd", Namespaces.XSD.toString());
-        builtinPrefixes.put("skos", Namespaces.SKOS.toString());
-        builtinPrefixes.put("dc", DublinCoreVocabulary.NAME_SPACE);
-        builtinPrefixes.put("foaf:", "http://xmlns.com/foaf/0.1/");
-        builtinPrefixes.put("dcterms:", "http://purl.org/dc/terms/");
-
+        for (Namespaces ns : Namespaces.values()) {
+            if (ns.isInUse()) {
+                builtinPrefixes.put(ns.getPrefixIRI(), ns.getPrefixName());
+            }
+        }
 //        languages = new ArrayList<String>();
 //        // TODO: Configurable.
 //        languages.add("en");
@@ -60,70 +56,68 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
         this.annotationPropertyIRIs = Collections.unmodifiableList(annotationPropertyIRIs);
     }
 
-    private boolean startsWithBuiltInPrefix(OWLEntity entity) {
+    private Optional<String> getBuiltInPrefix(OWLEntity entity) {
         IRI iri = entity.getIRI();
-        for(String s : builtinPrefixes.values()) {
-            if(iri.toString().startsWith(s)) {
-                return true;
-            }
+        String iriNS = iri.getNamespace();
+        if (builtinPrefixes.containsKey(iriNS)) {
+            return Optional.of(iriNS);
+        } else {
+            return Optional.empty();
         }
-        return false;
     }
 
     public synchronized String getShortForm(OWLEntity owlEntity) {
         try {
-            if(owlEntity.isBuiltIn() || startsWithBuiltInPrefix(owlEntity)) {
-                QNameShortFormProvider qNameShortFormProvider = new QNameShortFormProvider(builtinPrefixes);
-                return qNameShortFormProvider.getShortForm(owlEntity);
+            if (owlEntity instanceof HasPrefixedName) {
+                return ((HasPrefixedName) owlEntity).getPrefixedName();
+            }
+            Optional<String> builtInPrefix = getBuiltInPrefix(owlEntity);
+            if (builtInPrefix.isPresent()) {
+                return builtinPrefixes.get(builtInPrefix.get()) + ":" + owlEntity.getIRI().getFragment();
             }
             int matchedIndex = Integer.MAX_VALUE;
-//        int matchedLangIndex = Integer.MAX_VALUE;
             boolean matchedDefaultLang = false;
             OWLAnnotationValue renderingValue = null;
             // Just ask for the language once (bad coding!)
             final String defaultLanguage = languageProvider.getLang();
-            for(OWLOntology ontology : rootOntology.getImportsClosure()) {
-                for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(owlEntity.getIRI())) {
-                    // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
-                    // object to find the index.
-                    int index = annotationPropertyIRIs.indexOf(ax.getProperty().getIRI());
-                    if(index <= matchedIndex && index > -1) {
-                        if (index < matchedIndex) {
-                            matchedIndex = index;
-                            renderingValue = ax.getValue();
-                        }
-                        if(index == matchedIndex || index == Integer.MAX_VALUE) {
-                            final OWLAnnotationValue value = ax.getValue();
-                            if (value instanceof OWLLiteral) {
-                                OWLLiteral litValue = (OWLLiteral) value;
-                                String lang = litValue.getLang();
-                                if(lang != null) {
-                                    if(lang.equals(defaultLanguage)) {
-                                        matchedDefaultLang = true;
-                                        renderingValue = litValue;
-                                    }
-                                    else if(!matchedDefaultLang) {
-                                        renderingValue = litValue;
-                                    }
-                                }
-
-                            }
-                        }
-
-
+            for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxiomProvider.getAnnotationAssertionAxioms(owlEntity.getIRI())) {
+                // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
+                // object to find the index.
+                int index = annotationPropertyIRIs.indexOf(ax.getProperty().getIRI());
+                if (index <= matchedIndex && index > -1) {
+                    if (index < matchedIndex) {
+                        matchedIndex = index;
+                        renderingValue = ax.getValue();
                     }
+                    if (index == matchedIndex || index == Integer.MAX_VALUE) {
+                        final OWLAnnotationValue value = ax.getValue();
+                        if (value instanceof OWLLiteral) {
+                            OWLLiteral litValue = (OWLLiteral) value;
+                            String lang = litValue.getLang();
+                            if (lang != null) {
+                                if (lang.equals(defaultLanguage)) {
+                                    matchedDefaultLang = true;
+                                    renderingValue = litValue;
+                                } else if (!matchedDefaultLang) {
+                                    renderingValue = litValue;
+                                }
+                            }
+
+                        }
+                    }
+
+
                 }
             }
             String result;
-            if(renderingValue instanceof OWLLiteral) {
+            if (renderingValue instanceof OWLLiteral) {
                 result = ((OWLLiteral) renderingValue).getLiteral();
-            }
-            else {
+            } else {
                 // Had this as an instance variable, but creating a new instance each time is definitely thread safe.
                 SimpleShortFormProvider simpleShortFormProvider = new SimpleShortFormProvider();
                 result = URLDecoder.decode(simpleShortFormProvider.getShortForm(owlEntity), "UTF-8");
             }
-            if(result.contains(" ")) {
+            if (result.contains(" ")) {
                 result = getQuoted(result);
             }
             return result;

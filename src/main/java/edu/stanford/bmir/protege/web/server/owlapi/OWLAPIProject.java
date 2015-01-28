@@ -212,12 +212,14 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
      */
     private void initialiseProjectMachinery() {
         final OWLOntology rootOntology = getRootOntology();
+        HasAnnotationAssertionAxioms annotationAssertionAxiomProvider = new HasAnnotationAssertionAxiomsImpl(rootOntology);
+        WebProtegeShortFormProvider shortFormProvider = new WebProtegeShortFormProvider(annotationAssertionAxiomProvider, this);
         renderingManager = new RenderingManager(
                 rootOntology,
                 getDataFactory(),
                 new DefaultEntityIRIChecker(rootOntology),
                 new DefaultDeprecatedEntityChecker(rootOntology),
-                new WebProtegeBidirectionalShortFormProvider(rootOntology, this),
+                new WebProtegeBidirectionalShortFormProvider(rootOntology, shortFormProvider),
                 new WebProtegeOntologyIRIShortFormProvider(rootOntology),
                 new NullHighlightedEntityChecker());
 
