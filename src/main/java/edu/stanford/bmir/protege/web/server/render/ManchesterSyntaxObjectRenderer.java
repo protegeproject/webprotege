@@ -45,30 +45,13 @@ public class ManchesterSyntaxObjectRenderer {
 
     }
 
-    public String render(OWLObject object, HighlightChecker highlightChecker, DeprecatedChecker checker) {
+    public String render(OWLObject object, HighlightedEntityChecker highlightChecker, DeprecatedEntityChecker checker) {
         StringBuilder sb = new StringBuilder();
         EntityRenderer entityRenderer = new EntityRenderer(sb, shortFormProvider, entityIRIChecker, highlightChecker, checker, literalStyle, literalRenderer,  prettyPrintOverride, linkRenderer);
         object.accept(entityRenderer);
         return sb.toString();
     }
 
-
-    public static interface EntityIRIChecker {
-
-        boolean isEntityIRI(IRI iri);
-
-        Collection<OWLEntity> getEntitiesWithIRI(IRI iri);
-    }
-
-    public static interface HighlightChecker {
-
-        boolean isHighlighted(OWLEntity entity);
-    }
-
-    public static interface DeprecatedChecker {
-
-        boolean isDeprecated(OWLEntity entity);
-    }
 
     private static class EntityRenderer implements OWLObjectVisitor {
 
@@ -80,9 +63,9 @@ public class ManchesterSyntaxObjectRenderer {
 
         private EntityIRIChecker entityIRIChecker;
 
-        private HighlightChecker highlightChecker;
+        private HighlightedEntityChecker highlightChecker;
 
-        private DeprecatedChecker deprecatedChecker;
+        private DeprecatedEntityChecker deprecatedChecker;
 
         private LiteralStyle literalStyle;
 
@@ -97,8 +80,8 @@ public class ManchesterSyntaxObjectRenderer {
         private EntityRenderer(StringBuilder stringBuilder,
                                ShortFormProvider sfp,
                                EntityIRIChecker entityIRIChecker,
-                               HighlightChecker highlightChecker,
-                               DeprecatedChecker deprecatedChecker,
+                               HighlightedEntityChecker highlightChecker,
+                               DeprecatedEntityChecker deprecatedChecker,
                                LiteralStyle literalStyle,
                                LiteralRenderer literalRenderer,
                                PrettyPrint prettyPrintOverride,

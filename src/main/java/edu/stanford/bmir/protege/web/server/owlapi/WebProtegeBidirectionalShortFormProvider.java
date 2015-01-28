@@ -26,16 +26,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class WebProtegeBidirectionalShortFormProvider implements BidirectionalShortFormProvider {
 
-    private OWLAPIProject project;
+//    private OWLAPIProject project;
+
+    private OWLOntology rootOntology;
 
     private BidirectionalShortFormProviderAdapter delegate;
 
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    public WebProtegeBidirectionalShortFormProvider(OWLAPIProject project) {
-        this.project = project;
-        final Set<OWLOntology> importsClosure = project.getRootOntology().getImportsClosure();
-        delegate = new BidirectionalShortFormProviderAdapter(importsClosure, new WebProtegeShortFormProvider(project)) {
+    public WebProtegeBidirectionalShortFormProvider(OWLOntology rootOntology, HasLang languageProvider) {
+        this.rootOntology = rootOntology;
+        final Set<OWLOntology> importsClosure = rootOntology.getImportsClosure();
+        delegate = new BidirectionalShortFormProviderAdapter(importsClosure, new WebProtegeShortFormProvider(rootOntology, languageProvider)) {
             @Override
             public void remove(OWLEntity entity) {
                 if (!entity.isBuiltIn()) {
@@ -44,9 +46,9 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
             }
         };
 
-        setupBuiltinObjectRenderings(project);
+        setupBuiltinObjectRenderings(rootOntology);
 
-        OWLOntologyManager manager = project.getRootOntology().getOWLOntologyManager();
+        OWLOntologyManager manager = rootOntology.getOWLOntologyManager();
         manager.addOntologyChangeListener(new OWLOntologyChangeListener() {
             public void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws OWLException {
                 updateRenderings(changes);
@@ -54,8 +56,8 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
         });
     }
 
-    private void setupBuiltinObjectRenderings(OWLAPIProject project) {
-        OWLDataFactory df = project.getDataFactory();
+    private void setupBuiltinObjectRenderings(OWLOntology rootOntology) {
+        OWLDataFactory df = rootOntology.getOWLOntologyManager().getOWLDataFactory();
         for(IRI iri : OWLRDFVocabulary.BUILT_IN_ANNOTATION_PROPERTY_IRIS) {
             delegate.add(df.getOWLAnnotationProperty(iri));
         }
@@ -149,7 +151,7 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
                         @Override
                         public void visit(OWLAnnotationAssertionAxiom axiom) {
                             if(axiom.getSubject() instanceof IRI) {
-                                entities.addAll(project.getRootOntology().getEntitiesInSignature((IRI) axiom.getSubject(), true));
+                                entities.addAll(rootOntology.getEntitiesInSignature((IRI) axiom.getSubject(), true));
                             }
                         }
                     });
@@ -157,7 +159,7 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
                 for (OWLEntity entity : entities) {
                     if (!processed.contains(entity)) {
                         processed.add(entity);
-                        if (project.getRootOntology().containsEntityInSignature(entity, true)) {
+                        if (rootOntology.containsEntityInSignature(entity, true)) {
                             delegate.add(entity);
                         }
                         else {

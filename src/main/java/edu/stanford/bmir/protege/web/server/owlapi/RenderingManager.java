@@ -1,16 +1,15 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
-import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
@@ -38,100 +37,72 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
 
     public static final String NULL_BROWSER_TEXT = "\"\"";
 
-    private OWLAPIProject project;
-
-    private WebProtegeBidirectionalShortFormProvider shortFormProvider;
+    private final BidirectionalShortFormProvider shortFormProvider;
 
     // An immutable map of IRI to OWLEntity for built in entities.
-    private Map<IRI, OWLEntity> builtInEntities;
+    private final ImmutableMap<IRI, OWLEntity> builtInEntities;
 
-    private OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
+    private final OntologyIRIShortFormProvider ontologyIRIShortFormProvider;
 
-    private ManchesterSyntaxObjectRenderer.EntityIRIChecker entityIRIChecker;
+    private final EntityIRIChecker entityIRIChecker;
 
-    private ManchesterSyntaxObjectRenderer.DeprecatedChecker deprecatedEntityChecker;
+    private final DeprecatedEntityChecker deprecatedEntityChecker;
 
-    private ManchesterSyntaxObjectRenderer.HighlightChecker highlightChecker;
+    private final HighlightedEntityChecker highlightEntityChecker;
+    
+    private final OWLOntology rootOntology;
 
-    public RenderingManager(OWLAPIProject prj) {
-        this.project = prj;
+    private final OWLDataFactory dataFactory;
 
-        setupBuiltInEntities();
+    public RenderingManager(OWLOntology rootOnt,
+                            OWLDataFactory dataFactory,
+                            EntityIRIChecker entityIRIChecker,
+                            DeprecatedEntityChecker deprecatedChecker,
+                            BidirectionalShortFormProvider shortFormProvider,
+                            OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
+                            HighlightedEntityChecker highlightedEntityChecker) {
+        this.rootOntology = rootOnt;
+        this.dataFactory = dataFactory;
+        this.shortFormProvider = shortFormProvider;
+        this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
 
-        shortFormProvider = new WebProtegeBidirectionalShortFormProvider(project);
+        ImmutableMap.Builder<IRI, OWLEntity> builtInEntities = ImmutableMap.builder();
 
-        ontologyIRIShortFormProvider = new WebProtegeOntologyIRIShortFormProvider(project.getRootOntology());
-
-        entityIRIChecker = new ManchesterSyntaxObjectRenderer
-                .EntityIRIChecker() {
-            @Override
-            public boolean isEntityIRI(IRI iri) {
-                return project.getRootOntology().containsEntityInSignature(iri);
-            }
-
-            @Override
-            public Collection<OWLEntity> getEntitiesWithIRI(IRI iri) {
-                return project.getEntitiesWithIRI(iri);
-            }
-        };
-
-        deprecatedEntityChecker = new ManchesterSyntaxObjectRenderer
-                .DeprecatedChecker() {
-            @Override
-            public boolean isDeprecated(OWLEntity entity) {
-                return project.isDeprecated(entity);
-            }
-        };
-
-        highlightChecker = new ManchesterSyntaxObjectRenderer
-                .HighlightChecker() {
-            @Override
-            public boolean isHighlighted(OWLEntity entity) {
-                return false;
-            }
-        };
-    }
-
-
-    /**
-     * Called from the constructor
-     */
-    private void setupBuiltInEntities() {
-        HashMap<IRI, OWLEntity> builtInEntities = new HashMap<IRI, OWLEntity>();
-        
-        OWLDataFactory df = project.getDataFactory();
-        putEntity(df.getOWLThing(), builtInEntities);
-        putEntity(df.getOWLNothing(), builtInEntities);
-        putEntity(df.getOWLTopObjectProperty(), builtInEntities);
-        putEntity(df.getOWLBottomObjectProperty(), builtInEntities);
-        putEntity(df.getOWLTopDataProperty(), builtInEntities);
-        putEntity(df.getOWLBottomDataProperty(), builtInEntities);
+        putEntity(dataFactory.getOWLThing(), builtInEntities);
+        putEntity(dataFactory.getOWLNothing(), builtInEntities);
+        putEntity(dataFactory.getOWLTopObjectProperty(), builtInEntities);
+        putEntity(dataFactory.getOWLBottomObjectProperty(), builtInEntities);
+        putEntity(dataFactory.getOWLTopDataProperty(), builtInEntities);
+        putEntity(dataFactory.getOWLBottomDataProperty(), builtInEntities);
         for (IRI iri : OWLRDFVocabulary.BUILT_IN_ANNOTATION_PROPERTY_IRIS) {
-            putEntity(df.getOWLAnnotationProperty(iri), builtInEntities);
+            putEntity(dataFactory.getOWLAnnotationProperty(iri), builtInEntities);
         }
         for(DublinCoreVocabulary vocabulary : DublinCoreVocabulary.values()) {
-            OWLAnnotationProperty prop = df.getOWLAnnotationProperty(vocabulary.getIRI());
+            OWLAnnotationProperty prop = dataFactory.getOWLAnnotationProperty(vocabulary.getIRI());
             putEntity(prop, builtInEntities);
         }
-        for (OWLAnnotationProperty prop : SKOSVocabulary.getAnnotationProperties(df)) {
+        for (OWLAnnotationProperty prop : SKOSVocabulary.getAnnotationProperties(dataFactory)) {
             putEntity(prop, builtInEntities);
         }
         for (OWL2Datatype dt : OWL2Datatype.values()) {
-            OWLDatatype datatype = df.getOWLDatatype(dt.getIRI());
+            OWLDatatype datatype = dataFactory.getOWLDatatype(dt.getIRI());
             putEntity(datatype, builtInEntities);
         }
-        // Called from the constructor - thread safe to set it here
-        this.builtInEntities = Collections.unmodifiableMap(builtInEntities);
+        this.builtInEntities = builtInEntities.build();
 
+        this.entityIRIChecker = entityIRIChecker;
+
+        this.deprecatedEntityChecker = deprecatedChecker;
+
+        this.highlightEntityChecker = highlightedEntityChecker;
     }
-
 
     /**
      * Adds an {@link OWLEntity} to a map, so that they entity is keyed by its {@link IRI}.
      * @param entity The entity to add.  Not null.
      * @param map The map to add the entity to. Not null.
      */
-    private static void putEntity(OWLEntity entity, HashMap<IRI, OWLEntity> map) {
+    private static void putEntity(OWLEntity entity, ImmutableMap.Builder<IRI, OWLEntity> map) {
         map.put(entity.getIRI(), entity);
     }
 
@@ -178,7 +149,6 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         if (builtInEntity != null) {
             return Collections.singleton(builtInEntity);
         }
-        OWLOntology rootOntology = project.getRootOntology();
         Set<OWLEntity> entitiesInSig = rootOntology.getEntitiesInSignature(iri, true);
         if(!entitiesInSig.isEmpty()) {
             return entitiesInSig;
@@ -277,7 +247,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         if(entityType == null) {
             throw new NullPointerException("entityType must not be null");
         }
-        OWLDataFactory df = project.getDataFactory();
+        OWLDataFactory df = dataFactory;
         IRI iri = getIRI(entityName);
         return df.getOWLEntity(entityType, iri);
     }
@@ -308,7 +278,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         else {
             iri = getIRI(entityData.getName());
         }
-        OWLDataFactory df = project.getDataFactory();
+        OWLDataFactory df = dataFactory;
         return df.getOWLEntity(entityType, iri);
     }
 
@@ -363,7 +333,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
     public EntityData getEntityData(OWLAnnotationValue annotationValue) {
         return annotationValue.accept(new OWLAnnotationValueVisitorEx<EntityData>() {
             public EntityData visit(IRI iri) {
-                Set<OWLEntity> entities = project.getRootOntology().getEntitiesInSignature(iri);
+                Set<OWLEntity> entities = rootOntology.getEntitiesInSignature(iri);
                 if(entities.isEmpty()) {
                     // Now what?
                     return new EntityData(iri.toString(), iri.toString());
@@ -429,7 +399,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
                 datatype = OWL2Datatype.XSD_BOOLEAN;
             }
         }
-        OWLDataFactory df = project.getDataFactory();
+        OWLDataFactory df = dataFactory;
         OWLLiteral result = df.getOWLLiteral(lexicalValue, datatype);
         return getEntityData(result);
 
@@ -515,26 +485,6 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         return entityData;
     }
 
-//    /**
-//     * Gets the property entity data for a specified entity name.
-//     * @param entityName The entity name.  This should be a string which represents an IRI, but browser text
-//     * (as generated by this RenderingManager) will also be accepted.  Must not be null.
-//     * @return The entity data for the specified entity.  Not null.
-//     */
-//    public PropertyEntityData getPropertyEntityData(String entityName) {
-//        OWLEntity entity = getEntity(entityName);
-//        return getPropertyEntityData(entity);
-//    }
-
-//    /**
-//     * A convenience method which ultimately delegates to {@link #getEntity(String)}.
-//     * @param entityIRI The IRI of the entity for which the entity data will be returned.
-//     * @return The entity data of an entity which has the specified IRI.
-//     */
-//    public PropertyEntityData getPropertyEntityData(IRI entityIRI) {
-//        return getPropertyEntityData(entityIRI.toString());
-//    }
-
     /**
      * Tests to see whether an EntityData is well formed.  An EntityData object is considered well formed if it can be
      * converted to an OWLObject.  Specifically, 
@@ -578,8 +528,8 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
                     URI uri = new URI(entityData.getName());
                     IRI iri = IRI.create(uri);
                     for(EntityType<?> entityType : EntityType.values()) {
-                        OWLEntity entity = project.getDataFactory().getOWLEntity(entityType, iri);
-                        if(project.getRootOntology().containsEntityInSignature(entity)) {
+                        OWLEntity entity = dataFactory.getOWLEntity(entityType, iri);
+                        if(rootOntology.containsEntityInSignature(entity)) {
                             return entity;
                         }
                     }
@@ -673,7 +623,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         P3LiteralParser literalParser = new P3LiteralParser(entityName);
         String lexicalValue = literalParser.getLiteral();
         String lang = literalParser.getLang();
-        OWLDataFactory df = project.getDataFactory();
+        OWLDataFactory df = dataFactory;
         if(!lang.isEmpty()) {
             return df.getOWLLiteral(lexicalValue, lang);
         }
@@ -717,7 +667,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
      * @return
      */
     public OWLDatatype getDatatype(ValueType valueType) {
-        OWLDataFactory df = project.getDataFactory();
+        OWLDataFactory df = dataFactory;
         switch (valueType) {
             case Boolean:
                 return df.getBooleanOWLDatatype();
@@ -772,16 +722,16 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
                 new DefaultHttpLinkRenderer(),
                 new MarkdownLiteralRenderer());
         ManchesterSyntaxEntityFrameRenderer renderer = new ManchesterSyntaxEntityFrameRenderer(
-                project.getRootOntology(),
+                rootOntology,
                 shortFormProvider, ontologyIRIShortFormProvider, objectRenderer,
-                highlightChecker, deprecatedEntityChecker, new DefaultItemStyleProvider(), NestedAnnotationStyle.COMPACT);
+                highlightEntityChecker, deprecatedEntityChecker, new DefaultItemStyleProvider(), NestedAnnotationStyle.COMPACT);
         StringBuilder builder = new StringBuilder();
         renderer.render(entity, builder);
         return builder.toString();
     }
 
     public String getHTMLBrowserText(OWLObject object) {
-        return getHTMLBrowserText(object, new ManchesterSyntaxObjectRenderer.HighlightChecker() {
+        return getHTMLBrowserText(object, new HighlightedEntityChecker() {
             @Override
             public boolean isHighlighted(OWLEntity entity) {
                 return false;
@@ -790,7 +740,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
     }
 
     public String getHTMLBrowserText(OWLObject object, final Set<String> highlightedPhrases) {
-        return getHTMLBrowserText(object, new ManchesterSyntaxObjectRenderer.HighlightChecker() {
+        return getHTMLBrowserText(object, new HighlightedEntityChecker() {
             @Override
             public boolean isHighlighted(OWLEntity entity) {
                 return highlightedPhrases.contains(getShortForm(entity));
@@ -798,17 +748,17 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         });
     }
 
-    public String getHTMLBrowserText(OWLObject object, ManchesterSyntaxObjectRenderer.HighlightChecker highlightChecker) {
+    public String getHTMLBrowserText(OWLObject object, HighlightedEntityChecker highlightChecker) {
         ManchesterSyntaxObjectRenderer renderer = new ManchesterSyntaxObjectRenderer(
-                project.getRenderingManager().getShortFormProvider(),
-                new DefaultEntityIRIChecker(project.getRootOntology()),
+                getShortFormProvider(),
+                new DefaultEntityIRIChecker(rootOntology),
                 LiteralStyle.BRACKETED,
                 new DefaultHttpLinkRenderer(),
                 new MarkdownLiteralRenderer());
-        return renderer.render(object, highlightChecker, new ManchesterSyntaxObjectRenderer.DeprecatedChecker() {
+        return renderer.render(object, highlightChecker, new DeprecatedEntityChecker() {
             @Override
             public boolean isDeprecated(OWLEntity entity) {
-                return project.isDeprecated(entity);
+                return deprecatedEntityChecker.isDeprecated(entity);
             }
         });
     }
@@ -906,8 +856,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
 
 
     private void printBrowserTextReferenceWarningMessage(String referenceName) {
-        ProjectId projectId = project.getProjectId();
-        WebProtegeLoggerManager.get(RenderingManager.class).info(projectId, "Could not find entity by name \"%s\".  This name may be the browser text rather than an entity IRI.", referenceName);
+        WebProtegeLoggerManager.get(RenderingManager.class).info("Could not find entity by name \"%s\".  This name may be the browser text rather than an entity IRI.", referenceName);
     }
 
 }
