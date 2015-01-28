@@ -105,6 +105,6 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
     }
 
     private boolean isDefaultLanguage(OWLLiteral lit) {
-        return lit.hasLang() && project.getDefaultLanguage().equals(lit.getLang());
+        return lit.hasLang() && project.getLang().equals(lit.getLang());
     }
 }

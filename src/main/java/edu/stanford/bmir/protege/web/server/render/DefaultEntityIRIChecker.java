@@ -12,7 +12,7 @@ import java.util.Collection;
  *         Bio-Medical Informatics Research Group
  *         Date: 20/02/2014
  */
-public class DefaultEntityIRIChecker implements ManchesterSyntaxObjectRenderer.EntityIRIChecker {
+public class DefaultEntityIRIChecker implements EntityIRIChecker {
 
     private OWLOntology rootOntology;
 

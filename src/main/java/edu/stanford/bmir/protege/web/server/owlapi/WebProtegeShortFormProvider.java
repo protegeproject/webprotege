@@ -13,6 +13,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -21,16 +23,19 @@ import java.util.*;
  */
 public class WebProtegeShortFormProvider implements ShortFormProvider {
 
-    private OWLAPIProject project;
-    
+    private OWLOntology rootOntology;
+
+    private HasLang languageProvider;
+
     private final List<IRI> annotationPropertyIRIs;
 
     private final Map<String, String> builtinPrefixes = new HashMap<String, String>();
 
-//    private final List<String> languages;
 
-    public WebProtegeShortFormProvider(OWLAPIProject project) {
-        this.project = project;
+
+    public WebProtegeShortFormProvider(OWLOntology rootOntology, HasLang languageProvider) {
+        this.rootOntology = checkNotNull(rootOntology);
+        this.languageProvider = checkNotNull(languageProvider);
         builtinPrefixes.put("owl", Namespaces.OWL.toString());
         builtinPrefixes.put("rdfs", Namespaces.RDFS.toString());
         builtinPrefixes.put("rdf", Namespaces.RDF.toString());
@@ -76,8 +81,8 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
             boolean matchedDefaultLang = false;
             OWLAnnotationValue renderingValue = null;
             // Just ask for the language once (bad coding!)
-            final String defaultLanguage = project.getDefaultLanguage();
-            for(OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
+            final String defaultLanguage = languageProvider.getLang();
+            for(OWLOntology ontology : rootOntology.getImportsClosure()) {
                 for(OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(owlEntity.getIRI())) {
                     // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
                     // object to find the index.

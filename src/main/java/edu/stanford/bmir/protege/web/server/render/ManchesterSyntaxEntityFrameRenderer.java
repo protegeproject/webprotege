@@ -26,9 +26,9 @@ public class ManchesterSyntaxEntityFrameRenderer {
 
     private ManchesterSyntaxObjectRenderer objectRenderer;
 
-    private ManchesterSyntaxObjectRenderer.HighlightChecker highlightChecker;
+    private HighlightedEntityChecker highlightChecker;
 
-    private ManchesterSyntaxObjectRenderer.DeprecatedChecker deprecatedChecker;
+    private DeprecatedEntityChecker deprecatedChecker;
 
     private ItemStyleProvider itemStyleProvider;
 
@@ -62,8 +62,8 @@ public class ManchesterSyntaxEntityFrameRenderer {
                                                ShortFormProvider shortFormProvider,
                                                OntologyIRIShortFormProvider ontologyIRIShortFormProvider,
                                                ManchesterSyntaxObjectRenderer objectRenderer,
-                                               ManchesterSyntaxObjectRenderer.HighlightChecker highlightChecker,
-                                               ManchesterSyntaxObjectRenderer.DeprecatedChecker deprecatedChecker,
+                                               HighlightedEntityChecker highlightChecker,
+                                               DeprecatedEntityChecker deprecatedChecker,
                                                ItemStyleProvider itemStyleProvider,
                                                NestedAnnotationStyle nestedAnnotationStyle) {
         this.rootOntology = rootOntology;

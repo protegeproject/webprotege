@@ -3,7 +3,12 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
+import edu.stanford.bmir.protege.web.server.render.DefaultDeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.server.render.DefaultEntityIRIChecker;
+import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.server.render.NullHighlightedEntityChecker;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.HasContainsEntityInSignature;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
@@ -70,7 +75,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/03/2012
  */
-public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasApplyChanges {
+public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasApplyChanges, HasLang {
 
 
 
@@ -206,7 +211,15 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
      * Call from constructor only.
      */
     private void initialiseProjectMachinery() {
-        renderingManager = new RenderingManager(this);
+        final OWLOntology rootOntology = getRootOntology();
+        renderingManager = new RenderingManager(
+                rootOntology,
+                getDataFactory(),
+                new DefaultEntityIRIChecker(rootOntology),
+                new DefaultDeprecatedEntityChecker(rootOntology),
+                new WebProtegeBidirectionalShortFormProvider(rootOntology, this),
+                new WebProtegeOntologyIRIShortFormProvider(rootOntology),
+                new NullHighlightedEntityChecker());
 
         searchManager = new OWLAPISearchManager(this);
 
@@ -231,7 +244,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         metricsManager = new OWLAPIProjectMetricsManager(
                 getProjectId(),
-                DefaultMetricsCalculators.getDefaultMetrics(getRootOntology()),
+                DefaultMetricsCalculators.getDefaultMetrics(rootOntology),
                 projectEventManager,
                 WebProtegeLoggerManager.get(OWLAPIProjectMetadataManager.class));
 
@@ -242,7 +255,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         return documentStore.getProjectId();
     }
 
-    public String getDefaultLanguage() {
+    public String getLang() {
         return defaultLanguage;
     }
 
