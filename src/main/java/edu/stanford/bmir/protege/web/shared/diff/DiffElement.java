@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.diff;
 
 
 import com.google.common.base.Objects;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.io.Serializable;
 
@@ -19,13 +20,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @param <S> The type of source document.
  * @param <E> The type of lineElement contained within each line in the diff.
  */
-public class DiffElement<S extends Serializable, E extends Serializable> {
+public class DiffElement<S extends Serializable, E extends Serializable> implements Serializable, IsSerializable {
 
     private DiffOperation diffOperation;
 
     private S sourceDocument;
 
     private E lineElement;
+
+    /**
+     * For serialization purposes only
+     */
+    private DiffElement() {
+    }
 
     public DiffElement(DiffOperation diffOperation, S sourceDocument, E lineElement) {
         this.diffOperation = checkNotNull(diffOperation);
