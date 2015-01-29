@@ -9,5 +9,10 @@ import org.semanticweb.owlapi.model.OWLEntity;
 */
 public interface HighlightedEntityChecker {
 
+    /**
+     * Determines if the given entity should be highlighted.
+     * @param entity The entity.  Not {@code null}.
+     * @return {@code true} if the given entity should be highlighted, otherwise {@code false}.
+     */
     boolean isHighlighted(OWLEntity entity);
 }
