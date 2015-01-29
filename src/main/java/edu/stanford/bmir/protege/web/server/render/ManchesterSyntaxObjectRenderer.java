@@ -319,7 +319,7 @@ public class ManchesterSyntaxObjectRenderer {
 
         @Override
         public void visit(OWLDeclarationAxiom axiom) {
-            stringBuilder.append("<span style=\"section-kw\">");
+            stringBuilder.append("<span class=\"section-kw\">");
             stringBuilder.append(axiom.getEntity().getEntityType().getName());
             stringBuilder.append(": ");
             stringBuilder.append("</span>");

@@ -42,6 +42,13 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
         }
     };
 
+    private UploadAndMergeHandler uploadAndMergeHandler = new UploadAndMergeHandler() {
+        @Override
+        public void handleUploadAndMerge() {
+
+        }
+    };
+
 
     interface ProjectBarImplUiBinder extends UiBinder<HTMLPanel, ProjectBarImpl> {
 
@@ -59,7 +66,6 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
 
     @UiField
     protected ButtonBase projectSettingsItem;
-
 
 
     @UiHandler("shareProjectItem")
@@ -83,6 +89,13 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
                 showFreshEntitySettingsHandler.handleShowFreshEntitySettings();
             }
         });
+        popupMenu.addItem("Upload and merge...", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                uploadAndMergeHandler.handleUploadAndMerge();
+            }
+        });
+
         popupMenu.showRelativeTo(projectSettingsItem);
     }
 
@@ -108,5 +121,10 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
     @Override
     public void setShowShareSettingsHandler(ShowShareSettingsHandler showShareSettingsHandler) {
         this.showShareSettingsHandler = checkNotNull(showShareSettingsHandler);
+    }
+
+    @Override
+    public void setUploadAndMergeHandler(UploadAndMergeHandler uploadAndMergeHandler) {
+        this.uploadAndMergeHandler = checkNotNull(uploadAndMergeHandler);
     }
 }
