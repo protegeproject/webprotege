@@ -74,6 +74,13 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
 
             StringBuilder sb = new StringBuilder();
 
+            final ShortFormProvider uploadedOntologyShortFormProvider = new WebProtegeShortFormProvider(new HasAnnotationAssertionAxiomsImpl(uploadedRootOntology), new HasLang() {
+                @Override
+                public String getLang() {
+                    return project.getLang();
+                }
+            });
+
             ManchesterSyntaxObjectRenderer renderer = new ManchesterSyntaxObjectRenderer(
                     new ShortFormProvider() {
                         @Override
@@ -82,7 +89,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
                                 return project.getRenderingManager().getShortForm(owlEntity);
                             }
                             else if(uploadedRootOntology.containsEntityInSignature(owlEntity, true)) {
-                                return new SimpleShortFormProvider().getShortForm(owlEntity);
+                                return uploadedOntologyShortFormProvider.getShortForm(owlEntity);
                             }
                             else {
                                 return project.getRenderingManager().getShortForm(owlEntity);
@@ -99,18 +106,8 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
                     new NullHttpLinkRenderer(),
                     new MarkdownLiteralRenderer()
             );
-            ManchesterSyntaxObjectRenderer.HighlightChecker highlightChecker = new ManchesterSyntaxObjectRenderer.HighlightChecker() {
-                @Override
-                public boolean isHighlighted(OWLEntity entity) {
-                    return false;
-                }
-            };
-            ManchesterSyntaxObjectRenderer.DeprecatedChecker deprecatedChecker = new ManchesterSyntaxObjectRenderer.DeprecatedChecker() {
-                @Override
-                public boolean isDeprecated(OWLEntity entity) {
-                    return false;
-                }
-            };
+            HighlightedEntityChecker highlightChecker = NullHighlightedEntityChecker.get();
+            DeprecatedEntityChecker deprecatedChecker = NullDeprecatedEntityChecker.get();
             for(OntologyDiff diff : diffs) {
                 for(OWLAxiom ax : diff.getAxiomDiff().getAdded()) {
                     sb.append("<div class=\"diff-add-axiom\">");
