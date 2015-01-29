@@ -30,7 +30,7 @@ public class NullHighlightedEntityChecker implements HighlightedEntityChecker {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(INSTANCE);
+        return "NullHighlightedEntityChecker".hashCode();
     }
 
     @Override
