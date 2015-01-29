@@ -40,4 +40,20 @@ public class NullHighlightedEntityChecker_TestCase {
     public void shouldGenerateToString() {
         assertThat(checker.toString(), startsWith("NullHighlightedEntityChecker"));
     }
+
+    @Test
+    public void shouldBeEqualToSelf() {
+        assertThat(checker, is(equalTo(checker)));
+    }
+
+    @Test
+    public void shouldNotBeEqualToNull() {
+        assertThat(checker, is(not(equalTo(null))));
+    }
+
+    @Test
+    public void shouldHaveSameHashCodeAsOther() {
+        assertThat(checker.hashCode(), is(checker.hashCode()));
+    }
+
 }
