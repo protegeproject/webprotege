@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.shortform.DefaultLabellingIRIs;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
 import edu.stanford.bmir.protege.web.server.render.DefaultDeprecatedEntityChecker;
@@ -214,7 +216,13 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     private void initialiseProjectMachinery() {
         final OWLOntology rootOntology = getRootOntology();
         HasAnnotationAssertionAxioms annotationAssertionAxiomProvider = new HasAnnotationAssertionAxiomsImpl(rootOntology);
-        WebProtegeShortFormProvider shortFormProvider = new WebProtegeShortFormProvider(annotationAssertionAxiomProvider, this);
+
+        WebProtegeShortFormProvider shortFormProvider = new WebProtegeShortFormProvider(
+                ImmutableList.<IRI>builder()
+                        .addAll(DefaultLabellingIRIs.asImmutableList()).build(),
+                annotationAssertionAxiomProvider,
+                this);
+
         renderingManager = new RenderingManager(
                 rootOntology,
                 getDataFactory(),

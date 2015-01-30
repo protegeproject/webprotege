@@ -29,11 +29,13 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
 
     private final HasLang languageProvider;
 
-    private final ImmutableList<IRI> annotationPropertyIRIs;
+    private final ImmutableList<IRI> labellingIRIs;
 
     private final ImmutableMap<String, String> prefix2PrefixNameMap;
 
-    public WebProtegeShortFormProvider(HasAnnotationAssertionAxioms annotationAssertionAxiomProvider, HasLang languageProvider) {
+    public WebProtegeShortFormProvider(ImmutableList<IRI> labellingIRIs, HasAnnotationAssertionAxioms annotationAssertionAxiomProvider, HasLang languageProvider) {
+
+        this.labellingIRIs = checkNotNull(labellingIRIs);
         this.annotationAssertionAxiomProvider = checkNotNull(annotationAssertionAxiomProvider);
         this.languageProvider = checkNotNull(languageProvider);
 
@@ -44,13 +46,6 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
             }
         }
         prefix2PrefixNameMap = prefixIRI2PrefixNameMapBuilder.build();
-
-        ImmutableList.Builder<IRI> annotationPropertyIRIs = ImmutableList.builder();
-        annotationPropertyIRIs.add(SKOSVocabulary.PREFLABEL.getIRI());
-        annotationPropertyIRIs.add(OWLRDFVocabulary.RDFS_LABEL.getIRI());
-        annotationPropertyIRIs.add(IRI.create("http://bibframe.org/vocab/label"));
-        annotationPropertyIRIs.add(IRI.create("http://bibframe.org/vocab/title"));
-        this.annotationPropertyIRIs = annotationPropertyIRIs.build();
     }
 
     private Optional<String> getBuiltInPrefix(OWLEntity entity) {
@@ -80,7 +75,7 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
             for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxiomProvider.getAnnotationAssertionAxioms(owlEntity.getIRI())) {
                 // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
                 // object to find the index.
-                int index = annotationPropertyIRIs.indexOf(ax.getProperty().getIRI());
+                int index = labellingIRIs.indexOf(ax.getProperty().getIRI());
                 if (index <= matchedIndex && index > -1) {
                     if (index < matchedIndex) {
                         matchedIndex = index;
