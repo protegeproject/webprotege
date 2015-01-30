@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;
@@ -29,7 +30,7 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
 
     private final HasLang languageProvider;
 
-    private final List<IRI> annotationPropertyIRIs;
+    private final ImmutableList<IRI> annotationPropertyIRIs;
 
     private final Map<String, String> builtinPrefixes = new HashMap<String, String>();
 
@@ -41,12 +42,12 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
                 builtinPrefixes.put(ns.getPrefixIRI(), ns.getPrefixName());
             }
         }
-        List<IRI> annotationPropertyIRIs = new ArrayList<IRI>();
+        ImmutableList.Builder<IRI> annotationPropertyIRIs = ImmutableList.builder();
         annotationPropertyIRIs.add(SKOSVocabulary.PREFLABEL.getIRI());
         annotationPropertyIRIs.add(OWLRDFVocabulary.RDFS_LABEL.getIRI());
         annotationPropertyIRIs.add(IRI.create("http://bibframe.org/vocab/label"));
         annotationPropertyIRIs.add(IRI.create("http://bibframe.org/vocab/title"));
-        this.annotationPropertyIRIs = Collections.unmodifiableList(annotationPropertyIRIs);
+        this.annotationPropertyIRIs = annotationPropertyIRIs.build();
     }
 
     private Optional<String> getBuiltInPrefix(OWLEntity entity) {
