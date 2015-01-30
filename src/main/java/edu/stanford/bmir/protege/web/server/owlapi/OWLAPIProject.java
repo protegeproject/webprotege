@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.*;
-import edu.stanford.bmir.protege.web.server.shortform.DefaultLabellingIRIs;
+import edu.stanford.bmir.protege.web.server.shortform.DefaultShortFormAnnotationPropertyIRIs;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
 import edu.stanford.bmir.protege.web.server.render.DefaultDeprecatedEntityChecker;
@@ -219,7 +219,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         WebProtegeShortFormProvider shortFormProvider = new WebProtegeShortFormProvider(
                 ImmutableList.<IRI>builder()
-                        .addAll(DefaultLabellingIRIs.asImmutableList()).build(),
+                        .addAll(DefaultShortFormAnnotationPropertyIRIs.asImmutableList()).build(),
                 annotationAssertionAxiomProvider,
                 this);
 

@@ -70,7 +70,7 @@ public class WebProtegeShortFromProvider_TestCase {
         when(annotationAssertionAxiomsProvider.getAnnotationAssertionAxioms(entityIRI)).thenReturn(
                 Sets.newHashSet(annotationAssertion));
         shortFormProvider = new WebProtegeShortFormProvider(
-                DefaultLabellingIRIs.asImmutableList(),
+                DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
                 annotationAssertionAxiomsProvider,
                 languageProvider);
     }
