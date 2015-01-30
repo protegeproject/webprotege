@@ -19,6 +19,9 @@ import edu.stanford.bmir.protege.web.server.filesubmission.FileUploadConstants;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.render.*;
+import edu.stanford.bmir.protege.web.server.shortform.DefaultShortFormAnnotationPropertyIRIs;
+import edu.stanford.bmir.protege.web.server.shortform.WebProtegeIRIShortFormProvider;
+import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
 import edu.stanford.bmir.protege.web.server.util.DefaultTempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.axiom.OWLAxiomData;
@@ -51,15 +54,15 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     @Override
     protected ComputeProjectMergeResult execute(ComputeProjectMergeAction action, final OWLAPIProject project, ExecutionContext executionContext) {
         try {
-        DocumentId documentId = action.getProjectDocumentId();
-        final File file = new File(FileUploadConstants.UPLOADS_DIRECTORY, documentId.getDocumentId());
+            DocumentId documentId = action.getProjectDocumentId();
+            final File file = new File(FileUploadConstants.UPLOADS_DIRECTORY, documentId.getDocumentId());
 
-        UploadedProjectSourcesExtractor extractor = new UploadedProjectSourcesExtractor(
-                new ZipInputStreamChecker(),
-                new ZipArchiveProjectSourcesExtractor(
-                        new DefaultTempFileFactory(),
-                        new DefaultRootOntologyDocumentMatcher()),
-                new SingleDocumentProjectSourcesExtractor());
+            UploadedProjectSourcesExtractor extractor = new UploadedProjectSourcesExtractor(
+                    new ZipInputStreamChecker(),
+                    new ZipArchiveProjectSourcesExtractor(
+                            new DefaultTempFileFactory(),
+                            new DefaultRootOntologyDocumentMatcher()),
+                    new SingleDocumentProjectSourcesExtractor());
 
 
             OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
@@ -84,12 +87,17 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
 
             StringBuilder sb = new StringBuilder();
 
-            final ShortFormProvider uploadedOntologyShortFormProvider = new WebProtegeShortFormProvider(new HasAnnotationAssertionAxiomsImpl(uploadedRootOntology), new HasLang() {
-                @Override
-                public String getLang() {
-                    return project.getLang();
-                }
-            });
+            final ShortFormProvider uploadedOntologyShortFormProvider = new WebProtegeShortFormProvider(
+                    new WebProtegeIRIShortFormProvider(
+                            DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
+                            new HasAnnotationAssertionAxiomsImpl(uploadedRootOntology), new HasLang() {
+                        @Override
+                        public String getLang() {
+                            return project.getLang();
+                        }
+                    }
+                    )
+            );
 
             final ShortFormProvider projectShortFormProvider = project.getRenderingManager().getShortFormProvider();
 
@@ -128,7 +136,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
                         @Override
                         public Collection<OWLEntity> getEntitiesWithIRI(IRI iri) {
                             Collection<OWLEntity> first = firstDelegate.getEntitiesWithIRI(iri);
-                            if(!first.isEmpty()) {
+                            if (!first.isEmpty()) {
                                 return first;
                             }
                             return secondDelegate.getEntitiesWithIRI(iri);
@@ -141,11 +149,11 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
             HighlightedEntityChecker highlightChecker = NullHighlightedEntityChecker.get();
             DeprecatedEntityChecker deprecatedChecker = NullDeprecatedEntityChecker.get();
             List<DiffElement<String, OWLAxiom>> diffElements = new ArrayList<>();
-            for(OntologyDiff diff : diffs) {
-                for(OWLAxiom ax : diff.getAxiomDiff().getAdded()) {
+            for (OntologyDiff diff : diffs) {
+                for (OWLAxiom ax : diff.getAxiomDiff().getAdded()) {
                     diffElements.add(new DiffElement<>(DiffOperation.ADD, "ontology", ax));
                 }
-                for(OWLAxiom ax : diff.getAxiomDiff().getRemoved()) {
+                for (OWLAxiom ax : diff.getAxiomDiff().getRemoved()) {
                     diffElements.add(new DiffElement<>(DiffOperation.REMOVE, "ontology", ax));
                 }
             }
@@ -156,18 +164,18 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
                     OWLObject subj1 = subjectProvider.getSubject(o1);
                     OWLObject subj2 = subjectProvider.getSubject(o2);
                     OWLEntity entity1 = null;
-                    if(subj1 instanceof OWLEntity) {
+                    if (subj1 instanceof OWLEntity) {
                         entity1 = (OWLEntity) subj1;
                     }
                     OWLEntity entity2 = null;
-                    if(subj2 instanceof OWLEntity) {
+                    if (subj2 instanceof OWLEntity) {
                         entity2 = (OWLEntity) subj2;
                     }
                     int diff = 0;
-                    if(entity1 != null && entity2 != null) {
+                    if (entity1 != null && entity2 != null) {
                         diff = dualShortFormProvider.getShortForm(entity1).compareTo(dualShortFormProvider.getShortForm(entity2));
                     }
-                    if(diff != 0) {
+                    if (diff != 0) {
                         return diff;
                     }
                     int distance = StringUtils.getLevenshteinDistance(o1.toString(), o2.toString());
@@ -179,11 +187,11 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
                 @Override
                 public int compare(DiffElement<String, OWLAxiom> o1, DiffElement<String, OWLAxiom> o2) {
                     int diff = comp.compare(o1.getLineElement(), o2.getLineElement());
-                    if(diff != 0) {
+                    if (diff != 0) {
                         return diff;
                     }
                     int opDiff = o1.getDiffOperation().compareTo(o2.getDiffOperation());
-                    if(opDiff != 0) {
+                    if (opDiff != 0) {
                         return opDiff;
                     }
                     return o1.getSourceDocument().compareTo(o2.getSourceDocument());
@@ -191,13 +199,12 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
             });
 
             List<DiffElement<String, SafeHtml>> transformedDiff = new ArrayList<>();
-            for(DiffElement<String, OWLAxiom> element : diffElements) {
+            for (DiffElement<String, OWLAxiom> element : diffElements) {
                 String html = renderer.render(element.getLineElement(), highlightChecker, deprecatedChecker);
                 SafeHtml rendering = new SafeHtmlBuilder().appendHtmlConstant(html).toSafeHtml();
                 transformedDiff.add(new DiffElement<>(element.getDiffOperation(), element.getSourceDocument(), rendering));
             }
             return new ComputeProjectMergeResult(transformedDiff);
-
 
 
         } catch (IOException e) {
