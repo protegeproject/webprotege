@@ -41,7 +41,7 @@ public class MergeUploadedProjectWorkflow {
 
     private void confirmMerge(ComputeProjectMergeResult mergeResult, final ProjectId projectId, final DocumentId documentId) {
         ApplyChangesView view = new ApplyChangesViewImpl();
-        view.setPreview(mergeResult.getPreview());
+        view.setDiff(mergeResult.getDiff());
         ApplyChangesDialogController controller = new ApplyChangesDialogController(view);
         controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<MergeData>() {
             @Override

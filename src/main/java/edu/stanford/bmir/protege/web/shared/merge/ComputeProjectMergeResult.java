@@ -5,9 +5,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.shared.axiom.OWLAxiomData;
+import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,16 +19,16 @@ import java.util.Set;
  */
 public class ComputeProjectMergeResult implements Result {
 
-    private String htmlPreview;
+    private List<DiffElement<String, SafeHtml>> diff;
 
     private ComputeProjectMergeResult() {
     }
 
-    public ComputeProjectMergeResult(SafeHtml preview) {
-        this.htmlPreview = preview.asString();
+    public ComputeProjectMergeResult(List<DiffElement<String, SafeHtml>> diff) {
+        this.diff = diff;
     }
 
-    public SafeHtml getPreview() {
-        return new SafeHtmlBuilder().appendHtmlConstant(htmlPreview).toSafeHtml();
+    public List<DiffElement<String, SafeHtml>> getDiff() {
+        return diff;
     }
 }

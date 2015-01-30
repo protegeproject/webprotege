@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:d='urn:import:edu.stanford.bmir.protege.web.client.diff'>
 
     <ui:with field="mg" type="edu.stanford.bmir.protege.web.client.merge.MergeClientBundle"/>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
@@ -10,8 +11,8 @@
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="Changes to be applied" addStyleNames="{wp.style.formLabel}"/>
-            <g:ScrollPanel>
-                <g:HTML ui:field="changeRenderingField"/>
+            <g:ScrollPanel width="700px" height="300px">
+                <d:DiffViewImpl ui:field="diffView"/>
             </g:ScrollPanel>
         </div>
     </g:HTMLPanel>
