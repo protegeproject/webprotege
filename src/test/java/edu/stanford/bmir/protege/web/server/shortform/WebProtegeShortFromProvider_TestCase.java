@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.Sets;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,7 +69,10 @@ public class WebProtegeShortFromProvider_TestCase {
         when(annotationProperty.getIRI()).thenReturn(OWLRDFVocabulary.RDFS_LABEL.getIRI());
         when(annotationAssertionAxiomsProvider.getAnnotationAssertionAxioms(entityIRI)).thenReturn(
                 Sets.newHashSet(annotationAssertion));
-        shortFormProvider = new WebProtegeShortFormProvider(annotationAssertionAxiomsProvider, languageProvider);
+        shortFormProvider = new WebProtegeShortFormProvider(
+                DefaultLabellingIRIs.asImmutableList(),
+                annotationAssertionAxiomsProvider,
+                languageProvider);
     }
 
     @Test
