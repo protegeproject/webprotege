@@ -1618,13 +1618,3 @@ td {
 .ms-nested-annotation {
     /*	border-top: 1px dotted #f4f4f4;*/
 }
-
-.diff-add-axiom {
-    background-color: mintcream;
-    padding: 2px;
-}
-
-.diff-remove-axiom {
-    background-color: #fff5fa;
-    padding: 2px;
-}

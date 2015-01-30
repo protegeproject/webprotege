@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.merge;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
@@ -20,16 +22,20 @@ import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.server.util.DefaultTempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.axiom.OWLAxiomData;
+import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
+import edu.stanford.bmir.protege.web.shared.diff.DiffOperation;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeAction;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
+import org.apache.commons.lang.StringUtils;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Matthew Horridge
@@ -63,7 +69,11 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
             final OWLOntology uploadedRootOntology = importer.importRawProjectSources(rawProjectSources);
             System.out.println("Loaded uploadedRootOntology");
 
-            OntologyDiffCalculator diffCalculator = new OntologyDiffCalculator(new AnnotationDiffCalculator(), new AxiomDiffCalculator());
+            OntologyDiffCalculator diffCalculator = new OntologyDiffCalculator(
+                    new AnnotationDiffCalculator(),
+                    new AxiomDiffCalculator()
+            );
+
             ModifiedProjectOntologiesCalculator ontsCalculator = new ModifiedProjectOntologiesCalculator(
                     ImmutableSet.copyOf(project.getRootOntology().getImportsClosure()),
                     ImmutableSet.copyOf(uploadedRootOntology.getImportsClosure()),
@@ -81,46 +91,112 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
                 }
             });
 
+            final ShortFormProvider projectShortFormProvider = project.getRenderingManager().getShortFormProvider();
+
+            final ShortFormProvider dualShortFormProvider = new ShortFormProvider() {
+                @Override
+                public String getShortForm(OWLEntity owlEntity) {
+                    if (owlEntity.isBuiltIn()) {
+                        return projectShortFormProvider.getShortForm(owlEntity);
+                    } else if (project.getRootOntology().containsEntityInSignature(owlEntity, true)) {
+                        return projectShortFormProvider.getShortForm(owlEntity);
+                    } else if (uploadedRootOntology.containsEntityInSignature(owlEntity, true)) {
+                        return uploadedOntologyShortFormProvider.getShortForm(owlEntity);
+                    } else {
+                        return projectShortFormProvider.getShortForm(owlEntity);
+                    }
+                }
+
+                @Override
+                public void dispose() {
+
+                }
+            };
             ManchesterSyntaxObjectRenderer renderer = new ManchesterSyntaxObjectRenderer(
-                    new ShortFormProvider() {
+                    dualShortFormProvider,
+                    new EntityIRIChecker() {
+
+                        private EntityIRIChecker firstDelegate = new DefaultEntityIRIChecker(project.getRootOntology());
+
+                        private EntityIRIChecker secondDelegate = new DefaultEntityIRIChecker(uploadedRootOntology);
+
                         @Override
-                        public String getShortForm(OWLEntity owlEntity) {
-                            if(owlEntity.isBuiltIn() || project.getRootOntology().containsEntityInSignature(owlEntity, true)) {
-                                return project.getRenderingManager().getShortForm(owlEntity);
-                            }
-                            else if(uploadedRootOntology.containsEntityInSignature(owlEntity, true)) {
-                                return uploadedOntologyShortFormProvider.getShortForm(owlEntity);
-                            }
-                            else {
-                                return project.getRenderingManager().getShortForm(owlEntity);
-                            }
+                        public boolean isEntityIRI(IRI iri) {
+                            return firstDelegate.isEntityIRI(iri) || secondDelegate.isEntityIRI(iri);
                         }
 
                         @Override
-                        public void dispose() {
-
+                        public Collection<OWLEntity> getEntitiesWithIRI(IRI iri) {
+                            Collection<OWLEntity> first = firstDelegate.getEntitiesWithIRI(iri);
+                            if(!first.isEmpty()) {
+                                return first;
+                            }
+                            return secondDelegate.getEntitiesWithIRI(iri);
                         }
                     },
-                    new DefaultEntityIRIChecker(project.getRootOntology()),
                     LiteralStyle.REGULAR,
                     new NullHttpLinkRenderer(),
                     new MarkdownLiteralRenderer()
             );
             HighlightedEntityChecker highlightChecker = NullHighlightedEntityChecker.get();
             DeprecatedEntityChecker deprecatedChecker = NullDeprecatedEntityChecker.get();
+            List<DiffElement<String, OWLAxiom>> diffElements = new ArrayList<>();
             for(OntologyDiff diff : diffs) {
                 for(OWLAxiom ax : diff.getAxiomDiff().getAdded()) {
-                    sb.append("<div class=\"diff-add-axiom\">");
-                    sb.append(renderer.render(ax, highlightChecker, deprecatedChecker));
-                    sb.append("</div>\n");
+                    diffElements.add(new DiffElement<>(DiffOperation.ADD, "ontology", ax));
                 }
                 for(OWLAxiom ax : diff.getAxiomDiff().getRemoved()) {
-                    sb.append("<div class=\"diff-remove-axiom\">");
-                    sb.append(renderer.render(ax, highlightChecker, deprecatedChecker));
-                    sb.append("</div>");
+                    diffElements.add(new DiffElement<>(DiffOperation.REMOVE, "ontology", ax));
                 }
             }
-            return new ComputeProjectMergeResult(new SafeHtmlBuilder().appendHtmlConstant(sb.toString()).toSafeHtml());
+            final Comparator<OWLAxiom> comp = new Comparator<OWLAxiom>() {
+                @Override
+                public int compare(OWLAxiom o1, OWLAxiom o2) {
+                    AxiomSubjectProvider subjectProvider = new AxiomSubjectProvider();
+                    OWLObject subj1 = subjectProvider.getSubject(o1);
+                    OWLObject subj2 = subjectProvider.getSubject(o2);
+                    OWLEntity entity1 = null;
+                    if(subj1 instanceof OWLEntity) {
+                        entity1 = (OWLEntity) subj1;
+                    }
+                    OWLEntity entity2 = null;
+                    if(subj2 instanceof OWLEntity) {
+                        entity2 = (OWLEntity) subj2;
+                    }
+                    int diff = 0;
+                    if(entity1 != null && entity2 != null) {
+                        diff = dualShortFormProvider.getShortForm(entity1).compareTo(dualShortFormProvider.getShortForm(entity2));
+                    }
+                    if(diff != 0) {
+                        return diff;
+                    }
+                    int distance = StringUtils.getLevenshteinDistance(o1.toString(), o2.toString());
+                    return distance;
+//                    return o1.compareTo(o2);
+                }
+            };
+            Collections.sort(diffElements, new Comparator<DiffElement<String, OWLAxiom>>() {
+                @Override
+                public int compare(DiffElement<String, OWLAxiom> o1, DiffElement<String, OWLAxiom> o2) {
+                    int diff = comp.compare(o1.getLineElement(), o2.getLineElement());
+                    if(diff != 0) {
+                        return diff;
+                    }
+                    int opDiff = o1.getDiffOperation().compareTo(o2.getDiffOperation());
+                    if(opDiff != 0) {
+                        return opDiff;
+                    }
+                    return o1.getSourceDocument().compareTo(o2.getSourceDocument());
+                }
+            });
+
+            List<DiffElement<String, SafeHtml>> transformedDiff = new ArrayList<>();
+            for(DiffElement<String, OWLAxiom> element : diffElements) {
+                String html = renderer.render(element.getLineElement(), highlightChecker, deprecatedChecker);
+                SafeHtml rendering = new SafeHtmlBuilder().appendHtmlConstant(html).toSafeHtml();
+                transformedDiff.add(new DiffElement<>(element.getDiffOperation(), element.getSourceDocument(), rendering));
+            }
+            return new ComputeProjectMergeResult(transformedDiff);
 
 
 
