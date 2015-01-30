@@ -13,18 +13,15 @@ import org.semanticweb.owlapi.vocab.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 27/01/15
+ * 30/01/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class WebProtegeShortFromProvider_TestCase {
+public class WebProtegeIRIShortFormProvider_TestCase {
 
     public static final String LANG = "LANG";
 
@@ -42,10 +39,7 @@ public class WebProtegeShortFromProvider_TestCase {
     private OWLAnnotationAssertionAxiom annotationAssertion;
 
     @Mock
-    private OWLEntity entity;
-
-    @Mock
-    private IRI entityIRI;
+    private IRI iri;
 
     @Mock
     private OWLLiteral annotationValue;
@@ -53,12 +47,11 @@ public class WebProtegeShortFromProvider_TestCase {
     @Mock
     private OWLAnnotationProperty annotationProperty;
 
-    private WebProtegeShortFormProvider shortFormProvider;
+    private WebProtegeIRIShortFormProvider shortFormProvider;
 
     @Before
     public void setUp() throws Exception {
-        when(entity.getIRI()).thenReturn(entityIRI);
-        when(entityIRI.getFragment()).thenReturn(ENTITY_IRI_FRAGMENT);
+        when(iri.getFragment()).thenReturn(ENTITY_IRI_FRAGMENT);
 
         when(annotationAssertion.getValue()).thenReturn(annotationValue);
         when(annotationValue.getLiteral()).thenReturn(LITERAL);
@@ -67,45 +60,46 @@ public class WebProtegeShortFromProvider_TestCase {
         when(annotationAssertion.getProperty()).thenReturn(annotationProperty);
 
         when(annotationProperty.getIRI()).thenReturn(OWLRDFVocabulary.RDFS_LABEL.getIRI());
-        when(annotationAssertionAxiomsProvider.getAnnotationAssertionAxioms(entityIRI)).thenReturn(
+        when(annotationAssertionAxiomsProvider.getAnnotationAssertionAxioms(iri)).thenReturn(
                 Sets.newHashSet(annotationAssertion));
-        shortFormProvider = new WebProtegeShortFormProvider(
+        shortFormProvider = new WebProtegeIRIShortFormProvider(
                 DefaultShortFormAnnotationPropertyIRIs.asImmutableList(),
                 annotationAssertionAxiomsProvider,
-                languageProvider);
+                languageProvider
+        );
     }
 
     @Test
     public void shouldReturnLiteralValueWithLang() {
         when(languageProvider.getLang()).thenReturn(LANG);
-        String shortForm = shortFormProvider.getShortForm(entity);
+        String shortForm = shortFormProvider.getShortForm(iri);
         assertThat(shortForm, equalTo(LITERAL));
     }
 
     @Test
     public void shouldReturnLiteralValueForUnknownLang() {
         when(languageProvider.getLang()).thenReturn("OTHER");
-        String shortForm = shortFormProvider.getShortForm(entity);
+        String shortForm = shortFormProvider.getShortForm(iri);
         assertThat(shortForm, equalTo(LITERAL));
     }
 
     @Test
     public void shouldReturnLiteralValueOfRDFSLabelAnnotation() {
         when(annotationProperty.getIRI()).thenReturn(OWLRDFVocabulary.RDFS_LABEL.getIRI());
-        assertThat(shortFormProvider.getShortForm(entity), is(LITERAL));
+        assertThat(shortFormProvider.getShortForm(iri), is(LITERAL));
     }
 
     @Test
     public void shouldReturnLiteralValueOfSKOSPrefLabelAnnotation() {
         when(annotationProperty.getIRI()).thenReturn(SKOSVocabulary.PREFLABEL.getIRI());
-        assertThat(shortFormProvider.getShortForm(entity), is(LITERAL));
+        assertThat(shortFormProvider.getShortForm(iri), is(LITERAL));
     }
 
 
     @Test
     public void shouldReturnEntityIRIFragmentIfAnnotationAssertionPropertyIsNotKnown() {
         when(annotationProperty.getIRI()).thenReturn(IRI.create("http://other.com/other"));
-        assertThat(shortFormProvider.getShortForm(entity), is(ENTITY_IRI_FRAGMENT));
+        assertThat(shortFormProvider.getShortForm(iri), is(ENTITY_IRI_FRAGMENT));
     }
 
     @Test
@@ -122,7 +116,7 @@ public class WebProtegeShortFromProvider_TestCase {
     public void shouldReturnBuiltInRenderingForOWLTopObjectProperty() {
         testBuiltInShortForm(OWLRDFVocabulary.OWL_TOP_OBJECT_PROPERTY);
     }
-    
+
     @Test
     public void shouldReturnBuiltInRenderingForOWLBottomObjectProperty() {
         testBuiltInShortForm(OWLRDFVocabulary.OWL_BOTTOM_OBJECT_PROPERTY);
@@ -133,7 +127,7 @@ public class WebProtegeShortFromProvider_TestCase {
     public void shouldReturnBuiltInRenderingForOWLTopDataProperty() {
         testBuiltInShortForm(OWLRDFVocabulary.OWL_TOP_DATA_PROPERTY);
     }
-    
+
     @Test
     public void shouldReturnBuiltInRenderingForOWLBottomDataProperty() {
         testBuiltInShortForm(OWLRDFVocabulary.OWL_BOTTOM_DATA_PROPERTY);
@@ -870,18 +864,13 @@ public class WebProtegeShortFromProvider_TestCase {
 
 
     private void testPrefixRendering(Namespaces prefix) {
-        OWLEntity entity = mock(OWLEntity.class);
-        when(entity.isBuiltIn()).thenReturn(true);
-        when(entity.getIRI()).thenReturn(IRI.create(prefix.getPrefixIRI() + "frag"));
-        assertThat(shortFormProvider.getShortForm(entity), equalTo(prefix.getPrefixName() + ":frag"));
+        IRI iri = IRI.create(prefix.getPrefixIRI() + "suffix");
+        assertThat(shortFormProvider.getShortForm(iri), equalTo(prefix.getPrefixName() + ":suffix"));
     }
 
 
     private <V extends HasIRI & HasPrefixedName> void testBuiltInShortForm(V vocabulary) {
-        OWLEntity entity = mock(OWLEntity.class);
-        when(entity.isBuiltIn()).thenReturn(true);
-        when(entity.getIRI()).thenReturn(vocabulary.getIRI());
-        assertThat(shortFormProvider.getShortForm(entity), equalTo(vocabulary.getPrefixedName()));
+        IRI iri = vocabulary.getIRI();
+        assertThat(shortFormProvider.getShortForm(iri), equalTo(vocabulary.getPrefixedName()));
     }
-
 }
