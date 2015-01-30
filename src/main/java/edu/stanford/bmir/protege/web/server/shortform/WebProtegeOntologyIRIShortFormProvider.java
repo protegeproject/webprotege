@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.mansyntax;
+package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.server.inject.RootOntology;

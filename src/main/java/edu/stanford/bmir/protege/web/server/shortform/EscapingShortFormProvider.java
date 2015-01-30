@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.shortform;
 
 /**
  * Author: Matthew Horridge<br>
