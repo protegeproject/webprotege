@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 import com.google.inject.AbstractModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLEntityChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
-import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOntologyIRIShortFormProvider;
+import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.owlapi.AssertedClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;

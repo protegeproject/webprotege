@@ -1,6 +1,7 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.Sets;
+import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.junit.Before;
 import org.junit.Test;

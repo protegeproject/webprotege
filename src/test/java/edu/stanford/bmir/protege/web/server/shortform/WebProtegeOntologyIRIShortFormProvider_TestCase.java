@@ -1,5 +1,6 @@
-package edu.stanford.bmir.protege.web.server.mansyntax;
+package edu.stanford.bmir.protege.web.server.shortform;
 
+import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.when;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/03/2014
  */
 @RunWith(MockitoJUnitRunner.class)
-public class WebProtegeOntologyIRIShortFormProviderTestCase {
+public class WebProtegeOntologyIRIShortFormProvider_TestCase {
 
 
     private IRI iri;

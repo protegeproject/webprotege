@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.shortform;
 
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.*;
@@ -27,7 +27,7 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
 
     private final HasAnnotationAssertionAxioms annotationAssertionAxiomProvider;
 
-    private HasLang languageProvider;
+    private final HasLang languageProvider;
 
     private final List<IRI> annotationPropertyIRIs;
 
@@ -41,13 +41,6 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
                 builtinPrefixes.put(ns.getPrefixIRI(), ns.getPrefixName());
             }
         }
-//        languages = new ArrayList<String>();
-//        // TODO: Configurable.
-//        languages.add("en");
-//        languages.add("de");
-//        languages.add("es");
-//        languages.add("fr");
-
         List<IRI> annotationPropertyIRIs = new ArrayList<IRI>();
         annotationPropertyIRIs.add(SKOSVocabulary.PREFLABEL.getIRI());
         annotationPropertyIRIs.add(OWLRDFVocabulary.RDFS_LABEL.getIRI());

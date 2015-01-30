@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.render.*;
+import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
