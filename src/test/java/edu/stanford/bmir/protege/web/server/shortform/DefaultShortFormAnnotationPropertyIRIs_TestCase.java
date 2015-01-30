@@ -15,13 +15,13 @@ import static org.hamcrest.Matchers.*;
  * Stanford Center for Biomedical Informatics Research
  * 30/01/15
  */
-public class DefaultLabellingIRIs_TestCase {
+public class DefaultShortFormAnnotationPropertyIRIs_TestCase {
 
     private ImmutableList<IRI> defaultLabellingIRIs;
 
     @Before
     public void setUp() throws Exception {
-        defaultLabellingIRIs = DefaultLabellingIRIs.asImmutableList();
+        defaultLabellingIRIs = DefaultShortFormAnnotationPropertyIRIs.asImmutableList();
     }
 
     @Test

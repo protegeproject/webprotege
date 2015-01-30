@@ -11,7 +11,7 @@ import org.semanticweb.owlapi.vocab.SKOSVocabulary;
  * Stanford Center for Biomedical Informatics Research
  * 30/01/15
  */
-public enum DefaultLabellingIRIs implements HasIRI {
+public enum DefaultShortFormAnnotationPropertyIRIs implements HasIRI {
 
     SKOS_PREF_LABEL(SKOSVocabulary.PREFLABEL.getIRI()),
 
@@ -19,7 +19,7 @@ public enum DefaultLabellingIRIs implements HasIRI {
 
     private final IRI iri;
 
-    DefaultLabellingIRIs(IRI iri) {
+    DefaultShortFormAnnotationPropertyIRIs(IRI iri) {
         this.iri = iri;
     }
 
@@ -30,7 +30,7 @@ public enum DefaultLabellingIRIs implements HasIRI {
 
     public static ImmutableList<IRI> asImmutableList() {
         ImmutableList.Builder<IRI> resultBuilder = ImmutableList.builder();
-        for(DefaultLabellingIRIs labellingIRI : values()) {
+        for(DefaultShortFormAnnotationPropertyIRIs labellingIRI : values()) {
             resultBuilder.add(labellingIRI.getIRI());
         }
         return resultBuilder.build();
