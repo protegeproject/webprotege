@@ -4,26 +4,21 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.ShortFormProvider;
-import org.semanticweb.owlapi.util.SimpleShortFormProvider;
+import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.vocab.Namespaces;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
-import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 03/04/2012
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 30/01/15
  */
-public class WebProtegeShortFormProvider implements ShortFormProvider {
-
+public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
 
     private final HasAnnotationAssertionAxioms annotationAssertionAxiomProvider;
 
@@ -33,7 +28,7 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
 
     private final ImmutableMap<String, String> prefix2PrefixNameMap;
 
-    public WebProtegeShortFormProvider(ImmutableList<IRI> labellingIRIs, HasAnnotationAssertionAxioms annotationAssertionAxiomProvider, HasLang languageProvider) {
+    public WebProtegeIRIShortFormProvider(ImmutableList<IRI> labellingIRIs, HasAnnotationAssertionAxioms annotationAssertionAxiomProvider, HasLang languageProvider) {
 
         this.labellingIRIs = checkNotNull(labellingIRIs);
         this.annotationAssertionAxiomProvider = checkNotNull(annotationAssertionAxiomProvider);
@@ -48,8 +43,8 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
         prefix2PrefixNameMap = prefixIRI2PrefixNameMapBuilder.build();
     }
 
-    private Optional<String> getBuiltInPrefix(OWLEntity entity) {
-        IRI iri = entity.getIRI();
+
+    private Optional<String> getBuiltInPrefix(IRI iri) {
         String iriNS = iri.getNamespace();
         if (prefix2PrefixNameMap.containsKey(iriNS)) {
             return Optional.of(iriNS);
@@ -58,21 +53,19 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
         }
     }
 
-    public synchronized String getShortForm(OWLEntity owlEntity) {
+    @Override
+    public String getShortForm(IRI iri) {
         try {
-            if (owlEntity instanceof HasPrefixedName) {
-                return ((HasPrefixedName) owlEntity).getPrefixedName();
-            }
-            Optional<String> builtInPrefix = getBuiltInPrefix(owlEntity);
+            Optional<String> builtInPrefix = getBuiltInPrefix(iri);
             if (builtInPrefix.isPresent()) {
-                return prefix2PrefixNameMap.get(builtInPrefix.get()) + ":" + owlEntity.getIRI().getFragment();
+                return prefix2PrefixNameMap.get(builtInPrefix.get()) + ":" + iri.getFragment();
             }
             int matchedIndex = Integer.MAX_VALUE;
             boolean matchedDefaultLang = false;
             OWLAnnotationValue renderingValue = null;
             // Just ask for the language once (bad coding!)
             final String defaultLanguage = languageProvider.getLang();
-            for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxiomProvider.getAnnotationAssertionAxioms(owlEntity.getIRI())) {
+            for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxiomProvider.getAnnotationAssertionAxioms(iri)) {
                 // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
                 // object to find the index.
                 int index = labellingIRIs.indexOf(ax.getProperty().getIRI());
@@ -101,34 +94,21 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
 
                 }
             }
-            String result;
+            final String result;
             if (renderingValue instanceof OWLLiteral) {
                 result = ((OWLLiteral) renderingValue).getLiteral();
             } else {
-                // Had this as an instance variable, but creating a new instance each time is definitely thread safe.
-                SimpleShortFormProvider simpleShortFormProvider = new SimpleShortFormProvider();
-                result = URLDecoder.decode(simpleShortFormProvider.getShortForm(owlEntity), "UTF-8");
+                String iriFragment = iri.getFragment();
+                if(iriFragment != null) {
+                    result = iriFragment;
+                }
+                else {
+                    result = iri.toQuotedString();
+                }
             }
-            if (result.contains(" ")) {
-                result = getQuoted(result);
-            }
-            return result;
+            return URLDecoder.decode(result, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
     }
-
-    private static String getQuoted(String result) {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("'");
-//        sb.append(result);
-//        sb.append("'");
-//        return sb;
-        return result;
-    }
-
-    public void dispose() {
-    }
-
-
 }

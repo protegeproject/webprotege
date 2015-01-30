@@ -4,14 +4,11 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.*;
-import edu.stanford.bmir.protege.web.server.shortform.DefaultShortFormAnnotationPropertyIRIs;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
+import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
 import edu.stanford.bmir.protege.web.server.render.DefaultDeprecatedEntityChecker;
 import edu.stanford.bmir.protege.web.server.render.DefaultEntityIRIChecker;
 import edu.stanford.bmir.protege.web.server.render.NullHighlightedEntityChecker;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeBidirectionalShortFormProvider;
-import edu.stanford.bmir.protege.web.server.shortform.WebProtegeShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.HasContainsEntityInSignature;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
@@ -218,10 +215,12 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         HasAnnotationAssertionAxioms annotationAssertionAxiomProvider = new HasAnnotationAssertionAxiomsImpl(rootOntology);
 
         WebProtegeShortFormProvider shortFormProvider = new WebProtegeShortFormProvider(
-                ImmutableList.<IRI>builder()
-                        .addAll(DefaultShortFormAnnotationPropertyIRIs.asImmutableList()).build(),
-                annotationAssertionAxiomProvider,
-                this);
+                new WebProtegeIRIShortFormProvider(
+                        ImmutableList.<IRI>builder()
+                                .addAll(DefaultShortFormAnnotationPropertyIRIs.asImmutableList()).build(),
+                        annotationAssertionAxiomProvider,
+                        this
+                ));
 
         renderingManager = new RenderingManager(
                 rootOntology,
