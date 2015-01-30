@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
-import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.Namespaces;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
@@ -13,7 +13,6 @@ import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
-import java.util.jar.Attributes;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,16 +31,20 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
 
     private final ImmutableList<IRI> annotationPropertyIRIs;
 
-    private final Map<String, String> builtinPrefixes = new HashMap<String, String>();
+    private final ImmutableMap<String, String> prefix2PrefixNameMap;
 
     public WebProtegeShortFormProvider(HasAnnotationAssertionAxioms annotationAssertionAxiomProvider, HasLang languageProvider) {
         this.annotationAssertionAxiomProvider = checkNotNull(annotationAssertionAxiomProvider);
         this.languageProvider = checkNotNull(languageProvider);
+
+        ImmutableMap.Builder<String, String> prefixIRI2PrefixNameMapBuilder = ImmutableMap.builder();
         for (Namespaces ns : Namespaces.values()) {
             if (ns.isInUse()) {
-                builtinPrefixes.put(ns.getPrefixIRI(), ns.getPrefixName());
+                prefixIRI2PrefixNameMapBuilder.put(ns.getPrefixIRI(), ns.getPrefixName());
             }
         }
+        prefix2PrefixNameMap = prefixIRI2PrefixNameMapBuilder.build();
+
         ImmutableList.Builder<IRI> annotationPropertyIRIs = ImmutableList.builder();
         annotationPropertyIRIs.add(SKOSVocabulary.PREFLABEL.getIRI());
         annotationPropertyIRIs.add(OWLRDFVocabulary.RDFS_LABEL.getIRI());
@@ -53,7 +56,7 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
     private Optional<String> getBuiltInPrefix(OWLEntity entity) {
         IRI iri = entity.getIRI();
         String iriNS = iri.getNamespace();
-        if (builtinPrefixes.containsKey(iriNS)) {
+        if (prefix2PrefixNameMap.containsKey(iriNS)) {
             return Optional.of(iriNS);
         } else {
             return Optional.empty();
@@ -67,7 +70,7 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
             }
             Optional<String> builtInPrefix = getBuiltInPrefix(owlEntity);
             if (builtInPrefix.isPresent()) {
-                return builtinPrefixes.get(builtInPrefix.get()) + ":" + owlEntity.getIRI().getFragment();
+                return prefix2PrefixNameMap.get(builtInPrefix.get()) + ":" + owlEntity.getIRI().getFragment();
             }
             int matchedIndex = Integer.MAX_VALUE;
             boolean matchedDefaultLang = false;
