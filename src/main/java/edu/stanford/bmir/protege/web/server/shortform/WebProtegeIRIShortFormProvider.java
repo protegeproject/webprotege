@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
@@ -9,7 +10,6 @@ import org.semanticweb.owlapi.vocab.Namespaces;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -49,7 +49,7 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
         if (prefix2PrefixNameMap.containsKey(iriNS)) {
             return Optional.of(iriNS);
         } else {
-            return Optional.empty();
+            return Optional.absent();
         }
     }
 
