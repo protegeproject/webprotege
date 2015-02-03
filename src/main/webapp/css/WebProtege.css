@@ -728,6 +728,7 @@ ul.x-menu-list
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
     line-height: 15px;
+    z-index: 10;
 }
 
 .gwt-SuggestBoxPopup .item {
