@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.axiom;
+package edu.stanford.bmir.protege.web.shared.object;
 
 import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.OWLObject;

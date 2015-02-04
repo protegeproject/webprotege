@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.axiom;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomSubjectProvider;
-import edu.stanford.bmir.protege.web.shared.axiom.OWLObjectSelector;
+import edu.stanford.bmir.protege.web.shared.object.OWLObjectSelector;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;

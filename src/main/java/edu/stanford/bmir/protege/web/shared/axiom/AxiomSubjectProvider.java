@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.axiom;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.object.OWLObjectSelector;
 import org.semanticweb.owlapi.model.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
