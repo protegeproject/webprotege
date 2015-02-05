@@ -46,12 +46,10 @@ public class GetUserIdsActionHandler_TestCase {
         when(userA.getName()).thenReturn("User A");
         when(userB.getName()).thenReturn("User B");
         when(userC.getName()).thenReturn("User C");
-        when(nullUser.getName()).thenReturn(null);
         Set<User> users = Sets.newHashSet();
         users.add(userA);
         users.add(userB);
         users.add(userC);
-        users.add(nullUser);
         when(metaProject.getUsers()).thenReturn(users);
     }
 
@@ -68,6 +66,16 @@ public class GetUserIdsActionHandler_TestCase {
                 UserId.getUserId("User A"),
                 UserId.getUserId("User B"),
                 UserId.getUserId("User C")));
+    }
+
+    @Test
+    public void shouldNotReturnGuestUserForNullUser() {
+        when(nullUser.getName()).thenReturn(null);
+        Set<User> users = Sets.newHashSet();
+        users.add(nullUser);
+        when(metaProject.getUsers()).thenReturn(users);
+        GetUserIdsResult result = handler.execute(new GetUserIdsAction(), executionContext);
+        assertThat(result.getUserIds(), hasSize(0));
     }
 
 
