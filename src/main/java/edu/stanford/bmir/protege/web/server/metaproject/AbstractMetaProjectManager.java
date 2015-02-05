@@ -15,6 +15,7 @@ import java.util.Set;
 
 public abstract class AbstractMetaProjectManager extends MetaProjectManager {
 
+    @Override
     public boolean hasValidCredentials(String userName, String password) {
         if (getMetaProject() == null) {
             return false;
@@ -26,6 +27,7 @@ public abstract class AbstractMetaProjectManager extends MetaProjectManager {
         return user.verifyPassword(password);
     }
 
+    @Override
     public void changePassword(String userName, String password) {
         final MetaProject metaProject = getMetaProject();
         if (metaProject == null) {
@@ -38,6 +40,7 @@ public abstract class AbstractMetaProjectManager extends MetaProjectManager {
         user.setPassword(password);
     }
 
+    @Override
     public String getUserEmail(String userName) {
         final MetaProject metaProject = getMetaProject();
         if (metaProject == null) {
@@ -50,6 +53,7 @@ public abstract class AbstractMetaProjectManager extends MetaProjectManager {
         return user.getEmail();
     }
 
+    @Override
     public void setUserEmail(String userName, String email) {
         final MetaProject metaProject = getMetaProject();
         if (metaProject == null) {
@@ -63,6 +67,7 @@ public abstract class AbstractMetaProjectManager extends MetaProjectManager {
         OWLAPIMetaProjectStore.getStore().saveMetaProject(this);
     }
 
+    @Override
     public Collection<Operation> getAllowedOperations(String projectName, String userName) {
         Collection<Operation> allowedOps = new ArrayList<Operation>();
         final MetaProject metaProject = getMetaProject();
@@ -83,6 +88,7 @@ public abstract class AbstractMetaProjectManager extends MetaProjectManager {
         return allowedOps;
     }
 
+    @Override
     public Collection<Operation> getAllowedServerOperations(String userName) {
         Collection<Operation> allowedOps = new ArrayList<Operation>();
         if (userName == null) {
@@ -106,6 +112,7 @@ public abstract class AbstractMetaProjectManager extends MetaProjectManager {
         return allowedOps;
     }
 
+    @Override
     public Optional<UserId> getUserAssociatedWithOpenId(String userOpenId) {
         if (userOpenId == null) {
             return Optional.absent();
@@ -124,7 +131,8 @@ public abstract class AbstractMetaProjectManager extends MetaProjectManager {
         }
         return Optional.absent();
     }
-    
+
+    @Override
     public User getUser(String userNameOrEmail) {
         if (userNameOrEmail == null) {
             return null;
