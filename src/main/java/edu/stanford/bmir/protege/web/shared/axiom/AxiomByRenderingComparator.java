@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.axiom;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+import javax.inject.Inject;
 import java.util.Comparator;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -16,6 +17,7 @@ public class AxiomByRenderingComparator implements Comparator<OWLAxiom> {
 
     private OWLObjectRenderer renderer;
 
+    @Inject
     public AxiomByRenderingComparator(OWLObjectRenderer renderer) {
         this.renderer = checkNotNull(renderer);
     }

@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
 
+import javax.inject.Inject;
 import java.util.Comparator;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,6 +27,7 @@ public class AxiomBySubjectComparator implements Comparator<OWLAxiom> {
 
     private Comparator<OWLObject> subjectComparator;
 
+    @Inject
     public AxiomBySubjectComparator(AxiomSubjectProvider axiomSubjectProvider, Comparator<OWLObject> subjectComparator) {
         this.axiomSubjectProvider = checkNotNull(axiomSubjectProvider);
         this.subjectComparator = checkNotNull(subjectComparator);

@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.axiom;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +19,8 @@ public class AxiomByTypeComparator implements Comparator<OWLAxiom> {
 
     private Map<AxiomType<?>, Integer> typeIndexMap = new HashMap<>();
 
-    public AxiomByTypeComparator(List<AxiomType<?>> axiomTypeOrdering) {
+    @Inject
+    public AxiomByTypeComparator(@Named("axiomTypeOrdering") List<AxiomType<?>> axiomTypeOrdering) {
         for(AxiomType<?> axiomType : axiomTypeOrdering) {
             typeIndexMap.put(axiomType, typeIndexMap.size());
         }

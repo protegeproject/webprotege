@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.object.OWLObjectSelector;
 import org.semanticweb.owlapi.model.*;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -32,6 +34,7 @@ public class AxiomSubjectProvider {
      *                     an atom that is in the head of a {@link SWRLRule} to be the subject. Not {@code null}.
      * @throws java.lang.NullPointerException if any parameters are {@code null}.
      */
+    @Inject
     public AxiomSubjectProvider(OWLObjectSelector<OWLClassExpression> classExpressionSelector,
                                 OWLObjectSelector<OWLObjectPropertyExpression> objectPropertyExpressionSelector,
                                 OWLObjectSelector<OWLDataPropertyExpression> dataPropertyExpressionSelector,
