@@ -35,7 +35,7 @@ public class GetUserIdsActionHandler_TestCase {
     private MetaProject metaProject;
 
     @Mock
-    private User userA, userB, userC;
+    private User userA, userB, userC, nullUser;
 
     @Mock
     private ExecutionContext executionContext;
@@ -46,10 +46,12 @@ public class GetUserIdsActionHandler_TestCase {
         when(userA.getName()).thenReturn("User A");
         when(userB.getName()).thenReturn("User B");
         when(userC.getName()).thenReturn("User C");
+        when(nullUser.getName()).thenReturn(null);
         Set<User> users = Sets.newHashSet();
         users.add(userA);
         users.add(userB);
         users.add(userC);
+        users.add(nullUser);
         when(metaProject.getUsers()).thenReturn(users);
     }
 
