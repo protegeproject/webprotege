@@ -58,10 +58,12 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         return new File(metaProjectDirectory, METAPROJECT_PPRJ_FILE_NAME);
     }
 
+    @Override
     public MetaProject getMetaProject() {
         return metaproject;
     }
 
+    @Override
     public void registerProject(ProjectId projectId, NewProjectSettings newProjectSettings) {
         addProjectToMetaProject(projectId, newProjectSettings);
     }
@@ -87,6 +89,7 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
     }
 
 
+    @Override
     public UserData registerUser(String userName, String email, String password) throws UserRegistrationException {
         checkNotNull(userName);
         checkNotNull(email);
@@ -120,6 +123,7 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         return ownSlotValue != null && ownSlotValue.equals(Boolean.TRUE);
     }
 
+    @Override
     public List<ProjectDetails> getListableReadableProjects(UserId userId) {
         Policy policy = metaproject.getPolicy();
         User user = policy.getUserByName(userId.getUserName());
@@ -222,11 +226,7 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         return false;
     }
 
-
-    public void init(boolean loadOntologiesFromServer) {
-    }
-
-
+    @Override
     public void dispose() {
         metaproject.dispose();
         synchronized (this) {
@@ -234,7 +234,7 @@ public class LocalMetaProjectManager extends AbstractMetaProjectManager {
         }
     }
 
-
+    @Override
     public boolean allowsCreateUser() {
         ClientApplicationProperties clientApplicationProperties = WebProtegeProperties.get().getClientApplicationProperties();
         Optional<String> propertyValue = clientApplicationProperties.getPropertyValue(WebProtegePropertyName.USER_ACCOUNT_CREATION_ENABLED);
