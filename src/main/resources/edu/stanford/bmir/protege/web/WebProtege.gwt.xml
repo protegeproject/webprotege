@@ -27,6 +27,8 @@
     <inherits name="com.google.gwt.inject.Inject"/>
     <inherits name="edu.stanford.bmir.gwtcodemirror.CodeMirror"/>
 
+    <inherits name="com.google.gwt.logging.Logging"/>
+
 	<inherits name='com.googlecode.gwt.crypto.Crypto'/>
 
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
