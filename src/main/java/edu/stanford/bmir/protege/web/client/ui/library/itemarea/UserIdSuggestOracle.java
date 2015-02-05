@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class UserIdSuggestOracle implements ItemProvider<UserId> {
 
-    private List<UserId> data = Arrays.asList(UserId.getUserId("Matthew Horridge"), UserId.getUserId("Timothy Redmond"), UserId.getUserId("Martin O'Connor"));
+    private List<UserId> data = new ArrayList<>();
 
     public UserIdSuggestOracle() {
         this(Collections.<UserId>emptyList());
