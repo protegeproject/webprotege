@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.user;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;

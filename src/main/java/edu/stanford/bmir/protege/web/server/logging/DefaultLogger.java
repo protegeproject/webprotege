@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.logging;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.SerializationException;
-import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
