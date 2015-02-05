@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server;
+package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.LocalMetaProjectManager;
+import edu.stanford.bmir.protege.web.server.metaproject.LocalMetaProjectManager;
 import org.apache.commons.io.FileUtils;
 
 import javax.servlet.ServletContext;

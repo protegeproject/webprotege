@@ -1,9 +1,13 @@
-package edu.stanford.bmir.protege.web.server;
+package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.server.AuthenticationUtil;
+import edu.stanford.bmir.protege.web.server.UUIDMigrator;
+import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.server.metaproject.AbstractMetaProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
@@ -18,7 +22,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
 import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
-import edu.stanford.smi.protege.server.ServerProperties;
 import edu.stanford.smi.protege.server.metaproject.*;
 import edu.stanford.smi.protege.server.metaproject.impl.MetaProjectImpl;
 

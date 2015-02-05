@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
 import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
-import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
