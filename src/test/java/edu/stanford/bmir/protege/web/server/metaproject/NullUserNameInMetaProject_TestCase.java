@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
+import com.google.common.base.Objects;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
 import edu.stanford.smi.protege.server.metaproject.impl.MetaProjectImpl;
@@ -46,7 +47,8 @@ public class NullUserNameInMetaProject_TestCase {
         return new TypeSafeMatcher<User>() {
             @Override
             protected boolean matchesSafely(User item) {
-                    return name == null ? item.getName() == null : item.getName().equals(name);
+                String userName = item.getName();
+                return Objects.equal(name, userName);
             }
 
             @Override
