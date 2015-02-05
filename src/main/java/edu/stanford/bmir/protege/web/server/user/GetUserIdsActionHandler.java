@@ -42,7 +42,10 @@ public class GetUserIdsActionHandler implements ActionHandler<GetUserIdsAction, 
     public GetUserIdsResult execute(GetUserIdsAction action, ExecutionContext executionContext) {
         ImmutableList.Builder<UserId> result = ImmutableList.builder();
         for(User user : metaProject.getUsers()) {
-            result.add(UserId.getUserId(user.getName()));
+            String name = user.getName();
+            if (name != null) { // Unfortunately!
+                result.add(UserId.getUserId(name));
+            }
         }
         return new GetUserIdsResult(result.build());
     }
