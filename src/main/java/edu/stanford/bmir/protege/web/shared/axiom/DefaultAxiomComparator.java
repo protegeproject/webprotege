@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.axiom;
 import com.google.common.collect.Ordering;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -17,6 +18,7 @@ public class DefaultAxiomComparator implements Comparator<OWLAxiom> {
 
     private Comparator<OWLAxiom> compoundComparator;
 
+    @Inject
     public DefaultAxiomComparator(AxiomBySubjectComparator axiomBySubjectComparator, AxiomByTypeComparator axiomByTypeComparator, AxiomByRenderingComparator axiomByRenderingComparator) {
         compoundComparator = Ordering.compound(
                 Arrays.asList(

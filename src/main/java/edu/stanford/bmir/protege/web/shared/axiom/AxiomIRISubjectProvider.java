@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.axiom;
 import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.*;
 
+import javax.inject.Inject;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -18,6 +19,7 @@ public class AxiomIRISubjectProvider {
 
     private AxiomSubjectProviderVisitor visitor;
 
+    @Inject
     public AxiomIRISubjectProvider(Comparator<IRI> iriComparator) {
         visitor = new AxiomSubjectProviderVisitor(checkNotNull(iriComparator));
     }
