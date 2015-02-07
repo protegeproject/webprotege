@@ -62,11 +62,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>SharingSettingsService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.SharingSettingsServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>OpenIdServiceImpl</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.OpenIdServiceImpl</servlet-class>
 	</servlet>
@@ -214,11 +209,6 @@
 	<servlet-mapping>
 		<servlet-name>RenderingService</servlet-name>
 		<url-pattern>/webprotege/renderingservice</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>SharingSettingsService</servlet-name>
-		<url-pattern>/webprotege/sharingsettings</url-pattern>
 	</servlet-mapping>
 
 
