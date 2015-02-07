@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/11/2013
  */
-public class MailManager {
+public class MailManager implements SendMail {
 
     public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 
