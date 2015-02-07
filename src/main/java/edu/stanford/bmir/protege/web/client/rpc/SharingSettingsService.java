@@ -19,8 +19,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 @RemoteServiceRelativePath("sharingsettings")
 public interface SharingSettingsService extends RemoteService {
 
-    ProjectSharingSettings getProjectSharingSettings(ProjectId projectId);
-
     void updateSharingSettings(ProjectSharingSettings projectSharingSettings);
 
 

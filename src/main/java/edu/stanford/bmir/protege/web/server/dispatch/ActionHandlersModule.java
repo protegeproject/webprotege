@@ -26,10 +26,12 @@ import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
+import edu.stanford.bmir.protege.web.server.sharing.GetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
+import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
 
 /**
  * Matthew Horridge
@@ -120,6 +122,8 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(GetManchesterSyntaxFrameCompletionsActionHandler.class);
 
         multibinder.addBinding().to(ResetPasswordActionHandler.class);
+
+        multibinder.addBinding().to(GetProjectSharingSettingsActionHandler.class);
 
 
 
