@@ -92,104 +92,104 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
 
     public DefaultActionHandlerRegistry() {
 
-        register(new GetClientApplicationPropertiesActionHandler(), GetClientApplicationPropertiesAction.class);
+        register(new GetClientApplicationPropertiesActionHandler());
 
-        register(new GetUserIdsActionHandler(metaProjectManager), GetUserIdsAction.class);
+        register(new GetUserIdsActionHandler(metaProjectManager));
 
-        register(new GetAvailableProjectsHandler(), GetAvailableProjectsAction.class);
+        register(new GetAvailableProjectsHandler());
 
-        register(new LoadProjectActionHandler(), LoadProjectAction.class);
+        register(new LoadProjectActionHandler());
 
-        register(new GetProjectEventsActionHandler(), GetProjectEventsAction.class);
+        register(new GetProjectEventsActionHandler());
 
-        register(new GetProjectSettingsActionHandler(projectMetadataManager), GetProjectSettingsAction.class);
-        register(new SetProjectSettingsActionHandler(projectMetadataManager), SetProjectSettingsAction.class);
+        register(new GetProjectSettingsActionHandler(projectMetadataManager));
+        register(new SetProjectSettingsActionHandler(projectMetadataManager));
 
-        register(new GetClassFrameActionHandler(), GetClassFrameAction.class);
-        register(new UpdateClassFrameActionHandler(), UpdateClassFrameAction.class);
+        register(new GetClassFrameActionHandler());
+        register(new UpdateClassFrameActionHandler());
         
-        register(new GetObjectPropertyFrameActionHandler(), GetObjectPropertyFrameAction.class);
-        register(new UpdateObjectPropertyFrameHandler(), UpdateObjectPropertyFrameAction.class);
+        register(new GetObjectPropertyFrameActionHandler());
+        register(new UpdateObjectPropertyFrameHandler());
 
-        register(new GetDataPropertyFrameActionHandler(), GetDataPropertyFrameAction.class);
-        register(new UpdateDataPropertyFrameHandler(), UpdateDataPropertyFrameAction.class);
+        register(new GetDataPropertyFrameActionHandler());
+        register(new UpdateDataPropertyFrameHandler());
 
-        register(new GetAnnotationPropertyFrameActionHandler(), GetAnnotationPropertyFrameAction.class);
-        register(new UpdateAnnotationPropertyFrameActionHandler(), UpdateAnnotationPropertyFrameAction.class);
+        register(new GetAnnotationPropertyFrameActionHandler());
+        register(new UpdateAnnotationPropertyFrameActionHandler());
 
-        register(new GetNamedIndividualFrameActionHandler(), GetNamedIndividualFrameAction.class);
-        register(new UpdateNamedIndividualFrameHandler(), UpdateNamedIndividualFrameAction.class);
+        register(new GetNamedIndividualFrameActionHandler());
+        register(new UpdateNamedIndividualFrameHandler());
         
-        register(new GetRootOntologyIdActionHandler(), GetRootOntologyIdAction.class);
-        register(new GetOntologyAnnotationsActionHandler(), GetOntologyAnnotationsAction.class);
-        register(new SetOntologyAnnotationsActionHandler(), SetOntologyAnnotationsAction.class);
-        register(new GetEntityAnnotationsActionHandler(), GetEntityAnnotationsAction.class);
+        register(new GetRootOntologyIdActionHandler());
+        register(new GetOntologyAnnotationsActionHandler());
+        register(new SetOntologyAnnotationsActionHandler());
+        register(new GetEntityAnnotationsActionHandler());
 
-        register(new DeleteEntityActionHandler(), DeleteEntityAction.class);
+        register(new DeleteEntityActionHandler());
 
         // Entity creation
-        register(new CreateClassActionHandler(), CreateClassAction.class);
-        register(new CreateClassesActionHandler(), CreateClassesAction.class);
-        register(new CreateObjectPropertyActionHandler(), CreateObjectPropertiesAction.class);
-        register(new CreateDataPropertiesActionHandler(), CreateDataPropertiesAction.class);
-        register(new CreateAnnotationPropertiesActionHandler(), CreateAnnotationPropertiesAction.class);
-        register(new CreateNamedIndividualsActionHandler(), CreateNamedIndividualsAction.class);
+        register(new CreateClassActionHandler());
+        register(new CreateClassesActionHandler());
+        register(new CreateObjectPropertyActionHandler());
+        register(new CreateDataPropertiesActionHandler());
+        register(new CreateAnnotationPropertiesActionHandler());
+        register(new CreateNamedIndividualsActionHandler());
 
-        register(new LookupEntitiesActionHandler(), LookupEntitiesAction.class);
+        register(new LookupEntitiesActionHandler());
 
         // Watches
-        register(new AddWatchActionHandler(), AddWatchAction.class);
-        register(new RemoveWatchActionHandler(), RemoveWatchesAction.class);
+        register(new AddWatchActionHandler());
+        register(new RemoveWatchActionHandler());
 
 
         // User stuff
-        register(new GetCurrentUserInSessionActionHandler(), GetCurrentUserInSessionAction.class);
-        register(new SetEmailAddressActionHandler(), SetEmailAddressAction.class);
-        register(new GetEmailAddressActionHandler(), GetEmailAddressAction.class);
+        register(new GetCurrentUserInSessionActionHandler());
+        register(new SetEmailAddressActionHandler());
+        register(new GetEmailAddressActionHandler());
 
         // Notes
-        register(new GetDiscussionThreadActionHandler(), GetDiscussionThreadAction.class);
-        register(new AddNoteToEntityActionHandler(), AddNoteToEntityAction.class);
-        register(new AddReplyToNoteActionHandler(), AddReplyToNoteAction.class);
-        register(new SetNoteStatusActionHandler(), SetNoteStatusAction.class);
-        register(new DeleteNoteActionHandler(), DeleteNoteAction.class);
+        register(new GetDiscussionThreadActionHandler());
+        register(new AddNoteToEntityActionHandler());
+        register(new AddReplyToNoteActionHandler());
+        register(new SetNoteStatusActionHandler());
+        register(new DeleteNoteActionHandler());
 
 
-        register(new MoveProjectsToTrashActionHandler(), MoveProjectsToTrashAction.class);
-        register(new RemoveProjectsFromTrashActionHandler(), RemoveProjectsFromTrashAction.class);
+        register(new MoveProjectsToTrashActionHandler());
+        register(new RemoveProjectsFromTrashActionHandler());
 
         // CSV
-        register(new GetCSVGridActionHandler(), GetCSVGridAction.class);
-        register(new ImportCSVFileActionHandler(), ImportCSVFileAction.class);
+        register(new GetCSVGridActionHandler());
+        register(new ImportCSVFileActionHandler());
 
         // Usage
-        register(new GetUsageActionHandler(), GetUsageAction.class);
+        register(new GetUsageActionHandler());
 
-        register(new GetIndividualsActionHandler(), GetIndividualsAction.class);
+        register(new GetIndividualsActionHandler());
 
-        register(new GetEntityRenderingActionHandler(), GetEntityRenderingAction.class);
+        register(new GetEntityRenderingActionHandler());
 
         // Metrics
-        register(new GetMetricsActionHandler(), GetMetricsAction.class);
+        register(new GetMetricsActionHandler());
 
         // TODO: Plugin
-        register(new GetEntityCrudKitsActionHandler(), GetEntityCrudKitsAction.class);
-        register(new SetEntityCrudKitSettingsActionHandler(), SetEntityCrudKitSettingsAction.class);
-        register(new GetEntityCrudKitSettingsActionHandler(), GetEntityCrudKitSettingsAction.class);
+        register(new GetEntityCrudKitsActionHandler());
+        register(new SetEntityCrudKitSettingsActionHandler());
+        register(new GetEntityCrudKitSettingsActionHandler());
 
 
-        register(new GetManchesterSyntaxFrameActionHandler(), GetManchesterSyntaxFrameAction.class);
-        register(new SetManchesterSyntaxFrameActionHandler(), SetManchesterSyntaxFrameAction.class);
-        register(new CheckManchesterSyntaxFrameActionHandler(), CheckManchesterSyntaxFrameAction.class);
-        register(new GetManchesterSyntaxFrameCompletionsActionHandler(), GetManchesterSyntaxFrameCompletionsAction.class);
+        register(new GetManchesterSyntaxFrameActionHandler());
+        register(new SetManchesterSyntaxFrameActionHandler());
+        register(new CheckManchesterSyntaxFrameActionHandler());
+        register(new GetManchesterSyntaxFrameCompletionsActionHandler());
 
         register(new ResetPasswordActionHandler(metaProjectManager,
-                                                new ResetPasswordMailer(mailManager)), ResetPasswordAction.class);
+                                                new ResetPasswordMailer(mailManager)));
     }
 
 
-    private  <A extends Action<R>, R extends Result> void register(ActionHandler<A, R> handler, Class<A> forAction) {
-        registry.put(forAction, handler);
+    private  <A extends Action<R>, R extends Result> void register(ActionHandler<A, R> handler) {
+        registry.put(handler.getActionClass(), handler);
     }
 
     @Override
