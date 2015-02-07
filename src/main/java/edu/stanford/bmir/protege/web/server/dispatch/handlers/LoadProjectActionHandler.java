@@ -10,14 +10,15 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.smi.protege.server.metaproject.Operation;
 
+import javax.inject.Inject;
 import java.util.Collection;
 
 /**
@@ -27,6 +28,13 @@ import java.util.Collection;
  * Date: 05/04/2013
  */
 public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction, LoadProjectResult> {
+
+    private ProjectDetailsManager projectDetailsManager;
+
+    @Inject
+    public LoadProjectActionHandler(ProjectDetailsManager projectDetailsManager) {
+        this.projectDetailsManager = projectDetailsManager;
+    }
 
     @Override
     public Class<LoadProjectAction> getActionClass() {
@@ -50,8 +58,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
         webProtegeLogger.info(".... loaded project in " + (t1 - t0) + " ms");
         final ProjectId projectId = action.getProjectId();//project.getProjectId();
 
-        final OWLAPIProjectMetadataManager manager = OWLAPIProjectMetadataManager.getManager();
-        ProjectDetails projectDetails = manager.getProjectDetails(projectId);
+        ProjectDetails projectDetails = projectDetailsManager.getProjectDetails(projectId);
 
         Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(projectId.getId(), executionContext.getUserId().getUserName());
         PermissionsSet.Builder builder = PermissionsSet.builder();

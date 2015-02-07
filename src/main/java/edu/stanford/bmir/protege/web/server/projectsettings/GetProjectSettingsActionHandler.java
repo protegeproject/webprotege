@@ -5,10 +5,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
+
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,10 +22,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHandler<GetProjectSettingsAction, GetProjectSettingsResult> {
 
-    private ProjectSettingsManager settings;
+    private ProjectDetailsManager projectDetailsManager;
 
-    public GetProjectSettingsActionHandler(ProjectSettingsManager settings) {
-        this.settings = checkNotNull(settings);
+    @Inject
+    public GetProjectSettingsActionHandler(ProjectDetailsManager projectDetailsManager) {
+        this.projectDetailsManager = projectDetailsManager;
     }
 
     @Override
@@ -38,7 +42,7 @@ public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     @Override
     protected GetProjectSettingsResult execute(GetProjectSettingsAction action, OWLAPIProject project, ExecutionContext executionContext) {
         ProjectId projectId = action.getProjectId();
-        return new GetProjectSettingsResult(settings.getProjectSettings(projectId));
+        return new GetProjectSettingsResult(projectDetailsManager.getProjectSettings(projectId));
     }
 
 }

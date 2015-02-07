@@ -19,7 +19,7 @@ public interface BioPortalAPIService extends RemoteService {
 
     BioPortalUserInfo getBioPortalUserInfo(String bioportalAccountName, String bioportalPassword) throws CannotValidateBioPortalCredentials;
 
-    void uploadProjectToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException;
+    void uploadProjectToBioPortal(String projectDisplayName, ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException;
 
     List<BioPortalOntologyInfo> getOwnedOntologies(BioPortalUserId bioPortalUserId) throws BioPortalAPIServiceException;
 

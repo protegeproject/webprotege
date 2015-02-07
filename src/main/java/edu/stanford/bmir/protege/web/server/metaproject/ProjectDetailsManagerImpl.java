@@ -1,7 +1,10 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
@@ -12,10 +15,15 @@ import edu.stanford.smi.protege.model.KnowledgeBase;
 import edu.stanford.smi.protege.model.Slot;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
+import edu.stanford.smi.protege.server.metaproject.PropertyValue;
 import edu.stanford.smi.protege.server.metaproject.User;
 
 import javax.inject.Inject;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -25,6 +33,11 @@ import java.util.Set;
 public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
     public static final String DISPLAY_NAME_SLOT_NAME = "displayName";
+
+    private static final String IN_TRASH_SLOT_NAME = "inTrash";
+
+    private static final String PROJECT_TYPE_PROPERTY_NAME = "projectType";
+
 
     private MetaProject metaProject;
 
@@ -41,7 +54,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
     @Override
     public ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException {
-        ProjectInstance pi = metaProject.getProject(projectId.getId());
+        ProjectInstance pi = getProjectInstance(projectId);
         if (pi == null) {
             throw new UnknownProjectException(projectId);
         }
@@ -56,7 +69,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
     @Override
     public boolean isExistingProject(ProjectId projectId) {
-        return metaProject.getProject(projectId.getId()) != null;
+        return getProjectInstance(projectId) != null;
     }
 
     @Override
@@ -64,7 +77,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         if (userId.isGuest()) {
             return false;
         }
-        ProjectInstance project = metaProject.getProject(projectId.getId());
+        ProjectInstance project = getProjectInstance(projectId);
         if (project == null) {
             return false;
         }
@@ -103,6 +116,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
      * Adds a new project to the metaproject.  This sets up the name of the project and the description of the project
      * in the metaproject.  (Location is not set/used by this implementation - not all implementations use pprj files
      * anymore).
+     *
      * @param newProjectSettings The info about the new project
      */
     private void addProjectToMetaProject(ProjectId projectId, NewProjectSettings newProjectSettings) {
@@ -115,4 +129,119 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         User user = metaProject.getUser(newProjectSettings.getProjectOwner().getUserName());
         pi.setOwner(user);
     }
+
+
+    public boolean isInTrash(ProjectId projectId) {
+        ProjectInstance pi = getProjectInstance(projectId);
+        if(pi == null) {
+            throw new UnknownProjectException(projectId);
+        }
+        Instance instance = pi.getProtegeInstance();
+        KnowledgeBase knowledgeBase = instance.getKnowledgeBase();
+        Slot inTrashSlot = knowledgeBase.getSlot(IN_TRASH_SLOT_NAME);
+        if (inTrashSlot == null) {
+            return false;
+        }
+        Object val = instance.getOwnSlotValue(inTrashSlot);
+        if (!(val instanceof Boolean)) {
+            return false;
+        }
+        return (Boolean) val;
+    }
+
+    public void setInTrash(ProjectId projectId, boolean b) {
+        ProjectInstance pi = getProjectInstance(projectId);
+        if (pi == null) {
+            return;
+        }
+        Instance instance = pi.getProtegeInstance();
+        KnowledgeBase knowledgeBase = instance.getKnowledgeBase();
+        Slot inTrashSlot = knowledgeBase.getSlot(IN_TRASH_SLOT_NAME);
+        if (inTrashSlot != null) {
+            instance.setOwnSlotValue(inTrashSlot, b);
+        }
+        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
+    }
+
+    public OWLAPIProjectType getType(ProjectId projectId) {
+        String defaultProjectTypeName = OWLAPIProjectType.getDefaultProjectType().getProjectTypeName();
+        String projectType = getPropertyValue(projectId, PROJECT_TYPE_PROPERTY_NAME, defaultProjectTypeName);
+        if (projectType.equals(OWLAPIProjectType.getOBOProjectType().getProjectTypeName())) {
+            return OWLAPIProjectType.getOBOProjectType();
+        } else {
+            return OWLAPIProjectType.getDefaultProjectType();
+        }
+    }
+
+    @Override
+    public void setType(ProjectId projectId, OWLAPIProjectType projectType) {
+        setPropertyValue(projectId, PROJECT_TYPE_PROPERTY_NAME, projectType.getProjectTypeName());
+    }
+
+    private void setPropertyValue(ProjectId projectId, String propertyName, String propertyValue) {
+        ProjectInstance pi = getProjectInstance(projectId);
+        PropertyValue pv = metaProject.createPropertyValue(propertyName, propertyValue);
+        Set<PropertyValue> propertyValues = new HashSet<PropertyValue>(pi.getPropertyValues());
+        for (Iterator<PropertyValue> it = propertyValues.iterator(); it.hasNext(); ) {
+            PropertyValue curPv = it.next();
+            if (curPv.getPropertyName().equals(propertyName)) {
+                it.remove();
+            }
+        }
+        propertyValues.add(pv);
+        pi.setPropertyValues(propertyValues);
+        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
+    }
+
+    private String getPropertyValue(ProjectId projectId, String propertyName, String defaultValue) {
+        ProjectInstance pi = getProjectInstance(projectId);
+        String value = pi.getPropertyValue(propertyName);
+        if (value == null) {
+            return defaultValue;
+        }
+        return value;
+    }
+
+
+    @Override
+    public void setProjectSettings(ProjectSettings projectSettings) {
+            ProjectId projectId = projectSettings.getProjectId();
+            setType(projectId, new OWLAPIProjectType(projectSettings.getProjectType().getName()));
+
+            setDescription(projectId, projectSettings.getProjectDescription());
+            setDisplayName(projectId, projectSettings.getProjectDisplayName());
+    }
+
+    public void setDescription(ProjectId projectId, String description) {
+        ProjectInstance pi = getProjectInstance(projectId);
+        pi.setDescription(description);
+    }
+
+    @Override
+    public ProjectSettings getProjectSettings(ProjectId projectId) throws UnknownProjectException{
+        ProjectDetails projectDetails = getProjectDetails(projectId);
+            return new ProjectSettings(projectId,
+                    new ProjectType(getType(projectId).getProjectTypeName()), projectDetails.getDisplayName(),
+                    projectDetails.getDescription());
+    }
+
+    public void setDisplayName(ProjectId projectId, String displayName) {
+        checkNotNull(displayName);
+        ProjectInstance pi = getProjectInstance(projectId);
+        Slot displayNameSlot = pi.getProtegeInstance().getKnowledgeBase().getSlot("displayName");
+        if(displayNameSlot != null) {
+            // If it's not present then it's some really old version of the metaproject
+            pi.getProtegeInstance().setDirectOwnSlotValue(displayNameSlot, displayName);
+        }
+    }
+
+    private ProjectInstance getProjectInstance(ProjectId projectId) {
+        ProjectInstance projectInstance = metaProject.getProject(projectId.getId());
+        if (projectInstance == null) {
+            throw new UnknownProjectException(projectId);
+        }
+        return projectInstance;
+    }
+
+
 }

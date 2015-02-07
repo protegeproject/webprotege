@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
@@ -35,14 +36,14 @@ public class RevisionMetadataAnnotater {
     public List<OWLOntologyChange> getChanges() {
         List<OWLOntologyChange> result =  new ArrayList<OWLOntologyChange>();
         OWLAnnotation revisionAnnotation = getRevisionAnnotation();
-        result.add(new AddOntologyAnnotation(ontologyToAnnotate, revisionAnnotation));
-        result.add(new AddOntologyAnnotation(ontologyToAnnotate, getDescriptionAnnotation()));
-        Set<OWLAnnotation> creatorAnnotations = getCreatorAnnotations();
-        for(OWLAnnotation annotation : creatorAnnotations) {
-            result.add(new AddOntologyAnnotation(ontologyToAnnotate, annotation));
-        }
-        result.add(new AddOntologyAnnotation(ontologyToAnnotate, getRevisionDateAnnotation()));
-        result.add(new AddOntologyAnnotation(ontologyToAnnotate, getCommentAnnotation()));
+//        result.add(new AddOntologyAnnotation(ontologyToAnnotate, revisionAnnotation));
+//        result.add(new AddOntologyAnnotation(ontologyToAnnotate, getDescriptionAnnotation()));
+//        Set<OWLAnnotation> creatorAnnotations = getCreatorAnnotations();
+//        for(OWLAnnotation annotation : creatorAnnotations) {
+//            result.add(new AddOntologyAnnotation(ontologyToAnnotate, annotation));
+//        }
+//        result.add(new AddOntologyAnnotation(ontologyToAnnotate, getRevisionDateAnnotation()));
+//        result.add(new AddOntologyAnnotation(ontologyToAnnotate, getCommentAnnotation()));
         return result;
     }
     
@@ -117,12 +118,12 @@ public class RevisionMetadataAnnotater {
         return OWLAPIProjectManager.getProjectManager().getProject(projectId);
     }
 
-    private OWLAnnotation getDescriptionAnnotation() {
-        OWLAPIProject project = getProject();
-        OWLAPIProjectMetadataManager metadataManager = OWLAPIProjectMetadataManager.getManager();
-        String description = metadataManager.getDescription(projectId);
-        OWLDataFactory df = project.getDataFactory();
-        return df.getOWLAnnotation(df.getRDFSComment(), df.getOWLLiteral(description));
-    }
+//    private OWLAnnotation getDescriptionAnnotation() {
+//        OWLAPIProject project = getProject();
+//        OWLAPIProjectMetadataManager metadataManager = WebProtegeInjector.get().getInstance(OWLAPIProjectMetadataManager.class);
+//        String description = metadataManager.getDescription(projectId);
+//        OWLDataFactory df = project.getDataFactory();
+//        return df.getOWLAnnotation(df.getRDFSComment(), df.getOWLLiteral(description));
+//    }
 
 }

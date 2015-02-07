@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.projectsettings;
 
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
@@ -35,7 +36,7 @@ public class GetProjectSettingsActionHandler_TestCase {
     private ProjectSettings projectSettings;
 
     @Mock
-    private ProjectSettingsManager mdm;
+    private ProjectDetailsManager mdm;
 
     @Mock
     private GetProjectSettingsAction action;

@@ -155,11 +155,11 @@ public class OWLAPIProjectDocumentStore {
     }
 
 
-    public void exportProject(OutputStream outputStream, DownloadFormat format) throws
+    public void exportProject(String projectDisplayName, OutputStream outputStream, DownloadFormat format) throws
                                                                                 IOException,
                                                                                 OWLOntologyStorageException {
         // Does it already exist in the download cache?
-        createDownloadCacheIfNecessary(format);
+        createDownloadCacheIfNecessary(projectDisplayName, format);
         // Feed cached file to caller
         final ReadWriteLock projectDownloadCacheLock = getProjectDownloadCacheLock(projectId);
         try {
@@ -179,6 +179,7 @@ public class OWLAPIProjectDocumentStore {
     }
 
     public void exportProjectRevision(
+            String projectDisplayName,
             RevisionNumber revisionNumber,
             OutputStream outputStream,
             DownloadFormat format) throws IOException, OWLOntologyStorageException {
@@ -192,7 +193,7 @@ public class OWLAPIProjectDocumentStore {
         Optional<OWLOntology> revisionRootOntology = getOntologyFromManager(manager, rootOntologyId);
         if (revisionRootOntology.isPresent()) {
             applyRevisionMetadataAnnotationsToOntology(revisionNumber, revisionRootOntology.get());
-            saveImportsClosureToStream(revisionRootOntology.get(), format, outputStream, revisionNumber);
+            saveImportsClosureToStream(projectDisplayName, revisionRootOntology.get(), format, outputStream, revisionNumber);
         }
         else {
             // An error - no flipping ontology!
@@ -397,7 +398,7 @@ public class OWLAPIProjectDocumentStore {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private void createDownloadCacheIfNecessary(DownloadFormat format) throws IOException, OWLOntologyStorageException {
+    private void createDownloadCacheIfNecessary(String projectDisplayName, DownloadFormat format) throws IOException, OWLOntologyStorageException {
         ReadWriteLock projectDownloadCacheLock = getProjectDownloadCacheLock(projectId);
         try {
             projectDownloadCacheLock.writeLock().lock();
@@ -411,7 +412,7 @@ public class OWLAPIProjectDocumentStore {
                 RevisionNumber currentRevisionNumber = changeManager.getCurrentRevision();
 
                 BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(cachedFile));
-                exportProjectRevision(currentRevisionNumber, outputStream, format);
+                exportProjectRevision(projectDisplayName, currentRevisionNumber, outputStream, format);
                 outputStream.close();
             }
         } finally {
@@ -439,6 +440,7 @@ public class OWLAPIProjectDocumentStore {
 
 
     private void saveImportsClosureToStream(
+            String projectDisplayName,
             OWLOntology rootOntology,
             DownloadFormat format,
             OutputStream outputStream,
@@ -446,7 +448,6 @@ public class OWLAPIProjectDocumentStore {
                                            IOException,
                                            OWLOntologyStorageException {
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
-        String projectDisplayName = OWLAPIProjectMetadataManager.getManager().getDisplayName(projectId);
         String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies-" + format.getExtension();
         baseFolder = baseFolder.toLowerCase();
         baseFolder = baseFolder + "-REVISION-" + revisionNumber.getValue();

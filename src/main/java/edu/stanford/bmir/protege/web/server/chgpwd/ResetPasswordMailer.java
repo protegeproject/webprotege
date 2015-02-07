@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 
+import javax.inject.Inject;
 import javax.mail.MessagingException;
 
 /**
@@ -25,6 +26,7 @@ public class ResetPasswordMailer {
 
     private MailManager mailManager;
 
+    @Inject
     public ResetPasswordMailer(MailManager mailManager) {
         this.mailManager = mailManager;
     }

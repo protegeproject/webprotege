@@ -2,8 +2,13 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlersModule;
+import edu.stanford.bmir.protege.web.server.dispatch.DispatchModule;
 import edu.stanford.bmir.protege.web.server.init.ConfigurationTasksModule;
+import edu.stanford.bmir.protege.web.server.mail.MailModule;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectModule;
+
+import javax.servlet.ServletContext;
 
 /**
  * Matthew Horridge
@@ -12,18 +17,33 @@ import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectModule;
  */
 public class WebProtegeInjector {
 
-    private static final WebProtegeInjector instance = new WebProtegeInjector();
+    private static WebProtegeInjector instance;
 
     private final Injector injector;
 
-    private WebProtegeInjector() {
-        injector = Guice.createInjector(
-                new FileSystemConfigurationModule(),
-                new ConfigurationTasksModule(),
-                new MetaProjectModule());
+    public static synchronized void init(ServletContext servletContext) {
+        if(instance != null) {
+            throw new RuntimeException("Already initialized!");
+        }
+        instance = new WebProtegeInjector(servletContext);
     }
 
-    public static WebProtegeInjector get() {
+    private WebProtegeInjector(ServletContext servletContext) {
+        injector = Guice.createInjector(
+                new ServletContextModule(servletContext),
+                new WebProtegePropertiesModule(),
+                new FileSystemConfigurationModule(),
+                new ConfigurationTasksModule(),
+                new MetaProjectModule(),
+                new MailModule(),
+                new DispatchModule(),
+                new ActionHandlersModule());
+    }
+
+    public static synchronized WebProtegeInjector get() {
+        if(instance == null) {
+            throw new RuntimeException("Not initialized");
+        }
         return instance;
     }
 

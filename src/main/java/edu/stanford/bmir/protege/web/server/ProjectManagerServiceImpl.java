@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.server;
 
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -29,7 +31,10 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
 
     private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(ProjectManagerServiceImpl.class);
 
+    private ProjectDetailsManager projectDetailsManager;
+
     public ProjectManagerServiceImpl() {
+        projectDetailsManager = WebProtegeInjector.get().getInstance(ProjectDetailsManager.class);
     }
 
     public synchronized boolean isRegisteredProject(ProjectId projectId) {
@@ -123,8 +128,7 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
     }
 
     public ProjectType getProjectType(ProjectId projectId) throws ProjectNotRegisteredException {
-        OWLAPIProjectMetadataManager mdm = OWLAPIProjectMetadataManager.getManager();
-        OWLAPIProjectType projectType = mdm.getType(projectId);
+        OWLAPIProjectType projectType = projectDetailsManager.getType(projectId);
         return new ProjectType(projectType.getProjectTypeName());
     }
 
@@ -132,7 +136,6 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         if(!isSignedInUserProjectOwner(projectId)) {
             throw new NotProjectOwnerException(projectId);
         }
-        OWLAPIProjectMetadataManager mdm = OWLAPIProjectMetadataManager.getManager();
-        mdm.setProjectType(projectId, new OWLAPIProjectType(projectType.getName()));
+        projectDetailsManager.setType(projectId, new OWLAPIProjectType(projectType.getName()));
     }
 }

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
@@ -26,5 +27,18 @@ public interface ProjectDetailsManager {
     boolean isExistingProject(ProjectId projectId);
 
     boolean isProjectOwner(UserId userId, ProjectId projectId);
+
+    boolean isInTrash(ProjectId projectId);
+
+    void setInTrash(ProjectId projectId, boolean b);
+
+    OWLAPIProjectType getType(ProjectId projectId);
+
+    void setType(ProjectId projectId, OWLAPIProjectType projectType);
+
+    ProjectSettings getProjectSettings(ProjectId projectId);
+
+    void setProjectSettings(ProjectSettings projectSettings);
+
 
 }

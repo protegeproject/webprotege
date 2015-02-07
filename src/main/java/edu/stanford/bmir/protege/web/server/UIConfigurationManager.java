@@ -5,12 +5,13 @@ import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectMetadataManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
 import java.io.*;
 import java.util.LinkedHashMap;
 
@@ -36,14 +37,11 @@ public class UIConfigurationManager {
     private static final File DEFAULT_OBO_CONFIGURATION_FILE = new File(WebProtegeFileStore.getInstance().getDefaultUIConfigurationDataDirectory(), DEFAULT_OBO_CONFIGURATION_FILE_NAME);
 
 
-    private static final UIConfigurationManager instance = new UIConfigurationManager();
+    private ProjectDetailsManager projectDetailsManager;
 
-    /**
-     * Gets the one and only instance of the {@link UIConfigurationManager}.
-     * @return The singleton instance of the {@link UIConfigurationManager}.  Not {@code null}.
-     */
-    public static UIConfigurationManager get() {
-        return instance;
+    @Inject
+    public UIConfigurationManager(ProjectDetailsManager projectDetailsManager) {
+        this.projectDetailsManager = projectDetailsManager;
     }
 
 
@@ -99,7 +97,7 @@ public class UIConfigurationManager {
             return projectFile;
         }
 
-        OWLAPIProjectType projectType = OWLAPIProjectMetadataManager.getManager().getType(projectId);
+        OWLAPIProjectType projectType = projectDetailsManager.getType(projectId);
         if (projectType.equals(OWLAPIProjectType.getOBOProjectType())) {
             return DEFAULT_OBO_CONFIGURATION_FILE;
         }

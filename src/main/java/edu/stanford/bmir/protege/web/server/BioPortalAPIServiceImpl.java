@@ -20,8 +20,6 @@ import java.util.List;
  */
 public class BioPortalAPIServiceImpl extends WebProtegeRemoteServiceServlet implements BioPortalAPIService {
 
-
-
     private BioPortalRestAPI getAPI() {
         String restBase = BioPortalConfigurationManager.getManager().getRestBase();
         return new BioPortalRestAPI(restBase);
@@ -32,9 +30,9 @@ public class BioPortalAPIServiceImpl extends WebProtegeRemoteServiceServlet impl
         return api.getUserInfo(bioportalAccountName, bioportalPassword);
     }
 
-    public void uploadProjectToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException {
+    public void uploadProjectToBioPortal(String projectDisplayName, ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException {
         BioPortalRestAPI api = getAPI();
-        api.uploadOntologyToBioPortal(projectId, revisionNumber, publishInfo);
+        api.uploadOntologyToBioPortal(projectDisplayName, projectId, revisionNumber, publishInfo);
     }
 
 
