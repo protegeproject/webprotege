@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionH
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsProjectOwnerValidator;
 import edu.stanford.bmir.protege.web.server.entities.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
 import edu.stanford.bmir.protege.web.server.frame.*;
@@ -27,11 +28,13 @@ import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsAc
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.GetProjectSharingSettingsActionHandler;
+import edu.stanford.bmir.protege.web.server.sharing.SetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
+import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 
 /**
  * Matthew Horridge
@@ -125,7 +128,7 @@ public class ActionHandlersModule extends AbstractModule {
 
         multibinder.addBinding().to(GetProjectSharingSettingsActionHandler.class);
 
-
+        multibinder.addBinding().to(SetProjectSharingSettingsActionHandler.class);
 
 
 
