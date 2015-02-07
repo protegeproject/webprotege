@@ -5,10 +5,9 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.server.metaproject.Group;
-import edu.stanford.smi.protege.server.metaproject.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
@@ -16,6 +15,7 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.IllegalFormatException;
+import java.util.Set;
 import java.util.logging.*;
 
 /**
@@ -80,11 +80,12 @@ public class DefaultLogger implements WebProtegeLogger {
             pw.println(userId.get().getUserName());
             final UserId id = userId.get();
             if(!id.isGuest()) {
-                User user = MetaProjectManager.getManager().getMetaProject().getUser(id.getUserName());
-                pw.println("email: " + user.getEmail());
+                Set<GroupId> groups = getMetaProjectManager().getUserGroups(id);
+                Optional<String> email = getMetaProjectManager().getEmail(id);
+                pw.println("email: " + email.or("Not known"));
                 pw.println("groups: ");
-                for(Group group : user.getGroups()) {
-                    pw.println("        " + group.getName());
+                for(GroupId group : groups) {
+                    pw.println("        " + group.getGroupName());
                 }
             }
         }
@@ -119,6 +120,10 @@ public class DefaultLogger implements WebProtegeLogger {
         pw.println();
         t.printStackTrace(pw);
         return sw.toString();
+    }
+
+    private MetaProjectManager getMetaProjectManager() {
+        return MetaProjectManager.getManager();
     }
 
     @Override

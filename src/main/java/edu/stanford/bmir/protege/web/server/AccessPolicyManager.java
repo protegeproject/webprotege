@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
+import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.model.Instance;
@@ -52,7 +52,7 @@ public class AccessPolicyManager {
     }
 
     private ProjectInstance getProjectInstance(ProjectId projectId) {
-        MetaProject metaproject = MetaProjectManager.getManager().getMetaProject();
+        MetaProject metaproject = getMetaProject();
         return getProjectInstance(projectId, metaproject);
     }
 
@@ -80,7 +80,7 @@ public class AccessPolicyManager {
     }
 
     public List<String> getUsers() {
-        Set<User> users = MetaProjectManager.getManager().getMetaProject().getUsers();
+        Set<User> users = getMetaProject().getUsers();
         List<String> userNameList = new ArrayList<String>();
         if (users == null) {
             return userNameList;
@@ -101,7 +101,7 @@ public class AccessPolicyManager {
             return;
         }
 
-        MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
+        MetaProject metaProject = getMetaProject();
         Operation readOnlyOperation = metaProject.getOperation(OntologyShareAccessConstants.PROJECT_READ_ONLY_ACCESS_OPERATION);
         ProjectInstance projectInstance = getProjectInstance(projectId, metaProject);
 
@@ -152,7 +152,7 @@ public class AccessPolicyManager {
             for (GroupOperation groupOperation : projectInstance.getAllowedGroupOperations()) {
                 if (groupOperation.getAllowedGroup().equals(group) && groupOperation.getAllowedOperations().contains(operation)) {
                     for (String userName : userNameList) {
-                        User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
+                        User user = getMetaProject().getUser(userName);
                         group.addMember(user);
                     }
                     return;
@@ -161,7 +161,7 @@ public class AccessPolicyManager {
         }
         else {
             for (String userName : userNameList) {
-                User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
+                User user = getMetaProject().getUser(userName);
                 group.addMember(user);
             }
             GroupOperation groupOperation = metaProject.createGroupOperation();
@@ -178,7 +178,7 @@ public class AccessPolicyManager {
             return;
         }
 
-        MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
+        MetaProject metaProject = getMetaProject();
         Operation readOnlyOperation = metaProject.getOperation(OntologyShareAccessConstants.PROJECT_READ_ONLY_ACCESS_OPERATION);
         if (readOnlyOperation == null) {
             return;
@@ -196,7 +196,7 @@ public class AccessPolicyManager {
 
                 Set<User> members = group.getMembers();
                 for (String userName : userNameList) {
-                    User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
+                    User user = getMetaProject().getUser(userName);
                     members.remove(user);
 
                 }
@@ -211,7 +211,7 @@ public class AccessPolicyManager {
             return;
         }
 
-        MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
+        MetaProject metaProject = getMetaProject();
         Operation writeOperation = metaProject.getOperation(OntologyShareAccessConstants.PROJECT_WRITE_ACCESS_OPERATION);
         ProjectInstance projectInstance = getProjectInstance(projectId, metaProject);
 
@@ -238,7 +238,7 @@ public class AccessPolicyManager {
             return;
         }
 
-        MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
+        MetaProject metaProject = getMetaProject();
         Operation writeOperation = metaProject.getOperation(OntologyShareAccessConstants.PROJECT_WRITE_ACCESS_OPERATION);
         if (writeOperation == null) {
             return;
@@ -258,7 +258,7 @@ public class AccessPolicyManager {
     // TODO !!!! WHY ARE THERE EMPTY CATCH BLOCKS HERE?
     public Collection<AccessPolicyUserData> getUsersWithReadOnlyAccess(ProjectId projectId, boolean includeTemporaryAccount) {
         try {
-            MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
+            MetaProject metaProject = getMetaProject();
 
             Collection<AccessPolicyUserData> userList = new TreeSet<AccessPolicyUserData>(new AccessPolicyUserData());
             ProjectInstance projectInstance = getProjectInstance(projectId, metaProject);
@@ -306,7 +306,7 @@ public class AccessPolicyManager {
     public Collection<AccessPolicyUserData> getUsersWithWriteAccess(ProjectId projectId, boolean includeTemporaryAccount) {
 
         try {
-            MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
+            MetaProject metaProject = getMetaProject();
 
             Collection<AccessPolicyUserData> userList = new TreeSet<AccessPolicyUserData>(new AccessPolicyUserData());
             ProjectInstance projectInstance = getProjectInstance(projectId, metaProject);
@@ -480,7 +480,7 @@ public class AccessPolicyManager {
     public synchronized boolean checkIfAdditionalPolicyPresent(ProjectId projectId) {
         try {
 
-            MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
+            MetaProject metaProject = getMetaProject();
             if (metaProject == null) {
                 return true;
             }
@@ -557,7 +557,7 @@ public class AccessPolicyManager {
             for (Invitation invitation : invitationList) {
                 try {
                     //checking if the temporary account already exists, if not then create a new one ,else update its invitation
-                    User tempUser = metaProjectManager.getMetaProject().getUser(invitation.getEmailId());
+                    User tempUser = getMetaProject().getUser(invitation.getEmailId());
                     if (tempUser != null) { //Account already exists
                         if (!isAccountTemporary(invitation.getEmailId(), tempUser.getPropertyValue(InvitationConstants.USER_PROPERTY_TEMPORARY_ACCOUNT_RANDOM_NO))) {// The account is not a temporary account , hence reject the invitation
                             continue;
@@ -567,8 +567,8 @@ public class AccessPolicyManager {
                     }
                     else { //Account does not already exist
                         metaProjectManager.registerUser(invitation.getEmailId(),invitation.getEmailId(), "");
-                        metaProjectManager.setUserEmail(invitation.getEmailId(), invitation.getEmailId());
-                        tempUser = metaProjectManager.getMetaProject().getUser(invitation.getEmailId());
+                        metaProjectManager.setEmail(UserId.getUserId(invitation.getEmailId()), invitation.getEmailId());
+                        tempUser = getMetaProject().getUser(invitation.getEmailId());
                         Random random = new Random();
                         String randomNo = random.nextInt(10000) + "";
                         tempUser.addPropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT, "true");
@@ -616,6 +616,10 @@ public class AccessPolicyManager {
         catch (Exception e) {
             LOGGER.severe(e);
         }
+    }
+
+    private MetaProject getMetaProject() {
+        return MetaProjectManager.getManager().getMetaProject();
     }
 
     /**
@@ -694,8 +698,8 @@ public class AccessPolicyManager {
      * @return
      */
     public boolean isInvitedAccountPresent(String invitationId) {
-        MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
-        User tempUser = metaProjectManager.getMetaProject().getUser(invitationId);
+        UserDetailsManager userDetailsManager = MetaProjectManager.getManager();
+        User tempUser = getMetaProject().getUser(invitationId);
         if (tempUser == null) {
             return false;
         }
@@ -709,8 +713,8 @@ public class AccessPolicyManager {
      * @return
      */
     public boolean isAccountTemporary(String invitationId, String invitationRandomNo) {
-        MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
-        User tempUser = metaProjectManager.getMetaProject().getUser(invitationId);
+        UserDetailsManager userDetailsManager = MetaProjectManager.getManager();
+        User tempUser = getMetaProject().getUser(invitationId);
         if (tempUser == null) {
             return false;
         }
@@ -733,7 +737,7 @@ public class AccessPolicyManager {
      */
     public AccessPolicyUserData updateInvitedTemporaryAccount(String name, String hashedPassword, String salt, String emailId) {
 
-        User user = MetaProjectManager.getManager().getMetaProject().getUser(emailId);
+        User user = getMetaProject().getUser(emailId);
         user.setDigestedPassword(hashedPassword, salt);
         user.setName(name);
         user.removePropertyValue(InvitationConstants.USER_PROPERTY_IS_TEMPORARY_ACCOUNT, "true");
@@ -743,7 +747,6 @@ public class AccessPolicyManager {
 
         String invitationDate = user.getPropertyValue(InvitationConstants.USER_PROPERTY_ACCOUNT_INVITATION_DATE);
         user.removePropertyValue(InvitationConstants.USER_PROPERTY_ACCOUNT_INVITATION_DATE, invitationDate);
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(MetaProjectManager.getManager());
         return new AccessPolicyUserData(name, null);
     }
 
@@ -756,8 +759,8 @@ public class AccessPolicyManager {
         boolean result = false;
         int expirationPeriodInDays = WebProtegeProperties.get().getAccountInvitationExpirationPeriodInDays();
 
-        MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
-        User tempUser = metaProjectManager.getMetaProject().getUser(invitationId);
+        UserDetailsManager userDetailsManager = MetaProjectManager.getManager();
+        User tempUser = getMetaProject().getUser(invitationId);
         if (tempUser == null) {
             return false;
         }

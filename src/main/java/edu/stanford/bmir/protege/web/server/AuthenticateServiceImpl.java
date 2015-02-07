@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
 import edu.stanford.smi.protege.util.Log;
 
@@ -76,7 +77,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
             return null;
         }
 
-        User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
+        User user = getMetaProject().getUser(userName);
         if (user != null) {
             UserData userData = AuthenticationUtil.createUserData(UserId.getUserId(userName));
             userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.USER_ALREADY_EXISTS);
@@ -84,7 +85,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         }
 
         UserData userData = MetaProjectManager.getManager().registerUser(userName, emailId, password);
-        user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
+        user = getMetaProject().getUser(userName);
         user.setEmail(emailId);
 
         String openIdPropBase = OpenIdConstants.OPENID_PROPERTY_PREFIX;
@@ -112,6 +113,10 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         return userData;
     }
 
+    private MetaProject getMetaProject() {
+        return MetaProjectManager.getManager().getMetaProject();
+    }
+
     public UserData validateUserToAssociateOpenId(String userName, String password) {
 
         if (!isAuthenticateWithOpenId()) {
@@ -134,7 +139,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
                 return null;
             }
 
-            User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
+            User user = getMetaProject().getUser(userName);
 
             String openIdPropBase = OpenIdConstants.OPENID_PROPERTY_PREFIX;
 
@@ -165,7 +170,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
     }
 
     public void sendPasswordReminder(String userName) {
-        String email = MetaProjectManager.getManager().getUserEmail(userName);
+        String email = MetaProjectManager.getManager().getEmail(UserId.getUserId(userName)).orNull();
         if (email == null) {
             throw new IllegalArgumentException("User " + userName + " does not have an email configured.");
         }

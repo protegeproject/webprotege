@@ -25,19 +25,6 @@ import java.util.List;
 public interface ProjectManagerService extends RemoteService {
 
     /**
-     * Gets a list of ALL project names in the system whether or not the caller can list them.
-     * @return A list of ALL project names in the system.
-     */
-    List<String> getProjectNames();
-
-    /**
-     * Gets a list of project names for which the caller corresponds to the owner.
-     * @return A list of project names for which the signed in user is the owner.  This list will be empty if the user
-     *         is not signed in.
-     */
-    List<String> getOwnedProjectNames();
-
-    /**
      * Creates a new project.  The project is initialised based on the {@link NewProjectSettings} parameter. The call
      * will fail if the project is already registered or if the project is not registered but a (legacy) project document
      * exists.  By default, the project will be a private project (does not appear in the project list) with the owner

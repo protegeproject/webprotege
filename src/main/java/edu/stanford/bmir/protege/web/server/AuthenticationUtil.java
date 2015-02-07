@@ -3,10 +3,10 @@
  */
 package edu.stanford.bmir.protege.web.server;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.server.metaproject.User;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -69,14 +69,10 @@ public class AuthenticationUtil {
 
     public static void fillInEmail(UserData userData) {
         final UserId userId = userData.getUserId();
-        if (userId.isGuest()) {
-            return;
+        Optional<String> email = MetaProjectManager.getManager().getEmail(userId);
+        if(email.isPresent()) {
+            userData.setEmail(email.get());
         }
-        User user = MetaProjectManager.getManager().getMetaProject().getUser(userId.getUserName());
-        if (user == null) {
-            return;
-        }
-        userData.setEmail(user.getEmail());
     }
 
 

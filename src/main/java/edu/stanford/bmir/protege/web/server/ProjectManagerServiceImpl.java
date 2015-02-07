@@ -32,41 +32,11 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
     public ProjectManagerServiceImpl() {
     }
 
-    public synchronized List<String> getProjectNames() {
-        List<String> result = new ArrayList<String>();
-        MetaProjectManager mpm = getMetaProjectManager();
-        MetaProject mp = mpm.getMetaProject();
-        for (ProjectInstance instance : mp.getProjects()) {
-            String projectName = instance.getName();
-            result.add(projectName);
-        }
-        return result;
-    }
-
-    public synchronized List<String> getOwnedProjectNames() {
-        UserId userId = getUserInSession();
-        if(userId.isGuest()) {
-            return Collections.emptyList();
-        }
-        List<String> result = new ArrayList<String>();
-        MetaProjectManager mpm = getMetaProjectManager();
-        MetaProject mp = mpm.getMetaProject();
-        for (ProjectInstance instance : mp.getProjects()) {
-            User owner = instance.getOwner();
-            if(owner != null && userId.getUserName().equals(owner.getName())) {
-                String projectName = instance.getName();
-                result.add(projectName);
-            }
-        }
-        return result;
-    }
-
     public synchronized boolean isRegisteredProject(ProjectId projectId) {
         if (projectId == null) {
             throw new NullPointerException("projectId must not be null");
         }
-        ProjectInstance pi = MetaProjectManager.getManager().getMetaProject().getProject(projectId.getId());
-        return pi != null;
+        return MetaProjectManager.getManager().isExistingProject(projectId);
     }
 
     public synchronized ProjectDetails createNewProject(NewProjectSettings newProjectSettings) throws NotSignedInException, ProjectAlreadyRegisteredException, ProjectDocumentExistsException {
@@ -131,7 +101,8 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         if (!userInSession.isGuest()) {
             userSharingSettings.add(new UserSharingSetting(userInSession, SharingSetting.EDIT));
         }
-        SharingSettingsManager.getManager().updateSharingSettings(getThreadLocalRequest(), new ProjectSharingSettings(projectId, SharingSetting.NONE, userSharingSettings));
+        ProjectSharingSettings sharingSettings = new ProjectSharingSettings(projectId, SharingSetting.NONE, userSharingSettings);
+        getMetaProjectManager().setProjectSharingSettings(sharingSettings);
     }
 
 

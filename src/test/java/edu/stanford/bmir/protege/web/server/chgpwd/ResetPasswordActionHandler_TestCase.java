@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
@@ -28,7 +28,7 @@ public class ResetPasswordActionHandler_TestCase {
     private final String EMAIL_ADDRESS = "EMAIL.address";
 
     @Mock
-    private MetaProjectManager mpm;
+    private UserDetailsManager mpm;
 
     @Mock
     private User user;

@@ -44,20 +44,9 @@ public class GetCurrentUserInSessionActionHandler implements ActionHandler<GetCu
     @Override
     public GetCurrentUserInSessionResult execute(GetCurrentUserInSessionAction action, ExecutionContext executionContext) {
         UserId userId = executionContext.getUserId();
-        final UserDetails userDetails;
-        final Set<GroupId> groups = new HashSet<GroupId>();
-        if(userId.isGuest()) {
-            userDetails = UserDetails.getGuestUserDetails();
-        }
-        else {
-            final MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
-            User user = metaProject.getUser(userId.getUserName());
-            for(Group group : user.getGroups()) {
-                groups.add(GroupId.get(group.getName()));
-            }
-            userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), Optional.fromNullable(user.getEmail()));
-        }
-
-        return new GetCurrentUserInSessionResult(userDetails, groups);
+        MetaProjectManager mpm = MetaProjectManager.getManager();
+        UserDetails userDetails = mpm.getUserDetails(userId);
+        Set<GroupId> userGroups = mpm.getUserGroups(userId);
+        return new GetCurrentUserInSessionResult(userDetails, userGroups);
     }
 }

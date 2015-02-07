@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.PropertyValue;
 import edu.stanford.smi.protege.server.metaproject.User;
 import edu.stanford.smi.protege.util.Log;
@@ -38,7 +39,7 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
             List<String> openIdList = new ArrayList<String>();
             List<String> openIdAccId = new ArrayList<String>();
             List<String> openIdProvider = new ArrayList<String>();
-            User user = MetaProjectManager.getManager().getMetaProject().getUser(name);
+            User user = getMetaProject().getUser(name);
             Collection<PropertyValue> propColl = user.getPropertyValues();
             for (Iterator<PropertyValue> iterator = propColl.iterator(); iterator.hasNext();) {
                 PropertyValue propertyValue = iterator.next();
@@ -66,11 +67,15 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
         return oIdData;
     }
 
+    private MetaProject getMetaProject() {
+        return MetaProjectManager.getManager().getMetaProject();
+    }
+
     @SuppressWarnings("finally")
     public OpenIdData removeAssocToOpenId(String name, String opnId) {
         OpenIdData openIdData = new OpenIdData();
         try {
-            User user = MetaProjectManager.getManager().getMetaProject().getUser(name);
+            User user = getMetaProject().getUser(name);
             Collection<PropertyValue> propColl = user.getPropertyValues();
             for (Iterator<PropertyValue> iterator = propColl.iterator(); iterator.hasNext();) {
                 PropertyValue propertyValue = iterator.next();
@@ -112,7 +117,7 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
                 return null;
             }
 
-            User user = MetaProjectManager.getManager().getMetaProject().getUser(name);
+            User user = getMetaProject().getUser(name);
             String openIdPropBase = OpenIdConstants.OPENID_PROPERTY_PREFIX;
 
             for (int index = 1;; index++) {
@@ -261,7 +266,7 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
             return userData;
         }
 
-        User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
+        User user = getMetaProject().getUser(userName);
         if (user != null) {
             UserData userData = AuthenticationUtil.createUserData(UserId.getUserId(userName));
             userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.USER_ALREADY_EXISTS);
@@ -270,7 +275,7 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
 
         UserData userData = MetaProjectManager.getManager().registerUser(userName, emailId, "");
 
-        user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
+        user = getMetaProject().getUser(userName);
         user.setEmail(emailId);
         user.setDigestedPassword(hashedPassword, salt);
 
@@ -303,7 +308,7 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
             HttpSession session = request.getSession();
             String challenge = (String) session.getAttribute(AuthenticationConstants.LOGIN_CHALLENGE);
             session.setAttribute(AuthenticationConstants.LOGIN_CHALLENGE, null);
-            User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
+            User user = getMetaProject().getUser(userName);
             if (user == null) {
                 return null;
             }
@@ -341,7 +346,7 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_ID, null);
             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
 
-            OWLAPIMetaProjectStore.getStore().saveMetaProject(MetaProjectManager.getManager());
+//            OWLAPIMetaProjectStore.getStore().saveMetaProject(MetaProjectManager.getManager());
         } catch (Exception e) {
             Log.getLogger().log(Level.SEVERE, "Exception in validateUserToAssociateOpenId", e);
         }

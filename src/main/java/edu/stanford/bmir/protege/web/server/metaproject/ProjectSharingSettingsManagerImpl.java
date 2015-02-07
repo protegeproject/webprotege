@@ -1,40 +1,41 @@
-package edu.stanford.bmir.protege.web.server;
+package edu.stanford.bmir.protege.web.server.metaproject;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.domain.Invitation;
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.AccessPolicyManager;
+import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.*;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.inject.Inject;
 import java.util.*;
 
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 27/02/2012
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 05/02/15
  */
-public class SharingSettingsServiceImplP3Delegate {
+public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettingsManager {
+
 
     public static final String WORLD_GROUP_NAME = "World";
 
     public static enum OperationName {
-        
+
         READ(MetaProjectConstants.OPERATION_READ.getName()),
-        
+
         COMMENT("Comment"),
-        
+
         WRITE(MetaProjectConstants.OPERATION_WRITE.getName()),
-        
+
         DISPLAY_IN_PROJECT_List(MetaProjectConstants.OPERATION_DISPLAY_IN_PROJECT_LIST.getName());
 
         private String name;
-        
+
         private OperationName(String name) {
             this.name = name;
         }
@@ -49,7 +50,7 @@ public class SharingSettingsServiceImplP3Delegate {
             return name;
         }
     }
- 
+
 
     public static final String READERS_GROUP_NAME_SUFFIX = "_Readers";
 
@@ -59,13 +60,23 @@ public class SharingSettingsServiceImplP3Delegate {
 
     public static final String NONE_GROUP_NAME_SUFFIX = "_None";
 
+
+    private MetaProject metaProject;
+
+    private ProjectPermissionsManager projectPermissionsManager;
+
+    @Inject
+    public ProjectSharingSettingsManagerImpl(MetaProject metaProject, ProjectPermissionsManager projectPermissionsManager) {
+        this.metaProject = metaProject;
+        this.projectPermissionsManager = projectPermissionsManager;
+    }
+
+    @Override
     public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
-        MetaProjectManager mpm = MetaProjectManager.getManager();
-        MetaProject metaProject = mpm.getMetaProject();
         ProjectInstance projectInstance = metaProject.getProject(projectId.getId());
         Set<GroupOperation> groupOperations = projectInstance.getAllowedGroupOperations();
-        List<UserSharingSetting> result = new ArrayList<UserSharingSetting>();
-        Set<User> usersWithPermissionsOnProject = new HashSet<User>();
+        List<UserSharingSetting> result = new ArrayList<>();
+        Set<User> usersWithPermissionsOnProject = new HashSet<>();
         SharingSetting defaultSharingSetting = SharingSetting.getDefaultSharingSetting();
         for (GroupOperation groupOperation : groupOperations) {
             if (!isWorld(groupOperation.getAllowedGroup())) {
@@ -76,7 +87,7 @@ public class SharingSettingsServiceImplP3Delegate {
             }
         }
         for (User user : usersWithPermissionsOnProject) {
-            Collection<Operation> operations = mpm.getAllowedOperations(projectId.getId(), user.getName());
+            Collection<Operation> operations = projectPermissionsManager.getAllowedOperations(projectId.getId(), user.getName());
             SharingSetting sharingSetting = getSharingSettingFromOperations(operations);
             UserSharingSetting userSharingSetting = new UserSharingSetting(UserId.getUserId(user.getName()), sharingSetting);
             result.add(userSharingSetting);
@@ -86,65 +97,15 @@ public class SharingSettingsServiceImplP3Delegate {
         return new ProjectSharingSettings(projectId, defaultSharingSetting, result);
     }
 
-    private SharingSetting getSharingSettingFromOperations(Collection<Operation> operations) {
-        SharingSetting sharingSetting;
-        if (isWriteable(operations)) {
-            sharingSetting = SharingSetting.EDIT;
-        }
-        else if (isCommentable(operations)) {
-            sharingSetting = SharingSetting.COMMENT;
-        }
-        else if (isReadable(operations)) {
-            sharingSetting = SharingSetting.VIEW;
-        }
-        else {
-            sharingSetting = SharingSetting.NONE;
-        }
-        return sharingSetting;
-    }
 
-    private boolean isWorld(Group group) {
-        return group.getName().equals("World");
-    }
-
-
-    private boolean isReadable(Collection<Operation> operations) {
-        for (Operation operation : operations) {
-            if (operation.getName().equals(OperationName.READ.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isCommentable(Collection<Operation> operations) {
-        for (Operation operation : operations) {
-            if (operation.getName().equals(OperationName.COMMENT.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isWriteable(Collection<Operation> operations) {
-        for (Operation operation : operations) {
-            if (operation.getName().equals(OperationName.WRITE.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void updateSharingSettings(HttpServletRequest request, ProjectSharingSettings projectSharingSettings) {
-
-        MetaProjectManager mpm = MetaProjectManager.getManager();
-        MetaProject metaProject = mpm.getMetaProject();
+    @Override
+    public void setProjectSharingSettings(ProjectSharingSettings projectSharingSettings) {
         ProjectId projectId = projectSharingSettings.getProjectId();
         ProjectInstance projectInstance = metaProject.getProject(projectId.getId());
 
         // TODO: Check we are allowed to manage projects permissions
 
-        Map<SharingSetting, Set<User>> usersBySharingSetting = createUsersBySharingSettingMap(request, projectSharingSettings, metaProject);
+        Map<SharingSetting, Set<User>> usersBySharingSetting = createUsersBySharingSettingMap(projectSharingSettings, metaProject);
 
         Set<GroupOperation> allowedGroupOperations = createAllowedGroupOperationsFromSharingSettings(metaProject, projectId, usersBySharingSetting);
 
@@ -152,9 +113,10 @@ public class SharingSettingsServiceImplP3Delegate {
 
         projectInstance.setAllowedGroupOperations(allowedGroupOperations);
 
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(mpm);
-
+        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
     }
+
+
 
     private Set<GroupOperation> createAllowedGroupOperationsFromSharingSettings(MetaProject metaProject, ProjectId projectId, Map<SharingSetting, Set<User>> usersBySharingSetting) {
         Set<GroupOperation> allowedGroupOperations = new HashSet<GroupOperation>();
@@ -171,7 +133,7 @@ public class SharingSettingsServiceImplP3Delegate {
         return allowedGroupOperations;
     }
 
-    private Map<SharingSetting, Set<User>> createUsersBySharingSettingMap(HttpServletRequest request, ProjectSharingSettings projectSharingSettings, MetaProject metaProject) {
+    private Map<SharingSetting, Set<User>> createUsersBySharingSettingMap(ProjectSharingSettings projectSharingSettings, MetaProject metaProject) {
         Map<SharingSetting, Set<User>> usersBySharingSetting = createSharingSettingMap();
 
         for (UserSharingSetting userSharingSetting : projectSharingSettings.getSharingSettings()) {
@@ -184,7 +146,7 @@ public class SharingSettingsServiceImplP3Delegate {
                 else {
                     if(userId.getUserName().contains("@")) {
                         // Assume it's an email invitation
-                        sendEmailInvitation(request, projectSharingSettings, userSharingSetting);
+                        sendEmailInvitation(projectSharingSettings, userSharingSetting);
                         User freshUser = getUserFromUserId(metaProject, userId);
                         usersBySharingSetting.get(userSharingSetting.getSharingSetting()).add(freshUser);
                     }
@@ -194,7 +156,7 @@ public class SharingSettingsServiceImplP3Delegate {
         return usersBySharingSetting;
     }
 
-    private void sendEmailInvitation(HttpServletRequest request, ProjectSharingSettings projectSharingSettings, UserSharingSetting userSharingSetting) {
+    private void sendEmailInvitation(ProjectSharingSettings projectSharingSettings, UserSharingSetting userSharingSetting) {
         UserId userId = userSharingSetting.getUserId();
         // Email invitation
         List<Invitation> invitations = new ArrayList<Invitation>();
@@ -202,7 +164,7 @@ public class SharingSettingsServiceImplP3Delegate {
         invitation.setEmailId(userId.getUserName());
         invitation.setWriter(userSharingSetting.getSharingSetting() == SharingSetting.EDIT);
         invitations.add(invitation);
-        String baseURL = request.getHeader("referer");
+        String baseURL = "http://" + WebProtegeProperties.get().getApplicationHostName();
 
         AccessPolicyManager.get().createTemporaryAccountForInvitation(projectSharingSettings.getProjectId(), baseURL, invitations);
     }
@@ -232,7 +194,7 @@ public class SharingSettingsServiceImplP3Delegate {
         String groupName = getGroupName(projectId, sharingSetting);
         return getOrCreateGroup(metaProject, groupName);
     }
-    
+
     private Group getOrCreateGroup(MetaProject metaProject, String groupName) {
         Group group = metaProject.getGroup(groupName);
         if (group == null) {
@@ -240,7 +202,7 @@ public class SharingSettingsServiceImplP3Delegate {
         }
         return group;
     }
-    
+
     private String getGroupName(ProjectId projectId, SharingSetting sharingSetting) {
         return projectId.getId() + getGroupNameSuffix(sharingSetting);
     }
@@ -293,7 +255,7 @@ public class SharingSettingsServiceImplP3Delegate {
     private Operation getWriteOperation(MetaProject metaProject) {
         return metaProject.getOperation(OperationName.WRITE.getName());
     }
-    
+
     private Operation getCommentOperation(MetaProject metaProject) {
         Operation operation = metaProject.getOperation(OperationName.COMMENT.getName());
         if(operation == null) {
@@ -312,7 +274,56 @@ public class SharingSettingsServiceImplP3Delegate {
 
 
 
+    private SharingSetting getSharingSettingFromOperations(Collection<Operation> operations) {
+        SharingSetting sharingSetting;
+        if (isWriteable(operations)) {
+            sharingSetting = SharingSetting.EDIT;
+        }
+        else if (isCommentable(operations)) {
+            sharingSetting = SharingSetting.COMMENT;
+        }
+        else if (isReadable(operations)) {
+            sharingSetting = SharingSetting.VIEW;
+        }
+        else {
+            sharingSetting = SharingSetting.NONE;
+        }
+        return sharingSetting;
+    }
 
+    private boolean isWorld(Group group) {
+        return group.getName().equals("World");
+    }
+
+
+
+
+    private boolean isReadable(Collection<Operation> operations) {
+        for (Operation operation : operations) {
+            if (operation.getName().equals(OperationName.READ.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isCommentable(Collection<Operation> operations) {
+        for (Operation operation : operations) {
+            if (operation.getName().equals(OperationName.COMMENT.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isWriteable(Collection<Operation> operations) {
+        for (Operation operation : operations) {
+            if (operation.getName().equals(OperationName.WRITE.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
 }

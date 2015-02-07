@@ -27,7 +27,7 @@ public class SetEmailAddressActionHandler implements ActionHandler<SetEmailAddre
 
     @Override
     public SetEmailAddressResult execute(SetEmailAddressAction action, ExecutionContext executionContext) {
-        MetaProjectManager.getManager().setUserEmail(action.getUserId().getUserName(), action.getEmailAddress());
+        MetaProjectManager.getManager().setEmail(action.getUserId(), action.getEmailAddress());
         return new SetEmailAddressResult();
     }
 }

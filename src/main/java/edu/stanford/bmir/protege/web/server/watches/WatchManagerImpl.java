@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -11,9 +12,9 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.*;
+import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.*;
-import edu.stanford.smi.protege.server.metaproject.User;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
 
@@ -267,14 +268,9 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
         emailExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                final User user = MetaProjectManager.getManager().getMetaProject().getUser(userId.getUserName());
-                final String email = user.getEmail();
-                if (email == null) {
-                    return;
-                }
-
+                UserDetails userDetails = MetaProjectManager.getManager().getUserDetails(userId);
                 final String displayName = "watched project";
-                final String emailSubject = String.format("Changes made in %s by %s", displayName, user.getName());
+                final String emailSubject = String.format("Changes made in %s by %s", displayName, userDetails.getDisplayName());
                 String message = "\nChanges were made to " + entity.getEntityType().getName() + " " + project.getRenderingManager().getBrowserText(entity) + " " + entity.getIRI().toQuotedString();
                 message = message + (" on " + new Date() + "\n\n");
                 message = message + "You can view this " + entity.getEntityType().getName() + " at the link below:";
@@ -286,7 +282,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
                 directLinkBuilder.append(";tab=ClassesTab&id=");
                 directLinkBuilder.append(URLEncoder.encode(entity.getIRI().toString()));
                 message += "\n" + directLinkBuilder.toString();
-                App.get().getMailManager().sendMail(email, emailSubject, message);
+                App.get().getMailManager().sendMail(userDetails.getEmailAddress().or("Not specified"), emailSubject, message);
 
             }
         });
