@@ -12,11 +12,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Date: 27/02/2012
  */
 public class SharingSettingsServiceImpl extends WebProtegeRemoteServiceServlet implements SharingSettingsService {
-
-    public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
-        return MetaProjectManager.getManager().getProjectSharingSettings(projectId);
-    }
-
+    
     public void updateSharingSettings(ProjectSharingSettings projectSharingSettings) {
         MetaProjectManager.getManager().setProjectSharingSettings(projectSharingSettings);
     }

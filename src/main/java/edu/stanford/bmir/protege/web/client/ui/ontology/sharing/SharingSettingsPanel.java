@@ -4,7 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceAsync;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
@@ -14,6 +15,8 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestBox;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.UserIdSuggestOracle;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
+import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.ArrayList;
@@ -120,15 +123,10 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
     }
 
     private void refillSharingSettingsList(final ProjectId projectId) {
-        SharingSettingsServiceAsync sharingSettingsService = SharingSettingsServiceManager.getService();
-
-        sharingSettingsService.getProjectSharingSettings(projectId, new AsyncCallback<ProjectSharingSettings>() {
-            public void onFailure(Throwable caught) {
-                caught.printStackTrace();
-            }
-
-            public void onSuccess(ProjectSharingSettings result) {
-                updateListData(result);
+        DispatchServiceManager.get().execute(new GetProjectSharingSettingsAction(projectId), new AbstractWebProtegeAsyncCallback<GetProjectSharingSettingsResult>() {
+            @Override
+            public void onSuccess(GetProjectSharingSettingsResult result) {
+                updateListData(result.getProjectSharingSettings());
             }
         });
     }
