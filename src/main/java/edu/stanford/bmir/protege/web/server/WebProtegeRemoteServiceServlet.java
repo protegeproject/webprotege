@@ -8,8 +8,6 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
-import edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager;
-import edu.stanford.bmir.protege.web.server.projectsettings.ProjectSettingsManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 

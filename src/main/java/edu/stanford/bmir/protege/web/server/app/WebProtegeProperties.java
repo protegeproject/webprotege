@@ -99,7 +99,9 @@ public class WebProtegeProperties implements Serializable {
      */
     public static void initFromProperties(Properties properties) throws WebProtegeConfigurationException {
         if (instance != null) {
-            throw new IllegalStateException("WebProtegeProperties has already been initialized");
+
+            return;
+//            throw new IllegalStateException("WebProtegeProperties has already been initialized");
         }
         instance = new WebProtegeProperties(properties);
     }

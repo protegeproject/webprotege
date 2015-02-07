@@ -26,8 +26,7 @@ public class WebProtegeInitializer implements ServletContextListener {
             LoadWebProtegeProperties loadWebProtegeProperties = new LoadWebProtegeProperties();
             loadWebProtegeProperties.run(sce.getServletContext());
 
-            LoadMailProperties loadMailProperties = new LoadMailProperties();
-            loadMailProperties.run(sce.getServletContext());
+            WebProtegeInjector.init(sce.getServletContext());
 
             WebProtegeConfigurationChecker checker = WebProtegeInjector.get().getInstance(WebProtegeConfigurationChecker.class);
             checker.performConfiguration(sce.getServletContext());

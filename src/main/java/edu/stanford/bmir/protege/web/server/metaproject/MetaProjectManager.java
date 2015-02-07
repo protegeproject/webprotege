@@ -1,25 +1,23 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.server.user.HasUserIds;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
+import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
 import edu.stanford.smi.protege.server.metaproject.*;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -203,5 +201,33 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
         return userDetailsManager.getEmail(userId);
     }
 
+    @Override
+    public boolean isInTrash(ProjectId projectId) {
+        return projectDetailsManager.isInTrash(projectId);
+    }
 
+    @Override
+    public void setInTrash(ProjectId projectId, boolean b) {
+        projectDetailsManager.setInTrash(projectId, b);
+    }
+
+    @Override
+    public OWLAPIProjectType getType(ProjectId projectId) {
+        return projectDetailsManager.getType(projectId);
+    }
+
+    @Override
+    public void setType(ProjectId projectId, OWLAPIProjectType projectType) {
+        projectDetailsManager.setType(projectId, projectType);
+    }
+
+    @Override
+    public ProjectSettings getProjectSettings(ProjectId projectId) {
+        return projectDetailsManager.getProjectSettings(projectId);
+    }
+
+    @Override
+    public void setProjectSettings(ProjectSettings projectSettings) {
+        projectDetailsManager.setProjectSettings(projectSettings);
+    }
 }

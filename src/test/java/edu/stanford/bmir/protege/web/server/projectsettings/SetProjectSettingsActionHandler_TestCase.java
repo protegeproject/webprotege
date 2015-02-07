@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.projectsettings;
 
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 public class SetProjectSettingsActionHandler_TestCase {
 
     @Mock
-    private ProjectSettingsManager psm;
+    private ProjectDetailsManager psm;
 
     @Mock
     private SetProjectSettingsAction action;

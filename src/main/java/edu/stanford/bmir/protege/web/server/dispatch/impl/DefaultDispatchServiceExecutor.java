@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContai
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -16,9 +18,12 @@ import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedExceptio
  */
 public class DefaultDispatchServiceExecutor implements DispatchServiceHandler {
 
-    // TODO: Injection of registry with GIN
-    private ActionHandlerRegistry handlerRegistry = new DefaultActionHandlerRegistry();
+    private final ActionHandlerRegistry handlerRegistry;
 
+    @Inject
+    public DefaultDispatchServiceExecutor(ActionHandlerRegistry handlerRegistry) {
+        this.handlerRegistry = handlerRegistry;
+    }
 
     @Override
     public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException {

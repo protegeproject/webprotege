@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.smi.protege.server.metaproject.User;
 
+import javax.inject.Inject;
+
 import static edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResultCode.*;
 
 /**
@@ -27,6 +29,7 @@ public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAc
 
     private final ResetPasswordMailer mailer;
 
+    @Inject
     public ResetPasswordActionHandler(
             UserDetailsManager userDetailsManager, ResetPasswordMailer mailer) {
         this.userDetailsManager = userDetailsManager;

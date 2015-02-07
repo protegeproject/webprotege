@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.client.WebProtege;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.shortform.*;
@@ -256,7 +257,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 getProjectId(),
                 DefaultMetricsCalculators.getDefaultMetrics(rootOntology),
                 projectEventManager,
-                WebProtegeLoggerManager.get(OWLAPIProjectMetadataManager.class));
+                WebProtegeLoggerManager.get(OWLAPIProjectMetricsManager.class));
 
     }
 
@@ -677,10 +678,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         String changeDescription = changeDescriptionGenerator.generateChangeDescription(finalResult);
         // Log the changes
         changeManager.logChanges(userId, finalResult.getChangeList(), changeDescription);
-        // Log some metadata about when the changes were applied
-        OWLAPIProjectMetadataManager metadataManager = OWLAPIProjectMetadataManager.getManager();
-        metadataManager.setLastModifiedTime(getProjectId(), System.currentTimeMillis());
-        metadataManager.setLastModifiedBy(getProjectId(), userId);
+        // TODO Log some metadata about when the changes were applied
     }
 
 

@@ -1,15 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,12 +39,7 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        getService().getXRefs(getProjectId(), entity, new AsyncCallback<List<OBOXRef>>() {
-            public void onFailure(Throwable caught) {
-                MessageBox.alert(caught.getMessage());
-                GWT.log(caught.getMessage(), caught);
-            }
-
+        getService().getXRefs(getProjectId(), entity, new AbstractWebProtegeAsyncCallback<List<OBOXRef>>() {
             public void onSuccess(List<OBOXRef> result) {
                 editor.setValue(result);
             }

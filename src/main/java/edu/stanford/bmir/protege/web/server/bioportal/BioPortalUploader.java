@@ -39,16 +39,16 @@ public class BioPortalUploader {
         this.publishInfo = publishInfo;
     }
 
-    public BioPortalUploader(ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException, OWLOntologyStorageException {
+    public BioPortalUploader(String projectDisplayName, ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException, OWLOntologyStorageException {
         this.publishInfo = publishInfo;
-        ontologyDocument = getOntologyDocumentFromProjectAndRevision(projectId, revisionNumber);
+        ontologyDocument = getOntologyDocumentFromProjectAndRevision(projectDisplayName, projectId, revisionNumber);
     }
     
-    private File getOntologyDocumentFromProjectAndRevision(ProjectId projectId, RevisionNumber revisionNumber) throws IOException, OWLOntologyStorageException {
+    private File getOntologyDocumentFromProjectAndRevision(String projectDisplayName, ProjectId projectId, RevisionNumber revisionNumber) throws IOException, OWLOntologyStorageException {
         OWLAPIProjectDocumentStore store = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
         File ontologyDocument = File.createTempFile("BioPortalOntology", ".zip");
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(ontologyDocument));
-        store.exportProjectRevision(revisionNumber, bos, DownloadFormat.getDefaultFormat());
+        store.exportProjectRevision(projectDisplayName, revisionNumber, bos, DownloadFormat.getDefaultFormat());
         bos.close();
         return ontologyDocument;
     }

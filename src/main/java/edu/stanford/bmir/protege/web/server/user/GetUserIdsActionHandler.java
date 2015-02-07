@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -24,6 +26,7 @@ public class GetUserIdsActionHandler implements ActionHandler<GetUserIdsAction, 
 
     private HasUserIds hasUserIds;
 
+    @Inject
     public GetUserIdsActionHandler(HasUserIds hasUserIds) {
         this.hasUserIds = checkNotNull(hasUserIds);
     }
