@@ -67,11 +67,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>bpProposals</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.bioportal.BioPortalProposalsServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>OpenIdServiceImpl</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.OpenIdServiceImpl</servlet-class>
 	</servlet>
@@ -168,11 +163,6 @@
 	<servlet-mapping>
 		<servlet-name>OpenIdServiceImpl</servlet-name>
 		<url-pattern>/webprotege/openid</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>bpProposals</servlet-name>
-		<url-pattern>/webprotege/bpProposals</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
