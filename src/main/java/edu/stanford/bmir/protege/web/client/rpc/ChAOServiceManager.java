@@ -30,13 +30,6 @@ public class ChAOServiceManager {
         }
         return instance;
     }
-    /*
-     * Change methods
-     */
-
-    public void createChange(ProjectId projectId, String userName, String entityName, String action, String context, AsyncCallback<ChangeData> cb) {
-        proxy.createChange(projectId.getId(), userName, entityName, action, context, cb);
-    }
 
     public void getChanges(ProjectId projectId, Date startDate, Date endDate, int start, int limit, String sort,
             String dir, AsyncCallback<PaginationData<ChangeData>> cb) {
