@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsService;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
+import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -14,10 +14,10 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 public class SharingSettingsServiceImpl extends WebProtegeRemoteServiceServlet implements SharingSettingsService {
 
     public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
-        return SharingSettingsManager.getManager().getProjectSharingSettings(projectId);
+        return MetaProjectManager.getManager().getProjectSharingSettings(projectId);
     }
 
     public void updateSharingSettings(ProjectSharingSettings projectSharingSettings) {
-        SharingSettingsManager.getManager().updateSharingSettings(getThreadLocalRequest(), projectSharingSettings);
+        MetaProjectManager.getManager().setProjectSharingSettings(projectSharingSettings);
     }
 }

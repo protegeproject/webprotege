@@ -6,7 +6,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager;
+import edu.stanford.bmir.protege.web.server.metaproject.ServerSettingsManager;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
@@ -49,7 +50,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     }
 
     public String getUserEmail(String userName) {
-        return MetaProjectManager.getManager().getUserEmail(userName);
+        return MetaProjectManager.getManager().getEmail(UserId.getUserId(userName)).orNull();
     }
 
     public PermissionsSet getAllowedOperations(String project, String user) {
@@ -71,7 +72,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     }
 
     public void sendPasswordReminder(String userName) throws UnrecognizedUserNameException {
-        String email = MetaProjectManager.getManager().getUserEmail(userName);
+        String email = MetaProjectManager.getManager().getEmail(UserId.getUserId(userName)).orNull();
         if (email == null) {
             throw new UnrecognizedUserNameException("User " + userName + " does not have an email configured.");
         }
@@ -158,11 +159,8 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     }
 
     public boolean changePasswordEncrypted(String userName, String encryptedPassword, String salt) {
-        User user = MetaProjectManager.getManager().getMetaProject().getUser(userName);
-        if (user == null) {
-            return false;
-        }
-        user.setDigestedPassword(encryptedPassword, salt);
+        UserId userId = UserId.getUserId(userName);
+        MetaProjectManager.getManager().setDigestedPassword(userId, encryptedPassword, salt);
         return true;
     }
 
@@ -177,14 +175,14 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         return newSalt;
     }
 
-    //used only for https
-    public UserData registerUser(String userName, String password, String email) {
-        MetaProjectManager mpm = MetaProjectManager.getManager();
-        throwUserRegistrationExceptionIfAccountCreationIsDisabled(mpm);
-        UserData userData = mpm.registerUser(userName, email, password);
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(mpm);
-        return userData;
-    }
+//    //used only for https
+//    public UserData registerUser(String userName, String password, String email) {
+//        MetaProjectManager mpm = MetaProjectManager.getManager();
+//        throwUserRegistrationExceptionIfAccountCreationIsDisabled(mpm);
+//        UserData userData = mpm.registerUser(userName, email, password);
+//        OWLAPIMetaProjectStore.getStore().saveMetaProject(mpm);
+//        return userData;
+//    }
 
     public UserData registerUserViaEncrption(String name, String hashedPassword, String emailId) throws UserRegistrationException {
         MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
@@ -198,17 +196,14 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
 
         UserData userData = metaProjectManager.registerUser(name, emailId, emptyPassword);
 
-        User user = metaProjectManager.getMetaProject().getUser(name);
-        user.setDigestedPassword(hashedPassword, salt);
-        user.setEmail(emailId);
-
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProjectManager);
-
+        UserId userId = UserId.getUserId(name);
+        MetaProjectManager.getManager().setDigestedPassword(userId, hashedPassword, salt);
+        MetaProjectManager.getManager().setEmail(userId, emailId);
         return userData;
     }
 
-    private void throwUserRegistrationExceptionIfAccountCreationIsDisabled(MetaProjectManager metaProjectManager) {
-        if(!metaProjectManager.allowsCreateUser()) {
+    private void throwUserRegistrationExceptionIfAccountCreationIsDisabled(ServerSettingsManager serverSettingsManager) {
+        if(!serverSettingsManager.allowsCreateUser()) {
             throw new UserRegistrationException("Account creation is disabled");
         }
     }

@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.metaproject.LocalMetaProjectManager;
+import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectFile;
+import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import org.apache.commons.io.FileUtils;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
@@ -17,12 +19,18 @@ public class CheckMetaProjectExists implements ConfigurationTask {
 
     private static final String DEFAULT_PROJECTS_DIRECTORY_NAME = "default-projects";
 
+    private File metaProjectFile;
+
+    @Inject
+    public CheckMetaProjectExists(@MetaProjectFile File metaProjectFile) {
+        this.metaProjectFile = metaProjectFile;
+    }
+
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-            File metaProjectFile = LocalMetaProjectManager.getMetaProjectFile();
-            if(metaProjectFile.exists()) {
-                return;
-            }
+        if (metaProjectFile.exists()) {
+            return;
+        }
         createFreshMetaProject(servletContext, metaProjectFile);
     }
 
@@ -34,8 +42,7 @@ public class CheckMetaProjectExists implements ConfigurationTask {
             final File metaProjectDirectory = metaProjectFile.getParentFile();
             metaProjectDirectory.mkdirs();
             FileUtils.copyDirectory(templateMetaProjectDirectory, metaProjectDirectory);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new WebProtegeConfigurationException("There was a problem initializing the metaproject.  Details: " + e.getMessage());
         }
     }

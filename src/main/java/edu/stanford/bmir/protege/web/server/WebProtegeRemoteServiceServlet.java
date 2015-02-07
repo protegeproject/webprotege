@@ -4,16 +4,14 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager;
+import edu.stanford.bmir.protege.web.server.projectsettings.ProjectSettingsManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.server.metaproject.Group;
-import edu.stanford.smi.protege.server.metaproject.MetaProject;
-import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
-import edu.stanford.smi.protege.server.metaproject.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -82,17 +80,8 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
      */
     protected boolean isSignedInUserProjectOwner(ProjectId projectId) {
         UserId userId = getUserInSession();
-        if (userId.isGuest()) {
-            return false;
-        }
-        MetaProjectManager mpm = getMetaProjectManager();
-        MetaProject metaProject = mpm.getMetaProject();
-        ProjectInstance project = metaProject.getProject(projectId.getId());
-        if (project == null) {
-            return false;
-        }
-        User owner = project.getOwner();
-        return owner != null && userId.getUserName().equals(owner.getName());
+        ProjectDetailsManager mpm = getMetaProjectManager();
+        return mpm.isProjectOwner(userId, projectId);
     }
 
     /**
@@ -103,21 +92,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
      */
     protected boolean isSignedInUserAdmin() {
         UserId userId = getUserInSession();
-        if (userId.isGuest()) {
-            return false;
-        }
-        MetaProjectManager mpm = getMetaProjectManager();
-        MetaProject metaProject = mpm.getMetaProject();
-        User user = metaProject.getUser(userId.getUserName());
-        if (user == null) {
-            return false;
-        }
-        for (Group group : user.getGroups()) {
-            if (OntologyShareAccessConstants.ADMIN_GROUP.equals(group.getName())) {
-                return true;
-            }
-        }
-        return false;
+        return getMetaProjectManager().isUserAdmin(userId);
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

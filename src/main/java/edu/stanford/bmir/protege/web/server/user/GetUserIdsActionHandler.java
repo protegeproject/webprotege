@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsAction;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -21,10 +22,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetUserIdsActionHandler implements ActionHandler<GetUserIdsAction, GetUserIdsResult> {
 
-    private MetaProject metaProject;
+    private HasUserIds hasUserIds;
 
-    public GetUserIdsActionHandler(MetaProject metaProject) {
-        this.metaProject = checkNotNull(metaProject);
+    public GetUserIdsActionHandler(HasUserIds hasUserIds) {
+        this.hasUserIds = checkNotNull(hasUserIds);
     }
 
     @Override
@@ -39,13 +40,6 @@ public class GetUserIdsActionHandler implements ActionHandler<GetUserIdsAction, 
 
     @Override
     public GetUserIdsResult execute(GetUserIdsAction action, ExecutionContext executionContext) {
-        ImmutableList.Builder<UserId> result = ImmutableList.builder();
-        for(User user : metaProject.getUsers()) {
-            String name = user.getName();
-            if (name != null) { // Unfortunately!
-                result.add(UserId.getUserId(name));
-            }
-        }
-        return new GetUserIdsResult(result.build());
+        return new GetUserIdsResult(ImmutableList.copyOf(hasUserIds.getUserIds()));
     }
 }

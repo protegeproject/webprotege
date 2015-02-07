@@ -39,13 +39,12 @@ public class UUIDMigrator {
 
     private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(UUIDMigrator.class);
 
-    private MetaProjectManager mpm;
+//    private MetaProjectManager mpm;
 
     private MetaProject metaProject;
 
-    public UUIDMigrator(MetaProjectManager mpm) {
-        this.mpm = mpm;
-        this.metaProject = mpm.getMetaProject();
+    public UUIDMigrator(MetaProject metaProject) {
+        this.metaProject = metaProject;
     }
 
     /**
@@ -72,7 +71,7 @@ public class UUIDMigrator {
         for (ProjectInstance pi : metaProjectImpl.getProjects()) {
             migrateProjectInstance(kb, pi);
         }
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(mpm);
+        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
     }
 
     private void migrateProjectInstance(KnowledgeBase kb, ProjectInstance pi) {

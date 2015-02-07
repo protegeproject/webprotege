@@ -1,25 +1,36 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
+import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.user.HasUserIds;
+import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
+import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
-import edu.stanford.smi.protege.server.metaproject.MetaProject;
-import edu.stanford.smi.protege.server.metaproject.Operation;
-import edu.stanford.smi.protege.server.metaproject.User;
+import edu.stanford.smi.protege.server.metaproject.*;
 
+import javax.inject.Inject;
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface assumes a particular implementation i.e. a Protege 3 implementation with Project object.
  * i.e. the openProject method.  Is this a problem?
  */
-public abstract class MetaProjectManager {
+public final class MetaProjectManager implements HasUserIds, UserDetailsManager, ProjectPermissionsManager, AuthenticationManager, ProjectDetailsManager, OpenIdManager, ServerSettingsManager, ProjectSharingSettingsManager {
+
+
 
     private static MetaProjectManager instance;
 
@@ -28,57 +39,169 @@ public abstract class MetaProjectManager {
     }
 
     public static synchronized MetaProjectManager getManager() {
-        if(instance == null) {
-            instance  = new LocalMetaProjectManager();
+        if (instance == null) {
+            instance = WebProtegeInjector.get().getInstance(MetaProjectManager.class);
         }
         return instance;
     }
 
-    public abstract boolean hasValidCredentials(String userName, String password);
+    private AuthenticationManager authenticationManager;
 
-    public abstract UserData registerUser(String userName, String email, String password) throws UserRegistrationException;
+    private OpenIdManager openIdManager;
 
-    public abstract void changePassword(String userName, String password);
+    private ProjectDetailsManager projectDetailsManager;
 
-    public abstract String getUserEmail(String userName);
+    private ProjectPermissionsManager projectPermissionsManager;
 
-    public abstract void setUserEmail(String userName, String email);
+    private ProjectSharingSettingsManager projectSharingSettingsManager;
 
-    public abstract List<ProjectDetails> getListableReadableProjects(UserId userId);
+    private ServerSettingsManager serverSettingsManager;
 
-//    public abstract List<ProjectData> getProjectsData(String userName);
+    private UserDetailsManager userDetailsManager;
 
-    public abstract Collection<Operation> getAllowedOperations(String project, String userName);
+    private MetaProject metaProject;
 
-    public abstract Collection<Operation> getAllowedServerOperations(String userName);
+    @Inject
+    public MetaProjectManager(MetaProject metaProject,
+                              AuthenticationManager authenticationManager,
+                              OpenIdManager openIdManager,
+                              ProjectDetailsManager projectDetailsManager,
+                              ProjectPermissionsManager projectPermissionsManager,
+                              ProjectSharingSettingsManager projectSharingSettingsManager,
+                              ServerSettingsManager serverSettingsManager,
+                              UserDetailsManager userDetailsManager) {
+        this.metaProject = metaProject;
+        this.authenticationManager = authenticationManager;
+        this.openIdManager = openIdManager;
+        this.projectDetailsManager = projectDetailsManager;
+        this.projectPermissionsManager = projectPermissionsManager;
+        this.projectSharingSettingsManager = projectSharingSettingsManager;
+        this.serverSettingsManager = serverSettingsManager;
+        this.userDetailsManager = userDetailsManager;
+    }
 
-//    public abstract Project openProject(String name);
+    public MetaProject getMetaProject() {
+        return metaProject;
+    }
 
-    /**
-     * Creates a new project description inside the meta project (with the default access policy etc.)
-     * @param newProjectSettings The {@link edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings} that describes the new project.  Not <code>null</code>.
-     */
-    public abstract void registerProject(ProjectId projectId, NewProjectSettings newProjectSettings);
+    public final void dispose() {
+        metaProject.dispose();
+        synchronized (this) {
+            notifyAll();
+        }
 
-    public abstract MetaProject getMetaProject();
+    }
 
-    /**
-     * Reloads the metaproject. Should be used with care, because it reloads
-     * besides the user/password info, also the projects info. Clients should be
-     * notified of the change.
-     */
-//    public abstract void reloadMetaProject();
+    @Override
+    public Set<GroupId> getUserGroups(UserId userId) {
+        return projectPermissionsManager.getUserGroups(userId);
+    }
 
-    public abstract void dispose();
-    
-    public abstract Optional<UserId> getUserAssociatedWithOpenId(String userOpenId);
+    @Override
+    public boolean isUserAdmin(UserId userId) {
+        return projectPermissionsManager.isUserAdmin(userId);
+    }
 
-    public abstract boolean allowsCreateUser();
+    @Override
+    public boolean isProjectOwner(UserId userId, ProjectId projectId) {
+        return projectDetailsManager.isProjectOwner(userId, projectId);
+    }
 
-    //FIXME: this adds a dependency on the Protege 3 User class. But this implementation will be replace soon,
-    //so, hopefully this is not so bad.
-    public abstract User getUser(String userNameOrEmail);
+    @Override
+    public boolean hasValidCredentials(String userName, String password) {
+        return projectPermissionsManager.hasValidCredentials(userName, password);
+    }
 
-    public abstract ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException;
+    @Override
+    public void changePassword(String userName, String password) {
+        authenticationManager.changePassword(userName, password);
+    }
+
+    @Override
+    public Collection<Operation> getAllowedOperations(String projectName, String userName) {
+        return projectPermissionsManager.getAllowedOperations(projectName, userName);
+    }
+
+    @Override
+    public Collection<Operation> getAllowedServerOperations(String userName) {
+        return serverSettingsManager.getAllowedServerOperations(userName);
+    }
+
+    @Override
+    public Optional<UserId> getUserAssociatedWithOpenId(String userOpenId) {
+        return openIdManager.getUserAssociatedWithOpenId(userOpenId);
+    }
+
+    @Override
+    public User getUser(String userNameOrEmail) {
+        return userDetailsManager.getUser(userNameOrEmail);
+    }
+
+    @Override
+    public void registerProject(ProjectId projectId, NewProjectSettings newProjectSettings) {
+        projectDetailsManager.registerProject(projectId, newProjectSettings);
+    }
+
+    @Override
+    public UserData registerUser(String userName, String email, String password) throws UserRegistrationException {
+        return authenticationManager.registerUser(userName, email, password);
+    }
+
+    @Override
+    public List<ProjectDetails> getListableReadableProjects(UserId userId) {
+        return projectPermissionsManager.getListableReadableProjects(userId);
+    }
+
+    @Override
+    public boolean allowsCreateUser() {
+        return serverSettingsManager.allowsCreateUser();
+    }
+
+    @Override
+    public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
+        return projectSharingSettingsManager.getProjectSharingSettings(projectId);
+    }
+
+    @Override
+    public void setProjectSharingSettings(ProjectSharingSettings projectSharingSettings) {
+        projectSharingSettingsManager.setProjectSharingSettings(projectSharingSettings);
+    }
+
+    public void setDigestedPassword(UserId userId, String encryptedPassword, String salt) {
+        authenticationManager.setDigestedPassword(userId, encryptedPassword, salt);
+    }
+
+    public int getProjectCount() {
+        return projectDetailsManager.getProjectCount();
+    }
+
+    public boolean isExistingProject(ProjectId projectId) {
+        return projectDetailsManager.isExistingProject(projectId);
+    }
+
+    @Override
+    public ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException {
+        return projectDetailsManager.getProjectDetails(projectId);
+    }
+
+    @Override
+    public Collection<UserId> getUserIds() {
+        return userDetailsManager.getUserIds();
+    }
+
+    public void setEmail(UserId userId, String email) {
+        userDetailsManager.setEmail(userId, email);
+    }
+
+    @Override
+    public UserDetails getUserDetails(UserId userId) {
+        return userDetailsManager.getUserDetails(userId);
+    }
+
+    @Override
+    public Optional<String> getEmail(UserId userId) {
+        return userDetailsManager.getEmail(userId);
+    }
+
 
 }

@@ -104,12 +104,11 @@ public class OWLAPIProjectMetadataManager implements ProjectSettingsManager {
     }
     
     private void save() {
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(MetaProjectManager.getManager());
+        OWLAPIMetaProjectStore.getStore().saveMetaProject(getMetaProject());
     }
 
     private MetaProject getMetaProject() {
-        MetaProjectManager mpm = MetaProjectManager.getManager();
-        return mpm.getMetaProject();
+        return MetaProjectManager.getManager().getMetaProject();
     }
 
 

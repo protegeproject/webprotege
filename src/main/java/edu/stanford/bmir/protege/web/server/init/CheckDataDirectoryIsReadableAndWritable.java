@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import java.io.*;
 import java.util.UUID;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -14,9 +17,15 @@ import java.util.UUID;
  */
 public class CheckDataDirectoryIsReadableAndWritable implements ConfigurationTask {
 
+    private final File dataDirectory;
+
+    @Inject
+    public CheckDataDirectoryIsReadableAndWritable(@DataDirectory File dataDirectory) {
+        this.dataDirectory = checkNotNull(dataDirectory);
+    }
+
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-        File dataDirectory = WebProtegeProperties.get().getDataDirectory();
         File testFile = new File(dataDirectory, "write.test." + UUID.randomUUID() + ".txt");
         try {
             try {
@@ -25,7 +34,12 @@ public class CheckDataDirectoryIsReadableAndWritable implements ConfigurationTas
                 os.close();
             }
             catch (FileNotFoundException e) {
-                throw new WebProtegeConfigurationException("WebProtege is not able to write to the WebProtege data directory located at " + dataDirectory + ".  Please check that the specified data directory exists and that the user which the servlet container (tomcat) runs under has both read and write permission for this directory and its contents.");
+                throw new WebProtegeConfigurationException(
+                        "WebProtege is not able to write to the WebProtege data directory located at " +
+                                dataDirectory +
+                                ".  Please check that the specified data directory exists and that " +
+                                "the user which the servlet container (tomcat) runs under has both " +
+                                "read and write permission for this directory and its contents.");
             }
             catch (IOException e) {
                 throw new WebProtegeConfigurationException(e);
@@ -37,7 +51,12 @@ public class CheckDataDirectoryIsReadableAndWritable implements ConfigurationTas
                 is.close();
             }
             catch (FileNotFoundException e) {
-                throw new WebProtegeConfigurationException("WebProtege is not able to read the WebProtege data directory located at " + dataDirectory + ".  Please check that the specified data directory exists and that the user which the servlet container (tomcat) runs under has both read and write permission for this directory and its contents.");
+                throw new WebProtegeConfigurationException(
+                        "WebProtege is not able to read the WebProtege data directory located at " +
+                                dataDirectory +
+                                ".  Please check that the specified data directory exists and that the " +
+                                "user which the servlet container (tomcat) runs under has both read and " +
+                                "write permission for this directory and its contents.");
             }
             catch (IOException e) {
                 throw new WebProtegeConfigurationException(e);

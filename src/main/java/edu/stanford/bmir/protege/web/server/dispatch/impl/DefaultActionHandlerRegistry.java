@@ -94,7 +94,7 @@ public class DefaultActionHandlerRegistry implements ActionHandlerRegistry {
 
         register(new GetClientApplicationPropertiesActionHandler(), GetClientApplicationPropertiesAction.class);
 
-        register(new GetUserIdsActionHandler(metaProjectManager.getMetaProject()), GetUserIdsAction.class);
+        register(new GetUserIdsActionHandler(metaProjectManager), GetUserIdsAction.class);
 
         register(new GetAvailableProjectsHandler(), GetAvailableProjectsAction.class);
 

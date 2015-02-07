@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import edu.stanford.bmir.protege.web.server.IdUtil;
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -9,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
 import edu.stanford.smi.protege.server.metaproject.User;
@@ -23,13 +23,13 @@ public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAc
     private final WebProtegeLogger logger = WebProtegeLoggerManager.get(ResetPasswordActionHandler.class);
 
 
-    private final MetaProjectManager metaProjectManager;
+    private final UserDetailsManager userDetailsManager;
 
     private final ResetPasswordMailer mailer;
 
     public ResetPasswordActionHandler(
-            MetaProjectManager metaProjectManager, ResetPasswordMailer mailer) {
-        this.metaProjectManager = metaProjectManager;
+            UserDetailsManager userDetailsManager, ResetPasswordMailer mailer) {
+        this.userDetailsManager = userDetailsManager;
         this.mailer = mailer;
     }
 
@@ -49,7 +49,7 @@ public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAc
             ResetPasswordAction action, ExecutionContext executionContext) {
         final String emailAddress = action.getResetPasswordData().getEmailAddress();
         try {
-            User user = metaProjectManager.getUser(emailAddress);
+            User user = userDetailsManager.getUser(emailAddress);
             if(user == null) {
                 return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
             }

@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
+
+import javax.annotation.Nullable;
 
 /**
  * Author: Matthew Horridge<br>
@@ -37,14 +40,13 @@ public class GetEmailAddressActionHandler implements ActionHandler<GetEmailAddre
 
     @Override
     public GetEmailAddressResult execute(GetEmailAddressAction action, ExecutionContext executionContext) {
-        String emailAddress = MetaProjectManager.getManager().getUserEmail(action.getUserId().getUserName());
-        Optional<EmailAddress> address;
-        if(emailAddress == null) {
-            address = Optional.absent();
-        }
-        else {
-            address = Optional.of(new EmailAddress(emailAddress));
-        }
+        Optional<EmailAddress> address = MetaProjectManager.getManager().getEmail(action.getUserId()).transform(new Function<String, EmailAddress>() {
+            @Nullable
+            @Override
+            public EmailAddress apply(String s) {
+                return new EmailAddress(s);
+            }
+        });
         return new GetEmailAddressResult(action.getUserId(), address);
     }
 }

@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.init;
 
 import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
+import edu.stanford.bmir.protege.web.server.inject.UiConfigurationDirectory;
 import org.apache.commons.io.FileUtils;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
@@ -15,9 +17,15 @@ import java.io.IOException;
  */
 public class CheckUIConfigurationDataExists implements ConfigurationTask {
 
+    private final File defaultConfigurationDirectory;
+
+    @Inject
+    public CheckUIConfigurationDataExists(@UiConfigurationDirectory File defaultConfigurationDirectory) {
+        this.defaultConfigurationDirectory = defaultConfigurationDirectory;
+    }
+
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-        File defaultConfigurationDirectory = WebProtegeFileStore.getInstance().getDefaultUIConfigurationDataDirectory();
         if(defaultConfigurationDirectory.exists()) {
             return;
         }
@@ -32,7 +40,8 @@ public class CheckUIConfigurationDataExists implements ConfigurationTask {
             FileUtils.copyDirectory(templateDefaultConfigurationsDirectory, defaultConfigurationDirectory);
         }
         catch (IOException e) {
-            throw new WebProtegeConfigurationException("There was a problem copying the default project configurations.  Details: " + e.getMessage());
+            throw new WebProtegeConfigurationException("There was a problem copying the default project configurations.  " +
+                    "Details: " + e.getMessage());
         }
     }
 }
