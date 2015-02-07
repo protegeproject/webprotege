@@ -18,11 +18,6 @@ import java.util.Date;
 @RemoteServiceRelativePath("chao")
 public interface ChAOService extends RemoteService {
 
-    /*
-     * Changes
-     */
-    public ChangeData createChange(String projectName, String userName, String entityName, final String action, final String context);
-
     public PaginationData<ChangeData> getChanges(String projectName, Date startDate, Date endDate, int start, int limit, String sort, String dir);
 
     public PaginationData<ChangeData> getChanges(String projectName, String entityName, int start, int limit, String sort, String dir);

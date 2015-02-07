@@ -46,13 +46,6 @@ public class ChAOServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet implem
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    /*
-     * Changes
-     */
-    public ChangeData createChange(String projectName, String userName, String entityName, final String action, final String context) {
-        return null;
-    }
-
     public PaginationData<ChangeData> getChanges(String projectName, Date startDate, Date endDate, int start, int limit, String sort, String dir) {
         List<ChangeData> changes = getChanges(projectName, startDate, endDate);
         return PaginationServerUtil.pagedRecords(changes, start, limit, sort, dir);
