@@ -42,4 +42,16 @@ public interface WebProtegeSession {
      */
     UserId getUserInSession();
 
+    /**
+     * Sets the user in the session.
+     * @param userId The userId.  Not {@code null}.
+     * @throws java.lang.NullPointerException if any parameters are {@code null}.
+     */
+    void setUserInSession(UserId userId);
+
+    /**
+     *  Sets the guest user as the user in this session.
+     */
+    void clearUserInSession();
+
 }

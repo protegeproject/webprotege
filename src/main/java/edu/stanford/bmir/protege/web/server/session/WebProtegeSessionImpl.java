@@ -53,4 +53,14 @@ public class WebProtegeSessionImpl implements WebProtegeSession {
     public UserId getUserInSession() {
         return getAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER).or(UserId.getGuest());
     }
+
+    @Override
+    public void setUserInSession(UserId userId) {
+        setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER, checkNotNull(userId));
+    }
+
+    @Override
+    public void clearUserInSession() {
+        removeAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER);
+    }
 }
