@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionAttribute;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -16,49 +20,45 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ExecutionContext implements HasUserId {
 
-    private UserId userId;
+    private WebProtegeSession session;
 
     /**
      * Creates an ExecutionContext.
-     * @param userId The userId for the execution context.  Not {@code null}.
      * @throws NullPointerException if {@code userId} is {@code null}.
      */
-    public ExecutionContext(UserId userId) {
-        this.userId = checkNotNull(userId);
+    public ExecutionContext(WebProtegeSession session) {
+        this.session = checkNotNull(session);
     }
 
     /**
      * Gets the {@link UserId} in this execution context.
-     * @return The {@link UserId}.  Not {@code null}.
+     * @return The {@link UserId}.  Not {@code null}.  If the associated session (see {@link #getSession()})
+     * does not have a logged in user then the {@link edu.stanford.bmir.protege.web.shared.user.UserId}
+     * equal to the guest user is returned.
      */
     public UserId getUserId() {
-        return userId;
+        Optional<UserId> loggedInUser = session.getAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER);
+        return loggedInUser.or(UserId.getGuest());
+    }
+
+    /**
+     * Gets the WebProtegeSession that the action is executed in.
+     * @return The WebProtegeSession.  Not {@code null}.
+     */
+    public WebProtegeSession getSession() {
+        return session;
     }
 
     @Override
     public int hashCode() {
-        return "ExecutionContext".hashCode() + userId.hashCode();
+        return "ExecutionContext".hashCode();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof ExecutionContext)) {
-            return false;
-        }
-        ExecutionContext other = (ExecutionContext) obj;
-        return this.userId.equals(other.userId);
-    }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("ExecutionContext");
-        sb.append("(");
-        sb.append(userId);
-        sb.append(")");
-        return sb.toString();
+        return Objects.toStringHelper("ExecutionContext")
+                .add("session", session)
+                .toString();
     }
 }
