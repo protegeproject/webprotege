@@ -49,10 +49,6 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         MetaProjectManager.getManager().changePassword(userName, password);
     }
 
-    public String getUserEmail(String userName) {
-        return MetaProjectManager.getManager().getEmail(UserId.getUserId(userName)).orNull();
-    }
-
     public PermissionsSet getAllowedOperations(String project, String user) {
         Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(project, user);
         return toPermissionSet(ops);
@@ -70,7 +66,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         }
         return builder.build();
     }
-    
+
     public LoginChallengeData getUserSaltAndChallenge(String userNameOrEmail) {
     	User user = MetaProjectManager.getManager().getUser(userNameOrEmail);
         if (user == null) {
