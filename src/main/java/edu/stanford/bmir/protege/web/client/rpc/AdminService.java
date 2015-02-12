@@ -44,8 +44,6 @@ public interface AdminService extends RemoteService {
 
     boolean changePasswordEncrypted(String userName, String encryptedPassword, String salt);
 
-    UserId getCurrentUserInSession();
-
     void logout();
 
     boolean allowsCreateUsers();

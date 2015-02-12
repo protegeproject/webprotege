@@ -64,9 +64,6 @@ public class AdminServiceManager {
     public void registerUserViaEncrption(String name, String hashedPassword, String emailId, AsyncCallback<UserData> cb) throws UserNameAlreadyExistsException, UserEmailAlreadyExistsException {
         proxy.registerUserViaEncrption(name, hashedPassword, emailId, cb);
     }
-    public void getCurrentUserInSession(AsyncCallback<UserId> cb) {
-        proxy.getCurrentUserInSession(cb);
-    }
 
     public void logout(AsyncCallback<Void> cb) {
         proxy.logout(cb);
