@@ -53,12 +53,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(project, user);
         return toPermissionSet(ops);
     }
-
-    public PermissionsSet getAllowedServerOperations(String userName) {
-        Collection<Operation> ops = MetaProjectManager.getManager().getAllowedServerOperations(userName);
-        return toPermissionSet(ops);
-    }
-
+    
     private PermissionsSet toPermissionSet(Collection<Operation> ops) {
         PermissionsSet.Builder builder = PermissionsSet.builder();
         for (Operation op : ops) {
