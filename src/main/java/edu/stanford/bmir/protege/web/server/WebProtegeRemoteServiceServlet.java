@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -41,7 +42,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     public UserId getUserInSession() {
         HttpServletRequest request = getThreadLocalRequest();
         final HttpSession session = request.getSession();
-        return SessionConstants.getUserId(session);
+        return new WebProtegeSessionImpl(session).getUserInSession();
     }
 
     /**

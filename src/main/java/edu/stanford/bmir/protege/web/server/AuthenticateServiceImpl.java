@@ -8,6 +8,9 @@ import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionAttribute;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
@@ -37,15 +40,17 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
 
         HttpServletRequest request = this.getThreadLocalRequest();
         HttpSession session = request.getSession();
+        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
         session.setAttribute(AuthenticationConstants.LOGIN_METHOD, AuthenticationConstants.LOGIN_METHOD_WEBPROTEGE_ACCOUNT);
 
         if (!MetaProjectManager.getManager().hasValidCredentials(name, password)) {
-            SessionConstants.removeAttribute(SessionConstants.USER_ID, session);
+            webProtegeSession.removeAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER);
+//            SessionConstants.removeAttribute(SessionConstants.USER_ID, session);
             return null;
         }
 
         UserData userData = AuthenticationUtil.createUserData(userId);
-        SessionConstants.setAttribute(SessionConstants.USER_ID, userId, session);
+        webProtegeSession.setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER, userId);
         return userData;
     }
 
@@ -107,8 +112,8 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_ID, null);
         session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
         userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.REGISTER_USER_SUCCESS);
-
-        SessionConstants.setAttribute(SessionConstants.USER_ID, UserId.getUserId(userName), session);
+        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
+        webProtegeSession.setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER, UserId.getUserId(userName));
 
         return userData;
     }

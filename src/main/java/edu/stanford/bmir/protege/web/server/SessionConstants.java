@@ -13,22 +13,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SessionConstants {
 
-    public static final SessionKey<UserId> USER_ID = new SessionKey<UserId>("user.name");
-
-//    String userOpenId = (String) session.getAttribute(OpenIdConstants.HTTPSESSION_OPENID_URL);
-//    String openIdAccName = (String) session.getAttribute(OpenIdConstants.HTTPSESSION_OPENID_ID);
-//    String openIdProvider = (String) session.getAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER);
-//    String salt = (String) session.getAttribute(AuthenticationConstants.NEW_SALT);
-
-    //Related to values stored in Http Session
-//    public static final String HTTPSESSION_OPENID_URL = "userOpenId";
-//
-//    public static final String HTTPSESSION_OPENID_ID = "openId.id";// Now email associated with Openid
-//
-//    public static final String HTTPSESSION_OPENID_PROVIDER = "openId.provider";// Open id provider name
-
-//
-
     public static final SessionKey<OpenIdAccountDetails> OPEN_ID_ACCOUNT = new SessionKey<OpenIdAccountDetails>("openId.account");
 
     @SuppressWarnings("unchecked")
@@ -51,23 +35,6 @@ public class SessionConstants {
         checkNotNull(session);
         session.setAttribute(checkNotNull(key.keyName), checkNotNull(value));
     }
-
-    /**
-     * Gets the {@link UserId} of the user in the specified {@link HttpSession}.
-     * @param session The session.  Not {@code null}.
-     * @return The {@link UserId} of the user in the specified user session.  Not {@code null}.  If the user in the
-     * session is not logged in then the id of the guest user will be returned i.e. {@link edu.stanford.bmir.protege.web.shared.user.UserId#getGuest()}.
-     */
-    public static UserId getUserId(HttpSession session) {
-        Optional<UserId> userId = getAttribute(USER_ID, session);
-        if(userId.isPresent()) {
-            return userId.get();
-        }
-        else {
-            return UserId.getGuest();
-        }
-    }
-
 
     public static class SessionKey<C> {
 
