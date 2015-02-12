@@ -47,13 +47,13 @@ public class ExecutionContext_TestCase {
 
     @Test
     public void shouldReturnGuestUser() {
-        when(session.getAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER)).thenReturn(Optional.<UserId>absent());
+        when(session.getUserInSession()).thenReturn(UserId.getGuest());
         assertThat(context.getUserId(), is(UserId.getGuest()));
     }
 
     @Test
     public void shouldReturnUserId() {
-        when(session.getAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER)).thenReturn(Optional.of(userId));
+        when(session.getUserInSession()).thenReturn(userId);
         assertThat(context.getUserId(), is(userId));
     }
 

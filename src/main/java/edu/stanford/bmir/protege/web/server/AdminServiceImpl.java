@@ -39,7 +39,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         HttpServletRequest request = getThreadLocalRequest();
         final HttpSession session = request.getSession();
         WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
-        webProtegeSession.removeAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER);
+        webProtegeSession.clearUserInSession();
     }
 
     public PermissionsSet getAllowedOperations(String project, String user) {
@@ -91,7 +91,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         if (isverified) {
             UserId userId = UserId.getUserId(user.getName());
             WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
-            webProtegeSession.setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER, userId);
+            webProtegeSession.setUserInSession(userId);
             return userId;
         }
         else {
@@ -131,7 +131,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         HttpSession session = request.getSession();
         session.setAttribute(AuthenticationConstants.LOGIN_METHOD, null);
         WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
-        webProtegeSession.removeAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER);
+        webProtegeSession.clearUserInSession();
         SessionConstants.removeAttribute(SessionConstants.OPEN_ID_ACCOUNT, session);
     }
 

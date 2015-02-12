@@ -37,8 +37,7 @@ public class ExecutionContext implements HasUserId {
      * equal to the guest user is returned.
      */
     public UserId getUserId() {
-        Optional<UserId> loggedInUser = session.getAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER);
-        return loggedInUser.or(UserId.getGuest());
+        return session.getUserInSession();
     }
 
     /**
