@@ -35,10 +35,6 @@ public class AdminServiceManager {
         proxy.getAllowedOperations(projectId.getId(), userId.getUserName(), cb);
     }
 
-    public void changePassword(UserId userId, String password, AsyncCallback<Void> cb) {
-        proxy.changePassword(userId.getUserName(), password, cb);
-    }
-
     public void getUserSaltAndChallenge(UserId userId, AsyncCallback<LoginChallengeData> cb) {
         proxy.getUserSaltAndChallenge(userId.getUserName(), cb);
     }

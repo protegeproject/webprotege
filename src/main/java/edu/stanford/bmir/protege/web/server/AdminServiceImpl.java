@@ -45,15 +45,11 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         SessionConstants.removeAttribute(SessionConstants.USER_ID, session);
     }
 
-    public void changePassword(String userName, String password) {
-        MetaProjectManager.getManager().changePassword(userName, password);
-    }
-
     public PermissionsSet getAllowedOperations(String project, String user) {
         Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(project, user);
         return toPermissionSet(ops);
     }
-    
+
     private PermissionsSet toPermissionSet(Collection<Operation> ops) {
         PermissionsSet.Builder builder = PermissionsSet.builder();
         for (Operation op : ops) {

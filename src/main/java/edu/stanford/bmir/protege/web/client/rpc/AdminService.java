@@ -26,8 +26,6 @@ public interface AdminService extends RemoteService {
 
     UserData registerUserViaEncrption(String name, String hashedPassword, String emailId) throws UserRegistrationException;
 
-    void changePassword(String userName, String password) throws UnrecognizedUserNameException;
-
     PermissionsSet getAllowedOperations(String project, String user);
 
     LoginChallengeData getUserSaltAndChallenge(String userName);
