@@ -47,10 +47,6 @@ public class AdminServiceManager {
         proxy.changePassword(userId.getUserName(), password, cb);
     }
 
-    public void sendPasswordReminder(UserId userId, AsyncCallback<Void> cb) throws UnrecognizedUserNameException{
-        proxy.sendPasswordReminder(userId.getUserName(), cb);
-    }
-
     public void getUserSaltAndChallenge(UserId userId, AsyncCallback<LoginChallengeData> cb) {
         proxy.getUserSaltAndChallenge(userId.getUserName(), cb);
     }

@@ -70,16 +70,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         }
         return builder.build();
     }
-
-    public void sendPasswordReminder(String userName) throws UnrecognizedUserNameException {
-        String email = MetaProjectManager.getManager().getEmail(UserId.getUserId(userName)).orNull();
-        if (email == null) {
-            throw new UnrecognizedUserNameException("User " + userName + " does not have an email configured.");
-        }
-        changePassword(userName, EmailConstants.RESET_PASSWORD);
-        App.get().getMailManager().sendMail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY);
-    }
-
+    
     public LoginChallengeData getUserSaltAndChallenge(String userNameOrEmail) {
     	User user = MetaProjectManager.getManager().getUser(userNameOrEmail);
         if (user == null) {
