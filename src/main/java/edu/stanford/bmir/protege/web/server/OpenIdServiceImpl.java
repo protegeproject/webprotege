@@ -194,7 +194,7 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
                             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_ID, null);
                             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
                             WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
-                            webProtegeSession.setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER, userId.get());
+                            webProtegeSession.setUserInSession(userId.get());
                         }
                     }
                 }

@@ -44,8 +44,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         session.setAttribute(AuthenticationConstants.LOGIN_METHOD, AuthenticationConstants.LOGIN_METHOD_WEBPROTEGE_ACCOUNT);
 
         if (!MetaProjectManager.getManager().hasValidCredentials(name, password)) {
-            webProtegeSession.removeAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER);
-//            SessionConstants.removeAttribute(SessionConstants.USER_ID, session);
+            webProtegeSession.clearUserInSession();
             return null;
         }
 
@@ -113,7 +112,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
         userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.REGISTER_USER_SUCCESS);
         WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
-        webProtegeSession.setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER, UserId.getUserId(userName));
+        webProtegeSession.setUserInSession(UserId.getUserId(userName));
 
         return userData;
     }
