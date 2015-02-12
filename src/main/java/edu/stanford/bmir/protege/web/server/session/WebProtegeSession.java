@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.session;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
  * Matthew Horridge
@@ -32,5 +33,13 @@ public interface WebProtegeSession {
      * @param attribute The attribute to be removed. Not {@code null}.
      */
     void removeAttribute(WebProtegeSessionAttribute<?> attribute);
+
+    /**
+     * Gets the user in this session.
+     * @return The {@link edu.stanford.bmir.protege.web.shared.user.UserId} of the user in this session.
+     * Not {@code null}.  If there is not a specific user in this session then the {@link edu.stanford.bmir.protege.web.shared.user.UserId}
+     * of the guest user will be returned.
+     */
+    UserId getUserInSession();
 
 }

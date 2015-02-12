@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.session;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -21,6 +22,7 @@ public class WebProtegeSessionImpl implements WebProtegeSession {
     public WebProtegeSessionImpl(HttpSession httpSession) {
         this.httpSession = checkNotNull(httpSession);
     }
+
 
     @Override
     public void removeAttribute(WebProtegeSessionAttribute<?> attribute) {
@@ -45,5 +47,10 @@ public class WebProtegeSessionImpl implements WebProtegeSession {
         return Objects.toStringHelper("WebProtegeSession")
                 .addValue(httpSession)
                 .toString();
+    }
+
+    @Override
+    public UserId getUserInSession() {
+        return getAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER).or(UserId.getGuest());
     }
 }
