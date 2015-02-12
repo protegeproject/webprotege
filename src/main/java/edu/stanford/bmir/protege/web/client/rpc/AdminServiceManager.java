@@ -31,10 +31,6 @@ public class AdminServiceManager {
         return instance;
     }
 
-    public void getUserEmail(UserId userId, AsyncCallback<String> callback) {
-        proxy.getUserEmail(userId.getUserName(), callback);
-    }
-
     public void getAllowedOperations(ProjectId projectId, UserId userId, AsyncCallback<PermissionsSet> cb) {
         proxy.getAllowedOperations(projectId.getId(), userId.getUserName(), cb);
     }

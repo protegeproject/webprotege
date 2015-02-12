@@ -28,8 +28,6 @@ public interface AdminService extends RemoteService {
 
     void changePassword(String userName, String password) throws UnrecognizedUserNameException;
 
-    String getUserEmail(String userName) throws UnrecognizedUserNameException;
-
     PermissionsSet getAllowedOperations(String project, String user);
 
     PermissionsSet getAllowedServerOperations(String userName);
