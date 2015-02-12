@@ -10,6 +10,9 @@ import edu.stanford.bmir.protege.web.client.ui.openid.constants.OpenIdConstants;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionAttribute;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.PropertyValue;
@@ -190,7 +193,8 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
                             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_URL, null);
                             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_ID, null);
                             session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
-                            SessionConstants.setAttribute(SessionConstants.USER_ID, userId.get(), session);
+                            WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
+                            webProtegeSession.setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER, userId.get());
                         }
                     }
                 }

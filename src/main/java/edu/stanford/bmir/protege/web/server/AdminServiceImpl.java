@@ -8,6 +8,9 @@ import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.metaproject.ServerSettingsManager;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionAttribute;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
@@ -35,7 +38,8 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
     public void logout() {
         HttpServletRequest request = getThreadLocalRequest();
         final HttpSession session = request.getSession();
-        SessionConstants.removeAttribute(SessionConstants.USER_ID, session);
+        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
+        webProtegeSession.removeAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER);
     }
 
     public PermissionsSet getAllowedOperations(String project, String user) {
@@ -86,7 +90,8 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         boolean isverified = authenticatinUtil.verifyChallengedHash(user.getDigestedPassword(), response, challenge);
         if (isverified) {
             UserId userId = UserId.getUserId(user.getName());
-            SessionConstants.setAttribute(SessionConstants.USER_ID, userId, session);
+            WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
+            webProtegeSession.setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER, userId);
             return userId;
         }
         else {
@@ -125,7 +130,8 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         HttpServletRequest request = this.getThreadLocalRequest();
         HttpSession session = request.getSession();
         session.setAttribute(AuthenticationConstants.LOGIN_METHOD, null);
-        SessionConstants.removeAttribute(SessionConstants.USER_ID, session);
+        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
+        webProtegeSession.removeAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER);
         SessionConstants.removeAttribute(SessionConstants.OPEN_ID_ACCOUNT, session);
     }
 
