@@ -30,8 +30,6 @@ public interface AdminService extends RemoteService {
 
     PermissionsSet getAllowedOperations(String project, String user);
 
-    PermissionsSet getAllowedServerOperations(String userName);
-
     LoginChallengeData getUserSaltAndChallenge(String userName);
 
     UserId authenticateToLogin(String userNameOrEmail, String response);
