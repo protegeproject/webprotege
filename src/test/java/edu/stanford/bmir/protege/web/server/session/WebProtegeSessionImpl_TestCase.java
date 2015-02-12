@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpSession;
@@ -37,6 +38,9 @@ public class WebProtegeSessionImpl_TestCase<T> {
 
     @Mock
     private WebProtegeSessionAttribute<T> attribute;
+
+    @Mock
+    private UserId userId;
 
     @Mock
     private T value;
@@ -101,5 +105,24 @@ public class WebProtegeSessionImpl_TestCase<T> {
     public void shouldReturnGuestUser() {
         UserId userId = session.getUserInSession();
         assertThat(userId, is(UserId.getGuest()));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIfUserIdIsNull() {
+        session.setUserInSession(null);
+    }
+
+    @Test
+    public void shouldSetLoggedInUser() {
+        session.setUserInSession(userId);
+        verify(httpSession, Mockito.times(1))
+                .setAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER.getAttributeName(), userId);
+    }
+
+    @Test
+    public void shouldClearLoggedInUser() {
+        session.clearUserInSession();
+        verify(httpSession, times(1))
+                .removeAttribute(WebProtegeSessionAttribute.LOGGED_IN_USER.getAttributeName());
     }
 }
