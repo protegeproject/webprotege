@@ -23,6 +23,9 @@ import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
@@ -439,19 +442,16 @@ public class LoginUtil {
     }
 
     private static void checkUserNameInSession() {
-        AdminServiceManager.getInstance().getCurrentUserInSession(new AsyncCallback<UserId>() {
-
-            public void onSuccess(UserId userId) {
-                if (!userId.isGuest()) {
+        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AbstractWebProtegeAsyncCallback<GetCurrentUserInSessionResult>() {
+            @Override
+            public void onSuccess(GetCurrentUserInSessionResult result) {
+                UserId userId = result.getUserDetails().getUserId();
+                if(!userId.isGuest()) {
                     Application.get().setCurrentUser(userId);
                 }
                 else {
                     MessageBox.alert("Invalid user name or password. Please try again.");
                 }
-            }
-
-            public void onFailure(Throwable caught) {
-                MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
             }
         });
     }
