@@ -7,9 +7,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
-import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -36,7 +36,7 @@ public class DispatchServiceImpl extends WebProtegeRemoteServiceServlet implemen
         HttpServletRequest request = getThreadLocalRequest();
         HttpSession session = request.getSession();
         final RequestContext requestContext = new RequestContext(userId, session);
-        final ExecutionContext executionContext = new ExecutionContext(userId);
+        final ExecutionContext executionContext = new ExecutionContext(new WebProtegeSessionImpl(session));
         return executor.execute(action, requestContext, executionContext);
     }
 }
