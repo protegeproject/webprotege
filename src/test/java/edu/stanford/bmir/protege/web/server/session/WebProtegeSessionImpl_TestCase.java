@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.session;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -96,4 +97,9 @@ public class WebProtegeSessionImpl_TestCase<T> {
         verify(httpSession, times(1)).removeAttribute(ATTRIBUTE_NAME);
     }
 
+    @Test
+    public void shouldReturnGuestUser() {
+        UserId userId = session.getUserInSession();
+        assertThat(userId, is(UserId.getGuest()));
+    }
 }
