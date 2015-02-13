@@ -35,13 +35,6 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
 
     private static final long serialVersionUID = 7616699639338297327L;
 
-    public void logout() {
-        HttpServletRequest request = getThreadLocalRequest();
-        final HttpSession session = request.getSession();
-        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
-        webProtegeSession.clearUserInSession();
-    }
-
     public PermissionsSet getAllowedOperations(String project, String user) {
         Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(project, user);
         return toPermissionSet(ops);

@@ -16,6 +16,8 @@
 <%@ page import="com.google.common.base.Optional" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.app.UserInSession" %>
 <%@ page import="com.google.common.collect.ImmutableList" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -77,7 +79,8 @@
     }
 
     private void writeUserInSession(HttpSession session, JspWriter out) {
-        UserId userId = SessionConstants.getUserId(session);
+        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
+        UserId userId = webProtegeSession.getUserInSession();
         final UserInSession userInSession;
         final ImmutableList.Builder<GroupId> builder = ImmutableList.builder();
         if(userId.isGuest()) {

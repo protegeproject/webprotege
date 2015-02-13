@@ -65,10 +65,6 @@ public class AdminServiceManager {
         proxy.registerUserViaEncrption(name, hashedPassword, emailId, cb);
     }
 
-    public void logout(AsyncCallback<Void> cb) {
-        proxy.logout(cb);
-    }
-
     public void allowsCreateUsers(AsyncCallback<Boolean> async){
         proxy.allowsCreateUsers(async);
     }
