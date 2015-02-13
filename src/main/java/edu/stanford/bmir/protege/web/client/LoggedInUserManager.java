@@ -16,11 +16,14 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSes
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
+import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
+import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -93,12 +96,9 @@ public class LoggedInUserManager {
         if(userId.isGuest()) {
             return;
         }
-        AdminServiceManager.getInstance().logout(new AsyncCallback<Void>() {
-            public void onFailure(Throwable caught) {
-                MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
-            }
-
-            public void onSuccess(Void result) {
+        DispatchServiceManager.get().execute(new LogOutUserAction(), new AbstractWebProtegeAsyncCallback<LogOutUserResult>() {
+            @Override
+            public void onSuccess(LogOutUserResult logOutUserResult) {
                 replaceUserAndBroadcastChanges(UserDetails.getGuestUserDetails(), Collections.<GroupId>emptySet());
             }
         });

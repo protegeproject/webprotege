@@ -31,6 +31,7 @@ import edu.stanford.bmir.protege.web.server.sharing.GetProjectSharingSettingsAct
 import edu.stanford.bmir.protege.web.server.sharing.SetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
 import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;
+import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
@@ -129,6 +130,8 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(GetProjectSharingSettingsActionHandler.class);
 
         multibinder.addBinding().to(SetProjectSharingSettingsActionHandler.class);
+
+        multibinder.addBinding().to(LogOutUserActionHandler.class);
 
 
 
