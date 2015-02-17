@@ -49,7 +49,7 @@ public class Salt implements IsSerializable {
     @Override
     public String toString() {
         return Objects.toStringHelper("Salt")
-                .addValue(BaseEncoding.base16().encode(bytes))
+                .addValue(BaseEncoding.base16().lowerCase().encode(bytes))
                 .toString();
     }
 }
