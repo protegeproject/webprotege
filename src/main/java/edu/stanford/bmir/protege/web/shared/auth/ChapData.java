@@ -17,7 +17,7 @@ public class ChapData implements IsSerializable {
 
     private ChallengeMessageId id;
 
-    private byte [] challenge;
+    private ChallengeMessage challengeMessage;
 
     private byte[] salt;
 
@@ -27,9 +27,9 @@ public class ChapData implements IsSerializable {
     private ChapData() {
     }
 
-    public ChapData(ChallengeMessageId id, byte[] challenge, byte[] salt) {
+    public ChapData(ChallengeMessageId id, ChallengeMessage challengeMessage, byte[] salt) {
         this.id = checkNotNull(id);
-        this.challenge = Arrays.copyOf(checkNotNull(challenge), challenge.length);
+        this.challengeMessage = checkNotNull(challengeMessage);
         this.salt = Arrays.copyOf(checkNotNull(salt), salt.length);
     }
 
@@ -37,8 +37,8 @@ public class ChapData implements IsSerializable {
         return id;
     }
 
-    public byte[] getChallenge() {
-        return Arrays.copyOf(challenge, challenge.length);
+    public ChallengeMessage getChallengeMessage() {
+        return challengeMessage;
     }
 
     public byte[] getSalt() {
@@ -47,7 +47,7 @@ public class ChapData implements IsSerializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, Arrays.hashCode(challenge), Arrays.hashCode(salt));
+        return Objects.hashCode(id, challengeMessage, Arrays.hashCode(salt));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ChapData implements IsSerializable {
         }
         ChapData other = (ChapData) obj;
         return this.id.equals(other.id)
-                && Arrays.equals(this.challenge, other.challenge)
+                && challengeMessage.equals(other.challengeMessage)
                 && Arrays.equals(this.salt, other.salt);
     }
 
@@ -68,8 +68,8 @@ public class ChapData implements IsSerializable {
     @Override
     public String toString() {
         return toStringHelper("ChallengeMessage")
-                .add("id", id)
-                .add("challenge", Arrays.toString(challenge))
+                .addValue(id)
+                .addValue(challengeMessage)
                 .add("salt", salt)
                 .toString();
     }
