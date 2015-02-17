@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
+import com.google.common.io.BaseEncoding;
 import edu.stanford.bmir.protege.web.client.rpc.AdminService;
 import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
@@ -8,6 +9,8 @@ import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.metaproject.ServerSettingsManager;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
+import edu.stanford.bmir.protege.web.shared.auth.Salt;
+import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -124,9 +127,11 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         SessionConstants.removeAttribute(SessionConstants.OPEN_ID_ACCOUNT, session);
     }
 
-    public boolean changePasswordEncrypted(String userName, String encryptedPassword, String salt) {
+    public boolean changePasswordEncrypted(String userName, String encryptedPassword, String theSalt) {
         UserId userId = UserId.getUserId(userName);
-        MetaProjectManager.getManager().setDigestedPassword(userId, encryptedPassword, salt);
+        SaltedPasswordDigest passwordDigest = new SaltedPasswordDigest(BaseEncoding.base16().lowerCase().decode(encryptedPassword));
+        Salt salt = new Salt(BaseEncoding.base16().lowerCase().decode(theSalt));
+        MetaProjectManager.getManager().setDigestedPassword(userId, passwordDigest, salt);
         return true;
     }
 
@@ -163,7 +168,9 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         UserData userData = metaProjectManager.registerUser(name, emailId, emptyPassword);
 
         UserId userId = UserId.getUserId(name);
-        MetaProjectManager.getManager().setDigestedPassword(userId, hashedPassword, salt);
+        MetaProjectManager.getManager().setDigestedPassword(userId, new SaltedPasswordDigest(
+                BaseEncoding.base16().lowerCase().decode(hashedPassword)
+        ), new Salt(BaseEncoding.base16().lowerCase().decode(salt)));
         MetaProjectManager.getManager().setEmail(userId, emailId);
         return userData;
     }
