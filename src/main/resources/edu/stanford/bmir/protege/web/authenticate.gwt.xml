@@ -15,6 +15,7 @@
 	<inherits name="com.google.gwt.user.User"/>
 	<inherits name="com.google.gwt.place.Place"/>
     <inherits name="com.google.common.cache.Cache"/>
+    <inherits name="com.google.common.io.Io"/>
     <inherits name="com.google.gwt.json.JSON"/>
     <inherits name="com.google.common.collect.Collect"/>
     <inherits name="com.google.gwt.inject.Inject"/>
@@ -25,6 +26,6 @@
 
     <inherits name="edu.stanford.bmir.gwtcodemirror.CodeMirror"/>
 
-	<entry-point class="edu.stanford.bmir.protege.web.client.Authenticate"/> 
+    <entry-point class="edu.stanford.bmir.protege.web.client.Authenticate"/>
     
 </module>
