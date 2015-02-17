@@ -53,7 +53,7 @@ public class ChallengeMessage implements IsSerializable {
     @Override
     public String toString() {
         return toStringHelper("ChallengeMessage")
-                .addValue(BaseEncoding.base16().encode(message))
+                .addValue(BaseEncoding.base16().lowerCase().encode(message))
                 .toString();
     }
 }
