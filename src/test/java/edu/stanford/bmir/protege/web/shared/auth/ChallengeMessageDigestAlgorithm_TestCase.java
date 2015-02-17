@@ -33,7 +33,10 @@ public class ChallengeMessageDigestAlgorithm_TestCase {
 
     private byte [] digestOfSaltedPassword = {4, 4, 4, 4, 4};
 
-    private byte [] challengeMessage = {5, 5, 5, 5, 5};
+    @Mock
+    private ChallengeMessage challengeMessage;
+
+    private byte [] challengeMessageBytes = {3, 3, 3, 3, 3};
 
     private byte [] result = {6, 6, 6, 6, 6};
 
@@ -42,6 +45,7 @@ public class ChallengeMessageDigestAlgorithm_TestCase {
         when(digestAlgorithmProvider.get()).thenReturn(messageDigestAlgorithm);
         algorithm = new ChallengeMessageDigestAlgorithm(digestAlgorithmProvider);
         when(messageDigestAlgorithm.computeDigest()).thenReturn(result);
+        when(challengeMessage.getBytes()).thenReturn(challengeMessageBytes);
     }
 
     @Test(expected = NullPointerException.class)
@@ -63,7 +67,7 @@ public class ChallengeMessageDigestAlgorithm_TestCase {
     public void shouldComputeDigestWithChallengeFirstAndPasswordSecond() throws Exception {
         algorithm.getDigestOfMessageAndPassword(challengeMessage, digestOfSaltedPassword);
         InOrder inOrder = inOrder(messageDigestAlgorithm);
-        inOrder.verify(messageDigestAlgorithm, times(1)).update(challengeMessage);
+        inOrder.verify(messageDigestAlgorithm, times(1)).update(challengeMessage.getBytes());
         inOrder.verify(messageDigestAlgorithm, times(1)).update(digestOfSaltedPassword);
     }
 

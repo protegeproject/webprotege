@@ -17,9 +17,9 @@ public class ChallengeMessageDigestAlgorithm {
         this.digestAlgorithmProvider = checkNotNull(digestAlgorithmProvider);
     }
 
-    public byte [] getDigestOfMessageAndPassword(byte[] challengeMessage, byte[] digestOfSaltedPassword) {
+    public byte [] getDigestOfMessageAndPassword(ChallengeMessage challengeMessage, byte[] digestOfSaltedPassword) {
         MessageDigestAlgorithm algorithm = digestAlgorithmProvider.get();
-        algorithm.update(checkNotNull(challengeMessage));
+        algorithm.update(checkNotNull(challengeMessage.getBytes()));
         algorithm.update(checkNotNull(digestOfSaltedPassword));
         return algorithm.computeDigest();
     }
