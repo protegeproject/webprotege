@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ChapData implements IsSerializable {
 
-    private ChallengeMessageId id;
+    private ChapSessionId id;
 
     private ChallengeMessage challengeMessage;
 
@@ -25,13 +25,13 @@ public class ChapData implements IsSerializable {
     private ChapData() {
     }
 
-    public ChapData(ChallengeMessageId id, ChallengeMessage challengeMessage, Salt salt) {
+    public ChapData(ChapSessionId id, ChallengeMessage challengeMessage, Salt salt) {
         this.id = checkNotNull(id);
         this.challengeMessage = checkNotNull(challengeMessage);
         this.salt = checkNotNull(salt);
     }
 
-    public ChallengeMessageId getId() {
+    public ChapSessionId getId() {
         return id;
     }
 

@@ -11,14 +11,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
-public class ChallengeMessageId implements IsSerializable {
+public class ChapSessionId implements IsSerializable {
 
     private String id;
 
-    private ChallengeMessageId() {
+    private ChapSessionId() {
     }
 
-    public ChallengeMessageId(String id) {
+    public ChapSessionId(String id) {
         this.id = checkNotNull(id);
     }
 
@@ -36,10 +36,10 @@ public class ChallengeMessageId implements IsSerializable {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof ChallengeMessageId)) {
+        if (!(obj instanceof ChapSessionId)) {
             return false;
         }
-        ChallengeMessageId other = (ChallengeMessageId) obj;
+        ChapSessionId other = (ChapSessionId) obj;
         return this.id.equals(other.id);
     }
 

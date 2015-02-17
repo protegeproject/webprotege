@@ -26,7 +26,7 @@ public class ChapData_TestCase {
     private ChapData otherChapData;
 
     @Mock
-    private ChallengeMessageId id;
+    private ChapSessionId id;
 
     @Mock
     private ChallengeMessage challenge;
