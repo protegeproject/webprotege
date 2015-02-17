@@ -18,7 +18,7 @@ public interface AuthenticationManager {
 
     void changePassword(String userName, String password);
 
-    void setDigestedPassword(UserId userId, String encryptedPassword, String salt);
+    void setDigestedPassword(UserId userId, SaltedPasswordDigest saltedPasswordDigest, Salt salt);
 
     Optional<Salt> getSalt(UserId userId);
 

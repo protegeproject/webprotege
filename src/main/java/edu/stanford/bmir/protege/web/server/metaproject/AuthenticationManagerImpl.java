@@ -64,7 +64,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     @Override
-    public void setDigestedPassword(UserId userId, String encryptedPassword, String salt) {
+    public void setDigestedPassword(UserId userId, SaltedPasswordDigest saltedPasswordDigest, Salt salt) {
         if (userId.isGuest()) {
             return;
         }
@@ -72,7 +72,8 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         if (user == null) {
             return;
         }
-        user.setDigestedPassword(encryptedPassword, salt);
+        String encodedDigest = BaseEncoding.base16().lowerCase().encode(saltedPasswordDigest.getDigest());
+        user.setDigestedPassword(encodedDigest, BaseEncoding.base16().lowerCase().encode(salt.getBytes()));
         OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
     }
 

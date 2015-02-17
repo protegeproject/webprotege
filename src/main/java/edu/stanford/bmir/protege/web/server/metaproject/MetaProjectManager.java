@@ -167,8 +167,8 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
         projectSharingSettingsManager.setProjectSharingSettings(projectSharingSettings);
     }
 
-    public void setDigestedPassword(UserId userId, String encryptedPassword, String salt) {
-        authenticationManager.setDigestedPassword(userId, encryptedPassword, salt);
+    public void setDigestedPassword(UserId userId, SaltedPasswordDigest saltedPasswordDigest, Salt salt) {
+        authenticationManager.setDigestedPassword(userId, saltedPasswordDigest, salt);
     }
 
     public int getProjectCount() {
