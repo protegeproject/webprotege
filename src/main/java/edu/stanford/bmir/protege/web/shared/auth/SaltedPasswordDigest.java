@@ -29,7 +29,7 @@ public class SaltedPasswordDigest implements IsSerializable {
         this.digest = checkNotNull(digest);
     }
 
-    public byte[] getDigest() {
+    public byte[] getBytes() {
         return Arrays.copyOf(digest, digest.length);
     }
 

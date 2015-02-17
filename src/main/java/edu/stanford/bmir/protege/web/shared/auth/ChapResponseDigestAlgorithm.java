@@ -9,18 +9,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17/02/15
  */
-public class ChallengeMessageDigestAlgorithm {
+public class ChapResponseDigestAlgorithm {
 
     private Provider<MessageDigestAlgorithm> digestAlgorithmProvider;
 
-    public ChallengeMessageDigestAlgorithm(Provider<MessageDigestAlgorithm> digestAlgorithmProvider) {
+    public ChapResponseDigestAlgorithm(Provider<MessageDigestAlgorithm> digestAlgorithmProvider) {
         this.digestAlgorithmProvider = checkNotNull(digestAlgorithmProvider);
     }
 
-    public byte [] getDigestOfMessageAndPassword(ChallengeMessage challengeMessage, byte[] digestOfSaltedPassword) {
+    public byte [] getDigestOfMessageAndPassword(ChallengeMessage challengeMessage, SaltedPasswordDigest saltedPasswordDigest) {
         MessageDigestAlgorithm algorithm = digestAlgorithmProvider.get();
-        algorithm.update(checkNotNull(challengeMessage.getBytes()));
-        algorithm.update(checkNotNull(digestOfSaltedPassword));
+        algorithm.update(checkNotNull(challengeMessage).getBytes());
+        algorithm.update(checkNotNull(saltedPasswordDigest).getBytes());
         return algorithm.computeDigest();
     }
 }

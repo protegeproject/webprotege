@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
+import com.google.common.io.BaseEncoding;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,17 +37,19 @@ public class PasswordDigestAlgorithm_TestCase {
 
     private byte [] saltBytes = {2, 2, 2, 2, 2};
 
-    private byte [] digestResult = {4, 4, 4, 4, 4};
+    private byte [] digestBytes = {3, 4, 5, 6};
 
     private String password = "HelloWorld";
 
     private PasswordDigestAlgorithm algorithm;
 
+
+
     @Before
     public void setUp() throws Exception {
         when(messageDigestAlgorithmProvider.get()).thenReturn(messageDigestAlgorithm);
         algorithm = new PasswordDigestAlgorithm(messageDigestAlgorithmProvider);
-        when(messageDigestAlgorithm.computeDigest()).thenReturn(digestResult);
+        when(messageDigestAlgorithm.computeDigest()).thenReturn(digestBytes);
         when(salt.getBytes()).thenReturn(saltBytes);
     }
 
@@ -65,6 +68,16 @@ public class PasswordDigestAlgorithm_TestCase {
         algorithm.getDigestOfSaltedPassword(password, null);
     }
 
+
+    @Test
+    public void shouldUseUtf8EncodingOfBase16EncodingForSalt() throws UnsupportedEncodingException {
+        // Wonky stuff in the meta-project
+        algorithm.getDigestOfSaltedPassword(password, salt);
+        String base16Salt = BaseEncoding.base16().lowerCase().encode(salt.getBytes());
+        verify(messageDigestAlgorithm, times(1)).update(base16Salt.getBytes("utf-8"));
+    }
+
+
     @Test
     public void shouldUseUtf8EncodingForPassword() throws UnsupportedEncodingException {
         algorithm.getDigestOfSaltedPassword(password, salt);
@@ -75,12 +88,13 @@ public class PasswordDigestAlgorithm_TestCase {
     public void shouldPlaceSaltFirstAndPasswordSecond() throws UnsupportedEncodingException {
         InOrder inOrder = Mockito.inOrder(messageDigestAlgorithm);
         algorithm.getDigestOfSaltedPassword(password, salt);
-        inOrder.verify(messageDigestAlgorithm, times(1)).update(salt.getBytes());
+        String base16Salt = BaseEncoding.base16().lowerCase().encode(salt.getBytes());
+        inOrder.verify(messageDigestAlgorithm, times(1)).update(base16Salt.getBytes("utf-8"));
         inOrder.verify(messageDigestAlgorithm, times(1)).update(password.getBytes("utf-8"));
     }
 
     @Test
     public void shouldReturnDigestAlgorithmResult() {
-        assertThat(algorithm.getDigestOfSaltedPassword(password, salt), is(digestResult));
+        assertThat(algorithm.getDigestOfSaltedPassword(password, salt).getBytes(), is(digestBytes));
     }
 }
