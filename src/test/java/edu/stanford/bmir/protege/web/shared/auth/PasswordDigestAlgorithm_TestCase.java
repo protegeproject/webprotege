@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.inject.Provider;
 import java.io.UnsupportedEncodingException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,6 +26,9 @@ import static org.mockito.Mockito.when;
 public class PasswordDigestAlgorithm_TestCase {
 
     @Mock
+    private Provider<MessageDigestAlgorithm> messageDigestAlgorithmProvider;
+
+    @Mock
     private MessageDigestAlgorithm messageDigestAlgorithm;
 
     private byte [] salt = new byte[]{3, 3, 3, 3, 3}, digestResult = new byte[] {4, 4, 4, 4, 4};
@@ -35,7 +39,8 @@ public class PasswordDigestAlgorithm_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        algorithm = new PasswordDigestAlgorithm(messageDigestAlgorithm);
+        when(messageDigestAlgorithmProvider.get()).thenReturn(messageDigestAlgorithm);
+        algorithm = new PasswordDigestAlgorithm(messageDigestAlgorithmProvider);
         when(messageDigestAlgorithm.computeDigest()).thenReturn(digestResult);
     }
 
