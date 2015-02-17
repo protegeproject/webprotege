@@ -28,8 +28,8 @@ public class ChapData_TestCase {
     @Mock
     private ChallengeMessageId id;
 
-
-    private byte [] challenge = {3, 3, 3, 3};
+    @Mock
+    private ChallengeMessage challenge;
 
     private byte [] salt = {2, 2, 2, 2, 2, 2, 2};
 
@@ -81,7 +81,7 @@ public class ChapData_TestCase {
 
     @Test
     public void shouldReturnSuppliedChallenge() {
-        assertThat(chapData.getChallenge(), is(challenge));
+        assertThat(chapData.getChallengeMessage(), is(challenge));
     }
 
     @Test
