@@ -1,8 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
+import com.google.common.io.BaseEncoding;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,6 +16,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 14/02/15
  */
 public class PasswordDigestAlgorithm {
+
+    private static final String CHARSET_NAME = "utf-8";
 
     private final Provider<MessageDigestAlgorithm> messageDigestAlgorithmProvider;
 
@@ -32,13 +38,20 @@ public class PasswordDigestAlgorithm {
      * @throws java.lang.IllegalArgumentException if the salt is empty.
      * @throws java.lang.NullPointerException if any parameters are {@code null}.
      */
-    public byte [] getDigestOfSaltedPassword(String clearTextPassword, Salt salt) {
+    public SaltedPasswordDigest getDigestOfSaltedPassword(String clearTextPassword, Salt salt) {
         try {
+            // Digests the password and salt in the same (funky) way that the old meta-project code does.
+            checkNotNull(clearTextPassword);
+            checkNotNull(salt);
             MessageDigestAlgorithm messageDigestAlgorithm = messageDigestAlgorithmProvider.get();
-            messageDigestAlgorithm.update(checkNotNull(salt).getBytes());
-            byte [] utf8EncodedPassword = checkNotNull(clearTextPassword).getBytes("UTF-8");
-            messageDigestAlgorithm.update(utf8EncodedPassword);
-            return messageDigestAlgorithm.computeDigest();
+            // We have to do this because of the wonky way that the meta-projects code works.  The meta-project
+            // stores the salt as a string that is a base 16 encoding of the salt.  When it computes the salted
+            // password it uses the bytes from this string rather than the actual bytes corresponding to the salt.
+            String base16EncodedSalt = BaseEncoding.base16().lowerCase().encode(salt.getBytes());
+            byte[] base16EncodedSaltBytes = base16EncodedSalt.getBytes(CHARSET_NAME);
+            messageDigestAlgorithm.update(base16EncodedSaltBytes);
+            messageDigestAlgorithm.update(clearTextPassword.getBytes(CHARSET_NAME));
+            return new SaltedPasswordDigest(messageDigestAlgorithm.computeDigest());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
