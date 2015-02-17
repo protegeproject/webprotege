@@ -17,24 +17,24 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * 14/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ChallengeMessageId_TestCase {
+public class ChapSessionId_TestCase {
 
     public static final String ID = "testId";
 
-    private ChallengeMessageId id;
+    private ChapSessionId id;
 
-    private ChallengeMessageId otherId;
+    private ChapSessionId otherId;
 
 
     @Before
     public void setUp() throws Exception {
-        id = new ChallengeMessageId(ID);
-        otherId = new ChallengeMessageId(ID);
+        id = new ChapSessionId(ID);
+        otherId = new ChapSessionId(ID);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        new ChallengeMessageId(null);
+        new ChapSessionId(null);
     }
 
     @Test
