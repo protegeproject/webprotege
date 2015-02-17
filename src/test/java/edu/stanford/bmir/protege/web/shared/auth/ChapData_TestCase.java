@@ -18,12 +18,12 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * 14/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ChallengeMessage_TestCase {
+public class ChapData_TestCase {
 
 
-    private ChallengeMessage challengeMessage;
+    private ChapData chapData;
 
-    private ChallengeMessage otherChallengeMessage;
+    private ChapData otherChapData;
 
     @Mock
     private ChallengeMessageId id;
@@ -35,63 +35,63 @@ public class ChallengeMessage_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        challengeMessage = new ChallengeMessage(id, challenge, salt);
-        otherChallengeMessage = new ChallengeMessage(id, challenge, salt);
+        chapData = new ChapData(id, challenge, salt);
+        otherChapData = new ChapData(id, challenge, salt);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Id_IsNull() {
-        new ChallengeMessage(null, challenge, salt);
+        new ChapData(null, challenge, salt);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Challenge_IsNull() {
-        new ChallengeMessage(id, null, salt);
+        new ChapData(id, null, salt);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Salt_IsNull() {
-        new ChallengeMessage(id, challenge, null);
+        new ChapData(id, challenge, null);
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        assertThat(challengeMessage, is(equalTo(challengeMessage)));
+        assertThat(chapData, is(equalTo(chapData)));
     }
 
     @Test
     public void shouldNotBeEqualToNull() {
-        assertThat(challengeMessage, is(not(equalTo(null))));
+        assertThat(chapData, is(not(equalTo(null))));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(challengeMessage, is(equalTo(otherChallengeMessage)));
+        assertThat(chapData, is(equalTo(otherChapData)));
     }
 
     @Test
     public void shouldHaveSameHashCodeAsOther() {
-        assertThat(challengeMessage.hashCode(), is(otherChallengeMessage.hashCode()));
+        assertThat(chapData.hashCode(), is(otherChapData.hashCode()));
     }
 
     @Test
     public void shouldGenerateToString() {
-        assertThat(challengeMessage.toString(), startsWith("ChallengeMessage"));
+        assertThat(chapData.toString(), startsWith("ChallengeMessage"));
     }
 
     @Test
     public void shouldReturnSuppliedChallenge() {
-        assertThat(challengeMessage.getChallenge(), is(challenge));
+        assertThat(chapData.getChallenge(), is(challenge));
     }
 
     @Test
     public void shouldReturnSuppliedSalt() {
-        assertThat(challengeMessage.getSalt(), is(salt));
+        assertThat(chapData.getSalt(), is(salt));
     }
 
     @Test
     public void shouldReturnSuppliedId() {
-        assertThat(challengeMessage.getId(), is(id));
+        assertThat(chapData.getId(), is(id));
     }
 
 }
