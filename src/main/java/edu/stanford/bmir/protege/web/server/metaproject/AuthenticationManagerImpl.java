@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.server.AuthenticationUtil;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
+import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.UserEmailAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
@@ -87,14 +88,14 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     @Override
-    public Optional<byte[]> getDigestOfSaltedPassword(UserId userId) {
+    public Optional<SaltedPasswordDigest> getSaltedPasswordDigest(UserId userId) {
         User user = metaProject.getUser(userId.getUserName());
         if (user == null) {
             return Optional.absent();
         }
         String pwd = user.getDigestedPassword();
         byte[] pwdBytes = BaseEncoding.base16().lowerCase().decode(pwd);
-        return Optional.of(pwdBytes);
+        return Optional.of(new SaltedPasswordDigest(pwdBytes));
     }
 
 }

@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.server.user.HasUserIds;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
+import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -238,7 +239,7 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
     }
 
     @Override
-    public Optional<byte[]> getDigestOfSaltedPassword(UserId userId) {
-        return authenticationManager.getDigestOfSaltedPassword(userId);
+    public Optional<SaltedPasswordDigest> getSaltedPasswordDigest(UserId userId) {
+        return authenticationManager.getSaltedPasswordDigest(userId);
     }
 }

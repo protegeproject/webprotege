@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
+import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
 
@@ -21,5 +22,5 @@ public interface AuthenticationManager {
 
     Optional<Salt> getSalt(UserId userId);
 
-    Optional<byte []> getDigestOfSaltedPassword(UserId userId);
+    Optional<SaltedPasswordDigest> getSaltedPasswordDigest(UserId userId);
 }
