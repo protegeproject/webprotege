@@ -31,7 +31,8 @@ public class ChapData_TestCase {
     @Mock
     private ChallengeMessage challenge;
 
-    private byte [] salt = {2, 2, 2, 2, 2, 2, 2};
+    @Mock
+    private Salt salt;
 
     @Before
     public void setUp() throws Exception {
