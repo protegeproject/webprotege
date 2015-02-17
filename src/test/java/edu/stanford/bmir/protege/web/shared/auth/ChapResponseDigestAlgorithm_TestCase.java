@@ -21,9 +21,9 @@ import static org.mockito.Mockito.when;
  * 17/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ChallengeMessageDigestAlgorithm_TestCase {
+public class ChapResponseDigestAlgorithm_TestCase {
 
-    private ChallengeMessageDigestAlgorithm algorithm;
+    private ChapResponseDigestAlgorithm algorithm;
 
     @Mock
     private Provider<MessageDigestAlgorithm> digestAlgorithmProvider;
@@ -31,7 +31,8 @@ public class ChallengeMessageDigestAlgorithm_TestCase {
     @Mock
     private MessageDigestAlgorithm messageDigestAlgorithm;
 
-    private byte [] digestOfSaltedPassword = {4, 4, 4, 4, 4};
+    @Mock
+    private SaltedPasswordDigest digestOfSaltedPassword;
 
     @Mock
     private ChallengeMessage challengeMessage;
@@ -43,14 +44,14 @@ public class ChallengeMessageDigestAlgorithm_TestCase {
     @Before
     public void setUp() throws Exception {
         when(digestAlgorithmProvider.get()).thenReturn(messageDigestAlgorithm);
-        algorithm = new ChallengeMessageDigestAlgorithm(digestAlgorithmProvider);
+        algorithm = new ChapResponseDigestAlgorithm(digestAlgorithmProvider);
         when(messageDigestAlgorithm.computeDigest()).thenReturn(result);
         when(challengeMessage.getBytes()).thenReturn(challengeMessageBytes);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Provider_IsNull() {
-        new ChallengeMessageDigestAlgorithm(null);
+        new ChapResponseDigestAlgorithm(null);
     }
 
     @Test(expected = NullPointerException.class)
@@ -68,7 +69,7 @@ public class ChallengeMessageDigestAlgorithm_TestCase {
         algorithm.getDigestOfMessageAndPassword(challengeMessage, digestOfSaltedPassword);
         InOrder inOrder = inOrder(messageDigestAlgorithm);
         inOrder.verify(messageDigestAlgorithm, times(1)).update(challengeMessage.getBytes());
-        inOrder.verify(messageDigestAlgorithm, times(1)).update(digestOfSaltedPassword);
+        inOrder.verify(messageDigestAlgorithm, times(1)).update(digestOfSaltedPassword.getBytes());
     }
 
     @Test

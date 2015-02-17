@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.auth;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -65,8 +64,8 @@ public class SaltedPasswordDigest_TestCase {
 
     @Test
     public void shouldReturnDigest() {
-        assertThat(saltedPasswordDigest.getDigest(), is(digest));
-        assertThat(saltedPasswordDigest.getDigest() == digest, is(false));
+        assertThat(saltedPasswordDigest.getBytes(), is(digest));
+        assertThat(saltedPasswordDigest.getBytes() == digest, is(false));
     }
 
 }
