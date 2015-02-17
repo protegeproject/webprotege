@@ -59,7 +59,7 @@ public class ChapSessionId_TestCase {
 
     @Test
     public void shouldGenerateToString() {
-        assertThat(id.toString(), startsWith("ChallengeMessageId"));
+        assertThat(id.toString(), startsWith("ChapSessionId"));
     }
 
     @Test
