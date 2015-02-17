@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
 import com.google.common.base.Objects;
-import com.google.gwt.core.shared.GwtIncompatible;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.util.Arrays;
