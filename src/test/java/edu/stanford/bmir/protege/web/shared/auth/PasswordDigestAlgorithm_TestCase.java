@@ -31,7 +31,12 @@ public class PasswordDigestAlgorithm_TestCase {
     @Mock
     private MessageDigestAlgorithm messageDigestAlgorithm;
 
-    private byte [] salt = new byte[]{3, 3, 3, 3, 3}, digestResult = new byte[] {4, 4, 4, 4, 4};
+    @Mock
+    private Salt salt;
+
+    private byte [] saltBytes = {2, 2, 2, 2, 2};
+
+    private byte [] digestResult = {4, 4, 4, 4, 4};
 
     private String password = "HelloWorld";
 
@@ -42,6 +47,7 @@ public class PasswordDigestAlgorithm_TestCase {
         when(messageDigestAlgorithmProvider.get()).thenReturn(messageDigestAlgorithm);
         algorithm = new PasswordDigestAlgorithm(messageDigestAlgorithmProvider);
         when(messageDigestAlgorithm.computeDigest()).thenReturn(digestResult);
+        when(salt.getBytes()).thenReturn(saltBytes);
     }
 
     @Test(expected = NullPointerException.class)
@@ -59,11 +65,6 @@ public class PasswordDigestAlgorithm_TestCase {
         algorithm.getDigestOfSaltedPassword(password, null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowIllegalArgumentExceptionIf_Salt_IsEmpty() {
-        algorithm.getDigestOfSaltedPassword(password, new byte[0]);
-    }
-
     @Test
     public void shouldUseUtf8EncodingForPassword() throws UnsupportedEncodingException {
         algorithm.getDigestOfSaltedPassword(password, salt);
@@ -74,7 +75,7 @@ public class PasswordDigestAlgorithm_TestCase {
     public void shouldPlaceSaltFirstAndPasswordSecond() throws UnsupportedEncodingException {
         InOrder inOrder = Mockito.inOrder(messageDigestAlgorithm);
         algorithm.getDigestOfSaltedPassword(password, salt);
-        inOrder.verify(messageDigestAlgorithm, times(1)).update(salt);
+        inOrder.verify(messageDigestAlgorithm, times(1)).update(salt.getBytes());
         inOrder.verify(messageDigestAlgorithm, times(1)).update(password.getBytes("utf-8"));
     }
 
