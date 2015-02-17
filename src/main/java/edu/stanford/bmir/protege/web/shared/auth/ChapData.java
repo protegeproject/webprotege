@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
-public class ChallengeMessage implements IsSerializable {
+public class ChapData implements IsSerializable {
 
     private ChallengeMessageId id;
 
@@ -24,10 +24,10 @@ public class ChallengeMessage implements IsSerializable {
     /**
      * For serialization only
      */
-    private ChallengeMessage() {
+    private ChapData() {
     }
 
-    public ChallengeMessage(ChallengeMessageId id, byte[] challenge, byte [] salt) {
+    public ChapData(ChallengeMessageId id, byte[] challenge, byte[] salt) {
         this.id = checkNotNull(id);
         this.challenge = Arrays.copyOf(checkNotNull(challenge), challenge.length);
         this.salt = Arrays.copyOf(checkNotNull(salt), salt.length);
@@ -55,10 +55,10 @@ public class ChallengeMessage implements IsSerializable {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof ChallengeMessage)) {
+        if (!(obj instanceof ChapData)) {
             return false;
         }
-        ChallengeMessage other = (ChallengeMessage) obj;
+        ChapData other = (ChapData) obj;
         return this.id.equals(other.id)
                 && Arrays.equals(this.challenge, other.challenge)
                 && Arrays.equals(this.salt, other.salt);
