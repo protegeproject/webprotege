@@ -49,6 +49,6 @@ public class Md5MessageDigestAlgorithm implements MessageDigestAlgorithm {
     @Override
     public String computeDigestAsBase16Encoding() {
         byte [] digest = messageDigest.digest();
-        return BaseEncoding.base16().encode(digest);
+        return BaseEncoding.base16().lowerCase().encode(digest);
     }
 }

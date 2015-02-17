@@ -18,15 +18,19 @@ public class Md5MessageDigestAlgorithm_TestCase {
 
     public static final String HELLO_WEBPROTEGE_HEX_DIGEST = "0214cff36e786b25ad3543f6970c80f6";
 
+    public static final String EMPTY_STRING_HEX_DIGEST = "d41d8cd98f00b204e9800998ecf8427e";
+
     private Md5MessageDigestAlgorithm algorithm;
 
-    private byte[] helloWebProtegeDigest = BaseEncoding.base16().decode(HELLO_WEBPROTEGE_HEX_DIGEST);
+    private byte[] helloWebProtegeDigest;
+
     private byte[] emptyDigest;
 
     @Before
     public void setUp() throws Exception {
         algorithm = new Md5MessageDigestAlgorithm();
-        emptyDigest = BaseEncoding.base16().decode("d41d8cd98f00b204e9800998ecf8427e");
+        helloWebProtegeDigest = BaseEncoding.base16().lowerCase().decode(HELLO_WEBPROTEGE_HEX_DIGEST);
+        emptyDigest = BaseEncoding.base16().lowerCase().decode(EMPTY_STRING_HEX_DIGEST);
     }
 
     @Test(expected = NullPointerException.class)
@@ -60,14 +64,6 @@ public class Md5MessageDigestAlgorithm_TestCase {
     @Test
     public void shouldUpdateAndComputeDigest() throws UnsupportedEncodingException {
         algorithm.update("Hello ".getBytes("utf-8"));
-        algorithm.update("WebProtege".getBytes("utf-8"));
-        assertThat(algorithm.computeDigest(), is(helloWebProtegeDigest));
-    }
-
-    @Test
-    public void shouldRecomputeDigest() throws UnsupportedEncodingException {
-        algorithm.update("Hello ".getBytes("utf-8"));
-        algorithm.computeDigest();
         algorithm.update("WebProtege".getBytes("utf-8"));
         assertThat(algorithm.computeDigest(), is(helloWebProtegeDigest));
     }
