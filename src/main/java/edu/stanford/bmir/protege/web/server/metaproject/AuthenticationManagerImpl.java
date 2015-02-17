@@ -82,7 +82,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
             return Optional.absent();
         }
         String salt = user.getSalt();
-        byte[] saltBytes = BaseEncoding.base16().decode(salt);
+        byte[] saltBytes = BaseEncoding.base16().lowerCase().decode(salt);
         return Optional.fromNullable(new Salt(saltBytes));
     }
 
@@ -93,7 +93,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
             return Optional.absent();
         }
         String pwd = user.getDigestedPassword();
-        byte[] pwdBytes = BaseEncoding.base16().decode(pwd);
+        byte[] pwdBytes = BaseEncoding.base16().lowerCase().decode(pwd);
         return Optional.of(pwdBytes);
     }
 
