@@ -46,7 +46,7 @@ public class ChapSessionId implements IsSerializable {
 
     @Override
     public String toString() {
-        return toStringHelper("ChallengeMessageId")
+        return toStringHelper("ChapSessionId")
                 .addValue(id)
                 .toString();
     }
