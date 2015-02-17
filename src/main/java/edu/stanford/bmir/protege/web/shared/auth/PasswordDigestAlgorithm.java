@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.io.UnsupportedEncodingException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -12,15 +13,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PasswordDigestAlgorithm {
 
-    private final MessageDigestAlgorithm messageDigestAlgorithm;
+    private final Provider<MessageDigestAlgorithm> messageDigestAlgorithmProvider;
 
     /**
      * Constructs a PasswordDigestAlgorithm.
-     * @param messageDigestAlgorithm The digest algorithm that performs the actual digesting.  Not {@code null}.
+     * @param messageDigestAlgorithmProvider The digest algorithm that performs the actual digesting.  Not {@code null}.
      */
     @Inject
-    public PasswordDigestAlgorithm(MessageDigestAlgorithm messageDigestAlgorithm) {
-        this.messageDigestAlgorithm = checkNotNull(messageDigestAlgorithm);
+    public PasswordDigestAlgorithm(Provider<MessageDigestAlgorithm> messageDigestAlgorithmProvider) {
+        this.messageDigestAlgorithmProvider = checkNotNull(messageDigestAlgorithmProvider);
     }
 
     /**
@@ -33,6 +34,7 @@ public class PasswordDigestAlgorithm {
      */
     public byte [] getDigestOfSaltedPassword(String clearTextPassword, byte[] salt) {
         try {
+            MessageDigestAlgorithm messageDigestAlgorithm = messageDigestAlgorithmProvider.get();
             messageDigestAlgorithm.update(checkNotNull(salt));
             if(salt.length == 0) {
                 throw new IllegalArgumentException("Salt is empty.  This is probably unintentional.");
