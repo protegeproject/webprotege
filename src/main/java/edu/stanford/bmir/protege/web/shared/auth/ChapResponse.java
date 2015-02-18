@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.auth;
 
 import com.google.common.base.Objects;
 import com.google.common.io.BaseEncoding;
+import com.google.gwt.user.client.rpc.IsSerializable;
 
 import java.util.Arrays;
 
@@ -13,9 +14,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17/02/15
  */
-public class ChapResponse {
+public class ChapResponse implements IsSerializable {
 
     private byte [] bytes;
+
+    private ChapResponse() {
+    }
 
     public ChapResponse(byte[] bytes) {
         this.bytes = Arrays.copyOf(checkNotNull(bytes), bytes.length);
