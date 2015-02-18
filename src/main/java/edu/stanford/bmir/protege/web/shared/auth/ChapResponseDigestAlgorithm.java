@@ -17,10 +17,16 @@ public class ChapResponseDigestAlgorithm {
         this.digestAlgorithmProvider = checkNotNull(digestAlgorithmProvider);
     }
 
-    public byte [] getDigestOfMessageAndPassword(ChallengeMessage challengeMessage, SaltedPasswordDigest saltedPasswordDigest) {
+    /**
+     * Gets the digest of the challenge message and the salted password digest.
+     * @param challengeMessage The challenge message. Not {@code null}.
+     * @param saltedPasswordDigest The salted password digest.  Not {@code null}.
+     * @return The ChapResponse digest based on the challenge message and salted password digest.  Not {@code null}.
+     */
+    public ChapResponse getChapResponseDigest(ChallengeMessage challengeMessage, SaltedPasswordDigest saltedPasswordDigest) {
         MessageDigestAlgorithm algorithm = digestAlgorithmProvider.get();
         algorithm.update(checkNotNull(challengeMessage).getBytes());
         algorithm.update(checkNotNull(saltedPasswordDigest).getBytes());
-        return algorithm.computeDigest();
+        return new ChapResponse(algorithm.computeDigest());
     }
 }

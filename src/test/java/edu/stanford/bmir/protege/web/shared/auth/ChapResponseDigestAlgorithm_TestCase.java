@@ -56,17 +56,17 @@ public class ChapResponseDigestAlgorithm_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Message_IsNull() {
-        algorithm.getDigestOfMessageAndPassword(null, digestOfSaltedPassword);
+        algorithm.getChapResponseDigest(null, digestOfSaltedPassword);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Password_IsNull() {
-        algorithm.getDigestOfMessageAndPassword(challengeMessage, null);
+        algorithm.getChapResponseDigest(challengeMessage, null);
     }
 
     @Test
     public void shouldComputeDigestWithChallengeFirstAndPasswordSecond() throws Exception {
-        algorithm.getDigestOfMessageAndPassword(challengeMessage, digestOfSaltedPassword);
+        algorithm.getChapResponseDigest(challengeMessage, digestOfSaltedPassword);
         InOrder inOrder = inOrder(messageDigestAlgorithm);
         inOrder.verify(messageDigestAlgorithm, times(1)).update(challengeMessage.getBytes());
         inOrder.verify(messageDigestAlgorithm, times(1)).update(digestOfSaltedPassword.getBytes());
@@ -74,6 +74,7 @@ public class ChapResponseDigestAlgorithm_TestCase {
 
     @Test
     public void shouldReturnResult() {
-        assertThat(algorithm.getDigestOfMessageAndPassword(challengeMessage, digestOfSaltedPassword), is(result));
+        ChapResponse expectedResult = new ChapResponse(result);
+        assertThat(algorithm.getChapResponseDigest(challengeMessage, digestOfSaltedPassword), is(expectedResult));
     }
 }
