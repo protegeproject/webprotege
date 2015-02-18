@@ -15,9 +15,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -72,7 +69,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         if (user == null) {
             return;
         }
-        String encodedDigest = BaseEncoding.base16().lowerCase().encode(saltedPasswordDigest.getDigest());
+        String encodedDigest = BaseEncoding.base16().lowerCase().encode(saltedPasswordDigest.getBytes());
         user.setDigestedPassword(encodedDigest, BaseEncoding.base16().lowerCase().encode(salt.getBytes()));
         OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
     }
