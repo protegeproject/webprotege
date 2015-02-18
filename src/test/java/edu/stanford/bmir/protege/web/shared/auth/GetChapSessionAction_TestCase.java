@@ -19,12 +19,12 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * 17/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetChapDataAction_TestCase {
+public class GetChapSessionAction_TestCase {
 
 
-    private GetChapDataAction action;
+    private GetChapSessionAction action;
 
-    private GetChapDataAction otherAction;
+    private GetChapSessionAction otherAction;
 
     @Mock
     private UserId userId;
@@ -32,13 +32,13 @@ public class GetChapDataAction_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        action = new GetChapDataAction(userId);
-        otherAction = new GetChapDataAction(userId);
+        action = new GetChapSessionAction(userId);
+        otherAction = new GetChapSessionAction(userId);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        new GetChapDataAction(null);
+        new GetChapSessionAction(null);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class GetChapDataAction_TestCase {
 
     @Test
     public void shouldGenerateToString() {
-        assertThat(action.toString(), startsWith("GetChapDataAction"));
+        assertThat(action.toString(), startsWith("GetChapSessionAction"));
     }
 
     @Test

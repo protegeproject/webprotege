@@ -12,24 +12,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
-public class GetChapDataResult implements Result {
+public class GetChapSessionResult implements Result {
 
-    private ChapData chapData;
+    private ChapSession chapSession;
 
-    private GetChapDataResult() {
+    private GetChapSessionResult() {
     }
 
-    public GetChapDataResult(ChapData chapData) {
-        this.chapData = checkNotNull(chapData);
+    public GetChapSessionResult(ChapSession chapSession) {
+        this.chapSession = checkNotNull(chapSession);
     }
 
-    public ChapData getChapData() {
-        return chapData;
+    public ChapSession getChapSession() {
+        return chapSession;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(chapData);
+        return Objects.hashCode(chapSession);
     }
 
     @Override
@@ -37,18 +37,18 @@ public class GetChapDataResult implements Result {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GetChapDataResult)) {
+        if (!(obj instanceof GetChapSessionResult)) {
             return false;
         }
-        GetChapDataResult other = (GetChapDataResult) obj;
-        return this.chapData.equals(other.chapData);
+        GetChapSessionResult other = (GetChapSessionResult) obj;
+        return this.chapSession.equals(other.chapSession);
     }
 
 
     @Override
     public String toString() {
-        return toStringHelper("GetChapDataResult")
-                .addValue(chapData)
+        return toStringHelper("GetChapSessionResult")
+                .addValue(chapSession)
                 .toString();
     }
 }

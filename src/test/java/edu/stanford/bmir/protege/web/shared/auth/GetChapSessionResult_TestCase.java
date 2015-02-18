@@ -18,26 +18,26 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * 17/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetChapDataResult_TestCase {
+public class GetChapSessionResult_TestCase {
 
 
-    private GetChapDataResult result;
+    private GetChapSessionResult result;
 
-    private GetChapDataResult otherResult;
+    private GetChapSessionResult otherResult;
 
 
     @Mock
-    private ChapData chapData;
+    private ChapSession chapSession;
 
     @Before
     public void setUp() throws Exception {
-        result = new GetChapDataResult(chapData);
-        otherResult = new GetChapDataResult(chapData);
+        result = new GetChapSessionResult(chapSession);
+        otherResult = new GetChapSessionResult(chapSession);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerException() {
-        new GetChapDataResult(null);
+        new GetChapSessionResult(null);
     }
 
     @Test
@@ -62,11 +62,11 @@ public class GetChapDataResult_TestCase {
 
     @Test
     public void shouldGenerateToString() {
-        assertThat(result.toString(), startsWith("GetChapDataResult"));
+        assertThat(result.toString(), startsWith("GetChapSessionResult"));
     }
 
     @Test
     public void shouldReturnSuppliedChapData() {
-        assertThat(result.getChapData(), is(chapData));
+        assertThat(result.getChapSession(), is(chapSession));
     }
 }

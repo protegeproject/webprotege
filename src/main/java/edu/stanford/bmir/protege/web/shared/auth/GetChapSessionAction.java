@@ -12,17 +12,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
-public class GetChapDataAction implements Action<GetChapDataResult> {
+public class GetChapSessionAction implements Action<GetChapSessionResult> {
 
     private UserId userId;
 
     /**
      * For serialization purposes only
      */
-    private GetChapDataAction() {
+    private GetChapSessionAction() {
     }
 
-    public GetChapDataAction(UserId userId) {
+    public GetChapSessionAction(UserId userId) {
         this.userId = checkNotNull(userId);
     }
 
@@ -40,17 +40,17 @@ public class GetChapDataAction implements Action<GetChapDataResult> {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GetChapDataAction)) {
+        if (!(obj instanceof GetChapSessionAction)) {
             return false;
         }
-        GetChapDataAction other = (GetChapDataAction) obj;
+        GetChapSessionAction other = (GetChapSessionAction) obj;
         return this.userId.equals(other.userId);
     }
 
 
     @Override
     public String toString() {
-        return toStringHelper("GetChapDataAction")
+        return toStringHelper("GetChapSessionAction")
                 .addValue(userId)
                 .toString();
     }
