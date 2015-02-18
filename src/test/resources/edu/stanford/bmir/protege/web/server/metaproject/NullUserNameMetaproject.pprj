@@ -1,4 +1,4 @@
-; Thu Feb 05 10:15:58 PST 2015
+; Tue Feb 17 16:35:18 GMT 2015
 ; 
 ;+ (version "3.5")
 ;+ (build "Build 663")
@@ -6,16 +6,16 @@
 ([BROWSER_SLOT_NAMES] of  Property_List
 
 	(properties
-		[metaproject_ProjectKB_Class20019]
-		[metaproject_ProjectKB_Class20020]
-		[metaproject_ProjectKB_Class20021]
-		[metaproject_ProjectKB_Class20022]
-		[metaproject_ProjectKB_Class20023]
-		[metaproject_ProjectKB_Class20024]
-		[metaproject_ProjectKB_Class20025]
-		[metaproject_ProjectKB_Class20026]
-		[metaproject_ProjectKB_Class20027]
-		[metaproject_ProjectKB_Class20028]))
+		[NullUserNameMetaproject_ProjectKB_Class19]
+		[NullUserNameMetaproject_ProjectKB_Class20]
+		[NullUserNameMetaproject_ProjectKB_Class21]
+		[NullUserNameMetaproject_ProjectKB_Class22]
+		[NullUserNameMetaproject_ProjectKB_Class23]
+		[NullUserNameMetaproject_ProjectKB_Class24]
+		[NullUserNameMetaproject_ProjectKB_Class25]
+		[NullUserNameMetaproject_ProjectKB_Class26]
+		[NullUserNameMetaproject_ProjectKB_Class27]
+		[NullUserNameMetaproject_ProjectKB_Class28]))
 
 ([CLSES_TAB] of  Widget
 
@@ -48,6 +48,9 @@
 	(label "Instances")
 	(property_list [ProjectKB_0036_00038])
 	(widget_class_name "edu.stanford.smi.protege.widget.InstancesTab"))
+
+([KB_220222_Class3] of  Map
+)
 
 ([KB_386249_Instance_0] of  Property_List
 
@@ -427,23 +430,11 @@
 	(x 0)
 	(y 120))
 
-([KB_980282_Class3] of  Map
-)
-
 ([metaproject_ProjectKB_Class1] of  Widget
 
 	(is_hidden TRUE)
 	(property_list [metaproject_ProjectKB_Class2])
 	(widget_class_name "edu.stanford.smi.protegex.changes.changesKBViewTab.ChangesKBViewTab"))
-
-([metaproject_ProjectKB_Class10004] of  Widget
-
-	(is_hidden TRUE)
-	(property_list [metaproject_ProjectKB_Class10005])
-	(widget_class_name "org.protege.owl.mm.portability.protege3.MappingMasterTab"))
-
-([metaproject_ProjectKB_Class10005] of  Property_List
-)
 
 ([metaproject_ProjectKB_Class10006] of  Widget
 
@@ -790,77 +781,6 @@
 
 	(boolean_value FALSE)
 	(name "readOnly_configured"))
-
-([metaproject_ProjectKB_Class20019] of  String
-
-	(name ":INSTANCE-ANNOTATION")
-	(string_value "%3AANNOTATION-TEXT"))
-
-([metaproject_ProjectKB_Class20020] of  String
-
-	(name "Group")
-	(string_value "name"))
-
-([metaproject_ProjectKB_Class20021] of  String
-
-	(name "GroupOperation")
-	(string_value "allowedGroup{+can+}allowedOperation"))
-
-([metaproject_ProjectKB_Class20022] of  String
-
-	(name "Operation")
-	(string_value "name"))
-
-([metaproject_ProjectKB_Class20023] of  String
-
-	(name ":META-CLASS")
-	(string_value "%3ANAME"))
-
-([metaproject_ProjectKB_Class20024] of  String
-
-	(name ":PAL-CONSTRAINT")
-	(string_value "%3APAL-NAME"))
-
-([metaproject_ProjectKB_Class20025] of  String
-
-	(name "User")
-	(string_value "name"))
-
-([metaproject_ProjectKB_Class20026] of  String
-
-	(name "PropertyValue")
-	(string_value "propertyName{+%3D+}propertyValue"))
-
-([metaproject_ProjectKB_Class20027] of  String
-
-	(name "Project")
-	(string_value "name"))
-
-([metaproject_ProjectKB_Class20028] of  String
-
-	(name "Server")
-	(string_value "name"))
-
-([metaproject_ProjectKB_Class20029] of  Map_Entry
-
-	(key "add_name_on_instance_form")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([metaproject_ProjectKB_Class20030] of  Map_Entry
-
-	(key "change_tracking_active")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
-
-([metaproject_ProjectKB_Class20031] of  Map_Entry
-
-	(key "suppress_instance_counting")
-	(key_class "java.lang.String")
-	(value "false")
-	(value_class "java.lang.String"))
 
 ([metaproject_ProjectKB_Class3] of  Widget
 
@@ -4392,6 +4312,86 @@
 	(boolean_value FALSE)
 	(name "ButtonDisplayed-Delete Instance"))
 
+([NullUserNameMetaproject_ProjectKB_Class19] of  String
+
+	(name ":INSTANCE-ANNOTATION")
+	(string_value "%3AANNOTATION-TEXT"))
+
+([NullUserNameMetaproject_ProjectKB_Class20] of  String
+
+	(name "Group")
+	(string_value "name"))
+
+([NullUserNameMetaproject_ProjectKB_Class21] of  String
+
+	(name "GroupOperation")
+	(string_value "allowedGroup{+can+}allowedOperation"))
+
+([NullUserNameMetaproject_ProjectKB_Class22] of  String
+
+	(name "Operation")
+	(string_value "name"))
+
+([NullUserNameMetaproject_ProjectKB_Class23] of  String
+
+	(name ":PAL-CONSTRAINT")
+	(string_value "%3APAL-NAME"))
+
+([NullUserNameMetaproject_ProjectKB_Class24] of  String
+
+	(name ":META-CLASS")
+	(string_value "%3ANAME"))
+
+([NullUserNameMetaproject_ProjectKB_Class25] of  String
+
+	(name "User")
+	(string_value "name"))
+
+([NullUserNameMetaproject_ProjectKB_Class26] of  String
+
+	(name "Project")
+	(string_value "name"))
+
+([NullUserNameMetaproject_ProjectKB_Class27] of  String
+
+	(name "PropertyValue")
+	(string_value "propertyName{+%3D+}propertyValue"))
+
+([NullUserNameMetaproject_ProjectKB_Class28] of  String
+
+	(name "Server")
+	(string_value "name"))
+
+([NullUserNameMetaproject_ProjectKB_Class29] of  Map_Entry
+
+	(key "add_name_on_instance_form")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([NullUserNameMetaproject_ProjectKB_Class30] of  Map_Entry
+
+	(key "change_tracking_active")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([NullUserNameMetaproject_ProjectKB_Class31] of  Map_Entry
+
+	(key "suppress_instance_counting")
+	(key_class "java.lang.String")
+	(value "false")
+	(value_class "java.lang.String"))
+
+([NullUserNameMetaproject_ProjectKB_Class4] of  Widget
+
+	(is_hidden TRUE)
+	(property_list [NullUserNameMetaproject_ProjectKB_Class5])
+	(widget_class_name "org.protege.owl.mm.portability.protege3.MappingMasterTab"))
+
+([NullUserNameMetaproject_ProjectKB_Class5] of  Property_List
+)
+
 ([PAL_FORM_WIDGET] of  Widget
 
 	(height 476)
@@ -4580,9 +4580,9 @@
 ([projects_ProjectKB_00052] of  Map
 
 	(entries
-		[metaproject_ProjectKB_Class20029]
-		[metaproject_ProjectKB_Class20030]
-		[metaproject_ProjectKB_Class20031]))
+		[NullUserNameMetaproject_ProjectKB_Class29]
+		[NullUserNameMetaproject_ProjectKB_Class30]
+		[NullUserNameMetaproject_ProjectKB_Class31]))
 
 ([projects_ProjectKB_00053] of  Widget
 
