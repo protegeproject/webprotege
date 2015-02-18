@@ -18,7 +18,7 @@ public abstract class AbstractAuthenticationAction<R extends AbstractAuthenticat
 
     private ChapSessionId chapSessionId;
 
-    private byte [] challengeResponse;
+    private ChapResponse chapResponse;
 
     /**
      * For serialization only
@@ -26,9 +26,9 @@ public abstract class AbstractAuthenticationAction<R extends AbstractAuthenticat
     protected AbstractAuthenticationAction() {
     }
 
-    public AbstractAuthenticationAction(UserId userId, ChapSessionId chapSessionId, byte[] challengeResponse) {
-        this.chapSessionId = chapSessionId;
-        this.challengeResponse = Arrays.copyOf(checkNotNull(challengeResponse), challengeResponse.length);
+    public AbstractAuthenticationAction(UserId userId, ChapSessionId chapSessionId, ChapResponse chapResponse) {
+        this.chapSessionId = checkNotNull(chapSessionId);
+        this.chapResponse = checkNotNull(chapResponse);
         this.userId = checkNotNull(userId);
     }
 
@@ -36,11 +36,11 @@ public abstract class AbstractAuthenticationAction<R extends AbstractAuthenticat
         return userId;
     }
 
-    public ChapSessionId getId() {
+    public ChapSessionId getChapSessionId() {
         return chapSessionId;
     }
 
-    public byte[] getChallengeResponse() {
-        return Arrays.copyOf(challengeResponse, challengeResponse.length);
+    public ChapResponse getChapResponse() {
+        return chapResponse;
     }
 }
