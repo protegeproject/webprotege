@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.auth;
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import com.google.inject.assistedinject.Assisted;
-import com.google.inject.assistedinject.AssistedInject;
 
 import javax.inject.Inject;
 
@@ -15,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 14/02/15
  */
-public class ChapData implements IsSerializable {
+public class ChapSession implements IsSerializable {
 
     private ChapSessionId id;
 
@@ -26,11 +25,11 @@ public class ChapData implements IsSerializable {
     /**
      * For serialization only
      */
-    private ChapData() {
+    private ChapSession() {
     }
 
     @Inject
-    public ChapData(ChapSessionId id, ChallengeMessage challengeMessage, @Assisted Salt salt) {
+    public ChapSession(ChapSessionId id, ChallengeMessage challengeMessage, @Assisted Salt salt) {
         this.id = checkNotNull(id);
         this.challengeMessage = checkNotNull(challengeMessage);
         this.salt = checkNotNull(salt);
@@ -58,10 +57,10 @@ public class ChapData implements IsSerializable {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof ChapData)) {
+        if (!(obj instanceof ChapSession)) {
             return false;
         }
-        ChapData other = (ChapData) obj;
+        ChapSession other = (ChapSession) obj;
         return this.id.equals(other.id)
                 && challengeMessage.equals(other.challengeMessage)
                 && this.salt.equals(other.salt);
@@ -70,7 +69,7 @@ public class ChapData implements IsSerializable {
 
     @Override
     public String toString() {
-        return toStringHelper("ChallengeMessage")
+        return toStringHelper("ChapSession")
                 .addValue(id)
                 .addValue(challengeMessage)
                 .addValue(salt)

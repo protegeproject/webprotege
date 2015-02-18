@@ -18,12 +18,12 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * 14/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ChapData_TestCase {
+public class ChapSession_TestCase {
 
 
-    private ChapData chapData;
+    private ChapSession chapSession;
 
-    private ChapData otherChapData;
+    private ChapSession otherChapSession;
 
     @Mock
     private ChapSessionId id;
@@ -36,63 +36,63 @@ public class ChapData_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        chapData = new ChapData(id, challenge, salt);
-        otherChapData = new ChapData(id, challenge, salt);
+        chapSession = new ChapSession(id, challenge, salt);
+        otherChapSession = new ChapSession(id, challenge, salt);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Id_IsNull() {
-        new ChapData(null, challenge, salt);
+        new ChapSession(null, challenge, salt);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Challenge_IsNull() {
-        new ChapData(id, null, salt);
+        new ChapSession(id, null, salt);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Salt_IsNull() {
-        new ChapData(id, challenge, null);
+        new ChapSession(id, challenge, null);
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        assertThat(chapData, is(equalTo(chapData)));
+        assertThat(chapSession, is(equalTo(chapSession)));
     }
 
     @Test
     public void shouldNotBeEqualToNull() {
-        assertThat(chapData, is(not(equalTo(null))));
+        assertThat(chapSession, is(not(equalTo(null))));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(chapData, is(equalTo(otherChapData)));
+        assertThat(chapSession, is(equalTo(otherChapSession)));
     }
 
     @Test
     public void shouldHaveSameHashCodeAsOther() {
-        assertThat(chapData.hashCode(), is(otherChapData.hashCode()));
+        assertThat(chapSession.hashCode(), is(otherChapSession.hashCode()));
     }
 
     @Test
     public void shouldGenerateToString() {
-        assertThat(chapData.toString(), startsWith("ChallengeMessage"));
+        assertThat(chapSession.toString(), startsWith("ChapSession"));
     }
 
     @Test
     public void shouldReturnSuppliedChallenge() {
-        assertThat(chapData.getChallengeMessage(), is(challenge));
+        assertThat(chapSession.getChallengeMessage(), is(challenge));
     }
 
     @Test
     public void shouldReturnSuppliedSalt() {
-        assertThat(chapData.getSalt(), is(salt));
+        assertThat(chapSession.getSalt(), is(salt));
     }
 
     @Test
     public void shouldReturnSuppliedId() {
-        assertThat(chapData.getId(), is(id));
+        assertThat(chapSession.getId(), is(id));
     }
 
 }
