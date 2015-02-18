@@ -2,6 +2,10 @@ package edu.stanford.bmir.protege.web.shared.auth;
 
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import com.google.inject.assistedinject.Assisted;
+import com.google.inject.assistedinject.AssistedInject;
+
+import javax.inject.Inject;
 
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -25,7 +29,8 @@ public class ChapData implements IsSerializable {
     private ChapData() {
     }
 
-    public ChapData(ChapSessionId id, ChallengeMessage challengeMessage, Salt salt) {
+    @Inject
+    public ChapData(ChapSessionId id, ChallengeMessage challengeMessage, @Assisted Salt salt) {
         this.id = checkNotNull(id);
         this.challengeMessage = checkNotNull(challengeMessage);
         this.salt = checkNotNull(salt);
