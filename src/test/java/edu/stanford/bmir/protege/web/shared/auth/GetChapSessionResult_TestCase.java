@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
+import com.google.common.base.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,7 @@ public class GetChapSessionResult_TestCase {
 
 
     @Mock
-    private ChapSession chapSession;
+    private Optional<ChapSession> chapSession;
 
     @Before
     public void setUp() throws Exception {

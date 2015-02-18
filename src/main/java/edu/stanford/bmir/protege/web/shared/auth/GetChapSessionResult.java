@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.auth;
 
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import static com.google.common.base.Objects.toStringHelper;
@@ -14,16 +15,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetChapSessionResult implements Result {
 
-    private ChapSession chapSession;
+    private Optional<ChapSession> chapSession;
 
     private GetChapSessionResult() {
     }
 
-    public GetChapSessionResult(ChapSession chapSession) {
+    public GetChapSessionResult(Optional<ChapSession> chapSession) {
         this.chapSession = checkNotNull(chapSession);
     }
 
-    public ChapSession getChapSession() {
+    public Optional<ChapSession> getChapSession() {
         return chapSession;
     }
 
