@@ -394,21 +394,22 @@ public class LoginUtil {
     private void performSignInUsingEncryption(final UserId userId, final TextBox passField, final Window win) {
         PasswordDigestAlgorithm passwordDigestAlgorithm = new PasswordDigestAlgorithm(digestAlgorithmProvider);
         ChapResponseDigestAlgorithm chapResponseDigestAlgorithm = new ChapResponseDigestAlgorithm(digestAlgorithmProvider);
-        PerformLoginExecutor performLoginExecutor = new PerformLoginExecutor(DispatchServiceManager.get(), passwordDigestAlgorithm, chapResponseDigestAlgorithm);
-        performLoginExecutor.execute(userId, passField.getText(), new AbstractWebProtegeAsyncCallback<AuthenticationResponse>() {
-            @Override
-            public void onSuccess(AuthenticationResponse response) {
-                win.getEl().unmask();
-                if (response == AuthenticationResponse.SUCCESS) {
-                    Application.get().setCurrentUser(userId);
-                    win.close();
-                }
-                else {
-                    MessageBox.alert("Invalid user name or password. Please try again.");
-                    passField.setValue("");
-                }
-            }
-        });
+        AuthenticatedActionExecutor executor = new AuthenticatedActionExecutor(DispatchServiceManager.get(), passwordDigestAlgorithm, chapResponseDigestAlgorithm);
+        executor.execute(userId, passField.getText(),
+                        new PerformLoginActionFactory(),
+                        new AbstractWebProtegeAsyncCallback<AuthenticationResponse>() {
+                    @Override
+                    public void onSuccess(AuthenticationResponse response) {
+                        win.getEl().unmask();
+                        if (response == AuthenticationResponse.SUCCESS) {
+                            Application.get().setCurrentUser(userId);
+                            win.close();
+                        } else {
+                            MessageBox.alert("Invalid user name or password. Please try again.");
+                            passField.setValue("");
+                        }
+                    }
+                });
     }
 
     private void performSignInUsingHttps(final String userName, final TextBox passField, final Window win) {

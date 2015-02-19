@@ -13,9 +13,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 17/02/15
+ * 19/02/15
+ *
+ * Executes an action that requires authentication.
  */
-public class PerformLoginExecutor {
+public class AuthenticatedActionExecutor {
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -24,21 +26,21 @@ public class PerformLoginExecutor {
     private final ChapResponseDigestAlgorithm responseDigestAlgorithm;
 
     @Inject
-    public PerformLoginExecutor(DispatchServiceManager dispatchServiceManager,
-                                PasswordDigestAlgorithm passwordDigestAlgorithm,
-                                ChapResponseDigestAlgorithm responseDigestAlgorithm) {
+    public AuthenticatedActionExecutor(DispatchServiceManager dispatchServiceManager,
+                                       PasswordDigestAlgorithm passwordDigestAlgorithm,
+                                       ChapResponseDigestAlgorithm responseDigestAlgorithm) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);
         this.passwordDigestAlgorithm = checkNotNull(passwordDigestAlgorithm);
         this.responseDigestAlgorithm = checkNotNull(responseDigestAlgorithm);
     }
 
-    public void execute(final UserId userId, final String clearTextPassword, final AsyncCallback<AuthenticationResponse> callback) {
+    public <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void execute(final UserId userId, final String clearTextPassword, final AuthenticationActionFactory<A, R> actionFactory, final AsyncCallback<AuthenticationResponse> callback) {
         dispatchServiceManager.execute(new GetChapSessionAction(userId), new AbstractWebProtegeAsyncCallback<GetChapSessionResult>() {
             @Override
             public void onSuccess(GetChapSessionResult result) {
                 Optional<ChapSession> chapSession = result.getChapSession();
                 if (chapSession.isPresent()) {
-                    constructAndSendResponse(userId, clearTextPassword, chapSession.get(), callback);
+                    constructAndSendResponse(userId, clearTextPassword, chapSession.get(), actionFactory, callback);
                 } else {
                     callback.onSuccess(AuthenticationResponse.FAIL);
                 }
@@ -52,7 +54,7 @@ public class PerformLoginExecutor {
         });
     }
 
-    private void constructAndSendResponse(UserId userId, String clearTextPassword, ChapSession chapSession, final AsyncCallback<AuthenticationResponse> callback) {
+    private <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void constructAndSendResponse(UserId userId, String clearTextPassword, ChapSession chapSession, AuthenticationActionFactory<A, R> actionFactory, final AsyncCallback<AuthenticationResponse> callback) {
         SaltedPasswordDigest saltedPasswordDigest = passwordDigestAlgorithm.getDigestOfSaltedPassword(
                 clearTextPassword,
                 chapSession.getSalt());
@@ -61,15 +63,16 @@ public class PerformLoginExecutor {
                 chapSession.getChallengeMessage(),
                 saltedPasswordDigest);
 
-        sendResponse(userId, chapSession, response, callback);
+        sendResponse(userId, chapSession, response, actionFactory, callback);
     }
 
-    private void sendResponse(UserId userId, ChapSession chapSession, ChapResponse chapResponse, final AsyncCallback<AuthenticationResponse> callback) {
+    private <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void sendResponse(UserId userId, ChapSession chapSession, ChapResponse chapResponse, AuthenticationActionFactory<A, R> actionFactory, final AsyncCallback<AuthenticationResponse> callback) {
         ChapSessionId chapSessionId = chapSession.getId();
-        dispatchServiceManager.execute(new PerformLoginAction(userId, chapSessionId, chapResponse),
-                new AbstractWebProtegeAsyncCallback<PerformLoginResult>() {
+        A action = actionFactory.createAction(chapSessionId, userId, chapResponse);
+        dispatchServiceManager.execute(action,
+                new AbstractWebProtegeAsyncCallback<R>() {
                     @Override
-                    public void onSuccess(PerformLoginResult loginResult) {
+                    public void onSuccess(R loginResult) {
                         callback.onSuccess(loginResult.getResponse());
                     }
 
@@ -80,4 +83,7 @@ public class PerformLoginExecutor {
                     }
                 });
     }
+
+
 }
+
