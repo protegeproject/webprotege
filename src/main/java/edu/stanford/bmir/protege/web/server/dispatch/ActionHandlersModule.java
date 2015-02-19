@@ -1,9 +1,10 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
+import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
+import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
 import edu.stanford.bmir.protege.web.server.chgpwd.ResetPasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitsActionHandler;
@@ -11,7 +12,6 @@ import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionH
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsProjectOwnerValidator;
 import edu.stanford.bmir.protege.web.server.entities.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
 import edu.stanford.bmir.protege.web.server.frame.*;
@@ -34,8 +34,6 @@ import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;
 import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
-import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
-import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 
 /**
  * Matthew Horridge
@@ -132,7 +130,8 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(SetProjectSharingSettingsActionHandler.class);
 
         multibinder.addBinding().to(LogOutUserActionHandler.class);
-
+        multibinder.addBinding().to(GetChapSessionActionHandler.class);
+        multibinder.addBinding().to(PerformLoginActionHandler.class);
 
 
 
