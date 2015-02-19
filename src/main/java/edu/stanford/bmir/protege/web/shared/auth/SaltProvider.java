@@ -1,6 +1,4 @@
-package edu.stanford.bmir.protege.web.server.auth;
-
-import edu.stanford.bmir.protege.web.shared.auth.Salt;
+package edu.stanford.bmir.protege.web.shared.auth;
 
 import javax.inject.Provider;
 import java.util.Random;
