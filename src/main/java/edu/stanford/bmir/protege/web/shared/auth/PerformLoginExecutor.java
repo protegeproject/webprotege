@@ -15,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 17/02/15
  */
-public class ChapProtocolExecutor {
+public class PerformLoginExecutor {
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -24,7 +24,7 @@ public class ChapProtocolExecutor {
     private final ChapResponseDigestAlgorithm responseDigestAlgorithm;
 
     @Inject
-    public ChapProtocolExecutor(DispatchServiceManager dispatchServiceManager,
+    public PerformLoginExecutor(DispatchServiceManager dispatchServiceManager,
                                 PasswordDigestAlgorithm passwordDigestAlgorithm,
                                 ChapResponseDigestAlgorithm responseDigestAlgorithm) {
         this.dispatchServiceManager = checkNotNull(dispatchServiceManager);

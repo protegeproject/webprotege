@@ -394,8 +394,8 @@ public class LoginUtil {
     private void performSignInUsingEncryption(final UserId userId, final TextBox passField, final Window win) {
         PasswordDigestAlgorithm passwordDigestAlgorithm = new PasswordDigestAlgorithm(digestAlgorithmProvider);
         ChapResponseDigestAlgorithm chapResponseDigestAlgorithm = new ChapResponseDigestAlgorithm(digestAlgorithmProvider);
-        ChapProtocolExecutor chapProtocolExecutor = new ChapProtocolExecutor(DispatchServiceManager.get(), passwordDigestAlgorithm, chapResponseDigestAlgorithm);
-        chapProtocolExecutor.execute(userId, passField.getText(), new AbstractWebProtegeAsyncCallback<AuthenticationResponse>() {
+        PerformLoginExecutor performLoginExecutor = new PerformLoginExecutor(DispatchServiceManager.get(), passwordDigestAlgorithm, chapResponseDigestAlgorithm);
+        performLoginExecutor.execute(userId, passField.getText(), new AbstractWebProtegeAsyncCallback<AuthenticationResponse>() {
             @Override
             public void onSuccess(AuthenticationResponse response) {
                 win.getEl().unmask();
