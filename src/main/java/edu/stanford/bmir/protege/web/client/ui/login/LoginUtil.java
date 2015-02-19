@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.*;
-import com.gwtext.client.widgets.MessageBox.AlertCallback;
+import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.MessageBox.ConfirmCallback;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
@@ -29,17 +29,16 @@ import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AuthenticateServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.OpenIdServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdIconPanel;
 import edu.stanford.bmir.protege.web.client.ui.openid.OpenIdUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
-import edu.stanford.bmir.protege.web.shared.user.UnrecognizedUserNameException;
+import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import java.util.Date;
+import javax.inject.Provider;
 
 /**
  * @author Jennifer Vendetti <vendetti@stanford.edu>
@@ -48,6 +47,8 @@ import java.util.Date;
 public class LoginUtil {
 
     protected HandlerRegistration windowCloseHandlerRegistration; // handlerRegistration for removing window close handler
+
+    private final Provider<MessageDigestAlgorithm> digestAlgorithmProvider = new Md5DigestAlgorithmProvider();
 
     public void login(final boolean isLoginWithHttps) {
         if (isLoginWithHttps) {
@@ -390,8 +391,24 @@ public class LoginUtil {
         win.show();
     }
 
-    private void performSignInUsingEncryption(final UserId userName, final TextBox passField, final Window win) {
-        AdminServiceManager.getInstance().getUserSaltAndChallenge(userName, new GetSaltAndChallengeForLoginHandler(userName, passField, win));
+    private void performSignInUsingEncryption(final UserId userId, final TextBox passField, final Window win) {
+        PasswordDigestAlgorithm passwordDigestAlgorithm = new PasswordDigestAlgorithm(digestAlgorithmProvider);
+        ChapResponseDigestAlgorithm chapResponseDigestAlgorithm = new ChapResponseDigestAlgorithm(digestAlgorithmProvider);
+        ChapProtocolExecutor chapProtocolExecutor = new ChapProtocolExecutor(DispatchServiceManager.get(), passwordDigestAlgorithm, chapResponseDigestAlgorithm);
+        chapProtocolExecutor.execute(userId, passField.getText(), new AbstractWebProtegeAsyncCallback<AuthenticationResponse>() {
+            @Override
+            public void onSuccess(AuthenticationResponse response) {
+                win.getEl().unmask();
+                if (response == AuthenticationResponse.SUCCESS) {
+                    Application.get().setCurrentUser(userId);
+                    win.close();
+                }
+                else {
+                    MessageBox.alert("Invalid user name or password. Please try again.");
+                    passField.setValue("");
+                }
+            }
+        });
     }
 
     private void performSignInUsingHttps(final String userName, final TextBox passField, final Window win) {
@@ -628,60 +645,6 @@ public class LoginUtil {
         oSubWin.moveTo(ulx, uly);
         oSubWin.location.replace(url);
     }-*/;
-
-
-    private class GetSaltAndChallengeForLoginHandler implements AsyncCallback<LoginChallengeData> {
-
-        private UserId userName;
-
-        private TextBox passField;
-
-        private Window win;
-
-        public GetSaltAndChallengeForLoginHandler(final UserId userName, final TextBox passField, final Window win) {
-            this.userName = userName;
-            this.passField = passField;
-            this.win = win;
-        }
-
-        @Override
-        public void onSuccess(LoginChallengeData result) {
-
-            if (result != null) {
-                HashAlgorithm hAlgorithm = new HashAlgorithm();
-                String saltedHashedPass = hAlgorithm.md5(result.getSalt() + passField.getText());
-                String response = hAlgorithm.md5(result.getChallenge() + saltedHashedPass);
-                AdminServiceManager.getInstance().authenticateToLogin(userName, response, new AsyncCallback<UserId>() {
-
-                    public void onSuccess(UserId userId) {
-                        win.getEl().unmask();
-                        if (!userId.isGuest()) {
-                            Application.get().setCurrentUser(userId);
-                            win.close();
-                        }
-                        else {
-                            MessageBox.alert("Invalid user name or password. Please try again.");
-                            passField.setValue("");
-                        }
-
-                    }
-
-                    public void onFailure(Throwable caught) {
-                        MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
-                    }
-                });
-            }
-            else {
-                MessageBox.alert("Invalid user name or password. Please try again.");
-                passField.setValue("");
-            }
-        }
-
-        @Override
-        public void onFailure(Throwable caught) {
-            MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
-        }
-    }
 
     private void associateCurrentWebProtegeAccount() {
         final String httsPort = Application.get().getClientApplicationProperty(WebProtegePropertyName.HTTPS_PORT).orNull();
