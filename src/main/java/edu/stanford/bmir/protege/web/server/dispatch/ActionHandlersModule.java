@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.dispatch;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
+import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
 import edu.stanford.bmir.protege.web.server.chgpwd.ResetPasswordActionHandler;
@@ -131,7 +132,9 @@ public class ActionHandlersModule extends AbstractModule {
 
         multibinder.addBinding().to(LogOutUserActionHandler.class);
         multibinder.addBinding().to(GetChapSessionActionHandler.class);
+
         multibinder.addBinding().to(PerformLoginActionHandler.class);
+        multibinder.addBinding().to(ChangePasswordActionHandler.class);
 
 
 
