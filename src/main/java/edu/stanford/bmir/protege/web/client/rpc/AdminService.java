@@ -30,8 +30,6 @@ public interface AdminService extends RemoteService {
 
     LoginChallengeData getUserSaltAndChallenge(String userName);
 
-    UserId authenticateToLogin(String userNameOrEmail, String response);
-
     /**
      * Checks whether user logged in and returns the login method(openid or
      * webprotege account)
@@ -41,8 +39,6 @@ public interface AdminService extends RemoteService {
     void clearPreviousLoginAuthenticationData();
 
     String getNewSalt();
-
-    boolean changePasswordEncrypted(String userName, String encryptedPassword, String salt);
 
     boolean allowsCreateUsers();
 }

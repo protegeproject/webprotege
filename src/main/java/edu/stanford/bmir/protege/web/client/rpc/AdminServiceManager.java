@@ -38,23 +38,12 @@ public class AdminServiceManager {
     public void getUserSaltAndChallenge(UserId userId, AsyncCallback<LoginChallengeData> cb) {
         proxy.getUserSaltAndChallenge(userId.getUserName(), cb);
     }
-
-    //FIXME: userId - should be a string, can be the user id or the email
-    public void authenticateToLogin(UserId userId, String response, AsyncCallback<UserId> cb) {
-        proxy.authenticateToLogin(userId.getUserName(), response, cb);
-    }
-
     public void checkUserLoggedInMethod(AsyncCallback<String> cb) {
         proxy.checkUserLoggedInMethod(cb);
     }
 
     public void clearPreviousLoginAuthenticationData(AsyncCallback<Void> cb) {
         proxy.clearPreviousLoginAuthenticationData(cb);
-    }
-
-    public void changePasswordEncrypted(UserId userId, String encryptedPassword, String salt,
-            AsyncCallback<Boolean> cb) {
-        proxy.changePasswordEncrypted(userId.getUserName(), encryptedPassword, salt, cb);
     }
 
     public void getNewSalt(AsyncCallback<String> cb) {
