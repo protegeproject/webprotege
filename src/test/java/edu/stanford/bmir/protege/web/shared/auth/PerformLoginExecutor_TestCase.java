@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
  * 19/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ChapProtocol_Executor_TestCase {
+public class PerformLoginExecutor_TestCase {
 
     @Mock
     private DispatchServiceManager dispatchServiceManager;
@@ -38,7 +38,7 @@ public class ChapProtocol_Executor_TestCase {
     private ChapResponseDigestAlgorithm chapResponseDigestAlgorithm;
 
 
-    private ChapProtocolExecutor protocol;
+    private PerformLoginExecutor protocol;
 
     @Mock
     private UserId userId;
@@ -75,7 +75,7 @@ public class ChapProtocol_Executor_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        protocol = new ChapProtocolExecutor(dispatchServiceManager, passwordDigestAlgorithm, chapResponseDigestAlgorithm);
+        protocol = new PerformLoginExecutor(dispatchServiceManager, passwordDigestAlgorithm, chapResponseDigestAlgorithm);
 
         when(passwordDigestAlgorithm
                 .getDigestOfSaltedPassword(anyString(), any(Salt.class)))
