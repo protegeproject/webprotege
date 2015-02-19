@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import edu.stanford.bmir.protege.web.server.auth.AuthenticationModule;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchModule;
 import edu.stanford.bmir.protege.web.server.init.ConfigurationTasksModule;
@@ -37,7 +38,9 @@ public class WebProtegeInjector {
                 new MetaProjectModule(),
                 new MailModule(),
                 new DispatchModule(),
-                new ActionHandlersModule());
+                new ActionHandlersModule(),
+                new AuthenticationModule(),
+                new LoggingModule());
     }
 
     public static synchronized WebProtegeInjector get() {
