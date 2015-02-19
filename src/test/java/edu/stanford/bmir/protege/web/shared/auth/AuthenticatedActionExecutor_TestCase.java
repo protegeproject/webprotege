@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
  * 19/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class PerformLoginExecutor_TestCase {
+public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> {
 
     @Mock
     private DispatchServiceManager dispatchServiceManager;
@@ -38,7 +38,7 @@ public class PerformLoginExecutor_TestCase {
     private ChapResponseDigestAlgorithm chapResponseDigestAlgorithm;
 
 
-    private PerformLoginExecutor protocol;
+    private AuthenticatedActionExecutor protocol;
 
     @Mock
     private UserId userId;
@@ -70,12 +70,18 @@ public class PerformLoginExecutor_TestCase {
     private ChallengeMessage challengeMessage;
 
     @Mock
-    private PerformLoginResult performLoginResult;
+    private AuthenticationActionFactory<A, R> actionFactory;
+
+    @Mock
+    private A action;
+
+    @Mock
+    private R result;
 
 
     @Before
     public void setUp() throws Exception {
-        protocol = new PerformLoginExecutor(dispatchServiceManager, passwordDigestAlgorithm, chapResponseDigestAlgorithm);
+        protocol = new AuthenticatedActionExecutor(dispatchServiceManager, passwordDigestAlgorithm, chapResponseDigestAlgorithm);
 
         when(passwordDigestAlgorithm
                 .getDigestOfSaltedPassword(anyString(), any(Salt.class)))
@@ -100,24 +106,26 @@ public class PerformLoginExecutor_TestCase {
                     cb.onSuccess(chapSessionResult);
                 }
                 else if(args[1] instanceof PerformLoginAction) {
-                    AsyncCallback<PerformLoginResult> cb = (AsyncCallback<PerformLoginResult>) args[1];
-                    cb.onSuccess(performLoginResult);
+                    AsyncCallback<R> cb = (AsyncCallback<R>) args[1];
+                    cb.onSuccess(result);
                 }
                 return null;
             }
         }).when(dispatchServiceManager).execute(any(Action.class), any(AsyncCallback.class));
+
+        when(actionFactory.createAction(chapSessionId, userId, chapResponse)).thenReturn(action);
     }
 
     @Test
     public void shouldExecute_GetChapSession_ForUserId() {
-        protocol.execute(userId, clearTextPassword, callback);
+        protocol.execute(userId, clearTextPassword, actionFactory, callback);
         verify(dispatchServiceManager, atLeastOnce()).execute(argThat(isAGetChapSessionAction()), anyGetChapSessionResultCallback());
     }
 
     @Test
-    public void shouldExecute_PerformLogin_ForChapResponse() {
-        protocol.execute(userId, clearTextPassword, callback);
-        verify(dispatchServiceManager).execute(argThat(isAPerformLoginAction()), Matchers.<AsyncCallback<PerformLoginResult>>any());
+    public void shouldExecute_AuthenticationAction_ForChapResponse() {
+        protocol.execute(userId, clearTextPassword, actionFactory, callback);
+        verify(dispatchServiceManager).execute(eq(action), Matchers.<AsyncCallback<R>>any());
     }
 
     private Matcher<GetChapSessionAction> isAGetChapSessionAction() {
@@ -130,22 +138,6 @@ public class PerformLoginExecutor_TestCase {
             @Override
             public void describeTo(Description description) {
                 description.appendText("GetChapSessionAction with userId " + userId);
-            }
-        };
-    }
-
-    private Matcher<PerformLoginAction> isAPerformLoginAction() {
-        return new TypeSafeMatcher<PerformLoginAction>() {
-            @Override
-            protected boolean matchesSafely(PerformLoginAction item) {
-                return item.getUserId().equals(userId)
-                        && item.getChapResponse().equals(chapResponse)
-                        && item.getChapSessionId().equals(chapSessionId);
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("A PerformLoginAction " + new PerformLoginAction(userId, chapSessionId, chapResponse));
             }
         };
     }
