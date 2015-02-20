@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.dispatch.impl;
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
-import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceHandler;
+import edu.stanford.bmir.protege.web.server.dispatch.DispatchServiceExecutor;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
@@ -24,10 +24,10 @@ import javax.servlet.http.HttpSession;
  */
 public class DispatchServiceImpl extends WebProtegeRemoteServiceServlet implements DispatchService  {
 
-    private final DispatchServiceHandler executor;
+    private final DispatchServiceExecutor executor;
 
     public DispatchServiceImpl() {
-        executor = WebProtegeInjector.get().getInstance(DispatchServiceHandler.class);
+        executor = WebProtegeInjector.get().getInstance(DispatchServiceExecutor.class);
     }
 
     @Override
