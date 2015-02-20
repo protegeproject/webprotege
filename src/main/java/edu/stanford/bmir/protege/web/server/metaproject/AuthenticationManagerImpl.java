@@ -8,10 +8,7 @@ import edu.stanford.bmir.protege.web.server.AuthenticationUtil;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
-import edu.stanford.bmir.protege.web.shared.user.UserEmailAlreadyExistsException;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
-import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
+import edu.stanford.bmir.protege.web.shared.user.*;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
 
@@ -32,22 +29,30 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     @Override
-    public UserData registerUser(String userName, String email, String password) throws UserRegistrationException {
-        checkNotNull(userName);
+    public UserData registerUser(UserId userId, EmailAddress email, SaltedPasswordDigest password, Salt salt) throws UserRegistrationException {
+        checkNotNull(userId);
         checkNotNull(email);
         checkNotNull(password);
-        User existingUser = metaProject.getUser(userName);
+        checkNotNull(salt);
+        User existingUser = metaProject.getUser(userId.getUserName());
         if (existingUser != null) {
-            throw new UserNameAlreadyExistsException(userName);
+            throw new UserNameAlreadyExistsException(userId.getUserName());
         }
         for (User user : metaProject.getUsers()) {
-            if (email.equals(user.getEmail())) {
-                throw new UserEmailAlreadyExistsException(email);
+            if (email.getEmailAddress().equals(user.getEmail())) {
+                throw new UserEmailAlreadyExistsException(email.getEmailAddress());
             }
         }
-        User newUser = metaProject.createUser(userName, password);
+        User newUser = metaProject.createUser(userId.getUserName(), "");
+        newUser.setName(userId.getUserName());
+        String encodedPassword = BaseEncoding.base16().lowerCase().encode(password.getBytes());
+        String encodedSalt = BaseEncoding.base16().lowerCase().encode(salt.getBytes());
+        newUser.setDigestedPassword(encodedPassword, encodedSalt);
+        newUser.setEmail(email.getEmailAddress());
         OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
-        return AuthenticationUtil.createUserData(UserId.getUserId(newUser.getName()));
+        UserData userData = new UserData(userId);
+        userData.setEmail(email.getEmailAddress());
+        return userData;
     }
 
     @Override
