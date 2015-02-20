@@ -30,6 +30,7 @@ import com.gwtext.client.widgets.tree.event.TreeNodeListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogController;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -914,15 +915,11 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         WebProtegeDialog.showDialog(controller);
     }
 
-    private AsyncCallback<CreateClassesResult> getCreateClassesActionAsyncHandler() {
-        return new AsyncCallback<CreateClassesResult>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("There was a problem creating the classes.  Please try again.");
-            }
+    private AbstractDispatchServiceCallback<CreateClassesResult> getCreateClassesActionAsyncHandler() {
+        return new AbstractDispatchServiceCallback<CreateClassesResult>() {
 
             @Override
-            public void onSuccess(CreateClassesResult result) {
+            public void handleSuccess(CreateClassesResult result) {
                 Set<OWLClass> createdClasses = result.getCreatedClasses();
                 for(TreeNode node : getSelectedTreeNodes()) {
                     Set<OWLClass> existingClasses = new HashSet<OWLClass>();
@@ -969,7 +966,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 //        OntologyServiceManager.getInstance().createCls(projectId, className, superCls, getInheritMetaClasses(), userId, getCreateClsDescription() + " " + className, getCreateClassAsyncHandler(superCls, className));
     }
 
-    protected AsyncCallback<CreateClassResult> getCreateClassAsyncHandler() {
+    protected AbstractDispatchServiceCallback<CreateClassResult> getCreateClassAsyncHandler() {
         return new CreateClassHandler();
     }
 
@@ -1013,14 +1010,9 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return;
         }
         EntityFrameWatch entityWatch = new EntityFrameWatch(sel);
-        DispatchServiceManager.get().execute(new AddWatchAction(entityWatch, getProjectId(), getUserId()), new AsyncCallback<AddWatchResult>() {
+        DispatchServiceManager.get().execute(new AddWatchAction(entityWatch, getProjectId(), getUserId()), new AbstractDispatchServiceCallback<AddWatchResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("Problem adding watch");
-            }
-
-            @Override
-            public void onSuccess(AddWatchResult result) {
+            public void handleSuccess(AddWatchResult result) {
 
             }
         });
@@ -1034,13 +1026,10 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return;
         }
         Watch<?> watch = new HierarchyBranchWatch(sel);
-        DispatchServiceManager.get().execute(new AddWatchAction(watch, getProjectId(), getUserId()), new AsyncCallback<AddWatchResult>() {
-            @Override
-            public void onFailure(Throwable caught) {
-            }
+        DispatchServiceManager.get().execute(new AddWatchAction(watch, getProjectId(), getUserId()), new AbstractDispatchServiceCallback<AddWatchResult>() {
 
             @Override
-            public void onSuccess(AddWatchResult result) {
+            public void handleSuccess(AddWatchResult result) {
 
             }
         });
@@ -1056,13 +1045,10 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             Object userObject = selTreeNode.getUserObject();
             if(userObject instanceof EntityData) {
                 Set<Watch<?>> watches = ((EntityData) userObject).getWatches();
-                DispatchServiceManager.get().execute(new RemoveWatchesAction(watches, getProjectId(), getUserId()), new AsyncCallback<RemoveWatchesResult>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                    }
+                DispatchServiceManager.get().execute(new RemoveWatchesAction(watches, getProjectId(), getUserId()), new AbstractDispatchServiceCallback<RemoveWatchesResult>() {
 
                     @Override
-                    public void onSuccess(RemoveWatchesResult result) {
+                    public void handleSuccess(RemoveWatchesResult result) {
                     }
                 });
             }
@@ -1642,20 +1628,14 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class CreateClassHandler implements AsyncCallback<CreateClassResult> {
+    class CreateClassHandler extends AbstractDispatchServiceCallback<CreateClassResult> {
 
 
         public CreateClassHandler() {
         }
 
         @Override
-        public void onFailure(final Throwable caught) {
-            GWT.log("Error at creating class", caught);
-            MessageBox.showErrorMessage("Class not created", caught);
-        }
-
-        @Override
-        public void onSuccess(final CreateClassResult result) {
+        public void handleSuccess(final CreateClassResult result) {
             onClassCreated(result.getObject(), result.getSuperClasses());
             SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(), result.getBrowserText(result.getObject()).or(""), Collections.<EntityData>emptyList(), 0);
             onSubclassAdded(new EntityData(result.getPathToRoot().getSecondToLastElement().getIRI().toString()), Arrays.<EntityData>asList(subClassData), false);
@@ -1663,16 +1643,10 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class DeleteClassHandler implements AsyncCallback<DeleteEntityResult> {
+    class DeleteClassHandler extends AbstractDispatchServiceCallback<DeleteEntityResult> {
 
         @Override
-        public void onFailure(final Throwable caught) {
-            GWT.log("Error at deleting class", caught);
-            MessageBox.showErrorMessage("Class not deleted", caught);
-        }
-
-        @Override
-        public void onSuccess(final DeleteEntityResult result) {
+        public void handleSuccess(final DeleteEntityResult result) {
             GWT.log("Delete successfully class ", null);
 
         }

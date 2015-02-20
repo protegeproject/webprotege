@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
@@ -35,9 +36,9 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
         if(entityData.isPresent()) {
             DispatchServiceManager.get().execute(new GetEntityRenderingAction(getProjectId(), entityData.get().getEntity()),
-                                                 new AbstractWebProtegeAsyncCallback<GetEntityRenderingResult>() {
+                                                 new AbstractDispatchServiceCallback<GetEntityRenderingResult>() {
                                                      @Override
-                                                     public void onSuccess(GetEntityRenderingResult result) {
+                                                     public void handleSuccess(GetEntityRenderingResult result) {
                                                          html.setHTML(result.getRendering());
                                                      }
                                                  });

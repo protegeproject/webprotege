@@ -27,7 +27,7 @@ public class Authenticate implements EntryPoint {
 //                checkAuthenType();
 //            }
 //
-//            public void onSuccess(Map<String, String> result) {
+//            public void handleSuccess(Map<String, String> result) {
 //                checkAuthenType();
 //            }
 //        });

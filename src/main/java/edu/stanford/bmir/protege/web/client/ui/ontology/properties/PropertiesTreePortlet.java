@@ -13,6 +13,7 @@ import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -408,14 +409,14 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private <R  extends AbstractCreateEntityInHierarchyResult<E>, E extends OWLEntity> void createSubProperties(AbstractCreateEntityInHierarchyAction<R, E> action) {
-        DispatchServiceManager.get().execute(action, new AsyncCallback<R>() {
+        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<R>() {
             @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("There was a problem creating the properties", caught);
+            protected String getErrorMessage(Throwable throwable) {
+                return "There was a problem creating the properties";
             }
 
             @Override
-            public void onSuccess(R result) {
+            public void handleSuccess(R result) {
                 handleCreateEntitiesResult(result);
             }
         });
@@ -452,7 +453,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 //                }
 //
 //                @Override
-//                public void onSuccess(EntityData result) {
+//                public void handleSuccess(EntityData result) {
 //                    //                        refreshFromServer(500);
 //                    if (lastSelectedTreeNode != null) {
 //                        lastSelectedTreeNode.expand();
@@ -472,7 +473,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 //                }
 //
 //                @Override
-//                public void onSuccess(EntityData result) {
+//                public void handleSuccess(EntityData result) {
 //                    //                        refreshFromServer(500);
 //                    if (lastSelectedTreeNode != null) {
 //                        lastSelectedTreeNode.expand();
@@ -492,7 +493,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 //                }
 //
 //                @Override
-//                public void onSuccess(EntityData result) {
+//                public void handleSuccess(EntityData result) {
 //                    //                        refreshFromServer(500);
 //                    if (lastSelectedTreeNode != null) {
 //                        lastSelectedTreeNode.expand();
@@ -761,16 +762,15 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class DeletePropertyHandler implements AsyncCallback<DeleteEntityResult> {
+    class DeletePropertyHandler extends AbstractDispatchServiceCallback<DeleteEntityResult> {
 
         @Override
-        public void onFailure(Throwable caught) {
-            GWT.log("Error at deleting class", caught);
-            MessageBox.alert("There were errors at deleting property.<br>" + " Message: " + caught.getMessage());
+        protected String getErrorMessage(Throwable throwable) {
+            return "Error deleting property";
         }
 
         @Override
-        public void onSuccess(DeleteEntityResult result) {
+        public void handleSuccess(DeleteEntityResult result) {
             GWT.log("Delete successfully property ", null);
         }
     }

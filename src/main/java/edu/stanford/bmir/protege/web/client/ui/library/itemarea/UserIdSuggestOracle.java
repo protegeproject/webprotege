@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.itemarea;
 
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsAction;
@@ -27,9 +28,9 @@ public class UserIdSuggestOracle implements ItemProvider<UserId> {
 
     public UserIdSuggestOracle(final List<UserId> exclude) {
         DispatchServiceManager dispatchServiceManager = DispatchServiceManager.get();
-        dispatchServiceManager.execute(new GetUserIdsAction(), new AbstractWebProtegeAsyncCallback<GetUserIdsResult>() {
+        dispatchServiceManager.execute(new GetUserIdsAction(), new AbstractDispatchServiceCallback<GetUserIdsResult>() {
             @Override
-            public void onSuccess(GetUserIdsResult result) {
+            public void handleSuccess(GetUserIdsResult result) {
                 data.clear();
                 data.addAll(result.getUserIds());
                 data.removeAll(exclude);

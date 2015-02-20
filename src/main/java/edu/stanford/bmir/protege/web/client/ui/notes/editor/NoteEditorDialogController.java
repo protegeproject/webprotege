@@ -42,7 +42,7 @@ public class NoteEditorDialogController extends WebProtegeOKCancelDialogControll
 //            }
 //
 //            @Override
-//            public void onSuccess(AddNoteToEntityResult result) {
+//            public void handleSuccess(AddNoteToEntityResult result) {
 //                GWT.log("Posted o.k. " + result);
 //            }
 //        });
@@ -57,7 +57,7 @@ public class NoteEditorDialogController extends WebProtegeOKCancelDialogControll
 //            }
 //
 //            @Override
-//            public void onSuccess(AddReplyToNoteResult result) {
+//            public void handleSuccess(AddReplyToNoteResult result) {
 //                GWT.log("Replied o.k. " + result);
 //            }
 //        });

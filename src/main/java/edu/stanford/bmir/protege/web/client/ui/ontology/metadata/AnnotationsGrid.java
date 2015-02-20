@@ -6,6 +6,7 @@ import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetEntityAnnotationsAction;
@@ -116,13 +117,9 @@ public class AnnotationsGrid extends GridPanel implements HasProjectId {
         return projectId;
     }
 
-    class GetAnnotationsHandler implements AsyncCallback<RenderableGetObjectResult<Set<OWLAnnotation>>> {
+    class GetAnnotationsHandler extends AbstractDispatchServiceCallback<RenderableGetObjectResult<Set<OWLAnnotation>>> {
 
-		public void onFailure(Throwable caught) {
-			GWT.log("RPC error getting ontology annotations", caught);
-		}
-
-		public void onSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
+		public void handleSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
 			for (OWLAnnotation data : result.getObject()) {
                 final OWLAnnotationProperty property = data.getProperty();
                 String name = result.getBrowserTextMap().getBrowserText(property).or(property.getIRI().toQuotedString());

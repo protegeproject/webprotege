@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -42,13 +43,9 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
         this.importRoot = importRootClass;
         csvImportView = new CSVImportViewImpl();
 
-        DispatchServiceManager.get().execute(new GetCSVGridAction(documentId, ROW_LIMIT), new AsyncCallback<GetCSVGridResult>() {
+        DispatchServiceManager.get().execute(new GetCSVGridAction(documentId, ROW_LIMIT), new AbstractDispatchServiceCallback<GetCSVGridResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-            }
-
-            @Override
-            public void onSuccess(GetCSVGridResult result) {
+            public void handleSuccess(GetCSVGridResult result) {
                 csvImportView.setCSVGrid(result.getCSVGrid());
             }
         });
@@ -57,15 +54,14 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
             @Override
             public void handleHide(CSVImportDescriptor data, WebProtegeDialogCloser closer) {
                 UIUtil.showLoadProgessBar("Importing CSV file", "Please wait");
-                DispatchServiceManager.get().execute(new ImportCSVFileAction(projectId, csvDocumentId, importRoot, data), new AsyncCallback<ImportCSVFileResult>() {
+                DispatchServiceManager.get().execute(new ImportCSVFileAction(projectId, csvDocumentId, importRoot, data), new AbstractDispatchServiceCallback<ImportCSVFileResult>() {
                     @Override
-                    public void onFailure(Throwable caught) {
-                        MessageBox.showAlert("Import failed", "There was a problem importing the csv file");
-                        GWT.log("Problem importing CSV file", caught);
+                    protected String getErrorMessage(Throwable throwable) {
+                        return "There was a problem importing the csv file";
                     }
 
                     @Override
-                    public void onSuccess(ImportCSVFileResult result) {
+                    public void handleSuccess(ImportCSVFileResult result) {
                         MessageBox.showAlert("CSV import succeeded", result.getRowCount() + " rows were imported");
                     }
                 });

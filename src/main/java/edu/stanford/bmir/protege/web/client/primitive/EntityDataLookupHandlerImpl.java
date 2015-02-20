@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -52,14 +53,15 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
             }
         }
         final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, SearchType.EXACT_MATCH_IGNORE_CASE, 1, allowedEntityTypes);
-        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, entityLookupRequest), new AsyncCallback<LookupEntitiesResult>() {
+        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, entityLookupRequest), new AbstractDispatchServiceCallback<LookupEntitiesResult>() {
+
             @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
+            public void handleExecutionException(Throwable cause) {
+                callback.onFailure(cause);
             }
 
             @Override
-            public void onSuccess(LookupEntitiesResult result) {
+            public void handleSuccess(LookupEntitiesResult result) {
                 List<EntityLookupResult> results = result.getEntityLookupResults();
                 Optional<OWLEntityData> entityData = getMatchingEntity(results, trimmedContent, projectId, allowedEntityTypes);
                 callback.onSuccess(entityData);

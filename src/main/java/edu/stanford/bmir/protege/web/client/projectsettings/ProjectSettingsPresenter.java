@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.projectsettings;
 
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -38,9 +39,9 @@ public class ProjectSettingsPresenter {
 
 
         DispatchServiceManager.get().execute(new GetProjectSettingsAction(projectId),
-                new AbstractWebProtegeAsyncCallback<GetProjectSettingsResult>() {
+                new AbstractDispatchServiceCallback<GetProjectSettingsResult>() {
                     @Override
-                    public void onSuccess(GetProjectSettingsResult result) {
+                    public void handleSuccess(GetProjectSettingsResult result) {
                         setProjectSettingsAndShowDialog(result, controller);
                     }
                 });
@@ -56,9 +57,9 @@ public class ProjectSettingsPresenter {
 
 
     private void hideDialogAndSaveSettings(final ProjectSettings data, final WebProtegeDialogCloser closer) {
-        DispatchServiceManager.get().execute(new SetProjectSettingsAction(data), new AbstractWebProtegeAsyncCallback<SetProjectSettingsResult>() {
+        DispatchServiceManager.get().execute(new SetProjectSettingsAction(data), new AbstractDispatchServiceCallback<SetProjectSettingsResult>() {
             @Override
-            public void onSuccess(SetProjectSettingsResult setProjectSettingsResult) {
+            public void handleSuccess(SetProjectSettingsResult setProjectSettingsResult) {
                 closer.hide();
                 eventBusManager.postEvent(new ProjectSettingsChangedEvent(data));
             }

@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadResult;
@@ -99,14 +100,10 @@ public class DiscussionThreadPresenter implements HasDispose {
         if(currentTarget == null) {
             return;
         }
-        DispatchServiceManager.get().execute(new GetDiscussionThreadAction(projectId, currentTarget), new AsyncCallback<GetDiscussionThreadResult>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("There was a problem retrieving the notes from the server", caught);
-            }
+        DispatchServiceManager.get().execute(new GetDiscussionThreadAction(projectId, currentTarget), new AbstractDispatchServiceCallback<GetDiscussionThreadResult>() {
 
             @Override
-            public void onSuccess(GetDiscussionThreadResult result) {
+            public void handleSuccess(GetDiscussionThreadResult result) {
                 displayDiscussionThread(result.getThread());
             }
         });

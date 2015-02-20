@@ -423,7 +423,7 @@ public class Application implements HasUserId, PermissionChecker {
 //                }
 //
 //                @Override
-//                public void onSuccess(GetClientApplicationPropertiesResult result) {
+//                public void handleSuccess(GetClientApplicationPropertiesResult result) {
 //                    clientApplicationProperties = result.getClientApplicationProperties();
 //                    taskFinishedCallback.taskComplete();
 //                }

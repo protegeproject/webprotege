@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.auth;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -35,20 +36,15 @@ public class AuthenticatedActionExecutor {
     }
 
     public <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void execute(final UserId userId, final String clearTextPassword, final AuthenticationActionFactory<A, R> actionFactory, final AsyncCallback<AuthenticationResponse> callback) {
-        dispatchServiceManager.execute(new GetChapSessionAction(userId), new AsyncCallback<GetChapSessionResult>() {
+        dispatchServiceManager.execute(new GetChapSessionAction(userId), new AbstractDispatchServiceCallback<GetChapSessionResult>() {
             @Override
-            public void onSuccess(GetChapSessionResult result) {
+            public void handleSuccess(GetChapSessionResult result) {
                 Optional<ChapSession> chapSession = result.getChapSession();
                 if (chapSession.isPresent()) {
                     constructAndSendResponse(userId, clearTextPassword, chapSession.get(), actionFactory, callback);
                 } else {
                     callback.onSuccess(AuthenticationResponse.FAIL);
                 }
-            }
-
-            @Override
-            public void onFailure(Throwable caught) {
-                callback.onFailure(caught);
             }
         });
     }
@@ -69,15 +65,10 @@ public class AuthenticatedActionExecutor {
         ChapSessionId chapSessionId = chapSession.getId();
         A action = actionFactory.createAction(chapSessionId, userId, chapResponse);
         dispatchServiceManager.execute(action,
-                new AsyncCallback<R>() {
+                new AbstractDispatchServiceCallback<R>() {
                     @Override
-                    public void onSuccess(R loginResult) {
+                    public void handleSuccess(R loginResult) {
                         callback.onSuccess(loginResult.getResponse());
-                    }
-
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        callback.onFailure(caught);
                     }
                 });
     }
