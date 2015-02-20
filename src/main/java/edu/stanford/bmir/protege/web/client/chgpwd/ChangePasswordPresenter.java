@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.chgpwd;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -89,7 +90,7 @@ public class ChangePasswordPresenter {
         String currentPassword = data.getOldPassword();
         String newPassword = data.getNewPassword();
         ChangePasswordActionFactory actionFactory = new ChangePasswordActionFactory(newPassword, new SaltProvider());
-        executor.execute(userId, currentPassword, actionFactory, new AbstractWebProtegeAsyncCallback<AuthenticationResponse>() {
+        executor.execute(userId, currentPassword, actionFactory, new AsyncCallback<AuthenticationResponse>() {
             @Override
             public void onSuccess(AuthenticationResponse response) {
                 if(response == AuthenticationResponse.SUCCESS) {

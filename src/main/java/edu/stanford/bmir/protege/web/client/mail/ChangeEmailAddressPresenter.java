@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.mail;
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
@@ -33,7 +34,7 @@ public class ChangeEmailAddressPresenter {
         }
         ProgressMonitor.get().showProgressMonitor("Retrieving email address", "Please wait.");
 
-        DispatchServiceManager.get().execute(new GetEmailAddressAction(userId), new AbstractWebProtegeAsyncCallback<GetEmailAddressResult>() {
+        DispatchServiceManager.get().execute(new GetEmailAddressAction(userId), new AsyncCallback<GetEmailAddressResult>() {
             @Override
             public void onSuccess(GetEmailAddressResult result) {
                 showDialog(result.getEmailAddress());
@@ -43,7 +44,6 @@ public class ChangeEmailAddressPresenter {
             @Override
             public void onFailure(Throwable caught) {
                 ProgressMonitor.get().hideProgressMonitor();
-                super.onFailure(caught);
             }
         });
     }

@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
@@ -17,6 +18,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.login.HashAlgorithm;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationServiceProvider;
+import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.*;
 
@@ -67,7 +69,6 @@ public class WebProtegeSignupDialogController extends WebProtegeOKCancelDialogCo
     }
 
 
-
     ////////////////////
 
     private void doSignup(final SignupInfo data, final WebProtegeDialogCloser closer) {
@@ -94,7 +95,7 @@ public class WebProtegeSignupDialogController extends WebProtegeOKCancelDialogCo
         );
 
         UserId userId = UserId.getUserId(data.getUserName());
-        executor.execute(userId, data.getEmailAddress(), data.getPassword(), new AbstractWebProtegeAsyncCallback<CreateUserAccountResult>() {
+        executor.execute(userId, data.getEmailAddress(), data.getPassword(), new AsyncCallback<CreateUserAccountResult>() {
             @Override
             public void onSuccess(CreateUserAccountResult createUserAccountResult) {
                 MessageBox.showMessage("Registration complete",
@@ -104,26 +105,29 @@ public class WebProtegeSignupDialogController extends WebProtegeOKCancelDialogCo
             }
 
             @Override
-            public void onFailure(Throwable caught) {
-                if(caught instanceof UserNameAlreadyExistsException) {
-                    String username = ((UserNameAlreadyExistsException) caught).getUsername();
-                    MessageBox.showAlert("User name already taken", "A user named "
-                            + username
-                            + " is already registered.  Please choose another name.");
-                }
-                else if(caught instanceof UserEmailAlreadyExistsException) {
-                    String email = ((UserEmailAlreadyExistsException) caught).getEmailAddress();
-                    MessageBox.showAlert("Email address already taken", "The email address "
-                            + email
-                            + " is already taken.  Please choose a different email address.");
-                }
-                else if(caught instanceof UserRegistrationException) {
-                    MessageBox.showAlert(caught.getMessage());
-                }
-                else {
-                    MessageBox.showAlert("Error registering account",
-                            "There was a problem registering the specified user account.  " +
-                                    "Please contact administrator.");
+            public void onFailure(Throwable t) {
+                if (t instanceof ActionExecutionException) {
+                    Throwable caught = t.getCause();
+                    if (caught instanceof UserNameAlreadyExistsException) {
+                        String username = ((UserNameAlreadyExistsException) caught).getUsername();
+                        MessageBox.showAlert("User name already taken", "A user named "
+                                + username
+                                + " is already registered.  Please choose another name.");
+                    }
+                    else if (caught instanceof UserEmailAlreadyExistsException) {
+                        String email = ((UserEmailAlreadyExistsException) caught).getEmailAddress();
+                        MessageBox.showAlert("Email address already taken", "The email address "
+                                + email
+                                + " is already taken.  Please choose a different email address.");
+                    }
+                    else if (caught instanceof UserRegistrationException) {
+                        MessageBox.showAlert(caught.getMessage());
+                    }
+                    else {
+                        MessageBox.showAlert("Error registering account",
+                                "There was a problem registering the specified user account.  " +
+                                        "Please contact administrator.");
+                    }
                 }
             }
         });

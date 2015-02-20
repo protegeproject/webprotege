@@ -38,9 +38,6 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     @Override
     protected void displayEntity(OWLEntity entity) {
         getService().getSynonyms(getProjectId(), entity, new AbstractWebProtegeAsyncCallback<Collection<OBOTermSynonym>>() {
-            public void onFailure(Throwable caught) {
-            }
-
             public void onSuccess(Collection<OBOTermSynonym> result) {
                 editor.setValue(new ArrayList<>(result));
             }

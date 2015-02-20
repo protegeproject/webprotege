@@ -29,7 +29,7 @@ public abstract class AbstractWebProtegeAsyncCallback<T> implements AsyncCallbac
      * @param caught failure encountered while executing a remote procedure call
      */
     @Override
-    public void onFailure(Throwable caught) {
+    public final void onFailure(Throwable caught) {
         GWT.log(caught.getMessage(), caught);
         Logger logger = Logger.getLogger("AsyncCallbackErrorLogger");
         logger.log(Level.SEVERE, "Error executing remote call: " + caught.getMessage());
