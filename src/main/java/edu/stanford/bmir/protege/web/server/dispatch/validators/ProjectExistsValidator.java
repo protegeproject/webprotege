@@ -23,13 +23,14 @@ public class ProjectExistsValidator<A extends Action<?> & HasProjectId> implemen
 
     @Override
     public RequestValidationResult validateAction(A action, RequestContext requestContext) {
-        ProjectId projectId = action.getProjectId();
-        OWLAPIProjectDocumentStore ds = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
-        if(ds.exists()) {
-            return RequestValidationResult.getValid();
-        }
-        else {
-            return RequestValidationResult.getInvalid("Project does not exist");
-        }
+        return RequestValidationResult.getValid();
+//        ProjectId projectId = action.getProjectId();
+//        OWLAPIProjectDocumentStore ds = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
+//        if(ds.exists()) {
+//            return RequestValidationResult.getValid();
+//        }
+//        else {
+//            return RequestValidationResult.getInvalid("Project does not exist");
+//        }
     }
 }

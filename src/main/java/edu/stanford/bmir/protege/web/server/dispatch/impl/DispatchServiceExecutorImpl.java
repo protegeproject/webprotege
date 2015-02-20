@@ -16,27 +16,29 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/02/2013
  */
-public class DefaultDispatchServiceExecutor implements DispatchServiceHandler {
+public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
 
     private final ActionHandlerRegistry handlerRegistry;
 
     @Inject
-    public DefaultDispatchServiceExecutor(ActionHandlerRegistry handlerRegistry) {
+    public DispatchServiceExecutorImpl(ActionHandlerRegistry handlerRegistry) {
         this.handlerRegistry = handlerRegistry;
     }
 
     @Override
-    public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException {
+    public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
         ActionHandler<A, R> actionHandler = handlerRegistry.getActionHandler(action);
         RequestValidator<A> validator = actionHandler.getRequestValidator(action, requestContext);
-        if (validator instanceof UserHasProjectWritePermissionValidator) {
-            // Temp fix for permission problem
-            RequestValidationResult validationResult = validator.validateAction(action, requestContext);
-            if(!validationResult.isValid()) {
-                throw new PermissionDeniedException(validationResult.getInvalidMessage());
-            }
+        RequestValidationResult validationResult = validator.validateAction(action, requestContext);
+        if(!validationResult.isValid()) {
+            throw new PermissionDeniedException(validationResult.getInvalidMessage());
         }
-        R result = actionHandler.execute(action, executionContext);
-        return new DispatchServiceResultContainer(result);
+
+        try {
+            R result = actionHandler.execute(action, executionContext);
+            return new DispatchServiceResultContainer(result);
+        } catch (Exception e) {
+            throw new ActionExecutionException(e);
+        }
     }
 }

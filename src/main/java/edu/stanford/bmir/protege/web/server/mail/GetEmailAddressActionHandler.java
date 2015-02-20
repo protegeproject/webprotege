@@ -28,7 +28,7 @@ public class GetEmailAddressActionHandler implements ActionHandler<GetEmailAddre
         return new RequestValidator<GetEmailAddressAction>() {
             @Override
             public RequestValidationResult validateAction(GetEmailAddressAction action, RequestContext requestContext) {
-                if(requestContext.getUserId().isGuest()) {
+                if(!requestContext.getUserId().isGuest()) {
                     return RequestValidationResult.getValid();
                 }
                 else {
