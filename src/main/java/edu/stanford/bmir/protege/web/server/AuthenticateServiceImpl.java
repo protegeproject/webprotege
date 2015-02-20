@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionAttribute;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
+import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
@@ -81,16 +83,20 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
             return null;
         }
 
-        User user = getMetaProject().getUser(userName);
-        if (user != null) {
-            UserData userData = AuthenticationUtil.createUserData(UserId.getUserId(userName));
+        User existingUser = getMetaProject().getUser(userName);
+        UserId userId = UserId.getUserId(userName);
+        if (existingUser != null) {
+            UserData userData = AuthenticationUtil.createUserData(userId);
             userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.USER_ALREADY_EXISTS);
             return userData;
         }
 
-        UserData userData = MetaProjectManager.getManager().registerUser(userName, emailId, password);
-        user = getMetaProject().getUser(userName);
-        user.setEmail(emailId);
+        Salt salt = new SaltProvider().get();
+        PasswordDigestAlgorithm passwordDigestAlgorithm = new PasswordDigestAlgorithm(new Md5DigestAlgorithmProvider());
+        SaltedPasswordDigest saltedPasswordDigest = passwordDigestAlgorithm.getDigestOfSaltedPassword(password, salt);
+        EmailAddress email = new EmailAddress(emailId);
+        UserData userData = MetaProjectManager.getManager().registerUser(userId, email, saltedPasswordDigest, salt);
+        User user = getMetaProject().getUser(userName);
 
         String openIdPropBase = OpenIdConstants.OPENID_PROPERTY_PREFIX;
 
@@ -112,7 +118,7 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         session.setAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER, null);
         userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.REGISTER_USER_SUCCESS);
         WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
-        webProtegeSession.setUserInSession(UserId.getUserId(userName));
+        webProtegeSession.setUserInSession(userId);
 
         return userData;
     }
@@ -183,8 +189,5 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
 
     }
 
-    public UserData registerUser(String userName, String password, String email) {
-        return MetaProjectManager.getManager().registerUser(userName, email, password);
-    }
 
 }

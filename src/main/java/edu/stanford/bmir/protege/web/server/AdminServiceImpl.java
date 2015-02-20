@@ -145,39 +145,4 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         session.setAttribute(AuthenticationConstants.NEW_SALT, newSalt);
         return newSalt;
     }
-
-//    //used only for https
-//    public UserData registerUser(String userName, String password, String email) {
-//        MetaProjectManager mpm = MetaProjectManager.getManager();
-//        throwUserRegistrationExceptionIfAccountCreationIsDisabled(mpm);
-//        UserData userData = mpm.registerUser(userName, email, password);
-//        OWLAPIMetaProjectStore.getStore().saveMetaProject(mpm);
-//        return userData;
-//    }
-
-    public UserData registerUserViaEncrption(String name, String hashedPassword, String emailId) throws UserRegistrationException {
-        MetaProjectManager metaProjectManager = MetaProjectManager.getManager();
-
-        throwUserRegistrationExceptionIfAccountCreationIsDisabled(metaProjectManager);
-
-        HttpServletRequest request = this.getThreadLocalRequest();
-        HttpSession session = request.getSession();
-        String salt = (String) session.getAttribute(AuthenticationConstants.NEW_SALT);
-        String emptyPassword = "";
-
-        UserData userData = metaProjectManager.registerUser(name, emailId, emptyPassword);
-
-        UserId userId = UserId.getUserId(name);
-        MetaProjectManager.getManager().setDigestedPassword(userId, new SaltedPasswordDigest(
-                BaseEncoding.base16().lowerCase().decode(hashedPassword)
-        ), new Salt(BaseEncoding.base16().lowerCase().decode(salt)));
-        MetaProjectManager.getManager().setEmail(userId, emailId);
-        return userData;
-    }
-
-    private void throwUserRegistrationExceptionIfAccountCreationIsDisabled(ServerSettingsManager serverSettingsManager) {
-        if(!serverSettingsManager.allowsCreateUser()) {
-            throw new UserRegistrationException("Account creation is disabled");
-        }
-    }
 }

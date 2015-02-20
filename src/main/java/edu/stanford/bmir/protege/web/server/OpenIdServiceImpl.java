@@ -13,6 +13,9 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSession;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionAttribute;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
+import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.PropertyValue;
@@ -253,6 +256,14 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
 
     public UserData registerUserToAssocOpenIdWithEncrption(String userName, String hashedPassword, String emailId) {
 
+        if(userName == null) {
+            return null;
+        }
+
+        if(userName.isEmpty()) {
+            return null;
+        }
+
         if (!isAuthenticateWithOpenId()) {
             return null;
         }
@@ -262,8 +273,8 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
         String userOpenId = (String) session.getAttribute(OpenIdConstants.HTTPSESSION_OPENID_URL);
         String openIdAccName = (String) session.getAttribute(OpenIdConstants.HTTPSESSION_OPENID_ID);
         String openIdProvider = (String) session.getAttribute(OpenIdConstants.HTTPSESSION_OPENID_PROVIDER);
-        String salt = (String) session.getAttribute(AuthenticationConstants.NEW_SALT);
 
+        Salt salt = new SaltProvider().get();
         if (userOpenId == null && salt != null) {
             UserData userData = AuthenticationUtil.createUserData(UserId.getUserId(userName));
             userData.setProperty(OpenIdUtil.REGISTRATION_RESULT_PROP, OpenIdConstants.REGISTER_USER_ERROR);
@@ -277,11 +288,14 @@ public class OpenIdServiceImpl extends WebProtegeRemoteServiceServlet implements
             return userData;
         }
 
-        UserData userData = MetaProjectManager.getManager().registerUser(userName, emailId, "");
+
+        UserId userId = UserId.getUserId(userName);
+        EmailAddress emailAddress = new EmailAddress(emailId);
+        PasswordDigestAlgorithm passwordDigestAlgorithm = new PasswordDigestAlgorithm(new Md5DigestAlgorithmProvider());
+        SaltedPasswordDigest saltedPasswordDigest = passwordDigestAlgorithm.getDigestOfSaltedPassword("", salt);
+        UserData userData = MetaProjectManager.getManager().registerUser(userId, emailAddress, saltedPasswordDigest, salt);
 
         user = getMetaProject().getUser(userName);
-        user.setEmail(emailId);
-        user.setDigestedPassword(hashedPassword, salt);
 
         String openIdPropBase = OpenIdConstants.OPENID_PROPERTY_PREFIX;
 

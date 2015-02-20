@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
@@ -143,8 +144,8 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
     }
 
     @Override
-    public UserData registerUser(String userName, String email, String password) throws UserRegistrationException {
-        return authenticationManager.registerUser(userName, email, password);
+    public UserData registerUser(UserId userId, EmailAddress email, SaltedPasswordDigest password, Salt salt) throws UserRegistrationException {
+        return authenticationManager.registerUser(userId, email, password, salt);
     }
 
     @Override

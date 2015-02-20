@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
 
@@ -14,7 +15,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
  */
 public interface AuthenticationManager {
 
-    UserData registerUser(String userName, String email, String password) throws UserRegistrationException;
+    UserData registerUser(UserId userId, EmailAddress email, SaltedPasswordDigest password, Salt salt) throws UserRegistrationException;
 
     void changePassword(String userName, String password);
 

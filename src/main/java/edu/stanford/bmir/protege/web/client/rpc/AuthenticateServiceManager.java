@@ -52,9 +52,4 @@ public class AuthenticateServiceManager {
     public void sendPasswordReminder(UserId userId, AsyncCallback<Void> cb) {
         proxy.sendPasswordReminder(userId.getUserName(), cb);
     }
-
-    //create new user via https
-    public void registerUser(UserId userId, String password, String email, AsyncCallback<UserData> cb) {
-        proxy.registerUser(userId.getUserName(), password, email, cb);
-    }
 }

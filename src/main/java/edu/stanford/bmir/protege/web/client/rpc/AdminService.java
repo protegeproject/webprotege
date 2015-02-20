@@ -24,8 +24,6 @@ import edu.stanford.bmir.protege.web.shared.user.*;
 @RemoteServiceRelativePath("admin")
 public interface AdminService extends RemoteService {
 
-    UserData registerUserViaEncrption(String name, String hashedPassword, String emailId) throws UserRegistrationException;
-
     PermissionsSet getAllowedOperations(String project, String user);
 
     LoginChallengeData getUserSaltAndChallenge(String userName);

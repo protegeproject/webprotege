@@ -10,7 +10,9 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
+import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.model.Instance;
 import edu.stanford.smi.protege.server.metaproject.*;
@@ -566,8 +568,12 @@ public class AccessPolicyManager {
 
                     }
                     else { //Account does not already exist
-                        metaProjectManager.registerUser(invitation.getEmailId(),invitation.getEmailId(), "");
-                        metaProjectManager.setEmail(UserId.getUserId(invitation.getEmailId()), invitation.getEmailId());
+                        UserId userId = UserId.getUserId(invitation.getEmailId());
+                        EmailAddress emailAddress = new EmailAddress(invitation.getEmailId());
+                        Salt salt = new SaltProvider().get();
+                        PasswordDigestAlgorithm passwordDigestAlgorithm = new PasswordDigestAlgorithm(new Md5DigestAlgorithmProvider());
+                        SaltedPasswordDigest saltedPasswordDigest = passwordDigestAlgorithm.getDigestOfSaltedPassword("", salt);
+                        metaProjectManager.registerUser(userId, emailAddress, saltedPasswordDigest, salt);
                         tempUser = getMetaProject().getUser(invitation.getEmailId());
                         Random random = new Random();
                         String randomNo = random.nextInt(10000) + "";
