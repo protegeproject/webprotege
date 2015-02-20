@@ -293,7 +293,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 //                window.close();
 //            }
 //
-//            public void onSuccess(NotesData note) {
+//            public void handleSuccess(NotesData note) {
 //                addUserComment(getProjectId(), note);
 //                window.close();
 //            }

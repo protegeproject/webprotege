@@ -6,6 +6,7 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsDialogController;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
@@ -50,21 +51,15 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
     private void getSettingsAndShowDialog(Optional<ProjectId> activeProject) {
         UIUtil.showLoadProgessBar("Retrieving settings", "Please wait.");
         GetEntityCrudKitSettingsAction action = new GetEntityCrudKitSettingsAction(activeProject.get());
-        DispatchServiceManager.get().execute(action, new AsyncCallback<GetEntityCrudKitSettingsResult>() {
+        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<GetEntityCrudKitSettingsResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("Problem retrieving settings");
+            public void handleFinally() {
                 UIUtil.hideLoadProgessBar();
-                MessageBox.showAlert("Error", "An error occurred whilst retrieving the fresh entity settings.  Please try again.");
-
             }
 
             @Override
-            public void onSuccess(GetEntityCrudKitSettingsResult result) {
-                GWT.log("Got fresh entity settings: " + result.getSettings());
-                UIUtil.hideLoadProgessBar();
+            public void handleSuccess(GetEntityCrudKitSettingsResult result) {
                 showDialog(result);
-
             }
         });
     }
@@ -114,15 +109,9 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
             return;
         }
         ProjectId projectId = activeProject.get();
-        DispatchServiceManager.get().execute(new SetEntityCrudKitSettingsAction(projectId, fromSettings, toSettings, iriPrefixUpdateStrategy), new AsyncCallback<SetEntityCrudKitSettingsResult>() {
+        DispatchServiceManager.get().execute(new SetEntityCrudKitSettingsAction(projectId, fromSettings, toSettings, iriPrefixUpdateStrategy), new AbstractDispatchServiceCallback<SetEntityCrudKitSettingsResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("There was a problem setting the EntityCrudKitSettings", caught);
-                MessageBox.showAlert("Error", "An error occurred whilst updating the fresh entity settings.  Please try again.");
-            }
-
-            @Override
-            public void onSuccess(SetEntityCrudKitSettingsResult result) {
+            public void handleSuccess(SetEntityCrudKitSettingsResult result) {
                 closer.hide();
             }
         });

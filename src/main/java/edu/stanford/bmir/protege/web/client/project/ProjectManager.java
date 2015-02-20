@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.LoadProjectAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.LoadProjectResult;
@@ -45,14 +46,15 @@ public class ProjectManager {
         }
 
         final LoadProjectAction action = new LoadProjectAction(checkNotNull(projectId));
-        DispatchServiceManager.get().execute(action, new AsyncCallback<LoadProjectResult>() {
+        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<LoadProjectResult>() {
+
             @Override
-            public void onFailure(Throwable caught) {
-                projectLoadedCallback.onFailure(caught);
+            public void handleExecutionException(Throwable cause) {
+                projectLoadedCallback.onFailure(cause);
             }
 
             @Override
-            public void onSuccess(LoadProjectResult result) {
+            public void handleSuccess(LoadProjectResult result) {
                 Project project = registerProject(result.getUserId(), result.getRequestingUserProjectPermissionSet(), result.getProjectDetails());
                 projectLoadedCallback.onSuccess(project);
             }

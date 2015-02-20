@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionCallback;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionHandler;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionResult;
 import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -35,15 +35,16 @@ public class ManchesterSyntaxFrameAutoCompletionHandler implements AutoCompletio
         dispatchServiceManager.execute(
                 new GetManchesterSyntaxFrameCompletionsAction(
                         projectId, hasSubject.getSubject(), editorPosition, text, editorIndex, hasFreshEntities.getFreshEntities(), 25),
-                new AsyncCallback<GetManchesterSyntaxFrameCompletionsResult>() {
+                new AbstractDispatchServiceCallback<GetManchesterSyntaxFrameCompletionsResult>() {
+
                     @Override
-                    public void onFailure(Throwable caught) {
-                        callback.completionsReady(AutoCompletionResult.emptyResult());
+                    public void handleSuccess(GetManchesterSyntaxFrameCompletionsResult result) {
+                        callback.completionsReady(result.getAutoCompletionResult());
                     }
 
                     @Override
-                    public void onSuccess(GetManchesterSyntaxFrameCompletionsResult result) {
-                        callback.completionsReady(result.getAutoCompletionResult());
+                    public void handleErrorFinally(Throwable throwable) {
+                        callback.completionsReady(AutoCompletionResult.emptyResult());
                     }
                 });
     }

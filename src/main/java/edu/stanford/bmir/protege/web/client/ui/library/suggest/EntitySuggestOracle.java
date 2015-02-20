@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.primitive.EntitySuggestOracleSuggestLimit;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -51,14 +52,9 @@ public class EntitySuggestOracle extends SuggestOracle {
             callback.onSuggestionsReady(request, new Response(Collections.<Suggestion>emptyList()));
             return;
         }
-        DispatchServiceManager.get().execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), new AsyncCallback<LookupEntitiesResult>() {
+        DispatchServiceManager.get().execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), new AbstractDispatchServiceCallback<LookupEntitiesResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-                MessageBox.alert(caught.getMessage());
-            }
-
-            @Override
-            public void onSuccess(LookupEntitiesResult result) {
+            public void handleSuccess(LookupEntitiesResult result) {
                 List<EntitySuggestion> suggestions = new ArrayList<EntitySuggestion>();
                 for (final EntityLookupResult entity : result.getEntityLookupResults()) {
                     suggestions.add(new EntitySuggestion(entity.getOWLEntityData(), entity.getDisplayText()));

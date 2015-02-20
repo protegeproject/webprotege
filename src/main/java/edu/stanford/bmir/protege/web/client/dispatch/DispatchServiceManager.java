@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
 import com.google.common.base.Optional;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
@@ -70,14 +68,14 @@ public class DispatchServiceManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <A extends Action<R>, R extends Result> void execute(A action, final AsyncCallback<R> callback) {
+    public <A extends Action<R>, R extends Result> void execute(A action, final AbstractDispatchServiceCallback<R> callback) {
         if(action instanceof HasProjectId) {
             ProjectId projectId = ((HasProjectId) action).getProjectId();
             ResultCache resultCache = getResultCache(projectId);
             Optional<R> result = resultCache.getCachedResult(action);
             if(result.isPresent()) {
                 GWT.log("[DISPATCH] Using cached result (" + action + ")");
-                callback.onSuccess(result.get());
+                callback.handleSuccess(result.get());
                 return;
             }
         }
@@ -92,19 +90,16 @@ public class DispatchServiceManager {
 
         private Action<?> action;
 
-        private AsyncCallback<Result> delegate;
+        private AbstractDispatchServiceCallback<Result> delegate;
 
-        public AsyncCallbackProxy(Action<?> action, AsyncCallback<Result> delegate) {
+        public AsyncCallbackProxy(Action<?> action, AbstractDispatchServiceCallback<Result> delegate) {
             this.delegate = delegate;
             this.action = action;
         }
 
         @Override
         public void onFailure(Throwable caught) {
-            Optional<Throwable> passOn = handleError(caught, action);
-            if (passOn.isPresent()) {
-                delegate.onFailure(passOn.get());
-            }
+            handleError(caught, action, delegate);
         }
 
         @Override
@@ -116,8 +111,7 @@ public class DispatchServiceManager {
             }
             cacheRenderables(result.getResult());
             dispatchEvents(result.getResult());
-            delegate.onSuccess(result.getResult());
-
+            delegate.handleSuccess(result.getResult());
         }
 
     }
@@ -145,48 +139,16 @@ public class DispatchServiceManager {
         }
     }
 
-    private Optional<Throwable> handleError(Throwable throwable, Action<?> action) {
-        displayAlert(throwable.toString());
-        // Only ActionExecutionException and PermissionDeniedException are declared in the service method.
-        // We therefore handle these at the top level.
-        if(throwable instanceof ActionExecutionException) {
-            if(action instanceof InvocationExceptionTolerantAction) {
-                Optional<String> errorMessage = ((InvocationExceptionTolerantAction) action).handleInvocationException((InvocationException) throwable);
-                if(errorMessage.isPresent()) {
-                    displayAlert(errorMessage.get());
-                }
+    private void handleError(Throwable throwable, Action<?> action, AbstractDispatchServiceCallback<?> callback) {
+        // Skip handling for actions that do not care about errors
+        if(action instanceof InvocationExceptionTolerantAction) {
+            Optional<String> errorMessage = ((InvocationExceptionTolerantAction) action).handleInvocationException((InvocationException) throwable);
+            if(errorMessage.isPresent()) {
+                displayAlert(errorMessage.get());
             }
-            return Optional.of(throwable);
+            return;
         }
-        else if(throwable instanceof PermissionDeniedException) {
-            displayAlert("You do not have permission to carry out the specified action");
-            return Optional.of(throwable);
-        }
-        else if(throwable instanceof IncompatibleRemoteServiceException) {
-            displayAlert("WebProtege has been upgraded.  Please refresh your browser.");
-            GWT.log("Incompatible remote service exception", throwable);
-            return Optional.absent();
-        }
-        else if(throwable instanceof InvocationException) {
-            if(action instanceof InvocationExceptionTolerantAction) {
-                Optional<String> errorMessage = ((InvocationExceptionTolerantAction) action).handleInvocationException((InvocationException) throwable);
-                if(errorMessage.isPresent()) {
-                    displayAlert(errorMessage.get());
-                }
-            }
-            else {
-                displayAlert("There was a problem communicating with the server and the operation could not be completed.  Please check your network connection and try again.");
-            }
-            return Optional.absent();
-        }
-        else if(throwable instanceof UmbrellaException) {
-            displayAlert("An unexpected problem occurred and your actions could not be completed.  Please try again.");
-            return Optional.absent();
-        }
-        else {
-            return Optional.of(throwable);
-        }
-
+        callback.onFailure(throwable);
     }
 
     private void displayAlert(String alert) {

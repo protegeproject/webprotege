@@ -11,6 +11,7 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectDecoder;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
@@ -96,26 +97,25 @@ public class LoggedInUserManager {
         if(userId.isGuest()) {
             return;
         }
-        DispatchServiceManager.get().execute(new LogOutUserAction(), new AbstractWebProtegeAsyncCallback<LogOutUserResult>() {
+        DispatchServiceManager.get().execute(new LogOutUserAction(), new AbstractDispatchServiceCallback<LogOutUserResult>() {
             @Override
-            public void onSuccess(LogOutUserResult logOutUserResult) {
+            public void handleSuccess(LogOutUserResult logOutUserResult) {
                 replaceUserAndBroadcastChanges(UserDetails.getGuestUserDetails(), Collections.<GroupId>emptySet());
             }
         });
     }
 
     private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AsyncCallback<GetCurrentUserInSessionResult>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    GWT.log("Problem getting user details for user " + userId, caught);
-                    if(callback.isPresent()) {
-                        callback.get().onFailure(caught);
-                    }
+        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AbstractDispatchServiceCallback<GetCurrentUserInSessionResult>() {
+            @Override
+            public void handleExecutionException(Throwable cause) {
+                if(callback.isPresent()) {
+                    callback.get().onFailure(cause);
                 }
+            }
 
-                @Override
-                public void onSuccess(GetCurrentUserInSessionResult result) {
+            @Override
+                public void handleSuccess(GetCurrentUserInSessionResult result) {
                     replaceUserAndBroadcastChanges(result.getUserDetails(), result.getUserGroupIds());
                     if(callback.isPresent()) {
                         callback.get().onSuccess(result.getUserDetails());

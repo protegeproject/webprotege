@@ -21,6 +21,7 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
@@ -460,9 +461,9 @@ public class LoginUtil {
     }
 
     private static void checkUserNameInSession() {
-        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AbstractWebProtegeAsyncCallback<GetCurrentUserInSessionResult>() {
+        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AbstractDispatchServiceCallback<GetCurrentUserInSessionResult>() {
             @Override
-            public void onSuccess(GetCurrentUserInSessionResult result) {
+            public void handleSuccess(GetCurrentUserInSessionResult result) {
                 UserId userId = result.getUserDetails().getUserId();
                 if(!userId.isGuest()) {
                     Application.get().setCurrentUser(userId);

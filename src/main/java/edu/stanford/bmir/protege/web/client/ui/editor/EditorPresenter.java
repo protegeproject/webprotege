@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
@@ -169,14 +170,9 @@ public class EditorPresenter implements HasDispose {
         if (editorManager.isPresent()) {
             setEditorState(editedValue, editorCtx, view, editorManager.get());
         }
-        DispatchServiceManager.get().execute(updateAction, new AsyncCallback<Result>() {
+        DispatchServiceManager.get().execute(updateAction, new AbstractDispatchServiceCallback<Result>() {
             @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("Updating object failed", caught);
-            }
-
-            @Override
-            public void onSuccess(Result result) {
+            public void handleSuccess(Result result) {
                 GWT.log("Object successfully updated");
             }
         });
@@ -190,12 +186,12 @@ public class EditorPresenter implements HasDispose {
 //            editorHolder.setWidget(LOADING_INDICATOR_WIDGET);
             final EditorManager<C, O> editorManager = selectedMan.get();
             GetObjectAction<O> action = editorManager.createGetObjectAction(editorCtx);
-            DispatchServiceManager.get().execute(action, new AbstractWebProtegeAsyncCallback<GetObjectResult<O>>() {
+            DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<GetObjectResult<O>>() {
 
                 private int executionCounter = counter;
 
                 @Override
-                public void onSuccess(GetObjectResult<O> result) {
+                public void handleSuccess(GetObjectResult<O> result) {
                     handleGetObjectSuccess(result);
                 }
 

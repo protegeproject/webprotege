@@ -5,6 +5,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -72,16 +73,15 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
     private void showUsageForEntity(final OWLEntityData entityData) {
         final OWLEntity entity = entityData.getEntity();
         final GetUsageAction action = new GetUsageAction(entity, getProjectId(), Optional.of(usageView.getUsageFilter()));
-        DispatchServiceManager.get().execute(action, new AsyncCallback<GetUsageResult>() {
+        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<GetUsageResult>() {
+
             @Override
-            public void onFailure(Throwable caught) {
-                MessageBox.alert("There was a problem retrieving the usage for the selected entity");
-                setTitle("Error retrieving definition and usage of " + entityData.getBrowserText());
-                usageView.clearData();
+            protected String getErrorMessage(Throwable throwable) {
+                return "There was a problem retrieving the usage for the selected entity";
             }
 
             @Override
-            public void onSuccess(GetUsageResult result) {
+            public void handleSuccess(GetUsageResult result) {
                 final Collection<UsageReference> references = result.getUsageReferences();
                 final int visibleReferences = references.size();
                 final int totalReferences = result.getTotalUsageCount();

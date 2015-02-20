@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.chgpwd;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
@@ -48,10 +49,10 @@ public class ResetPasswordPresenter {
     }
 
     private void resetPassword(ResetPasswordData data) {
-        dispatchService.execute(new ResetPasswordAction(data), new AbstractWebProtegeAsyncCallback<ResetPasswordResult>() {
+        dispatchService.execute(new ResetPasswordAction(data), new AbstractDispatchServiceCallback<ResetPasswordResult>() {
 
             @Override
-            public void onSuccess(ResetPasswordResult result) {
+            public void handleSuccess(ResetPasswordResult result) {
                 if (result.getResultCode() == ResetPasswordResultCode.SUCCESS) {
                     MessageBox.showMessage("Your password has been reset.  " +
                                                    "A temporary password has been sent your email address.");

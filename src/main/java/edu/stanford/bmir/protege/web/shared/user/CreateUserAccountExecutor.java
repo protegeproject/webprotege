@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
@@ -29,7 +30,7 @@ public class CreateUserAccountExecutor {
         this.saltProvider = saltProvider;
     }
 
-    public void execute(UserId userId, EmailAddress emailAddress, String clearTextPassword, AsyncCallback<CreateUserAccountResult> callback) {
+    public void execute(UserId userId, EmailAddress emailAddress, String clearTextPassword, AbstractDispatchServiceCallback<CreateUserAccountResult> callback) {
         Salt salt = saltProvider.get();
         SaltedPasswordDigest saltedPasswordDigest = passwordDigestAlgorithm.getDigestOfSaltedPassword(clearTextPassword, salt);
         dispatchServiceManager.execute(new CreateUserAccountAction(userId, emailAddress, saltedPasswordDigest, salt), callback);

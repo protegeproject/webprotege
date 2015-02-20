@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.mail;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -34,15 +35,15 @@ public class ChangeEmailAddressPresenter {
         }
         ProgressMonitor.get().showProgressMonitor("Retrieving email address", "Please wait.");
 
-        DispatchServiceManager.get().execute(new GetEmailAddressAction(userId), new AsyncCallback<GetEmailAddressResult>() {
+        DispatchServiceManager.get().execute(new GetEmailAddressAction(userId), new AbstractDispatchServiceCallback<GetEmailAddressResult>() {
             @Override
-            public void onSuccess(GetEmailAddressResult result) {
+            public void handleSuccess(GetEmailAddressResult result) {
                 showDialog(result.getEmailAddress());
                 ProgressMonitor.get().hideProgressMonitor();
             }
 
             @Override
-            public void onFailure(Throwable caught) {
+            public void handleFinally() {
                 ProgressMonitor.get().hideProgressMonitor();
             }
         });
@@ -58,9 +59,9 @@ public class ChangeEmailAddressPresenter {
             @Override
             public void handleHide(Optional<EmailAddress> data, final WebProtegeDialogCloser closer) {
                 if(data.isPresent()) {
-                    DispatchServiceManager.get().execute(new SetEmailAddressAction(userId, data.get().getEmailAddress()), new AbstractWebProtegeAsyncCallback<SetEmailAddressResult>() {
+                    DispatchServiceManager.get().execute(new SetEmailAddressAction(userId, data.get().getEmailAddress()), new AbstractDispatchServiceCallback<SetEmailAddressResult>() {
                         @Override
-                        public void onSuccess(SetEmailAddressResult result) {
+                        public void handleSuccess(SetEmailAddressResult result) {
                             closer.hide();
                         }
                     });

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.metrics;
 
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.RequestRefreshEvent;
 import edu.stanford.bmir.protege.web.client.events.RequestRefreshEventHandler;
@@ -59,9 +60,9 @@ public class MetricsPresenter {
     }
 
     private void processRequestRefresh() {
-        dispatchServiceManager.execute(new GetMetricsAction(projectId), new AbstractWebProtegeAsyncCallback<GetMetricsResult>() {
+        dispatchServiceManager.execute(new GetMetricsAction(projectId), new AbstractDispatchServiceCallback<GetMetricsResult>() {
             @Override
-            public void onSuccess(GetMetricsResult result) {
+            public void handleSuccess(GetMetricsResult result) {
                 view.setMetrics(result.getMetricValues());
             }
         });

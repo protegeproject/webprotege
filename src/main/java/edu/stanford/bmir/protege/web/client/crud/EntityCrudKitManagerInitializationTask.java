@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.crud;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.ApplicationInitManager;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
@@ -22,16 +23,14 @@ public class EntityCrudKitManagerInitializationTask implements ApplicationInitMa
 
     @Override
     public void run(final ApplicationInitManager.ApplicationInitTaskCallback callback) {
-        DispatchServiceManager.get().execute(new GetEntityCrudKitsAction(), new AsyncCallback<GetEntityCrudKitsResult>() {
+        DispatchServiceManager.get().execute(new GetEntityCrudKitsAction(), new AbstractDispatchServiceCallback<GetEntityCrudKitsResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("Could not get kits");
-                // Not fatal
+            public void handleFinally() {
                 callback.taskComplete();
             }
 
             @Override
-            public void onSuccess(GetEntityCrudKitsResult result) {
+            public void handleSuccess(GetEntityCrudKitsResult result) {
                 GWT.log("Got EntityCrudKits");
                 EntityCrudKitManager.get().init(result.getKits());
                 callback.taskComplete();

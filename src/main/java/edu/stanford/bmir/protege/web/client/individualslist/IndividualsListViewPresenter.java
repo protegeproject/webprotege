@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.action.CreateHandler;
 import edu.stanford.bmir.protege.web.client.action.DeleteHandler;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.CreateNamedIndividualsResult;
@@ -70,9 +71,9 @@ public class IndividualsListViewPresenter {
 
     private void updateList() {
         GetIndividualsAction action = new GetIndividualsAction(projectId, currentType.or(DataFactory.getOWLThing()), Optional.<PageRequest>absent());
-        DispatchServiceManager.get().execute(action, new AbstractWebProtegeAsyncCallback<GetIndividualsResult>() {
+        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<GetIndividualsResult>() {
             @Override
-            public void onSuccess(GetIndividualsResult result) {
+            public void handleSuccess(GetIndividualsResult result) {
                 view.setListData(result.getIndividuals());
             }
         });
@@ -83,9 +84,9 @@ public class IndividualsListViewPresenter {
             @Override
             public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
                 final Set<String> browserTexts = createEntityInfo.getBrowserTexts();
-                DispatchServiceManager.get().execute(new CreateNamedIndividualsAction(projectId, currentType, browserTexts), new AbstractWebProtegeAsyncCallback<CreateNamedIndividualsResult>() {
+                DispatchServiceManager.get().execute(new CreateNamedIndividualsAction(projectId, currentType, browserTexts), new AbstractDispatchServiceCallback<CreateNamedIndividualsResult>() {
                     @Override
-                    public void onSuccess(CreateNamedIndividualsResult result) {
+                    public void handleSuccess(CreateNamedIndividualsResult result) {
                         Set<OWLNamedIndividualData> individuals = result.getIndividuals();
                         view.addListData(individuals);
                         if(!individuals.isEmpty()) {
@@ -124,13 +125,9 @@ public class IndividualsListViewPresenter {
     }
 
     protected void deleteIndividual(final OWLNamedIndividualData entity) {
-        DispatchServiceManager.get().execute(new DeleteEntityAction(entity.getEntity(), projectId), new AsyncCallback<DeleteEntityResult>() {
+        DispatchServiceManager.get().execute(new DeleteEntityAction(entity.getEntity(), projectId), new AbstractDispatchServiceCallback<DeleteEntityResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-            }
-
-            @Override
-            public void onSuccess(DeleteEntityResult result) {
+            public void handleSuccess(DeleteEntityResult result) {
                 view.removeListData(Collections.singleton(entity));
             }
         });
