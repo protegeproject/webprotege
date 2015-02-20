@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
@@ -15,9 +17,8 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.login.HashAlgorithm;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationServiceProvider;
-import edu.stanford.bmir.protege.web.shared.user.UserEmailAlreadyExistsException;
-import edu.stanford.bmir.protege.web.shared.user.UserNameAlreadyExistsException;
-import edu.stanford.bmir.protege.web.shared.user.UserRegistrationException;
+import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.user.*;
 
 
 /**
@@ -86,52 +87,45 @@ public class WebProtegeSignupDialogController extends WebProtegeOKCancelDialogCo
 
 
     private void handleSuccess(final SignupInfo data, final WebProtegeDialogCloser dialogCloser) {
-        final AdminServiceManager adminServiceManager = AdminServiceManager.getInstance();
-        adminServiceManager.getNewSalt(new AsyncCallback<String>() {
-            public void onFailure(Throwable caught) {
-                MessageBox.showAlert("Error",
-                        "There was a problem registering the specified user account. " +
-                                "Please contact admin. (Problem " + caught.getMessage() + ")");
+        CreateUserAccountExecutor executor = new CreateUserAccountExecutor(
+                DispatchServiceManager.get(),
+                new PasswordDigestAlgorithm(new Md5DigestAlgorithmProvider()),
+                new SaltProvider()
+        );
+
+        UserId userId = UserId.getUserId(data.getUserName());
+        executor.execute(userId, data.getEmailAddress(), data.getPassword(), new AbstractWebProtegeAsyncCallback<CreateUserAccountResult>() {
+            @Override
+            public void onSuccess(CreateUserAccountResult createUserAccountResult) {
+                MessageBox.showMessage("Registration complete",
+                        "You have successfully registered.  " +
+                                "Please log in using the button/link on the top right.");
+                dialogCloser.hide();
             }
 
-            public void onSuccess(String salt) {
-                HashAlgorithm hashAlgorithm = new HashAlgorithm();
-                String userName = data.getUserName();
-                String email = data.getEmailAddress().getEmailAddress();
-                String hashedPassword = hashAlgorithm.md5(salt + data.getPassword());
-                adminServiceManager.registerUserViaEncrption(userName, hashedPassword, email, new AsyncCallback<UserData>() {
-                    public void onFailure(Throwable caught) {
-                        if(caught instanceof UserNameAlreadyExistsException) {
-                            String username = ((UserNameAlreadyExistsException) caught).getUsername();
-                            MessageBox.showAlert("User name already taken", "A user named "
-                                    + username
-                                    + " is already registered.  Please choose another name.");
-                        }
-                        else if(caught instanceof UserEmailAlreadyExistsException) {
-                            String email = ((UserEmailAlreadyExistsException) caught).getEmailAddress();
-                            MessageBox.showAlert("Email address already taken", "The email address "
-                                    + email
-                                    + " is already taken.  Please choose a different email address.");
-                        }
-                        else if(caught instanceof UserRegistrationException) {
-                            MessageBox.showAlert(caught.getMessage());
-                        }
-                        else {
-                            MessageBox.showAlert("Error registering account",
-                                    "There was a problem registering the specified user account.  " +
-                                            "Please contact administrator.");
-                        }
-                    }
-
-                    public void onSuccess(UserData result) {
-                        MessageBox.showMessage("Registration complete",
-                                "You have successfully registered.  " +
-                                        "Please log in using the button/link on the top right.");
-                        dialogCloser.hide();
-                    }
-                });
+            @Override
+            public void onFailure(Throwable caught) {
+                if(caught instanceof UserNameAlreadyExistsException) {
+                    String username = ((UserNameAlreadyExistsException) caught).getUsername();
+                    MessageBox.showAlert("User name already taken", "A user named "
+                            + username
+                            + " is already registered.  Please choose another name.");
+                }
+                else if(caught instanceof UserEmailAlreadyExistsException) {
+                    String email = ((UserEmailAlreadyExistsException) caught).getEmailAddress();
+                    MessageBox.showAlert("Email address already taken", "The email address "
+                            + email
+                            + " is already taken.  Please choose a different email address.");
+                }
+                else if(caught instanceof UserRegistrationException) {
+                    MessageBox.showAlert(caught.getMessage());
+                }
+                else {
+                    MessageBox.showAlert("Error registering account",
+                            "There was a problem registering the specified user account.  " +
+                                    "Please contact administrator.");
+                }
             }
         });
-
     }
 }
