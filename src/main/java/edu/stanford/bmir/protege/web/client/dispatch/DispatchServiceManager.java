@@ -146,7 +146,23 @@ public class DispatchServiceManager {
     }
 
     private Optional<Throwable> handleError(Throwable throwable, Action<?> action) {
-        if(throwable instanceof IncompatibleRemoteServiceException) {
+        displayAlert(throwable.toString());
+        // Only ActionExecutionException and PermissionDeniedException are declared in the service method.
+        // We therefore handle these at the top level.
+        if(throwable instanceof ActionExecutionException) {
+            if(action instanceof InvocationExceptionTolerantAction) {
+                Optional<String> errorMessage = ((InvocationExceptionTolerantAction) action).handleInvocationException((InvocationException) throwable);
+                if(errorMessage.isPresent()) {
+                    displayAlert(errorMessage.get());
+                }
+            }
+            return Optional.of(throwable);
+        }
+        else if(throwable instanceof PermissionDeniedException) {
+            displayAlert("You do not have permission to carry out the specified action");
+            return Optional.of(throwable);
+        }
+        else if(throwable instanceof IncompatibleRemoteServiceException) {
             displayAlert("WebProtege has been upgraded.  Please refresh your browser.");
             GWT.log("Incompatible remote service exception", throwable);
             return Optional.absent();
@@ -164,18 +180,8 @@ public class DispatchServiceManager {
             return Optional.absent();
         }
         else if(throwable instanceof UmbrellaException) {
-            for(Throwable cause : ((UmbrellaException) throwable).getCauses()) {
-                if(cause instanceof PermissionDeniedException) {
-                    displayAlert("You do not have permission to perform the requested operation.");
-                    return Optional.absent();
-                }
-            }
             displayAlert("An unexpected problem occurred and your actions could not be completed.  Please try again.");
             return Optional.absent();
-        }
-        else if(throwable instanceof PermissionDeniedException) {
-            displayAlert("You do not have permission to carry out the specified action");
-            return Optional.of(throwable);
         }
         else {
             return Optional.of(throwable);
