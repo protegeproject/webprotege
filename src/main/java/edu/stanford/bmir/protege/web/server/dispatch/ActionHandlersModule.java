@@ -31,10 +31,12 @@ import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandl
 import edu.stanford.bmir.protege.web.server.sharing.GetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.SetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
+import edu.stanford.bmir.protege.web.server.user.CreateUserAccountActionHandler;
 import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;
 import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
+import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
 
 /**
  * Matthew Horridge
@@ -135,6 +137,7 @@ public class ActionHandlersModule extends AbstractModule {
 
         multibinder.addBinding().to(PerformLoginActionHandler.class);
         multibinder.addBinding().to(ChangePasswordActionHandler.class);
+        multibinder.addBinding().to(CreateUserAccountActionHandler.class);
 
 
 
