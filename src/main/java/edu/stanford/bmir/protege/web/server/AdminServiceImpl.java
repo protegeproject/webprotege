@@ -67,31 +67,6 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         return MetaProjectManager.getManager().allowsCreateUser();
     }
 
-    public UserId authenticateToLogin(String userNameOrEmail, String response) {
-        HttpServletRequest request = this.getThreadLocalRequest();
-        HttpSession session = request.getSession();
-
-        final String challenge = (String) session.getAttribute(AuthenticationConstants.LOGIN_CHALLENGE);
-        session.setAttribute(AuthenticationConstants.LOGIN_CHALLENGE, null);
-
-        User user = MetaProjectManager.getManager().getUser(userNameOrEmail);
-        if (user == null) { //user not in metaproject
-            return UserId.getGuest();
-        }
-        AuthenticationUtil authenticatinUtil = new AuthenticationUtil();
-        boolean isverified = authenticatinUtil.verifyChallengedHash(user.getDigestedPassword(), response, challenge);
-        if (isverified) {
-            UserId userId = UserId.getUserId(user.getName());
-            WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
-            webProtegeSession.setUserInSession(userId);
-            return userId;
-        }
-        else {
-            return UserId.getGuest();
-        }
-
-    }
-
     private static String encodeBytes(byte[] bytes) {
         int stringLength = 2 * bytes.length;
         BigInteger bi = new BigInteger(1, bytes);
@@ -126,14 +101,7 @@ public class AdminServiceImpl extends WebProtegeRemoteServiceServlet implements 
         webProtegeSession.clearUserInSession();
         SessionConstants.removeAttribute(SessionConstants.OPEN_ID_ACCOUNT, session);
     }
-
-    public boolean changePasswordEncrypted(String userName, String encryptedPassword, String theSalt) {
-        UserId userId = UserId.getUserId(userName);
-        SaltedPasswordDigest passwordDigest = new SaltedPasswordDigest(BaseEncoding.base16().lowerCase().decode(encryptedPassword));
-        Salt salt = new Salt(BaseEncoding.base16().lowerCase().decode(theSalt));
-        MetaProjectManager.getManager().setDigestedPassword(userId, passwordDigest, salt);
-        return true;
-    }
+    
 
     public String getNewSalt() {
         Random random = new Random();
