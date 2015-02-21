@@ -25,6 +25,7 @@ import edu.stanford.bmir.protege.web.server.notes.AddNoteToEntityActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddReplyToNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.DeleteNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
+import edu.stanford.bmir.protege.web.server.project.GetUIConfigurationActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
@@ -58,6 +59,8 @@ public class ActionHandlersModule extends AbstractModule {
 
         multibinder.addBinding().to(GetProjectSettingsActionHandler.class);
         multibinder.addBinding().to(SetProjectSettingsActionHandler.class);
+
+        multibinder.addBinding().to(GetUIConfigurationActionHandler.class);
 
         multibinder.addBinding().to(GetClassFrameActionHandler.class);
         multibinder.addBinding().to(UpdateClassFrameActionHandler.class);

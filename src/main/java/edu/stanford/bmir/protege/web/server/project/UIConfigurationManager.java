@@ -1,10 +1,12 @@
-package edu.stanford.bmir.protege.web.server;
+package edu.stanford.bmir.protege.web.server.project;
 
 import com.thoughtworks.xstream.XStream;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
+import edu.stanford.bmir.protege.web.server.UIConfigurationManagerException;
+import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
@@ -25,23 +27,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class UIConfigurationManager {
 
-    private static final String DEFAULT_OBO_CONFIGURATION_FILE_NAME = "default-obo-configuration.xml";
-
-    private static final String DEFAULT_OWL_CONFIGURATION_FILE_NAME = "default-owl-configuration.xml";
-
     private static final String CONFIGURATION_FILE_NAME = "ui-configuration.xml";
 
-
-    private static final File DEFAULT_OWL_CONFIGURATION_FILE = new File(WebProtegeFileStore.getInstance().getDefaultUIConfigurationDataDirectory(), DEFAULT_OWL_CONFIGURATION_FILE_NAME);
-
-    private static final File DEFAULT_OBO_CONFIGURATION_FILE = new File(WebProtegeFileStore.getInstance().getDefaultUIConfigurationDataDirectory(), DEFAULT_OBO_CONFIGURATION_FILE_NAME);
+    private final DefaultUIConfigurationFileManager defaultUIConfigurationFileManager;
 
 
     private ProjectDetailsManager projectDetailsManager;
 
     @Inject
-    public UIConfigurationManager(ProjectDetailsManager projectDetailsManager) {
+    public UIConfigurationManager(ProjectDetailsManager projectDetailsManager,
+                                  DefaultUIConfigurationFileManager defaultUIConfigurationFileManager) {
         this.projectDetailsManager = projectDetailsManager;
+        this.defaultUIConfigurationFileManager = defaultUIConfigurationFileManager;
     }
 
 
@@ -98,13 +95,7 @@ public class UIConfigurationManager {
         }
 
         OWLAPIProjectType projectType = projectDetailsManager.getType(projectId);
-        if (projectType.equals(OWLAPIProjectType.getOBOProjectType())) {
-            return DEFAULT_OBO_CONFIGURATION_FILE;
-        }
-        else {
-            return DEFAULT_OWL_CONFIGURATION_FILE;
-        }
-
+        return defaultUIConfigurationFileManager.getDefaultConfigurationFile(projectType);
     }
 
     private OutputStream getUIConfigurationOutputStream(ProjectId projectId, UserId userId) throws IOException {

@@ -23,6 +23,8 @@ import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import com.gwtext.client.widgets.menu.event.CheckItemListenerAdapter;
 import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 
@@ -39,6 +41,8 @@ import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.project.GetUIConfigurationAction;
+import edu.stanford.bmir.protege.web.shared.project.GetUIConfigurationResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.ArrayList;
@@ -143,12 +147,33 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     public void buildUI() {
-        tabs = new ArrayList<AbstractTab>();
+        tabs = new ArrayList<>();
     }
 
     private void getProjectConfiguration() {
         UIUtil.showLoadProgessBar("Loading Project", "Loading user interface configuration");
-        ProjectConfigurationServiceManager.getInstance().getProjectConfiguration(projectId, Application.get().getUserId(), new GetProjectConfigurationHandler());
+        DispatchServiceManager.get().execute(new GetUIConfigurationAction(projectId),
+                new AbstractDispatchServiceCallback<GetUIConfigurationResult>() {
+                    @Override
+                    public void handleSuccess(GetUIConfigurationResult result) {
+                        getProject().setProjectLayoutConfiguration(result.getConfiguration());
+                        createOntolgyForm();
+                        doLayout();
+                        setInitialSelection();
+                        GWT.log("Project configuration set up");
+                    }
+
+                    @Override
+                    public void handleFinally() {
+                        GWT.log("GetUIConfigurationAction.handleFinally");
+                        UIUtil.hideLoadProgessBar();
+                    }
+
+                    @Override
+                    protected String getErrorMessage(Throwable throwable) {
+                        return "There was an error loading the UI configuration";
+                    }
+                });
     }
 
     public void layoutProject() {
@@ -534,37 +559,30 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
             }
         }
     }
-
-    class GetProjectConfigurationHandler implements AsyncCallback<ProjectLayoutConfiguration> {
-
-        private long t0 = currentTime();
-
-        private long currentTime() {
-            return new Date().getTime();
-        }
-
-        public GetProjectConfigurationHandler() {
-
-        }
-
-        @Override
-        public void onFailure(Throwable caught) {
-            GWT.log("There were errors at loading project configuration for " + projectId, caught);
-            UIUtil.hideLoadProgessBar();
-            MessageBox.showAlert("Could not load the project configuration for this project" + " Message: " + caught.getMessage());
-        }
-
-        @Override
-        public void onSuccess(ProjectLayoutConfiguration config) {
-            getProject().setProjectLayoutConfiguration(config);
-            createOntolgyForm();
-            doLayout();
-
-            setInitialSelection();
-            UIUtil.hideLoadProgessBar();
-            long t1 = currentTime();
-            GWT.log("Time to load project configuration: " + (t1 - t0) + "ms");
-        }
-    }
+//
+//    class GetProjectConfigurationHandler implements AsyncCallback<ProjectLayoutConfiguration> {
+//
+//        private long t0 = currentTime();
+//
+//        private long currentTime() {
+//            return new Date().getTime();
+//        }
+//
+//        public GetProjectConfigurationHandler() {
+//
+//        }
+//
+//        @Override
+//        public void onFailure(Throwable caught) {
+//            GWT.log("There were errors at loading project configuration for " + projectId, caught);
+//            UIUtil.hideLoadProgessBar();
+//            MessageBox.showAlert("Could not load the project configuration for this project" + " Message: " + caught.getMessage());
+//        }
+//
+//        @Override
+//        public void onSuccess(ProjectLayoutConfiguration config) {
+//
+//        }
+//    }
 
 }

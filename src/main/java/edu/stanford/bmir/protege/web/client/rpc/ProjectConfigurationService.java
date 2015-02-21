@@ -9,7 +9,5 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 @RemoteServiceRelativePath("projectconfig")
 public interface ProjectConfigurationService extends RemoteService {
 
-	ProjectLayoutConfiguration getProjectLayoutConfiguration(ProjectId projectId, UserId userId);
-
 	void saveProjectLayoutConfiguration(ProjectId projectId, UserId userId, ProjectLayoutConfiguration config);
 }
