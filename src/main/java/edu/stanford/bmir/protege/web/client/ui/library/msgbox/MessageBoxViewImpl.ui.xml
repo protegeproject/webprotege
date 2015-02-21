@@ -1,6 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
     <ui:style>
         .main-panel-style {
             width: 450px;
@@ -8,9 +10,6 @@
         }
         .main-panel-style * p {
             padding-bottom: 10px;
-        }
-        .icon-style {
-            width: 70px;
         }
         .message-block {
             width: 100%;
@@ -37,7 +36,7 @@
                 <col width="*" valign="top"/>
             </colgroup>
             <tr>
-                <td valign="top"><g:Image url="images/alert-icon.png" addStyleNames="{style.icon-style}" ui:field="iconImage"/></td>
+                <td valign="top"><g:Image resource="{wp.alertIcon}" ui:field="iconImage"/></td>
                 <td valign="top">
                     <g:HTMLPanel addStyleNames="{style.message-block}">
                         <g:HTML ui:field="titleLabel" addStyleNames="{style.main-message-style}"/>
