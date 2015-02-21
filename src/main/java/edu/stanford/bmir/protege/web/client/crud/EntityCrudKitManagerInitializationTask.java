@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.crud;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.ApplicationInitManager;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
@@ -23,7 +22,7 @@ public class EntityCrudKitManagerInitializationTask implements ApplicationInitMa
 
     @Override
     public void run(final ApplicationInitManager.ApplicationInitTaskCallback callback) {
-        DispatchServiceManager.get().execute(new GetEntityCrudKitsAction(), new AbstractDispatchServiceCallback<GetEntityCrudKitsResult>() {
+        DispatchServiceManager.get().execute(new GetEntityCrudKitsAction(), new DispatchServiceCallback<GetEntityCrudKitsResult>() {
             @Override
             public void handleFinally() {
                 callback.taskComplete();

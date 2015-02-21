@@ -3,11 +3,10 @@ package edu.stanford.bmir.protege.web.client.actionbar.project;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsDialogController;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallbackWithProgressDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
@@ -15,7 +14,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButto
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
-import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -51,7 +49,7 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
 
     private void getSettingsAndShowDialog(Optional<ProjectId> activeProject) {
         GetEntityCrudKitSettingsAction action = new GetEntityCrudKitSettingsAction(activeProject.get());
-        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallbackWithProgressDisplay<GetEntityCrudKitSettingsResult>() {
+        DispatchServiceManager.get().execute(action, new DispatchServiceCallbackWithProgressDisplay<GetEntityCrudKitSettingsResult>() {
             @Override
             public String getProgressDisplayTitle() {
                 return "Retrieving settings";
@@ -114,7 +112,7 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
             return;
         }
         ProjectId projectId = activeProject.get();
-        DispatchServiceManager.get().execute(new SetEntityCrudKitSettingsAction(projectId, fromSettings, toSettings, iriPrefixUpdateStrategy), new AbstractDispatchServiceCallback<SetEntityCrudKitSettingsResult>() {
+        DispatchServiceManager.get().execute(new SetEntityCrudKitSettingsAction(projectId, fromSettings, toSettings, iriPrefixUpdateStrategy), new DispatchServiceCallback<SetEntityCrudKitSettingsResult>() {
             @Override
             public void handleSuccess(SetEntityCrudKitSettingsResult result) {
                 closer.hide();

@@ -5,15 +5,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.Component;
-import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallbackWithProgressDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.place.PlaceManager;
@@ -26,7 +24,6 @@ import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.MyWebProtegeTab;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
-import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
@@ -226,7 +223,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
                     activate(ontTab.getId());
                 }
                 else {
-                    Application.get().loadProject(projectId, new AbstractDispatchServiceCallbackWithProgressDisplay<Project>() {
+                    Application.get().loadProject(projectId, new DispatchServiceCallbackWithProgressDisplay<Project>() {
                         @Override
                         public String getProgressDisplayTitle() {
                             return "Loading project";

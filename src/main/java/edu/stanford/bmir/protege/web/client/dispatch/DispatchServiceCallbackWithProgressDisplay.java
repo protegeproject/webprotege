@@ -5,15 +5,15 @@ package edu.stanford.bmir.protege.web.client.dispatch;
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-public abstract class AbstractDispatchServiceCallbackWithProgressDisplay<T> extends AbstractDispatchServiceCallback<T> {
+public abstract class DispatchServiceCallbackWithProgressDisplay<T> extends DispatchServiceCallback<T> {
 
     private ProgressDisplay progressDisplay;
 
-    public AbstractDispatchServiceCallbackWithProgressDisplay() {
+    public DispatchServiceCallbackWithProgressDisplay() {
         this(new MessageBoxErrorDisplay(), new ProgressDisplayImpl());
     }
 
-    public AbstractDispatchServiceCallbackWithProgressDisplay(DispatchErrorMessageDisplay errorMessageDisplay, ProgressDisplay progressDisplay) {
+    public DispatchServiceCallbackWithProgressDisplay(DispatchErrorMessageDisplay errorMessageDisplay, ProgressDisplay progressDisplay) {
         super(errorMessageDisplay);
         this.progressDisplay = progressDisplay;
     }

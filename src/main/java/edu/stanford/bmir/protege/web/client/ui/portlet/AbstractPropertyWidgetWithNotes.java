@@ -2,8 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
@@ -42,7 +41,7 @@ public abstract class AbstractPropertyWidgetWithNotes extends AbstractPropertyWi
                 public void handleAccept(Optional<NoteContent> noteContent) {
                     if (noteContent.isPresent()) {
                         OWLEntity entity = DataFactory.getOWLClass(value);
-                        DispatchServiceManager.get().execute(new AddNoteToEntityAction(getProjectId(), entity, noteContent.get()), new AbstractDispatchServiceCallback<AddNoteToEntityResult>() {
+                        DispatchServiceManager.get().execute(new AddNoteToEntityAction(getProjectId(), entity, noteContent.get()), new DispatchServiceCallback<AddNoteToEntityResult>() {
 
                             @Override
                             public void handleSuccess(AddNoteToEntityResult result) {

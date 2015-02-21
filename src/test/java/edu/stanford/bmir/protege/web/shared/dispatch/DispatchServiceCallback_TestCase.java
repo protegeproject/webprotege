@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.dispatch;
 
 import com.google.gwt.user.client.rpc.InvocationException;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchErrorMessageDisplay;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
@@ -19,11 +19,11 @@ import static org.mockito.Mockito.*;
  * 20/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AbstractDispatchServiceCallback_TestCase<T> {
+public class DispatchServiceCallback_TestCase<T> {
 
     private DispatchErrorMessageDisplay messageDisplay;
 
-    private AbstractDispatchServiceCallback<T> callback;
+    private DispatchServiceCallback<T> callback;
 
     @Mock
     private T value;
@@ -31,7 +31,7 @@ public class AbstractDispatchServiceCallback_TestCase<T> {
     @Before
     public void setUp() throws Exception {
         messageDisplay = mock(DispatchErrorMessageDisplay.class);
-        callback = spy(new AbstractDispatchServiceCallback<T>(messageDisplay) {});
+        callback = spy(new DispatchServiceCallback<T>(messageDisplay) {});
     }
 
     @Test

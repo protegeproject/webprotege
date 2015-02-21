@@ -1,25 +1,15 @@
 package edu.stanford.bmir.protege.web.client;
 
-import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.*;
-import com.google.gwt.i18n.client.Dictionary;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtext.client.widgets.MessageBox;
-import edu.stanford.bmir.protege.web.client.app.ClientObjectDecoder;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
-import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
@@ -97,7 +87,7 @@ public class LoggedInUserManager {
         if(userId.isGuest()) {
             return;
         }
-        DispatchServiceManager.get().execute(new LogOutUserAction(), new AbstractDispatchServiceCallback<LogOutUserResult>() {
+        DispatchServiceManager.get().execute(new LogOutUserAction(), new DispatchServiceCallback<LogOutUserResult>() {
             @Override
             public void handleSuccess(LogOutUserResult logOutUserResult) {
                 replaceUserAndBroadcastChanges(UserDetails.getGuestUserDetails(), Collections.<GroupId>emptySet());
@@ -106,7 +96,7 @@ public class LoggedInUserManager {
     }
 
     private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AbstractDispatchServiceCallback<GetCurrentUserInSessionResult>() {
+        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>() {
             @Override
             public void handleExecutionException(Throwable cause) {
                 if(callback.isPresent()) {

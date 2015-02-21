@@ -5,8 +5,7 @@ import com.google.common.collect.Sets;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
@@ -15,7 +14,6 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
@@ -187,7 +185,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         else {
             String newRendering = editor.getValue().get();
             dispatchService.execute(new CheckManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), newRendering, freshEntities),
-                    new AbstractDispatchServiceCallback<CheckManchesterSyntaxFrameResult>() {
+                    new DispatchServiceCallback<CheckManchesterSyntaxFrameResult>() {
 
                         @Override
                         public void handleFinally() {
@@ -231,7 +229,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         final Optional<String> editorText = editor.getValue();
         if(!isPristine() && pristineValue.isPresent() && editorText.isPresent() && currentSubject.isPresent()) {
             String text = editorText.get();
-            dispatchService.execute(new SetManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new AbstractDispatchServiceCallback<SetManchesterSyntaxFrameResult>() {
+            dispatchService.execute(new SetManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new DispatchServiceCallback<SetManchesterSyntaxFrameResult>() {
                 @Override
                 public void handleSuccess(SetManchesterSyntaxFrameResult result) {
                     if(reformatText) {
@@ -246,7 +244,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     private void replaceTextWithFrameRendering(final OWLEntity subject) {
         editor.setApplyChangesViewVisible(false);
         freshEntities.clear();
-        dispatchService.execute(new GetManchesterSyntaxFrameAction(projectId, subject), new AbstractDispatchServiceCallback<GetManchesterSyntaxFrameResult>() {
+        dispatchService.execute(new GetManchesterSyntaxFrameAction(projectId, subject), new DispatchServiceCallback<GetManchesterSyntaxFrameResult>() {
             @Override
             public void handleSuccess(GetManchesterSyntaxFrameResult result) {
                 editor.setValue(result.getManchesterSyntax());

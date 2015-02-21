@@ -1,11 +1,7 @@
 package edu.stanford.bmir.protege.web.client.chgpwd;
 
-import com.google.common.base.Optional;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
@@ -49,7 +45,7 @@ public class ResetPasswordPresenter {
     }
 
     private void resetPassword(ResetPasswordData data) {
-        dispatchService.execute(new ResetPasswordAction(data), new AbstractDispatchServiceCallback<ResetPasswordResult>() {
+        dispatchService.execute(new ResetPasswordAction(data), new DispatchServiceCallback<ResetPasswordResult>() {
 
             @Override
             public void handleSuccess(ResetPasswordResult result) {

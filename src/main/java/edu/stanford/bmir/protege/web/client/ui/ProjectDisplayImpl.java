@@ -23,8 +23,7 @@ import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import com.gwtext.client.widgets.menu.event.CheckItemListenerAdapter;
 import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallbackWithProgressDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
@@ -150,7 +149,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private void getProjectConfiguration() {
         DispatchServiceManager.get().execute(new GetUIConfigurationAction(projectId),
-                new AbstractDispatchServiceCallbackWithProgressDisplay<GetUIConfigurationResult>() {
+                new DispatchServiceCallbackWithProgressDisplay<GetUIConfigurationResult>() {
                     @Override
                     public void handleSuccess(GetUIConfigurationResult result) {
                         getProject().setProjectLayoutConfiguration(result.getConfiguration());
@@ -392,7 +391,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         ProjectLayoutConfiguration config = getProject().getProjectLayoutConfiguration();
         config.setProjectId(projectId);
         DispatchServiceManager.get().execute(new SetUIConfigurationAction(projectId, config),
-                new AbstractDispatchServiceCallbackWithProgressDisplay<SetUIConfigurationResult>() {
+                new DispatchServiceCallbackWithProgressDisplay<SetUIConfigurationResult>() {
                     @Override
                     public void handleSuccess(SetUIConfigurationResult setUIConfigurationResult) {
                         MessageBox.showMessage("Project layout saved",

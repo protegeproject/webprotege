@@ -30,7 +30,7 @@ import com.gwtext.client.widgets.tree.event.TreeNodeListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogController;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -915,8 +915,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         WebProtegeDialog.showDialog(controller);
     }
 
-    private AbstractDispatchServiceCallback<CreateClassesResult> getCreateClassesActionAsyncHandler() {
-        return new AbstractDispatchServiceCallback<CreateClassesResult>() {
+    private DispatchServiceCallback<CreateClassesResult> getCreateClassesActionAsyncHandler() {
+        return new DispatchServiceCallback<CreateClassesResult>() {
 
             @Override
             public void handleSuccess(CreateClassesResult result) {
@@ -966,7 +966,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 //        OntologyServiceManager.getInstance().createCls(projectId, className, superCls, getInheritMetaClasses(), userId, getCreateClsDescription() + " " + className, getCreateClassAsyncHandler(superCls, className));
     }
 
-    protected AbstractDispatchServiceCallback<CreateClassResult> getCreateClassAsyncHandler() {
+    protected DispatchServiceCallback<CreateClassResult> getCreateClassAsyncHandler() {
         return new CreateClassHandler();
     }
 
@@ -1010,7 +1010,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return;
         }
         EntityFrameWatch entityWatch = new EntityFrameWatch(sel);
-        DispatchServiceManager.get().execute(new AddWatchAction(entityWatch, getProjectId(), getUserId()), new AbstractDispatchServiceCallback<AddWatchResult>() {
+        DispatchServiceManager.get().execute(new AddWatchAction(entityWatch, getProjectId(), getUserId()), new DispatchServiceCallback<AddWatchResult>() {
             @Override
             public void handleSuccess(AddWatchResult result) {
 
@@ -1026,7 +1026,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return;
         }
         Watch<?> watch = new HierarchyBranchWatch(sel);
-        DispatchServiceManager.get().execute(new AddWatchAction(watch, getProjectId(), getUserId()), new AbstractDispatchServiceCallback<AddWatchResult>() {
+        DispatchServiceManager.get().execute(new AddWatchAction(watch, getProjectId(), getUserId()), new DispatchServiceCallback<AddWatchResult>() {
 
             @Override
             public void handleSuccess(AddWatchResult result) {
@@ -1045,7 +1045,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             Object userObject = selTreeNode.getUserObject();
             if(userObject instanceof EntityData) {
                 Set<Watch<?>> watches = ((EntityData) userObject).getWatches();
-                DispatchServiceManager.get().execute(new RemoveWatchesAction(watches, getProjectId(), getUserId()), new AbstractDispatchServiceCallback<RemoveWatchesResult>() {
+                DispatchServiceManager.get().execute(new RemoveWatchesAction(watches, getProjectId(), getUserId()), new DispatchServiceCallback<RemoveWatchesResult>() {
 
                     @Override
                     public void handleSuccess(RemoveWatchesResult result) {
@@ -1628,7 +1628,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class CreateClassHandler extends AbstractDispatchServiceCallback<CreateClassResult> {
+    class CreateClassHandler extends DispatchServiceCallback<CreateClassResult> {
 
 
         public CreateClassHandler() {
@@ -1643,7 +1643,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class DeleteClassHandler extends AbstractDispatchServiceCallback<DeleteEntityResult> {
+    class DeleteClassHandler extends DispatchServiceCallback<DeleteEntityResult> {
 
         @Override
         public void handleSuccess(final DeleteEntityResult result) {

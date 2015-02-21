@@ -2,10 +2,9 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadResult;
@@ -100,7 +99,7 @@ public class DiscussionThreadPresenter implements HasDispose {
         if(currentTarget == null) {
             return;
         }
-        DispatchServiceManager.get().execute(new GetDiscussionThreadAction(projectId, currentTarget), new AbstractDispatchServiceCallback<GetDiscussionThreadResult>() {
+        DispatchServiceManager.get().execute(new GetDiscussionThreadAction(projectId, currentTarget), new DispatchServiceCallback<GetDiscussionThreadResult>() {
 
             @Override
             public void handleSuccess(GetDiscussionThreadResult result) {
