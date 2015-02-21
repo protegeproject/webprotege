@@ -71,12 +71,6 @@
 		<servlet-class>edu.stanford.bmir.protege.web.server.AuthenticateServiceImpl</servlet-class>
 	</servlet>
 
-
-	<servlet>
-		<servlet-name>ProjectManagerService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.ProjectManagerServiceImpl</servlet-class>
-	</servlet>
-
 	<servlet>
 		<servlet-name>OBOTextEditorService</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.OBOTextEditorServiceImpl</servlet-class>
@@ -148,11 +142,6 @@
 	<servlet-mapping>
 		<servlet-name>ProjectUploadServlet</servlet-name>
 		<url-pattern>/webprotege/submitfile</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>ProjectManagerService</servlet-name>
-		<url-pattern>/webprotege/projectmanager</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
