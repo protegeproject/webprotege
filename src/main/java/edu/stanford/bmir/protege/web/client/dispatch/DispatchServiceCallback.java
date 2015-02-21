@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.InvocationException;
@@ -36,6 +37,7 @@ public abstract class DispatchServiceCallback<T> implements AsyncCallback<T>  {
 
     @Override
     public final void onFailure(Throwable throwable) {
+        GWT.log("Error executing remote call: " + throwable.getMessage(), throwable);
         try {
             if(throwable instanceof ActionExecutionException) {
                 handleExecutionException(throwable.getCause());
