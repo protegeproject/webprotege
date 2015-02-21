@@ -144,6 +144,7 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(CreateUserAccountActionHandler.class);
 
         multibinder.addBinding().to(GetHeadRevisionNumberActionHandler.class);
+        multibinder.addBinding().to(GetRevisionSummariesActionHandler.class);
 
 
 
