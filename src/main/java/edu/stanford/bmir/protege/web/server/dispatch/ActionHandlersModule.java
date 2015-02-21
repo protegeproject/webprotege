@@ -37,6 +37,7 @@ import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;
 import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
+import edu.stanford.bmir.protege.web.shared.project.SetUIConfigurationActionHandler;
 import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
 
 /**
@@ -61,6 +62,7 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(SetProjectSettingsActionHandler.class);
 
         multibinder.addBinding().to(GetUIConfigurationActionHandler.class);
+        multibinder.addBinding().to(SetUIConfigurationActionHandler.class);
 
         multibinder.addBinding().to(GetClassFrameActionHandler.class);
         multibinder.addBinding().to(UpdateClassFrameActionHandler.class);
