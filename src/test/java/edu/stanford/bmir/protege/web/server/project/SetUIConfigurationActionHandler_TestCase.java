@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
+import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -56,5 +57,11 @@ public class SetUIConfigurationActionHandler_TestCase {
     public void shouldSaveConfiguration() {
         handler.execute(action, executionContext);
         verify(uiConfigurationManager, times(1)).saveProjectLayoutConfiguration(projectId, userId, configuration);
+    }
+
+    @Test(expected = NotSignedInException.class)
+    public void shouldNotSaveConfigurationForGuestUser() {
+        when(userId.isGuest()).thenReturn(true);
+        handler.execute(action, executionContext);
     }
 }
