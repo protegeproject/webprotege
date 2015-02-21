@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
@@ -19,9 +17,7 @@ import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEven
 import edu.stanford.bmir.protege.web.client.ui.upload.FileUploadResponse;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
-import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyRegisteredException;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
+import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
@@ -76,7 +72,6 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
 
     private void createProjectFromUpload(UploadFileInfo data, FileUploadResponse result) {
         UIUtil.showLoadProgessBar(PROGRESS_DIALOG_TITLE, "Creating project");
-        ProjectManagerServiceAsync projectManagerService = GWT.create(ProjectManagerService.class);
         UserId userId = Application.get().getUserId();
         DocumentId documentId = result.getDocumentId();
         String projectName = data.getProjectSettings().getProjectName();
@@ -84,40 +79,41 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
         ProjectType projectType = data.getProjectSettings().getProjectType();
         NewProjectSettings newProjectSettings = new NewProjectSettings(userId, projectName, projectDescription, projectType, documentId);
 
-        projectManagerService.createNewProject(newProjectSettings, new AsyncCallback<ProjectDetails>() {
-            public void onFailure(Throwable caught) {
-                UIUtil.hideLoadProgessBar();
-                caught.printStackTrace();
-                handleCreateProjectFailure(caught);
+        DispatchServiceManager.get().execute(new CreateNewProjectAction(newProjectSettings), new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectResult>() {
+            @Override
+            public String getProgressDisplayTitle() {
+                return "Creating project";
             }
 
-            public void onSuccess(ProjectDetails result) {
-                UIUtil.hideLoadProgessBar();
+            @Override
+            public String getProgressDisplayMessage() {
+                return "Please wait";
+            }
+
+            @Override
+            public void handleExecutionException(Throwable caught) {
+                if (caught instanceof NotSignedInException) {
+                    MessageBox.showAlert("You must be signed in to create new projects.", "Please sign in.");
+                } else if (caught instanceof ProjectAlreadyRegisteredException) {
+                    ProjectAlreadyRegisteredException ex = (ProjectAlreadyRegisteredException) caught;
+                    String projectName = ex.getProjectId().getId();
+                    MessageBox.showMessage("The project name " + projectName + " is already taken.  Please try a different name.");
+                } else if (caught instanceof ProjectDocumentExistsException) {
+                    ProjectDocumentExistsException ex = (ProjectDocumentExistsException) caught;
+                    String projectName = ex.getProjectId().getId();
+                    MessageBox.showAlert("Project already exists", "There is already a non-empty project on the server which is named " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
+                } else {
+                    MessageBox.showAlert(caught.getMessage());
+                }
+            }
+
+            @Override
+            public void handleSuccess(CreateNewProjectResult result) {
                 MessageBox.showMessage("Project uploaded", "Your ontology was uploaded and the project was successfully created.");
-                EventBusManager.getManager().postEvent(new ProjectCreatedEvent(result));
+                EventBusManager.getManager().postEvent(new ProjectCreatedEvent(result.getProjectDetails()));
             }
         });
     }
-
-    private void handleCreateProjectFailure(Throwable caught) {
-        if (caught instanceof NotSignedInException) {
-            MessageBox.showAlert("You must be signed in to create new projects.", "Please sign in.");
-        }
-        else if (caught instanceof ProjectAlreadyRegisteredException) {
-            ProjectAlreadyRegisteredException ex = (ProjectAlreadyRegisteredException) caught;
-            String projectName = ex.getProjectId().getId();
-            MessageBox.showMessage("The project name " + projectName + " is already taken.  Please try a different name.");
-        }
-        else if (caught instanceof ProjectDocumentExistsException) {
-            ProjectDocumentExistsException ex = (ProjectDocumentExistsException) caught;
-            String projectName = ex.getProjectId().getId();
-            MessageBox.showAlert("Project already exists", "There is already a non-empty project on the server which is named " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
-        }
-        else {
-            MessageBox.showAlert(caught.getMessage());
-        }
-    }
-
 
     @Override
     public Widget getWidget() {

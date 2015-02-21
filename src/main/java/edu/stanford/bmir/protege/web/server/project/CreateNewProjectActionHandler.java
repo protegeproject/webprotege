@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
-import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -54,16 +51,13 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
         NewProjectSettings newProjectSettings = action.getNewProjectSettings();
         OWLAPIProject project = pm.createNewProject(newProjectSettings);
         ProjectId projectId = project.getProjectId();
-        if (!isRegisteredProject(projectId)) {
+        if (!projectDetailsManager.isExistingProject(projectId)) {
             projectDetailsManager.registerProject(projectId, newProjectSettings);
             projectSharingSettingsManager.applyDefaultSharingSettings(projectId, executionContext.getUserId());
         }
         return new CreateNewProjectResult(projectDetailsManager.getProjectDetails(projectId));
     }
 
-    private synchronized boolean isRegisteredProject(ProjectId projectId) {
-        return projectDetailsManager.isExistingProject(projectId);
-    }
 
 
 }

@@ -69,7 +69,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
     @Override
     public boolean isExistingProject(ProjectId projectId) {
-        return getProjectInstance(projectId) != null;
+        return metaProject.getProject(projectId.getId()) != null;
     }
 
     @Override

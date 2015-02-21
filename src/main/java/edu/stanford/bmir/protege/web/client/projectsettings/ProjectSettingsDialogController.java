@@ -1,25 +1,10 @@
 package edu.stanford.bmir.protege.web.client.projectsettings;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
-import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
-
-import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>
