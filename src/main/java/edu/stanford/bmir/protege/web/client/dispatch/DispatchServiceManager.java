@@ -3,10 +3,8 @@ package edu.stanford.bmir.protege.web.client.dispatch;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.Event;
-import com.google.web.bindery.event.shared.UmbrellaException;
 import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
 import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
@@ -21,7 +19,6 @@ import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.HashMap;
@@ -69,17 +66,17 @@ public class DispatchServiceManager {
 
     @SuppressWarnings("unchecked")
     public <A extends Action<R>, R extends Result> void execute(A action, final AbstractDispatchServiceCallback<R> callback) {
+        callback.handleSubmittedForExecution();
         if(action instanceof HasProjectId) {
             ProjectId projectId = ((HasProjectId) action).getProjectId();
             ResultCache resultCache = getResultCache(projectId);
             Optional<R> result = resultCache.getCachedResult(action);
-            if(result.isPresent()) {
+            if (result.isPresent()) {
                 GWT.log("[DISPATCH] Using cached result (" + action + ")");
                 callback.onSuccess(result.get());
                 return;
             }
         }
-
         GWT.log("[DISPATCH] Making request to server.  Request " + requestCount + ". (" + action + ")");
         requestCount++;
         async.executeAction(action, new AsyncCallbackProxy(action, callback));

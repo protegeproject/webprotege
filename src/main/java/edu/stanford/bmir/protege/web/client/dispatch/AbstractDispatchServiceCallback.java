@@ -26,6 +26,14 @@ public abstract class AbstractDispatchServiceCallback<T> implements AsyncCallbac
         this.errorMessageDisplay = errorMessageDisplay;
     }
 
+    /**
+     * Called when the action is submitted for execution.
+     * This can be used to display a progress indicator to the user, for example.
+     */
+    public void handleSubmittedForExecution() {
+
+    }
+
     @Override
     public final void onFailure(Throwable throwable) {
         try {
