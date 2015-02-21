@@ -75,7 +75,7 @@ public class DispatchServiceManager {
             Optional<R> result = resultCache.getCachedResult(action);
             if(result.isPresent()) {
                 GWT.log("[DISPATCH] Using cached result (" + action + ")");
-                callback.handleSuccess(result.get());
+                callback.onSuccess(result.get());
                 return;
             }
         }
@@ -111,7 +111,7 @@ public class DispatchServiceManager {
             }
             cacheRenderables(result.getResult());
             dispatchEvents(result.getResult());
-            delegate.handleSuccess(result.getResult());
+            delegate.onSuccess(result.getResult());
         }
 
     }
