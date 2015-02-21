@@ -1,16 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.id;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtext.client.widgets.MessageBox;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdResult;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-
-import java.util.Collection;
 
 /**
  * Author: Matthew Horridge<br>
@@ -42,7 +37,7 @@ public class OntologyIdPortlet extends AbstractOWLEntityPortlet {
     }
 
     private void updateDisplay() {
-        DispatchServiceManager.get().execute(new GetRootOntologyIdAction(getProjectId()), new AbstractDispatchServiceCallback<GetRootOntologyIdResult>() {
+        DispatchServiceManager.get().execute(new GetRootOntologyIdAction(getProjectId()), new DispatchServiceCallback<GetRootOntologyIdResult>() {
 
             @Override
             public void handleSuccess(GetRootOntologyIdResult result) {

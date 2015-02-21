@@ -1,25 +1,17 @@
 package edu.stanford.bmir.protege.web.client.renderer;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
-import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
-import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
-
-import java.util.Collection;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
@@ -36,7 +28,7 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
         if(entityData.isPresent()) {
             DispatchServiceManager.get().execute(new GetEntityRenderingAction(getProjectId(), entityData.get().getEntity()),
-                                                 new AbstractDispatchServiceCallback<GetEntityRenderingResult>() {
+                                                 new DispatchServiceCallback<GetEntityRenderingResult>() {
                                                      @Override
                                                      public void handleSuccess(GetEntityRenderingResult result) {
                                                          html.setHTML(result.getRendering());

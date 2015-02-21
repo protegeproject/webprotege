@@ -13,7 +13,7 @@ import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -409,7 +409,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private <R  extends AbstractCreateEntityInHierarchyResult<E>, E extends OWLEntity> void createSubProperties(AbstractCreateEntityInHierarchyAction<R, E> action) {
-        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<R>() {
+        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<R>() {
             @Override
             protected String getErrorMessage(Throwable throwable) {
                 return "There was a problem creating the properties";
@@ -762,7 +762,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class DeletePropertyHandler extends AbstractDispatchServiceCallback<DeleteEntityResult> {
+    class DeletePropertyHandler extends DispatchServiceCallback<DeleteEntityResult> {
 
         @Override
         protected String getErrorMessage(Throwable throwable) {

@@ -1,25 +1,18 @@
 package edu.stanford.bmir.protege.web.client.ui.signup;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.ui.login.HashAlgorithm;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationServiceProvider;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.*;
 
@@ -96,7 +89,7 @@ public class WebProtegeSignupDialogController extends WebProtegeOKCancelDialogCo
         );
 
         UserId userId = UserId.getUserId(data.getUserName());
-        executor.execute(userId, data.getEmailAddress(), data.getPassword(), new AbstractDispatchServiceCallback<CreateUserAccountResult>() {
+        executor.execute(userId, data.getEmailAddress(), data.getPassword(), new DispatchServiceCallback<CreateUserAccountResult>() {
             @Override
             public void handleSuccess(CreateUserAccountResult createUserAccountResult) {
                 MessageBox.showMessage("Registration complete",

@@ -14,15 +14,15 @@ import java.util.logging.Logger;
  * Stanford Center for Biomedical Informatics Research
  * 20/02/15
  */
-public abstract class AbstractDispatchServiceCallback<T> implements AsyncCallback<T>  {
+public abstract class DispatchServiceCallback<T> implements AsyncCallback<T>  {
 
     private DispatchErrorMessageDisplay errorMessageDisplay;
 
-    public AbstractDispatchServiceCallback() {
+    public DispatchServiceCallback() {
         errorMessageDisplay = new MessageBoxErrorDisplay();
     }
 
-    public AbstractDispatchServiceCallback(DispatchErrorMessageDisplay errorMessageDisplay) {
+    public DispatchServiceCallback(DispatchErrorMessageDisplay errorMessageDisplay) {
         this.errorMessageDisplay = errorMessageDisplay;
     }
 

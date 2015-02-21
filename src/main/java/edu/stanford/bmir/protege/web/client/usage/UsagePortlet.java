@@ -3,12 +3,9 @@ package edu.stanford.bmir.protege.web.client.usage;
 import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtext.client.widgets.MessageBox;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
@@ -73,7 +70,7 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
     private void showUsageForEntity(final OWLEntityData entityData) {
         final OWLEntity entity = entityData.getEntity();
         final GetUsageAction action = new GetUsageAction(entity, getProjectId(), Optional.of(usageView.getUsageFilter()));
-        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<GetUsageResult>() {
+        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<GetUsageResult>() {
 
             @Override
             protected String getErrorMessage(Throwable throwable) {

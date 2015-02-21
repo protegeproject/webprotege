@@ -2,9 +2,8 @@ package edu.stanford.bmir.protege.web.shared.auth;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
@@ -36,7 +35,7 @@ public class AuthenticatedActionExecutor {
     }
 
     public <A extends AbstractAuthenticationAction<R>, R extends AbstractAuthenticationResult> void execute(final UserId userId, final String clearTextPassword, final AuthenticationActionFactory<A, R> actionFactory, final AsyncCallback<AuthenticationResponse> callback) {
-        dispatchServiceManager.execute(new GetChapSessionAction(userId), new AbstractDispatchServiceCallback<GetChapSessionResult>() {
+        dispatchServiceManager.execute(new GetChapSessionAction(userId), new DispatchServiceCallback<GetChapSessionResult>() {
             @Override
             public void handleSuccess(GetChapSessionResult result) {
                 Optional<ChapSession> chapSession = result.getChapSession();
@@ -65,7 +64,7 @@ public class AuthenticatedActionExecutor {
         ChapSessionId chapSessionId = chapSession.getId();
         A action = actionFactory.createAction(chapSessionId, userId, chapResponse);
         dispatchServiceManager.execute(action,
-                new AbstractDispatchServiceCallback<R>() {
+                new DispatchServiceCallback<R>() {
                     @Override
                     public void handleSuccess(R loginResult) {
                         callback.onSuccess(loginResult.getResponse());

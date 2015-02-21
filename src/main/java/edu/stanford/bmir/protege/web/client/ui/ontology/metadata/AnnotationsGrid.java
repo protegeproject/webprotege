@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.grid.ColumnModel;
 import com.gwtext.client.widgets.grid.GridPanel;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetEntityAnnotationsAction;
@@ -117,7 +115,7 @@ public class AnnotationsGrid extends GridPanel implements HasProjectId {
         return projectId;
     }
 
-    class GetAnnotationsHandler extends AbstractDispatchServiceCallback<RenderableGetObjectResult<Set<OWLAnnotation>>> {
+    class GetAnnotationsHandler extends DispatchServiceCallback<RenderableGetObjectResult<Set<OWLAnnotation>>> {
 
 		public void handleSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
 			for (OWLAnnotation data : result.getObject()) {

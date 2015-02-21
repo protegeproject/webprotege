@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.shared.auth;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -112,7 +112,7 @@ public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticati
                 }
                 return null;
             }
-        }).when(dispatchServiceManager).execute(any(Action.class), any(AbstractDispatchServiceCallback.class));
+        }).when(dispatchServiceManager).execute(any(Action.class), any(DispatchServiceCallback.class));
 
         when(actionFactory.createAction(chapSessionId, userId, chapResponse)).thenReturn(action);
     }
@@ -126,7 +126,7 @@ public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticati
     @Test
     public void shouldExecute_AuthenticationAction_ForChapResponse() {
         protocol.execute(userId, clearTextPassword, actionFactory, callback);
-        verify(dispatchServiceManager).execute(eq(action), Matchers.<AbstractDispatchServiceCallback<R>>any());
+        verify(dispatchServiceManager).execute(eq(action), Matchers.<DispatchServiceCallback<R>>any());
     }
 
     private Matcher<GetChapSessionAction> isAGetChapSessionAction() {
@@ -144,7 +144,7 @@ public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticati
     }
 
 
-    private AbstractDispatchServiceCallback<GetChapSessionResult> anyGetChapSessionResultCallback() {
+    private DispatchServiceCallback<GetChapSessionResult> anyGetChapSessionResultCallback() {
         return Matchers.any();
     }
 }

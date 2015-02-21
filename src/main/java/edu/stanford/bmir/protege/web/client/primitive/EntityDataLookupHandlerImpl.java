@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -53,7 +53,7 @@ public class EntityDataLookupHandlerImpl implements EntityDataLookupHandler {
             }
         }
         final EntityLookupRequest entityLookupRequest = new EntityLookupRequest(trimmedContent, SearchType.EXACT_MATCH_IGNORE_CASE, 1, allowedEntityTypes);
-        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, entityLookupRequest), new AbstractDispatchServiceCallback<LookupEntitiesResult>() {
+        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, entityLookupRequest), new DispatchServiceCallback<LookupEntitiesResult>() {
 
             @Override
             public void handleExecutionException(Throwable cause) {

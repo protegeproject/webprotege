@@ -65,7 +65,7 @@ public class DispatchServiceManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <A extends Action<R>, R extends Result> void execute(A action, final AbstractDispatchServiceCallback<R> callback) {
+    public <A extends Action<R>, R extends Result> void execute(A action, final DispatchServiceCallback<R> callback) {
         callback.handleSubmittedForExecution();
         if(action instanceof HasProjectId) {
             ProjectId projectId = ((HasProjectId) action).getProjectId();
@@ -87,9 +87,9 @@ public class DispatchServiceManager {
 
         private Action<?> action;
 
-        private AbstractDispatchServiceCallback<Result> delegate;
+        private DispatchServiceCallback<Result> delegate;
 
-        public AsyncCallbackProxy(Action<?> action, AbstractDispatchServiceCallback<Result> delegate) {
+        public AsyncCallbackProxy(Action<?> action, DispatchServiceCallback<Result> delegate) {
             this.delegate = delegate;
             this.action = action;
         }
@@ -136,7 +136,7 @@ public class DispatchServiceManager {
         }
     }
 
-    private void handleError(Throwable throwable, Action<?> action, AbstractDispatchServiceCallback<?> callback) {
+    private void handleError(Throwable throwable, Action<?> action, DispatchServiceCallback<?> callback) {
         // Skip handling for actions that do not care about errors
         if(action instanceof InvocationExceptionTolerantAction) {
             Optional<String> errorMessage = ((InvocationExceptionTolerantAction) action).handleInvocationException((InvocationException) throwable);

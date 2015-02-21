@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.shared.dispatch;
 
 import com.google.gwt.user.client.rpc.InvocationException;
 import edu.stanford.bmir.protege.web.client.dispatch.*;
-import edu.stanford.bmir.protege.web.client.ui.ProjectDisplay;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +16,7 @@ import static org.mockito.Mockito.*;
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-public class AbstractDispatchServiceCallbackWithProgress_TestCase<T> {
+public class DispatchServiceCallbackWithProgress_TestCase<T> {
 
 
     public static final String PROGRESS_DISPLAY_TITLE = "ProgressDisplayTitle";
@@ -26,7 +25,7 @@ public class AbstractDispatchServiceCallbackWithProgress_TestCase<T> {
 
     private ProgressDisplay progressDisplay;
 
-    private AbstractDispatchServiceCallbackWithProgressDisplay<T> callback;
+    private DispatchServiceCallbackWithProgressDisplay<T> callback;
 
     @Mock
     private T value;
@@ -35,7 +34,7 @@ public class AbstractDispatchServiceCallbackWithProgress_TestCase<T> {
     public void setUp() throws Exception {
         messageDisplay = mock(DispatchErrorMessageDisplay.class);
         progressDisplay = mock(ProgressDisplay.class);
-        callback = spy(new AbstractDispatchServiceCallbackWithProgressDisplay<T>(messageDisplay, progressDisplay) {
+        callback = spy(new DispatchServiceCallbackWithProgressDisplay<T>(messageDisplay, progressDisplay) {
             @Override
             public String getProgressDisplayTitle() {
                 return PROGRESS_DISPLAY_TITLE;

@@ -1,11 +1,9 @@
 package edu.stanford.bmir.protege.web.client.mail;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
@@ -35,7 +33,7 @@ public class ChangeEmailAddressPresenter {
         }
         ProgressMonitor.get().showProgressMonitor("Retrieving email address", "Please wait.");
 
-        DispatchServiceManager.get().execute(new GetEmailAddressAction(userId), new AbstractDispatchServiceCallback<GetEmailAddressResult>() {
+        DispatchServiceManager.get().execute(new GetEmailAddressAction(userId), new DispatchServiceCallback<GetEmailAddressResult>() {
             @Override
             public void handleSuccess(GetEmailAddressResult result) {
                 showDialog(result.getEmailAddress());
@@ -59,7 +57,7 @@ public class ChangeEmailAddressPresenter {
             @Override
             public void handleHide(Optional<EmailAddress> data, final WebProtegeDialogCloser closer) {
                 if(data.isPresent()) {
-                    DispatchServiceManager.get().execute(new SetEmailAddressAction(userId, data.get().getEmailAddress()), new AbstractDispatchServiceCallback<SetEmailAddressResult>() {
+                    DispatchServiceManager.get().execute(new SetEmailAddressAction(userId, data.get().getEmailAddress()), new DispatchServiceCallback<SetEmailAddressResult>() {
                         @Override
                         public void handleSuccess(SetEmailAddressResult result) {
                             closer.hide();

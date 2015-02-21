@@ -3,9 +3,8 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
@@ -122,7 +121,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
     }
 
     private void refillSharingSettingsList(final ProjectId projectId) {
-        DispatchServiceManager.get().execute(new GetProjectSharingSettingsAction(projectId), new AbstractDispatchServiceCallback<GetProjectSharingSettingsResult>() {
+        DispatchServiceManager.get().execute(new GetProjectSharingSettingsAction(projectId), new DispatchServiceCallback<GetProjectSharingSettingsResult>() {
             @Override
             public void handleSuccess(GetProjectSharingSettingsResult result) {
                 updateListData(result.getProjectSharingSettings());

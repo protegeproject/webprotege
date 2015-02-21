@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
@@ -42,7 +40,7 @@ public class SharingSettingsDialogController extends WebProtegeOKCancelDialogCon
     }
 
     private void updateSharingSettingsOnServer(final ProjectSharingSettings sharingSettings) {
-        DispatchServiceManager.get().execute(new SetProjectSharingSettingsAction(sharingSettings), new AbstractDispatchServiceCallback<SetProjectSharingSettingsResult>() {
+        DispatchServiceManager.get().execute(new SetProjectSharingSettingsAction(sharingSettings), new DispatchServiceCallback<SetProjectSharingSettingsResult>() {
             @Override
             public void handleSuccess(SetProjectSharingSettingsResult setProjectSharingSettingsResult) {
                 EventBusManager.getManager().postEvent(new PermissionsChangedEvent(sharingSettings.getProjectId()));

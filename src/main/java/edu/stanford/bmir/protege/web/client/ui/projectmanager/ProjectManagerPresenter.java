@@ -3,10 +3,8 @@ package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
@@ -168,7 +166,7 @@ public class ProjectManagerPresenter {
         GWT.log("Reloading project view");
 
         GetAvailableProjectsAction action = new GetAvailableProjectsAction();
-        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<GetAvailableProjectsResult>() {
+        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<GetAvailableProjectsResult>() {
             @Override
             public void handleSuccess(GetAvailableProjectsResult result) {
                 projectDetailsCache.setProjectDetails(result.getDetails());

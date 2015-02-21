@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteAction;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteResult;
@@ -28,7 +26,7 @@ public class DeleteNoteHandlerImpl implements DeleteNoteHandler {
     @Override
     public void handleDeleteNote() {
         ProjectId projectId = Application.get().getActiveProject().get();
-        DispatchServiceManager.get().execute(new DeleteNoteAction(projectId, noteId), new AbstractDispatchServiceCallback<DeleteNoteResult>() {
+        DispatchServiceManager.get().execute(new DeleteNoteAction(projectId, noteId), new DispatchServiceCallback<DeleteNoteResult>() {
             @Override
             public void handleSuccess(DeleteNoteResult result) {
 
