@@ -52,11 +52,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>ProjectConfigurationServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.ProjectConfigurationServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>OpenIdServiceImpl</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.OpenIdServiceImpl</servlet-class>
 	</servlet>
@@ -138,11 +133,6 @@
 	<servlet-mapping>
 		<servlet-name>OntologyServiceImpl</servlet-name>
 		<url-pattern>/webprotege/ontology</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>ProjectConfigurationServiceImpl</servlet-name>
-		<url-pattern>/webprotege/projectconfig</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

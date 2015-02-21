@@ -28,7 +28,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 
-import edu.stanford.bmir.protege.web.client.rpc.ProjectConfigurationServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
@@ -41,12 +40,10 @@ import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
-import edu.stanford.bmir.protege.web.shared.project.GetUIConfigurationAction;
-import edu.stanford.bmir.protege.web.shared.project.GetUIConfigurationResult;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.project.*;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -384,13 +381,27 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     protected void saveProjectConfiguration() {
-        if (Application.get().getUserId().isGuest()) {
+        UserId userId = Application.get().getUserId();
+        if (userId.isGuest()) {
             MessageBox.showAlert("You are not signed in", "To save the layout, you need to sign in first.");
             return;
         }
         ProjectLayoutConfiguration config = getProject().getProjectLayoutConfiguration();
         config.setProjectId(projectId);
-        ProjectConfigurationServiceManager.getInstance().saveProjectConfiguration(projectId, Application.get().getUserId(), config, new SaveConfigHandler());
+        UIUtil.showLoadProgessBar("Saving configuration", "Saving the current project layout.");
+        DispatchServiceManager.get().execute(new SetUIConfigurationAction(projectId, config),
+                new AbstractDispatchServiceCallback<SetUIConfigurationResult>() {
+            @Override
+            public void handleSuccess(SetUIConfigurationResult setUIConfigurationResult) {
+                MessageBox.showMessage("Project layout saved",
+                        "Project layout saved successfully. This layout will be used the next time you log in.");
+            }
+
+            @Override
+            public void handleFinally() {
+                UIUtil.hideLoadProgessBar();
+            }
+        });
     }
 
     public String getLabel() {
