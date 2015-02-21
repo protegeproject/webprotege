@@ -36,7 +36,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
     
     private final SharingSettingsDefaultSharingSettingPanel defaultSharingSettingPanel;
     
-    public static final String PLACE_HOLDER_TEXT = "Enter names or email addresses (1 per line)";
+    public static final String PLACE_HOLDER_TEXT = "Enter names (1 per line)";
 
     public SharingSettingsPanel(final ProjectId projectId) {
         this.projectId = projectId;
