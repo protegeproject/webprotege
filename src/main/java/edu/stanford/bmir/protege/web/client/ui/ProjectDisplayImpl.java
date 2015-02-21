@@ -559,30 +559,4 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
             }
         }
     }
-//
-//    class GetProjectConfigurationHandler implements AsyncCallback<ProjectLayoutConfiguration> {
-//
-//        private long t0 = currentTime();
-//
-//        private long currentTime() {
-//            return new Date().getTime();
-//        }
-//
-//        public GetProjectConfigurationHandler() {
-//
-//        }
-//
-//        @Override
-//        public void onFailure(Throwable caught) {
-//            GWT.log("There were errors at loading project configuration for " + projectId, caught);
-//            UIUtil.hideLoadProgessBar();
-//            MessageBox.showAlert("Could not load the project configuration for this project" + " Message: " + caught.getMessage());
-//        }
-//
-//        @Override
-//        public void onSuccess(ProjectLayoutConfiguration config) {
-//
-//        }
-//    }
-
 }
