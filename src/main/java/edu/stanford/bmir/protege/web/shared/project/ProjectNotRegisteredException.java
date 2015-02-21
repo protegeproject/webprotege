@@ -22,7 +22,6 @@ public class ProjectNotRegisteredException extends RuntimeException implements S
     }
 
     public ProjectNotRegisteredException(ProjectId projectId) {
-        super("Project Not Registered (" + projectId + ")");
         this.projectId = projectId;
     }
 

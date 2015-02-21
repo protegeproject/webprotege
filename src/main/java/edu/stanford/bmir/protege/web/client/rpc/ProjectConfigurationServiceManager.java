@@ -22,10 +22,6 @@ public class ProjectConfigurationServiceManager {
 		proxy = GWT.create(ProjectConfigurationService.class);
 	}
 
-	public void getProjectConfiguration(ProjectId projectId, UserId userId, AsyncCallback<ProjectLayoutConfiguration> cb) {
-		proxy.getProjectLayoutConfiguration(projectId, userId, cb);
-	}
-
 	public void saveProjectConfiguration(ProjectId projectId, UserId userId,  ProjectLayoutConfiguration config, AsyncCallback<Void> cb) {
 		proxy.saveProjectLayoutConfiguration(projectId, userId, config, cb);
 	}

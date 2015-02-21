@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
 import com.google.inject.AbstractModule;
+import edu.stanford.bmir.protege.web.server.project.DefaultUIConfigurationFileManager;
+import edu.stanford.bmir.protege.web.server.project.DefaultUIConfigurationFileManagerImpl;
 
 import java.io.File;
 
@@ -21,5 +23,7 @@ public class FileSystemConfigurationModule extends AbstractModule {
 
         bind(File.class).annotatedWith(UiConfigurationDirectory.class)
                 .toProvider(UiConfigurationDirectoryProvider.class);
+
+        bind(DefaultUIConfigurationFileManager.class).to(DefaultUIConfigurationFileManagerImpl.class);
     }
 }
