@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.DispatchModule;
 import edu.stanford.bmir.protege.web.server.init.ConfigurationTasksModule;
 import edu.stanford.bmir.protege.web.server.mail.MailModule;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectModule;
+import edu.stanford.bmir.protege.web.server.project.ProjectManagerModule;
 
 import javax.servlet.ServletContext;
 
@@ -31,6 +32,7 @@ public class WebProtegeInjector {
 
     private WebProtegeInjector(ServletContext servletContext) {
         injector = Guice.createInjector(
+                new ProjectManagerModule(),
                 new ServletContextModule(servletContext),
                 new WebProtegePropertiesModule(),
                 new FileSystemConfigurationModule(),
