@@ -38,8 +38,7 @@ import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.shared.project.SetUIConfigurationActionHandler;
-import edu.stanford.bmir.protege.web.shared.user.CreateUserAccountAction;
-
+import edu.stanford.bmir.protege.web.server.revision.*;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -144,6 +143,7 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(ChangePasswordActionHandler.class);
         multibinder.addBinding().to(CreateUserAccountActionHandler.class);
 
+        multibinder.addBinding().to(GetHeadRevisionNumberActionHandler.class);
 
 
 
