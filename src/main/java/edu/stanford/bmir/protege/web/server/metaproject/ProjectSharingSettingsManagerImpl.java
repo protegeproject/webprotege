@@ -115,6 +115,20 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
     }
 
+    /**
+     * Applies the default sharing setting to a project.  The default sharing settings are that the project is private,
+     * but the signed in user is an editor.
+     * @param projectId The project id that identifies the project to apply sharing settings to.
+     */
+    @Override
+    public void applyDefaultSharingSettings(ProjectId projectId, UserId userId) {
+        List<UserSharingSetting> userSharingSettings = new ArrayList<UserSharingSetting>();
+        if (!userId.isGuest()) {
+            userSharingSettings.add(new UserSharingSetting(userId, SharingSetting.EDIT));
+        }
+        ProjectSharingSettings sharingSettings = new ProjectSharingSettings(projectId, SharingSetting.NONE, userSharingSettings);
+        this.setProjectSharingSettings(sharingSettings);
+    }
 
 
     private Set<GroupOperation> createAllowedGroupOperationsFromSharingSettings(MetaProject metaProject, ProjectId projectId, Map<SharingSetting, Set<User>> usersBySharingSetting) {

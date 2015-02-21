@@ -168,6 +168,11 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
         projectSharingSettingsManager.setProjectSharingSettings(projectSharingSettings);
     }
 
+    @Override
+    public void applyDefaultSharingSettings(ProjectId projectId, UserId forUser) {
+        projectSharingSettingsManager.applyDefaultSharingSettings(projectId, forUser);
+    }
+
     public void setDigestedPassword(UserId userId, SaltedPasswordDigest saltedPasswordDigest, Salt salt) {
         authenticationManager.setDigestedPassword(userId, saltedPasswordDigest, salt);
     }

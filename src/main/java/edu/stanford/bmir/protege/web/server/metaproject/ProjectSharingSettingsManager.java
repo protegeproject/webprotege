@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
  * Matthew Horridge
@@ -9,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * 06/02/15
  */
 public interface ProjectSharingSettingsManager {
+
+    void applyDefaultSharingSettings(ProjectId projectId, UserId forUser);
 
     void setProjectSharingSettings(ProjectSharingSettings projectSharingSettings);
 
