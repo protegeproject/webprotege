@@ -83,11 +83,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>RevisionManager</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.RevisionManagerServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>BioPortalAPIService</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.BioPortalAPIServiceImpl</servlet-class>
 	</servlet>
@@ -163,11 +158,6 @@
 	<servlet-mapping>
 		<servlet-name>OBOTextEditorService</servlet-name>
 		<url-pattern>/webprotege/obotexteditorservice</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>RevisionManager</servlet-name>
-		<url-pattern>/webprotege/revisionmanager</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
