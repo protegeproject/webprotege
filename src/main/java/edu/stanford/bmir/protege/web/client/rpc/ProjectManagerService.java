@@ -36,19 +36,4 @@ public interface ProjectManagerService extends RemoteService {
      * @throws edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException If the project is not registered but the project document already exists.
      */
     ProjectDetails createNewProject(NewProjectSettings newProjectSettings) throws NotSignedInException, ProjectAlreadyRegisteredException, ProjectDocumentExistsException;
-
-    long getLastAccessTime(ProjectId projectId);
-
-    /**
-     * Gets the list of available project types.
-     * @see ProjectType
-     * @return A list of project types.  Not null.
-     */
-    List<ProjectType> getAvailableProjectTypes();
-
-
-    ProjectType getProjectType(ProjectId projectId) throws ProjectNotRegisteredException;
-
-    void setProjectType(ProjectId projectId, ProjectType projectType) throws NotProjectOwnerException, ProjectNotRegisteredException;
-
 }

@@ -49,25 +49,6 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
 
         ensureSignedIn();
 
-//        ProjectId projectId = ProjectIdFactory.getFreshProjectId();
-//
-//        if(isRegisteredProject(projectId)) {
-//            // Not allowed to overwrite
-//            if(isProjectExistsOnDisk(projectId)) {
-//                throw new ProjectAlreadyRegisteredException(projectId);
-//            }
-//            // For the time being, allow owners to put new sources in place
-//            else if(!isSignedInUserAllowedToOverwriteProjectSources(projectId)) {
-//                throw new ProjectAlreadyRegisteredException(projectId);
-//            }
-//        }
-//        else if(isProjectExistsOnDisk(projectId)) {
-//            // Too dangerous to do anything here.
-//            throw new ProjectDocumentExistsException(projectId);
-//        }
-//
-
-
         OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
         OWLAPIProject project = pm.createNewProject(newProjectSettings);
         ProjectId projectId = project.getProjectId();
@@ -78,22 +59,6 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         }
         return getMetaProjectManager().getProjectDetails(projectId);
     }
-
-    private boolean isProjectExistsOnDisk(ProjectId projectId) {
-        OWLAPIProjectDocumentStore docStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
-        return docStore.exists();
-    }
-
-    /**
-     * Detemines whether or not the signed in user is allowed to overwrite project source.  In this implementation, the
-     * signed in user can overwrite project sources if they are either the project owner, or they are an admin.
-     * @param projectId The project id that identifies the project sources to be overwritten.
-     * @return <code>true</code> if the signed in user can overwrite project sources, otherwise <code>false</code>.
-     */
-    private boolean isSignedInUserAllowedToOverwriteProjectSources(ProjectId projectId) {
-        return isSignedInUserProjectOwner(projectId) || isSignedInUserAdmin();
-    }
-
 
     /**
      * Applies the default sharing setting to a project.  The default sharing settings are that the project is private,
@@ -110,32 +75,4 @@ public class ProjectManagerServiceImpl extends WebProtegeRemoteServiceServlet im
         getMetaProjectManager().setProjectSharingSettings(sharingSettings);
     }
 
-
-    public long getLastAccessTime(ProjectId projectId) {
-        return OWLAPIProjectManager.getProjectManager().getLastAccessTime(projectId);
-    }
-
-    /**
-     * Gets the list of available project types.
-     * @return A list of project types.  Not null.
-     * @see edu.stanford.bmir.protege.web.client.rpc.data.ProjectType
-     */
-    public List<ProjectType> getAvailableProjectTypes() {
-        List<ProjectType> projectTypes = new ArrayList<ProjectType>();
-        projectTypes.add(new ProjectType(OWLAPIProjectType.getDefaultProjectType().getProjectTypeName()));
-        projectTypes.add(new ProjectType(OWLAPIProjectType.getOBOProjectType().getProjectTypeName()));
-        return projectTypes;
-    }
-
-    public ProjectType getProjectType(ProjectId projectId) throws ProjectNotRegisteredException {
-        OWLAPIProjectType projectType = projectDetailsManager.getType(projectId);
-        return new ProjectType(projectType.getProjectTypeName());
-    }
-
-    public void setProjectType(ProjectId projectId, ProjectType projectType) throws NotProjectOwnerException, ProjectNotRegisteredException {
-        if(!isSignedInUserProjectOwner(projectId)) {
-            throw new NotProjectOwnerException(projectId);
-        }
-        projectDetailsManager.setType(projectId, new OWLAPIProjectType(projectType.getName()));
-    }
 }
