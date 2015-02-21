@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -53,19 +54,27 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CSVImportDescriptor>() {
             @Override
             public void handleHide(CSVImportDescriptor data, WebProtegeDialogCloser closer) {
-                UIUtil.showLoadProgessBar("Importing CSV file", "Please wait");
-                DispatchServiceManager.get().execute(new ImportCSVFileAction(projectId, csvDocumentId, importRoot, data), new AbstractDispatchServiceCallback<ImportCSVFileResult>() {
+                DispatchServiceManager.get().execute(new ImportCSVFileAction(projectId, csvDocumentId, importRoot, data), new AbstractDispatchServiceCallbackWithProgressDisplay<ImportCSVFileResult>() {
                     @Override
                     protected String getErrorMessage(Throwable throwable) {
-                        return "There was a problem importing the csv file";
+                        return "There was a problem importing the csv file.  Please try again.";
                     }
 
                     @Override
                     public void handleSuccess(ImportCSVFileResult result) {
-                        MessageBox.showAlert("CSV import succeeded", result.getRowCount() + " rows were imported");
+                        MessageBox.showMessage("CSV import succeeded", result.getRowCount() + " rows were imported");
+                    }
+
+                    @Override
+                    public String getProgressDisplayTitle() {
+                        return "Importing CSV file";
+                    }
+
+                    @Override
+                    public String getProgressDisplayMessage() {
+                        return "Please wait.";
                     }
                 });
-                UIUtil.hideLoadProgessBar();
                 closer.hide();
             }
         });

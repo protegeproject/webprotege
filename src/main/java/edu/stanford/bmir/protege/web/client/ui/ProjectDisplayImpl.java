@@ -24,6 +24,7 @@ import com.gwtext.client.widgets.menu.event.CheckItemListenerAdapter;
 import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
@@ -98,7 +99,6 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
 
-
     @Override
     public ProjectId getProjectId() {
         return projectId;
@@ -106,11 +106,12 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     /**
      * Gets the project for this tab.
+     *
      * @return The {@link Project}.  Not {@code null}.
      */
     public Project getProject() {
         Optional<Project> project = ProjectManager.get().getProject(projectId);
-        if(!project.isPresent()) {
+        if (!project.isPresent()) {
             throw new IllegalStateException("Unknown project: " + project);
         }
         return project.get();
@@ -148,22 +149,24 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     private void getProjectConfiguration() {
-        UIUtil.showLoadProgessBar("Loading Project", "Loading user interface configuration");
         DispatchServiceManager.get().execute(new GetUIConfigurationAction(projectId),
-                new AbstractDispatchServiceCallback<GetUIConfigurationResult>() {
+                new AbstractDispatchServiceCallbackWithProgressDisplay<GetUIConfigurationResult>() {
                     @Override
                     public void handleSuccess(GetUIConfigurationResult result) {
                         getProject().setProjectLayoutConfiguration(result.getConfiguration());
                         createOntolgyForm();
                         doLayout();
                         setInitialSelection();
-                        GWT.log("Project configuration set up");
                     }
 
                     @Override
-                    public void handleFinally() {
-                        GWT.log("GetUIConfigurationAction.handleFinally");
-                        UIUtil.hideLoadProgessBar();
+                    public String getProgressDisplayTitle() {
+                        return "Loading project";
+                    }
+
+                    @Override
+                    public String getProgressDisplayMessage() {
+                        return "Loading user interface configuration";
                     }
 
                     @Override
@@ -188,7 +191,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         if (tabs.size() > 0) {
             activate(0);
         }
-        if (UIUtil.getBooleanConfigurationProperty(project.getProjectLayoutConfiguration(), SHOW_ONTOLOGY_TOOLBAR, true) ) {
+        if (UIUtil.getBooleanConfigurationProperty(project.getProjectLayoutConfiguration(), SHOW_ONTOLOGY_TOOLBAR, true)) {
             createToolbarButtons();
         }
         doLayout();
@@ -209,7 +212,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     protected void createToolbarButtons() {
-       Toolbar toolbar = getTopToolbar();
+        Toolbar toolbar = getTopToolbar();
         toolbar.addFill();
         toolbar.addButton(getAddPortletButton());
         toolbar.addSpacer();
@@ -252,23 +255,23 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     protected void onPortletAdded(final String javaClassName) {
-            GWT.runAsync(new RunAsyncCallback() {
-                @Override
-                public void onFailure(Throwable reason) {
-                    GWT.log("There was a problem adding the portlet", reason);
-                }
+        GWT.runAsync(new RunAsyncCallback() {
+            @Override
+            public void onFailure(Throwable reason) {
+                GWT.log("There was a problem adding the portlet", reason);
+            }
 
-                @Override
-                public void onSuccess() {
-                    EntityPortlet portlet = UIFactory.createPortlet(getProject(), javaClassName);
-                    if (portlet == null) {
-                        return;
-                    }
-                    AbstractTab activeTab = getActiveOntologyTab();
-                    activeTab.addPortlet(portlet, activeTab.getColumnCount() - 1);
-                    doLayout();
+            @Override
+            public void onSuccess() {
+                EntityPortlet portlet = UIFactory.createPortlet(getProject(), javaClassName);
+                if (portlet == null) {
+                    return;
                 }
-            });
+                AbstractTab activeTab = getActiveOntologyTab();
+                activeTab.addPortlet(portlet, activeTab.getColumnCount() - 1);
+                doLayout();
+            }
+        });
 
     }
 
@@ -314,7 +317,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     protected ToolbarButton getSaveConfigurationButton() {
-        ToolbarButton saveConfigButton = new ToolbarButton(null,  new ButtonListenerAdapter() {
+        ToolbarButton saveConfigButton = new ToolbarButton(null, new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
                 MessageBox.showYesNoConfirmBox("Save project layout?", "Save the current project layout for future sessions?", new YesNoHandler() {
@@ -388,20 +391,25 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
         ProjectLayoutConfiguration config = getProject().getProjectLayoutConfiguration();
         config.setProjectId(projectId);
-        UIUtil.showLoadProgessBar("Saving configuration", "Saving the current project layout.");
         DispatchServiceManager.get().execute(new SetUIConfigurationAction(projectId, config),
-                new AbstractDispatchServiceCallback<SetUIConfigurationResult>() {
-            @Override
-            public void handleSuccess(SetUIConfigurationResult setUIConfigurationResult) {
-                MessageBox.showMessage("Project layout saved",
-                        "Project layout saved successfully. This layout will be used the next time you log in.");
-            }
+                new AbstractDispatchServiceCallbackWithProgressDisplay<SetUIConfigurationResult>() {
+                    @Override
+                    public void handleSuccess(SetUIConfigurationResult setUIConfigurationResult) {
+                        MessageBox.showMessage("Project layout saved",
+                                "Project layout saved successfully. This layout will be used the next time you log in.");
+                    }
 
-            @Override
-            public void handleFinally() {
-                UIUtil.hideLoadProgessBar();
-            }
-        });
+                    @Override
+                    public String getProgressDisplayTitle() {
+                        return "Saving configuration";
+                    }
+
+                    @Override
+                    public String getProgressDisplayMessage() {
+                        return "Saving the current project layout.";
+                    }
+
+                });
     }
 
     public String getLabel() {
@@ -541,7 +549,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private void setInitialSelection() {
         final String ontologyName = com.google.gwt.user.client.Window.Location.getParameter("ontology");
-        if (ontologyName == null || ! projectId.getId().equals(ontologyName)) {
+        if (ontologyName == null || !projectId.getId().equals(ontologyName)) {
             return;
         }
 

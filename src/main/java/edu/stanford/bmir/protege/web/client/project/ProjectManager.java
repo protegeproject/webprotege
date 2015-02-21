@@ -37,7 +37,7 @@ public class ProjectManager {
         return instance;
     }
 
-    public void loadProject(ProjectId projectId, final AsyncCallback<Project> projectLoadedCallback) {
+    public void loadProject(ProjectId projectId, final AbstractDispatchServiceCallback<Project> projectLoadedCallback) {
         checkNotNull(projectLoadedCallback);
         Project project = map.get(checkNotNull(projectId));
         if(project != null) {
@@ -47,6 +47,10 @@ public class ProjectManager {
 
         final LoadProjectAction action = new LoadProjectAction(checkNotNull(projectId));
         DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<LoadProjectResult>() {
+            @Override
+            public void handleSubmittedForExecution() {
+                projectLoadedCallback.handleSubmittedForExecution();
+            }
 
             @Override
             public void handleExecutionException(Throwable cause) {

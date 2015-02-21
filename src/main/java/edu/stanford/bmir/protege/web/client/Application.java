@@ -11,6 +11,7 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.app.ClientApplicationPropertiesDecoder;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitManagerInitializationTask;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
@@ -198,18 +199,9 @@ public class Application implements HasUserId, PermissionChecker {
      * @param callback The call back that will be executed once the project has been loaded.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public void loadProject(final ProjectId projectId, final AsyncCallback<Project> callback) {
+    public void loadProject(final ProjectId projectId, final AbstractDispatchServiceCallback<Project> callback) {
         checkNotNull(callback);
-        GWT.runAsync(new RunAsyncCallback() {
-            @Override
-            public void onFailure(Throwable reason) {
-            }
-
-            @Override
-            public void onSuccess() {
-                ProjectManager.get().loadProject(projectId, callback);
-            }
-        });
+        ProjectManager.get().loadProject(projectId, callback);
     }
 
     public void closeProject(ProjectId projectId, AsyncCallback<ProjectId> callback) {

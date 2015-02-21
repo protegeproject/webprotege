@@ -128,6 +128,10 @@ public abstract class AbstractDispatchServiceCallback<T> implements AsyncCallbac
         }
     }
 
+    protected String getErrorMessageTitle() {
+        return "Error";
+    }
+
     protected String getErrorMessage(Throwable throwable) {
         return "An error has occurred.  Please try again.";
     }

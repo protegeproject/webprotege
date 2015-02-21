@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsDialogController;
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractDispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
@@ -49,12 +50,16 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
     }
 
     private void getSettingsAndShowDialog(Optional<ProjectId> activeProject) {
-        UIUtil.showLoadProgessBar("Retrieving settings", "Please wait.");
         GetEntityCrudKitSettingsAction action = new GetEntityCrudKitSettingsAction(activeProject.get());
-        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallback<GetEntityCrudKitSettingsResult>() {
+        DispatchServiceManager.get().execute(action, new AbstractDispatchServiceCallbackWithProgressDisplay<GetEntityCrudKitSettingsResult>() {
             @Override
-            public void handleFinally() {
-                UIUtil.hideLoadProgessBar();
+            public String getProgressDisplayTitle() {
+                return "Retrieving settings";
+            }
+
+            @Override
+            public String getProgressDisplayMessage() {
+                return "Please wait.";
             }
 
             @Override
