@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
+import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -35,6 +36,9 @@ public class SetUIConfigurationActionHandler implements ActionHandler<SetUIConfi
 
     @Override
     public SetUIConfigurationResult execute(SetUIConfigurationAction action, ExecutionContext executionContext) {
+        if(executionContext.getUserId().isGuest()) {
+            throw new NotSignedInException("The project layout cannot be saved because you are not signed in");
+        }
         uiConfigurationManager.saveProjectLayoutConfiguration(
                 action.getProjectId(),
                 executionContext.getUserId(),
