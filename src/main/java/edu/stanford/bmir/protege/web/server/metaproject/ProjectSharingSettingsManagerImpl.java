@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
-import edu.stanford.bmir.protege.web.client.ui.ontology.accesspolicy.domain.Invitation;
 import edu.stanford.bmir.protege.web.server.AccessPolicyManager;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
@@ -157,16 +156,16 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     }
 
     private void sendEmailInvitation(ProjectSharingSettings projectSharingSettings, UserSharingSetting userSharingSetting) {
-        UserId userId = userSharingSetting.getUserId();
-        // Email invitation
-        List<Invitation> invitations = new ArrayList<Invitation>();
-        final Invitation invitation = new Invitation();
-        invitation.setEmailId(userId.getUserName());
-        invitation.setWriter(userSharingSetting.getSharingSetting() == SharingSetting.EDIT);
-        invitations.add(invitation);
-        String baseURL = "http://" + WebProtegeProperties.get().getApplicationHostName();
-
-        AccessPolicyManager.get().createTemporaryAccountForInvitation(projectSharingSettings.getProjectId(), baseURL, invitations);
+//        UserId userId = userSharingSetting.getUserId();
+//        // Email invitation
+//        List<Invitation> invitations = new ArrayList<Invitation>();
+//        final Invitation invitation = new Invitation();
+//        invitation.setEmailId(userId.getUserName());
+//        invitation.setWriter(userSharingSetting.getSharingSetting() == SharingSetting.EDIT);
+//        invitations.add(invitation);
+//        String baseURL = "http://" + WebProtegeProperties.get().getApplicationHostName();
+//
+//        AccessPolicyManager.get().createTemporaryAccountForInvitation(projectSharingSettings.getProjectId(), baseURL, invitations);
     }
 
     private void getWorldAllowedOperations(ProjectSharingSettings projectSharingSettings, MetaProject metaProject, Set<GroupOperation> allowedGroupOperations) {

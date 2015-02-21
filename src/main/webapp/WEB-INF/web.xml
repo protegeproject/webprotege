@@ -57,11 +57,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>AccessPolicyServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.AccessPolicyServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>OpenIdServiceImpl</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.OpenIdServiceImpl</servlet-class>
 	</servlet>
@@ -173,11 +168,6 @@
 	<servlet-mapping>
 		<servlet-name>AuthenticateServiceImpl</servlet-name>
 		<url-pattern>/authenticate/authenticate/authen</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>AccessPolicyServiceImpl</servlet-name>
-		<url-pattern>/accesspolicy</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
