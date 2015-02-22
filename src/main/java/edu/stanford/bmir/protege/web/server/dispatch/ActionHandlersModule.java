@@ -121,6 +121,7 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(GetIndividualsActionHandler.class);
 
         multibinder.addBinding().to(GetEntityRenderingActionHandler.class);
+        multibinder.addBinding().to(GetDataPropertyFrameActionHandler.class);
 
         multibinder.addBinding().to(GetMetricsActionHandler.class);
 
