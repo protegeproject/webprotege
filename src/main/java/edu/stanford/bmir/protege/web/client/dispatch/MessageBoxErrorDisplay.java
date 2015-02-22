@@ -31,8 +31,7 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
     @Override
     public void displayInvocationExceptionErrorMessage() {
         MessageBox.showMessage(
-                "Error",
-                "There was a problem communicating with WebProtégé.  " +
-                        "Please check your network connection and try again.");
+                "Internal Error",
+                "An internal error has occurred.  Please refresh your browser and try again.");
     }
 }
