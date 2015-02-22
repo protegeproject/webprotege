@@ -9,7 +9,7 @@ public interface DispatchErrorMessageDisplay {
 
     void displayPermissionDeniedErrorMessage();
 
-    void displayGeneralErrorMessage(String message);
+    void displayGeneralErrorMessage(String title, String message);
 
     void displayIncompatibleRemoteServiceExceptionErrorMessage();
 

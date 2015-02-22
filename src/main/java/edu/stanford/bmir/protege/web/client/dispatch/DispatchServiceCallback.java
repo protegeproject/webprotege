@@ -108,7 +108,7 @@ public abstract class DispatchServiceCallback<T>  {
     private void displayAndLogError(Throwable throwable) {
         Logger logger = Logger.getLogger("AsyncCallbackErrorLogger");
         logger.log(Level.SEVERE, "Error executing remote call: " + throwable.getMessage());
-        errorMessageDisplay.displayGeneralErrorMessage(getErrorMessage(throwable));
+        errorMessageDisplay.displayGeneralErrorMessage("Error", getErrorMessage(throwable));
     }
 
     private void _handleIncompatibleRemoteServiceException(IncompatibleRemoteServiceException e) {

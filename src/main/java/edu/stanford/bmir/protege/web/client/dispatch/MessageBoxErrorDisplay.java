@@ -15,8 +15,8 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
     }
 
     @Override
-    public void displayGeneralErrorMessage(String message) {
-        MessageBox.showAlert(message);
+    public void displayGeneralErrorMessage(String title, String message) {
+        MessageBox.showAlert(title, message);
     }
 
     @Override

@@ -31,7 +31,8 @@ public class DispatchServiceCallback_TestCase<T> {
     @Before
     public void setUp() throws Exception {
         messageDisplay = mock(DispatchErrorMessageDisplay.class);
-        callback = spy(new DispatchServiceCallback<T>(messageDisplay) {});
+        callback = spy(new DispatchServiceCallback<T>(messageDisplay) {
+        });
     }
 
     @Test
@@ -47,7 +48,7 @@ public class DispatchServiceCallback_TestCase<T> {
         when(actionExecutionException.getCause()).thenReturn(cause);
         callback.onFailure(actionExecutionException);
         verify(callback, times(1)).handleExecutionException(cause);
-        verify(messageDisplay, times(1)).displayGeneralErrorMessage(any(String.class));
+        verify(messageDisplay, times(1)).displayGeneralErrorMessage(anyString(), anyString());
     }
 
     @Test
@@ -69,7 +70,7 @@ public class DispatchServiceCallback_TestCase<T> {
     public void shouldDealWithOtherKindOfException() {
         Exception exception = mock(Exception.class);
         callback.onFailure(exception);
-        verify(messageDisplay, times(1)).displayGeneralErrorMessage(anyString());
+        verify(messageDisplay, times(1)).displayGeneralErrorMessage(anyString(), anyString());
     }
 
 
