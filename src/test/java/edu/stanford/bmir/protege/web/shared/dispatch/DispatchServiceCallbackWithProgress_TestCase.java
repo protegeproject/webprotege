@@ -72,7 +72,7 @@ public class DispatchServiceCallbackWithProgress_TestCase<T> {
         when(actionExecutionException.getCause()).thenReturn(cause);
         callback.onFailure(actionExecutionException);
         verify(callback, times(1)).handleExecutionException(cause);
-        verify(messageDisplay, times(1)).displayGeneralErrorMessage(any(String.class));
+        verify(messageDisplay, times(1)).displayGeneralErrorMessage(anyString(), anyString());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class DispatchServiceCallbackWithProgress_TestCase<T> {
     public void shouldDealWithOtherKindOfException() {
         Exception exception = mock(Exception.class);
         callback.onFailure(exception);
-        verify(messageDisplay, times(1)).displayGeneralErrorMessage(anyString());
+        verify(messageDisplay, times(1)).displayGeneralErrorMessage(anyString(), anyString());
     }
 
 
