@@ -103,8 +103,4 @@ public class ChAOServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet implem
         return PaginationServerUtil.pagedRecords(data, start, limit, sort, dir);
     }
 
-    public Collection<ChangeData> getWatchedEntities(String projectName, String userName) {
-        return Collections.emptyList();
-    }
-
 }

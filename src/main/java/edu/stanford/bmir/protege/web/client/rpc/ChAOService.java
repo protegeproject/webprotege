@@ -34,7 +34,4 @@ public interface ChAOService extends RemoteService {
 
     public PaginationData<ChangeData> getWatchedEntities(String projectName, String userName, int start, int limit, String sort, String dir);
 
-    public Collection<ChangeData> getWatchedEntities(String projectName, String userName);
-
-
 }
