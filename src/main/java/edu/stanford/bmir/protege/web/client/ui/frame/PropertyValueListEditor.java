@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -8,6 +9,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
+import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
@@ -21,6 +23,8 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -70,10 +74,15 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
     @Override
     public void setValue(final PropertyValueList propertyValueList) {
-        RenderingServiceManager.getManager().execute(new GetRendering(projectId, propertyValueList), new AbstractWebProtegeAsyncCallback<GetRenderingResponse>() {
+        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(propertyValueList.getSignature())), new AbstractWebProtegeAsyncCallback<GetEntityDataResult>() {
             @Override
-            public void onSuccess(GetRenderingResponse result) {
-                fillUp(propertyValueList, result);
+            public void onSuccess(final GetEntityDataResult result) {
+                fillUp(propertyValueList, new HasEntityDataProvider() {
+                    @Override
+                    public Optional<OWLEntityData> getEntityData(OWLEntity entity) {
+                        return Optional.of(result.getEntityDataMap().get(entity));
+                    }
+                });
             }
         });
     }

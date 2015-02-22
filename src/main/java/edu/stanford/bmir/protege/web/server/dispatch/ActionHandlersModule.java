@@ -30,6 +30,7 @@ import edu.stanford.bmir.protege.web.server.project.GetUIConfigurationActionHand
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
+import edu.stanford.bmir.protege.web.server.renderer.GetEntityDataActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.GetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.sharing.SetProjectSharingSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.usage.GetUsageActionHandler;
@@ -121,6 +122,9 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(GetIndividualsActionHandler.class);
 
         multibinder.addBinding().to(GetEntityRenderingActionHandler.class);
+        multibinder.addBinding().to(GetEntityDataActionHandler.class);
+
+
         multibinder.addBinding().to(GetDataPropertyFrameActionHandler.class);
 
         multibinder.addBinding().to(GetMetricsActionHandler.class);
