@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.renderer;
 
 import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class GetEntityDataAction_TestCase {
     private ProjectId projectId;
 
     @Mock
-    private ImmutableCollection<OWLEntity> entities;
+    private ImmutableSet<OWLEntity> entities;
 
 
     @Before

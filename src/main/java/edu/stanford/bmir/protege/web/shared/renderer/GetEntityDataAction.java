@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.renderer;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -19,7 +20,7 @@ public class GetEntityDataAction implements Action<GetEntityDataResult>, HasProj
 
     private ProjectId projectId;
 
-    private ImmutableCollection<OWLEntity> entities;
+    private ImmutableSet<OWLEntity> entities;
 
 
     /**
@@ -28,7 +29,7 @@ public class GetEntityDataAction implements Action<GetEntityDataResult>, HasProj
     private GetEntityDataAction() {
     }
 
-    public GetEntityDataAction(ProjectId projectId, ImmutableCollection<OWLEntity> entities) {
+    public GetEntityDataAction(ProjectId projectId, ImmutableSet<OWLEntity> entities) {
         this.projectId = checkNotNull(projectId);
         this.entities = checkNotNull(entities);
     }
@@ -38,7 +39,7 @@ public class GetEntityDataAction implements Action<GetEntityDataResult>, HasProj
         return projectId;
     }
 
-    public ImmutableCollection<OWLEntity> getEntities() {
+    public ImmutableSet<OWLEntity> getEntities() {
         return entities;
     }
 
