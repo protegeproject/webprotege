@@ -1,16 +1,17 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
-import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
-import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
-import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
+import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
@@ -33,16 +34,21 @@ public abstract class AbstractFrameEditor<O> extends SimplePanel implements Valu
     @Override
     final public void setValue(final O object) {
         if (object instanceof HasSignature) {
-            RenderingServiceManager renderingServiceManager = RenderingServiceManager.getManager();
+            RenderingManager renderingManager = RenderingManager.getManager();
             final HasSignature hasSignature = (HasSignature) object;
-            renderingServiceManager.execute(new GetRendering(projectId, hasSignature), new AsyncCallback<GetRenderingResponse>() {
+            renderingManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(hasSignature.getSignature())), new AsyncCallback<GetEntityDataResult>() {
                 @Override
                 public void onFailure(Throwable caught) {
                 }
 
                 @Override
-                public void onSuccess(GetRenderingResponse result) {
-                    setValue(object, result);
+                public void onSuccess(final GetEntityDataResult result) {
+                    setValue(object, new HasEntityDataProvider() {
+                        @Override
+                        public Optional<OWLEntityData> getEntityData(OWLEntity entity) {
+                            return Optional.fromNullable(result.getEntityDataMap().get(entity));
+                        }
+                    });
                 }
             });
         }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.URL;
@@ -34,6 +35,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.project.Project;
+import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
@@ -59,8 +61,11 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedE
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedHandler;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedHandler;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import edu.stanford.bmir.protege.web.shared.watches.*;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -222,15 +227,15 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     private void handleParentAddedEvent(final ClassHierarchyParentAddedEvent event) {
         final TreeNode tn = findTreeNode(event.getParent());
         if(tn != null) {
-            RenderingServiceManager.getManager().execute(new GetRendering(getProjectId(), event), new AsyncCallback<GetRenderingResponse>() {
+            RenderingManager.getManager().execute(new GetEntityDataAction(getProjectId(), ImmutableSet.copyOf(event.getSignature())), new AsyncCallback<GetEntityDataResult>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     GWT.log("Problem getting classes", caught);
                 }
 
                 @Override
-                public void onSuccess(GetRenderingResponse result) {
-                    SubclassEntityData subClassData = new SubclassEntityData(event.getChild().toStringID(), result.getRendering(event.getChild().getIRI()).get().getBrowserText(), Collections.<EntityData>emptyList(), 0);
+                public void onSuccess(GetEntityDataResult result) {
+                    SubclassEntityData subClassData = new SubclassEntityData(event.getChild().toStringID(), result.getEntityDataMap().get(event.getChild()).getBrowserText(), Collections.<EntityData>emptyList(), 0);
                     subClassData.setValueType(ValueType.Cls);
                     onSubclassAdded((EntityData) tn.getUserObject(), Arrays.<EntityData>asList(subClassData), false);
                 }

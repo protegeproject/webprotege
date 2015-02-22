@@ -81,12 +81,6 @@
 		<servlet-class>edu.stanford.bmir.protege.web.server.BioPortalAPIServiceImpl</servlet-class>
 	</servlet>
 
-
-	<servlet>
-		<servlet-name>RenderingService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.RenderingServiceImpl</servlet-class>
-	</servlet>
-
 	<servlet>
 		<servlet-name>ProjectUploadServlet</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.filesubmission.FileUploadServlet</servlet-class>
@@ -153,13 +147,6 @@
 		<servlet-name>BioPortalAPIService</servlet-name>
 		<url-pattern>/webprotege/bioportalapi</url-pattern>
 	</servlet-mapping>
-
-
-	<servlet-mapping>
-		<servlet-name>RenderingService</servlet-name>
-		<url-pattern>/webprotege/renderingservice</url-pattern>
-	</servlet-mapping>
-
 
 	<!-- Default page to serve -->
 	

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.properties;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
@@ -17,6 +18,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.project.Project;
+import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -32,6 +34,8 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedHandler;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.Serializable;
@@ -776,14 +780,14 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private void updateTextAsync(final OWLEntity entity, final TreeNode node) {
-        RenderingServiceManager.getManager().execute(new GetRendering(getProjectId(), entity), new AsyncCallback<GetRenderingResponse>() {
+        RenderingManager.getManager().execute(new GetEntityDataAction(getProjectId(), ImmutableSet.<OWLEntity>of(entity)), new AsyncCallback<GetEntityDataResult>() {
             @Override
             public void onFailure(Throwable caught) {
             }
 
             @Override
-            public void onSuccess(GetRenderingResponse result) {
-                node.setText(result.getEntityData(entity).get().getBrowserText());
+            public void onSuccess(GetEntityDataResult result) {
+                node.setText(result.getEntityDataMap().get(entity).getBrowserText());
             }
         });
     }

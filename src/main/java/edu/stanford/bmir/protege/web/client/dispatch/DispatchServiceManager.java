@@ -6,7 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
-import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
+import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
@@ -117,7 +117,7 @@ public class DispatchServiceManager {
     private void cacheRenderables(Object result) {
         if (result instanceof HasBrowserTextMap) {
             BrowserTextMap browserTextMap = ((HasBrowserTextMap) result).getBrowserTextMap();
-            RenderingServiceManager.getManager().registerEntityData(browserTextMap.getOWLEntityData());
+            RenderingManager.getManager().registerEntityData(browserTextMap.getOWLEntityData());
         }
     }
 
