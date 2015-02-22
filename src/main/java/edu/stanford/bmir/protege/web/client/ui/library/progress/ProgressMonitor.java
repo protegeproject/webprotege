@@ -16,9 +16,10 @@ public class ProgressMonitor {
 
     private final PopupPanel popupPanel;
 
-    private final static ProgressBarViewImpl widget = new ProgressBarViewImpl();
+    private final ProgressBarViewImpl widget;
 
     private ProgressMonitor() {
+        widget = new ProgressBarViewImpl();
         popupPanel = new PopupPanel(false, true);
         popupPanel.addStyleName("progress-popup");
         popupPanel.setWidget(widget);
