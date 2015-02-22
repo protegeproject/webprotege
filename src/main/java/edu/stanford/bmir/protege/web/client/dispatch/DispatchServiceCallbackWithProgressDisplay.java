@@ -30,7 +30,7 @@ public abstract class DispatchServiceCallbackWithProgressDisplay<T> extends Disp
     public abstract String getProgressDisplayMessage();
 
     @Override
-    public final void handleFinally() {
+    public void handleFinally() {
         progressDisplay.hideProgress();
         handleProgressDisplayFinally();
     }

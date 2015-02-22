@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.InvocationException;
+import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.client.rpc.StatusCodeException;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 
 /**
@@ -29,9 +33,26 @@ public class MessageBoxErrorDisplay implements DispatchErrorMessageDisplay {
     }
 
     @Override
-    public void displayInvocationExceptionErrorMessage() {
-        MessageBox.showMessage(
-                "Internal Error",
-                "An internal error has occurred.  Please refresh your browser and try again.");
+    public void displayInvocationExceptionErrorMessage(InvocationException exception) {
+        GWT.log("InvocationException: " + exception.getClass().getName() + ": " + exception.getMessage(), exception);
+        if(exception instanceof StatusCodeException) {
+            StatusCodeException statusCodeException = (StatusCodeException) exception;
+            if (statusCodeException.getStatusCode() != 0) {
+                MessageBox.showAlert(statusCodeException.getStatusText(),
+                        "WebProtégé has encountered an error. Please try again.<br>" +
+                                "Status Code: " + statusCodeException.getStatusCode() + " (" + statusCodeException.getStatusText() + ")"
+                );
+            }
+            else {
+                MessageBox.showAlert("Connection Error",
+                        "WebProtégé cannot connect to the server.  Please check your network connection.");
+            }
+        }
+        else {
+            MessageBox.showMessage(
+                    "Error",
+                    "An error has occurred.  Please refresh your browser and try again.");
+        }
+
     }
 }

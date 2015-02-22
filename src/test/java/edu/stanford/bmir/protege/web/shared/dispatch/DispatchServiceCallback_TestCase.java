@@ -63,7 +63,7 @@ public class DispatchServiceCallback_TestCase<T> {
     public void shouldDisplayInvocationExceptionMessage() {
         InvocationException exception = mock(InvocationException.class);
         callback.onFailure(exception);
-        verify(messageDisplay, times(1)).displayInvocationExceptionErrorMessage();
+        verify(messageDisplay, times(1)).displayInvocationExceptionErrorMessage(exception);
     }
 
     @Test

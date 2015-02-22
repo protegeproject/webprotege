@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * Stanford Center for Biomedical Informatics Research
  * 20/02/15
  */
-public abstract class DispatchServiceCallback<T>  {
+public abstract class DispatchServiceCallback<T> {
 
     private DispatchErrorMessageDisplay errorMessageDisplay;
 
@@ -34,33 +34,22 @@ public abstract class DispatchServiceCallback<T>  {
     }
 
     public final void onFailure(Throwable throwable) {
-        try {
-            if(throwable instanceof ActionExecutionException) {
-                handleExecutionException(throwable.getCause());
-            }
-            else if(throwable instanceof PermissionDeniedException) {
-                handlePermissionDeniedException((PermissionDeniedException) throwable);
-            }
-            else if(throwable instanceof IncompatibleRemoteServiceException) {
-                _handleIncompatibleRemoteServiceException((IncompatibleRemoteServiceException) throwable);
-            }
-            else if(throwable instanceof InvocationException) {
-                _handleInvocationException((InvocationException) throwable);
-            }
-            else if(throwable instanceof UmbrellaException) {
-                _handleUmbrellaException((UmbrellaException) throwable);
-            }
-            else {
-                // Should we actually get here?  I don't think so.
-                displayAndLogError(throwable);
-            }
-        } finally {
-            try {
-                handleErrorFinally(throwable);
-            } finally {
-                handleFinally();
-            }
+        if (throwable instanceof ActionExecutionException) {
+            handleExecutionException(throwable.getCause());
+        } else if (throwable instanceof PermissionDeniedException) {
+            handlePermissionDeniedException((PermissionDeniedException) throwable);
+        } else if (throwable instanceof IncompatibleRemoteServiceException) {
+            _handleIncompatibleRemoteServiceException((IncompatibleRemoteServiceException) throwable);
+        } else if (throwable instanceof InvocationException) {
+            _handleInvocationException((InvocationException) throwable);
+        } else if (throwable instanceof UmbrellaException) {
+            _handleUmbrellaException((UmbrellaException) throwable);
+        } else {
+            // Should we actually get here?  I don't think so.
+            displayAndLogError(throwable);
         }
+        handleErrorFinally(throwable);
+        handleFinally();
     }
 
     public final void onSuccess(T t) {
@@ -73,6 +62,7 @@ public abstract class DispatchServiceCallback<T>  {
 
     /**
      * Handles success.
+     *
      * @param t The return value from the call.
      */
     public void handleSuccess(T t) {
@@ -82,6 +72,7 @@ public abstract class DispatchServiceCallback<T>  {
 
     /**
      * Called after some kind of error has occurred.  This can be used to clean up after all errors.
+     *
      * @param throwable The error that occurred.
      */
     public void handleErrorFinally(Throwable throwable) {
@@ -94,7 +85,6 @@ public abstract class DispatchServiceCallback<T>  {
      * block in a "try-catch-finally" statement.
      */
     public void handleFinally() {
-
     }
 
     public void handleExecutionException(Throwable cause) {
@@ -116,11 +106,11 @@ public abstract class DispatchServiceCallback<T>  {
     }
 
     private void _handleInvocationException(InvocationException e) {
-        errorMessageDisplay.displayInvocationExceptionErrorMessage();
+        errorMessageDisplay.displayInvocationExceptionErrorMessage(e);
     }
 
     private void _handleUmbrellaException(UmbrellaException e) {
-        for(Throwable cause : e.getCauses()) {
+        for (Throwable cause : e.getCauses()) {
             onFailure(cause);
         }
     }
@@ -132,7 +122,6 @@ public abstract class DispatchServiceCallback<T>  {
     protected String getErrorMessage(Throwable throwable) {
         return "An error has occurred.  Please try again.";
     }
-
 
 
 }

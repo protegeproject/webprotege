@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -87,7 +88,8 @@ public class RevisionsListViewPresenter implements HasDispose {
     }
 
 
-    private void setListData(List<RevisionSummary> result) {
+    private void setListData(List<RevisionSummary> r) {
+        List<RevisionSummary> result = new ArrayList<>(r);
         Collections.sort(result);
         Collections.reverse(result);
         List<RevisionSummary> data = dataProvider.getList();
