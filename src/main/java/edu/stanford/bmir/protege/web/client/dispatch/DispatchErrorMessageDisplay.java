@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
+import com.google.gwt.user.client.rpc.InvocationException;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -19,9 +21,10 @@ public interface DispatchErrorMessageDisplay {
     void displayIncompatibleRemoteServiceExceptionErrorMessage();
 
     /**
-     * Display an error message for an {@link com.google.gwt.user.client.rpc.InvocationException}
+     * Display an error message for an {@link com.google.gwt.user.client.rpc.InvocationException}.
+     * @param exception The {@link com.google.gwt.user.client.rpc.InvocationException} that was thrown.
      */
-    void displayInvocationExceptionErrorMessage();
+    void displayInvocationExceptionErrorMessage(InvocationException exception);
 
     /**
      * Display a general error message.

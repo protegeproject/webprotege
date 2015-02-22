@@ -16,12 +16,11 @@ public class ProgressMonitor {
 
     private final PopupPanel popupPanel;
 
-    private final ProgressBarViewImpl widget;
+    private final static ProgressBarViewImpl widget = new ProgressBarViewImpl();
 
     private ProgressMonitor() {
         popupPanel = new PopupPanel(false, true);
         popupPanel.addStyleName("progress-popup");
-        widget = new ProgressBarViewImpl();
         popupPanel.setWidget(widget);
         popupPanel.setGlassEnabled(true);
         popupPanel.setGlassStyleName("glass");
