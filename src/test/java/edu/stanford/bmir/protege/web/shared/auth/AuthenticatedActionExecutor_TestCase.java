@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -45,7 +44,7 @@ public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticati
     private UserId userId;
 
     @Mock
-    private AsyncCallback<AuthenticationResponse> callback;
+    private DispatchServiceCallback<AuthenticationResponse> callback;
 
     private String clearTextPassword = "ThePassword";
 
@@ -103,11 +102,11 @@ public class AuthenticatedActionExecutor_TestCase<A extends AbstractAuthenticati
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 Object[] args = invocationOnMock.getArguments();
                 if (args[0] instanceof GetChapSessionAction) {
-                    AsyncCallback<GetChapSessionResult> cb = (AsyncCallback<GetChapSessionResult>) args[1];
+                    DispatchServiceCallback<GetChapSessionResult> cb = (DispatchServiceCallback<GetChapSessionResult>) args[1];
                     cb.onSuccess(chapSessionResult);
                 }
                 else if(args[1] instanceof PerformLoginAction) {
-                    AsyncCallback<R> cb = (AsyncCallback<R>) args[1];
+                    DispatchServiceCallback<R> cb = (DispatchServiceCallback<R>) args[1];
                     cb.onSuccess(result);
                 }
                 return null;

@@ -55,18 +55,6 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         return userData;
     }
 
-    public UserData validateUser(String name, String password) {
-        if (!MetaProjectManager.getManager().hasValidCredentials(name, password)) {
-            return null;
-        }
-        Log.getLogger().info("User " + name + " logged in at: " + new Date());
-        return AuthenticationUtil.createUserData(UserId.getUserId(name));
-    }
-
-    public void changePassword(String userName, String password) {
-        MetaProjectManager.getManager().changePassword(userName, password);
-    }
-
     public UserData registerUserToAssociateOpenId(String userName, String password, String emailId) {
 
         if (!isAuthenticateWithOpenId()) {
@@ -178,16 +166,4 @@ public class AuthenticateServiceImpl extends WebProtegeRemoteServiceServlet impl
         return userData ;
 
     }
-
-    public void sendPasswordReminder(String userName) {
-        String email = MetaProjectManager.getManager().getEmail(UserId.getUserId(userName)).orNull();
-        if (email == null) {
-            throw new IllegalArgumentException("User " + userName + " does not have an email configured.");
-        }
-        changePassword(userName, EmailConstants.RESET_PASSWORD);
-        App.get().getMailManager().sendMail(email, EmailConstants.FORGOT_PASSWORD_SUBJECT, EmailConstants.FORGOT_PASSWORD_EMAIL_BODY);
-
-    }
-
-
 }

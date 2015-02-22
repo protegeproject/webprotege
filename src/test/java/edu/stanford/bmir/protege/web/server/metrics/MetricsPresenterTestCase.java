@@ -35,7 +35,7 @@ public class MetricsPresenterTestCase {
     private DispatchServiceManager dispatchServiceManager;
 
     @Mock
-    protected AsyncCallback<GetMetricsResult> callback;
+    protected DispatchServiceCallback<GetMetricsResult> callback;
 
     @Mock
     protected GetMetricsResult result;
@@ -60,7 +60,7 @@ public class MetricsPresenterTestCase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-                AsyncCallback<GetMetricsResult> action = (AsyncCallback<GetMetricsResult>) invocationOnMock.getArguments()[1];
+                DispatchServiceCallback<GetMetricsResult> action = (DispatchServiceCallback<GetMetricsResult>) invocationOnMock.getArguments()[1];
                 action.onSuccess(result);
                 return null;
             }

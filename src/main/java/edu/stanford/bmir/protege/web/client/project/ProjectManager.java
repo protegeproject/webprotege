@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackInvoker;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.LoadProjectAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.LoadProjectResult;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
@@ -40,7 +42,7 @@ public class ProjectManager {
         checkNotNull(projectLoadedCallback);
         Project project = map.get(checkNotNull(projectId));
         if(project != null) {
-            projectLoadedCallback.onSuccess(project);
+            new DispatchServiceCallbackInvoker<>(projectLoadedCallback).onSuccess(project);
             return;
         }
 
@@ -53,13 +55,13 @@ public class ProjectManager {
 
             @Override
             public void handleExecutionException(Throwable cause) {
-                projectLoadedCallback.onFailure(cause);
+                new DispatchServiceCallbackInvoker<>(projectLoadedCallback).onFailure(cause);
             }
 
             @Override
             public void handleSuccess(LoadProjectResult result) {
                 Project project = registerProject(result.getUserId(), result.getRequestingUserProjectPermissionSet(), result.getProjectDetails());
-                projectLoadedCallback.onSuccess(project);
+                new DispatchServiceCallbackInvoker<>(projectLoadedCallback).onSuccess(project);
             }
         });
     }

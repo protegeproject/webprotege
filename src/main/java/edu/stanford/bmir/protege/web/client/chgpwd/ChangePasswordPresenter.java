@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.chgpwd;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -68,13 +70,6 @@ public class ChangePasswordPresenter {
         return newPassword.equals(newPasswordConfirmation);
     }
 
-    private void handleSuccess() {
-        MessageBox.showMessage("Your password has been changed");
-    }
-
-    private void showFailureMessage() {
-        MessageBox.showAlert("There was a problem changing your password. Please try again");
-    }
 
     private void handleIncorrectPasswordConfirmation() {
         MessageBox.showAlert("Passwords do not match", "Please re-enter the new password and confirmation.");
@@ -90,11 +85,11 @@ public class ChangePasswordPresenter {
         String currentPassword = data.getOldPassword();
         String newPassword = data.getNewPassword();
         ChangePasswordActionFactory actionFactory = new ChangePasswordActionFactory(newPassword, new SaltProvider());
-        executor.execute(userId, currentPassword, actionFactory, new AsyncCallback<AuthenticationResponse>() {
+        executor.execute(userId, currentPassword, actionFactory, new DispatchServiceCallbackWithProgressDisplay<AuthenticationResponse>() {
             @Override
-            public void onSuccess(AuthenticationResponse response) {
+            public void handleSuccess(AuthenticationResponse response) {
                 if(response == AuthenticationResponse.SUCCESS) {
-                    handleSuccess();
+                    MessageBox.showMessage("Your password has been changed");
                     closer.hide();
                 }
                 else {
@@ -103,8 +98,13 @@ public class ChangePasswordPresenter {
             }
 
             @Override
-            public void onFailure(Throwable caught) {
-                showFailureMessage();
+            public String getProgressDisplayTitle() {
+                return "Changing password";
+            }
+
+            @Override
+            public String getProgressDisplayMessage() {
+                return "Please wait.";
             }
         });
     }
