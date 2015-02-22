@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.UmbrellaException;
@@ -15,7 +13,7 @@ import java.util.logging.Logger;
  * Stanford Center for Biomedical Informatics Research
  * 20/02/15
  */
-public abstract class DispatchServiceCallback<T> implements AsyncCallback<T>  {
+public abstract class DispatchServiceCallback<T>  {
 
     private DispatchErrorMessageDisplay errorMessageDisplay;
 
@@ -35,9 +33,7 @@ public abstract class DispatchServiceCallback<T> implements AsyncCallback<T>  {
 
     }
 
-    @Override
     public final void onFailure(Throwable throwable) {
-        GWT.log("Error executing remote call: " + throwable.getMessage(), throwable);
         try {
             if(throwable instanceof ActionExecutionException) {
                 handleExecutionException(throwable.getCause());
@@ -67,7 +63,6 @@ public abstract class DispatchServiceCallback<T> implements AsyncCallback<T>  {
         }
     }
 
-    @Override
     public final void onSuccess(T t) {
         try {
             handleSuccess(t);

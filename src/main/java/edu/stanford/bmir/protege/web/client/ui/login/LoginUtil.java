@@ -398,9 +398,9 @@ public class LoginUtil {
         AuthenticatedActionExecutor executor = new AuthenticatedActionExecutor(DispatchServiceManager.get(), passwordDigestAlgorithm, chapResponseDigestAlgorithm);
         executor.execute(userId, passField.getText(),
                         new PerformLoginActionFactory(),
-                        new AbstractWebProtegeAsyncCallback<AuthenticationResponse>() {
+                        new DispatchServiceCallback<AuthenticationResponse>() {
                     @Override
-                    public void onSuccess(AuthenticationResponse response) {
+                    public void handleSuccess(AuthenticationResponse response) {
                         win.getEl().unmask();
                         if (response == AuthenticationResponse.SUCCESS) {
                             Application.get().setCurrentUser(userId);
