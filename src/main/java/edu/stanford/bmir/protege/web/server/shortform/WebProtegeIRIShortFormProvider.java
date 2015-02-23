@@ -55,60 +55,60 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
 
     @Override
     public String getShortForm(IRI iri) {
-        try {
-            Optional<String> builtInPrefix = getBuiltInPrefix(iri);
-            if (builtInPrefix.isPresent()) {
-                return prefix2PrefixNameMap.get(builtInPrefix.get()) + ":" + iri.getFragment();
-            }
-            int matchedIndex = Integer.MAX_VALUE;
-            boolean matchedDefaultLang = false;
-            OWLAnnotationValue renderingValue = null;
-            // Just ask for the language once (bad coding!)
-            final String defaultLanguage = languageProvider.getLang();
-            for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxiomProvider.getAnnotationAssertionAxioms(iri)) {
-                // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
-                // object to find the index.
-                int index = labellingIRIs.indexOf(ax.getProperty().getIRI());
-                if (index <= matchedIndex && index > -1) {
-                    if (index < matchedIndex) {
-                        matchedIndex = index;
-                        renderingValue = ax.getValue();
-                    }
-                    if (index == matchedIndex || index == Integer.MAX_VALUE) {
-                        final OWLAnnotationValue value = ax.getValue();
-                        if (value instanceof OWLLiteral) {
-                            OWLLiteral litValue = (OWLLiteral) value;
-                            String lang = litValue.getLang();
-                            if (lang != null) {
-                                if (lang.equals(defaultLanguage)) {
-                                    matchedDefaultLang = true;
-                                    renderingValue = litValue;
-                                } else if (!matchedDefaultLang) {
-                                    renderingValue = litValue;
-                                }
-                            }
-
-                        }
-                    }
-
-
-                }
-            }
-            final String result;
-            if (renderingValue instanceof OWLLiteral) {
-                result = ((OWLLiteral) renderingValue).getLiteral();
-            } else {
-                String iriFragment = iri.getFragment();
-                if(iriFragment != null) {
-                    result = iriFragment;
-                }
-                else {
-                    result = iri.toQuotedString();
-                }
-            }
-            return URLDecoder.decode(result, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+        Optional<String> builtInPrefix = getBuiltInPrefix(iri);
+        if (builtInPrefix.isPresent()) {
+            return prefix2PrefixNameMap.get(builtInPrefix.get()) + ":" + iri.getFragment();
         }
+        int matchedIndex = Integer.MAX_VALUE;
+        boolean matchedDefaultLang = false;
+        OWLAnnotationValue renderingValue = null;
+        // Just ask for the language once (bad coding!)
+        final String defaultLanguage = languageProvider.getLang();
+        for (OWLAnnotationAssertionAxiom ax : annotationAssertionAxiomProvider.getAnnotationAssertionAxioms(iri)) {
+            // Think this is thread safe.  The list is immutable and each indexOf call creates a fresh iterator
+            // object to find the index.
+            int index = labellingIRIs.indexOf(ax.getProperty().getIRI());
+            if (index <= matchedIndex && index > -1) {
+                if (index < matchedIndex) {
+                    matchedIndex = index;
+                    renderingValue = ax.getValue();
+                }
+                if (index == matchedIndex || index == Integer.MAX_VALUE) {
+                    final OWLAnnotationValue value = ax.getValue();
+                    if (value instanceof OWLLiteral) {
+                        OWLLiteral litValue = (OWLLiteral) value;
+                        String lang = litValue.getLang();
+                        if (lang != null) {
+                            if (lang.equals(defaultLanguage)) {
+                                matchedDefaultLang = true;
+                                renderingValue = litValue;
+                            } else if (!matchedDefaultLang) {
+                                renderingValue = litValue;
+                            }
+                        }
+
+                    }
+                }
+
+
+            }
+        }
+        if (renderingValue instanceof OWLLiteral) {
+            return ((OWLLiteral) renderingValue).getLiteral();
+        } else {
+            String result;
+            String iriFragment = iri.getFragment();
+            if (iriFragment != null) {
+                result = iriFragment;
+            } else {
+                result = iri.toQuotedString();
+            }
+            try {
+                return URLDecoder.decode(result, "UTF-8");
+            } catch (IllegalArgumentException | UnsupportedEncodingException e) {
+                return result;
+            }
+        }
+
     }
 }
