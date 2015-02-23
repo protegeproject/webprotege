@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -79,6 +82,23 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
             }
         }
         return allowedOps;
+    }
+
+    @Override
+    public PermissionsSet getPermissionsSet(ProjectId projectId, UserId userId) {
+        ProjectInstance pi = metaProject.getProject(projectId.getId());
+        if(pi == null) {
+            return PermissionsSet.emptySet();
+        }
+        User user = metaProject.getUser(userId.getUserName());
+        if(user == null) {
+            return PermissionsSet.emptySet();
+        }
+        PermissionsSet.Builder builder = PermissionsSet.builder();
+        for(Operation operation : metaProject.getPolicy().getAllowedOperations(user, pi)) {
+            builder.addPermission(Permission.getPermission(operation.getName()));
+        }
+        return builder.build();
     }
 
     @Override
