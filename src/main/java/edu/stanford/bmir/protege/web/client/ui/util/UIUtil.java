@@ -29,20 +29,16 @@ public class UIUtil {
 
     public static final String LOCAL = "#local_";
 
-    public static final String ADD_PREFIX = "add_parent";
-
     public static final String REMOVE_PREFIX = "remove_parent_";
 
     public static final String GOTO_PREFIX = "goto_parent_";
 
-    private static String[] noteTypes = new String[]{"Comment"};   //default value
 
     public static void showLoadProgessBar(final String message, final String barMessage) {
         ProgressMonitor.get().showProgressMonitor(message, barMessage);
     }
 
     public static void hideLoadProgessBar() {
-//        MessageBox.hide();
         ProgressMonitor.get().hideProgressMonitor();
     }
 
@@ -56,10 +52,6 @@ public class UIUtil {
         if (delayInMilliSeconds > 0) {
             timer.schedule(delayInMilliSeconds);
         }
-    }
-
-    public static void unmask(ExtElement el) {
-        el.unmask();
     }
 
     public static String getDisplayText(Object object) {
@@ -234,29 +226,8 @@ public class UIUtil {
         config.put(prop, value);
     }
 
-    public static void setConfigurationPropertyValue(PortletConfiguration config, String prop, Object value) {
-        if (config == null) {
-            return;
-        }
-        Map<String, Object> props = config.getProperties();
-        if (props == null) {
-            props = new HashMap<String, Object>();
-            config.setProperties(props);
-        }
-        props.put(prop, value);
-    }
-
-
     public static String getAppliedToTransactionString(String operationDescription, String applyTo) {
         return operationDescription + TRANSACTION_APPLY_TO_TRAILER_STRING + applyTo;
-    }
-
-    public static void setNoteTypes(String[] noteTypes) {
-        UIUtil.noteTypes = noteTypes;
-    }
-
-    public static String[] getNoteTypes() {
-        return UIUtil.noteTypes;
     }
 
     /**
@@ -352,17 +323,6 @@ public class UIUtil {
 
     }
 
-    public static Collection<String> getStringCollection(Collection<EntityData> entities) {
-        Collection<String> coll = new HashSet<String>();
-        if (entities == null) {
-            return coll;
-        }
-        for (EntityData entity : entities) {
-            coll.add(entity.getName());
-        }
-        return coll;
-    }
-
     public static String replaceEOLWithBR(String str) {
         return str.replaceAll("\n", "<br />");
     }
@@ -377,93 +337,6 @@ public class UIUtil {
         return false;
     }
 
-    public static String removeHTMLTags(String html) { //to be tested in all browsers
-        HTML htmlW = new HTML(html);
-        return htmlW.getElement().getInnerText();
-    }
-
-    public static int getIdentifierStart(String text, int currPos) {
-        if (text == null) {
-            return -1;
-        }
-        if (currPos > text.length()) {
-            currPos = text.length();
-        }
-
-        int res = currPos;
-        while (res > 0 && isIdentifierPart(text.charAt(res - 1))) {
-            res--;
-        }
-        return res;
-    }
-
-    public static int getIdentifierEnd(String text, int currPos) {
-        if (text == null) {
-            return -1;
-        }
-        if (currPos < 0) {
-            currPos = 0;
-        }
-
-        int res = currPos;
-        while (res < text.length() && isIdentifierPart(text.charAt(res))) {
-            res++;
-        }
-        return res;
-    }
-
-    private static boolean isIdentifierPart(char ch) {
-        boolean res = false;
-        res = res || Character.isLetter(ch);
-        res = res || Character.isDigit(ch);
-        res = res || ch == '_';
-        res = res || ch == '-';
-        res = res || ch == '.';
-        res = res || ch == ':';
-        return res;
-    }
-
-    static final String OWL_CLASS_ID = "http://www.w3.org/2002/07/owl#Class";
-
-    static final String RDFS_CLASS_ID = "http://www.w3.org/2000/01/rdf-schema#Class";
-
-    static final String RDF_PROPERTY_ID = "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property";
-
-    static final String OWL_DATA_PROPERTY_ID = "http://www.w3.org/2002/07/owl#DataProperty";
-
-    static final String OWL_OBJ_PROPERTY_ID = "http://www.w3.org/2002/07/owl#ObjectProperty";
-
-    public static ValueType guessValueType(EntityData entityData) {
-        ValueType valueType = entityData.getValueType();
-        if (valueType != null) {
-            return valueType;
-        }
-
-        if (entityData instanceof SubclassEntityData) {
-            return ValueType.Cls;
-        }
-
-        if (entityData instanceof PropertyEntityData) {
-            return ValueType.Property;
-        }
-
-        Collection<EntityData> types = entityData.getTypes();
-        if (types == null) {
-            return null;
-        }
-
-        for (EntityData type : types) {
-            String typeName = type.getName();
-            if (typeName.equals(OWL_CLASS_ID) || typeName.equals(RDFS_CLASS_ID)) {
-                return ValueType.Cls;
-            }
-            else if (typeName.equals(RDF_PROPERTY_ID) || typeName.equals(OWL_DATA_PROPERTY_ID) || typeName.equals(OWL_OBJ_PROPERTY_ID)) {
-                return ValueType.Property;
-            }
-        }
-
-        return null;
-    }
 
 }
 
