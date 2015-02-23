@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.shared.openid.OpenIdAccountDetails;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,8 +10,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Class to store the keys that we use to store data in the session.
  */
 public class SessionConstants {
-
-    public static final SessionKey<OpenIdAccountDetails> OPEN_ID_ACCOUNT = new SessionKey<OpenIdAccountDetails>("openId.account");
 
     @SuppressWarnings("unchecked")
     public static <T> Optional<T> getAttribute(SessionKey<T> key, HttpSession session) {

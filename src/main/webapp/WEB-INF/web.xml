@@ -52,26 +52,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>OpenIdServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.OpenIdServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>OpenIdAuthenticationResServlet</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.openid.OpenIdAuthenticationResponseServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>OpenIdAuthenticationServlet</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.openid.OpenIdAuthenticationServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>AuthenticateServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.AuthenticateServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>OBOTextEditorService</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.OBOTextEditorServiceImpl</servlet-class>
 	</servlet>
@@ -111,26 +91,6 @@
 	<servlet-mapping>
 		<servlet-name>AdminServiceImpl</servlet-name>
 		<url-pattern>/webprotege/admin</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>OpenIdServiceImpl</servlet-name>
-		<url-pattern>/webprotege/openid</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>OpenIdAuthenticationResServlet</servlet-name>
-		<url-pattern>/openidresponse</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>OpenIdAuthenticationServlet</servlet-name>
-		<url-pattern>/openidauthservlet</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>AuthenticateServiceImpl</servlet-name>
-		<url-pattern>/authenticate/authenticate/authen</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

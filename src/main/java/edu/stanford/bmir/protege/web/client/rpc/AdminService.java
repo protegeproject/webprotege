@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.client.rpc;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import edu.stanford.bmir.protege.web.client.rpc.data.LoginChallengeData;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
-import edu.stanford.bmir.protege.web.shared.user.*;
 
 /**
  * A service for accessing administrative and configuration data stored in
@@ -25,18 +22,4 @@ import edu.stanford.bmir.protege.web.shared.user.*;
 public interface AdminService extends RemoteService {
 
     PermissionsSet getAllowedOperations(String project, String user);
-
-    LoginChallengeData getUserSaltAndChallenge(String userName);
-
-    /**
-     * Checks whether user logged in and returns the login method(openid or
-     * webprotege account)
-     */
-    String checkUserLoggedInMethod();
-
-    void clearPreviousLoginAuthenticationData();
-
-    String getNewSalt();
-
-    boolean allowsCreateUsers();
 }
