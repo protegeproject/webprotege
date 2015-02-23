@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -27,4 +28,6 @@ public interface ProjectPermissionsManager {
     List<ProjectDetails> getListableReadableProjects(UserId userId);
 
     Collection<Operation> getAllowedOperations(String project, String userName);
+
+    PermissionsSet getPermissionsSet(ProjectId projectId, UserId userId);
 }

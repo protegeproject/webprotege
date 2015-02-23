@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.user.HasUserIds;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;
@@ -117,6 +118,11 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
     @Override
     public Collection<Operation> getAllowedOperations(String projectName, String userName) {
         return projectPermissionsManager.getAllowedOperations(projectName, userName);
+    }
+
+    @Override
+    public PermissionsSet getPermissionsSet(ProjectId projectId, UserId userId) {
+        return projectPermissionsManager.getPermissionsSet(projectId, userId);
     }
 
     @Override
