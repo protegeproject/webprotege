@@ -946,10 +946,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         };
     }
 
-    protected boolean isValidClassName(String value) {
-        return value != null && value.length() > 0 && UIUtil.getIdentifierStart(value, value.length()) == 0;
-    }
-
     /**
      * Gets the selected class.
      * @return The selected class, or {@code null} if there is not selection.
