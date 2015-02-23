@@ -71,14 +71,6 @@ public class URLUtil {
         }
     }
 
-    public static int httpPut(String urlStr) {
-        return httpRequest(urlStr, "PUT");
-    }
-
-    public static int httpDelete(String urlStr) {
-        return httpRequest(urlStr, "DELETE");
-    }
-
     public static int httpRequest(String urlStr, String requestType) {
         try {
             URL url = new URL(urlStr);
@@ -108,17 +100,6 @@ public class URLUtil {
 
         return encodedString;
     }
-
-    /**
-     * Encodes the argument. If the argument is null, it will return the empty string.
-     *
-     * @param urlToEncode
-     * @return
-     */
-    public static String encodeNN(String urlToEncode) {
-        return encode(urlToEncode == null ? "" : urlToEncode);
-    }
-
 
     public static void main (String[] args) throws Exception{
         //BufferedReader reader = read(args[0]);
