@@ -37,11 +37,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>AdminServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.AdminServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>ChAOServiceImpl</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.owlapi.ChAOServiceOWLAPIImpl</servlet-class>
 	</servlet>
@@ -86,11 +81,6 @@
 	<servlet-mapping>
 		<servlet-name>OntologyServiceImpl</servlet-name>
 		<url-pattern>/webprotege/ontology</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>AdminServiceImpl</servlet-name>
-		<url-pattern>/webprotege/admin</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

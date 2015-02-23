@@ -1,17 +1,18 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
-import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
+import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -103,15 +104,10 @@ public class ProjectPermissionManager implements HasDispose {
     }
 
     private void updatePermissionsForUserId(final UserId userId) {
-        AdminServiceManager.getInstance().getAllowedOperations(projectId, userId, new AsyncCallback<PermissionsSet>() {
+        DispatchServiceManager.get().execute(new GetPermissionsAction(projectId, userId), new DispatchServiceCallback<GetPermissionsResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("Failure getting permissions for logged in user");
-            }
-
-            @Override
-            public void onSuccess(PermissionsSet result) {
-                setUserPermissions(userId, result);
+            public void handleSuccess(GetPermissionsResult result) {
+                setUserPermissions(userId, result.getPermissionsSet());
             }
         });
     }
