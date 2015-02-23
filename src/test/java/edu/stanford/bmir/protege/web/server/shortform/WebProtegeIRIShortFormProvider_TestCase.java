@@ -95,6 +95,12 @@ public class WebProtegeIRIShortFormProvider_TestCase {
         assertThat(shortFormProvider.getShortForm(iri), is(LITERAL));
     }
 
+    @Test
+    public void shouldHandleIllegalEscapes() {
+        String shortForm = "Illegal%Escape";
+        when(annotationValue.getLiteral()).thenReturn(shortForm);
+        assertThat(shortFormProvider.getShortForm(iri), is(shortForm));
+    }
 
     @Test
     public void shouldReturnEntityIRIFragmentIfAnnotationAssertionPropertyIsNotKnown() {
