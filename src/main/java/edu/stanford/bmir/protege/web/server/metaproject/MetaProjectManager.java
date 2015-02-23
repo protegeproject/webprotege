@@ -29,7 +29,7 @@ import java.util.Set;
  * This interface assumes a particular implementation i.e. a Protege 3 implementation with Project object.
  * i.e. the openProject method.  Is this a problem?
  */
-public final class MetaProjectManager implements HasUserIds, UserDetailsManager, ProjectPermissionsManager, AuthenticationManager, ProjectDetailsManager, OpenIdManager, ServerSettingsManager, ProjectSharingSettingsManager {
+public final class MetaProjectManager implements HasUserIds, UserDetailsManager, ProjectPermissionsManager, AuthenticationManager, ProjectDetailsManager, ServerSettingsManager, ProjectSharingSettingsManager {
 
 
 
@@ -48,8 +48,6 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
 
     private AuthenticationManager authenticationManager;
 
-    private OpenIdManager openIdManager;
-
     private ProjectDetailsManager projectDetailsManager;
 
     private ProjectPermissionsManager projectPermissionsManager;
@@ -65,7 +63,6 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
     @Inject
     public MetaProjectManager(MetaProject metaProject,
                               AuthenticationManager authenticationManager,
-                              OpenIdManager openIdManager,
                               ProjectDetailsManager projectDetailsManager,
                               ProjectPermissionsManager projectPermissionsManager,
                               ProjectSharingSettingsManager projectSharingSettingsManager,
@@ -73,7 +70,6 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
                               UserDetailsManager userDetailsManager) {
         this.metaProject = metaProject;
         this.authenticationManager = authenticationManager;
-        this.openIdManager = openIdManager;
         this.projectDetailsManager = projectDetailsManager;
         this.projectPermissionsManager = projectPermissionsManager;
         this.projectSharingSettingsManager = projectSharingSettingsManager;
@@ -126,11 +122,6 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
     @Override
     public Collection<Operation> getAllowedServerOperations(String userName) {
         return serverSettingsManager.getAllowedServerOperations(userName);
-    }
-
-    @Override
-    public Optional<UserId> getUserAssociatedWithOpenId(String userOpenId) {
-        return openIdManager.getUserAssociatedWithOpenId(userOpenId);
     }
 
     @Override

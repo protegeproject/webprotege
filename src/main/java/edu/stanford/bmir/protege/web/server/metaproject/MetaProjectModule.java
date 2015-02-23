@@ -20,7 +20,6 @@ public class MetaProjectModule extends AbstractModule {
         bind(URI.class).annotatedWith(MetaProjectURI.class).toProvider(MetaProjectURIProvider.class);
         bind(MetaProject.class).toProvider(MetaProjectProvider.class).asEagerSingleton();
         bind(AuthenticationManager.class).to(AuthenticationManagerImpl.class).asEagerSingleton();
-        bind(OpenIdManager.class).to(OpenIdManagerImpl.class).asEagerSingleton();
         bind(ProjectDetailsManager.class).to(ProjectDetailsManagerImpl.class).asEagerSingleton();
         bind(ProjectPermissionsManager.class).to(ProjectPermissionsManagerImpl.class).asEagerSingleton();
         bind(ProjectSharingSettingsManager.class).to(ProjectSharingSettingsManagerImpl.class).asEagerSingleton();

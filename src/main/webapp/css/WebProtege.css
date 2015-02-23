@@ -13,22 +13,9 @@ body
 
 a
 {
-    text-decoration:none;
-}
-
-a:link
-{
-    color:#327BAA;
-}
-
-a:visited
-{
-    color:#6F1488;
-}
-
-a:hover
-{
-    color:#DC7317;
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .x-panel
@@ -635,8 +622,8 @@ ul.x-menu-list
     color: #000000;
 }
 
-*.web-protege-laf .gwt-TextBox, .gwt-TextBox-readonly {
-    /*border: 1px solid rgb(198, 198, 198);*/
+*.web-protege-laf .gwt-TextBox, .gwt-TextBox-readonly, .gwt-PasswordTextBox {
+    border: 1px solid #F0F0F0;
     font-size: 12px;
     font-family: tahoma, sans-serif;
     padding: 2px;
@@ -668,14 +655,6 @@ ul.x-menu-list
     font-size: 12px;
     padding-bottom: 2px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-*.web-protege-laf .gwt-PasswordTextBox {
-    border: 1px solid silver;
-    font-size: 12px;
-    font-family: tahoma, sans-serif;
-    padding: 2px;
-    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
 }
 
 .web-protege-form-horizontal-padding {
