@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
-import edu.stanford.bmir.protege.web.server.AccessPolicyManager;
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
