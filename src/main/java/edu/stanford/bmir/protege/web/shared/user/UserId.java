@@ -111,6 +111,10 @@ public class UserId implements Serializable, IsSerializable, Comparable<UserId> 
     }
 
     public int compareTo(UserId o) {
+        int diff = userName.compareToIgnoreCase(o.getUserName());
+        if(diff != 0) {
+            return diff;
+        }
         return userName.compareTo(o.getUserName());
     }
 
