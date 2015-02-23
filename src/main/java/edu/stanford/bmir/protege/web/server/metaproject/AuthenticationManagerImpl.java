@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
-import edu.stanford.bmir.protege.web.server.AuthenticationUtil;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
