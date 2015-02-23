@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
-import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
-import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
@@ -44,7 +41,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
             return false;
         }
         for (Group group : user.getGroups()) {
-            if (OntologyShareAccessConstants.ADMIN_GROUP.equals(group.getName())) {
+            if ("Admin".equals(group.getName())) {
                 return true;
             }
         }

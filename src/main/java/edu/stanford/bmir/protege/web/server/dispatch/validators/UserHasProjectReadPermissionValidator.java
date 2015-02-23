@@ -1,15 +1,10 @@
 package edu.stanford.bmir.protege.web.server.dispatch.validators;
 
-import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.smi.protege.server.metaproject.Operation;
 
 import java.util.Collection;
 
