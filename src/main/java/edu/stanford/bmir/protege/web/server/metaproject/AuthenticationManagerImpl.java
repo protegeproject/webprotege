@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserData;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
@@ -28,7 +27,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     @Override
-    public UserData registerUser(UserId userId, EmailAddress email, SaltedPasswordDigest password, Salt salt) throws UserRegistrationException {
+    public UserDetails registerUser(UserId userId, EmailAddress email, SaltedPasswordDigest password, Salt salt) throws UserRegistrationException {
         checkNotNull(userId);
         checkNotNull(email);
         checkNotNull(password);
@@ -49,9 +48,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         newUser.setDigestedPassword(encodedPassword, encodedSalt);
         newUser.setEmail(email.getEmailAddress());
         OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
-        UserData userData = new UserData(userId);
-        userData.setEmail(email.getEmailAddress());
-        return userData;
+        return UserDetails.getUserDetails(userId, userId.getUserName(), email.getEmailAddress());
     }
 
     @Override
