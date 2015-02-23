@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     A {@link PermissionsSet} represents an immutable set of {@link Permission} objects.
  * </p>
  */
-public final class PermissionsSet implements Serializable, Iterable<Permission> {
+public class PermissionsSet implements Serializable, Iterable<Permission> {
 
     private static final PermissionsSet EMPTY_SET = new PermissionsSet(Collections.<Permission>emptySet());
 
@@ -30,7 +30,7 @@ public final class PermissionsSet implements Serializable, Iterable<Permission> 
     }
 
     private PermissionsSet(Set<Permission> permissions) {
-        this.permissions = new HashSet<Permission>(permissions);
+        this.permissions = new HashSet<>(permissions);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
