@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 
 import java.io.Serializable;
@@ -38,7 +39,7 @@ public class UserDetails implements Serializable {
      * @param emailAddress The email address of the user.  Not {@code null}.
      * @throws NullPointerException if any parameter is {@code null}.
      */
-    private UserDetails(UserId userId, String displayName, Optional<String> emailAddress) {
+    public UserDetails(UserId userId, String displayName, Optional<String> emailAddress) {
         this.userId = checkNotNull(userId);
         this.displayName = checkNotNull(displayName);
         if(emailAddress.isPresent()) {
@@ -98,7 +99,7 @@ public class UserDetails implements Serializable {
 
     @Override
     public int hashCode() {
-        return "UserDetails".hashCode() + userId.hashCode() + displayName.hashCode() + getEmailAddress().hashCode();
+        return Objects.hashCode(userId, displayName, emailAddress);
     }
 
     @Override
@@ -115,15 +116,10 @@ public class UserDetails implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("UserDetails");
-        sb.append("(");
-        sb.append(userId);
-        sb.append(" DisplayName(");
-        sb.append(") ");
-        sb.append(getEmailAddress().isPresent() ? getEmailAddress().get() : "EmailAddress(<Not Present>)");
-        sb.append(")");
-        sb.append(")");
-        return sb.toString();
+        return Objects.toStringHelper("UserDetails")
+                .addValue(userId)
+                .add("displayName", displayName)
+                .add("emailAddress", Optional.fromNullable(emailAddress).or(""))
+                .toString();
     }
 }
