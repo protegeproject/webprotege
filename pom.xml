@@ -19,7 +19,6 @@
         <gwt.test.mode>htmlunit</gwt.test.mode>
         <!-- Properties common to all build profiles -->
         <application.name>WebProtege</application.name>
-        <openid.enabled>true</openid.enabled>
         <!-- Mail properties empty by default -->
         <mail.smtp.host/>
         <mail.smtp.auth/>
@@ -287,31 +286,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!--
-            openid4java includes some funky dependencies that break compilation and GWT test cases so
-            we need to exclude them.
-            nekohtml - doesn't specify a version, but the resolved version is too old and GWT test cases rely on a
-            newer version
-            guice - a non-standard guice dependency is used.  We use the com.google.inject guice dep instead.
-        -->
-        <dependency>
-            <groupId>org.openid4java</groupId>
-            <artifactId>openid4java-consumer</artifactId>
-            <version>0.9.6</version>
-            <type>pom</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.nekohtml</groupId>
-                    <artifactId>nekohtml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.code.guice</groupId>
-                    <artifactId>guice</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
     </dependencies>
 
     <build>
