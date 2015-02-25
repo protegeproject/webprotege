@@ -20,7 +20,7 @@ import static org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 11/07/2013
  */
-public class ManchesterSyntaxObjectRenderer {
+public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
 
     private ShortFormProvider shortFormProvider;
 
@@ -46,6 +46,16 @@ public class ManchesterSyntaxObjectRenderer {
         this.linkRenderer = linkRenderer;
         this.literalRenderer = literalRenderer;
 
+    }
+
+    @Override
+    public void setShortFormProvider(ShortFormProvider shortFormProvider) {
+        throw new RuntimeException("Unsupported Operation");
+    }
+
+    @Override
+    public String render(OWLObject object) {
+        return render(object, NullHighlightedEntityChecker.get(), NullDeprecatedEntityChecker.get());
     }
 
     public String render(OWLObject object, HighlightedEntityChecker highlightChecker, DeprecatedEntityChecker checker) {

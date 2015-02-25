@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.dispatch;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
+import edu.stanford.bmir.protege.web.client.actionbar.project.UploadAndMergeHandler;
 import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
@@ -20,6 +21,8 @@ import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsAc
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.mail.GetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.mail.SetEmailAddressActionHandler;
+import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
+import edu.stanford.bmir.protege.web.server.merge.MergeUploadedProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.metrics.GetMetricsActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddNoteToEntityActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.AddReplyToNoteActionHandler;
@@ -157,7 +160,8 @@ public class ActionHandlersModule extends AbstractModule {
 
         multibinder.addBinding().to(GetPermissionsActionHandler.class);
 
-
+        multibinder.addBinding().to(ComputeProjectMergeActionHandler.class);
+        multibinder.addBinding().to(MergeUploadedProjectActionHandler.class);
 
     }
 }

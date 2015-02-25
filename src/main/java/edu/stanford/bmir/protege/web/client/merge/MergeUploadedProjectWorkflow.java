@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.client.merge;
 
+import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
+
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
@@ -31,10 +35,20 @@ public class MergeUploadedProjectWorkflow {
 
 
     private void computeMerge(final ProjectId projectId, final DocumentId uploadedProjectDocumentId) {
-        dispatchServiceManager.execute(new ComputeProjectMergeAction(projectId, uploadedProjectDocumentId), new AbstractWebProtegeAsyncCallback<ComputeProjectMergeResult>() {
+        dispatchServiceManager.execute(new ComputeProjectMergeAction(projectId, uploadedProjectDocumentId), new DispatchServiceCallbackWithProgressDisplay<ComputeProjectMergeResult>() {
             @Override
-            public void onSuccess(ComputeProjectMergeResult result) {
-                confirmMerge(result, projectId, uploadedProjectDocumentId);
+            public String getProgressDisplayTitle() {
+                return "Uploading and merging ontologies";
+            }
+
+            @Override
+            public String getProgressDisplayMessage() {
+                return "Uploading ontologies and computing the diff.  Please wait.";
+            }
+
+            @Override
+            public void handleSuccess(ComputeProjectMergeResult mergeResult) {
+                confirmMerge(mergeResult, projectId, uploadedProjectDocumentId);
             }
         });
     }
@@ -55,9 +69,21 @@ public class MergeUploadedProjectWorkflow {
     }
 
     private void performMerge(ProjectId projectId, DocumentId uploadedProjectDocumentId) {
-        dispatchServiceManager.execute(new MergeUploadedProjectAction(projectId, uploadedProjectDocumentId), new AbstractWebProtegeAsyncCallback<MergeUploadedProjectResult>() {
+
+        dispatchServiceManager.execute(new MergeUploadedProjectAction(projectId, uploadedProjectDocumentId), new DispatchServiceCallbackWithProgressDisplay<MergeUploadedProjectResult>() {
+
             @Override
-            public void onSuccess(MergeUploadedProjectResult mergeUploadedProjectResult) {
+            public String getProgressDisplayTitle() {
+                return "Merging ontologies";
+            }
+
+            @Override
+            public String getProgressDisplayMessage() {
+                return "Applying changes to merge ontologies.  Please wait.";
+            }
+
+            @Override
+            public void handleSuccess(MergeUploadedProjectResult mergeUploadedProjectResult) {
                 MessageBox.showMessage("The uploaded ontologies were successfully merged into the project");
             }
         });
