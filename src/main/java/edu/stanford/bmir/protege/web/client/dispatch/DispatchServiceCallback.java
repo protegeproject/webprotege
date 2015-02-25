@@ -96,8 +96,8 @@ public abstract class DispatchServiceCallback<T> {
     }
 
     private void displayAndLogError(Throwable throwable) {
-        Logger logger = Logger.getLogger("AsyncCallbackErrorLogger");
-        logger.log(Level.SEVERE, "Error executing remote call: " + throwable.getMessage());
+//        Logger logger = Logger.getLogger("AsyncCallbackErrorLogger");
+//        logger.log(Level.SEVERE, "Error executing remote call: " + throwable.getMessage());
         errorMessageDisplay.displayGeneralErrorMessage("Error", getErrorMessage(throwable));
     }
 
@@ -120,7 +120,7 @@ public abstract class DispatchServiceCallback<T> {
     }
 
     protected String getErrorMessage(Throwable throwable) {
-        return "An error has occurred.  Please try again.";
+        return "An error has occurred.  Please try again. " + throwable.getMessage();
     }
 
 
