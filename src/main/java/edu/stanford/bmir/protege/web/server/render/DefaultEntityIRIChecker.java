@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.server.render;
 
+import edu.stanford.bmir.protege.web.server.inject.RootOntology;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 
+import javax.inject.Inject;
 import java.util.Collection;
 
 /**
@@ -16,7 +18,8 @@ public class DefaultEntityIRIChecker implements EntityIRIChecker {
 
     private OWLOntology rootOntology;
 
-    public DefaultEntityIRIChecker(OWLOntology rootOntology) {
+    @Inject
+    public DefaultEntityIRIChecker(@RootOntology OWLOntology rootOntology) {
         this.rootOntology = rootOntology;
     }
 
