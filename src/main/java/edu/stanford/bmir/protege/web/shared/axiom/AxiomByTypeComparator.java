@@ -20,7 +20,7 @@ public class AxiomByTypeComparator implements Comparator<OWLAxiom> {
     private Map<AxiomType<?>, Integer> typeIndexMap = new HashMap<>();
 
     @Inject
-    public AxiomByTypeComparator(@Named("axiomTypeOrdering") List<AxiomType<?>> axiomTypeOrdering) {
+    public AxiomByTypeComparator(@AxiomTypeOrdering List<AxiomType<?>> axiomTypeOrdering) {
         for(AxiomType<?> axiomType : axiomTypeOrdering) {
             typeIndexMap.put(axiomType, typeIndexMap.size());
         }
