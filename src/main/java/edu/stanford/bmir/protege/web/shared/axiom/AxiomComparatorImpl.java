@@ -14,12 +14,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 04/02/15
  */
-public class DefaultAxiomComparator implements Comparator<OWLAxiom> {
+public class AxiomComparatorImpl implements Comparator<OWLAxiom> {
 
     private Comparator<OWLAxiom> compoundComparator;
 
     @Inject
-    public DefaultAxiomComparator(AxiomBySubjectComparator axiomBySubjectComparator, AxiomByTypeComparator axiomByTypeComparator, AxiomByRenderingComparator axiomByRenderingComparator) {
+    public AxiomComparatorImpl(AxiomBySubjectComparator axiomBySubjectComparator, AxiomByTypeComparator axiomByTypeComparator, AxiomByRenderingComparator axiomByRenderingComparator) {
         compoundComparator = Ordering.compound(
                 Arrays.asList(
                         checkNotNull(axiomBySubjectComparator),

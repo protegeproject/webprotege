@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.axiom;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomByRenderingComparator;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomBySubjectComparator;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomByTypeComparator;
-import edu.stanford.bmir.protege.web.shared.axiom.DefaultAxiomComparator;
+import edu.stanford.bmir.protege.web.shared.axiom.AxiomComparatorImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
  * 04/02/15
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultAxiomComparator_TestCase {
+public class AxiomComparatorImpl_TestCase {
 
     public static final int BY_SUBJECT_DIFF = -5;
     public static final int TYPE_DIFF = -7;
@@ -42,11 +42,11 @@ public class DefaultAxiomComparator_TestCase {
     @Mock
     private OWLAxiom axiom1, axiom2;
 
-    private DefaultAxiomComparator defaultAxiomComparator;
+    private AxiomComparatorImpl comparator;
 
     @Before
     public void setUp() throws Exception {
-        defaultAxiomComparator = new DefaultAxiomComparator(
+        comparator = new AxiomComparatorImpl(
                 bySubjectComparator,
                 byTypeComparator,
                 byRenderingComparator);
@@ -55,7 +55,7 @@ public class DefaultAxiomComparator_TestCase {
     @Test
     public void shouldCompareBySubjectFirst() {
         when(bySubjectComparator.compare(axiom1, axiom2)).thenReturn(BY_SUBJECT_DIFF);
-        assertThat(defaultAxiomComparator.compare(axiom1, axiom2), is(BY_SUBJECT_DIFF));
+        assertThat(comparator.compare(axiom1, axiom2), is(BY_SUBJECT_DIFF));
         verify(byTypeComparator, never()).compare(axiom1, axiom2);
         verify(byRenderingComparator, never()).compare(axiom1, axiom2);
     }
@@ -65,7 +65,7 @@ public class DefaultAxiomComparator_TestCase {
         // Same subject.  Now compare by type
         when(bySubjectComparator.compare(axiom1, axiom2)).thenReturn(COMPARE_SAME);
         when(byTypeComparator.compare(axiom1, axiom2)).thenReturn(TYPE_DIFF);
-        assertThat(defaultAxiomComparator.compare(axiom1, axiom2), is(TYPE_DIFF));
+        assertThat(comparator.compare(axiom1, axiom2), is(TYPE_DIFF));
         verify(byRenderingComparator, never()).compare(axiom1, axiom2);
     }
 
@@ -75,6 +75,6 @@ public class DefaultAxiomComparator_TestCase {
         when(bySubjectComparator.compare(axiom1, axiom2)).thenReturn(COMPARE_SAME);
         when(byTypeComparator.compare(axiom1, axiom2)).thenReturn(COMPARE_SAME);
         when(byRenderingComparator.compare(axiom1, axiom2)).thenReturn(RENDERING_DIFF);
-        assertThat(defaultAxiomComparator.compare(axiom1, axiom2), is(RENDERING_DIFF));
+        assertThat(comparator.compare(axiom1, axiom2), is(RENDERING_DIFF));
     }
 }
