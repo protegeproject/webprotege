@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import org.semanticweb.owlapi.model.SWRLAtom;
 import org.semanticweb.owlapi.model.SWRLObject;
 
+import javax.inject.Inject;
 import java.util.Comparator;
 
 /**
@@ -16,6 +17,7 @@ public class SWRLAtomSelector implements OWLObjectSelector<SWRLAtom> {
     private Comparator<? super SWRLAtom> swrlObjectComparator;
 
 
+    @Inject
     public SWRLAtomSelector(Comparator<? super SWRLAtom> swrlObjectComparator) {
         this.swrlObjectComparator = swrlObjectComparator;
     }

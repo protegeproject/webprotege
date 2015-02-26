@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.vocab.Namespaces;
 
+import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -28,6 +29,7 @@ public class WebProtegeIRIShortFormProvider implements IRIShortFormProvider {
 
     private final ImmutableMap<String, String> prefix2PrefixNameMap;
 
+    @Inject
     public WebProtegeIRIShortFormProvider(ImmutableList<IRI> labellingIRIs, HasAnnotationAssertionAxioms annotationAssertionAxiomProvider, HasLang languageProvider) {
 
         this.labellingIRIs = checkNotNull(labellingIRIs);

@@ -4,6 +4,8 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -14,6 +16,7 @@ public class WebProtegeShortFormProvider implements ShortFormProvider {
 
     private final IRIShortFormProvider iriShortFormProvider;
 
+    @Inject
     public WebProtegeShortFormProvider(IRIShortFormProvider iriShortFormProvider) {
         this.iriShortFormProvider = iriShortFormProvider;
     }
