@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
+import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
@@ -13,7 +14,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWr
 import edu.stanford.bmir.protege.web.server.filesubmission.FileUploadConstants;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
-import edu.stanford.bmir.protege.web.server.util.DefaultTempFileFactory;
+import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectAction;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
@@ -36,67 +37,69 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
 
     @Override
     protected MergeUploadedProjectResult execute(MergeUploadedProjectAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        DocumentId documentId = action.getUploadedDocumentId();
-        final File file = new File(FileUploadConstants.UPLOADS_DIRECTORY, documentId.getDocumentId());
-
-        UploadedProjectSourcesExtractor extractor = new UploadedProjectSourcesExtractor(
-                new ZipInputStreamChecker(),
-                new ZipArchiveProjectSourcesExtractor(
-                        new DefaultTempFileFactory(),
-                        new DefaultRootOntologyDocumentMatcher()),
-                new SingleDocumentProjectSourcesExtractor());
-
         try {
-            OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
-            RawProjectSources rawProjectSources = extractor.extractProjectSources(file);
-            OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration();
-            RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
-            final OWLOntology uploadedRootOntology = importer.importRawProjectSources(rawProjectSources);
-            System.out.println("Loaded uploadedRootOntology");
-            OWLOntology projectRootOntology = project.getRootOntology();
-            boolean rootIsEqual = projectRootOntology.getOntologyID().equals(uploadedRootOntology.getOntologyID());
-            System.out.println("Root is equal: " + rootIsEqual);
-            if(rootIsEqual) {
-                project.applyChanges(executionContext.getUserId(), new ChangeListGenerator<Void>() {
-                    @Override
-                    public OntologyChangeList<Void> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
-                        OWLOntology projectRootOntology = project.getRootOntology();
-                        OntologyChangeList.Builder<Void> builder = OntologyChangeList.builder();
+            DocumentId documentId = action.getUploadedDocumentId();
+            final OWLOntology uploadedRootOntology = loadUploadedOntology(documentId);
+            final OWLOntology projectRootOntology = project.getRootOntology();
+            if(isUploadedOntologyMergableIntoRootOntology(uploadedRootOntology, projectRootOntology)) {
+                generateAndApplyChanges(action.getCommitMessage(), project, projectRootOntology, uploadedRootOntology, executionContext);
+            }
+        } catch (IOException | OWLOntologyCreationException e) {
+            throw new ActionExecutionException(e);
+        }
+        return new MergeUploadedProjectResult();
+    }
 
-                        for(OWLAxiom ax : uploadedRootOntology.getAxioms()) {
-                            if(!projectRootOntology.containsAxiom(ax)) {
-                                System.out.println("+    " + ax);
-                                builder.addAxiom(projectRootOntology, ax);
-                            }
-                        }
-                        for(OWLAxiom ax : projectRootOntology.getAxioms()) {
-                            if(!uploadedRootOntology.containsAxiom(ax)) {
-                                System.out.println("-    " + ax);
-                                builder.removeAxiom(projectRootOntology, ax);
-                            }
-                        }
-                        return builder.build();
-                    }
+    private void generateAndApplyChanges(String commitMessage, OWLAPIProject project, final OWLOntology projectRootOntology, final OWLOntology uploadedRootOntology, ExecutionContext executionContext) {
+        project.applyChanges(executionContext.getUserId(), new ChangeListGenerator<Void>() {
+            @Override
+            public OntologyChangeList<Void> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
+                OntologyChangeList.Builder<Void> builder = OntologyChangeList.builder();
 
-                    @Override
-                    public Void getRenamedResult(Void result, RenameMap renameMap) {
-                        return null;
+                for(OWLAxiom ax : uploadedRootOntology.getAxioms()) {
+                    if(!projectRootOntology.containsAxiom(ax)) {
+                        builder.addAxiom(projectRootOntology, ax);
                     }
-                }, new FixedMessageChangeDescriptionGenerator<Void>("Merged from external edit"));
+                }
+                for(OWLAxiom ax : projectRootOntology.getAxioms()) {
+                    if(!uploadedRootOntology.containsAxiom(ax)) {
+                        builder.removeAxiom(projectRootOntology, ax);
+                    }
+                }
+                return builder.build();
             }
 
+            @Override
+            public Void getRenamedResult(Void result, RenameMap renameMap) {
+                return null;
+            }
+        }, new FixedMessageChangeDescriptionGenerator<Void>(commitMessage + " [Merged from external edit]"));
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (OWLOntologyCreationException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+    private boolean isUploadedOntologyMergableIntoRootOntology(OWLOntology uploadedRootOntology, OWLOntology projectRootOntology) {
+        return projectRootOntology.getOntologyID().equals(uploadedRootOntology.getOntologyID());
     }
 
     @Override
     public Class<MergeUploadedProjectAction> getActionClass() {
         return MergeUploadedProjectAction.class;
     }
+
+    private OWLOntology loadUploadedOntology(DocumentId documentId) throws IOException, OWLOntologyCreationException {
+        // Extract sources
+        UploadedProjectSourcesExtractor extractor = new UploadedProjectSourcesExtractor(
+                new ZipInputStreamChecker(),
+                new ZipArchiveProjectSourcesExtractor(
+                        new TempFileFactoryImpl(),
+                        new RootOntologyDocumentMatcherImpl()),
+                new SingleDocumentProjectSourcesExtractor());
+        // Load sources
+        OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
+        final File file = new File(FileUploadConstants.UPLOADS_DIRECTORY, documentId.getDocumentId());
+        RawProjectSources rawProjectSources = extractor.extractProjectSources(file);
+        OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration();
+        RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
+        return importer.importRawProjectSources(rawProjectSources);
+    }
+
 }

@@ -13,15 +13,22 @@ public class MergeUploadedProjectAction extends AbstractHasProjectAction<MergeUp
 
     private DocumentId uploadedDocumentId;
 
+    private String commitMessage;
+
     private MergeUploadedProjectAction() {
     }
 
-    public MergeUploadedProjectAction(ProjectId projectId, DocumentId uploadedDocumentId) {
+    public MergeUploadedProjectAction(ProjectId projectId, DocumentId uploadedDocumentId, String commitMessage) {
         super(projectId);
         this.uploadedDocumentId = uploadedDocumentId;
+        this.commitMessage = commitMessage;
     }
 
     public DocumentId getUploadedDocumentId() {
         return uploadedDocumentId;
+    }
+
+    public String getCommitMessage() {
+        return commitMessage;
     }
 }
