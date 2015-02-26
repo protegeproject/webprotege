@@ -12,12 +12,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27/01/15
  */
-public class DefaultDeprecatedEntityChecker implements DeprecatedEntityChecker {
+public class DeprecatedEntityCheckerImpl implements DeprecatedEntityChecker {
 
     private OWLOntology rootOntology;
 
 
-    public DefaultDeprecatedEntityChecker(OWLOntology rootOntology) {
+    public DeprecatedEntityCheckerImpl(OWLOntology rootOntology) {
         this.rootOntology = checkNotNull(rootOntology);
     }
 
