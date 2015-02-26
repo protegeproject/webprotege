@@ -14,6 +14,7 @@ import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
 import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
 import org.semanticweb.owlapi.util.AutoIRIMapper;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class ZipArchiveProjectSourcesExtractor implements RawProjectSourcesExtra
 
     private static WebProtegeLogger logger = WebProtegeLoggerManager.get(ZipArchiveProjectSourcesExtractor.class);
 
+    @Inject
     public ZipArchiveProjectSourcesExtractor(TempFileFactory tempFileFactory, RootOntologyDocumentFileMatcher rootOntologyDocumentFileMatcher) {
         this.tempFileFactory = tempFileFactory;
         this.rootOntologyDocumentFileMatcher = rootOntologyDocumentFileMatcher;
