@@ -54,13 +54,13 @@ public class MergeUploadedProjectWorkflow {
     }
 
     private void confirmMerge(ComputeProjectMergeResult mergeResult, final ProjectId projectId, final DocumentId documentId) {
-        ApplyChangesView view = new ApplyChangesViewImpl();
+        final ApplyChangesView view = new ApplyChangesViewImpl();
         view.setDiff(mergeResult.getDiff());
         ApplyChangesDialogController controller = new ApplyChangesDialogController(view);
         controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<MergeData>() {
             @Override
             public void handleHide(MergeData data, WebProtegeDialogCloser closer) {
-                performMerge(projectId, documentId);
+                performMerge(projectId, documentId, view.getCommitMessage());
                 closer.hide();
             }
         });
@@ -68,9 +68,9 @@ public class MergeUploadedProjectWorkflow {
 
     }
 
-    private void performMerge(ProjectId projectId, DocumentId uploadedProjectDocumentId) {
+    private void performMerge(ProjectId projectId, DocumentId uploadedProjectDocumentId, String commitMessage) {
 
-        dispatchServiceManager.execute(new MergeUploadedProjectAction(projectId, uploadedProjectDocumentId), new DispatchServiceCallbackWithProgressDisplay<MergeUploadedProjectResult>() {
+        dispatchServiceManager.execute(new MergeUploadedProjectAction(projectId, uploadedProjectDocumentId, commitMessage), new DispatchServiceCallbackWithProgressDisplay<MergeUploadedProjectResult>() {
 
             @Override
             public String getProgressDisplayTitle() {
