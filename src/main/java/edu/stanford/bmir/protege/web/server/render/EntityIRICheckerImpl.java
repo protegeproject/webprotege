@@ -14,12 +14,12 @@ import java.util.Collection;
  *         Bio-Medical Informatics Research Group
  *         Date: 20/02/2014
  */
-public class DefaultEntityIRIChecker implements EntityIRIChecker {
+public class EntityIRICheckerImpl implements EntityIRIChecker {
 
     private OWLOntology rootOntology;
 
     @Inject
-    public DefaultEntityIRIChecker(@RootOntology OWLOntology rootOntology) {
+    public EntityIRICheckerImpl(@RootOntology OWLOntology rootOntology) {
         this.rootOntology = rootOntology;
     }
 

@@ -752,7 +752,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
     public String getHTMLBrowserText(OWLObject object, HighlightedEntityChecker highlightChecker) {
         ManchesterSyntaxObjectRenderer renderer = new ManchesterSyntaxObjectRenderer(
                 getShortFormProvider(),
-                new DefaultEntityIRIChecker(rootOntology),
+                new EntityIRICheckerImpl(rootOntology),
                 LiteralStyle.BRACKETED,
                 new DefaultHttpLinkRenderer(),
                 new MarkdownLiteralRenderer());
