@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import edu.stanford.bmir.protege.web.server.inject.RootOntology;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLOntology;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +21,8 @@ public class HasAnnotationAssertionAxiomsImpl implements HasAnnotationAssertionA
 
     private final OWLOntology rootOntology;
 
-    public HasAnnotationAssertionAxiomsImpl(OWLOntology rootOntology) {
+    @Inject
+    public HasAnnotationAssertionAxiomsImpl(@RootOntology OWLOntology rootOntology) {
         this.rootOntology = checkNotNull(rootOntology);
     }
 

@@ -2,11 +2,13 @@ package edu.stanford.bmir.protege.web.server.render;
 
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
+import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -32,6 +34,7 @@ public class ManchesterSyntaxObjectRenderer {
 
     private LiteralRenderer literalRenderer;
 
+    @Inject
     public ManchesterSyntaxObjectRenderer(ShortFormProvider shortFormProvider,
                                           EntityIRIChecker entityIRIChecker,
                                           LiteralStyle literalStyle,
