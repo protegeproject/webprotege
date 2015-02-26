@@ -8,7 +8,7 @@ import java.io.File;
  *         Bio-Medical Informatics Research Group
  *         Date: 19/02/2014
  */
-public class DefaultRootOntologyDocumentMatcher implements RootOntologyDocumentFileMatcher {
+public class RootOntologyDocumentMatcherImpl implements RootOntologyDocumentFileMatcher {
 
     public static final String ROOT_ONTOLOGY_DOCUMENT_FILE_NAME = "root-ontology.owl";
 

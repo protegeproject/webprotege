@@ -29,7 +29,6 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.io.FileDocumentSource;
 import org.semanticweb.owlapi.model.*;
-import uk.ac.manchester.cs.jfact.datatypes.ordered;
 
 import java.io.*;
 import java.util.*;
@@ -499,7 +498,7 @@ public class OWLAPIProjectDocumentStore {
             File uploadedFile = new File(uploadsDirectory, documentId.getDocumentId());
             UploadedProjectSourcesExtractor extractor = new UploadedProjectSourcesExtractor(new ZipInputStreamChecker
                                                                                                     (),
-                                                                                            new ZipArchiveProjectSourcesExtractor(new DefaultTempFileFactory(), new DefaultRootOntologyDocumentMatcher()), new SingleDocumentProjectSourcesExtractor());
+                                                                                            new ZipArchiveProjectSourcesExtractor(new DefaultTempFileFactory(), new RootOntologyDocumentMatcherImpl()), new SingleDocumentProjectSourcesExtractor());
 
             if (uploadedFile.exists()) {
                 OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
