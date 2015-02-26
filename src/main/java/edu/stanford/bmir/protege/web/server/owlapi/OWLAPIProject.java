@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
 import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityCheckerImpl;
-import edu.stanford.bmir.protege.web.server.render.DefaultEntityIRIChecker;
+import edu.stanford.bmir.protege.web.server.render.EntityIRICheckerImpl;
 import edu.stanford.bmir.protege.web.server.render.NullHighlightedEntityChecker;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.HasContainsEntityInSignature;
@@ -225,7 +225,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         renderingManager = new RenderingManager(
                 rootOntology,
                 getDataFactory(),
-                new DefaultEntityIRIChecker(rootOntology),
+                new EntityIRICheckerImpl(rootOntology),
                 new DeprecatedEntityCheckerImpl(rootOntology),
                 new WebProtegeBidirectionalShortFormProvider(rootOntology, shortFormProvider),
                 new WebProtegeOntologyIRIShortFormProvider(rootOntology),
