@@ -2,19 +2,17 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.client.WebProtege;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
-import edu.stanford.bmir.protege.web.server.render.DefaultDeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityCheckerImpl;
 import edu.stanford.bmir.protege.web.server.render.DefaultEntityIRIChecker;
 import edu.stanford.bmir.protege.web.server.render.NullHighlightedEntityChecker;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.HasContainsEntityInSignature;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
-import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettings;
@@ -228,7 +226,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 rootOntology,
                 getDataFactory(),
                 new DefaultEntityIRIChecker(rootOntology),
-                new DefaultDeprecatedEntityChecker(rootOntology),
+                new DeprecatedEntityCheckerImpl(rootOntology),
                 new WebProtegeBidirectionalShortFormProvider(rootOntology, shortFormProvider),
                 new WebProtegeOntologyIRIShortFormProvider(rootOntology),
                 NullHighlightedEntityChecker.get());
