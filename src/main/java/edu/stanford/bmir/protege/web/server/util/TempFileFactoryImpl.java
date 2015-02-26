@@ -13,7 +13,7 @@ import java.util.UUID;
  *         Bio-Medical Informatics Research Group
  *         Date: 18/02/2014
  */
-public class DefaultTempFileFactory implements TempFileFactory {
+public class TempFileFactoryImpl implements TempFileFactory {
 
     @Override
     public File createTempDirectory() throws IOException {
