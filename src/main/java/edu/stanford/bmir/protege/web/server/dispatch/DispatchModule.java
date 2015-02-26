@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
 import com.google.inject.AbstractModule;
-import edu.stanford.bmir.protege.web.server.dispatch.impl.DefaultActionHandlerRegistry;
+import edu.stanford.bmir.protege.web.server.dispatch.impl.ActionHandlerRegistryImpl;
 import edu.stanford.bmir.protege.web.server.dispatch.impl.DispatchServiceExecutorImpl;
 
 /**
@@ -13,7 +13,7 @@ public class DispatchModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(ActionHandlerRegistry.class).to(DefaultActionHandlerRegistry.class).asEagerSingleton();
+        bind(ActionHandlerRegistry.class).to(ActionHandlerRegistryImpl.class).asEagerSingleton();
         bind(DispatchServiceExecutor.class).to(DispatchServiceExecutorImpl.class);
     }
 }
