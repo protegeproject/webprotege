@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web;
 import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.primitive.DefaultPrimitiveDataParser;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataParserImpl;
 import edu.stanford.bmir.protege.web.client.primitive.EntityDataLookupHandler;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataParserCallback;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.doAnswer;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 11/04/2014
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultPrimitiveDataParser_LiteralParsing_TestCase {
+public class PrimitiveDataParserImpl_LiteralParsing_TestCase {
 
     @Mock
     protected EntityDataLookupHandler lookupHandler;
@@ -46,7 +46,7 @@ public class DefaultPrimitiveDataParser_LiteralParsing_TestCase {
 
     private OWLDataFactory dataFactory = new OWLDataFactoryImpl();
 
-    private DefaultPrimitiveDataParser parser;
+    private PrimitiveDataParserImpl parser;
 
     @Before
     @SuppressWarnings("unchecked")
@@ -61,7 +61,7 @@ public class DefaultPrimitiveDataParser_LiteralParsing_TestCase {
                 return null;
             }
         }).when(lookupHandler).lookupEntity(any(String.class), any(Set.class), any(AsyncCallback.class));
-        parser = new DefaultPrimitiveDataParser(lookupHandler);
+        parser = new PrimitiveDataParserImpl(lookupHandler);
     }
 
     @Test
