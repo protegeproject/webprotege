@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ public class UploadedProjectSourcesExtractor implements RawProjectSourcesExtract
 
     private SingleDocumentProjectSourcesExtractor singleDocumentProjectSourcesExtractor;
 
+    @Inject
     public UploadedProjectSourcesExtractor(ZipInputStreamChecker zipInputStreamChecker,
                                            ZipArchiveProjectSourcesExtractor zipArchiveProjectSourcesExtractor,
                                            SingleDocumentProjectSourcesExtractor
