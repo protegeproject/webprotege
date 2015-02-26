@@ -8,13 +8,13 @@ import java.util.Comparator;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
  */
-public class DefaultAnnotationPropertyComparator implements Comparator<OWLAnnotationProperty> {
+public class AnnotationPropertyComparatorImpl implements Comparator<OWLAnnotationProperty> {
 
     private ShortFormProvider shortFormProvider;
 
     private final IRIIndexProvider indexProvider;
 
-    public DefaultAnnotationPropertyComparator(ShortFormProvider shortFormProvider, IRIIndexProvider iriIndexProvider) {
+    public AnnotationPropertyComparatorImpl(ShortFormProvider shortFormProvider, IRIIndexProvider iriIndexProvider) {
         this.shortFormProvider = shortFormProvider;
         this.indexProvider = iriIndexProvider;
     }

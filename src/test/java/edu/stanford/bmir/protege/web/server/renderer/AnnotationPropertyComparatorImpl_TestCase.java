@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.renderer;
 
-import edu.stanford.bmir.protege.web.server.render.DefaultAnnotationPropertyComparator;
+import edu.stanford.bmir.protege.web.server.render.AnnotationPropertyComparatorImpl;
 import edu.stanford.bmir.protege.web.server.render.IRIIndexProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 04/10/2014
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultAnnotationPropertyComparator_TestCase {
+public class AnnotationPropertyComparatorImpl_TestCase {
 
     @Mock
     private ShortFormProvider sfp;
@@ -36,11 +36,11 @@ public class DefaultAnnotationPropertyComparator_TestCase {
     @Mock
     private IRI indexedIRIA, indexedIRIB, otherPropertyIRI;
 
-    private DefaultAnnotationPropertyComparator comparator;
+    private AnnotationPropertyComparatorImpl comparator;
 
     @Before
     public void setUp() throws Exception {
-        comparator = new DefaultAnnotationPropertyComparator(sfp, iriIndexProvider);
+        comparator = new AnnotationPropertyComparatorImpl(sfp, iriIndexProvider);
 
         when(indexedPropertyA.getIRI()).thenReturn(indexedIRIA);
         when(iriIndexProvider.getIndex(indexedIRIA)).thenReturn(2);
