@@ -24,13 +24,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 06/01/2013
  */
-public class DefaultPrimitiveDataParser implements PrimitiveDataParser {
+public class PrimitiveDataParserImpl implements PrimitiveDataParser {
 
 
     private EntityDataLookupHandler entityDataLookupHandler;
 
     @Inject
-    public DefaultPrimitiveDataParser(EntityDataLookupHandler entityDataLookupHandler) {
+    public PrimitiveDataParserImpl(EntityDataLookupHandler entityDataLookupHandler) {
         this.entityDataLookupHandler = entityDataLookupHandler;
     }
 

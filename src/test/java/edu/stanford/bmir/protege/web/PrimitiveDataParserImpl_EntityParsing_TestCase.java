@@ -4,10 +4,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.primitive.DefaultPrimitiveDataParser;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataParserImpl;
 import edu.stanford.bmir.protege.web.client.primitive.EntityDataLookupHandler;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataParserCallback;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import org.junit.Before;
@@ -18,8 +17,6 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import org.semanticweb.owlapi.model.*;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +29,7 @@ import static org.mockito.Mockito.doAnswer;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 11/04/2014
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultPrimitiveDataParser_EntityParsingTestCase {
+public class PrimitiveDataParserImpl_EntityParsing_TestCase {
 
     @Mock
     protected EntityDataLookupHandler lookupHandler;
@@ -43,7 +40,7 @@ public class DefaultPrimitiveDataParser_EntityParsingTestCase {
 
     protected Set<PrimitiveType> primitiveTypes;
 
-    private DefaultPrimitiveDataParser parser;
+    private PrimitiveDataParserImpl parser;
 
     private Map<String, OWLEntityData> lookupMap = Maps.newHashMap();
 
@@ -60,7 +57,7 @@ public class DefaultPrimitiveDataParser_EntityParsingTestCase {
                 return null;
             }
         }).when(lookupHandler).lookupEntity(any(String.class), any(Set.class), any(AsyncCallback.class));
-        parser = new DefaultPrimitiveDataParser(lookupHandler);
+        parser = new PrimitiveDataParserImpl(lookupHandler);
     }
 
     @Test
