@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.render;
 
 import com.google.common.collect.Lists;
+import edu.stanford.bmir.protege.web.shared.object.OWLObjectComparatorImpl;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
@@ -14,8 +15,6 @@ import java.util.*;
  */
 public abstract class AbstractOWLAxiomItemSectionRenderer<E extends OWLObject, I extends OWLAxiom, R> extends AbstractSectionRenderer<E, I, R> {
 
-
-    private static final DefaultOWLObjectComparator comparator = new DefaultOWLObjectComparator();
 
     @Override
     public final Formatting getSectionFormatting() {
