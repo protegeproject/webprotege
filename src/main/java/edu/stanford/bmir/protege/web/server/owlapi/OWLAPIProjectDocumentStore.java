@@ -6,7 +6,7 @@ import com.google.common.collect.ListMultimap;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.server.util.DefaultTempFileFactory;
+import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.IdUtil;
@@ -498,7 +498,7 @@ public class OWLAPIProjectDocumentStore {
             File uploadedFile = new File(uploadsDirectory, documentId.getDocumentId());
             UploadedProjectSourcesExtractor extractor = new UploadedProjectSourcesExtractor(new ZipInputStreamChecker
                                                                                                     (),
-                                                                                            new ZipArchiveProjectSourcesExtractor(new DefaultTempFileFactory(), new RootOntologyDocumentMatcherImpl()), new SingleDocumentProjectSourcesExtractor());
+                                                                                            new ZipArchiveProjectSourcesExtractor(new TempFileFactoryImpl(), new RootOntologyDocumentMatcherImpl()), new SingleDocumentProjectSourcesExtractor());
 
             if (uploadedFile.exists()) {
                 OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();

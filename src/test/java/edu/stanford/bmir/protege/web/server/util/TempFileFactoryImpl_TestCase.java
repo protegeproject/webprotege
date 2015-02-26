@@ -14,11 +14,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *         Bio-Medical Informatics Research Group
  *         Date: 19/02/2014
  */
-public class DefaultTempFileFactory_TestCase {
+public class TempFileFactoryImpl_TestCase {
 
     @Test
     public void shouldCreateTempDirectory() throws IOException {
-        DefaultTempFileFactory fileFactory = new DefaultTempFileFactory();
+        TempFileFactoryImpl fileFactory = new TempFileFactoryImpl();
         File dir = fileFactory.createTempDirectory();
         assertThat(dir.exists(), is(true));
         assertThat(dir.isDirectory(), is(true));
