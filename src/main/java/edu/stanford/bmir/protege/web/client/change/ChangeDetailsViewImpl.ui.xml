@@ -12,6 +12,25 @@
             border-left: 1px solid #ededed;
         }
 
+        .subjectsField {
+            font-size: 12px;
+            color: darkgray;
+            padding-bottom: 2px;
+        }
+
+        .revisionField {
+            font-size: 10px;
+            color: #ffffff;
+            background-color: #cbcbcb;
+            float: right;
+            padding: 1px;
+            margin-right: 5px;
+            font-weight: bold;
+            border-radius: 2px;
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+
         .highLevelDescription {
             font-size: 12px;
             font-weight: bold;
@@ -37,7 +56,14 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:Label ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
+        <div>
+            <g:Label ui:field="subjectsField" addStyleNames="{style.subjectsField}"/>
+            <div>
+                <g:InlineLabel ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
+                <g:InlineLabel ui:field="revisionField" addStyleNames="{style.revisionField}"/>
+            </div>
+
+        </div>
         <div class="{style.author}">
             <g:InlineLabel ui:field="authorField"/> authored changes <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
         </div>
