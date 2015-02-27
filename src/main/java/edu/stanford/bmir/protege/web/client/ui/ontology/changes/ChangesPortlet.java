@@ -1,31 +1,20 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
 import com.google.common.base.Optional;
-import com.gwtext.client.data.*;
-import com.gwtext.client.widgets.PagingToolbar;
-import com.gwtext.client.widgets.grid.ColumnConfig;
-import com.gwtext.client.widgets.grid.ColumnModel;
-import com.gwtext.client.widgets.grid.GridPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import edu.stanford.bmir.protege.web.client.change.ChangeListView;
+import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
+import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.util.PaginationUtil;
-import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class ChangesPortlet extends AbstractOWLEntityPortlet {
-	protected GridPanel changesGrid;
-	protected RecordDef recordDef;
-	protected Store store;
-	protected ChangesProxyImpl proxy;
-
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
@@ -33,11 +22,16 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
 		super(project);
 	}
 
+	private ChangeListView changeListView;
+
 	@Override
 	public void initialize() {
-		createGrid();
 		setHeight(200);
-		add(changesGrid);
+		changeListView = new ChangeListViewImpl();
+        ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
+		scrollPanel.setWidth("100%");
+		scrollPanel.setHeight("100%");
+        add(scrollPanel);
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override
             public void handleProjectChanged(ProjectChangedEvent event) {
@@ -65,85 +59,16 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
     }
 
     private void updateDisplayForSelectedEntity() {
-        store.removeAll();
-
-        String entityName = "";
-
-        EntityData entity = getEntity();
-
-        if (entity != null) {
-            entityName = entity.getName();
-            setTitle("Change history for " + UIUtil.getDisplayText(getEntity()));
-        } else {
-            setTitle("Change history (nothing selected)");
-        }
-
 
         ProjectId projectId = getProjectId();
-        proxy.resetParams();
-        proxy.setProjectId(projectId);
-        proxy.setEntityName(entityName);
-
-        PagingToolbar pToolbar = (PagingToolbar) changesGrid.getBottomToolbar();
-        store.load(0, pToolbar.getPageSize());
-    }
-
-    private void createGrid() {
-		changesGrid = new GridPanel();
-
-		changesGrid.setAutoWidth(true);
-		changesGrid.setAutoExpandColumn("ChangesGrid_ChangeDescCol");
-		changesGrid.setStripeRows(true);
-		changesGrid.setFrame(true);
-		createColumns();
-
-		recordDef = new RecordDef(new FieldDef[] { new StringFieldDef("desc"),
-				new StringFieldDef("author"), new DateFieldDef("timestamp"),
-				new StringFieldDef("applies") });
-
-
-		ArrayReader reader = new ArrayReader(recordDef);
-		proxy = new ChangesProxyImpl();
-		store = new Store(proxy, reader);
-
-		PagingToolbar pToolbar = PaginationUtil.getNewPagingToolbar(store, 20);
-
-		changesGrid.setBottomToolbar(pToolbar);
-
-		changesGrid.setStore(store);
-
-		if (changesGrid.getStore() == null) {
-			changesGrid.setStore(store);
-		}
-
-		setTitle("Changes");
-
-		//TODO: Uncomment this code after the patch to set entityName for a newly created portlet is set
-		//reload();
+		if (getSelectedEntity().isPresent()) {
+			ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, DispatchServiceManager.get());
+			presenter.setChangesForEntity(projectId, getSelectedEntity().get());
+		    setTitle("Changes for " + getSelectedEntityData().get().getBrowserText());
+        }
+        else {
+            setTitle("Noting selected");
+        }
 	}
 
-	private void createColumns() {
-		ColumnConfig changeDescCol = new ColumnConfig("Description", "desc");
-		changeDescCol.setId("ChangesGrid_ChangeDescCol");
-		changeDescCol.setResizable(true);
-		changeDescCol.setSortable(true);
-
-		ColumnConfig authorCol = new ColumnConfig("Author", "author");
-		authorCol.setResizable(true);
-		authorCol.setSortable(true);
-
-		ColumnConfig timestampCol = new ColumnConfig("Timestamp", "timestamp");
-		timestampCol.setResizable(true);
-		timestampCol.setSortable(true);
-
-		ColumnConfig appliesToCol = new ColumnConfig("Applies to", "applies");
-		appliesToCol.setResizable(true);
-		appliesToCol.setSortable(true);
-		appliesToCol.setHidden(true);
-
-		ColumnConfig[] columns = new ColumnConfig[] { changeDescCol, authorCol,
-				timestampCol, appliesToCol };
-		ColumnModel columnModel = new ColumnModel(columns);
-		changesGrid.setColumnModel(columnModel);
-	}
 }
