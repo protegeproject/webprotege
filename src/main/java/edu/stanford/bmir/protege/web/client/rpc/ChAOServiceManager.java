@@ -44,14 +44,4 @@ public class ChAOServiceManager {
     public void getNumChanges(ProjectId projectId, Date start, Date end, AsyncCallback<Integer> cb) {
         proxy.getNumChanges(projectId.getId(), start, end, cb);
     }
-
-    /*
-     * Watched entities
-     */
-
-    public void getWatchedEntities(ProjectId projectId, UserId userId, int start, int limit, String sort, String dir,
-            AsyncCallback<PaginationData<ChangeData>> cb) {
-
-        proxy.getWatchedEntities(projectId.getId(), userId.getUserName(), start, limit, sort, dir, cb);
-    }
 }
