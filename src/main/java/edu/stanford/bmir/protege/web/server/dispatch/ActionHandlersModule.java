@@ -2,12 +2,12 @@ package edu.stanford.bmir.protege.web.server.dispatch;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
-import edu.stanford.bmir.protege.web.client.actionbar.project.UploadAndMergeHandler;
 import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetProjectChangesActionHandler;
+import edu.stanford.bmir.protege.web.server.change.GetWatchedEntityChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.chgpwd.ResetPasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitsActionHandler;
@@ -165,5 +165,6 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(MergeUploadedProjectActionHandler.class);
 
         multibinder.addBinding().to(GetProjectChangesActionHandler.class);
+        multibinder.addBinding().to(GetWatchedEntityChangesActionHandler.class);
     }
 }
