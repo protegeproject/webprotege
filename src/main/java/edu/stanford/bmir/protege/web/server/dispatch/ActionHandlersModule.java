@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesAc
 import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
+import edu.stanford.bmir.protege.web.server.change.GetProjectChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.chgpwd.ResetPasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitsActionHandler;
@@ -163,5 +164,6 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(ComputeProjectMergeActionHandler.class);
         multibinder.addBinding().to(MergeUploadedProjectActionHandler.class);
 
+        multibinder.addBinding().to(GetProjectChangesActionHandler.class);
     }
 }
