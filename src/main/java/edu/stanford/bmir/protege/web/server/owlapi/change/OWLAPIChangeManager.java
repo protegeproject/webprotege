@@ -501,39 +501,6 @@ public class OWLAPIChangeManager {
         return insertionIndex - 1;
     }
 
-    public List<ChangeData> getChangeDataForWatches(Set<Watch<?>> watches) {
-        Set<OWLEntity> superEntities = new HashSet<OWLEntity>();
-        Set<OWLEntity> directWatches = new HashSet<OWLEntity>();
-        for (Watch<?> watch : watches) {
-            if (watch instanceof HierarchyBranchWatch) {
-                OWLEntity entity = ((HierarchyBranchWatch) watch).getEntity();
-                superEntities.add(entity);
-                directWatches.add(entity);
-            }
-            if (watch instanceof EntityFrameWatch) {
-                directWatches.add(((EntityFrameWatch) watch).getEntity());
-            }
-        }
-        if (superEntities.isEmpty() || directWatches.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        List<ChangeData> result = new ArrayList<ChangeData>();
-
-        List<Revision> revisionsCopy = getRevisionsCopy();
-        for (Revision revision : revisionsCopy) {
-            if (revision.getRevisionType() != RevisionType.BASELINE) {
-                if (isWatchedRevision(superEntities, directWatches, revision)) {
-                    for (OWLEntity entity : revision.getEntities(project)) {
-                        ChangeData changeData = createChangeDataFromRevision(entity, revision);
-                        result.add(changeData);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
     private boolean isWatchedRevision(final Set<OWLEntity> superEntities, Set<OWLEntity> directWatches, Revision revision) {
         Set<OWLEntity> entities = revision.getEntities(project);
         for (OWLEntity entity : entities) {

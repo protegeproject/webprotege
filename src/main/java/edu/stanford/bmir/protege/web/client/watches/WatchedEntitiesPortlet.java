@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
+package edu.stanford.bmir.protege.web.client.watches;
 
 import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.Application;
