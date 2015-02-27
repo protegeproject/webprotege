@@ -30,12 +30,15 @@
 }
 
 .source {
-    color: gray;
+    color: #b2b2b2;
     padding-right: 10px;
     min-width: 50px;
 }
 
 .lineElement {
     display: inline-block;
+    width: 500px;
+    vertical-align: top;
+    white-space: normal;
 }
 
