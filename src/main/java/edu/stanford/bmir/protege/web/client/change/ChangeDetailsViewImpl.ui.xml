@@ -1,0 +1,46 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:diff="urn:import:edu.stanford.bmir.protege.web.client.diff"
+             xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel">
+
+    <ui:style>
+        .main {
+            padding: 2px;
+            margin-left: 10px;
+            padding-left: 20px;
+            padding-bottom: 10px;
+            border-left: 1px solid #ededed;
+        }
+
+        .highLevelDescription {
+            font-size: 12px;
+            font-weight: bold;
+            color: gray;
+        }
+
+        .author {
+            font-size: 12px;
+            color: darkgray;
+            padding-top: 2px;
+            padding-left: 1px;
+            padding-bottom: 3px;
+        }
+
+        .diffView {
+            padding: 2px;
+            padding-left: 10px;
+        }
+
+        .timestampField {
+            display: inline;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Label ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
+        <div class="{style.author}">
+            <g:InlineLabel ui:field="authorField"/> authored changes <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
+        </div>
+        <diff:DiffViewImpl ui:field="diffView" addStyleNames="{style.diffView}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>
