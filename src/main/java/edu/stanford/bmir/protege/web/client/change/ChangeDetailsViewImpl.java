@@ -8,15 +8,19 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.diff.DiffLineElementRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffSourceDocumentRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffView;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -34,7 +38,14 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
 
     public ChangeDetailsViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        revisionField.setVisible(false);
     }
+
+    @UiField
+    protected HasText subjectsField;
+
+    @UiField
+    protected Label revisionField;
 
     @UiField
     protected HasText highLevelDescriptionField;
@@ -47,6 +58,22 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
 
     @UiField
     protected DiffView diffView;
+
+    @Override
+    public void setSubjects(Set<OWLEntityData> subjects) {
+        StringBuilder sb = new StringBuilder();
+        for(OWLEntityData entityData : subjects) {
+            sb.append(entityData.getBrowserText());
+            sb.append("  ");
+        }
+        subjectsField.setText(sb.toString().trim());
+    }
+
+    @Override
+    public void setRevision(RevisionNumber revision) {
+        revisionField.setText("R " + Integer.toString(revision.getValueAsInt()));
+        revisionField.setVisible(true);
+    }
 
     @Override
     public void setHighLevelDescription(String description) {
