@@ -1,21 +1,18 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
-import com.gwtext.client.widgets.layout.FitLayout;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.change.ChangeListView;
+import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
+import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import java.util.Collection;
-
-/**
- * @author Jennifer Vendetti <vendetti@stanford.edu>
- *
- */
 public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
-    private WatchedEntitiesGrid grid;
+    private ChangeListView changeListView;
 
     public WatchedEntitiesPortlet(Project project) {
         super(project);
@@ -23,19 +20,14 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     public void initialize() {
-        setLayout(new FitLayout());
-        setBorder(true);
-        setHeight(300);
-        setTitle(generateTitle());
-
-        grid = new WatchedEntitiesGrid(getProject());
-        add(grid);
-        onRefresh();
+        setHeight(200);
+        changeListView = new ChangeListViewImpl();
+        ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
+        scrollPanel.setWidth("100%");
+        scrollPanel.setHeight("100%");
+        add(scrollPanel);
     }
 
-    private String generateTitle() {
-        return "Watched Entities " + (Application.get().isGuestUser() ? " - Sign in to see the watched entities" : " for " + Application.get().getUserDisplayName());
-    }
 
     @Override
     public void onLogin(UserId userId) {
@@ -49,8 +41,12 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     protected void onRefresh() {
+        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, DispatchServiceManager.get());
+        presenter.setChangesForWatches(getProjectId(), getUserId());
         setTitle(generateTitle());
+    }
 
-        grid.reload();
+    private String generateTitle() {
+        return "Watched Entities " + (Application.get().isGuestUser() ? " - Sign in to see the watched entities" : " for " + Application.get().getUserDisplayName());
     }
 }
