@@ -12,7 +12,9 @@ import edu.stanford.bmir.protege.web.server.render.NullHighlightedEntityChecker;
 import edu.stanford.bmir.protege.web.shared.*;
 import edu.stanford.bmir.protege.web.shared.HasContainsEntityInSignature;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
+import edu.stanford.bmir.protege.web.shared.axiom.*;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettings;
@@ -47,11 +49,13 @@ import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider
 import org.protege.owlapi.model.ProtegeOWLOntologyManager;
 import org.semanticweb.binaryowl.BinaryOWLParseException;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
+import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.io.OWLParserException;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.NonMappingOntologyIRIMapper;
 import org.semanticweb.owlapi.util.OWLObjectDuplicator;
 import org.semanticweb.owlapi.util.OWLOntologyChangeVisitorAdapterEx;
+import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.vocab.Namespaces;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.EmptyInMemOWLOntologyFactory;
@@ -747,6 +751,52 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public AxiomSubjectProvider getAxiomSubjectProvider() {
+        Comparator<OWLObject> comparator = getOWLObjectComparator();
+        return new AxiomSubjectProvider(
+                new OWLClassExpressionSelector(comparator),
+                new OWLObjectPropertyExpressionSelector(comparator),
+                new OWLDataPropertyExpressionSelector(comparator),
+                new OWLIndividualSelector(comparator),
+                new SWRLAtomSelector(comparator)
+        );
+    }
+
+    public Comparator<OWLObject> getOWLObjectComparator() {
+        return new OWLObjectComparatorImpl(
+                getOWLObjectRenderer()
+            );
+    }
+
+    private OWLObjectRenderer getOWLObjectRenderer() {
+        return new OWLObjectRenderer() {
+            @Override
+            public void setShortFormProvider(ShortFormProvider shortFormProvider) {
+
+            }
+
+            @Override
+            public String render(OWLObject object) {
+                return renderingManager.getHTMLBrowserText(object);
+            }
+        };
+    }
+
+    public Comparator<OWLAxiom> getAxiomComparator() {
+        return new AxiomComparatorImpl(
+                new AxiomBySubjectComparator(
+                        getAxiomSubjectProvider(),
+                        getOWLObjectComparator()
+                ),
+                new AxiomByTypeComparator(
+                        DefaultAxiomTypeOrdering.get()
+                ),
+                new AxiomByRenderingComparator(
+                        getOWLObjectRenderer()
+                )
+        );
+    }
 
     // TODO:
 
