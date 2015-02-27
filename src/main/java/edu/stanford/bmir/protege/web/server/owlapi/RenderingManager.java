@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
@@ -11,6 +13,7 @@ import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.renderer.HasHtmlBrowserText;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
@@ -34,7 +37,7 @@ import java.util.*;
  * This class is here to deal with the confusion/mess surrounding "names" in web-protege.  It translates between OWLObjects
  * and EntityData and names.
  */
-public class RenderingManager implements BrowserTextProvider, HasGetFrameRendering  {
+public class RenderingManager implements BrowserTextProvider, HasGetFrameRendering, HasHtmlBrowserText {
 
     public static final String NULL_BROWSER_TEXT = "\"\"";
 
@@ -738,6 +741,11 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
                 return false;
             }
         });
+    }
+
+    @Override
+    public SafeHtml getHtmlBrowserText(OWLObject object) {
+        return new SafeHtmlBuilder().appendHtmlConstant(getHTMLBrowserText(object)).toSafeHtml();
     }
 
     public String getHTMLBrowserText(OWLObject object, final Set<String> highlightedPhrases) {
