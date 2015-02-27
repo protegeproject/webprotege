@@ -1,10 +1,7 @@
-package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
+package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import edu.stanford.bmir.protege.web.client.change.ChangeListView;
-import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
-import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
