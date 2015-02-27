@@ -7,9 +7,9 @@ package edu.stanford.bmir.protege.web.shared.diff;
  */
 public enum DiffOperation {
 
-    ADD("Add", "+"),
+    ADD("Add", "\u2295"),
 
-    REMOVE("Remove", "-");
+    REMOVE("Remove", "\u2296");
 
     private String displayName;
 
