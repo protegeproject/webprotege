@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -43,31 +45,38 @@ public class ProjectChange_TestCase {
     @Mock
     private Page<DiffElement<String, SafeHtml>> diff;
 
+    @Mock
+    private ImmutableSet<OWLEntityData> subjects;
 
     @Before
     public void setUp() throws Exception {
-        projectChange = new ProjectChange(revisionNumber, userId, timestamp, summary, diff);
-        otherProjectChange = new ProjectChange(revisionNumber, userId, timestamp, summary, diff);
+        projectChange = new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, diff);
+        otherProjectChange = new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, diff);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIf_Subjects_IsNull() {
+        new ProjectChange(null, revisionNumber, userId, timestamp, summary, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_RevisionNumber_IsNull() {
-        new ProjectChange(null, userId, timestamp, summary, diff);
+        new ProjectChange(subjects, null, userId, timestamp, summary, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_UserId_IsNull() {
-        new ProjectChange(revisionNumber, null, timestamp, summary, diff);
+        new ProjectChange(subjects, revisionNumber, null, timestamp, summary, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Summary_IsNull() {
-        new ProjectChange(revisionNumber, userId, timestamp, null, diff);
+        new ProjectChange(subjects, revisionNumber, userId, timestamp, null, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Diff_IsNull() {
-        new ProjectChange(revisionNumber, userId, timestamp, summary, null);
+        new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, null);
     }
 
     @Test
@@ -114,5 +123,9 @@ public class ProjectChange_TestCase {
     @Test
     public void shouldReturnSupplied_Diff() {
         assertThat(projectChange.getDiff(), is(diff));
+    }
+    @Test
+    public void shouldReturnSupplied_Subjects() {
+        assertThat(projectChange.getSubjects(), is(subjects));
     }
 }

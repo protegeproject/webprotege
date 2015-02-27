@@ -1,14 +1,17 @@
 package edu.stanford.bmir.protege.web.shared.change;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -19,6 +22,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 24/02/15
  */
 public class ProjectChange implements IsSerializable, Serializable {
+
+    private ImmutableSet<OWLEntityData> subjects;
 
     private RevisionNumber revisionNumber;
 
@@ -36,12 +41,17 @@ public class ProjectChange implements IsSerializable, Serializable {
     private ProjectChange() {
     }
 
-    public ProjectChange(RevisionNumber revisionNumber, UserId author, long timestamp, String summary, Page<DiffElement<String, SafeHtml>> diff) {
+    public ProjectChange(ImmutableSet<OWLEntityData> subjects, RevisionNumber revisionNumber, UserId author, long timestamp, String summary, Page<DiffElement<String, SafeHtml>> diff) {
+        this.subjects = checkNotNull(subjects);
         this.revisionNumber = checkNotNull(revisionNumber);
         this.author = checkNotNull(author);
         this.timestamp = checkNotNull(timestamp);
         this.summary = checkNotNull(summary);
         this.diff = checkNotNull(diff);
+    }
+
+    public ImmutableSet<OWLEntityData> getSubjects() {
+        return subjects;
     }
 
     public RevisionNumber getRevisionNumber() {
