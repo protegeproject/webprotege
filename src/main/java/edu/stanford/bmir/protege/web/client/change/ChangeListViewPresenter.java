@@ -5,14 +5,17 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Ordering;
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.shared.Filter;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
+import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -32,6 +35,16 @@ public class ChangeListViewPresenter {
     public ChangeListViewPresenter(ChangeListView changeListView, DispatchServiceManager dispatchServiceManager) {
         this.changeListView = changeListView;
         this.dispatchServiceManager = dispatchServiceManager;
+    }
+
+    public void setChangesForProject(ProjectId projectId) {
+        changeListView.clear();
+        dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.<OWLEntity>absent()), new DispatchServiceCallback<GetProjectChangesResult>() {
+            @Override
+            public void handleSuccess(GetProjectChangesResult result) {
+                fillView(result.getChanges(), SubjectDisplay.DO_NOT_DISPLAY_SUBJECT);
+            }
+        });
     }
 
     public void setChangesForEntity(ProjectId projectId, OWLEntity entity) {
@@ -76,7 +89,12 @@ public class ChangeListViewPresenter {
             view.setRevision(projectChange.getRevisionNumber());
             view.setAuthor(projectChange.getAuthor());
             view.setHighLevelDescription(projectChange.getSummary());
-            view.setDiff(projectChange.getDiff().getPageElements());
+            Page<DiffElement<String, SafeHtml>> page = projectChange.getDiff();
+            List<DiffElement<String, SafeHtml>> pageElements = page.getPageElements();
+            if (page.getPageCount() == 1) {
+                view.setDiff(pageElements);
+            }
+            view.setChangeCount(projectChange.getChangeCount());
             view.setTimestamp(changeTimeStamp);
             changeListView.addChangeDetailsView(view);
         }

@@ -39,6 +39,7 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
     public ChangeDetailsViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         revisionField.setVisible(false);
+        tooManyChangesMessage.setVisible(true);
     }
 
     @UiField
@@ -58,6 +59,12 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
 
     @UiField
     protected DiffView diffView;
+
+    @UiField
+    protected HasText changeCountField;
+
+    @UiField
+    protected Label tooManyChangesMessage;
 
     @Override
     public void setSubjects(Set<OWLEntityData> subjects) {
@@ -98,6 +105,12 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
                 return new SafeHtmlBuilder().appendHtmlConstant(document).toSafeHtml();
             }
         });
+        tooManyChangesMessage.setVisible(false);
+    }
+
+    @Override
+    public void setChangeCount(int changeCount) {
+        changeCountField.setText(Integer.toString(changeCount));
     }
 
     @Override

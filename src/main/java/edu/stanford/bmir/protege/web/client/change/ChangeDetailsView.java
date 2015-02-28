@@ -28,4 +28,6 @@ public interface ChangeDetailsView extends IsWidget {
     void setDiff(List<DiffElement<String, SafeHtml>> diff);
 
     void setTimestamp(long timestamp);
+
+    void setChangeCount(int changeCount);
 }
