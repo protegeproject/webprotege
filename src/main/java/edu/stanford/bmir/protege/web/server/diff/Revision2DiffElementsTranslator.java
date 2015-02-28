@@ -65,11 +65,14 @@ public class Revision2DiffElementsTranslator {
         };
     }
 
-    public List<DiffElement<String, OWLOntologyChangeRecord>> getDiffElementsFromRevision(Revision revision) {
+    public List<DiffElement<String, OWLOntologyChangeRecord>> getDiffElementsFromRevision(Revision revision, int limit) {
         final List<DiffElement<String, OWLOntologyChangeRecord>> changeRecordElements = new ArrayList<>();
         for(final OWLOntologyChangeRecord changeRecord : revision) {
             if(filter.isIncluded(changeRecord)) {
                 changeRecordElements.add(toElement(changeRecord));
+            }
+            if(changeRecordElements.size() >= limit) {
+                break;
             }
         }
         return changeRecordElements;
