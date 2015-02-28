@@ -765,7 +765,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     public Comparator<OWLObject> getOWLObjectComparator() {
         return new OWLObjectComparatorImpl(
-                getOWLObjectRenderer()
+                getRenderingManager()
             );
     }
 
