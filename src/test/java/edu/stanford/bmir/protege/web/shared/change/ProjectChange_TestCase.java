@@ -38,6 +38,8 @@ public class ProjectChange_TestCase {
     @Mock
     private UserId userId;
 
+    private int changeCount = 3;
+
     private long timestamp = 100;
 
     private String summary = "The Summary";
@@ -50,33 +52,33 @@ public class ProjectChange_TestCase {
 
     @Before
     public void setUp() throws Exception {
-        projectChange = new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, diff);
-        otherProjectChange = new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, diff);
+        projectChange = new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, changeCount, diff);
+        otherProjectChange = new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Subjects_IsNull() {
-        new ProjectChange(null, revisionNumber, userId, timestamp, summary, diff);
+        new ProjectChange(null, revisionNumber, userId, timestamp, summary, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_RevisionNumber_IsNull() {
-        new ProjectChange(subjects, null, userId, timestamp, summary, diff);
+        new ProjectChange(subjects, null, userId, timestamp, summary, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_UserId_IsNull() {
-        new ProjectChange(subjects, revisionNumber, null, timestamp, summary, diff);
+        new ProjectChange(subjects, revisionNumber, null, timestamp, summary, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Summary_IsNull() {
-        new ProjectChange(subjects, revisionNumber, userId, timestamp, null, diff);
+        new ProjectChange(subjects, revisionNumber, userId, timestamp, null, changeCount, diff);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Diff_IsNull() {
-        new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, null);
+        new ProjectChange(subjects, revisionNumber, userId, timestamp, summary, changeCount, null);
     }
 
     @Test

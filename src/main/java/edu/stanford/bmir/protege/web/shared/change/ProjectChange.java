@@ -35,19 +35,26 @@ public class ProjectChange implements IsSerializable, Serializable {
 
     private Page<DiffElement<String, SafeHtml>> diff;
 
+    private int changeCount;
+
     /**
      * For serialization purposes only.
      */
     private ProjectChange() {
     }
 
-    public ProjectChange(ImmutableSet<OWLEntityData> subjects, RevisionNumber revisionNumber, UserId author, long timestamp, String summary, Page<DiffElement<String, SafeHtml>> diff) {
+    public ProjectChange(ImmutableSet<OWLEntityData> subjects, RevisionNumber revisionNumber, UserId author, long timestamp, String summary, int changeCount, Page<DiffElement<String, SafeHtml>> diff) {
         this.subjects = checkNotNull(subjects);
         this.revisionNumber = checkNotNull(revisionNumber);
         this.author = checkNotNull(author);
         this.timestamp = checkNotNull(timestamp);
         this.summary = checkNotNull(summary);
         this.diff = checkNotNull(diff);
+        this.changeCount = changeCount;
+    }
+
+    public int getChangeCount() {
+        return changeCount;
     }
 
     public ImmutableSet<OWLEntityData> getSubjects() {
@@ -76,7 +83,7 @@ public class ProjectChange implements IsSerializable, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(revisionNumber, author, timestamp, summary, diff);
+        return Objects.hashCode(revisionNumber, author, timestamp, summary, changeCount, diff);
     }
 
     @Override
@@ -92,7 +99,8 @@ public class ProjectChange implements IsSerializable, Serializable {
                 && this.author.equals(other.author)
                 && this.summary.equals(other.summary)
                 && this.timestamp == other.timestamp
-                && this.diff.equals(other.diff);
+                && this.diff.equals(other.diff)
+                && this.changeCount == other.changeCount;
     }
 
     @Override
@@ -102,7 +110,10 @@ public class ProjectChange implements IsSerializable, Serializable {
                 .add("author", author)
                 .add("timestamp", timestamp)
                 .add("summary", summary)
+                .add("changeCount", changeCount)
                 .add("diff", diff)
                 .toString();
     }
+
+
 }
