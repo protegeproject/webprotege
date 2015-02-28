@@ -59,6 +59,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
             Set<OntologyDiff> diffs = computeDiff(uploadedRootOntology, projectRootOntology);
 
             List<DiffElement<String, SafeHtml>> transformedDiff = renderDiff(
+                    project,
                     projectRootOntology,
                     uploadedRootOntology,
                     project.getRenderingManager().getShortFormProvider(),
@@ -91,6 +92,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     }
 
     private List<DiffElement<String, SafeHtml>> renderDiff(
+            OWLAPIProject project,
             OWLOntology projectRootOntology,
             OWLOntology uploadedRootOntology,
             ShortFormProvider projectShortFormProvider,
@@ -109,7 +111,7 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
                 dualShortFormProvider);
 
         List<DiffElement<String, OWLAxiom>> diffElements = getDiffElements(diffs);
-        sortDiff(dualShortFormProvider, renderer, diffElements);
+        sortDiff(dualShortFormProvider, project, diffElements);
 
         // Transform from OWLAxiom to SafeHtml
         List<DiffElement<String, SafeHtml>> transformedDiff = new ArrayList<>();
@@ -135,8 +137,8 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     }
 
 
-    private void sortDiff(ShortFormProvider dualShortFormProvider, OWLObjectRenderer renderer, List<DiffElement<String, OWLAxiom>> diffElements) {
-        final Comparator<OWLAxiom> axiomComparator = getDefaultAxiomComparator(dualShortFormProvider, renderer);
+    private void sortDiff(ShortFormProvider dualShortFormProvider, OWLAPIProject project, List<DiffElement<String, OWLAxiom>> diffElements) {
+        final Comparator<OWLAxiom> axiomComparator = getDefaultAxiomComparator(dualShortFormProvider, project);
 
 
         Collections.sort(diffElements, new Comparator<DiffElement<String, OWLAxiom>>() {
@@ -169,23 +171,9 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
     }
 
     private Comparator<OWLAxiom> getDefaultAxiomComparator(ShortFormProvider dualShortFormProvider,
-                                                           OWLObjectRenderer renderer) {
-        OWLEntityComparator comparator = new OWLEntityComparator(dualShortFormProvider);
-        Comparator<OWLObject> owlObjectComparator = new OWLObjectComparatorImpl(renderer);
+                                                           OWLAPIProject project) {
 
-        return new AxiomComparatorImpl(
-                new AxiomBySubjectComparator(
-                        new edu.stanford.bmir.protege.web.shared.axiom.AxiomSubjectProvider(
-                                new OWLClassExpressionSelector(comparator),
-                                new OWLObjectPropertyExpressionSelector(comparator),
-                                new OWLDataPropertyExpressionSelector(comparator),
-                                new OWLIndividualSelector(comparator),
-                                new SWRLAtomSelector(owlObjectComparator)),
-                        owlObjectComparator
-                ),
-                new AxiomByTypeComparator(DefaultAxiomTypeOrdering.get()),
-                new AxiomByRenderingComparator(renderer)
-        );
+        return project.getAxiomComparator();
     }
 
     private OWLObjectRenderer getManchesterSyntaxObjectRenderer(final OWLOntology projectRootOntology, final OWLOntology uploadedRootOntology, ShortFormProvider dualShortFormProvider) {
