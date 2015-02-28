@@ -26,6 +26,7 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
         scrollPanel.setWidth("100%");
         scrollPanel.setHeight("100%");
         add(scrollPanel);
+        onRefresh();
     }
 
 
