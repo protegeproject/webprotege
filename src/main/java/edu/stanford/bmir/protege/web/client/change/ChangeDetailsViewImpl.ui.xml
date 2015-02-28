@@ -53,6 +53,12 @@
         .timestampField {
             display: inline;
         }
+        .tooManyChangesMessage {
+            font-size: 12px;
+            color: darkgray;
+            background-color : rgb(255, 250, 230);
+            padding: 4px;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
@@ -65,8 +71,9 @@
 
         </div>
         <div class="{style.author}">
-            <g:InlineLabel ui:field="authorField"/> authored changes <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
+            <g:InlineLabel ui:field="authorField"/> authored <g:InlineLabel ui:field="changeCountField"/> changes <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
         </div>
         <diff:DiffViewImpl ui:field="diffView" addStyleNames="{style.diffView}"/>
+        <g:Label text="There are too many changes to show here.  If you would like to view them, please download this revision." ui:field="tooManyChangesMessage" addStyleNames="{style.tooManyChangesMessage}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
