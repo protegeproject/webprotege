@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.server.render;
 
 import edu.stanford.bmir.protege.web.server.inject.RootOntology;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Matthew Horridge,
@@ -30,6 +30,14 @@ public class EntityIRICheckerImpl implements EntityIRIChecker {
 
     @Override
     public Collection<OWLEntity> getEntitiesWithIRI(IRI iri) {
-        return rootOntology.getEntitiesInSignature(iri, true);
+        Set<OWLEntity> result = new HashSet<>();
+        OWLDataFactory dataFactory = rootOntology.getOWLOntologyManager().getOWLDataFactory();
+        for(EntityType<?> entityType : EntityType.values()) {
+            OWLEntity entity = dataFactory.getOWLEntity(entityType, iri);
+            if(rootOntology.containsEntityInSignature(entity, true)) {
+                result.add(entity);
+            }
+        }
+        return result;
     }
 }
