@@ -37,11 +37,6 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>ChAOServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.owlapi.ChAOServiceOWLAPIImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>OntologyServiceImpl</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.owlapi.OntologyServiceOWLAPIImpl</servlet-class>
 	</servlet>
@@ -71,11 +66,6 @@
 	<servlet-mapping>
 		<servlet-name>DownloadServlet</servlet-name>
 		<url-pattern>/download</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>ChAOServiceImpl</servlet-name>
-		<url-pattern>/webprotege/chao</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
