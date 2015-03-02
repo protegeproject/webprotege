@@ -26,6 +26,6 @@ public class OntologyDiffCalculator {
     public OntologyDiff computeDiff(OWLOntology from, OWLOntology to) {
         Diff<OWLAxiom> axiomDiff = axiomDiffCalculator.computeDiff(from, to);
         Diff<OWLAnnotation> annotationDiff = annotationDiffCalculator.computeDiff(from, to);
-        return new OntologyDiff(annotationDiff, axiomDiff);
+        return new OntologyDiff(from.getOntologyID(), to.getOntologyID(), annotationDiff, axiomDiff);
     }
 }
