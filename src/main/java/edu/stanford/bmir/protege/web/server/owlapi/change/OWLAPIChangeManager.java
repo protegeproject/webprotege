@@ -725,7 +725,7 @@ public class OWLAPIChangeManager {
             );
 
             List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements = translator.getDiffElementsFromRevision(revision, Integer.MAX_VALUE);
-            if (axiomDiffElements.size() < 20) {
+            if (axiomDiffElements.size() < 200) {
                 sortDiff(axiomDiffElements);
             }
             List<DiffElement<String, SafeHtml>> diffElements = getDiffElements(axiomDiffElements);
@@ -737,7 +737,7 @@ public class OWLAPIChangeManager {
             else {
                 subjects = ImmutableSet.of();
             }
-            Pager<DiffElement<String, SafeHtml>> pager = Pager.getPagerForPageSize(diffElements, 50);
+            Pager<DiffElement<String, SafeHtml>> pager = Pager.getPagerForPageSize(diffElements, 150);
             ProjectChange projectChange = new ProjectChange(
                     subjects,
                     revision.getRevisionNumber(),
