@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
@@ -25,10 +24,13 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     private ProjectDetailsManager projectDetailsManager;
 
+    private ProjectExistsFilter projectExistsFilter;
+
     @Inject
-    public ProjectPermissionsManagerImpl(MetaProject metaProject, ProjectDetailsManager projectDetailsManager) {
+    public ProjectPermissionsManagerImpl(MetaProject metaProject, ProjectDetailsManager projectDetailsManager, ProjectExistsFilter projectExistsFilter) {
         this.metaProject = metaProject;
         this.projectDetailsManager = projectDetailsManager;
+        this.projectExistsFilter = projectExistsFilter;
     }
 
     @Override
@@ -108,14 +110,15 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     public List<ProjectDetails> getListableReadableProjects(UserId userId) {
         Policy policy = metaProject.getPolicy();
         User user = policy.getUserByName(userId.getUserName());
+        // Get groups is an expensive operation it seems!
+        Collection<Group> userGroups = user.getGroups();
         List<ProjectDetails> result = new ArrayList<>();
         for (ProjectInstance projectInstance : metaProject.getProjects()) {
             final String name = projectInstance.getName();
             if (name != null && ProjectId.isWelFormedProjectId(name)) {
                 final ProjectId projectId = ProjectId.get(name);
-                if (isAuthorisedToReadAndList(policy, user, projectInstance)) {
-                    OWLAPIProjectDocumentStore ds = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
-                    if (ds.exists()) {
+                if (isAuthorisedToReadAndList(policy, user, projectInstance, userGroups)) {
+                    if (projectExistsFilter.isProjectPresent(projectId)) {
                         ProjectDetails projectDetails = projectDetailsManager.getProjectDetails(projectId);
                         result.add(projectDetails);
                     }
@@ -130,11 +133,11 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
         return user != null && owner != null && owner.equals(user);
     }
 
-    private boolean isAuthorisedToRead(Policy policy, User user, ProjectInstance projectInstance) {
+    private boolean isAuthorisedToRead(Policy policy, User user, ProjectInstance projectInstance, Collection<Group> userGroups) {
         if (user == null) {
             return isWorldAllowedOperation(projectInstance, MetaProjectConstants.OPERATION_READ);
         }
-        else if (isAdminUser(user)) {
+        else if (isAdminUser(user, userGroups)) {
             return true;
         }
         else
@@ -142,11 +145,11 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     }
 
-    private boolean isAdminUser(User user) {
+    private boolean isAdminUser(User user, Collection<Group> userGroups) {
         if (user == null) {
             return false;
         }
-        for (Group group : user.getGroups()) {
+        for (Group group : userGroups) {
             if (ADMIN_GROUP.equals(group.getName())) {
                 return true;
             }
@@ -155,13 +158,13 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     }
 
 
-    private boolean isAuthorisedToDisplayInList(Policy policy, User user, ProjectInstance projectInstance) {
+    private boolean isAuthorisedToDisplayInList(Policy policy, User user, ProjectInstance projectInstance, Collection<Group> userGroups) {
         Operation operation = MetaProjectConstants.OPERATION_DISPLAY_IN_PROJECT_LIST;
         if (user == null) {
             return isWorldAllowedOperation(projectInstance, operation);
         }
         else {
-            return isAdminUser(user) || policy.isOperationAuthorized(user, operation, projectInstance);
+            return  policy.isOperationAuthorized(user, operation, projectInstance) || isAdminUser(user, userGroups);
         }
 
     }
@@ -181,8 +184,8 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     }
 
 
-    private boolean isAuthorisedToReadAndList(Policy policy, User user, ProjectInstance projectInstance) {
+    private boolean isAuthorisedToReadAndList(Policy policy, User user, ProjectInstance projectInstance, Collection<Group> userGroups) {
         User owner = projectInstance.getOwner();
-        return isUserOwner(user, owner) || isAuthorisedToDisplayInList(policy, user, projectInstance) && isAuthorisedToRead(policy, user, projectInstance);
+        return isUserOwner(user, owner) || isAuthorisedToDisplayInList(policy, user, projectInstance, userGroups) && isAuthorisedToRead(policy, user, projectInstance, userGroups);
     }
 }
