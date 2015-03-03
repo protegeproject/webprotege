@@ -5,10 +5,7 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.diff.DiffLineElementRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffSourceDocumentRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffView;
@@ -18,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -43,7 +41,7 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
     }
 
     @UiField
-    protected HasText subjectsField;
+    protected HTML subjectsField;
 
     @UiField
     protected Label revisionField;
@@ -67,13 +65,15 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
     protected Label tooManyChangesMessage;
 
     @Override
-    public void setSubjects(Set<OWLEntityData> subjects) {
+    public void setSubjects(Collection<OWLEntityData> subjects) {
         StringBuilder sb = new StringBuilder();
         for(OWLEntityData entityData : subjects) {
+            sb.append("<span style=\"padding-left: 5px;\">");
             sb.append(entityData.getBrowserText());
-            sb.append("  ");
+            sb.append(",");
+            sb.append("</span>");
         }
-        subjectsField.setText(sb.toString().trim());
+        subjectsField.setHTML(sb.toString().trim());
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Ordering;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -42,7 +43,7 @@ public class ChangeListViewPresenter {
         dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.<OWLEntity>absent()), new DispatchServiceCallback<GetProjectChangesResult>() {
             @Override
             public void handleSuccess(GetProjectChangesResult result) {
-                fillView(result.getChanges(), SubjectDisplay.DO_NOT_DISPLAY_SUBJECT);
+                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT);
             }
         });
     }
@@ -71,7 +72,7 @@ public class ChangeListViewPresenter {
         changeListView.clear();
         List<ProjectChange> projectChanges = new ArrayList<>(changes);
         Collections.sort(projectChanges, Ordering.compound(Arrays.asList(
-                new ProjectChangeSubjectsComparator(),
+//                new ProjectChangeSubjectsComparator(),
                 Ordering.from(new ProjectChangeTimestampComparator()).reverse())));
         long previousTimeStamp = 0;
         for(ProjectChange projectChange : projectChanges) {
@@ -84,7 +85,15 @@ public class ChangeListViewPresenter {
 
             ChangeDetailsView view = new ChangeDetailsViewImpl();
             if (subjectDisplay == SubjectDisplay.DISPLAY_SUBJECT) {
-                view.setSubjects(projectChange.getSubjects());
+                GWT.log(projectChange.getSubjects().toString());
+                List<OWLEntityData> subjects = new ArrayList<>(projectChange.getSubjects());
+                Collections.sort(subjects, new Comparator<OWLEntityData>() {
+                    @Override
+                    public int compare(OWLEntityData o1, OWLEntityData o2) {
+                        return o1.compareToIgnoreCase(o2);
+                    }
+                });
+                view.setSubjects(subjects);
             }
             view.setRevision(projectChange.getRevisionNumber());
             view.setAuthor(projectChange.getAuthor());
