@@ -7,7 +7,7 @@
     <g:HTMLPanel>
         <div class="{wp.style.formGroup}">
             <g:Label text="Commit message" addStyleNames="{wp.style.formLabel}"/>
-            <g:TextArea ui:field="commitMessageField" characterWidth="60" visibleLines="5"/>
+            <g:TextArea ui:field="commitMessageField" text="Applied changes from en external edit" characterWidth="60" visibleLines="5"/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="Changes to be applied" addStyleNames="{wp.style.formLabel}"/>
