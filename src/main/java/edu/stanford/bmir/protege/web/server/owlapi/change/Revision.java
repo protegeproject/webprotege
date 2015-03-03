@@ -103,12 +103,12 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
             }
         }
         for (IRI iri : iris) {
-            result.add(project.getDataFactory().getOWLClass(iri));
-            result.add(project.getDataFactory().getOWLObjectProperty(iri));
-            result.add(project.getDataFactory().getOWLDataProperty(iri));
-            result.add(project.getDataFactory().getOWLAnnotationProperty(iri));
-            result.add(project.getDataFactory().getOWLNamedIndividual(iri));
-            result.add(project.getDataFactory().getOWLDatatype(iri));
+            for(EntityType<?> entityType : EntityType.values()) {
+                OWLEntity entity = project.getDataFactory().getOWLEntity(entityType, iri);
+                if(project.getRootOntology().containsEntityInSignature(entity)) {
+                    result.add(entity);
+                }
+            }
         }
         return result.build();
     }
