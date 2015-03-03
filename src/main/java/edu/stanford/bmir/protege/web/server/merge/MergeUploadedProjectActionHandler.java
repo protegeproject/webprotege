@@ -81,7 +81,7 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
             public Void getRenamedResult(Void result, RenameMap renameMap) {
                 return null;
             }
-        }, new FixedMessageChangeDescriptionGenerator<Void>(commitMessage + " [Merged from external edit]"));
+        }, new FixedMessageChangeDescriptionGenerator<Void>(commitMessage));
     }
 
 
