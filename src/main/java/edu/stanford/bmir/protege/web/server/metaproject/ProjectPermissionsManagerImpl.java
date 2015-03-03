@@ -108,8 +108,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     @Override
     public List<ProjectDetails> getListableReadableProjects(UserId userId) {
-        Policy policy = metaProject.getPolicy();
-        User user = policy.getUserByName(userId.getUserName());
+        User user = metaProject.getUser(userId.getUserName());
         // Get groups is an expensive operation it seems!
         Collection<Group> userGroups = user.getGroups();
         List<ProjectDetails> result = new ArrayList<>();
@@ -117,7 +116,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
             final String name = projectInstance.getName();
             if (name != null && ProjectId.isWelFormedProjectId(name)) {
                 final ProjectId projectId = ProjectId.get(name);
-                if (isAuthorisedToReadAndList(policy, user, projectInstance, userGroups)) {
+                if (isAuthorisedToReadAndList(user, projectInstance, userGroups)) {
                     if (projectExistsFilter.isProjectPresent(projectId)) {
                         ProjectDetails projectDetails = projectDetailsManager.getProjectDetails(projectId);
                         result.add(projectDetails);
@@ -133,16 +132,11 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
         return user != null && owner != null && owner.equals(user);
     }
 
-    private boolean isAuthorisedToRead(Policy policy, User user, ProjectInstance projectInstance, Collection<Group> userGroups) {
+    private boolean isAuthorisedToRead(User user, ProjectInstance projectInstance, Collection<Group> userGroups) {
         if (user == null) {
             return isWorldAllowedOperation(projectInstance, MetaProjectConstants.OPERATION_READ);
-        }
-        else if (isAdminUser(user, userGroups)) {
-            return true;
-        }
-        else
-            return policy.isOperationAuthorized(user, MetaProjectConstants.OPERATION_READ, projectInstance);
-
+        } else
+            return isAdminUser(user, userGroups) || isOperationAuthorised(projectInstance, userGroups, MetaProjectConstants.OPERATION_READ);
     }
 
     private boolean isAdminUser(User user, Collection<Group> userGroups) {
@@ -158,15 +152,26 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     }
 
 
-    private boolean isAuthorisedToDisplayInList(Policy policy, User user, ProjectInstance projectInstance, Collection<Group> userGroups) {
+    private boolean isAuthorisedToDisplayInList(User user, ProjectInstance projectInstance, Collection<Group> userGroups) {
         Operation operation = MetaProjectConstants.OPERATION_DISPLAY_IN_PROJECT_LIST;
         if (user == null) {
             return isWorldAllowedOperation(projectInstance, operation);
         }
         else {
-            return  policy.isOperationAuthorized(user, operation, projectInstance) || isAdminUser(user, userGroups);
+            return isOperationAuthorised(projectInstance, userGroups, operation);
         }
 
+    }
+
+    private boolean isOperationAuthorised(ProjectInstance projectInstance, Collection<Group> userGroups, Operation operation) {
+        for(GroupOperation groupOperation : projectInstance.getAllowedGroupOperations()) {
+            if(groupOperation.getAllowedOperations().contains(operation)) {
+                if(userGroups.contains(groupOperation.getAllowedGroup())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean isWorldAllowedOperation(ProjectInstance projectInstance, Operation operation) {
@@ -184,8 +189,8 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     }
 
 
-    private boolean isAuthorisedToReadAndList(Policy policy, User user, ProjectInstance projectInstance, Collection<Group> userGroups) {
+    private boolean isAuthorisedToReadAndList(User user, ProjectInstance projectInstance, Collection<Group> userGroups) {
         User owner = projectInstance.getOwner();
-        return isUserOwner(user, owner) || isAuthorisedToDisplayInList(policy, user, projectInstance, userGroups) && isAuthorisedToRead(policy, user, projectInstance, userGroups);
+        return isUserOwner(user, owner) || isAuthorisedToDisplayInList(user, projectInstance, userGroups) && isAuthorisedToRead(user, projectInstance, userGroups);
     }
 }
