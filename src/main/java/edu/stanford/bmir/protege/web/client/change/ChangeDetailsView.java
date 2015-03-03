@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ public interface ChangeDetailsView extends IsWidget {
 
     void setRevision(RevisionNumber revision);
 
-    void setSubjects(Set<OWLEntityData> subjects);
+    void setSubjects(Collection<OWLEntityData> subjects);
 
     void setHighLevelDescription(String description);
 

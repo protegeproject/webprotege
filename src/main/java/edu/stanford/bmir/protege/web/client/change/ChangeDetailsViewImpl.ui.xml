@@ -16,6 +16,7 @@
             font-size: 12px;
             color: darkgray;
             padding-bottom: 2px;
+            padding-left: 20px;
         }
 
         .revisionField {
@@ -63,7 +64,6 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <div>
-            <g:Label ui:field="subjectsField" addStyleNames="{style.subjectsField}"/>
             <div>
                 <g:InlineLabel ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
                 <g:InlineLabel ui:field="revisionField" addStyleNames="{style.revisionField}"/>
@@ -73,6 +73,10 @@
         <div class="{style.author}">
             <g:InlineLabel ui:field="authorField"/> authored <g:InlineLabel ui:field="changeCountField"/> changes <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
         </div>
+        <div class="{style.subjectsField}">
+            <g:InlineHTML ui:field="subjectsField"/>
+        </div>
+
         <diff:DiffViewImpl ui:field="diffView" addStyleNames="{style.diffView}"/>
         <g:Label text="There are too many changes to show here.  If you would like to view them, please download this revision." ui:field="tooManyChangesMessage" addStyleNames="{style.tooManyChangesMessage}"/>
     </g:HTMLPanel>

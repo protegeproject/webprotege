@@ -17,6 +17,7 @@ import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLEntityChecker
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.render.ManchesterSyntaxObjectRenderer;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.Filter;
 import edu.stanford.bmir.protege.web.shared.axiom.*;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
@@ -725,21 +726,20 @@ public class OWLAPIChangeManager {
             );
 
             List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements = translator.getDiffElementsFromRevision(revision, Integer.MAX_VALUE);
+            ImmutableSet.Builder<OWLEntityData> subjectsBuilder = ImmutableSet.builder();
+
             if (axiomDiffElements.size() < 200) {
                 sortDiff(axiomDiffElements);
+                for(OWLEntity entity : revision.getEntities(project)) {
+                    String rendering = project.getRenderingManager().getBrowserText(entity);
+                    OWLEntityData entityData = DataFactory.getOWLEntityData(entity, rendering);
+                    subjectsBuilder.add(entityData);
+                }
             }
             List<DiffElement<String, SafeHtml>> diffElements = getDiffElements(axiomDiffElements);
-            ImmutableSet<OWLEntityData> subjects;
-            if(subject.isPresent()) {
-                Map<OWLEntity, OWLEntityData> rendering = project.getRenderingManager().getRendering(subject.asSet());
-                subjects = ImmutableSet.copyOf(rendering.values());
-            }
-            else {
-                subjects = ImmutableSet.of();
-            }
             Pager<DiffElement<String, SafeHtml>> pager = Pager.getPagerForPageSize(diffElements, 150);
             ProjectChange projectChange = new ProjectChange(
-                    subjects,
+                    subjectsBuilder.build(),
                     revision.getRevisionNumber(),
                     revision.getUserId(),
                     revision.getTimestamp(),
