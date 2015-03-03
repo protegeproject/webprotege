@@ -16,6 +16,7 @@ public class MetaProjectModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(ProjectExistsFilter.class).to(ProjectExistsFilterImpl.class);
         bind(File.class).annotatedWith(MetaProjectFile.class).toProvider(MetaProjectFileProvider.class);
         bind(URI.class).annotatedWith(MetaProjectURI.class).toProvider(MetaProjectURIProvider.class);
         bind(MetaProject.class).toProvider(MetaProjectProvider.class).asEagerSingleton();
