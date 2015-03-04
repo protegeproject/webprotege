@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.util.OntologyDocumentFileFilter;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.ZipFileExtractor;
@@ -31,8 +30,6 @@ public class ZipArchiveProjectSourcesExtractor implements RawProjectSourcesExtra
     private TempFileFactory tempFileFactory;
 
     private RootOntologyDocumentFileMatcher rootOntologyDocumentFileMatcher;
-
-    private static WebProtegeLogger logger = WebProtegeLoggerManager.get(ZipArchiveProjectSourcesExtractor.class);
 
     @Inject
     public ZipArchiveProjectSourcesExtractor(TempFileFactory tempFileFactory, RootOntologyDocumentFileMatcher rootOntologyDocumentFileMatcher) {

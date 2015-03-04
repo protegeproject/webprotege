@@ -5,7 +5,7 @@ import com.mongodb.Mongo;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteConcern;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.persistence.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -33,6 +33,8 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
 
     public static final int DEFAULT_PORT = 27017;
 
+    private WebProtegeProperties webProtegeProperties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
+
     @Override
     protected String getDatabaseName() {
         return "webprotege";
@@ -40,9 +42,22 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
 
     @Override
     public Mongo mongo() throws Exception {
-        Mongo mongo = new Mongo(address);
-        mongo.setWriteConcern(WriteConcern.SAFE);
-        return mongo;
+
+        final String hostName = getHostName();
+        final int port = getPort();
+
+        try {
+            ServerAddress address = new ServerAddress(hostName, port);
+            Mongo mongo = new Mongo(address);
+            mongo.setWriteConcern(WriteConcern.SAFE);
+            return mongo;
+        }
+        catch (IllegalArgumentException e) {
+            throw new WebProtegeConfigurationException("Port or host name of database out of range: " + hostName + " port " + port);
+        }
+        catch (UnknownHostException e) {
+            throw new WebProtegeConfigurationException(getUnknownHostErrorMessage(hostName, port));
+        }
     }
 
     @Override
@@ -66,29 +81,8 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static final ServerAddress address;
-
-
-
-    static {
-        final String hostName = getHostName();
-        final int port = getPort();
-
-        try {
-            address = new ServerAddress(hostName, port);
-            WebProtegeLoggerManager.get(WebProtegeApplicationConfig.class).info("mongod address: " + address);
-        }
-        catch (IllegalArgumentException e) {
-            throw new WebProtegeConfigurationException("Port or host name of database out of range: " + hostName + " port " + port);
-        }
-        catch (UnknownHostException e) {
-            throw new WebProtegeConfigurationException(getUnknownHostErrorMessage(hostName, port));
-        }
-
-    }
-
-    private static int getPort() {
-        Optional<String> overridingPortString = WebProtegeProperties.get().getDBPort();
+    private int getPort() {
+        Optional<String> overridingPortString = webProtegeProperties.getDBPort();
         if (!overridingPortString.isPresent()) {
             return DEFAULT_PORT;
         }
@@ -101,8 +95,8 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
         }
     }
 
-    private static String getHostName() {
-        Optional<String> overridingHostName = WebProtegeProperties.get().getDBHost();
+    private String getHostName() {
+        Optional<String> overridingHostName = webProtegeProperties.getDBHost();
         if(overridingHostName.isPresent()) {
             return overridingHostName.get();
         }

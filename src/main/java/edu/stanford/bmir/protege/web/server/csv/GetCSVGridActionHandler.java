@@ -6,12 +6,15 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.server.filesubmission.FileUploadConstants;
+import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridAction;
 import edu.stanford.bmir.protege.web.shared.csv.GetCSVGridResult;
 
+import javax.inject.Inject;
 import java.io.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -20,6 +23,13 @@ import java.io.*;
  * Date: 21/05/2013
  */
 public class GetCSVGridActionHandler implements ActionHandler<GetCSVGridAction, GetCSVGridResult> {
+
+    private final File uploadsDirectory;
+
+    @Inject
+    public GetCSVGridActionHandler(@UploadsDirectory File uploadsDirectory) {
+        this.uploadsDirectory = checkNotNull(uploadsDirectory);
+    }
 
     @Override
     public Class<GetCSVGridAction> getActionClass() {
@@ -34,7 +44,7 @@ public class GetCSVGridActionHandler implements ActionHandler<GetCSVGridAction, 
     @Override
     public GetCSVGridResult execute(GetCSVGridAction action, ExecutionContext executionContext) {
         DocumentId documentId = action.getCSVDocumentId();
-        File file = new File(FileUploadConstants.UPLOADS_DIRECTORY, documentId.getDocumentId());
+        File file = new File(uploadsDirectory, documentId.getDocumentId());
         if(!file.exists()) {
             throw new RuntimeException("CSV file does not exist");
         }

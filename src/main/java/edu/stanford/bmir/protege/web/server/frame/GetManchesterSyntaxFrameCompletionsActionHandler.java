@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectRe
 import edu.stanford.bmir.protege.web.server.inject.ManchesterSyntaxParsingContextModule;
 import edu.stanford.bmir.protege.web.server.inject.ProjectModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
@@ -31,6 +32,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
+import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -41,7 +43,9 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
 
     private final ManchesterSyntaxKeywords syntaxStyles;
 
-    public GetManchesterSyntaxFrameCompletionsActionHandler() {
+    @Inject
+    public GetManchesterSyntaxFrameCompletionsActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
         syntaxStyles = new ManchesterSyntaxKeywords();
     }
 

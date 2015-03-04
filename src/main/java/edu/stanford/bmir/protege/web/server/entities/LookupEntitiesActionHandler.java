@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
@@ -15,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.search.SearchType;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +28,11 @@ import java.util.regex.Pattern;
  * Date: 12/11/2013
  */
 public class LookupEntitiesActionHandler extends AbstractHasProjectActionHandler<LookupEntitiesAction, LookupEntitiesResult> {
+
+    @Inject
+    public LookupEntitiesActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     public Class<LookupEntitiesAction> getActionClass() {

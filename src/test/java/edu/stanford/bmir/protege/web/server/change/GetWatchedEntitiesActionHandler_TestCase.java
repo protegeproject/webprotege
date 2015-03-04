@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.change;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.server.watches.WatchManager;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
@@ -56,9 +57,12 @@ public class GetWatchedEntitiesActionHandler_TestCase {
     @Mock
     private ImmutableList<ProjectChange> projectChanges;
 
+    @Mock
+    private OWLAPIProjectManager projectManager;
+
     @Before
     public void setUp() throws Exception {
-        handler = new GetWatchedEntityChangesActionHandler();
+        handler = new GetWatchedEntityChangesActionHandler(projectManager);
         when(action.getUserId()).thenReturn(userId);
         when(project.getWatchManager()).thenReturn(watchManager);
         when(watchManager.getWatches(userId)).thenReturn(watches);

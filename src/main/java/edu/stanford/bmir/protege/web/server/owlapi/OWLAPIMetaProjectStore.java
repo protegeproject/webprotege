@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Stopwatch;
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class OWLAPIMetaProjectStore {
 
-    private static final WebProtegeLogger logger = WebProtegeLoggerManager.get(OWLAPIMetaProjectStore.class);
+    private final WebProtegeLogger logger;
 
     public static final int SAVE_META_PROJECT_DELAY = 60000;
 
@@ -40,6 +39,7 @@ public class OWLAPIMetaProjectStore {
     private final Timer saveTimer = new Timer();
 
     private OWLAPIMetaProjectStore() {
+        logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
     }
 
     public static OWLAPIMetaProjectStore getStore() {

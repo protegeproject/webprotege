@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.inject;
 
-import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.File;
 
@@ -13,8 +13,15 @@ import java.io.File;
  */
 public class DataDirectoryProvider implements Provider<File> {
 
+    private WebProtegeProperties webProtegeProperties;
+
+    @Inject
+    public DataDirectoryProvider(WebProtegeProperties webProtegeProperties) {
+        this.webProtegeProperties = webProtegeProperties;
+    }
+
     @Override
     public File get() {
-        return WebProtegeFileStore.getInstance().getDataDirectory();
+        return webProtegeProperties.getDataDirectory();
     }
 }

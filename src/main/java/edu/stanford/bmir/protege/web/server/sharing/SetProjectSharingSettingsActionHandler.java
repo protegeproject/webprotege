@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsProjectOwnerValidator;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsResult;
 
@@ -25,7 +26,10 @@ public class SetProjectSharingSettingsActionHandler extends AbstractHasProjectAc
     private final UserIsProjectOwnerValidator<SetProjectSharingSettingsAction> validator;
 
     @Inject
-    public SetProjectSharingSettingsActionHandler(ProjectSharingSettingsManager sharingSettingsManager, UserIsProjectOwnerValidator<SetProjectSharingSettingsAction> validator) {
+    public SetProjectSharingSettingsActionHandler(ProjectSharingSettingsManager sharingSettingsManager,
+                                                  UserIsProjectOwnerValidator<SetProjectSharingSettingsAction> validator,
+                                                  OWLAPIProjectManager projectManager) {
+        super(projectManager);
         this.sharingSettingsManager = sharingSettingsManager;
         this.validator = validator;
     }

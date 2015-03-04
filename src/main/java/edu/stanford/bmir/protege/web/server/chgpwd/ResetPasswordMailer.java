@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
 
@@ -13,8 +12,6 @@ import javax.mail.MessagingException;
  */
 public class ResetPasswordMailer {
 
-    private final WebProtegeLogger logger = WebProtegeLoggerManager.get(ResetPasswordMailer.class);
-
     public static final String SUBJECT = "Your WebProtégé password has been reset";
 
     public static final String BODY_TEMPLATE = "Your WebProtégé password has been reset to:" +
@@ -24,11 +21,14 @@ public class ResetPasswordMailer {
             "Please sign in using this new password and then change it after signing in.";
 
 
-    private MailManager mailManager;
+    private final MailManager mailManager;
+
+    private final WebProtegeLogger logger;
 
     @Inject
-    public ResetPasswordMailer(MailManager mailManager) {
+    public ResetPasswordMailer(MailManager mailManager, WebProtegeLogger logger) {
         this.mailManager = mailManager;
+        this.logger = logger;
     }
 
     public void sendEmail(final String emailAddress, final String pwd) {

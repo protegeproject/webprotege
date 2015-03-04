@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.project;
 import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 
+import javax.inject.Inject;
 import java.io.File;
 
 /**
@@ -17,18 +18,26 @@ public class DefaultUIConfigurationFileManagerImpl implements DefaultUIConfigura
     private static final String DEFAULT_OWL_CONFIGURATION_FILE_NAME = "default-owl-configuration.xml";
 
 
-    private static final File DEFAULT_OWL_CONFIGURATION_FILE = new File(WebProtegeFileStore.getInstance().getDefaultUIConfigurationDataDirectory(), DEFAULT_OWL_CONFIGURATION_FILE_NAME);
+    private WebProtegeFileStore webProtegeFileStore;
 
-    private static final File DEFAULT_OBO_CONFIGURATION_FILE = new File(WebProtegeFileStore.getInstance().getDefaultUIConfigurationDataDirectory(), DEFAULT_OBO_CONFIGURATION_FILE_NAME);
-
+    @Inject
+    public DefaultUIConfigurationFileManagerImpl(WebProtegeFileStore webProtegeFileStore) {
+        this.webProtegeFileStore = webProtegeFileStore;
+    }
 
     @Override
     public File getDefaultConfigurationFile(OWLAPIProjectType projectType) {
         if(projectType == OWLAPIProjectType.getOBOProjectType()) {
-            return DEFAULT_OBO_CONFIGURATION_FILE;
+            return new File(
+                    webProtegeFileStore.getDefaultUIConfigurationDataDirectory(),
+                    DEFAULT_OBO_CONFIGURATION_FILE_NAME
+            );
         }
         else {
-            return DEFAULT_OWL_CONFIGURATION_FILE;
+            return new File(
+                    webProtegeFileStore.getDefaultUIConfigurationDataDirectory(),
+                    DEFAULT_OWL_CONFIGURATION_FILE_NAME
+            );
         }
     }
 }

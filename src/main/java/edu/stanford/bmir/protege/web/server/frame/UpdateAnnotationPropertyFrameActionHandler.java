@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectResult;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -9,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateAnnotationPropertyFrameAction;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -16,6 +19,11 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
  * Date: 24/04/2013
  */
 public class UpdateAnnotationPropertyFrameActionHandler extends AbstractUpdateFrameHandler<UpdateAnnotationPropertyFrameAction, AnnotationPropertyFrame, OWLAnnotationProperty> {
+
+    @Inject
+    public UpdateAnnotationPropertyFrameActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     protected Result createResponse(LabelledFrame<AnnotationPropertyFrame> to, EventList<ProjectEvent<?>> events) {

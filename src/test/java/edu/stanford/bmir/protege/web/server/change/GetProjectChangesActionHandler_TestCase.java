@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.GetProjectChangesResult;
@@ -47,10 +48,13 @@ public class GetProjectChangesActionHandler_TestCase {
     @Mock
     private ImmutableList<ProjectChange> projectChanges;
 
+    @Mock
+    private OWLAPIProjectManager projectManager;
+
     @Before
     public void setUp() throws Exception {
         when(action.getSubject()).thenReturn(subject);
-        handler = new GetProjectChangesActionHandler();
+        handler = new GetProjectChangesActionHandler(projectManager);
         when(project.getChangeManager()).thenReturn(changeManager);
         when(changeManager.getProjectChanges(subject)).thenReturn(projectChanges);
     }

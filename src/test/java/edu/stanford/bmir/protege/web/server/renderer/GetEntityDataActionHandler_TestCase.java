@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.renderer;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
@@ -53,10 +54,13 @@ public class GetEntityDataActionHandler_TestCase {
     @Mock
     private ExecutionContext executionContext;
 
+    @Mock
+    private OWLAPIProjectManager projectManager;
+
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetEntityDataActionHandler();
+        handler = new GetEntityDataActionHandler(projectManager);
 
         renderingMap = new HashMap<>();
         renderingMap.put(entity, entityData);

@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -52,7 +51,6 @@ import java.util.regex.Pattern;
  */
 public class CHAO2NotesConverter {
 
-    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(CHAO2NotesConverter.class);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,7 +132,6 @@ public class CHAO2NotesConverter {
 
 
     private void mapOntologyClasses() {
-        LOGGER.info("Mapping annotated objects in notes file to ontology classes");
         for (OWLClassAssertionAxiom ax : notesOntology.getClassAssertionAxioms(ontologyClass)) {
             final OWLIndividual individual = ax.getIndividual();
             if (individual.isNamed()) {
@@ -146,7 +143,6 @@ public class CHAO2NotesConverter {
                     IRI iri = IRI.create(iriLiteral);
                     if (domainOntology.containsEntityInSignature(iri)) {
                         entity2OntologyClsIndividualMap.put(df.getOWLClass(iri), ontologyClsIndividual);
-                        LOGGER.info("Mapped " + iri.toQuotedString());
                     }
                 }
             }
@@ -160,7 +156,6 @@ public class CHAO2NotesConverter {
                 // Subject becomes object
                 OWLNamedIndividual objectNoteIndividual = ax.getSubject().asOWLNamedIndividual();
                 notes2Replies.put(subjectNoteIndividual, objectNoteIndividual);
-                LOGGER.info("Mapped reply from " + subjectNoteIndividual.getIRI().toQuotedString() + " to " + objectNoteIndividual.getIRI().toQuotedString());
             }
         }
 

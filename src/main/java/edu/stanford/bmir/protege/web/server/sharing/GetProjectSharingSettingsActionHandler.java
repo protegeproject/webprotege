@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsResult;
 
@@ -25,7 +26,8 @@ public class GetProjectSharingSettingsActionHandler extends AbstractHasProjectAc
     private ProjectSharingSettingsManager sharingSettingsManager;
 
     @Inject
-    public GetProjectSharingSettingsActionHandler(ProjectSharingSettingsManager sharingSettingsManager) {
+    public GetProjectSharingSettingsActionHandler(ProjectSharingSettingsManager sharingSettingsManager, OWLAPIProjectManager projectManager) {
+        super(projectManager);
         this.sharingSettingsManager = checkNotNull(sharingSettingsManager);
     }
 

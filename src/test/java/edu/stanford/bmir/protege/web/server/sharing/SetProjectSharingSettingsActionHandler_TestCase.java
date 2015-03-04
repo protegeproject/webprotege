@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsProjectOwnerValidator;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -44,9 +45,12 @@ public class SetProjectSharingSettingsActionHandler_TestCase {
     @Mock
     private OWLAPIProject project;
 
+    @Mock
+    private OWLAPIProjectManager projectManager;
+
     @Before
     public void setUp() throws Exception {
-        handler = new SetProjectSharingSettingsActionHandler(sharingSettingsManager, validator);
+        handler = new SetProjectSharingSettingsActionHandler(sharingSettingsManager, validator, projectManager);
         when(action.getProjectSharingSettings()).thenReturn(sharingSettings);
     }
 

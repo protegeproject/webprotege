@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.server.filesubmission;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.FileUploadResponseAttributes;
+import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -50,13 +51,18 @@ public class FileUploadServlet extends HttpServlet {
 
     public static final String RESPONSE_MIME_TYPE = "text/html";
 
-    public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(FileUploadServlet.class);
+    public final WebProtegeLogger logger;
 
+    private final File uploadsDirectory = WebProtegeInjector.get().getInstance(WebProtegeFileStore.class).getUploadsDirectory();
+
+    public FileUploadServlet() {
+        logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+    }
 
     @Override
     @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LOGGER.info("Received upload from %s", req.getRemoteAddr());
+        logger.info("Received upload from %s", req.getRemoteAddr());
         resp.setHeader("Content-Type", RESPONSE_MIME_TYPE);
         try {
             if (ServletFileUpload.isMultipartContent(req)) {
@@ -71,7 +77,7 @@ public class FileUploadServlet extends HttpServlet {
                         File uploadedFile = createServerSideFile();
                         long sizeInBytes = uploadedFile.length();
                         long sizeInMB = sizeInBytes / (1024 * 1024);
-                        LOGGER.info("Created server side file %s.  File size is %d MB ", uploadedFile.getName(), sizeInMB);
+                        logger.info("Created server side file %s.  File size is %d MB ", uploadedFile.getName(), sizeInMB);
                         item.write(uploadedFile);
                         resp.setStatus(HttpServletResponse.SC_CREATED);
                         sendSuccessMessage(resp, uploadedFile.getName());
@@ -81,13 +87,13 @@ public class FileUploadServlet extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Could not find form file item");
             }
             else {
-                LOGGER.info("BAD REQUEST: POST must be multipart encoding.");
+                logger.info("BAD REQUEST: POST must be multipart encoding.");
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "POST must be multipart encoding.");
             }
 
         }
         catch (Throwable e) {
-            LOGGER.severe(e);
+            logger.severe(e);
             sendErrorMessage(resp, e);
         }
     }
@@ -162,8 +168,8 @@ public class FileUploadServlet extends HttpServlet {
      * @throws IOException If there was a problem creating the file.
      */
     private File createServerSideFile() throws IOException {
-        FileUploadConstants.UPLOADS_DIRECTORY.mkdirs();
-        return File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX, FileUploadConstants.UPLOADS_DIRECTORY);
+        uploadsDirectory.mkdirs();
+        return File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX, uploadsDirectory);
     }
     
     private static class Pair {

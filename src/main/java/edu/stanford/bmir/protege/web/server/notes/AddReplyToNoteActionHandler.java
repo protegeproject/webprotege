@@ -6,10 +6,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectCommentPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteResult;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -20,6 +23,11 @@ import edu.stanford.bmir.protege.web.shared.notes.Note;
 public class AddReplyToNoteActionHandler extends AbstractHasProjectActionHandler<AddReplyToNoteAction, AddReplyToNoteResult> {
 
     private static final UserHasProjectCommentPermissionValidator<AddReplyToNoteAction,AddReplyToNoteResult> VALIDATOR = new UserHasProjectCommentPermissionValidator<AddReplyToNoteAction, AddReplyToNoteResult>();
+
+    @Inject
+    public AddReplyToNoteActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     protected RequestValidator<AddReplyToNoteAction> getAdditionalRequestValidator(AddReplyToNoteAction action, RequestContext requestContext) {

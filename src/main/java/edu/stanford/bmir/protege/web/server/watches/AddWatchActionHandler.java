@@ -7,10 +7,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.watches.AddWatchAction;
 import edu.stanford.bmir.protege.web.shared.watches.AddWatchResult;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,6 +22,11 @@ import edu.stanford.bmir.protege.web.shared.watches.AddWatchResult;
  * Date: 20/03/2013
  */
 public class AddWatchActionHandler extends AbstractHasProjectActionHandler<AddWatchAction, AddWatchResult> {
+
+    @Inject
+    public AddWatchActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     public Class<AddWatchAction> getActionClass() {

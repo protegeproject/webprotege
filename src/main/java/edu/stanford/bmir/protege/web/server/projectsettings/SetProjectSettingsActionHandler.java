@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectAdminPermissionValidator;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsResult;
 
@@ -20,7 +21,8 @@ public class SetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     private ProjectDetailsManager projectDetailsManager;
 
     @Inject
-    public SetProjectSettingsActionHandler(ProjectDetailsManager projectDetailsManager) {
+    public SetProjectSettingsActionHandler(ProjectDetailsManager projectDetailsManager, OWLAPIProjectManager projectManager) {
+        super(projectManager);
         this.projectDetailsManager = projectDetailsManager;
     }
 

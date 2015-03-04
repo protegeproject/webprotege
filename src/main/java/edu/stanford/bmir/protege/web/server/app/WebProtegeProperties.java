@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationExceptio
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Properties;
@@ -21,24 +23,23 @@ import static edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName.*;
  */
 public class WebProtegeProperties implements Serializable {
 
-
-
-    private static WebProtegeProperties instance;
-
     private ImmutableMap<WebProtegePropertyName, Optional<String>> propertyValueMap;
 
     public static final String WEB_PROTEGE_PROPERTIES_FILE_NAME = "webprotege.properties";
 
 
     /**
-     * Internal constructor to initialize properties.
+     * Initialises WebProtegeProperties with property values from a {@link java.util.Properties} object.
      * @param properties A {@link Properties} object which contains the properties to be used in the initialization.
-     * Not {@code null}.
+     * Not {@code null}.  Only property values whose property names are equal to the property names specified
+     *                   by the {@link edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName} enum will
+     *                   be read.
      * @throws NullPointerException if {@code properties} is {@code null}.
-     * @throws WebProtegeConfigurationException if required property values are missing.  See the {@link edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName}
+     * @throws WebProtegeConfigurationException if required property values are missing.
+     * See the {@link edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName}
      * enum for a list of required properties (which do not have defaults).
      */
-    private WebProtegeProperties(final Properties properties) {
+    public WebProtegeProperties(Properties properties) {
         checkNotNull(properties);
         ImmutableMap.Builder<WebProtegePropertyName, Optional<String>> builder = ImmutableMap.builder();
         for (WebProtegePropertyName propertyName : values()) {
@@ -75,36 +76,16 @@ public class WebProtegeProperties implements Serializable {
         return ("${" + propertyName.name() + "}").equals(value);
     }
 
-    /**
-     * Gets the one and only instance of {@link WebProtegeProperties}.
-     * @return The singleton instance of {@link WebProtegeProperties}.  Not {@code null}.
-     */
-    public static WebProtegeProperties get() {
-        if(instance == null) {
-            throw new IllegalStateException("WebProtegeProperties has not been initialized.  WebProtegeProperties.initFromProperties(Properties) must be called ONCE by some initializer.");
-        }
-        return instance;
-    }
-
-    /**
-     * Initialises the {@link WebProtegeProperties} object with property values from the specified {@link Properties}
-     * object.  This method should only be called once by some initial setup for the application.
-     * @param properties The properties object which should be used for initialization.  Not {@code null}.  Only property
-     * values whose property names are equal to the property names specified by the {@link edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName} enum will be
-     * read.
-     * @throws WebProtegeConfigurationException If one of the expected property values listed in
-     * {@link edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName#values()} does not have a default
-     * value and does not have a value specified in {@code properties}.
-     *
-     */
-    public static void initFromProperties(Properties properties) throws WebProtegeConfigurationException {
-        if (instance != null) {
-
-            return;
-//            throw new IllegalStateException("WebProtegeProperties has already been initialized");
-        }
-        instance = new WebProtegeProperties(properties);
-    }
+//    /**
+//     * Gets the one and only instance of {@link WebProtegeProperties}.
+//     * @return The singleton instance of {@link WebProtegeProperties}.  Not {@code null}.
+//     */
+//    public static WebProtegeProperties get() {
+//        if(instance == null) {
+//            throw new IllegalStateException("WebProtegeProperties has not been initialized.  WebProtegeProperties.initFromProperties(Properties) must be called ONCE by some initializer.");
+//        }
+//        return instance;
+//    }
 
     /**
      * Gets a property value as a string.

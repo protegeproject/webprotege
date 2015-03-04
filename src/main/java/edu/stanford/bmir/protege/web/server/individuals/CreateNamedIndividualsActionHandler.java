@@ -10,9 +10,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,6 +25,11 @@ import java.util.Set;
  * Date: 12/09/2013
  */
 public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActionHandler<CreateNamedIndividualsAction, CreateNamedIndividualsResult> {
+
+    @Inject
+    public CreateNamedIndividualsActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     protected RequestValidator<CreateNamedIndividualsAction> getAdditionalRequestValidator(CreateNamedIndividualsAction action, RequestContext requestContext) {

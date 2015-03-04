@@ -1,14 +1,10 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.server.db.mongodb.MongoDBManager;
 import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
-import edu.stanford.bmir.protege.web.server.init.LoadMailProperties;
-import edu.stanford.bmir.protege.web.server.init.LoadWebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
@@ -19,27 +15,30 @@ import javax.servlet.ServletContextListener;
 
 public class WebProtegeInitializer implements ServletContextListener {
 
-    public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(WebProtegeInitializer.class);
+    public final WebProtegeLogger logger;
+
+    public WebProtegeInitializer() {
+        logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+    }
 
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            LoadWebProtegeProperties loadWebProtegeProperties = new LoadWebProtegeProperties();
-            loadWebProtegeProperties.run(sce.getServletContext());
-
-            WebProtegeInjector.init(sce.getServletContext());
+//            LoadWebProtegeProperties loadWebProtegeProperties = new LoadWebProtegeProperties();
+//            loadWebProtegeProperties.run(sce.getServletContext());
 
             WebProtegeConfigurationChecker checker = WebProtegeInjector.get().getInstance(WebProtegeConfigurationChecker.class);
             checker.performConfiguration(sce.getServletContext());
-            LOGGER.info("Initialization complete");
-            WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(LOGGER);
+
+            logger.info("Initialization complete");
+            WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(logger);
             loggerEx.logMemoryUsage();
         }
         catch (WebProtegeConfigurationException e) {
-            LOGGER.severe(e);
+            logger.severe(e);
             WebProtegeWebAppFilter.setConfigError(e);
         }
         catch (Throwable t) {
-            LOGGER.severe(t);
+            logger.severe(t);
             WebProtegeWebAppFilter.setError(t);
         }
     }
@@ -50,13 +49,7 @@ public class WebProtegeInitializer implements ServletContextListener {
             OWLAPIMetaProjectStore.getStore().saveMetaProjectNow(MetaProjectManager.getManager().getMetaProject());
         }
         catch (Throwable e) {
-            WebProtegeLoggerManager.get(WebProtegeInitializer.class).severe(e);
-        }
-        try {
-            MongoDBManager.get().dispose();
-        }
-        catch (Throwable e) {
-            WebProtegeLoggerManager.get(WebProtegeInitializer.class).severe(e);
+            logger.severe(e);
         }
         MetaProject metaProject = WebProtegeInjector.get().getInstance(MetaProject.class);
         OWLAPIMetaProjectStore.getStore().saveMetaProjectNow(metaProject);

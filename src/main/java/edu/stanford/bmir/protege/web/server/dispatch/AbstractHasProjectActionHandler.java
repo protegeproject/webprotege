@@ -8,8 +8,11 @@ import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -25,6 +28,12 @@ import java.util.List;
  */
 public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasProjectId, R extends Result> implements ActionHandler<A, R> {
 
+    private OWLAPIProjectManager projectManager;
+
+    @Inject
+    public AbstractHasProjectActionHandler(OWLAPIProjectManager projectManager) {
+        this.projectManager = checkNotNull(projectManager);
+    }
 
     @Override
     final public RequestValidator<A> getRequestValidator(A action, RequestContext requestContext) {
@@ -49,8 +58,7 @@ public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasP
 
     @Override
     final public R execute(A action, ExecutionContext executionContext) {
-        final OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
-        OWLAPIProject project = pm.getProject(action.getProjectId());
+        OWLAPIProject project = projectManager.getProject(action.getProjectId());
         return execute(action, project, executionContext);
     }
 

@@ -6,11 +6,14 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.notes.SetNoteStatusAction;
 import edu.stanford.bmir.protege.web.shared.notes.SetNoteStatusResult;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,6 +22,11 @@ import edu.stanford.bmir.protege.web.shared.notes.SetNoteStatusResult;
  * Date: 17/04/2013
  */
 public class SetNoteStatusActionHandler extends AbstractHasProjectActionHandler<SetNoteStatusAction, SetNoteStatusResult> {
+
+    @Inject
+    public SetNoteStatusActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     protected RequestValidator<SetNoteStatusAction> getAdditionalRequestValidator(SetNoteStatusAction action, RequestContext requestContext) {

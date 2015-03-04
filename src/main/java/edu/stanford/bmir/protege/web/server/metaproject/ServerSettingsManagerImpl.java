@@ -19,9 +19,12 @@ public class ServerSettingsManagerImpl implements ServerSettingsManager {
 
     private MetaProject metaProject;
 
+    private WebProtegeProperties webProtegeProperties;
+
     @Inject
-    public ServerSettingsManagerImpl(MetaProject metaProject) {
+    public ServerSettingsManagerImpl(MetaProject metaProject, WebProtegeProperties webProtegeProperties) {
         this.metaProject = metaProject;
+        this.webProtegeProperties = webProtegeProperties;
     }
 
     @Override
@@ -50,7 +53,7 @@ public class ServerSettingsManagerImpl implements ServerSettingsManager {
 
     @Override
     public boolean allowsCreateUser() {
-        ClientApplicationProperties clientApplicationProperties = WebProtegeProperties.get().getClientApplicationProperties();
+        ClientApplicationProperties clientApplicationProperties = webProtegeProperties.getClientApplicationProperties();
         com.google.common.base.Optional<String> propertyValue = clientApplicationProperties.getPropertyValue(WebProtegePropertyName.USER_ACCOUNT_CREATION_ENABLED);
         return "true".equalsIgnoreCase(propertyValue.or("true"));
     }

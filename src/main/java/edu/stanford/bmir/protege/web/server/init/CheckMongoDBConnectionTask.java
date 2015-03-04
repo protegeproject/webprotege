@@ -1,8 +1,15 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.db.mongodb.MongoDBManager;
+import com.mongodb.MongoClient;
+import edu.stanford.bmir.protege.web.server.inject.DbHost;
+import edu.stanford.bmir.protege.web.server.inject.DbPort;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
+
+import java.net.UnknownHostException;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,8 +19,34 @@ import javax.servlet.ServletContext;
  */
 public class CheckMongoDBConnectionTask implements ConfigurationTask {
 
+    private final String dbHost;
+
+    private final int dbPort;
+
+    @Inject
+    public CheckMongoDBConnectionTask(@DbHost String dbHost, @DbPort int dbPort) {
+        this.dbHost = checkNotNull(dbHost);
+        this.dbPort = dbPort;
+    }
+
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-            MongoDBManager.get();
+        try {
+            MongoClient mongoClient = new MongoClient(dbHost, dbPort);
+            mongoClient.getDatabaseNames();
+            mongoClient.close();
+        } catch (UnknownHostException e) {
+            throw new WebProtegeConfigurationException(getUnknownHostErrorMessage());
+        }
     }
+
+    private String getUnknownHostErrorMessage() {
+        return String.format(
+                "Could not connect to database on %s at port %d.  " +
+                        "Please make sure the mongod daemon is running at this address.",
+                dbHost,
+                dbPort
+        );
+    }
+
 }

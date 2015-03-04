@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.project.ImportedOntologyMetadata;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.binaryowl.BinaryOWLMetadata;
@@ -30,7 +30,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class ImportsCacheManager {
 
 
-    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(ImportsCacheManager.class);
 
     private static final String META_DATA_TIME_STAMP_ATTR = "timestamp";
 
@@ -52,6 +51,8 @@ public class ImportsCacheManager {
 
 
 
+    private final WebProtegeLogger logger;
+
     private Map<OWLOntologyID, ImportedOntologyMetadata> metadataMap = new HashMap<OWLOntologyID, ImportedOntologyMetadata>();
 
     private Set<OWLOntologyID> ontologyIDs = new HashSet<OWLOntologyID>();
@@ -64,8 +65,9 @@ public class ImportsCacheManager {
     private final OWLAPIProjectFileStore projectFileStore;
 
     public ImportsCacheManager(ProjectId projectId) {
+        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         this.projectId = projectId;
-        projectFileStore = OWLAPIProjectFileStore.getProjectFileStore(projectId);
+        projectFileStore = WebProtegeInjector.get().getInstance(OWLAPIProjectFileStoreFactory.class).get(projectId);
     }
 
     public OWLOntologyIRIMapper getIRIMapper() {
@@ -119,11 +121,11 @@ public class ImportsCacheManager {
 
                 ontologyIDs.add(ont.getOntologyID());
                 metadataMap.put(ont.getOntologyID(), value);
-                LOGGER.info("Cached imported ontology: " + ont.getOntologyID() + " in " + file.getName());
+                logger.info("Cached imported ontology: " + ont.getOntologyID() + " in " + file.getName());
             }
 
             catch (IOException e) {
-                LOGGER.severe(e);
+                logger.severe(e);
             }
             finally {
                 try {
@@ -132,7 +134,7 @@ public class ImportsCacheManager {
                     }
                 }
                 catch (IOException e) {
-                    LOGGER.severe(e);
+                    logger.severe(e);
                 }
             }
         }
@@ -179,7 +181,7 @@ public class ImportsCacheManager {
                 }
             }
             for(OWLOntologyID id : ontologyIDs) {
-                LOGGER.info("Cached import: " + id);
+                logger.info("Cached import: " + id);
             }
         }
         finally {
@@ -208,13 +210,13 @@ public class ImportsCacheManager {
                 }
             }
             catch (IOException e) {
-                LOGGER.severe(e);
+                logger.severe(e);
             }
             catch (BinaryOWLParseException e) {
-                LOGGER.severe(e);
+                logger.severe(e);
             }
             catch (UnloadableImportException e) {
-                LOGGER.severe(e);
+                logger.severe(e);
             }
             finally {
                 try {
@@ -223,7 +225,7 @@ public class ImportsCacheManager {
                     }
                 }
                 catch (IOException e) {
-                    LOGGER.severe(e);
+                    logger.severe(e);
                 }
             }
         }

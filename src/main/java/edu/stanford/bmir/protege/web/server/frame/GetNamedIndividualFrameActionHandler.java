@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -22,6 +24,13 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 public class GetNamedIndividualFrameActionHandler implements ActionHandler<GetNamedIndividualFrameAction, GetObjectResult<LabelledFrame<NamedIndividualFrame>>> {
 
     private static final NamedIndividualFrameTranslator TRANSLATOR = new NamedIndividualFrameTranslator();
+
+    private OWLAPIProjectManager projectManager;
+
+    @Inject
+    public GetNamedIndividualFrameActionHandler(OWLAPIProjectManager projectManager) {
+        this.projectManager = projectManager;
+    }
 
     /**
      * Gets the class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action} handled by this handler.
@@ -39,7 +48,7 @@ public class GetNamedIndividualFrameActionHandler implements ActionHandler<GetNa
 
     @Override
     public GetObjectResult<LabelledFrame<NamedIndividualFrame>> execute(GetNamedIndividualFrameAction action, ExecutionContext executionContext) {
-        OWLAPIProject project = OWLAPIProjectManager.getProjectManager().getProject(action.getProjectId());
+        OWLAPIProject project = projectManager.getProject(action.getProjectId());
         FrameActionResultTranslator<NamedIndividualFrame, OWLNamedIndividual> t = new FrameActionResultTranslator<NamedIndividualFrame, OWLNamedIndividual>(action.getSubject(), project, TRANSLATOR);
         return new GetObjectResult<LabelledFrame<NamedIndividualFrame>>(t.doIT());
     }

@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
-import edu.stanford.bmir.protege.web.server.filesubmission.FileUploadConstants;
+import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
@@ -24,11 +24,14 @@ import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
 import org.semanticweb.owlapi.model.*;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -36,6 +39,14 @@ import java.util.Set;
  * 26/01/15
  */
 public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionHandler<MergeUploadedProjectAction, MergeUploadedProjectResult> {
+
+    private final File uploadsDirectory;
+
+    @Inject
+    public MergeUploadedProjectActionHandler(@UploadsDirectory File uploadsDirectory, OWLAPIProjectManager projectManager) {
+        super(projectManager);
+        this.uploadsDirectory = checkNotNull(uploadsDirectory);
+    }
 
     @Override
     protected RequestValidator<MergeUploadedProjectAction> getAdditionalRequestValidator(MergeUploadedProjectAction action, RequestContext requestContext) {
@@ -101,7 +112,7 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
                 new SingleDocumentProjectSourcesExtractor());
         // Load sources
         OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
-        final File file = new File(FileUploadConstants.UPLOADS_DIRECTORY, documentId.getDocumentId());
+        final File file = new File(uploadsDirectory, documentId.getDocumentId());
         RawProjectSources rawProjectSources = extractor.extractProjectSources(file);
         OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration();
         RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);

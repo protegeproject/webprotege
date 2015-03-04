@@ -7,11 +7,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesAction;
 import edu.stanford.bmir.protege.web.shared.change.GetWatchedEntityChangesResult;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 
+import javax.inject.Inject;
 import java.util.Set;
 
 /**
@@ -20,6 +22,11 @@ import java.util.Set;
  * 27/02/15
  */
 public class GetWatchedEntityChangesActionHandler extends AbstractHasProjectActionHandler<GetWatchedEntityChangesAction, GetWatchedEntityChangesResult> {
+
+    @Inject
+    public GetWatchedEntityChangesActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     protected RequestValidator<GetWatchedEntityChangesAction> getAdditionalRequestValidator(GetWatchedEntityChangesAction action, RequestContext requestContext) {

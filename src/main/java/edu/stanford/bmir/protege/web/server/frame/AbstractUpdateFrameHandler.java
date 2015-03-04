@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -19,6 +20,8 @@ import edu.stanford.bmir.protege.web.shared.frame.EntityFrame;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -27,6 +30,10 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, S>, F extends EntityFrame<S>,  S extends OWLEntity> extends AbstractHasProjectActionHandler<A, Result> implements ActionHandler<A, Result> {
 
+    @Inject
+    public AbstractUpdateFrameHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     /**
      * Gets an additional validator that is specific to the implementing handler.  This is returned as part of a
