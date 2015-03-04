@@ -7,7 +7,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
@@ -18,6 +17,10 @@ import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.events.ProjectEventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.inject.Inject;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -26,7 +29,15 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class GetProjectEventsActionHandler implements ActionHandler<GetProjectEventsAction, GetProjectEventsResult> {
 
-    public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(GetProjectEventsActionHandler.class);
+    public final WebProtegeLogger logger;
+
+    private OWLAPIProjectManager projectManager;
+
+    @Inject
+    public GetProjectEventsActionHandler(OWLAPIProjectManager projectManager, WebProtegeLogger logger) {
+        this.projectManager = checkNotNull(projectManager);
+        this.logger = checkNotNull(logger);
+    }
 
     @Override
     public Class<GetProjectEventsAction> getActionClass() {
@@ -40,7 +51,6 @@ public class GetProjectEventsActionHandler implements ActionHandler<GetProjectEv
 
     @Override
     public GetProjectEventsResult execute(GetProjectEventsAction action, ExecutionContext executionContext) {
-        OWLAPIProjectManager projectManager = OWLAPIProjectManager.getProjectManager();
         final EventTag sinceTag = action.getSinceTag();
         final ProjectId projectId = action.getProjectId();
         if(!projectManager.isActive(projectId)) {

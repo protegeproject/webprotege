@@ -13,6 +13,6 @@ public class LoggingModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(WebProtegeLogger.class).toInstance(new DefaultLogger(LoggingModule.class));
+        bind(WebProtegeLogger.class).to(DefaultLogger.class).asEagerSingleton();
     }
 }

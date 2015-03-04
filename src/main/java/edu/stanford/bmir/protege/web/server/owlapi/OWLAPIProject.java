@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
 import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityCheckerImpl;
@@ -23,7 +24,6 @@ import edu.stanford.bmir.protege.web.server.events.EventLifeTime;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.HighLevelEventGenerator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
@@ -81,12 +81,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasApplyChanges, HasLang {
 
-
-
-
     public static final EventLifeTime PROJECT_EVENT_LIFE_TIME = EventLifeTime.get(60, TimeUnit.SECONDS);
-
-    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(OWLAPIProject.class);
 
     private OWLAPIProjectDocumentStore documentStore;
 
@@ -260,7 +255,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 getProjectId(),
                 DefaultMetricsCalculators.getDefaultMetrics(rootOntology),
                 projectEventManager,
-                WebProtegeLoggerManager.get(OWLAPIProjectMetricsManager.class));
+                WebProtegeInjector.get().getInstance(WebProtegeLogger.class));
 
     }
 
@@ -547,7 +542,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 projectChangeWriteLock.unlock();
             }
 
-            LOGGER.info(getProjectId(), "%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
+            WebProtegeInjector.get().getInstance(WebProtegeLogger.class).info(getProjectId(), "%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
 
             if (!(changeListGenerator instanceof SilentChangeListGenerator)) {
                 List<ProjectEvent<?>> highLevelEvents = new ArrayList<ProjectEvent<?>>();

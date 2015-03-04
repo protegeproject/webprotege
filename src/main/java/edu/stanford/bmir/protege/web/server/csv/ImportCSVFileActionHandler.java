@@ -9,8 +9,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
-import edu.stanford.bmir.protege.web.server.filesubmission.FileUploadConstants;
+import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.csv.CSVGrid;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileAction;
 import edu.stanford.bmir.protege.web.shared.csv.ImportCSVFileResult;
@@ -18,7 +19,10 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 
+import javax.inject.Inject;
 import java.io.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -27,6 +31,14 @@ import java.io.*;
  * Date: 31/05/2013
  */
 public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Integer,ImportCSVFileAction, ImportCSVFileResult> {
+
+    private final File uploadsDirectory;
+
+    @Inject
+    public ImportCSVFileActionHandler(@UploadsDirectory File uploadsDirectory, OWLAPIProjectManager projectManager) {
+        super(projectManager);
+        this.uploadsDirectory = checkNotNull(uploadsDirectory);
+    }
 
     @Override
     public Class<ImportCSVFileAction> getActionClass() {
@@ -42,7 +54,7 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
     private CSVGrid parseCSVGrid(ImportCSVFileAction action) {
         try {
             CSVGridParser parser = new CSVGridParser();
-            final File file = new File(FileUploadConstants.UPLOADS_DIRECTORY, action.getDocumentId().getDocumentId());
+            final File file = new File(uploadsDirectory, action.getDocumentId().getDocumentId());
             final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
             CSVGrid grid = parser.readAll(reader);
             reader.close();
@@ -55,7 +67,7 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
 
     @Override
     protected ChangeDescriptionGenerator<Integer> getChangeDescription(ImportCSVFileAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<Integer>("Imported CSV File");
+        return new FixedMessageChangeDescriptionGenerator<>("Imported CSV File");
     }
 
     @Override
@@ -65,6 +77,6 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
 
     @Override
     protected RequestValidator<ImportCSVFileAction> getAdditionalRequestValidator(ImportCSVFileAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<ImportCSVFileAction>();
+        return new UserHasProjectWritePermissionValidator<>();
     }
 }

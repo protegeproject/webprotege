@@ -6,8 +6,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberResult;
+
+import javax.inject.Inject;
 
 /**
  * Matthew Horridge
@@ -15,6 +18,11 @@ import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberResult
  * 21/02/15
  */
 public class GetHeadRevisionNumberActionHandler extends AbstractHasProjectActionHandler<GetHeadRevisionNumberAction, GetHeadRevisionNumberResult> {
+
+    @Inject
+    public GetHeadRevisionNumberActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     public Class<GetHeadRevisionNumberAction> getActionClass() {

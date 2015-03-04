@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.logging;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.SerializationException;
+import edu.stanford.bmir.protege.web.server.inject.AdminEmail;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
@@ -9,6 +11,8 @@ import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -32,8 +36,12 @@ public class DefaultLogger implements WebProtegeLogger {
 
     private Logger logger;
 
-    public DefaultLogger(Class<?> cls) {
+    private Provider<Optional<String>> emailAddressProvider;
+
+    @Inject
+    public DefaultLogger(@AdminEmail Provider<Optional<String>> emailAddressProvider) {
         this.logger = Logger.getLogger(LOG_NAME);
+        this.emailAddressProvider = emailAddressProvider;
         if (logger.getUseParentHandlers()) {
             this.logger.setUseParentHandlers(false);
             ConsoleHandler consoleHandler = new ConsoleHandler();
@@ -169,9 +177,9 @@ public class DefaultLogger implements WebProtegeLogger {
 
     private void emailMessage(String message) {
         try {
-            Optional<String> adminEmail = WebProtegeProperties.get().getAdministratorEmail();
-            if (adminEmail.isPresent()) {
-                App.get().getMailManager().sendMail(adminEmail.get(), SUBJECT, message);
+            Optional<String> emailAddress = emailAddressProvider.get();
+            if (emailAddress.isPresent()) {
+                App.get().getMailManager().sendMail(emailAddress.get(), SUBJECT, message);
             }
         }
         catch (Throwable e) {

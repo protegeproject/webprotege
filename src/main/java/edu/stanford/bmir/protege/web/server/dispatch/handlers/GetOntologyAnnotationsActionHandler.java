@@ -9,9 +9,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
+import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -22,6 +24,10 @@ import java.util.*;
  */
 public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetOntologyAnnotationsAction, RenderableGetObjectResult<Set<OWLAnnotation>>> {
 
+    @Inject
+    public GetOntologyAnnotationsActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     public Class<GetOntologyAnnotationsAction> getActionClass() {

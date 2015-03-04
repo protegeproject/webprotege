@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.inject.ApplicationHost;
 import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
 import edu.stanford.bmir.protege.web.server.inject.MailProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 import javax.inject.Inject;
@@ -39,8 +38,6 @@ public class MailManager implements SendMail {
 
     public static final String DEFAULT_FROM_VALUE_PREFIX = "no-reply@";
 
-    public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(MailManager.class);
-
     private final Properties properties;
 
     private final MessagingExceptionHandler messagingExceptionHandler;
@@ -48,6 +45,8 @@ public class MailManager implements SendMail {
     private final String applicationName;
 
     private final String applicationHost;
+
+    private final WebProtegeLogger logger;
 
     /**
      * Constructs a {@code MailManager} using the specified {@link Properties} object and the specified exception handler.
@@ -67,11 +66,12 @@ public class MailManager implements SendMail {
      */
     @Inject
     public MailManager(@ApplicationName String applicationName, @ApplicationHost String applicationHost,
-                       @MailProperties Properties properties, MessagingExceptionHandler messagingExceptionHandler) {
+                       @MailProperties Properties properties, MessagingExceptionHandler messagingExceptionHandler, WebProtegeLogger logger) {
         this.applicationName = checkNotNull(applicationName);
         this.applicationHost = checkNotNull(applicationHost);
         this.properties = new Properties(checkNotNull(properties));
         this.messagingExceptionHandler = checkNotNull(messagingExceptionHandler);
+        this.logger = logger;
     }
 
     /**
@@ -115,9 +115,9 @@ public class MailManager implements SendMail {
             Transport.send(msg);
         } catch (MessagingException e) {
             exceptionHandler.handleMessagingException(e);
-            LOGGER.info(e.getMessage());
+            logger.info(e.getMessage());
         } catch (UnsupportedEncodingException e) {
-            LOGGER.info(e.getMessage());
+            logger.info(e.getMessage());
         }
     }
 

@@ -18,8 +18,10 @@ public class FileSystemConfigurationModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(File.class).annotatedWith(DataDirectory.class)
-                .toProvider(DataDirectoryProvider.class);
+
+        bind(File.class).annotatedWith(DataDirectory.class).toProvider(DataDirectoryProvider.class);
+
+        bind(File.class).annotatedWith(UploadsDirectory.class).toProvider(UploadsDirectoryProvider.class);
 
         bind(File.class).annotatedWith(UiConfigurationDirectory.class)
                 .toProvider(UiConfigurationDirectoryProvider.class);

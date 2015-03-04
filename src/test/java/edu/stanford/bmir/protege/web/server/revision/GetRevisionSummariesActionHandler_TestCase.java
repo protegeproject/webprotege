@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesResult;
@@ -46,13 +47,16 @@ public class GetRevisionSummariesActionHandler_TestCase {
     @Mock
     private RevisionSummary summaryA, summaryB, summaryC;
 
+    @Mock
+    private OWLAPIProjectManager projectManager;
+
     @Before
     public void setUp() throws Exception {
         revisionSummaries = new ArrayList<>();
         revisionSummaries.add(summaryA);
         revisionSummaries.add(summaryB);
         revisionSummaries.add(summaryC);
-        handler = new GetRevisionSummariesActionHandler();
+        handler = new GetRevisionSummariesActionHandler(projectManager);
         when(project.getChangeManager()).thenReturn(changeManager);
         when(changeManager.getRevisionSummaries()).thenReturn(revisionSummaries);
     }

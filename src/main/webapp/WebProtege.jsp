@@ -15,6 +15,8 @@
 <%@ page import="com.google.common.collect.ImmutableList" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector" %>
+<%@ page import="java.io.IOException" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -26,7 +28,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="Content-Language" content="en-us">
 
-    <title><%writeApplicationName();%></title>
+    <title><%writeApplicationName(out);%></title>
 
     <link rel="stylesheet" href="js/ext/resources/css/ext-all.css" type="text/css">
 
@@ -64,12 +66,14 @@
 </html>
 
 <%!
-    private void writeApplicationName() {
-        WebProtegeProperties.get().getApplicationName();
+    private void writeApplicationName(JspWriter out) throws IOException {
+        WebProtegeProperties webProtegeProperties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
+        out.print(webProtegeProperties.getApplicationName());
     }
 
-    private void writeClientApplicationProperties(JspWriter out) {
-        ClientApplicationProperties props = WebProtegeProperties.get().getClientApplicationProperties();
+    private void writeClientApplicationProperties(JspWriter out) throws IOException {
+        WebProtegeProperties webProtegeProperties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
+        ClientApplicationProperties props = webProtegeProperties.getClientApplicationProperties();
         ClientObjectWriter.get(
                 "clientApplicationProperties",
                 new ClientApplicationPropertiesEncoder()).writeVariableDeclaration(props, out);

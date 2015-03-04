@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStoreFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 
 /**
@@ -12,8 +14,7 @@ public class ProjectManagerModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        // This is BAD. However, we need to replace instances of the manager with injection, so
-        // we do this for now.
-        bind(OWLAPIProjectManager.class).toInstance(OWLAPIProjectManager.getProjectManager());
+        bind(OWLAPIProjectManager.class).asEagerSingleton();
+        install(new FactoryModuleBuilder().build(OWLAPIProjectFileStoreFactory.class));
     }
 }

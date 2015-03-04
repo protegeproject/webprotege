@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.server.change.ChangeGenerationContext;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.change.SilentChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -72,7 +71,6 @@ public class ImportCSVFileChangeListGenerator implements ChangeListGenerator<Int
                 }
             }
         }
-        WebProtegeLoggerManager.get(ImportCSVFileChangeListGenerator.class).info("Generated changes for import from " + csvGrid.getRowCount() + " rows");
         return changesBuilder.build(csvGrid.getRowCount());
     }
 

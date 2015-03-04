@@ -4,8 +4,8 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
@@ -27,7 +27,11 @@ import javax.servlet.http.HttpSession;
  */
 public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServlet {
 
-    public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(RemoteServiceServlet.class);
+    public final WebProtegeLogger logger;
+
+    public WebProtegeRemoteServiceServlet() {
+        logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+    }
 
     protected MetaProjectManager getMetaProjectManager() {
         return MetaProjectManager.getManager();
@@ -36,7 +40,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     /**
      * Gets the userId for the client associated with the current thread local request.
      *
-     * @return The UserId.  Not null (if no user is logged in then the value specified by {@link edu.stanford.bmir.protege.web.shared.user.UserId#getNull()}
+     * @return The UserId.  Not null (if no user is logged in then the value specified by {@link edu.stanford.bmir.protege.web.shared.user.UserId#getGuest()} ()}
      *         will be returned.
      */
     public UserId getUserInSession() {
@@ -114,7 +118,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     @Override
     protected void doUnexpectedFailure(Throwable e) {
         HttpServletRequest request = getThreadLocalRequest();
-        LOGGER.severe(e, getUserInSession(), request);
+        logger.severe(e, getUserInSession(), request);
         super.doUnexpectedFailure(e);
     }
 

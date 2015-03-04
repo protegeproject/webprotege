@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
 import edu.stanford.bmir.protege.web.server.diff.SameSubjectFilter;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLEntityChecker;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.render.ManchesterSyntaxObjectRenderer;
@@ -32,7 +33,6 @@ import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
@@ -47,12 +47,7 @@ import org.semanticweb.binaryowl.BinaryOWLParseException;
 import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
 import org.semanticweb.binaryowl.chunk.SkipSetting;
 import org.semanticweb.owlapi.change.*;
-import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLEntityComparator;
-import org.semanticweb.owlapi.util.ShortFormProvider;
-import org.semanticweb.owlapi.util.SimpleRenderer;
-import uk.ac.manchester.cs.jfact.datatypes.cardinality;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -71,7 +66,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class OWLAPIChangeManager {
 
-    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(OWLAPIChangeManager.class);
+    private final WebProtegeLogger logger;
 
     public static final String USERNAME_METADATA_ATTRIBUTE = "username";
 
@@ -101,6 +96,7 @@ public class OWLAPIChangeManager {
 
     public OWLAPIChangeManager(OWLAPIProject project) {
         this.project = project;
+        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         read();
     }
 
@@ -142,7 +138,7 @@ public class OWLAPIChangeManager {
             }, SkipSetting.SKIP_NONE);
             inputStream.close();
             long t1 = System.currentTimeMillis();
-            LOGGER.info(project.getProjectId(), "Change history loading complete.  Loaded %d revisions in %d ms", revisions.size(), (t1 - t0));
+            logger.info(project.getProjectId(), "Change history loading complete.  Loaded %d revisions in %d ms", revisions.size(), (t1 - t0));
 
         } catch (BinaryOWLParseException e) {
             handleCorruptChangeLog(e);
@@ -394,7 +390,7 @@ public class OWLAPIChangeManager {
     private void handleCorruptChangeLog(BinaryOWLParseException e) {
         // The change log appears to be corrupt.  We somehow need a way of backing up the old log and creating
         // a fresh one.
-        WebProtegeLoggerManager.get(OWLAPIChangeManager.class).severe(new RuntimeException("Corrupt change log", e));
+        logger.severe(new RuntimeException("Corrupt change log", e));
     }
 
     public RevisionNumber getCurrentRevision() {

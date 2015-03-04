@@ -109,8 +109,14 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     @Override
     public List<ProjectDetails> getListableReadableProjects(UserId userId) {
         User user = metaProject.getUser(userId.getUserName());
+        final Collection<Group> userGroups;
+        if(user == null) {
+            userGroups = Collections.emptySet();
+        }
+        else {
+            userGroups = user.getGroups();
+        }
         // Get groups is an expensive operation it seems!
-        Collection<Group> userGroups = user.getGroups();
         List<ProjectDetails> result = new ArrayList<>();
         for (ProjectInstance projectInstance : metaProject.getProjects()) {
             final String name = projectInstance.getName();

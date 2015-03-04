@@ -19,22 +19,14 @@ import javax.servlet.ServletContext;
  */
 public class WebProtegeInjector {
 
-    private static WebProtegeInjector instance;
+    private static final WebProtegeInjector instance = new WebProtegeInjector();
 
     private final Injector injector;
 
-    public static synchronized void init(ServletContext servletContext) {
-        if(instance != null) {
-            throw new RuntimeException("Already initialized!");
-        }
-        instance = new WebProtegeInjector(servletContext);
-    }
-
-    private WebProtegeInjector(ServletContext servletContext) {
+    private WebProtegeInjector() {
         injector = Guice.createInjector(
-                new ProjectManagerModule(),
-                new ServletContextModule(servletContext),
                 new WebProtegePropertiesModule(),
+                new ProjectManagerModule(),
                 new FileSystemConfigurationModule(),
                 new ConfigurationTasksModule(),
                 new MetaProjectModule(),
@@ -42,13 +34,11 @@ public class WebProtegeInjector {
                 new DispatchModule(),
                 new ActionHandlersModule(),
                 new AuthenticationModule(),
-                new LoggingModule());
+                new LoggingModule(),
+                new DbModule());
     }
 
     public static synchronized WebProtegeInjector get() {
-        if(instance == null) {
-            throw new RuntimeException("Not initialized");
-        }
         return instance;
     }
 

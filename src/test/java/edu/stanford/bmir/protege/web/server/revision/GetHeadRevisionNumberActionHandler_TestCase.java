@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberResult;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -37,9 +38,12 @@ public class GetHeadRevisionNumberActionHandler_TestCase {
     @Mock
     private RevisionNumber revisionNumber;
 
+    @Mock
+    private OWLAPIProjectManager projectManager;
+
     @Before
     public void setUp() throws Exception {
-        handler = new GetHeadRevisionNumberActionHandler();
+        handler = new GetHeadRevisionNumberActionHandler(projectManager);
         when(project.getRevisionNumber()).thenReturn(revisionNumber);
     }
 

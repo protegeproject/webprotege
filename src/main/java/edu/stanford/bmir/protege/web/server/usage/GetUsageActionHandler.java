@@ -6,9 +6,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.usage.*;
 import org.semanticweb.owlapi.model.*;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +23,11 @@ import java.util.Set;
  * Date: 11/07/2013
  */
 public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUsageAction, GetUsageResult> {
+
+    @Inject
+    public GetUsageActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     public Class<GetUsageAction> getActionClass() {

@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
@@ -59,8 +60,10 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         ANNOTATION_PROPERTIES_ROOT.setBrowserText(ANNOTATION_PROPERTIES_ROOT_NAME);
     }
 
+    private OWLAPIProjectManager projectManager;
 
     public OntologyServiceOWLAPIImpl() {
+        projectManager = WebProtegeInjector.get().getInstance(OWLAPIProjectManager.class);
     }
 
 
@@ -100,8 +103,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      * @return The OWL API project. Not <code>null</code>.
      */
     private OWLAPIProject getProject(ProjectId projectId) {
-        OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
-        return pm.getProject(projectId);
+        return projectManager.getProject(projectId);
     }
 
     private RenderingManager getRenderingManager(String projectName) {
@@ -122,8 +124,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      */
     private OWLOntology getOntology(String projectName) {
         ProjectId projectId = ProjectId.get(projectName);
-        OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
-        return pm.getProject(projectId).getRootOntology();
+        return projectManager.getProject(projectId).getRootOntology();
     }
 
     private String toName(OWLOntologyID id) {

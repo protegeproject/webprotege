@@ -8,8 +8,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -18,6 +21,11 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
  * Date: 20/02/2013
  */
 public class GetRootOntologyIdActionHandler extends AbstractHasProjectActionHandler<GetRootOntologyIdAction, GetRootOntologyIdResult> {
+
+    @Inject
+    public GetRootOntologyIdActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     /**
      * Gets the class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action} handled by this handler.

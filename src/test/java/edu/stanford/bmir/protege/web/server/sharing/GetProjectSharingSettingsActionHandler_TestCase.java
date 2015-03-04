@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
@@ -46,9 +47,12 @@ public class GetProjectSharingSettingsActionHandler_TestCase {
     @Mock
     private ExecutionContext executionContext;
 
+    @Mock
+    private OWLAPIProjectManager projectManager;
+
     @Before
     public void setUp() throws Exception {
-        handler = new GetProjectSharingSettingsActionHandler(settingsManager);
+        handler = new GetProjectSharingSettingsActionHandler(settingsManager, projectManager);
         when(settingsManager.getProjectSharingSettings(projectId)).thenReturn(projectSharingSettings);
         when(action.getProjectId()).thenReturn(projectId);
     }

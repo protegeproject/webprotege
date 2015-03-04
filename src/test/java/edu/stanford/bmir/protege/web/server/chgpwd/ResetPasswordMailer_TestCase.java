@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,9 +27,12 @@ public class ResetPasswordMailer_TestCase {
     @Mock
     private MailManager mailManager;
 
+    @Mock
+    private WebProtegeLogger logger;
+
     @Before
     public void setUp() throws Exception {
-        mailer = new ResetPasswordMailer(mailManager);
+        mailer = new ResetPasswordMailer(mailManager, logger);
     }
 
     @Test

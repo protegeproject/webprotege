@@ -6,8 +6,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectAdminPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsResult;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,6 +19,11 @@ import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsResult;
  * Date: 8/19/13
  */
 public class GetEntityCrudKitSettingsActionHandler extends AbstractHasProjectActionHandler<GetEntityCrudKitSettingsAction, GetEntityCrudKitSettingsResult> {
+
+    @Inject
+    public GetEntityCrudKitSettingsActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     public Class<GetEntityCrudKitSettingsAction> getActionClass() {

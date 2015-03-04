@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.event.UserStartingViewingProjectEvent;
@@ -41,9 +42,12 @@ public class ProjectAccessManager implements HasDispose {
 
     private HasPostEvents<ProjectEvent<?>> postEvents;
 
+    private final WebProtegeLogger logger;
+
     public ProjectAccessManager(ProjectId projectId, HasPostEvents<ProjectEvent<?>> postEvents) {
         this.projectId = projectId;
         this.postEvents = postEvents;
+        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         purgeTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -70,7 +74,7 @@ public class ProjectAccessManager implements HasDispose {
     }
 
     private void logStats() {
-        WebProtegeLoggerManager.get(ProjectAccessManager.class).info("There are %d users now viewing %s", userIdAccessTimeMap.size(), projectId);
+        logger.info("There are %d users now viewing %s", userIdAccessTimeMap.size(), projectId);
     }
 
 

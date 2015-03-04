@@ -294,6 +294,14 @@
     </dependencies>
 
     <build>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <!-- Generate compiled stuff in the folder used for developing mode -->
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
@@ -338,10 +346,6 @@
                     <webappDirectory>${webappDirectory}</webappDirectory>
                     <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
                     <webResources>
-                        <resource>
-                            <directory>src/main/configuration</directory>
-                            <filtering>true</filtering>
-                        </resource>
                         <resource>
                             <directory>src/main/webapp</directory>
                             <filtering>true</filtering>

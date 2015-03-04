@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
@@ -25,7 +26,8 @@ public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     private ProjectDetailsManager projectDetailsManager;
 
     @Inject
-    public GetProjectSettingsActionHandler(ProjectDetailsManager projectDetailsManager) {
+    public GetProjectSettingsActionHandler(OWLAPIProjectManager projectManager, ProjectDetailsManager projectDetailsManager) {
+        super(projectManager);
         this.projectDetailsManager = projectDetailsManager;
     }
 

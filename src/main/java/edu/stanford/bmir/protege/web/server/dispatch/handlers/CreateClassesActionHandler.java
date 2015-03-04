@@ -14,10 +14,12 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +30,11 @@ import java.util.Set;
  * Date: 22/02/2013
  */
 public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<CreateClassesAction, CreateClassesResult> {
+
+    @Inject
+    public CreateClassesActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     public Class<CreateClassesAction> getActionClass() {

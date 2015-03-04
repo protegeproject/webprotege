@@ -8,7 +8,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
@@ -58,6 +59,8 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
 
     private final OWLDataFactory dataFactory;
 
+    private final WebProtegeLogger logger;
+
     public RenderingManager(OWLOntology rootOnt,
                             OWLDataFactory dataFactory,
                             EntityIRIChecker entityIRIChecker,
@@ -69,6 +72,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
         this.dataFactory = dataFactory;
         this.shortFormProvider = shortFormProvider;
         this.ontologyIRIShortFormProvider = ontologyIRIShortFormProvider;
+        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
 
         ImmutableMap.Builder<IRI, OWLEntity> builtInEntities = ImmutableMap.builder();
 
@@ -865,7 +869,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
 
 
     private void printBrowserTextReferenceWarningMessage(String referenceName) {
-        WebProtegeLoggerManager.get(RenderingManager.class).info("Could not find entity by name \"%s\".  This name may be the browser text rather than an entity IRI.", referenceName);
+        logger.info("Could not find entity by name \"%s\".  This name may be the browser text rather than an entity IRI.", referenceName);
     }
 
 }

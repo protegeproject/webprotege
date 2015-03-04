@@ -4,12 +4,14 @@ import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStoreFactory;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
@@ -43,12 +45,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     private static final String HIERARCHY_BRANCH_WATCH_NAME = "HierarchyBranchWatch";
 
-    private ExecutorService emailExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-        @Override
-        public void uncaughtException(Thread t, Throwable e) {
-            WebProtegeLoggerManager.get(WatchManagerImpl.class).severe(e);
-        }
-    }).build());
+    private ExecutorService emailExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).build());
 
     private Multimap<UserId, Watch<?>> userId2Watch = HashMultimap.create();
 
@@ -67,9 +64,16 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     private File watchFile;
 
+    private final WebProtegeProperties webProtegeProperties;
+
+    private final WebProtegeLogger logger;
+
     public WatchManagerImpl(OWLAPIProject project) {
         this.project = project;
-        final OWLAPIProjectFileStore projectFileStore = OWLAPIProjectFileStore.getProjectFileStore(project.getProjectId());
+        this.webProtegeProperties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
+        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+        OWLAPIProjectFileStoreFactory instance = WebProtegeInjector.get().getInstance(OWLAPIProjectFileStoreFactory.class);
+        final OWLAPIProjectFileStore projectFileStore = instance.get(project.getProjectId());
         watchFile = new File(projectFileStore.getProjectDirectory(), WATCHES_FILE_NAME);
 
         if(watchFile.exists()) {
@@ -276,7 +280,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
                 message = message + "You can view this " + entity.getEntityType().getName() + " at the link below:";
                 StringBuilder directLinkBuilder = new StringBuilder();
                 directLinkBuilder.append("http://");
-                directLinkBuilder.append(WebProtegeProperties.get().getApplicationHostName());
+                directLinkBuilder.append(webProtegeProperties.getApplicationHostName());
                 directLinkBuilder.append("#Edit:projectId=");
                 directLinkBuilder.append(project.getProjectId().getId());
                 directLinkBuilder.append(";tab=ClassesTab&id=");
@@ -322,7 +326,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
             bufferedReader.close();
         }
         catch (IOException e) {
-            WebProtegeLoggerManager.get(WatchManagerImpl.class).severe(e);
+            logger.severe(e);
         }
 
     }
@@ -383,7 +387,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
             pw.close();
         }
         catch (IOException e) {
-            WebProtegeLoggerManager.get(WatchManagerImpl.class).severe(e);
+            logger.severe(e);
         }
     }
 

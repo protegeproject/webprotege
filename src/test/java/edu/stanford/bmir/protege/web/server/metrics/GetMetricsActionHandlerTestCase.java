@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.metrics;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsResult;
 import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
@@ -37,6 +38,9 @@ public class GetMetricsActionHandlerTestCase {
     @Mock
     protected ImmutableList<MetricValue> metricValues;
 
+    @Mock
+    private OWLAPIProjectManager projectManager;
+
 
     @Before
     public void setUp() {
@@ -46,7 +50,7 @@ public class GetMetricsActionHandlerTestCase {
 
     @Test
     public void shouldReturnMetricValues() {
-        GetMetricsActionHandler handler = new GetMetricsActionHandler();
+        GetMetricsActionHandler handler = new GetMetricsActionHandler(projectManager);
         GetMetricsResult result = handler.execute(new GetMetricsAction(projectId), project, mock(ExecutionContext.class));
         assertThat(result.getMetricValues(), is(equalTo(metricValues)));
     }
