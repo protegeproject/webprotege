@@ -15,6 +15,7 @@ public class MailModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(MailManager.class).asEagerSingleton();
+        bind(SendMail.class).to(MailManager.class);
         bind(MessagingExceptionHandler.class).to(WebProtegeLoggerMessagingExceptionHandler.class);
         bind(Properties.class).annotatedWith(MailProperties.class).toProvider(MailPropertiesProvider.class).asEagerSingleton();
     }

@@ -46,7 +46,6 @@ public class MailManager implements SendMail {
 
     private final String applicationHost;
 
-    private final WebProtegeLogger logger;
 
     /**
      * Constructs a {@code MailManager} using the specified {@link Properties} object and the specified exception handler.
@@ -65,13 +64,14 @@ public class MailManager implements SendMail {
      * @throws NullPointerException if any parameters are {@code null}.
      */
     @Inject
-    public MailManager(@ApplicationName String applicationName, @ApplicationHost String applicationHost,
-                       @MailProperties Properties properties, MessagingExceptionHandler messagingExceptionHandler, WebProtegeLogger logger) {
+    public MailManager(@ApplicationName String applicationName,
+                       @ApplicationHost String applicationHost,
+                       @MailProperties Properties properties,
+                       MessagingExceptionHandler messagingExceptionHandler) {
         this.applicationName = checkNotNull(applicationName);
         this.applicationHost = checkNotNull(applicationHost);
         this.properties = new Properties(checkNotNull(properties));
         this.messagingExceptionHandler = checkNotNull(messagingExceptionHandler);
-        this.logger = logger;
     }
 
     /**
@@ -115,9 +115,8 @@ public class MailManager implements SendMail {
             Transport.send(msg);
         } catch (MessagingException e) {
             exceptionHandler.handleMessagingException(e);
-            logger.info(e.getMessage());
         } catch (UnsupportedEncodingException e) {
-            logger.info(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

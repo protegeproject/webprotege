@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.SerializationException;
 import edu.stanford.bmir.protege.web.server.inject.AdminEmail;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
@@ -38,10 +39,13 @@ public class DefaultLogger implements WebProtegeLogger {
 
     private Provider<Optional<String>> emailAddressProvider;
 
+    private SendMail sendMail;
+
     @Inject
-    public DefaultLogger(@AdminEmail Provider<Optional<String>> emailAddressProvider) {
+    public DefaultLogger(@AdminEmail Provider<Optional<String>> emailAddressProvider, SendMail sendMail) {
         this.logger = Logger.getLogger(LOG_NAME);
         this.emailAddressProvider = emailAddressProvider;
+        this.sendMail = sendMail;
         if (logger.getUseParentHandlers()) {
             this.logger.setUseParentHandlers(false);
             ConsoleHandler consoleHandler = new ConsoleHandler();
@@ -179,7 +183,7 @@ public class DefaultLogger implements WebProtegeLogger {
         try {
             Optional<String> emailAddress = emailAddressProvider.get();
             if (emailAddress.isPresent()) {
-                App.get().getMailManager().sendMail(emailAddress.get(), SUBJECT, message);
+                sendMail.sendMail(emailAddress.get(), SUBJECT, message);
             }
         }
         catch (Throwable e) {

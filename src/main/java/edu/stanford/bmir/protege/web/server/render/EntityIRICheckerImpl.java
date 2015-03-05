@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.render;
 
-import edu.stanford.bmir.protege.web.server.inject.RootOntology;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;

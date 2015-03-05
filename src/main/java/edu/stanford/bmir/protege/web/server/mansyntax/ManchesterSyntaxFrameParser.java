@@ -2,9 +2,7 @@ package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.server.inject.RootOntology;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseError;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxFramesParser;
@@ -16,8 +14,6 @@ import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
 import java.util.Collections;
 import java.util.List;
