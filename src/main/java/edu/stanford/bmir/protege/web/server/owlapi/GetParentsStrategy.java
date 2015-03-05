@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;
-import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
-import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;

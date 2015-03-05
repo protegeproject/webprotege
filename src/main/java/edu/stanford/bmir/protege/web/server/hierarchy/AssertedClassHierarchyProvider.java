@@ -1,12 +1,13 @@
-package edu.stanford.bmir.protege.web.server.owlapi;
+package edu.stanford.bmir.protege.web.server.hierarchy;
 
-import org.protege.editor.owl.model.hierarchy.AbstractOWLObjectHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.protege.owlapi.inference.cls.ChildClassExtractor;
 import org.protege.owlapi.inference.cls.ParentClassExtractor;
 import org.protege.owlapi.inference.orphan.Relation;
 import org.protege.owlapi.inference.orphan.TerminalElementFinder;
 import org.semanticweb.owlapi.model.*;
 
+import javax.inject.Inject;
 import java.util.*;
 
 
@@ -18,72 +19,61 @@ import java.util.*;
  */
 public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyProvider<OWLClass> {
 
-    private OWLOntologyManager owlOntologyManager;
-
     /*
      * It is not safe to set the collection of ontologies to a HashSet or TreeSet.
      * When an ontology changes name it gets a new Hash Code and it is sorted
      * differently, so these Collections do not work.
      */
-    private Collection<OWLOntology> ontologies;
+    private OWLOntology rootOntology;
 
-    private OWLClass root;
-
-    private OWLOntologyChangeListener listener;
+    private final OWLClass root;
 
     private TerminalElementFinder<OWLClass> rootFinder;
 
     private Set<OWLClass> nodesToUpdate = new HashSet<OWLClass>();
 
-
-    public AssertedClassHierarchyProvider(OWLOntologyManager owlOntologyManager) {
-        super(owlOntologyManager);
-        this.owlOntologyManager = owlOntologyManager;
+    @Inject
+    public AssertedClassHierarchyProvider(@RootOntology OWLOntology rootOntology, @ClassHierarchyRoot OWLClass rootCls) {
+        this.root = rootCls;
+        this.rootOntology = rootOntology;
         /*
          * It is not safe to set the collection of ontologies to a HashSet or TreeSet.
          * When an ontology changes name it gets a new Hash Code and it is sorted
          * differently, so these Collections do not work.
          */
-        ontologies = new ArrayList<OWLOntology>();
-        rootFinder = new TerminalElementFinder<OWLClass>(new Relation<OWLClass>() {
+        rootFinder = new TerminalElementFinder<>(new Relation<OWLClass>() {
             public Collection<OWLClass> getR(OWLClass cls) {
                 Collection<OWLClass> parents = getParents(cls);
                 parents.remove(root);
                 return parents;
             }
         });
-
-        listener = new OWLOntologyChangeListener() {
-            public void ontologiesChanged(List<? extends OWLOntologyChange> changes) {
-                handleChanges(changes);
-            }
-        };
-        getManager().addOntologyChangeListener(listener);
-    }
-
-
-    /**
-     * Sets the ontologies that this hierarchy provider should use
-     * in order to determine the hierarchy.
-     */
-    public void setOntologies(Set<OWLOntology> ontologies) {
-        /*
-         * It is not safe to set the collection of ontologies to a HashSet or TreeSet.
-         * When an ontology changes name it gets a new Hash Code and it is sorted
-         * differently, so these Collections do not work.
-         */
-        this.ontologies = new ArrayList<OWLOntology>(ontologies);
         nodesToUpdate.clear();
-        if (root == null) {
-            root = owlOntologyManager.getOWLDataFactory().getOWLThing();
-        }
         rebuildImplicitRoots();
         fireHierarchyChanged();
     }
 
+
+//    /**
+//     * Sets the ontologies that this hierarchy provider should use
+//     * in order to determine the hierarchy.
+//     */
+//    private void setOntologies(Set<OWLOntology> ontologies) {
+//        /*
+//         * It is not safe to set the collection of ontologies to a HashSet or TreeSet.
+//         * When an ontology changes name it gets a new Hash Code and it is sorted
+//         * differently, so these Collections do not work.
+//         */
+//
+//    }
+
+    private Set<OWLOntology> getOntologies() {
+        return rootOntology.getImportsClosure();
+    }
+
     private void rebuildImplicitRoots() {
         rootFinder.clear();
-        for (OWLOntology ont : ontologies) {
+        for (OWLOntology ont : rootOntology.getImportsClosure()) {
             Set<OWLClass> ref = ont.getClassesInSignature();
             rootFinder.appendTerminalElements(ref);
         }
@@ -91,11 +81,10 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
     }
 
     public void dispose() {
-        getManager().removeOntologyChangeListener(listener);
     }
 
 
-    private void handleChanges(List<? extends OWLOntologyChange> changes) {
+    public void handleChanges(List<? extends OWLOntologyChange> changes) {
         Set<OWLClass> oldTerminalElements = new HashSet<OWLClass>(rootFinder.getTerminalElements());
         Set<OWLClass> changedClasses = new HashSet<OWLClass>();
         changedClasses.add(root);
@@ -128,7 +117,7 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
         List<OWLAxiomChange> filteredChanges = new ArrayList<OWLAxiomChange>();
         for (OWLOntologyChange change : changes) {
             // only listen for changes on the appropriate ontologies
-            if (ontologies.contains(change.getOntology())){
+            if (getOntologies().contains(change.getOntology())){
                 if (change.isAxiomChange()) {
                     filteredChanges.add((OWLAxiomChange) change);
                 }
@@ -157,7 +146,7 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
 
         for (OWLOntologyChange change : changes) {
             // only listen for changes on the appropriate ontologies
-            if (ontologies.contains(change.getOntology())){
+            if (getOntologies().contains(change.getOntology())){
                 if (change.isAxiomChange()) {
                     boolean remove = change instanceof RemoveAxiom;
                     OWLAxiom axiom = change.getAxiom();
@@ -183,9 +172,6 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
     }
 
     public Set<OWLClass> getRoots() {
-        if (root == null) {
-            root = owlOntologyManager.getOWLDataFactory().getOWLThing();
-        }
         return Collections.singleton(root);
     }
 
@@ -215,7 +201,7 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
     private Set<OWLClass> extractChildren(OWLClass parent) {
         ChildClassExtractor childClassExtractor = new ChildClassExtractor();
         childClassExtractor.setCurrentParentClass(parent);
-        for (OWLOntology ont : ontologies) {
+        for (OWLOntology ont : getOntologies()) {
             for (OWLAxiom ax : ont.getReferencingAxioms(parent)) {
                 if (ax.isLogicalAxiom()) {
                     ax.accept(childClassExtractor);
@@ -227,7 +213,7 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
 
 
     public boolean containsReference(OWLClass object) {
-        for (OWLOntology ont : ontologies) {
+        for (OWLOntology ont : getOntologies()) {
             if (ont.containsClassInSignature(object.getIRI())) {
                 return true;
             }
@@ -251,7 +237,7 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
         // Not a root, so must have another parent
         parentClassExtractor.reset();
         parentClassExtractor.setCurrentClass(object);
-        for (OWLOntology ont : ontologies) {
+        for (OWLOntology ont : getOntologies()) {
             for (OWLAxiom ax : ont.getAxioms(object)) {
                 ax.accept(parentClassExtractor);
             }
@@ -263,7 +249,7 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
 
     public Set<OWLClass> getEquivalents(OWLClass object) {
         Set<OWLClass> result = new HashSet<OWLClass>();
-        for (OWLOntology ont : ontologies) {
+        for (OWLOntology ont : getOntologies()) {
             for (OWLClassExpression equiv : object.getEquivalentClasses(ont)) {
                 if (!equiv.isAnonymous()) {
                     result.add((OWLClass) equiv);

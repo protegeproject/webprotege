@@ -337,6 +337,7 @@ public class OWLAPIProjectDocumentStore {
             try {
                 OWLOntologyLoaderConfiguration config = new OWLOntologyLoaderConfiguration();
                 config = config.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
+                config = config.setReportStackTraces(true);
                 FileDocumentSource documentSource = new FileDocumentSource(rootOntologyDocument);
                 logger.info(projectId, "Loading root ontology imports closure.");
                 OWLOntology rootOntology = manager.loadOntologyFromOntologyDocument(documentSource, config);
