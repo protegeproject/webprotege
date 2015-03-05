@@ -5,31 +5,19 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.collect.*;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.ChangeData;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
 import edu.stanford.bmir.protege.web.server.diff.SameSubjectFilter;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
-import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLEntityChecker;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
-import edu.stanford.bmir.protege.web.server.render.ManchesterSyntaxObjectRenderer;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.Filter;
 import edu.stanford.bmir.protege.web.shared.axiom.*;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
-import edu.stanford.bmir.protege.web.shared.diff.DiffElementOperationComparator;
-import edu.stanford.bmir.protege.web.shared.diff.DiffOperation;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
-import edu.stanford.bmir.protege.web.shared.merge.Diff;
-import edu.stanford.bmir.protege.web.shared.object.*;
-import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
@@ -80,11 +68,7 @@ public class OWLAPIChangeManager {
     private final OWLAPIProject project;
 
 
-    private List<Revision> revisions = new ArrayList<Revision>();
-
-
-//    private ListMultimap<OWLEntity, Revision> entity2Revisions = ArrayListMultimap.create();
-
+    private List<Revision> revisions = new ArrayList<>();
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -116,7 +100,6 @@ public class OWLAPIChangeManager {
             final BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(changeHistoryFile));
             final Interner<OWLAxiom> axiomInterner = getAxiomInterner();
             final Interner<String> metadataInterner = Interners.newStrongInterner();
-            final Interner<OWLOntologyID> ontologyIDInterner = Interners.newStrongInterner();
             changeLog.readChanges(inputStream, project.getDataFactory(), new BinaryOWLChangeLogHandler() {
                 public void handleChangesRead(OntologyChangeRecordList list, SkipSetting skipSetting, long l) {
 
@@ -130,7 +113,7 @@ public class OWLAPIChangeManager {
                     RevisionType type = RevisionType.valueOf(metadata.getStringAttribute(REVISION_TYPE_META_DATA_ATTRIBUTE, RevisionType.EDIT.name()));
 
                     final UserId userId = UserId.getUserId(userName);
-                    final List<OWLOntologyChangeRecord> changeRecords = internChangeRecords(list, axiomInterner, ontologyIDInterner);
+                    final List<OWLOntologyChangeRecord> changeRecords = internChangeRecords(list, axiomInterner);
 
                     Revision revision = new Revision(userId, revisionNumber, changeRecords, list.getTimestamp(), description, type);
                     addRevision(revision);
@@ -142,11 +125,6 @@ public class OWLAPIChangeManager {
 
         } catch (BinaryOWLParseException e) {
             handleCorruptChangeLog(e);
-        } catch (EOFException e) {
-            // Was the last record that we tried to read malformed?
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -170,8 +148,8 @@ public class OWLAPIChangeManager {
         return axiomInterner;
     }
 
-    private List<OWLOntologyChangeRecord> internChangeRecords(OntologyChangeRecordList list, final Interner<OWLAxiom> axiomInterner, Interner<OWLOntologyID> ontologyIDInterner) {
-        List<OWLOntologyChangeRecord> result = new ArrayList<OWLOntologyChangeRecord>();
+    private List<OWLOntologyChangeRecord> internChangeRecords(OntologyChangeRecordList list, final Interner<OWLAxiom> axiomInterner) {
+        List<OWLOntologyChangeRecord> result = new ArrayList<>();
         List<OWLOntologyChangeRecord> records = list.getChangeRecords();
 
         for (OWLOntologyChangeRecord record : records) {
@@ -235,34 +213,18 @@ public class OWLAPIChangeManager {
         try {
             writeLock.lock();
             revisions.add(revision);
-//            indexRevision(revision);
         } finally {
             writeLock.unlock();
         }
     }
 
-//    /**
-//     * Performs indexing of a revision (against its signature etc.).
-//     * @param revision The revision.
-//     */
-//    private void indexRevision(Revision revision) {
-//        try {
-//            writeLock.lock();
-//            for(OWLEntity entity : revision.getEntities(project)) {
-//                entity2Revisions.put(entity, revision);
-//            }
-//        }
-//        finally {
-//            writeLock.unlock();
-//        }
-//    }
 
     private void persistBaseline() {
         try {
             // Sort the basline axioms in a nice order
             writeLock.lock();
-            List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
-            Set<AxiomType<?>> axiomTypes = new LinkedHashSet<AxiomType<?>>();
+            List<OWLOntologyChange> changes = new ArrayList<>();
+            Set<AxiomType<?>> axiomTypes = new LinkedHashSet<>();
             axiomTypes.add(AxiomType.DECLARATION);
             axiomTypes.add(AxiomType.ANNOTATION_ASSERTION);
             axiomTypes.add(AxiomType.SUBCLASS_OF);
@@ -331,7 +293,7 @@ public class OWLAPIChangeManager {
             RevisionNumber revisionNumber = getCurrentRevision().getNextRevisionNumber();
             long timestamp = System.currentTimeMillis();
             final String highlevelDescription = desc != null ? desc : "";
-            List<OWLOntologyChangeRecord> records = new ArrayList<OWLOntologyChangeRecord>(changes.size());
+            List<OWLOntologyChangeRecord> records = new ArrayList<>(changes.size());
             for (OWLOntologyChange change : changes) {
                 records.add(change.getChangeRecord());
             }
@@ -339,24 +301,10 @@ public class OWLAPIChangeManager {
             addRevision(revision);
 
             persistChanges(timestamp, revisionNumber, revisionType, userId, changes, highlevelDescription, immediately);
-//            fireProjectChangedEvent(userId, changes, revisionNumber, timestamp, revision);
-
         } finally {
             writeLock.unlock();
         }
     }
-
-
-//    private void fireProjectChangedEvent(UserId userId, List<? extends OWLOntologyChange> changes, RevisionNumber revisionNumber, long timestamp, Revision revision) {
-//        Set<OWLEntityData> changedEntitiesData = new HashSet<OWLEntityData>();
-//        for (OWLEntity entity : revision.getEntities(project)) {
-//            String browserText = project.getRenderingManager().getBrowserText(entity);
-//            changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
-//        }
-//        RevisionSummary revisionSummary = new RevisionSummary(revisionNumber, userId, timestamp, changes.size());
-//        ProjectEvent<?> event = new ProjectChangedEvent(project.getProjectId(), revisionSummary, changedEntitiesData);
-//        EventBusManager.getManager().postEvent(event);
-//    }
 
     private void persistChanges(long timestamp, RevisionNumber revision, RevisionType type, UserId userId, List<? extends OWLOntologyChange> changes, String highlevelDescription, boolean immediately) {
         try {
@@ -475,45 +423,6 @@ public class OWLAPIChangeManager {
         }
     }
 
-    private int getRevisionIndexForTimestamp(long timestamp) {
-        if (revisions.isEmpty()) {
-            return -1;
-        }
-        Revision firstRevision = revisions.get(0);
-        if (timestamp < firstRevision.getTimestamp()) {
-            return -1;
-        }
-        Revision lastRevision = revisions.get(revisions.size() - 1);
-        if (timestamp > lastRevision.getTimestamp()) {
-            return -revisions.size();
-        }
-        return Collections.binarySearch(revisions, Revision.createEmptyRevisionWithTimestamp(timestamp), new Revision.RevisionTimeStampComparator());
-    }
-
-    private int getRevisionFloorIndexForTimestamp(long timestamp) {
-        int index = getRevisionIndexForTimestamp(timestamp);
-        if (index >= 0) {
-            return index;
-        }
-        int insertionIndex = -index - 1;
-        return insertionIndex - 1;
-    }
-
-    private boolean isWatchedRevision(final Set<OWLEntity> superEntities, Set<OWLEntity> directWatches, Revision revision) {
-        Set<OWLEntity> entities = revision.getEntities(project);
-        for (OWLEntity entity : entities) {
-            if (directWatches.contains(entity)) {
-                return true;
-            }
-            boolean watchedByAncestor = isWatchedByAncestor(superEntities, entity);
-            if (watchedByAncestor) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
     private Set<OWLEntity> getWatchedEntities(Set<OWLEntity> superEntities, Set<OWLEntity> directWatches, Revision revision) {
         Set<OWLEntity> watchedEntities = new HashSet<>();
         Set<OWLEntity> entities = revision.getEntities(project);
@@ -529,7 +438,6 @@ public class OWLAPIChangeManager {
             }
         }
         return watchedEntities;
-
     }
 
 
@@ -590,65 +498,7 @@ public class OWLAPIChangeManager {
     private List<Revision> getRevisionsCopy() {
         try {
             readLock.lock();
-            return new ArrayList<Revision>(revisions);
-        } finally {
-            readLock.unlock();
-        }
-    }
-
-
-    public List<ChangeData> getChangeDataInTimestampInterval(long fromTimestamp, long toTimestamp, RevisionType revisionType) {
-        List<Revision> revisions = getRevisionsCopy();
-        List<ChangeData> result = new ArrayList<ChangeData>();
-        for (Revision revision : revisions) {
-            if (revision.getRevisionType() == RevisionType.EDIT || revisionType == RevisionType.BASELINE) {
-                long ts = revision.getTimestamp();
-                if (ts >= fromTimestamp && ts <= toTimestamp) {
-                    for (OWLEntity entity : revision.getEntities(project)) {
-                        result.add(createChangeDataFromRevision(entity, revision));
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    private ChangeData createChangeDataFromRevision(OWLEntity entity, Revision changeList) {
-        EntityData entityData = project.getRenderingManager().getEntityData(entity);
-        return new ChangeData(entityData, changeList.getUserId().getUserName(), changeList.getHighLevelDescription(project), new Date(changeList.getTimestamp()));
-
-    }
-
-    public List<ChangeData> getChangeDataForEntitiesInTimeStampInterval(Set<OWLEntity> entites, long fromTimestamp, long toTimestamp) {
-        List<Revision> revisions = getRevisionsCopy();
-
-        List<ChangeData> result = new ArrayList<ChangeData>();
-        for (Revision changeList : revisions) {
-            long ts = changeList.getTimestamp();
-            if (ts >= fromTimestamp && ts <= toTimestamp) {
-                Set<OWLEntity> changeEntities = changeList.getEntities(project);
-                for (OWLEntity entity : entites) {
-                    if (changeEntities.contains(entity)) {
-                        EntityData entityData = project.getRenderingManager().getEntityData(entity);
-                        result.add(new ChangeData(entityData, changeList.getUserId().getUserName(), changeList.getHighLevelDescription(project, entity), new Date(changeList.getTimestamp())));
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    public int getChangeSetCount(long fromTimestamp, long toTimestamp) {
-        try {
-            readLock.lock();
-            int count = 0;
-            for (Revision changeList : revisions) {
-                long ts = changeList.getTimestamp();
-                if (ts >= fromTimestamp && ts <= toTimestamp) {
-                    count++;
-                }
-            }
-            return count;
+            return new ArrayList<>(revisions);
         } finally {
             readLock.unlock();
         }
@@ -665,7 +515,7 @@ public class OWLAPIChangeManager {
 
 
     public List<RevisionSummary> getRevisionSummaries() {
-        List<RevisionSummary> result = new ArrayList<RevisionSummary>();
+        List<RevisionSummary> result = new ArrayList<>();
         try {
             readLock.lock();
             for (Revision revision : revisions) {
@@ -778,7 +628,6 @@ public class OWLAPIChangeManager {
 
 
     public ImmutableList<ProjectChange> getProjectChangesForWatches(Set<Watch<?>> watches) {
-        System.out.println("Getting project changes for watches: " + watches);
         Set<OWLEntity> superEntities = new HashSet<>();
         Set<OWLEntity> directWatches = new HashSet<>();
         for (Watch<?> watch : watches) {
