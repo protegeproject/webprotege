@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
-import org.protege.editor.owl.model.hierarchy.OWLObjectHierarchyProvider;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
 
@@ -21,7 +21,7 @@ public class IndirectlyWatchedEntitiesFinder {
 
     private final OWLOntology rootOntology;
 
-    private final OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider;
+    private final edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider;
 
     private final OWLObjectHierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider;
 

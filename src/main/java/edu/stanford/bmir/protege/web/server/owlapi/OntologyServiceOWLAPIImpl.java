@@ -5,6 +5,10 @@ import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
+import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -15,9 +19,6 @@ import org.ncbo.stanford.util.BioPortalServerConstants;
 import org.ncbo.stanford.util.BioPortalUtil;
 import org.ncbo.stanford.util.BioportalConcept;
 import org.ncbo.stanford.util.HTMLUtil;
-import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;
-import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
-import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
@@ -365,7 +366,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
 
     /**
-     * Gets the subclasses of a given entity.  This implementation uses the {@link AssertedClassHierarchyProvider} that
+     * Gets the subclasses of a given entity.  This implementation uses the {@link edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider} that
      * is used in Protege 4 to answer the request.
      * @param projectName The name of the relevant project.
      * @param className The class name which corresponds to an entity for which subclasses will be retrieved.  This

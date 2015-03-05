@@ -2,13 +2,13 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.inject.Injector;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
-import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
+import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
 import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityCheckerImpl;
@@ -32,7 +32,6 @@ import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
-import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.metrics.OWLAPIProjectMetricsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -46,9 +45,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
 import org.coode.owlapi.rdf.rdfxml.RDFXMLOntologyStorer;
-import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;
-import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
-import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
 import org.protege.owlapi.model.ProtegeOWLOntologyManager;
 import org.semanticweb.binaryowl.BinaryOWLParseException;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
@@ -85,6 +81,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasApplyChanges, HasLang {
 
+    static {
+        WebProtegeOWLManager.createOWLOntologyManager();
+    }
+
     public static final EventLifeTime PROJECT_EVENT_LIFE_TIME = EventLifeTime.get(60, TimeUnit.SECONDS);
 
     private OWLAPIProjectDocumentStore documentStore;
@@ -99,7 +99,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private OWLOntology ontology;
 
-    private AssertedClassHierarchyProvider classHierarchyProvider = new AssertedClassHierarchyProvider(WebProtegeOWLManager.createOWLOntologyManager());
+    private AssertedClassHierarchyProvider classHierarchyProvider;
 
     private OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
 
@@ -244,17 +244,13 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         // MH: All of this is highly dodgy and not at all thread safe.  It is therefore BROKEN!  Needs fixing.
 
-        classHierarchyProvider = new AssertedClassHierarchyProvider(manager);
-        classHierarchyProvider.setOntologies(manager.getOntologies());
+        classHierarchyProvider = new AssertedClassHierarchyProvider(getRootOntology(), getDataFactory().getOWLThing());
 
-        objectPropertyHierarchyProvider = new OWLObjectPropertyHierarchyProvider(manager);
-        objectPropertyHierarchyProvider.setOntologies(manager.getOntologies());
+        objectPropertyHierarchyProvider = new OWLObjectPropertyHierarchyProvider(getRootOntology(), getDataFactory().getOWLTopObjectProperty());
 
-        dataPropertyHierarchyProvider = new OWLDataPropertyHierarchyProvider(manager);
-        dataPropertyHierarchyProvider.setOntologies(manager.getOntologies());
+        dataPropertyHierarchyProvider = new OWLDataPropertyHierarchyProvider(getRootOntology(), getDataFactory().getOWLTopDataProperty());
 
-        annotationPropertyHierarchyProvider = new OWLAnnotationPropertyHierarchyProvider(manager);
-        annotationPropertyHierarchyProvider.setOntologies(manager.getOntologies());
+        annotationPropertyHierarchyProvider = new OWLAnnotationPropertyHierarchyProvider(getRootOntology(), getDataFactory());
 
         WebProtegeInjector appInjector = WebProtegeInjector.get();
         metricsManager = new OWLAPIProjectMetricsManager(
@@ -323,6 +319,10 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private void handleOntologiesChanged(List<? extends OWLOntologyChange> changes) {
         documentStore.saveOntologyChanges(Collections.unmodifiableList(changes));
+        classHierarchyProvider.handleChanges(changes);
+        objectPropertyHierarchyProvider.handleChanges(changes);
+        dataPropertyHierarchyProvider.handleChanges(changes);
+        annotationPropertyHierarchyProvider.handleChanges(changes);
         metricsManager.handleOntologyChanges(changes);
     }
 

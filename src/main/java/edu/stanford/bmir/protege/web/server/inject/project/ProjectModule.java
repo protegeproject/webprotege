@@ -1,16 +1,16 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
 import com.google.inject.AbstractModule;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLEntityChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
-import edu.stanford.bmir.protege.web.server.owlapi.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.watches.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;
-import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
-import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
 import org.semanticweb.owlapi.expression.OWLEntityChecker;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
 import org.semanticweb.owlapi.model.*;
