@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import edu.stanford.bmir.protege.web.server.inject.RootOntology;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;

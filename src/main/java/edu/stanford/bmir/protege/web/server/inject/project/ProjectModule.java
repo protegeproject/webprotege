@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.inject;
+package edu.stanford.bmir.protege.web.server.inject.project;
 
 import com.google.inject.AbstractModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLEntityChecker;
@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyCheck
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.server.owlapi.AssertedClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.watches.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
 import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
@@ -16,6 +18,8 @@ import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 
+import java.io.File;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/03/2014
  *
@@ -24,15 +28,24 @@ import org.semanticweb.owlapi.util.ShortFormProvider;
  */
 public class ProjectModule extends AbstractModule {
 
+    private ProjectId projectId;
+
     private OWLAPIProject project;
 
     public ProjectModule(OWLAPIProject project) {
         this.project = project;
+        this.projectId = project.getProjectId();
     }
+
 
     @Override
     protected void configure() {
+        bind(ProjectId.class).toInstance(projectId);
+
+        bind(File.class).annotatedWith(ProjectDirectory.class).toProvider(ProjectDirectoryProvider.class);
+
         bind(OWLDataFactory.class).toInstance(project.getDataFactory());
+        bind(OWLEntityProvider.class).toInstance(project.getDataFactory());
         bind(OWLOntology.class).annotatedWith(RootOntology.class).toInstance(project.getRootOntology());
         bind(ShortFormProvider.class).toInstance(project.getRenderingManager().getShortFormProvider());
         bind(BidirectionalShortFormProvider.class).toInstance(project.getRenderingManager().getShortFormProvider());
@@ -45,5 +58,10 @@ public class ProjectModule extends AbstractModule {
         bind(OWLObjectPropertyHierarchyProvider.class).toInstance(project.getObjectPropertyHierarchyProvider());
         bind(OWLDataPropertyHierarchyProvider.class).toInstance(project.getDataPropertyHierarchyProvider());
         bind(OWLAnnotationPropertyHierarchyProvider.class).toInstance(project.getAnnotationPropertyHierarchyProvider());
+
+        bind(File.class).annotatedWith(WatchFile.class).toProvider(WatchFileProvider.class);
+        bind(WatchManager.class).to(WatchManagerImpl.class).asEagerSingleton();
+        bind(WatchStore.class).to(WatchStoreImpl.class).asEagerSingleton();
+        bind(WatchTriggeredHandler.class).to(WatchTriggeredHandlerImpl.class);
     }
 }

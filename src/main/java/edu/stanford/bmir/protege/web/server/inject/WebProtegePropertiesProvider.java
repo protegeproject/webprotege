@@ -2,13 +2,13 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.*;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,11 +24,11 @@ public class WebProtegePropertiesProvider implements Provider<WebProtegeProperti
      */
     private static final String SYSTEM_PROPERTY_PREFIX = "webprotege.";
 
-    private WebProtegeLogger logger;
+    private final Logger logger;
 
     @Inject
-    public WebProtegePropertiesProvider(WebProtegeLogger logger) {
-        this.logger = logger;
+    public WebProtegePropertiesProvider() {
+        logger = Logger.getLogger("WebProtegeProperties");
     }
 
     @Override

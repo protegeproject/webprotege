@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.inject;
+package edu.stanford.bmir.protege.web.server.inject.project;
 
 import com.google.inject.BindingAnnotation;
 
@@ -6,9 +6,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/03/2014
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 04/03/15
  */
 @BindingAnnotation
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RootOntology {
+public @interface WatchFile {
 }

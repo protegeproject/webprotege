@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.inject.ManchesterSyntaxParsingContextModule;
-import edu.stanford.bmir.protege.web.server.inject.ProjectModule;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;

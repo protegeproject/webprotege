@@ -46,7 +46,7 @@ public class MailManagerTestCase {
         Mailbox.clearAll();
         Properties mailProperties = new Properties();
         MessagingExceptionHandler messagingExceptionHandler = mock(MessagingExceptionHandler.class);
-        MailManager mailManager = new MailManager(APP_NAME, HOST_NAME, mailProperties, messagingExceptionHandler, logger);
+        MailManager mailManager = new MailManager(APP_NAME, HOST_NAME, mailProperties, messagingExceptionHandler);
         mailManager.sendMail(TO, SUBJECT, BODY, messagingExceptionHandler);
         List<Message> messageList = Mailbox.get(TO);
         message = messageList.get(0);

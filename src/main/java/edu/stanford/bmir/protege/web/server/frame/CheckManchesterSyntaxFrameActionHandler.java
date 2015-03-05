@@ -8,23 +8,19 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.inject.ManchesterSyntaxParsingContextModule;
-import edu.stanford.bmir.protege.web.server.inject.ProjectModule;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxChangeGenerator;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.CheckManchesterSyntaxFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseResult;
-import org.coode.owlapi.manchesterowlsyntax.OntologyAxiomPair;
 import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
