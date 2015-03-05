@@ -235,7 +235,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 new WebProtegeOntologyIRIShortFormProvider(rootOntology),
                 NullHighlightedEntityChecker.get());
 
-        searchManager = new OWLAPISearchManager(this);
+        searchManager = new OWLAPISearchManager(renderingManager, renderingManager.getShortFormProvider());
 
         changeManager = new OWLAPIChangeManager(this);
 
