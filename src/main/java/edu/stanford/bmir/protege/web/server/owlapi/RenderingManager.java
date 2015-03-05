@@ -38,7 +38,7 @@ import java.util.*;
  * This class is here to deal with the confusion/mess surrounding "names" in web-protege.  It translates between OWLObjects
  * and EntityData and names.
  */
-public class RenderingManager implements BrowserTextProvider, HasGetFrameRendering, HasHtmlBrowserText {
+public class RenderingManager implements BrowserTextProvider, HasGetFrameRendering, HasHtmlBrowserText, LegacyEntityDataProvider {
 
     public static final String NULL_BROWSER_TEXT = "\"\"";
 
