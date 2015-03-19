@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.generated;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.metrics.MetricsPortlet;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -50,6 +51,14 @@ public class UIFactory {
 
     public static final String PORTLET_SUFFIX = "Portlet";
 
+
+    private static final ImmutableMap<String, String> backwardsCompatMap = ImmutableMap.<String, String>builder()
+            .put("edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet",
+                    "edu.stanford.bmir.protege.web.client.change.ChangesPortlet")
+            .put("edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet",
+                    "edu.stanford.bmir.protege.web.client.watches.WatchedEntitiesPortlet")
+            .build();
+
     /*
      * Tab factory
      */
@@ -79,6 +88,10 @@ public class UIFactory {
 
     public static EntityPortlet createPortlet(Project project, String portletJavaClassName) {
         try {
+            String replacementName = backwardsCompatMap.get(portletJavaClassName);
+            if(replacementName != null) {
+                portletJavaClassName = replacementName;
+            }
             if (portletJavaClassName.equals(AllPropertiesPortlet.class.getName())) {
                 return new AllPropertiesPortlet(project);
             }
@@ -162,12 +175,14 @@ public class UIFactory {
             }
             else if (portletJavaClassName.equals(UsagePortlet.class.getName())) {
                 return new UsagePortlet(project);
-            }
-            else if (portletJavaClassName.equals(OWLEntityDescriptionBrowserPortlet.class.getName())) {
+            } else if (portletJavaClassName.equals(OWLEntityDescriptionBrowserPortlet.class.getName())) {
                 return new OWLEntityDescriptionBrowserPortlet(project);
             }
             else if (portletJavaClassName.endsWith(OWLEntityDescriptionEditorPortlet.class.getName())) {
                 return new OWLEntityDescriptionEditorPortlet(project);
+            }
+            else {
+                GWT.log("Portlet not found: " + portletJavaClassName);
             }
         } catch (Exception e) {
             GWT.log("Error when creating portlet", e);
