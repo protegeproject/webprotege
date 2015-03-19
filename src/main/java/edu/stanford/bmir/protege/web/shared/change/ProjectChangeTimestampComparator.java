@@ -9,8 +9,24 @@ import java.util.Comparator;
  */
 public class ProjectChangeTimestampComparator implements Comparator<ProjectChange> {
 
+    private static final int ONE_BEFORE_TWO = -1;
+
+    private static final int SAME = 0;
+
+    private static final int ONE_AFTER_TWO = 1;
+
     @Override
     public int compare(ProjectChange o1, ProjectChange o2) {
-        return (int) (o1.getTimestamp() - o2.getTimestamp());
+        long timestamp1 = o1.getTimestamp();
+        long timestamp2 = o2.getTimestamp();
+        if(timestamp1 < timestamp2) {
+            return ONE_BEFORE_TWO;
+        }
+        else if(timestamp1 == timestamp2) {
+            return SAME;
+        }
+        else {
+            return ONE_AFTER_TWO;
+        }
     }
 }
