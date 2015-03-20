@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.auth.GetChapSessionActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.PerformLoginActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetProjectChangesActionHandler;
 import edu.stanford.bmir.protege.web.server.change.GetWatchedEntityChangesActionHandler;
+import edu.stanford.bmir.protege.web.server.change.RevertRevisionActionHandler;
 import edu.stanford.bmir.protege.web.server.chgpwd.ResetPasswordActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.crud.GetEntityCrudKitsActionHandler;
@@ -166,5 +167,7 @@ public class ActionHandlersModule extends AbstractModule {
 
         multibinder.addBinding().to(GetProjectChangesActionHandler.class);
         multibinder.addBinding().to(GetWatchedEntityChangesActionHandler.class);
+
+        multibinder.addBinding().to(RevertRevisionActionHandler.class);
     }
 }

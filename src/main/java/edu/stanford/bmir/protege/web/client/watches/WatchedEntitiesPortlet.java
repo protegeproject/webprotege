@@ -42,7 +42,7 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     protected void onRefresh() {
-        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, DispatchServiceManager.get());
+        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, DispatchServiceManager.get(), false);
         presenter.setChangesForWatches(getProjectId(), getUserId());
         setTitle(generateTitle());
     }

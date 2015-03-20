@@ -31,4 +31,8 @@ public interface ChangeDetailsView extends IsWidget {
     void setTimestamp(long timestamp);
 
     void setChangeCount(int changeCount);
+
+    void setRevertRevisionVisible(boolean visible);
+
+    void setRevertRevisionHandler(RevertRevisionHandler revertRevisionHandler);
 }
