@@ -22,7 +22,7 @@ public class PrimitiveDataEditorClientModule extends AbstractGinModule {
         bind(PrimitiveDataEditorView.class).to(PrimitiveDataEditorViewImpl.class);
         bind(LanguageEditor.class).to(DefaultLanguageEditor.class);
         bind(ProjectId.class).toProvider(ActiveProjectIdProvider.class);
-        bind(PrimitiveDataParser.class).to(DefaultPrimitiveDataParser.class);
+        bind(PrimitiveDataParser.class).to(PrimitiveDataParserImpl.class);
         bind(EntityDataLookupHandler.class).to(EntityDataLookupHandlerImpl.class);
         bind(FreshEntitiesHandler.class).to(NullFreshEntitiesHandler.class);
         bind(PrimitiveDataEditorFreshEntityView.class).to(PrimitiveDataEditorFreshEntityViewImpl.class);

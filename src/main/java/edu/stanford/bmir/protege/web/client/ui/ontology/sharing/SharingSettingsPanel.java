@@ -2,10 +2,9 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
@@ -14,6 +13,8 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestBox;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.UserIdSuggestOracle;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
+import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
     
     private final SharingSettingsDefaultSharingSettingPanel defaultSharingSettingPanel;
     
-    public static final String PLACE_HOLDER_TEXT = "Enter names or email addresses (1 per line)";
+    public static final String PLACE_HOLDER_TEXT = "Enter names (1 per line)";
 
     public SharingSettingsPanel(final ProjectId projectId) {
         this.projectId = projectId;
@@ -120,15 +121,10 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
     }
 
     private void refillSharingSettingsList(final ProjectId projectId) {
-        SharingSettingsServiceAsync sharingSettingsService = SharingSettingsServiceManager.getService();
-
-        sharingSettingsService.getProjectSharingSettings(projectId, new AsyncCallback<ProjectSharingSettings>() {
-            public void onFailure(Throwable caught) {
-                caught.printStackTrace();
-            }
-
-            public void onSuccess(ProjectSharingSettings result) {
-                updateListData(result);
+        DispatchServiceManager.get().execute(new GetProjectSharingSettingsAction(projectId), new DispatchServiceCallback<GetProjectSharingSettingsResult>() {
+            @Override
+            public void handleSuccess(GetProjectSharingSettingsResult result) {
+                updateListData(result.getProjectSharingSettings());
             }
         });
     }

@@ -37,69 +37,8 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>AdminServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.AdminServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>NotificationServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.NotificationServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ChAOServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.owlapi.ChAOServiceOWLAPIImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>OntologyServiceImpl</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.owlapi.OntologyServiceOWLAPIImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ProjectConfigurationServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.ProjectConfigurationServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>AccessPolicyServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.AccessPolicyServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>SharingSettingsService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.SharingSettingsServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>bpProposals</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.bioportal.BioPortalProposalsServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>OpenIdServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.OpenIdServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>OpenIdAuthenticationResServlet</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.openid.OpenIdAuthenticationResponseServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>OpenIdAuthenticationServlet</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.openid.OpenIdAuthenticationServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>AuthenticateServiceImpl</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.AuthenticateServiceImpl</servlet-class>
-	</servlet>
-
-
-	<servlet>
-		<servlet-name>ProjectManagerService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.ProjectManagerServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -108,24 +47,8 @@
 	</servlet>
 
 	<servlet>
-		<servlet-name>RecaptchaService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.RecaptchaServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>RevisionManager</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.RevisionManagerServiceImpl</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>BioPortalAPIService</servlet-name>
 		<servlet-class>edu.stanford.bmir.protege.web.server.BioPortalAPIServiceImpl</servlet-class>
-	</servlet>
-
-
-	<servlet>
-		<servlet-name>RenderingService</servlet-name>
-		<servlet-class>edu.stanford.bmir.protege.web.server.RenderingServiceImpl</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -146,63 +69,8 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>RecaptchaService</servlet-name>
-		<url-pattern>/webprotege/recaptchaservice</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>NotificationServiceImpl</servlet-name>
-		<url-pattern>/webprotege/notification</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>ChAOServiceImpl</servlet-name>
-		<url-pattern>/webprotege/chao</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
 		<servlet-name>OntologyServiceImpl</servlet-name>
 		<url-pattern>/webprotege/ontology</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>ProjectConfigurationServiceImpl</servlet-name>
-		<url-pattern>/webprotege/projectconfig</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>AdminServiceImpl</servlet-name>
-		<url-pattern>/webprotege/admin</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>OpenIdServiceImpl</servlet-name>
-		<url-pattern>/webprotege/openid</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>bpProposals</servlet-name>
-		<url-pattern>/webprotege/bpProposals</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>OpenIdAuthenticationResServlet</servlet-name>
-		<url-pattern>/openidresponse</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>OpenIdAuthenticationServlet</servlet-name>
-		<url-pattern>/openidauthservlet</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>AuthenticateServiceImpl</servlet-name>
-		<url-pattern>/authenticate/authenticate/authen</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>AccessPolicyServiceImpl</servlet-name>
-		<url-pattern>/accesspolicy</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
@@ -211,36 +79,14 @@
 	</servlet-mapping>
 
 	<servlet-mapping>
-		<servlet-name>ProjectManagerService</servlet-name>
-		<url-pattern>/webprotege/projectmanager</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
 		<servlet-name>OBOTextEditorService</servlet-name>
 		<url-pattern>/webprotege/obotexteditorservice</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>RevisionManager</servlet-name>
-		<url-pattern>/webprotege/revisionmanager</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
 		<servlet-name>BioPortalAPIService</servlet-name>
 		<url-pattern>/webprotege/bioportalapi</url-pattern>
 	</servlet-mapping>
-
-
-	<servlet-mapping>
-		<servlet-name>RenderingService</servlet-name>
-		<url-pattern>/webprotege/renderingservice</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>SharingSettingsService</servlet-name>
-		<url-pattern>/webprotege/sharingsettings</url-pattern>
-	</servlet-mapping>
-
 
 	<!-- Default page to serve -->
 	

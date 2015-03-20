@@ -5,16 +5,16 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
-import edu.stanford.bmir.protege.web.server.util.DefaultTempFileFactory;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
 import edu.stanford.bmir.protege.web.server.filedownload.DownloadFormat;
-import edu.stanford.bmir.protege.web.server.filesubmission.FileUploadConstants;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
@@ -29,7 +29,6 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.io.FileDocumentSource;
 import org.semanticweb.owlapi.model.*;
-import uk.ac.manchester.cs.jfact.datatypes.ordered;
 
 import java.io.*;
 import java.util.*;
@@ -57,7 +56,7 @@ public class OWLAPIProjectDocumentStore {
 
     private static final String PROJECT_ATTRIBUTES_FILE_NAME = "project-attributes.binary";
 
-    private static final WebProtegeLogger logger = WebProtegeLoggerManager.get(OWLAPIProjectDocumentStore.class);
+    private final WebProtegeLogger logger;
 
     private ProjectId projectId;
 
@@ -113,16 +112,22 @@ public class OWLAPIProjectDocumentStore {
     }
 
 
+    private OWLAPIProjectManager projectManager;
+
     private OWLAPIProjectDocumentStore(ProjectId projectId) {
+        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         this.projectId = projectId;
-        this.projectFileStore = OWLAPIProjectFileStore.getProjectFileStore(projectId);
+        this.projectManager = WebProtegeInjector.get().getInstance(OWLAPIProjectManager.class);
+        this.projectFileStore = WebProtegeInjector.get().getInstance(OWLAPIProjectFileStoreFactory.class).get(projectId);
     }
 
     private OWLAPIProjectDocumentStore(NewProjectSettings newProjectSettings) throws
                                                                               ProjectAlreadyExistsException,
                                                                               IOException {
         this.projectId = ProjectIdFactory.getFreshProjectId();
-        this.projectFileStore = OWLAPIProjectFileStore.getProjectFileStore(projectId);
+        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+        this.projectManager = WebProtegeInjector.get().getInstance(OWLAPIProjectManager.class);
+        this.projectFileStore = WebProtegeInjector.get().getInstance(OWLAPIProjectFileStoreFactory.class).get(projectId);
         if (projectFileStore.getProjectDirectory().exists()) {
             throw new ProjectDocumentExistsException(projectId);
         }
@@ -134,6 +139,8 @@ public class OWLAPIProjectDocumentStore {
             createEmptyProject(newProjectSettings);
         }
     }
+
+
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,11 +162,11 @@ public class OWLAPIProjectDocumentStore {
     }
 
 
-    public void exportProject(OutputStream outputStream, DownloadFormat format) throws
+    public void exportProject(String projectDisplayName, OutputStream outputStream, DownloadFormat format) throws
                                                                                 IOException,
                                                                                 OWLOntologyStorageException {
         // Does it already exist in the download cache?
-        createDownloadCacheIfNecessary(format);
+        createDownloadCacheIfNecessary(projectDisplayName, format);
         // Feed cached file to caller
         final ReadWriteLock projectDownloadCacheLock = getProjectDownloadCacheLock(projectId);
         try {
@@ -179,6 +186,7 @@ public class OWLAPIProjectDocumentStore {
     }
 
     public void exportProjectRevision(
+            String projectDisplayName,
             RevisionNumber revisionNumber,
             OutputStream outputStream,
             DownloadFormat format) throws IOException, OWLOntologyStorageException {
@@ -187,17 +195,18 @@ public class OWLAPIProjectDocumentStore {
         checkNotNull(format);
 
         OWLOntologyManager manager = getOntologyManagerForRevision(revisionNumber);
-        OWLAPIProject project = OWLAPIProjectManager.getProjectManager().getProject(projectId);
+        OWLAPIProject project = projectManager.getProject(projectId);
         OWLOntologyID rootOntologyId = project.getRootOntology().getOntologyID();
         Optional<OWLOntology> revisionRootOntology = getOntologyFromManager(manager, rootOntologyId);
         if (revisionRootOntology.isPresent()) {
             applyRevisionMetadataAnnotationsToOntology(revisionNumber, revisionRootOntology.get());
-            saveImportsClosureToStream(revisionRootOntology.get(), format, outputStream, revisionNumber);
+            saveImportsClosureToStream(projectDisplayName, revisionRootOntology.get(), format, outputStream, revisionNumber);
         }
         else {
             // An error - no flipping ontology!
-            throw new RuntimeException("The ontology could not be downloaded from " + WebProtegeProperties.get()
-                                                                                                          .getApplicationHostName() + ".  Please contact the administrator.");
+            WebProtegeProperties properties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
+
+            throw new RuntimeException("The ontology could not be downloaded from " + properties.getApplicationName() + ".  Please contact the administrator.");
         }
     }
 
@@ -328,6 +337,7 @@ public class OWLAPIProjectDocumentStore {
             try {
                 OWLOntologyLoaderConfiguration config = new OWLOntologyLoaderConfiguration();
                 config = config.setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
+                config = config.setReportStackTraces(true);
                 FileDocumentSource documentSource = new FileDocumentSource(rootOntologyDocument);
                 logger.info(projectId, "Loading root ontology imports closure.");
                 OWLOntology rootOntology = manager.loadOntologyFromOntologyDocument(documentSource, config);
@@ -397,7 +407,7 @@ public class OWLAPIProjectDocumentStore {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private void createDownloadCacheIfNecessary(DownloadFormat format) throws IOException, OWLOntologyStorageException {
+    private void createDownloadCacheIfNecessary(String projectDisplayName, DownloadFormat format) throws IOException, OWLOntologyStorageException {
         ReadWriteLock projectDownloadCacheLock = getProjectDownloadCacheLock(projectId);
         try {
             projectDownloadCacheLock.writeLock().lock();
@@ -406,12 +416,12 @@ public class OWLAPIProjectDocumentStore {
             if (!cachedFile.exists()) {
                 downloadCacheDirectory.mkdirs();
                 // Create
-                OWLAPIProject project = OWLAPIProjectManager.getProjectManager().getProject(projectId);
+                OWLAPIProject project = projectManager.getProject(projectId);
                 OWLAPIChangeManager changeManager = project.getChangeManager();
                 RevisionNumber currentRevisionNumber = changeManager.getCurrentRevision();
 
                 BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(cachedFile));
-                exportProjectRevision(currentRevisionNumber, outputStream, format);
+                exportProjectRevision(projectDisplayName, currentRevisionNumber, outputStream, format);
                 outputStream.close();
             }
         } finally {
@@ -426,19 +436,20 @@ public class OWLAPIProjectDocumentStore {
         checkNotNull(revisionNumber, "revisionNumber must not be null");
         checkNotNull(revisionRootOntology, "revisionRootOntology must not be null");
         OWLOntologyManager manager = revisionRootOntology.getOWLOntologyManager();
-        RevisionMetadataAnnotater annotater = new RevisionMetadataAnnotater(projectId, revisionNumber,
-                                                                            revisionRootOntology);
-        manager.applyChanges(annotater.getChanges());
+//        RevisionMetadataAnnotater annotater = new RevisionMetadataAnnotater(projectId, revisionNumber,
+//                                                                            revisionRootOntology);
+//        manager.applyChanges(annotater.getChanges());
     }
 
     private OWLOntologyManager getOntologyManagerForRevision(RevisionNumber revision) {
-        OWLAPIProject project = OWLAPIProjectManager.getProjectManager().getProject(projectId);
+        OWLAPIProject project = projectManager.getProject(projectId);
         OWLAPIChangeManager changeManager = project.getChangeManager();
         return changeManager.getOntologyManagerForRevision(revision);
     }
 
 
     private void saveImportsClosureToStream(
+            String projectDisplayName,
             OWLOntology rootOntology,
             DownloadFormat format,
             OutputStream outputStream,
@@ -446,7 +457,6 @@ public class OWLAPIProjectDocumentStore {
                                            IOException,
                                            OWLOntologyStorageException {
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
-        String projectDisplayName = OWLAPIProjectMetadataManager.getManager().getDisplayName(projectId);
         String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies-" + format.getExtension();
         baseFolder = baseFolder.toLowerCase();
         baseFolder = baseFolder + "-REVISION-" + revisionNumber.getValue();
@@ -492,13 +502,14 @@ public class OWLAPIProjectDocumentStore {
 
     private synchronized void createProjectFromSources(NewProjectSettings newProjectSettings) throws IOException {
         try {
-            File uploadsDirectory = FileUploadConstants.UPLOADS_DIRECTORY;
+            // TODO: FIX Temporary Measure
+            File uploadsDirectory = WebProtegeInjector.get().getInstance(WebProtegeFileStore.class).getUploadsDirectory();
 
             DocumentId documentId = newProjectSettings.getSourceDocumentId();
             File uploadedFile = new File(uploadsDirectory, documentId.getDocumentId());
             UploadedProjectSourcesExtractor extractor = new UploadedProjectSourcesExtractor(new ZipInputStreamChecker
                                                                                                     (),
-                                                                                            new ZipArchiveProjectSourcesExtractor(new DefaultTempFileFactory(), new DefaultRootOntologyDocumentMatcher()), new SingleDocumentProjectSourcesExtractor());
+                                                                                            new ZipArchiveProjectSourcesExtractor(new TempFileFactoryImpl(), new RootOntologyDocumentMatcherImpl()), new SingleDocumentProjectSourcesExtractor());
 
             if (uploadedFile.exists()) {
                 OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();

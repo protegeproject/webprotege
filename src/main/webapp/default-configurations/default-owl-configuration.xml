@@ -229,7 +229,7 @@
                     <width>0.7</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangesPortlet</name>
+                            <name>edu.stanford.bmir.protege.web.client.change.ChangesPortlet</name>
                             <height>570</height>
                             <width>450</width>
                         </portlet>
@@ -271,7 +271,7 @@
                             <width>450</width>
                         </portlet>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet</name>
+                            <name>edu.stanford.bmir.protege.web.client.watches.WatchedEntitiesPortlet</name>
                             <height>280</height>
                             <width>450</width>
                         </portlet>

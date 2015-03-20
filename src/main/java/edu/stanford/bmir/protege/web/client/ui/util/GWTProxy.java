@@ -80,7 +80,7 @@ public abstract class GWTProxy extends DataProxy {
 	}
 
 	private native JavaScriptObject convertBaseParams(JavaScriptObject store) /*-{
-																				var params = new Array();
+																				var params = [];
 																				var i = 0;
 																				var o = store.baseParams;
 																				for(var key in o){

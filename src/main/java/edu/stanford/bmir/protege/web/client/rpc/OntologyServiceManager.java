@@ -21,7 +21,7 @@ public class OntologyServiceManager {
     }
 
     private OntologyServiceManager() {
-        proxy = (OntologyServiceAsync) GWT.create(OntologyService.class);
+        proxy = GWT.create(OntologyService.class);
     }
 
     public void hasWritePermission(ProjectId projectId, UserId userId, AsyncCallback<Boolean> cb) {

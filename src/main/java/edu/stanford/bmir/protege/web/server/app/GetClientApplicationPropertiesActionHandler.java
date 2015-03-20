@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesAction;
 import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesResult;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -16,6 +18,13 @@ import edu.stanford.bmir.protege.web.shared.app.GetClientApplicationPropertiesRe
  * Date: 19/07/2013
  */
 public class GetClientApplicationPropertiesActionHandler implements ActionHandler<GetClientApplicationPropertiesAction, GetClientApplicationPropertiesResult> {
+
+    private final WebProtegeProperties properties;
+
+    @Inject
+    public GetClientApplicationPropertiesActionHandler(WebProtegeProperties properties) {
+        this.properties = properties;
+    }
 
     @Override
     public Class<GetClientApplicationPropertiesAction> getActionClass() {
@@ -29,7 +38,7 @@ public class GetClientApplicationPropertiesActionHandler implements ActionHandle
 
     @Override
     public GetClientApplicationPropertiesResult execute(GetClientApplicationPropertiesAction action, ExecutionContext executionContext) {
-        ClientApplicationProperties clientApplicationProperties = WebProtegeProperties.get().getClientApplicationProperties();
+        ClientApplicationProperties clientApplicationProperties = properties.getClientApplicationProperties();
         return new GetClientApplicationPropertiesResult(clientApplicationProperties);
     }
 }

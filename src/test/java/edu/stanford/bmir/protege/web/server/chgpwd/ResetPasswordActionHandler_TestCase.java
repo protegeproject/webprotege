@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
-import edu.stanford.bmir.protege.web.server.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
@@ -28,7 +29,7 @@ public class ResetPasswordActionHandler_TestCase {
     private final String EMAIL_ADDRESS = "EMAIL.address";
 
     @Mock
-    private MetaProjectManager mpm;
+    private UserDetailsManager mpm;
 
     @Mock
     private User user;
@@ -47,9 +48,12 @@ public class ResetPasswordActionHandler_TestCase {
 
     private ResetPasswordActionHandler handler;
 
+    @Mock
+    private WebProtegeLogger logger;
+
     @Before
     public void setUp() throws Exception {
-        handler = new ResetPasswordActionHandler(mpm, mailer);
+        handler = new ResetPasswordActionHandler(mpm, mailer, logger);
         when(action.getResetPasswordData()).thenReturn(data);
         when(data.getEmailAddress()).thenReturn(EMAIL_ADDRESS);
     }

@@ -1,26 +1,22 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.annotations;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEventHandler;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -66,14 +62,9 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
     }
 
     private void updateView() {
-        DispatchServiceManager.get().execute(new GetOntologyAnnotationsAction(getProjectId()), new AsyncCallback<RenderableGetObjectResult<Set<OWLAnnotation>>>() {
+        DispatchServiceManager.get().execute(new GetOntologyAnnotationsAction(getProjectId()), new DispatchServiceCallback<RenderableGetObjectResult<Set<OWLAnnotation>>>() {
             @Override
-            public void onFailure(Throwable caught) {
-                MessageBox.alert("There was a problem retrieving the annotation for this project.");
-            }
-
-            @Override
-            public void onSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
+            public void handleSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
                 final Set<OWLAnnotation> object = result.getObject();
                 if(!annotationsView.getValue().equals(Optional.of(result.getObject()))) {
                     lastSet = Optional.of(object);
@@ -112,15 +103,9 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
         }
         Optional<Set<OWLAnnotation>> annotations = annotationsView.getValue();
         if (annotations.isPresent() && lastSet.isPresent()) {
-            DispatchServiceManager.get().execute(new SetOntologyAnnotationsAction(getProjectId(), lastSet.get(), annotations.get()), new AsyncCallback<SetOntologyAnnotationsResult>() {
+            DispatchServiceManager.get().execute(new SetOntologyAnnotationsAction(getProjectId(), lastSet.get(), annotations.get()), new DispatchServiceCallback<SetOntologyAnnotationsResult>() {
                 @Override
-                public void onFailure(Throwable caught) {
-                    MessageBox.alert("There was a problem setting the ontology annotations for this project.");
-                    GWT.log("Problem setting ontology annotations", caught);
-                }
-
-                @Override
-                public void onSuccess(SetOntologyAnnotationsResult result) {
+                public void handleSuccess(SetOntologyAnnotationsResult result) {
 
                 }
             });

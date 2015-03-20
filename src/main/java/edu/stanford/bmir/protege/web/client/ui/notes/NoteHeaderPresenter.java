@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
@@ -62,16 +61,10 @@ public class NoteHeaderPresenter implements HasDispose {
     private void setNoteResolved() {
         ProjectId projectId = Application.get().getActiveProject().get();
         NoteStatus status = currentNoteStatus == NoteStatus.OPEN ? NoteStatus.RESOLVED : NoteStatus.OPEN;
-        DispatchServiceManager.get().execute(new                 SetNoteStatusAction(projectId, note.getNoteId(), status), new AsyncCallback<SetNoteStatusResult>() {
+        DispatchServiceManager.get().execute(new                 SetNoteStatusAction(projectId, note.getNoteId(), status), new DispatchServiceCallback<SetNoteStatusResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("Setting status failed", caught);
-            }
-
-            @Override
-            public void onSuccess(SetNoteStatusResult result) {
+            public void handleSuccess(SetNoteStatusResult result) {
                 currentNoteStatus = result.getNoteStatus();
-                GWT.log("Successfully resolved note");
             }
         });
     }

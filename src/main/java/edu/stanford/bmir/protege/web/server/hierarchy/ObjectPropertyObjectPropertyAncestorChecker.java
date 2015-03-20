@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.hierarchy;
 
-import org.protege.editor.owl.model.hierarchy.OWLObjectHierarchyProvider;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 /**

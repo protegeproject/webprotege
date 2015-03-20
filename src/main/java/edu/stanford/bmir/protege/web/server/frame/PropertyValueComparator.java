@@ -2,10 +2,9 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
-import edu.stanford.bmir.protege.web.server.render.DefaultAnnotationPropertyComparator;
+import edu.stanford.bmir.protege.web.server.render.AnnotationPropertyComparatorImpl;
 import edu.stanford.bmir.protege.web.server.render.IRIIndexProvider;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -26,11 +25,11 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
     public static final int BEFORE = -AFTER;
 
     private OWLAPIProject project;
-    private DefaultAnnotationPropertyComparator annotationPropertyComparator;
+    private AnnotationPropertyComparatorImpl annotationPropertyComparator;
 
     public PropertyValueComparator(OWLAPIProject project) {
         this.project = project;
-        this.annotationPropertyComparator = new DefaultAnnotationPropertyComparator(
+        this.annotationPropertyComparator = new AnnotationPropertyComparatorImpl(
                 project.getRenderingManager().getShortFormProvider(),
                 IRIIndexProvider.withDefaultAnnotationPropertyOrdering()
         );
@@ -105,6 +104,6 @@ public class PropertyValueComparator implements Comparator<PropertyValue> {
     }
 
     private boolean isDefaultLanguage(OWLLiteral lit) {
-        return lit.hasLang() && project.getDefaultLanguage().equals(lit.getLang());
+        return lit.hasLang() && project.getLang().equals(lit.getLang());
     }
 }

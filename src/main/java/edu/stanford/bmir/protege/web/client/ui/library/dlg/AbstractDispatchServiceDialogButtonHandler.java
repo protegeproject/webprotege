@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.library.dlg;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -22,15 +22,10 @@ public abstract class AbstractDispatchServiceDialogButtonHandler<D, A extends Ac
 
     @Override
     public void handleHide(D data, final WebProtegeDialogCloser closer) {
-        DispatchServiceManager.get().execute(createAction(data), new AsyncCallback<R>() {
+        DispatchServiceManager.get().execute(createAction(data), new DispatchServiceCallback<R>() {
             @Override
-            public void onFailure(Throwable caught) {
-                handleFailure(caught, closer);
-            }
-
-            @Override
-            public void onSuccess(R result) {
-                handleSuccess(result, closer);
+            public void handleSuccess(R result) {
+                AbstractDispatchServiceDialogButtonHandler.this.handleSuccess(result, closer);
             }
         });
     }

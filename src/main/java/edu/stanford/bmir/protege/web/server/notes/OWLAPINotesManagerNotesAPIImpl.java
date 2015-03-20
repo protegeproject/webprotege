@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.notes;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.notes.converter.CHAO2NotesConverter;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
@@ -49,7 +49,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 
     public static final IRI CHANGES_ONTOLOGY_IRI = IRI.create("http://protege.stanford.edu/ontologies/ChAO/changes.owl");
 
-    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(OWLAPINotesManagerNotesAPIImpl.class);
+    private final WebProtegeLogger logger;
 
 
     private OWLAPIProject project;
@@ -64,6 +64,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 
 
     public OWLAPINotesManagerNotesAPIImpl(OWLAPIProject project) {
+        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         this.project = project;
         try {
             long t0 = System.currentTimeMillis();
@@ -86,7 +87,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             long t1 = System.currentTimeMillis();
             importLegacyNotesIfNecessary();
 
-            WebProtegeLoggerManager.get(OWLAPINotesManagerNotesAPIImpl.class).info(project.getProjectId(), "Initialized notes manager in %d ms", (t1 - t0));
+            logger.info(project.getProjectId(), "Initialized notes manager in %d ms", (t1 - t0));
         }
         catch (OWLOntologyCreationException e) {
             // Can't start - too dangerous to do anything without human intervention
@@ -103,20 +104,20 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         File notesDataDirectory = documentStore.getNotesDataDirectory();
         File legacy = new File(notesDataDirectory, "notes-data.legacy");
         if(legacy.exists()) {
-            LOGGER.info(project.getProjectId(), "Importing legacy notes data");
+            logger.info(project.getProjectId(), "Importing legacy notes data");
             try {
                 final BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(legacy));
                 OWLOntology legacyNotesOntology = WebProtegeOWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(inputStream);
                 String base = legacyNotesOntology.getOntologyID().getOntologyIRI().toString();
-                LOGGER.info(project.getProjectId(), "Using base obtained from legacy notes ontology: " + base);
+                logger.info(project.getProjectId(), "Using base obtained from legacy notes ontology: " + base);
                 CHAO2NotesConverter converter = new CHAO2NotesConverter(project.getRootOntology(), legacyNotesOntology, base);
                 converter.convertToNotes(this);
                 inputStream.close();
                 FileUtils.moveFile(legacy, new File(legacy.getParentFile(), "notes-data.legacy.imported-" + System.currentTimeMillis()));
-                LOGGER.info(project.getProjectId(), "Import completed");
+                logger.info(project.getProjectId(), "Import completed");
             }
             catch (Exception e) {
-                LOGGER.severe(e);
+                logger.severe(e);
             }
         }
 
@@ -198,7 +199,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         UserId author = UserId.getUserId(annotation.getAuthor());
         String body = annotation.getBody() == null ? "" : annotation.getBody();
         long timestamp = annotation.getCreatedAt();
-        Optional<String> subject = annotation.getSubject() == null ? Optional.<String>absent() : Optional.<String>of(annotation.getSubject());
+        Optional<String> subject = annotation.getSubject() == null ? Optional.<String>absent() : Optional.of(annotation.getSubject());
 
         NoteId noteId = NoteId.createNoteIdFromLexicalForm(annotation.getId());
         NoteHeader noteHeader = new NoteHeader(noteId, inReplyTo, author, timestamp);
@@ -240,7 +241,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         if(note == null) {
             // Sometimes we fail to find the note.  I'm not sure why.  This has something to do with the weird internals
             // and typing of the notes API.
-            LOGGER.info(project.getProjectId(), "Failed to find note by Id when changing the note status.  The noteId was %s", noteId);
+            logger.info(project.getProjectId(), "Failed to find note by Id when changing the note status.  The noteId was %s", noteId);
             return;
         }
         if(noteStatus == NoteStatus.OPEN) {

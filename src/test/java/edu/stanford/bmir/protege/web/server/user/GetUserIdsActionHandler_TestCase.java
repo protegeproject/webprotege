@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsAction;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,25 +31,25 @@ public class GetUserIdsActionHandler_TestCase {
     private GetUserIdsActionHandler handler;
 
     @Mock
-    private MetaProject metaProject;
+    private HasUserIds hasUserIds;
 
     @Mock
-    private User userA, userB, userC;
+    private UserId userA, userB, userC, nullUser;
 
     @Mock
     private ExecutionContext executionContext;
 
     @Before
     public void setUp() throws Exception {
-        handler = new GetUserIdsActionHandler(metaProject);
-        when(userA.getName()).thenReturn("User A");
-        when(userB.getName()).thenReturn("User B");
-        when(userC.getName()).thenReturn("User C");
-        Set<User> users = Sets.newHashSet();
+        handler = new GetUserIdsActionHandler(hasUserIds);
+        when(userA.getUserName()).thenReturn("User A");
+        when(userB.getUserName()).thenReturn("User B");
+        when(userC.getUserName()).thenReturn("User C");
+        Set<UserId> users = Sets.newHashSet();
         users.add(userA);
         users.add(userB);
         users.add(userC);
-        when(metaProject.getUsers()).thenReturn(users);
+        when(hasUserIds.getUserIds()).thenReturn(users);
     }
 
     @Test(expected = NullPointerException.class)
@@ -63,12 +62,8 @@ public class GetUserIdsActionHandler_TestCase {
         GetUserIdsResult result = handler.execute(new GetUserIdsAction(), executionContext);
         ImmutableList<UserId> resultUserIds = result.getUserIds();
         assertThat(resultUserIds, containsInAnyOrder(
-                UserId.getUserId("User A"),
-                UserId.getUserId("User B"),
-                UserId.getUserId("User C")));
+                userA,
+                userB,
+                userC));
     }
-
-
-
-
 }

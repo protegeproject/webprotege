@@ -123,7 +123,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
             preconfiguredClass = Optional.of(DataFactory.getOWLClass(preconfiguredClassName));
         }
         else {
-            preconfiguredClass = Optional.<OWLClass>absent();
+            preconfiguredClass = Optional.absent();
         }
     }
 

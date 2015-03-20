@@ -19,9 +19,9 @@ public class ProgressMonitor {
     private final ProgressBarViewImpl widget;
 
     private ProgressMonitor() {
+        widget = new ProgressBarViewImpl();
         popupPanel = new PopupPanel(false, true);
         popupPanel.addStyleName("progress-popup");
-        widget = new ProgressBarViewImpl();
         popupPanel.setWidget(widget);
         popupPanel.setGlassEnabled(true);
         popupPanel.setGlassStyleName("glass");

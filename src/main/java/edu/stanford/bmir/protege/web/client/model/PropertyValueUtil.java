@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.client.model;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -67,7 +67,7 @@ public class PropertyValueUtil {
                 new AddPropertyValueHandler(entityName, propName, asyncCallback));
     }
 
-    abstract class AbstractPropertyHandler<T> extends AbstractAsyncHandler<T> {
+    abstract class AbstractPropertyHandler<T> implements AsyncCallback<T> {
         private AsyncCallback<T> asyncCallback;
         private String subject;
         private String property;
@@ -87,7 +87,7 @@ public class PropertyValueUtil {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at removing value for " + getProperty() + " and " + getSubject(), caught);
             MessageBox.showAlert("There was an error at removing the property value for " + getProperty() + " and " + getSubject() + ".");
             if (asyncCallback != null) {
@@ -96,7 +96,7 @@ public class PropertyValueUtil {
         }
 
         @Override
-        public void handleSuccess(T result) {
+        public void onSuccess(T result) {
             if (asyncCallback != null) {
                 asyncCallback.onSuccess(result);
             }
@@ -113,9 +113,9 @@ public class PropertyValueUtil {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             GWT.log("* Success at removing value for " + getProperty() + " and " + getSubject(), null);
-            super.handleSuccess(result);
+            super.onSuccess(result);
         }
 
     }
@@ -131,9 +131,9 @@ public class PropertyValueUtil {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             GWT.log("Success at replacing value for " + getProperty() + " and " + getSubject() + " with: " + newEntityData, null);
-            super.handleSuccess(result);
+            super.onSuccess(result);
         }
     }
 
@@ -144,9 +144,9 @@ public class PropertyValueUtil {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             GWT.log("Success at adding value for " + getProperty() + " and " + getSubject(), null);
-            super.handleSuccess(result);
+            super.onSuccess(result);
         }
     }
 
@@ -160,9 +160,9 @@ public class PropertyValueUtil {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             GWT.log("Success at setting value for " + getProperty() + " and " + getSubject() + " to: " + newEntityData, null);
-            super.handleSuccess(result);
+            super.onSuccess(result);
         }
     }
 

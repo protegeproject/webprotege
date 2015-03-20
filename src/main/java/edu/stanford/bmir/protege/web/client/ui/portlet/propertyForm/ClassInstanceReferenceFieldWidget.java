@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
@@ -14,7 +15,7 @@ import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalReferenceData;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -208,7 +209,7 @@ public class ClassInstanceReferenceFieldWidget extends ReferenceFieldWidget {
                 getSubject().getName());
     }
 
-    class ImportInternalReferenceHandler extends AbstractAsyncHandler<EntityData> {
+    class ImportInternalReferenceHandler implements AsyncCallback<EntityData> {
         private Window selectWindow;
 
         public ImportInternalReferenceHandler(Window selectWindow) {
@@ -216,14 +217,14 @@ public class ClassInstanceReferenceFieldWidget extends ReferenceFieldWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             selectWindow.getEl().unmask();
             GWT.log("Could not import Internal reference ", null);
             MessageBox.alert("Internal reference generation failed!");
         }
 
         @Override
-        public void handleSuccess(EntityData refInstance) {
+        public void onSuccess(EntityData refInstance) {
             selectWindow.getEl().unmask();
             getProject().forceGetEvents();
             if (refInstance != null) {

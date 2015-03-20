@@ -100,18 +100,5 @@ public class BioPortalUploadImpl implements BioPortalUpload {
         buffer.append(value.toString());
         buffer.append("&");
     }
-
-
-    public static void main(String[] args) {
-        BioPortalUploadImpl bpUploadService = new BioPortalUploadImpl();
-        String response = bpUploadService.uploadOntologyFromURL("http://stagerest.bioontology.org/bioportal/",
-                "http://smi-protege.stanford.edu/collab-protege/ont/TestUpload1.owl",
-                "Test Upload 3", null, "OWL",
-                "10/08/2012", "Tania Tudorache", "tudorache@stanford.edu",
-                "UPLThree", "1.0", "http://ont.org", "http://doc.org",
-                "http://publ.org", "public", null, "This is a test upload from WP", "2818,5060",
-                null, null, null, null);
-
-        System.out.println("POST response: " + response);
-    }
+    
 }

@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.EmptySuccessWebProtegeCallback;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.shared.project.*;
 
 import java.util.Collections;
@@ -16,8 +13,6 @@ import java.util.Collections;
  * Date: 09/04/2013
  */
 public class TrashManagerRequestHandlerImpl implements TrashManagerRequestHandler {
-
-    private static final ProjectManagerServiceAsync PROJECT_MANAGER_SERVICE_ASYNC = GWT.create(ProjectManagerService.class);
 
     @Override
     public void handleMoveProjectToTrash(final ProjectId projectId) {

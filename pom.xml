@@ -9,7 +9,7 @@
     <groupId>edu.stanford.protege</groupId>
     <artifactId>webprotege</artifactId>
     <packaging>war</packaging>
-    <version>2.5.1-SNAPSHOT</version>
+    <version>2.6.0-SNAPSHOT</version>
     <name>GWT Maven Archetype</name>
 
     <properties>
@@ -19,7 +19,6 @@
         <gwt.test.mode>htmlunit</gwt.test.mode>
         <!-- Properties common to all build profiles -->
         <application.name>WebProtege</application.name>
-        <openid.enabled>true</openid.enabled>
         <!-- Mail properties empty by default -->
         <mail.smtp.host/>
         <mail.smtp.auth/>
@@ -110,13 +109,13 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>16.0.1</version>
+            <version>18.0</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.google.guava</groupId>-->
-            <!--<artifactId>guava-gwt</artifactId>-->
-            <!--<version>15.0</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-gwt</artifactId>
+            <version>18.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.google.gwt.inject</groupId>
@@ -124,9 +123,15 @@
             <version>2.1.2</version>
         </dependency>
         <dependency>
-            <groupId>com.google.code.guice</groupId>
+            <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>1.0</version>
+            <version>3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-multibindings</artifactId>
+            <version>3.0</version>
         </dependency>
 
         <dependency>
@@ -162,6 +167,11 @@
             <version>1.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
 
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
@@ -204,7 +214,7 @@
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>protege</artifactId>
-            <version>3.5.1</version>
+            <version>3.5.1.1</version>
         </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
@@ -281,34 +291,17 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!--
-            openid4java includes some funky dependencies that break compilation and GWT test cases so
-            we need to exclude them.
-            nekohtml - doesn't specify a version, but the resolved version is too old and GWT test cases rely on a
-            newer version
-            guice - a non-standard guice dependency is used.  We use the com.google.inject guice dep instead.
-        -->
-        <dependency>
-            <groupId>org.openid4java</groupId>
-            <artifactId>openid4java-consumer</artifactId>
-            <version>0.9.6</version>
-            <type>pom</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.nekohtml</groupId>
-                    <artifactId>nekohtml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.code.guice</groupId>
-                    <artifactId>guice</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
     </dependencies>
 
     <build>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <!-- Generate compiled stuff in the folder used for developing mode -->
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
@@ -353,10 +346,6 @@
                     <webappDirectory>${webappDirectory}</webappDirectory>
                     <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
                     <webResources>
-                        <resource>
-                            <directory>src/main/configuration</directory>
-                            <filtering>true</filtering>
-                        </resource>
                         <resource>
                             <directory>src/main/webapp</directory>
                             <filtering>true</filtering>

@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -15,7 +16,7 @@ import com.gwtext.client.widgets.layout.ColumnLayout;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidget;
@@ -213,7 +214,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
      * Remote calls
      */
 
-    class AddPropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class AddPropertyValueHandler implements AsyncCallback<Void> {
 
         private final EntityData newEntityData;
 
@@ -222,7 +223,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at adding property for " + getProperty().getBrowserText() + " and "
                     + getSubject().getBrowserText(), caught);
             Window.alert("There was an error at adding the property value for " + getSubject().getBrowserText() + ".");
@@ -230,7 +231,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             if (values == null) {
                 values = new ArrayList<EntityData>();
             }
@@ -238,7 +239,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
         }
     }
 
-    class RemovePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class RemovePropertyValueHandler implements AsyncCallback<Void> {
 
         private final EntityData newEntityData;
 
@@ -247,7 +248,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at remove property for " + getProperty().getBrowserText() + " and "
                     + getSubject().getBrowserText(), caught);
             Window.alert("There was an error at removing the property value for " + getSubject().getBrowserText() + ".");
@@ -255,7 +256,7 @@ public class InstanceCheckBoxWidget extends AbstractPropertyWidget {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             if (values != null) {
                 values.remove(newEntityData);
             }

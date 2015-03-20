@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsExceptio
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -14,17 +16,16 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class OWLAPIProjectManager {
 
-    private static OWLAPIProjectManager instance = new OWLAPIProjectManager();
+//    private static OWLAPIProjectManager instance = new OWLAPIProjectManager();
 
     private final OWLAPIProjectCache projectCache;
 
-    private OWLAPIProjectManager() {
-        projectCache = new OWLAPIProjectCache();
+    @Inject
+    public OWLAPIProjectManager(OWLAPIProjectCache projectCache) {
+        this.projectCache = projectCache;
     }
 
-    public static synchronized  OWLAPIProjectManager getProjectManager() {
-        return instance;
-    }
+
     
     public OWLAPIProject getProject(ProjectId projectId) throws ProjectDocumentNotFoundException {
         return projectCache.getProject(projectId);

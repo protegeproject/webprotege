@@ -2,11 +2,12 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
@@ -61,7 +62,7 @@ public class InstanceRadioButtonWidget extends InstanceCheckBoxWidget {
      * Remote calls
      */
 
-    class SetPropertyValuesHandler extends AbstractAsyncHandler<Void> {
+    class SetPropertyValuesHandler implements AsyncCallback<Void> {
 
         private final Collection<EntityData> newValues;
 
@@ -70,7 +71,7 @@ public class InstanceRadioButtonWidget extends InstanceCheckBoxWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at setting property for " + getProperty().getBrowserText() + " and "
                     + getSubject().getBrowserText(), caught);
             Window.alert("There was an error at setting the property value for " + getSubject().getBrowserText() + ".");
@@ -78,7 +79,7 @@ public class InstanceRadioButtonWidget extends InstanceCheckBoxWidget {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             values = newValues;
         }
     }

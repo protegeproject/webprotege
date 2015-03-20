@@ -6,10 +6,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectCommentPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityAction;
 import edu.stanford.bmir.protege.web.shared.notes.AddNoteToEntityResult;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -18,6 +21,11 @@ import edu.stanford.bmir.protege.web.shared.notes.Note;
  * Date: 15/04/2013
  */
 public class AddNoteToEntityActionHandler extends AbstractHasProjectActionHandler<AddNoteToEntityAction, AddNoteToEntityResult> {
+
+    @Inject
+    public AddNoteToEntityActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     protected RequestValidator<AddNoteToEntityAction> getAdditionalRequestValidator(AddNoteToEntityAction action, RequestContext requestContext) {

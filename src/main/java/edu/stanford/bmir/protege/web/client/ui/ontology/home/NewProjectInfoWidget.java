@@ -1,24 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerService;
-import edu.stanford.bmir.protege.web.client.rpc.ProjectManagerServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
-import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDownModel;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -46,21 +34,10 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm implements HasIni
 
     private final TextArea projectDescriptionTextArea;
 
-    private Set<String> projectNameCache = new HashSet<String>();
-
-    private Set<String> ownedProjectNameCache = new HashSet<String>();
-
     public NewProjectInfoWidget() {
-        fillProjectNamesCache();
-
         projectNameTextBox = new TextBox();
         projectNameTextBox.setWidth(FIELD_WIDTH);
         projectNameTextBox.setName(PROJECT_NAME_FIELD_NAME);
-        projectNameTextBox.addKeyUpHandler(new KeyUpHandler() {
-            public void onKeyUp(KeyUpEvent event) {
-                handleCandidateProjectNameChange();
-            }
-        });
         addWidget(PROJECT_NAME_LABEL, projectNameTextBox);
 
 
@@ -71,57 +48,6 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm implements HasIni
         addWidget(PROJECT_DESCRIPTION_LABEL, projectDescriptionTextArea);
 
         addDialogValidator(new EmptyProjectNameValidator());
-        addDialogValidator(new ExistingProjectNameValidator());
-    }
-
-
-    private void fillProjectNamesCache() {
-        getProjectManagerService().getProjectNames(new AsyncCallback<List<String>>() {
-            public void onFailure(Throwable caught) {
-                caught.printStackTrace();
-            }
-
-            public void onSuccess(List<String> result) {
-                projectNameCache.clear();
-                projectNameCache.addAll(result);
-            }
-        });
-        getProjectManagerService().getOwnedProjectNames(new AsyncCallback<List<String>>() {
-            public void onFailure(Throwable caught) {
-                caught.printStackTrace();
-            }
-
-            public void onSuccess(List<String> result) {
-                ownedProjectNameCache.clear();
-                ownedProjectNameCache.addAll(result);
-            }
-        });
-    }
-
-    private void handleCandidateProjectNameChange() {
-        if (isExistingProjectName()) {
-            projectNameTextBox.addStyleName(ERROR_STYLE);
-        }
-        else {
-            projectNameTextBox.removeStyleName(ERROR_STYLE);
-        }
-    }
-
-    private ProjectManagerServiceAsync getProjectManagerService() {
-        return GWT.create(ProjectManagerService.class);
-
-    }
-
-    public boolean isValidProjectName() {
-        return !isExistingProjectName();
-    }
-
-    public boolean isExistingProjectName() {
-        return projectNameCache.contains(getProjectName());
-    }
-
-    public boolean isOwnerOfProjectName() {
-        return ownedProjectNameCache.contains(getProjectName());
     }
 
     public NewProjectInfo getNewProjectInfo() {
@@ -152,17 +78,6 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm implements HasIni
 
         public String getValidationMessage() {
             return "Please specify a project name";
-        }
-    }
-
-    private class ExistingProjectNameValidator implements WebProtegeDialogValidator {
-
-        public ValidationState getValidationState() {
-            return isExistingProjectName() && !isOwnerOfProjectName() ? ValidationState.INVALID : ValidationState.VALID;
-        }
-
-        public String getValidationMessage() {
-            return getValidationState() == ValidationState.INVALID ? "A project named " + getProjectName() + " already exists.  Please enter different name." : "";
         }
     }
 }

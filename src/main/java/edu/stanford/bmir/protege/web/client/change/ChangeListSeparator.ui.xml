@@ -1,0 +1,18 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+
+    <ui:style>
+        .main {
+            padding-top: 10px;
+            padding-bottom: 5px;
+            padding-left: 6px;
+        }
+        .separatorText {
+            font-size: 12px;
+            color: darkgray;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Label ui:field="separatorText" addStyleNames="{style.separatorText}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

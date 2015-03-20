@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 
+import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
+import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.inject.Inject;
 import java.io.File;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -113,7 +116,8 @@ public class OWLAPIProjectFileStore {
      * @param webProtegeDataDirectory The root directory where data will be stored.
      * @param projectId The id of the project
      */
-    private OWLAPIProjectFileStore(File webProtegeDataDirectory, ProjectId projectId) {
+    @Inject
+    public OWLAPIProjectFileStore(@DataDirectory File webProtegeDataDirectory, @Assisted ProjectId projectId) {
         checkNotNull(webProtegeDataDirectory);
         File baseDirectory = new File(webProtegeDataDirectory, BASE_DIRECTORY_NAME);
         File allProjectsDirectory = new File(baseDirectory, ALL_PROJECTS_DIRECTORY_NAME);
@@ -135,12 +139,6 @@ public class OWLAPIProjectFileStore {
         downloadCacheDirectory.mkdirs();
         configurationsDirectory.mkdirs();
     }
-
-    public static OWLAPIProjectFileStore getProjectFileStore(ProjectId projectId) {
-        File dataDirectory = WebProtegeFileStore.getInstance().getDataDirectory();
-        return new OWLAPIProjectFileStore(dataDirectory, projectId);
-    }
-
 
     public File getProjectDirectory() {
         return projectDirectory;

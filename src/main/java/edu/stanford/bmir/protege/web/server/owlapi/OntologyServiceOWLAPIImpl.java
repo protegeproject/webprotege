@@ -5,6 +5,11 @@ import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
+import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
@@ -14,9 +19,6 @@ import org.ncbo.stanford.util.BioPortalServerConstants;
 import org.ncbo.stanford.util.BioPortalUtil;
 import org.ncbo.stanford.util.BioportalConcept;
 import org.ncbo.stanford.util.HTMLUtil;
-import org.protege.editor.owl.model.hierarchy.OWLAnnotationPropertyHierarchyProvider;
-import org.protege.editor.owl.model.hierarchy.OWLDataPropertyHierarchyProvider;
-import org.protege.editor.owl.model.hierarchy.OWLObjectPropertyHierarchyProvider;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
@@ -59,8 +61,10 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         ANNOTATION_PROPERTIES_ROOT.setBrowserText(ANNOTATION_PROPERTIES_ROOT_NAME);
     }
 
+    private OWLAPIProjectManager projectManager;
 
     public OntologyServiceOWLAPIImpl() {
+        projectManager = WebProtegeInjector.get().getInstance(OWLAPIProjectManager.class);
     }
 
 
@@ -100,8 +104,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      * @return The OWL API project. Not <code>null</code>.
      */
     private OWLAPIProject getProject(ProjectId projectId) {
-        OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
-        return pm.getProject(projectId);
+        return projectManager.getProject(projectId);
     }
 
     private RenderingManager getRenderingManager(String projectName) {
@@ -122,8 +125,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
      */
     private OWLOntology getOntology(String projectName) {
         ProjectId projectId = ProjectId.get(projectName);
-        OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
-        return pm.getProject(projectId).getRootOntology();
+        return projectManager.getProject(projectId).getRootOntology();
     }
 
     private String toName(OWLOntologyID id) {
@@ -178,7 +180,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     public Integer loadProject(String projectName) {
         getOntology(projectName);
         OWLAPIProject project = getProject(projectName);
-        return (int) project.getChangeManager().getCurrentRevision().getValueAsInt();
+        return project.getChangeManager().getCurrentRevision().getValueAsInt();
     }
 
 
@@ -278,7 +280,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         for(Triple triple : directValues) {
             EntityData entityData = triple.getValue();
             if(entityData.getValueType() == ValueType.Instance || entityData.getValueType() == ValueType.Cls) {
-                reifiedValues.addAll(getEntityTriples(projectName, Arrays.<String>asList(entityData.getName()), reifiedProps));
+                reifiedValues.addAll(getEntityTriples(projectName, Arrays.asList(entityData.getName()), reifiedProps));
             }
         }
         return reifiedValues;
@@ -292,7 +294,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         for(Triple triple : directValues) {
             EntityData entityData = triple.getValue();
             if(entityData.getValueType() == ValueType.Instance || entityData.getValueType() == ValueType.Cls) {
-                final List<Triple> reifiedTriples = getEntityTriples(projectName, Arrays.<String>asList(entityData.getName()), reifiedProps);
+                final List<Triple> reifiedTriples = getEntityTriples(projectName, Arrays.asList(entityData.getName()), reifiedProps);
                 if (!reifiedTriples.isEmpty()) {
                     EntityPropertyValues reifiedSet = new EntityPropertyValues(entityData);
                     for(Triple reifiedTriple : reifiedTriples) {
@@ -362,24 +364,9 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
     }
 
-    /**
-     * "Creates a class".  The behaviour of this implementation is defined in the {@link CreateClassChangeFactory}.
-     *
-     * @param projectId
-     * @param className
-     * @param superCls
-     * @param userId
-     * @param operationDescription A high level description.  @return EntityData that represents the newly created class.
-     * */
-    public EntityData createCls(ProjectId projectId, String className, OWLClass superCls, UserId userId, String operationDescription) {
-        OWLAPIProject project = getProject(projectId);
-        CreateClassChangeFactory cf = new CreateClassChangeFactory(project, userId, operationDescription, className, superCls);
-        applyChanges(cf);
-        return getRenderingManager(projectId).getEntityData(className, EntityType.CLASS);
-    }
 
     /**
-     * Gets the subclasses of a given entity.  This implementation uses the {@link AssertedClassHierarchyProvider} that
+     * Gets the subclasses of a given entity.  This implementation uses the {@link edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider} that
      * is used in Protege 4 to answer the request.
      * @param projectName The name of the relevant project.
      * @param className The class name which corresponds to an entity for which subclasses will be retrieved.  This

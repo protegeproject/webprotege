@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data;
 
 import com.google.common.base.Objects;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 18/01/2012
  */
-public class NewProjectSettings implements Serializable {
+public class NewProjectSettings implements IsSerializable {
 
     private UserId projectOwner;
 

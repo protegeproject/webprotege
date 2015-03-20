@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.*;
@@ -31,7 +32,7 @@ import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityPropertyValues;
@@ -456,7 +457,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
                 double eventTime = e.getTime();
                 if (eventTime - timeOfLastClick > 500) { //not the second click in a double click
                     onCellClickOrDblClick(grid, rowIndex, colindex, e);
-                };
+                }
 
                 /*
                  * Set new value for timeOfLastClick the time the last click was handled
@@ -1074,7 +1075,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
      * Remote calls
      */
 
-    protected class GetTriplesHandler extends AbstractAsyncHandler<List<EntityPropertyValues>> {
+    protected class GetTriplesHandler implements AsyncCallback<List<EntityPropertyValues>> {
 
         private EntityData mySubject = null;
 
@@ -1083,13 +1084,13 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Instance Grid Widget: Error at getting triples for " + getSubject(), caught);
             updateActionLinks(isReplace());
         }
 
         @Override
-        public void handleSuccess(List<EntityPropertyValues> entityPropertyValues) {
+        public void onSuccess(List<EntityPropertyValues> entityPropertyValues) {
             if (!UIUtil.equals(mySubject, getSubject())) {  return; }
             store.removeAll();
 
@@ -1116,7 +1117,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
     }
 
 
-    class RemovePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class RemovePropertyValueHandler implements AsyncCallback<Void> {
         private int removeInd;
 
         public RemovePropertyValueHandler(int removeIndex) {
@@ -1124,7 +1125,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at removing value for " + getProperty().getBrowserText() + " and "
                     + getSubject().getBrowserText(), caught);
             MessageBox.alert("There was an error at removing the property value for " + getProperty().getBrowserText()
@@ -1133,7 +1134,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             GWT.log("Success at removing value for " + getProperty().getBrowserText() + " and "
                     + getSubject().getBrowserText(), null);
             Record recordToRemove = store.getAt(removeInd);
@@ -1145,13 +1146,13 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
     }
 
 
-    protected class ReplacePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    protected class ReplacePropertyValueHandler implements AsyncCallback<Void> {
 
         public ReplacePropertyValueHandler(EntityData newEntityData) {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at replace property for " + getProperty().getBrowserText() + " and "
                     + getSubject().getBrowserText(), caught);
             MessageBox.alert("There was an error at setting the property value for " + getSubject().getBrowserText() + ".");
@@ -1160,17 +1161,17 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             InstanceGridWidget.this.grid.getStore().commitChanges();
             updateActionLinks(isReplace());
         }
     }
 
 
-    class AddPropertyValueHandler extends AbstractAsyncHandler<EntityData> {
+    class AddPropertyValueHandler implements AsyncCallback<EntityData> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at add property for " + getProperty().getBrowserText() + " and "
                     + getSubject().getBrowserText(), caught);
             MessageBox.alert("There was an error at adding the property value for " + getSubject().getBrowserText() + ".");
@@ -1178,7 +1179,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         }
 
         @Override
-        public void handleSuccess(EntityData newInstance) {
+        public void onSuccess(EntityData newInstance) {
             if (newInstance == null) {
                 GWT.log("Error at add property for " + getProperty().getBrowserText() + " and "  + getSubject().getBrowserText(), null);
                 updateActionLinks(isReplace());
@@ -1204,13 +1205,13 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
     }
 
 
-    protected class AddExistingValueHandler extends AbstractAsyncHandler<Void> {
+    protected class AddExistingValueHandler implements AsyncCallback<Void> {
 
         public AddExistingValueHandler(EntityData newEntityData) {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at adding property for " + getProperty().getBrowserText() + " and "  + getSubject().getBrowserText(), caught);
             MessageBox.alert("There was an error at adding the property value(s) for " + getSubject().getBrowserText() + ".");
             InstanceGridWidget.this.refresh();
@@ -1218,7 +1219,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             InstanceGridWidget.this.refresh();
             updateActionLinks(isReplace());
         }

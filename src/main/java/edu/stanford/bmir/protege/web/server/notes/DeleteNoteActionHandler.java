@@ -6,9 +6,12 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteAction;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteResult;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,6 +20,11 @@ import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteResult;
  * Date: 15/04/2013
  */
 public class DeleteNoteActionHandler extends AbstractHasProjectActionHandler<DeleteNoteAction, DeleteNoteResult> {
+
+    @Inject
+    public DeleteNoteActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     protected RequestValidator<DeleteNoteAction> getAdditionalRequestValidator(DeleteNoteAction action, RequestContext requestContext) {

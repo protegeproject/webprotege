@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.properties;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
@@ -13,9 +14,11 @@ import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.project.Project;
+import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -31,6 +34,8 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedHandler;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.Serializable;
@@ -84,7 +89,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
 
         // Temporary - to be replaced when ontology is loaded.
-        TreeNode root = new TreeNode((String) null);
+        TreeNode root = new TreeNode(null);
         root.setId("RootPropertyNode");
         root.setHref("");
         root.setUserObject(new PropertyEntityData("RootPropertyNode", "RootPropertyNode", null));
@@ -408,14 +413,14 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private <R  extends AbstractCreateEntityInHierarchyResult<E>, E extends OWLEntity> void createSubProperties(AbstractCreateEntityInHierarchyAction<R, E> action) {
-        DispatchServiceManager.get().execute(action, new AsyncCallback<R>() {
+        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<R>() {
             @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("There was a problem creating the properties", caught);
+            protected String getErrorMessage(Throwable throwable) {
+                return "There was a problem creating the properties";
             }
 
             @Override
-            public void onSuccess(R result) {
+            public void handleSuccess(R result) {
                 handleCreateEntitiesResult(result);
             }
         });
@@ -452,7 +457,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 //                }
 //
 //                @Override
-//                public void onSuccess(EntityData result) {
+//                public void handleSuccess(EntityData result) {
 //                    //                        refreshFromServer(500);
 //                    if (lastSelectedTreeNode != null) {
 //                        lastSelectedTreeNode.expand();
@@ -472,7 +477,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 //                }
 //
 //                @Override
-//                public void onSuccess(EntityData result) {
+//                public void handleSuccess(EntityData result) {
 //                    //                        refreshFromServer(500);
 //                    if (lastSelectedTreeNode != null) {
 //                        lastSelectedTreeNode.expand();
@@ -492,7 +497,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 //                }
 //
 //                @Override
-//                public void onSuccess(EntityData result) {
+//                public void handleSuccess(EntityData result) {
 //                    //                        refreshFromServer(500);
 //                    if (lastSelectedTreeNode != null) {
 //                        lastSelectedTreeNode.expand();
@@ -667,7 +672,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     /*
      * Remote procedure calls
      */
-    class GetSubproperties extends AbstractAsyncHandler<List<EntityData>> {
+    class GetSubproperties implements AsyncCallback<List<EntityData>> {
 
         private String propName;
 
@@ -680,12 +685,12 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("RPC error at getting subproperties of " + propName, caught);
         }
 
         @Override
-        public void handleSuccess(List<EntityData> children) {
+        public void onSuccess(List<EntityData> children) {
             if (propName == null) {
                 propName = "RootPropertyNode";
             }
@@ -741,16 +746,16 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class CreatePropertyHandler extends AbstractAsyncHandler<EntityData> {
+    class CreatePropertyHandler implements AsyncCallback<EntityData> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at creating class", caught);
             MessageBox.alert("There were errors at creating the property.<br>" + " Message: " + caught.getMessage());
         }
 
         @Override
-        public void handleSuccess(EntityData entityData) {
+        public void onSuccess(EntityData entityData) {
             if (entityData != null) {
                 GWT.log("Created successfully property " + entityData.getName(), null);
             }
@@ -761,12 +766,11 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    class DeletePropertyHandler extends AbstractAsyncHandler<DeleteEntityResult> {
+    class DeletePropertyHandler extends DispatchServiceCallback<DeleteEntityResult> {
 
         @Override
-        public void handleFailure(Throwable caught) {
-            GWT.log("Error at deleting class", caught);
-            MessageBox.alert("There were errors at deleting property.<br>" + " Message: " + caught.getMessage());
+        protected String getErrorMessage(Throwable throwable) {
+            return "Error deleting property";
         }
 
         @Override
@@ -776,14 +780,14 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private void updateTextAsync(final OWLEntity entity, final TreeNode node) {
-        RenderingServiceManager.getManager().execute(new GetRendering(getProjectId(), entity), new AsyncCallback<GetRenderingResponse>() {
+        RenderingManager.getManager().execute(new GetEntityDataAction(getProjectId(), ImmutableSet.<OWLEntity>of(entity)), new AsyncCallback<GetEntityDataResult>() {
             @Override
             public void onFailure(Throwable caught) {
             }
 
             @Override
-            public void onSuccess(GetRenderingResponse result) {
-                node.setText(result.getEntityData(entity).get().getBrowserText());
+            public void onSuccess(GetEntityDataResult result) {
+                node.setText(result.getEntityDataMap().get(entity).getBrowserText());
             }
         });
     }

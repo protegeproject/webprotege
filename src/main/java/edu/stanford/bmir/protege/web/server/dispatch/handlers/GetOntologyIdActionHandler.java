@@ -8,6 +8,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,6 +19,11 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
  * Date: 05/07/2013
  */
 public class GetOntologyIdActionHandler extends AbstractHasProjectActionHandler<GetOntologyIdAction, GetOntologyIdResult> {
+
+    @Inject
+    public GetOntologyIdActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     protected GetOntologyIdResult execute(GetOntologyIdAction action, OWLAPIProject project, ExecutionContext executionContext) {

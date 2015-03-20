@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.projectsettings;
 
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsAction;
 import edu.stanford.bmir.protege.web.shared.projectsettings.GetProjectSettingsResult;
@@ -35,7 +37,7 @@ public class GetProjectSettingsActionHandler_TestCase {
     private ProjectSettings projectSettings;
 
     @Mock
-    private ProjectSettingsManager mdm;
+    private ProjectDetailsManager mdm;
 
     @Mock
     private GetProjectSettingsAction action;
@@ -46,9 +48,12 @@ public class GetProjectSettingsActionHandler_TestCase {
     @Mock
     private ExecutionContext executionContext;
 
+    @Mock
+    private OWLAPIProjectManager projectManager;
+
     @Before
     public void setUp() throws Exception {
-        actionHandler = new GetProjectSettingsActionHandler(mdm);
+        actionHandler = new GetProjectSettingsActionHandler(projectManager, mdm);
 
         when(action.getProjectId()).thenReturn(projectId);
         when(mdm.getProjectSettings(projectId)).thenReturn(projectSettings);

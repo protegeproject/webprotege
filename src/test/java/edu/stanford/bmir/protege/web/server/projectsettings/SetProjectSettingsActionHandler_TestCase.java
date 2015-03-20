@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.projectsettings;
 
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.SetProjectSettingsAction;
@@ -22,7 +24,7 @@ import static org.mockito.Mockito.*;
 public class SetProjectSettingsActionHandler_TestCase {
 
     @Mock
-    private ProjectSettingsManager psm;
+    private ProjectDetailsManager psm;
 
     @Mock
     private SetProjectSettingsAction action;
@@ -38,13 +40,16 @@ public class SetProjectSettingsActionHandler_TestCase {
 
     private SetProjectSettingsActionHandler handler;
 
+    @Mock
+    private OWLAPIProjectManager projectManager;
+
     @Before
     public void setUp() throws Exception {
         when(psm.getProjectSettings(projectId)).thenReturn(projectSettings);
         when(projectSettings.getProjectId()).thenReturn(projectId);
         when(action.getProjectId()).thenReturn(projectId);
         when(action.getProjectSettings()).thenReturn(projectSettings);
-        handler = new SetProjectSettingsActionHandler(psm);
+        handler = new SetProjectSettingsActionHandler(psm, projectManager);
     }
 
     @Test

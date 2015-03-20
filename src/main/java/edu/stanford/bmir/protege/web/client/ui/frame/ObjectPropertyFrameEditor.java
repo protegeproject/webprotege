@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
@@ -10,16 +11,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
-import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
-import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
+import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
@@ -30,8 +28,11 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import java.util.*;
@@ -163,12 +164,12 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         annotations.setValue(new PropertyValueList(Collections.<PropertyValue>unmodifiableSet(frame.getAnnotationPropertyValues())));
         characteristics.clear();
         characteristics.addAll(object.getFrame().getCharacteristics());
-        RenderingServiceManager.getManager().execute(new GetRendering(projectId, frame.getDomains()), new AbstractWebProtegeAsyncCallback<GetRenderingResponse>() {
+        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getDomains())), new AbstractWebProtegeAsyncCallback<GetEntityDataResult>() {
             @Override
-            public void onSuccess(GetRenderingResponse result) {
+            public void onSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
                 for (OWLClass cls : frame.getDomains()) {
-                    final Optional<OWLEntityData> entityData = result.getEntityData(cls);
+                    final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));
                     if (entityData.isPresent()) {
                         primitiveDatas.add(entityData.get());
                     }
@@ -176,12 +177,12 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
                 domains.setValue(primitiveDatas);
             }
         });
-        RenderingServiceManager.getManager().execute(new GetRendering(projectId, frame.getRanges()), new AbstractWebProtegeAsyncCallback<GetRenderingResponse>() {
+        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new AbstractWebProtegeAsyncCallback<GetEntityDataResult>() {
             @Override
-            public void onSuccess(GetRenderingResponse result) {
+            public void onSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
                 for (OWLClass cls : frame.getRanges()) {
-                    final Optional<OWLEntityData> entityData = result.getEntityData(cls);
+                    final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));
                     if (entityData.isPresent()) {
                         primitiveDatas.add(entityData.get());
                     }

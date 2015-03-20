@@ -647,7 +647,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
                 }
             }
         });
-        setIconInsetStyleName(Optional.<String>of(styleName));
+        setIconInsetStyleName(Optional.of(styleName));
     }
 
     /**

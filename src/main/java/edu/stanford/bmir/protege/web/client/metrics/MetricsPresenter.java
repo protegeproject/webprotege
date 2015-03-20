@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.client.metrics;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.RequestRefreshEvent;
 import edu.stanford.bmir.protege.web.client.events.RequestRefreshEventHandler;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsResult;
@@ -59,9 +59,9 @@ public class MetricsPresenter {
     }
 
     private void processRequestRefresh() {
-        dispatchServiceManager.execute(new GetMetricsAction(projectId), new AbstractWebProtegeAsyncCallback<GetMetricsResult>() {
+        dispatchServiceManager.execute(new GetMetricsAction(projectId), new DispatchServiceCallback<GetMetricsResult>() {
             @Override
-            public void onSuccess(GetMetricsResult result) {
+            public void handleSuccess(GetMetricsResult result) {
                 view.setMetrics(result.getMetricValues());
             }
         });

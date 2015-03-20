@@ -1,26 +1,20 @@
 package edu.stanford.bmir.protege.web.client;
 
-import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.*;
-import com.google.gwt.i18n.client.Dictionary;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtext.client.widgets.MessageBox;
-import edu.stanford.bmir.protege.web.client.app.ClientObjectDecoder;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.rpc.AdminServiceManager;
-import edu.stanford.bmir.protege.web.client.ui.login.constants.AuthenticationConstants;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
+import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
+import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -93,29 +87,25 @@ public class LoggedInUserManager {
         if(userId.isGuest()) {
             return;
         }
-        AdminServiceManager.getInstance().logout(new AsyncCallback<Void>() {
-            public void onFailure(Throwable caught) {
-                MessageBox.alert(AuthenticationConstants.ASYNCHRONOUS_CALL_FAILURE_MESSAGE);
-            }
-
-            public void onSuccess(Void result) {
+        DispatchServiceManager.get().execute(new LogOutUserAction(), new DispatchServiceCallback<LogOutUserResult>() {
+            @Override
+            public void handleSuccess(LogOutUserResult logOutUserResult) {
                 replaceUserAndBroadcastChanges(UserDetails.getGuestUserDetails(), Collections.<GroupId>emptySet());
             }
         });
     }
 
     private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new AsyncCallback<GetCurrentUserInSessionResult>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                    GWT.log("Problem getting user details for user " + userId, caught);
-                    if(callback.isPresent()) {
-                        callback.get().onFailure(caught);
-                    }
+        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>() {
+            @Override
+            public void handleExecutionException(Throwable cause) {
+                if(callback.isPresent()) {
+                    callback.get().onFailure(cause);
                 }
+            }
 
-                @Override
-                public void onSuccess(GetCurrentUserInSessionResult result) {
+            @Override
+                public void handleSuccess(GetCurrentUserInSessionResult result) {
                     replaceUserAndBroadcastChanges(result.getUserDetails(), result.getUserGroupIds());
                     if(callback.isPresent()) {
                         callback.get().onSuccess(result.getUserDetails());

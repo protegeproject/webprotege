@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -35,7 +36,7 @@ public class GetAvailableProjectsHandler implements ActionHandler<GetAvailablePr
     @Override
     public GetAvailableProjectsResult execute(GetAvailableProjectsAction action, ExecutionContext executionContext) {
         UserId userId = executionContext.getUserId();
-        MetaProjectManager mpm = MetaProjectManager.getManager();
+        ProjectPermissionsManager mpm = MetaProjectManager.getManager();
         List<ProjectDetails> details = mpm.getListableReadableProjects(userId);
         Collections.sort(details);
         return new GetAvailableProjectsResult(details);

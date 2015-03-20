@@ -1,0 +1,108 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:diff="urn:import:edu.stanford.bmir.protege.web.client.diff"
+             xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel">
+
+    <ui:style>
+        .main {
+            padding: 2px;
+            margin-left: 10px;
+            padding-left: 20px;
+            padding-bottom: 10px;
+            border-left: 1px solid #ededed;
+        }
+
+        .subjectsField {
+            font-size: 12px;
+            color: darkgray;
+            padding-bottom: 2px;
+            padding-left: 20px;
+        }
+
+        .revisionField {
+            font-size: 10px;
+            color: #ffffff;
+            background-color: #cbcbcb;
+            float: right;
+            padding: 1px;
+            margin-right: 5px;
+            font-weight: bold;
+            border-radius: 2px;
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+
+        .revertButton {
+            border: none;
+            background: none;
+            color: #c0c0c0;
+            border-radius: 3px;
+            padding: 4px;
+            padding-top: 1px;
+            padding-bottom: 2px;
+            cursor: pointer;
+            line-height: 10px;
+        }
+
+        .revertButton:hover {
+            background: #a0a0a0;
+            color: #ffffff;
+        }
+
+        .revertButtonContent {
+            font-size: 24px;
+            bottom: -5px;
+        }
+
+        .highLevelDescription {
+            font-size: 12px;
+            font-weight: bold;
+            color: gray;
+        }
+
+        .author {
+            font-size: 12px;
+            color: darkgray;
+            padding-top: 2px;
+            padding-left: 1px;
+            padding-bottom: 3px;
+        }
+
+        .diffView {
+            padding: 2px;
+            padding-left: 10px;
+        }
+
+        .timestampField {
+            display: inline;
+        }
+        .tooManyChangesMessage {
+            font-size: 12px;
+            color: darkgray;
+            background-color : rgb(255, 250, 230);
+            padding: 4px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <div>
+            <div>
+                <g:InlineLabel ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
+                <g:InlineLabel ui:field="revisionField" addStyleNames="{style.revisionField}"/>
+            </div>
+
+        </div>
+        <div class="{style.author}">
+            <g:InlineLabel ui:field="authorField"/> authored <g:InlineLabel ui:field="changeCountField"/> changes <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
+            <g:Button ui:field="revertButton" title="Revert changes in this revision" addStyleNames="{style.revertButton}">
+                <span class="glyphicon glyphicon-backward"/>
+            </g:Button>
+        </div>
+        <div class="{style.subjectsField}">
+            <g:InlineHTML ui:field="subjectsField"/>
+        </div>
+
+        <diff:DiffViewImpl ui:field="diffView" addStyleNames="{style.diffView}"/>
+        <g:Label text="There are too many changes to show here.  If you would like to view them, please download this revision." ui:field="tooManyChangesMessage" addStyleNames="{style.tooManyChangesMessage}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

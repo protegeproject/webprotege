@@ -6,12 +6,12 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.gwtext.client.widgets.Component;
-import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.place.PlaceManager;
@@ -21,10 +21,9 @@ import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedHandler;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.MyWebProtegeTab;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
-import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
@@ -222,11 +221,34 @@ public class ProjectDisplayContainerPanel extends TabPanel {
                 ProjectDisplayImpl ontTab = projectId2ProjectPanelMap.get(projectId);
                 if (ontTab != null) {
                     activate(ontTab.getId());
-                    return;
                 }
                 else {
-                    UIUtil.showLoadProgessBar("Loading project", "Please wait");
-                    Application.get().loadProject(projectId, new LoadProjectHandler(projectId));
+                    Application.get().loadProject(projectId, new DispatchServiceCallbackWithProgressDisplay<Project>() {
+                        @Override
+                        public String getProgressDisplayTitle() {
+                            return "Loading project";
+                        }
+
+                        @Override
+                        public String getProgressDisplayMessage() {
+                            return "Please wait.";
+                        }
+
+                        @Override
+                        public void handleSuccess(Project project) {
+                            addProjectDisplay(projectId);
+                        }
+
+                        @Override
+                        protected String getErrorMessageTitle() {
+                            return "Error";
+                        }
+
+                        @Override
+                        protected String getErrorMessage(Throwable throwable) {
+                            return "There was an error whilst loading the project.  Please try again.";
+                        }
+                    });
                 }
             }
         });
@@ -270,33 +292,4 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             }
         });
     }
-
-
-
-
-    private class LoadProjectHandler extends AbstractAsyncHandler<Project> {
-
-        private final ProjectId projectId;
-
-        LoadProjectHandler(ProjectId projectId) {
-            this.projectId = projectId;
-        }
-
-        @Override
-        public void handleFailure(Throwable caught) {
-            GWT.log("There were errors while loading project " + projectId, caught);
-            UIUtil.hideLoadProgessBar();
-            MessageBox.alert("Load project " + projectId + " failed.<br>" + " Message: " + caught.getMessage());
-        }
-
-        @Override
-        public void handleSuccess(Project project) {
-            UIUtil.hideLoadProgessBar();
-            addProjectDisplay(projectId);
-
-        }
-    }
-
-
-
 }

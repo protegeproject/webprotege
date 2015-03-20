@@ -1,154 +1,89 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.gwtext.client.widgets.Panel;
-import com.gwtext.client.widgets.form.Label;
-import com.gwtext.client.widgets.layout.AnchorLayout;
-import com.gwtext.client.widgets.layout.AnchorLayoutData;
-import com.gwtext.client.widgets.layout.FitLayout;
+import com.google.common.base.Optional;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.gwtext.client.core.EventObject;
+import com.gwtext.client.widgets.Button;
+import com.gwtext.client.widgets.Tool;
+import com.gwtext.client.widgets.ToolbarButton;
+import com.gwtext.client.widgets.event.ButtonListenerAdapter;
+import edu.stanford.bmir.protege.web.client.change.ChangeListView;
+import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
+import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
-import edu.stanford.bmir.protege.web.client.rpc.ChAOServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
+import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 
-import java.util.Collection;
-import java.util.Date;
-
-/**
- * @author Jennifer Vendetti <vendetti@stanford.edu>
- */
 public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
 
-    private ChangesGrid grid;
-
-    private Label lblToday;
-
-    private Label lblYesterday;
+    public static final String REFRESH_TO_SEE_THE_LATEST_CHANGES = "Click to see the latest changes";
+    public static final String LATEST_CHANGES_VISIBLE = "Latest changes displayed";
+    private ToolbarButton refreshButton;
 
     public ChangeSummaryPortlet(Project project) {
         super(project);
     }
 
+    private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
+
+    private ChangeListView changeListView;
+
     @Override
     public void initialize() {
-        setLayout(new FitLayout());
-        setBorder(true);
-        setPaddings(15);
+        setHeight(200);
+        changeListView = new ChangeListViewImpl();
+        refreshButton = new ToolbarButton(REFRESH_TO_SEE_THE_LATEST_CHANGES);
+        refreshButton.addListener(new ButtonListenerAdapter() {
+            @Override
+            public void onClick(Button button, EventObject e) {
+                onRefresh();
+            }
+        });
+        setTopToolbar(refreshButton);
 
-        setTitle("Change Summary for " + getProject().getDisplayName());
+        ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
+        scrollPanel.setWidth("100%");
+        scrollPanel.setHeight("100%");
+        add(scrollPanel);
+        addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
+            @Override
+            public void handleProjectChanged(ProjectChangedEvent event) {
+                ChangeSummaryPortlet.this.handleProjectChanged(event);
+            }
+        });
+        addApplicationEventHandler(PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
+            @Override
+            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
+                onRefresh();
+            }
+        });
+        onRefresh();
+    }
 
-        Panel main = new Panel();
-        main.setLayout(new AnchorLayout());
-
-        main.add(new HTML("<b>Recent Activity</b>"));
-
-        // Number of changes for today
-        FlowPanel today = new FlowPanel();
-        today.add(new Label("Today: "));
-        lblToday = new Label(" (refresh the widget to get the count)");
-        today.add(lblToday);
-        main.add(today);
-
-        // Number of changes for yesterday
-        FlowPanel yesterday = new FlowPanel();
-        yesterday.add(new Label("Yesterday: "));
-        lblYesterday = new Label(" (refresh the widget to get the count)");
-        yesterday.add(lblYesterday);
-        main.add(yesterday);
-
-        main.add(new HTML("<br /><br />"));
-
-        // Change history grid
-        grid = new ChangesGrid(getProjectId());
-
-        /*
-           * Didn't have time to investigate this much, but it was hard to get the
-           * grid to have good layout. When the grid is in an AnchorLayout, it
-           * seems that calls to setSize are ignored. Also, if you enter 100% for
-           * the height in the AnchorLayoutData, the grid draws outside the bottom
-           * of the containing portlet. I could only get this to work by
-           * specifying a negative pixel value for the height.
-           */
-        main.add(grid, new AnchorLayoutData("100% -75"));
-        add(main);
+    private void handleProjectChanged(ProjectChangedEvent event) {
+        if (lastRevisionNumber.equals(event.getRevisionNumber())) {
+            return;
+        }
+        refreshButton.setDisabled(false);
+        refreshButton.setText("Current revision is " + event.getRevisionNumber().getValue() + ". " + REFRESH_TO_SEE_THE_LATEST_CHANGES);
+        lastRevisionNumber = event.getRevisionNumber();
     }
 
     @Override
     protected void onRefresh() {
-        refreshContent();
-    }
-
-    @SuppressWarnings("deprecation")
-    protected void refreshContent() {
-
-        /*
-           * Tried using the non-deprecated methods here (i.e., from Calendar),
-           * but this results in GWT error: "No source code is available for type
-           * java.util.Calendar; did you forget to inherit a required module?".
-           * Apparently, the Calendar class is not in the GWT 1.5 JRE emulation
-           * library and can't be used on the client-side. Check available classes
-           * for client-side code here: http://tinyurl.com/bwrden.
-           */
-
-        Date start = new Date();
-        start.setHours(0);
-        start.setMinutes(0);
-        start.setSeconds(0);
-
-        Date end = new Date();
-        end.setDate(end.getDate() + 1);
-        end.setHours(0);
-        end.setMinutes(0);
-        end.setSeconds(0);
-
-        ChAOServiceManager.getInstance().getNumChanges(getProjectId(), start, end, new GetNumChangesHandler(0));
-
-        start.setDate(start.getDate() - 1);
-        end.setDate(end.getDate() - 1);
-
-        ChAOServiceManager.getInstance().getNumChanges(getProjectId(), start, end, new GetNumChangesHandler(-1));
-
-        grid.reload();
-    }
-
-
-    /*
-      * Remote calls
-      */
-
-    class GetNumChangesHandler extends AbstractAsyncHandler<Integer> {
-
-        private int labelType; // 0 - today, -1 - yesterday
-
-        public GetNumChangesHandler(int labelType) {
-            this.labelType = labelType;
-        }
-
-        @Override
-        public void handleFailure(Throwable caught) {
-            GWT.log("RPC error getting number of changes for the " + getProject().getProjectId() + "ontology", caught);
-        }
-
-        @Override
-        public void handleSuccess(Integer numChanges) {
-            if (numChanges == null || numChanges.equals(0)) {
-                setLabelText("no changes detected");
-            }
-            else {
-                setLabelText(numChanges.toString());
-            }
-        }
-
-        private void setLabelText(String text) {
-            if (labelType == 0) { // today
-                lblToday.setText(text);
-            }
-            else if (labelType == -1) { // yesterday
-                lblYesterday.setText(text);
-            }
-        }
+        ProjectId projectId = getProjectId();
+        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, DispatchServiceManager.get(), hasWritePermission());
+        presenter.setChangesForProject(projectId);
+        setTitle("Changes for project");
+        refreshButton.setDisabled(true);
+        refreshButton.setText(LATEST_CHANGES_VISIBLE);
     }
 }

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.project.Project;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -36,12 +37,9 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void displayEntity(OWLEntity entity) {
-        getService().getSynonyms(getProjectId(), entity, new AsyncCallback<Collection<OBOTermSynonym>>() {
-            public void onFailure(Throwable caught) {
-            }
-
+        getService().getSynonyms(getProjectId(), entity, new AbstractWebProtegeAsyncCallback<Collection<OBOTermSynonym>>() {
             public void onSuccess(Collection<OBOTermSynonym> result) {
-                editor.setValue(new ArrayList<OBOTermSynonym>(result));
+                editor.setValue(new ArrayList<>(result));
             }
         });
     }

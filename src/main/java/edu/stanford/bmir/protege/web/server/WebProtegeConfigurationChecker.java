@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.server;
 
-import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.init.*;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,24 +14,14 @@ import java.util.List;
  */
 public class WebProtegeConfigurationChecker {
 
-    /**
-     * A list of initialization tasks.  Ordering should be unimportant.
-     */
-    private List<ConfigurationTask> configurationTasks = Arrays.asList(
-            new CheckWebProtegeDataDirectoryExists(),
-            new CheckDataDirectoryIsReadableAndWritable(),
-            new CheckMetaProjectExists(),
-            new CheckUIConfigurationDataExists(),
-            new CheckMongoDBConnectionTask()
-    );
+    private final Set<ConfigurationTask> configurationTasks;
+
+    @Inject
+    public WebProtegeConfigurationChecker(Set<ConfigurationTask> configurationTasks) {
+        this.configurationTasks = configurationTasks;
+    }
 
     public boolean performConfiguration(ServletContext servletContext) throws WebProtegeConfigurationException {
-
-        LoadWebProtegeProperties loadWebProtegeProperties = new LoadWebProtegeProperties();
-        loadWebProtegeProperties.run(servletContext);
-
-        LoadMailProperties loadMailProperties = new LoadMailProperties();
-        loadMailProperties.run(servletContext);
 
         for(ConfigurationTask task : configurationTasks) {
             task.run(servletContext);

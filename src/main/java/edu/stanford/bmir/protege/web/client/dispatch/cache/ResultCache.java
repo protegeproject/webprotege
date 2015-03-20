@@ -68,7 +68,7 @@ public class ResultCache {
         if(result != null) {
             GWT.log("[Result Cache] Found cached result for " + action + "  --> " + result);
         }
-        return Optional.<R>fromNullable((R) result);
+        return Optional.fromNullable((R) result);
     }
 
     @SuppressWarnings("unchecked")

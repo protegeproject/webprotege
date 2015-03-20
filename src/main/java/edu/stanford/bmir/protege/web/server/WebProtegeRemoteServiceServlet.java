@@ -3,34 +3,17 @@ package edu.stanford.bmir.protege.web.server;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
-import com.google.gwt.user.server.rpc.SerializationPolicyLoader;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
+import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.server.metaproject.Group;
-import edu.stanford.smi.protege.server.metaproject.MetaProject;
-import edu.stanford.smi.protege.server.metaproject.ProjectInstance;
-import edu.stanford.smi.protege.server.metaproject.User;
 
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.text.ParseException;
-import java.util.Enumeration;
-import java.util.regex.Pattern;
 
 /**
  * Author: Matthew Horridge<br>
@@ -44,7 +27,11 @@ import java.util.regex.Pattern;
  */
 public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServlet {
 
-    public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(RemoteServiceServlet.class);
+    public final WebProtegeLogger logger;
+
+    public WebProtegeRemoteServiceServlet() {
+        logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+    }
 
     protected MetaProjectManager getMetaProjectManager() {
         return MetaProjectManager.getManager();
@@ -53,13 +40,13 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     /**
      * Gets the userId for the client associated with the current thread local request.
      *
-     * @return The UserId.  Not null (if no user is logged in then the value specified by {@link edu.stanford.bmir.protege.web.shared.user.UserId#getNull()}
+     * @return The UserId.  Not null (if no user is logged in then the value specified by {@link edu.stanford.bmir.protege.web.shared.user.UserId#getGuest()} ()}
      *         will be returned.
      */
     public UserId getUserInSession() {
         HttpServletRequest request = getThreadLocalRequest();
         final HttpSession session = request.getSession();
-        return SessionConstants.getUserId(session);
+        return new WebProtegeSessionImpl(session).getUserInSession();
     }
 
     /**
@@ -96,17 +83,8 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
      */
     protected boolean isSignedInUserProjectOwner(ProjectId projectId) {
         UserId userId = getUserInSession();
-        if (userId.isGuest()) {
-            return false;
-        }
-        MetaProjectManager mpm = getMetaProjectManager();
-        MetaProject metaProject = mpm.getMetaProject();
-        ProjectInstance project = metaProject.getProject(projectId.getId());
-        if (project == null) {
-            return false;
-        }
-        User owner = project.getOwner();
-        return owner != null && userId.getUserName().equals(owner.getName());
+        ProjectDetailsManager mpm = getMetaProjectManager();
+        return mpm.isProjectOwner(userId, projectId);
     }
 
     /**
@@ -117,21 +95,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
      */
     protected boolean isSignedInUserAdmin() {
         UserId userId = getUserInSession();
-        if (userId.isGuest()) {
-            return false;
-        }
-        MetaProjectManager mpm = getMetaProjectManager();
-        MetaProject metaProject = mpm.getMetaProject();
-        User user = metaProject.getUser(userId.getUserName());
-        if (user == null) {
-            return false;
-        }
-        for (Group group : user.getGroups()) {
-            if (OntologyShareAccessConstants.ADMIN_GROUP.equals(group.getName())) {
-                return true;
-            }
-        }
-        return false;
+        return getMetaProjectManager().isUserAdmin(userId);
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,7 +118,7 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
     @Override
     protected void doUnexpectedFailure(Throwable e) {
         HttpServletRequest request = getThreadLocalRequest();
-        LOGGER.severe(e, getUserInSession(), request);
+        logger.severe(e, getUserInSession(), request);
         super.doUnexpectedFailure(e);
     }
 

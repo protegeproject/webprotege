@@ -1,12 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -80,7 +80,7 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
      * Remote calls
      */
 
-    class GetTriplesHandler extends AbstractAsyncHandler<List<Triple>> {
+    class GetTriplesHandler implements AsyncCallback<List<Triple>> {
 
         private EntityData mySubject;
 
@@ -89,12 +89,12 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Instance Text Field Widget: Error at getting triples for " + mySubject, caught);
         }
 
         @Override
-        public void handleSuccess(List<Triple> triples) {
+        public void onSuccess(List<Triple> triples) {
             valuesToDisplayValuesMap.clear();
             Set<EntityData> subjects = null;
             if (triples != null) {
@@ -186,10 +186,10 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             if (subject.equals(getSubject())) {
                 valuesToDisplayValuesMap.remove(oldEntityData);
-                super.handleSuccess(result);
+                super.onSuccess(result);
             }
         }
 
@@ -206,7 +206,7 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             GWT.log("Success at setting value for " + getProperty().getBrowserText() + " and "
                     + subject.getBrowserText() + " (" + changeSubject.getBrowserText() + ")", null);
             if (subject.equals(getSubject())) {
@@ -216,7 +216,7 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
         }
     }
 
-    class AddInstanceValueWithPropertyValueHandler extends AbstractAsyncHandler<EntityData> {
+    class AddInstanceValueWithPropertyValueHandler implements AsyncCallback<EntityData> {
 
         protected EntityData subject;
         protected EntityData newEntityData;
@@ -230,7 +230,7 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at adding instance property for " + getProperty().getBrowserText() + " and "
                     + subject.getBrowserText(), caught);
             MessageBox.alert("There was an error at adding the instance property value for " + subject.getBrowserText()
@@ -238,7 +238,7 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
         }
 
         @Override
-        public void handleSuccess(EntityData newInstanceEntityData) {
+        public void onSuccess(EntityData newInstanceEntityData) {
             if (newInstanceEntityData == null) {
                 GWT.log("Success at adding instance property for " + getProperty().getBrowserText() + " and "
                         + subject.getBrowserText(), null);

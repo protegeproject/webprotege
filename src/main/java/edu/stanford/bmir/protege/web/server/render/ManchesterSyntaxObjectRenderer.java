@@ -2,11 +2,13 @@ package edu.stanford.bmir.protege.web.server.render;
 
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
+import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import org.semanticweb.owlapi.util.SimpleIRIShortFormProvider;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -18,7 +20,7 @@ import static org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 11/07/2013
  */
-public class ManchesterSyntaxObjectRenderer {
+public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
 
     private ShortFormProvider shortFormProvider;
 
@@ -32,6 +34,7 @@ public class ManchesterSyntaxObjectRenderer {
 
     private LiteralRenderer literalRenderer;
 
+    @Inject
     public ManchesterSyntaxObjectRenderer(ShortFormProvider shortFormProvider,
                                           EntityIRIChecker entityIRIChecker,
                                           LiteralStyle literalStyle,
@@ -45,30 +48,23 @@ public class ManchesterSyntaxObjectRenderer {
 
     }
 
-    public String render(OWLObject object, HighlightChecker highlightChecker, DeprecatedChecker checker) {
+    @Override
+    public void setShortFormProvider(ShortFormProvider shortFormProvider) {
+        throw new RuntimeException("Unsupported Operation");
+    }
+
+    @Override
+    public String render(OWLObject object) {
+        return render(object, NullHighlightedEntityChecker.get(), NullDeprecatedEntityChecker.get());
+    }
+
+    public String render(OWLObject object, HighlightedEntityChecker highlightChecker, DeprecatedEntityChecker checker) {
         StringBuilder sb = new StringBuilder();
         EntityRenderer entityRenderer = new EntityRenderer(sb, shortFormProvider, entityIRIChecker, highlightChecker, checker, literalStyle, literalRenderer,  prettyPrintOverride, linkRenderer);
         object.accept(entityRenderer);
         return sb.toString();
     }
 
-
-    public static interface EntityIRIChecker {
-
-        boolean isEntityIRI(IRI iri);
-
-        Collection<OWLEntity> getEntitiesWithIRI(IRI iri);
-    }
-
-    public static interface HighlightChecker {
-
-        boolean isHighlighted(OWLEntity entity);
-    }
-
-    public static interface DeprecatedChecker {
-
-        boolean isDeprecated(OWLEntity entity);
-    }
 
     private static class EntityRenderer implements OWLObjectVisitor {
 
@@ -80,9 +76,9 @@ public class ManchesterSyntaxObjectRenderer {
 
         private EntityIRIChecker entityIRIChecker;
 
-        private HighlightChecker highlightChecker;
+        private HighlightedEntityChecker highlightChecker;
 
-        private DeprecatedChecker deprecatedChecker;
+        private DeprecatedEntityChecker deprecatedChecker;
 
         private LiteralStyle literalStyle;
 
@@ -97,8 +93,8 @@ public class ManchesterSyntaxObjectRenderer {
         private EntityRenderer(StringBuilder stringBuilder,
                                ShortFormProvider sfp,
                                EntityIRIChecker entityIRIChecker,
-                               HighlightChecker highlightChecker,
-                               DeprecatedChecker deprecatedChecker,
+                               HighlightedEntityChecker highlightChecker,
+                               DeprecatedEntityChecker deprecatedChecker,
                                LiteralStyle literalStyle,
                                LiteralRenderer literalRenderer,
                                PrettyPrint prettyPrintOverride,
@@ -333,7 +329,7 @@ public class ManchesterSyntaxObjectRenderer {
 
         @Override
         public void visit(OWLDeclarationAxiom axiom) {
-            stringBuilder.append("<span style=\"section-kw\">");
+            stringBuilder.append("<span class=\"section-kw\">");
             stringBuilder.append(axiom.getEntity().getEntityType().getName());
             stringBuilder.append(": ");
             stringBuilder.append("</span>");

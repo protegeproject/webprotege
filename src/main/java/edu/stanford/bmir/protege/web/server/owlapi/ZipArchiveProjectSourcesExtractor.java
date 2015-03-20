@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.server.util.OntologyDocumentFileFilter;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.ZipFileExtractor;
@@ -14,6 +13,7 @@ import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
 import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
 import org.semanticweb.owlapi.util.AutoIRIMapper;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -31,8 +31,7 @@ public class ZipArchiveProjectSourcesExtractor implements RawProjectSourcesExtra
 
     private RootOntologyDocumentFileMatcher rootOntologyDocumentFileMatcher;
 
-    private static WebProtegeLogger logger = WebProtegeLoggerManager.get(ZipArchiveProjectSourcesExtractor.class);
-
+    @Inject
     public ZipArchiveProjectSourcesExtractor(TempFileFactory tempFileFactory, RootOntologyDocumentFileMatcher rootOntologyDocumentFileMatcher) {
         this.tempFileFactory = tempFileFactory;
         this.rootOntologyDocumentFileMatcher = rootOntologyDocumentFileMatcher;

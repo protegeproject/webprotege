@@ -61,7 +61,7 @@ public class UserInSessionEncoder_TestCase {
         when(userDetails.getUserId()).thenReturn(userId);
         when(userId.getUserName()).thenReturn("JohnSmith");
         when(userDetails.getDisplayName()).thenReturn("John Smith");
-        when(userDetails.getEmailAddress()).thenReturn(Optional.<String>of("john.smith@gmail.com"));
+        when(userDetails.getEmailAddress()).thenReturn(Optional.of("john.smith@gmail.com"));
         when(userInSession.getGroups()).thenReturn(groups);
     }
 

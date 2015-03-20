@@ -3,19 +3,20 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ClientObjectWriter" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.ClientApplicationPropertiesEncoder" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserId" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.SessionConstants" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.UserInSessionEncoder" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserDetails" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.permissions.GroupId" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="java.util.HashSet" %>
 <%@ page import="edu.stanford.smi.protege.server.metaproject.MetaProject" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.MetaProjectManager" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager" %>
 <%@ page import="edu.stanford.smi.protege.server.metaproject.User" %>
 <%@ page import="edu.stanford.smi.protege.server.metaproject.Group" %>
 <%@ page import="com.google.common.base.Optional" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.app.UserInSession" %>
 <%@ page import="com.google.common.collect.ImmutableList" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector" %>
+<%@ page import="java.io.IOException" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -27,12 +28,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="Content-Language" content="en-us">
 
-    <title><%writeApplicationName();%></title>
+    <title><%writeApplicationName(out);%></title>
 
     <link rel="stylesheet" href="js/ext/resources/css/ext-all.css" type="text/css">
 
     <link rel="stylesheet" href="css/WebProtege.css" type="text/css">
-
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
 
     <script>
         <%
@@ -65,19 +66,22 @@
 </html>
 
 <%!
-    private void writeApplicationName() {
-        WebProtegeProperties.get().getApplicationName();
+    private void writeApplicationName(JspWriter out) throws IOException {
+        WebProtegeProperties webProtegeProperties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
+        out.print(webProtegeProperties.getApplicationName());
     }
 
-    private void writeClientApplicationProperties(JspWriter out) {
-        ClientApplicationProperties props = WebProtegeProperties.get().getClientApplicationProperties();
+    private void writeClientApplicationProperties(JspWriter out) throws IOException {
+        WebProtegeProperties webProtegeProperties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
+        ClientApplicationProperties props = webProtegeProperties.getClientApplicationProperties();
         ClientObjectWriter.get(
                 "clientApplicationProperties",
                 new ClientApplicationPropertiesEncoder()).writeVariableDeclaration(props, out);
     }
 
     private void writeUserInSession(HttpSession session, JspWriter out) {
-        UserId userId = SessionConstants.getUserId(session);
+        WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
+        UserId userId = webProtegeSession.getUserInSession();
         final UserInSession userInSession;
         final ImmutableList.Builder<GroupId> builder = ImmutableList.builder();
         if(userId.isGuest()) {

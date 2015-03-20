@@ -2,8 +2,8 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorHandler;
@@ -48,14 +48,9 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
 
     private void doReply(NoteContent content) {
         ProjectId projectId = Application.get().getActiveProject().get();
-        DispatchServiceManager.get().execute(new AddReplyToNoteAction(projectId, noteId, content), new AsyncCallback<AddReplyToNoteResult>() {
+        DispatchServiceManager.get().execute(new AddReplyToNoteAction(projectId, noteId, content), new DispatchServiceCallback<AddReplyToNoteResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("Reply failed", caught);
-            }
-
-            @Override
-            public void onSuccess(AddReplyToNoteResult result) {
+            public void handleSuccess(AddReplyToNoteResult result) {
                 GWT.log("Replied o.k. " + result);
             }
         });

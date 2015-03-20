@@ -2,20 +2,25 @@ package edu.stanford.bmir.protege.web.server.logging;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.SerializationException;
-import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.inject.AdminEmail;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.mail.SendMail;
+import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.app.App;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.server.metaproject.Group;
-import edu.stanford.smi.protege.server.metaproject.User;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.IllegalFormatException;
+import java.util.Set;
 import java.util.logging.*;
 
 /**
@@ -32,8 +37,15 @@ public class DefaultLogger implements WebProtegeLogger {
 
     private Logger logger;
 
-    public DefaultLogger(Class<?> cls) {
+    private Provider<Optional<String>> emailAddressProvider;
+
+    private SendMail sendMail;
+
+    @Inject
+    public DefaultLogger(@AdminEmail Provider<Optional<String>> emailAddressProvider, SendMail sendMail) {
         this.logger = Logger.getLogger(LOG_NAME);
+        this.emailAddressProvider = emailAddressProvider;
+        this.sendMail = sendMail;
         if (logger.getUseParentHandlers()) {
             this.logger.setUseParentHandlers(false);
             ConsoleHandler consoleHandler = new ConsoleHandler();
@@ -80,11 +92,12 @@ public class DefaultLogger implements WebProtegeLogger {
             pw.println(userId.get().getUserName());
             final UserId id = userId.get();
             if(!id.isGuest()) {
-                User user = MetaProjectManager.getManager().getMetaProject().getUser(id.getUserName());
-                pw.println("email: " + user.getEmail());
+                Set<GroupId> groups = getMetaProjectManager().getUserGroups(id);
+                Optional<String> email = getMetaProjectManager().getEmail(id);
+                pw.println("email: " + email.or("Not known"));
                 pw.println("groups: ");
-                for(Group group : user.getGroups()) {
-                    pw.println("        " + group.getName());
+                for(GroupId group : groups) {
+                    pw.println("        " + group.getGroupName());
                 }
             }
         }
@@ -119,6 +132,10 @@ public class DefaultLogger implements WebProtegeLogger {
         pw.println();
         t.printStackTrace(pw);
         return sw.toString();
+    }
+
+    private MetaProjectManager getMetaProjectManager() {
+        return MetaProjectManager.getManager();
     }
 
     @Override
@@ -164,9 +181,9 @@ public class DefaultLogger implements WebProtegeLogger {
 
     private void emailMessage(String message) {
         try {
-            Optional<String> adminEmail = WebProtegeProperties.get().getAdministratorEmail();
-            if (adminEmail.isPresent()) {
-                App.get().getMailManager().sendMail(adminEmail.get(), SUBJECT, message);
+            Optional<String> emailAddress = emailAddressProvider.get();
+            if (emailAddress.isPresent()) {
+                sendMail.sendMail(emailAddress.get(), SUBJECT, message);
             }
         }
         catch (Throwable e) {

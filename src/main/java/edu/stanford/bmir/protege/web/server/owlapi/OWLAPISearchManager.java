@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,12 +17,16 @@ import java.util.regex.Pattern;
  */
 public class OWLAPISearchManager {
 
-    private OWLAPIProject project;
+    private BidirectionalShortFormProvider shortFormProvider;
 
-    public OWLAPISearchManager(OWLAPIProject project) {
-        this.project = project;
+    private LegacyEntityDataProvider entityDataProvider;
+
+    @Inject
+    public OWLAPISearchManager(LegacyEntityDataProvider entityDataProvider, BidirectionalShortFormProvider shortFormProvider) {
+        this.shortFormProvider = shortFormProvider;
+        this.entityDataProvider = entityDataProvider;
     }
-    
+
     public List<EntityData> search(final String search) {
         final String normalizedSearchString;
         if(search.startsWith("*") && search.endsWith("*")) {
@@ -32,19 +37,17 @@ public class OWLAPISearchManager {
         }
         List<EntityData> result = new ArrayList<EntityData>();
 
-        RenderingManager rm = project.getRenderingManager();
-        BidirectionalShortFormProvider sfp = rm.getShortFormProvider();
         // Needs to be more efficient, but will do for now
-        Set<String> shortForms = sfp.getShortForms();
+        Set<String> shortForms = shortFormProvider.getShortForms();
         Pattern pattern = Pattern.compile(normalizedSearchString, Pattern.CASE_INSENSITIVE);
 
         
         for(String shortForm : shortForms) {
             Matcher matcher = pattern.matcher(shortForm);
             if(matcher.find()) {
-                Set<OWLEntity> entities = sfp.getEntities(shortForm);
+                Set<OWLEntity> entities = shortFormProvider.getEntities(shortForm);
                 for(OWLEntity entity : entities) {
-                    EntityData entityData = rm.getEntityData(entity);
+                    EntityData entityData = entityDataProvider.getEntityData(entity);
                     result.add(entityData);
                 }
             }

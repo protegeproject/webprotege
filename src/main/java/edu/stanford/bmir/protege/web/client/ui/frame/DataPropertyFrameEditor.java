@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -12,9 +13,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
-import edu.stanford.bmir.protege.web.client.rpc.GetRendering;
-import edu.stanford.bmir.protege.web.client.rpc.GetRenderingResponse;
-import edu.stanford.bmir.protege.web.client.rpc.RenderingServiceManager;
+import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -27,10 +26,14 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
+import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
+import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,16 +142,16 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         final DataPropertyFrame frame = object.getFrame();
         iriField.setText(frame.getSubject().getIRI().toString());
         annotations.setValue(frame.getPropertyValueList());
-        RenderingServiceManager.getManager().execute(new GetRendering(projectId, frame.getDomains()), new AsyncCallback<GetRenderingResponse>() {
+        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getDomains())), new AsyncCallback<GetEntityDataResult>() {
             @Override
             public void onFailure(Throwable caught) {
             }
 
             @Override
-            public void onSuccess(GetRenderingResponse result) {
+            public void onSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
                 for (OWLClass cls : frame.getDomains()) {
-                    final Optional<OWLEntityData> entityData = result.getEntityData(cls);
+                    final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));
                     if (entityData.isPresent()) {
                         primitiveDatas.add(entityData.get());
                     }
@@ -156,16 +159,16 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
                 domains.setValue(primitiveDatas);
             }
         });
-        RenderingServiceManager.getManager().execute(new GetRendering(projectId, frame.getRanges()), new AsyncCallback<GetRenderingResponse>() {
+        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new AsyncCallback<GetEntityDataResult>() {
             @Override
             public void onFailure(Throwable caught) {
             }
 
             @Override
-            public void onSuccess(GetRenderingResponse result) {
+            public void onSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
                 for (OWLDatatype dt : frame.getRanges()) {
-                    final Optional<OWLEntityData> entityData = result.getEntityData(dt);
+                    final Optional<OWLEntityData> entityData = Optional.of(result.getEntityDataMap().get(dt));
                     if (entityData.isPresent()) {
                         primitiveDatas.add(entityData.get());
                     }

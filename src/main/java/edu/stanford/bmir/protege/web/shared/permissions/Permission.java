@@ -58,16 +58,6 @@ public class Permission implements Serializable {
      * @return The {@link Permission} that has the specified name.  Not {@code null}.
      * @throws NullPointerException if {@code permissionName} is {@code null}.
      */
-    public static Permission getPermission(PermissionName permissionName) {
-        return getPermission(permissionName.getPermissionName());
-    }
-
-    /**
-     * Gets a pemission that has the specified name.
-     * @param permissionName The name of the permission.  Not {@code null}.
-     * @return The {@link Permission} that has the specified name.  Not {@code null}.
-     * @throws NullPointerException if {@code permissionName} is {@code null}.
-     */
     public static Permission getPermission(String permissionName) {
         checkNotNull(permissionName);
         if(PermissionName.READ.getPermissionName().equals(permissionName)) {

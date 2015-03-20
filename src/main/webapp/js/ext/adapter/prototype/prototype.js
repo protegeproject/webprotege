@@ -983,8 +983,7 @@ $w('abs round ceil floor').each(function(method){
 });
 function $H(object) {
   return new Hash(object);
-};
-
+}
 var Hash = Class.create(Enumerable, (function() {
 
   function toQueryPair(key, value) {

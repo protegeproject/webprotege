@@ -7,9 +7,9 @@ import com.gwtext.client.widgets.form.ComboBox;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.event.ComboBoxCallback;
 import com.gwtext.client.widgets.form.event.ComboBoxListenerAdapter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.PagedIndividualsProxyImpl;
@@ -141,9 +141,16 @@ public class InstanceComboBox extends AbstractFieldWidget {
         }
         store.removeAll();
         GetIndividualsAction action = new GetIndividualsAction(getProjectId(), DataFactory.getOWLClass(allowedType), Optional.<PageRequest>absent());
-        DispatchServiceManager.get().execute(action, new AbstractWebProtegeAsyncCallback<GetIndividualsResult>() {
+        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<GetIndividualsResult>() {
+
+
             @Override
-            public void onSuccess(GetIndividualsResult result) {
+            protected String getErrorMessage(Throwable throwable) {
+                return "Error retrieving individuals";
+            }
+
+            @Override
+            public void handleSuccess(GetIndividualsResult result) {
                 store.removeAll();
                 for (OWLNamedIndividualData ind : result.getIndividuals()) {
                     store.add(recordDef.createRecord(new Object[]{ind.getEntity().getIRI().toString(), ind.getBrowserText()}));

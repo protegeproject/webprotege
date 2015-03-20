@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
-import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -44,20 +44,9 @@ public class GetCurrentUserInSessionActionHandler implements ActionHandler<GetCu
     @Override
     public GetCurrentUserInSessionResult execute(GetCurrentUserInSessionAction action, ExecutionContext executionContext) {
         UserId userId = executionContext.getUserId();
-        final UserDetails userDetails;
-        final Set<GroupId> groups = new HashSet<GroupId>();
-        if(userId.isGuest()) {
-            userDetails = UserDetails.getGuestUserDetails();
-        }
-        else {
-            final MetaProject metaProject = MetaProjectManager.getManager().getMetaProject();
-            User user = metaProject.getUser(userId.getUserName());
-            for(Group group : user.getGroups()) {
-                groups.add(GroupId.get(group.getName()));
-            }
-            userDetails = UserDetails.getUserDetails(userId, userId.getUserName(), Optional.fromNullable(user.getEmail()));
-        }
-
-        return new GetCurrentUserInSessionResult(userDetails, groups);
+        MetaProjectManager mpm = MetaProjectManager.getManager();
+        UserDetails userDetails = mpm.getUserDetails(userId);
+        Set<GroupId> userGroups = mpm.getUserGroups(userId);
+        return new GetCurrentUserInSessionResult(userDetails, userGroups);
     }
 }

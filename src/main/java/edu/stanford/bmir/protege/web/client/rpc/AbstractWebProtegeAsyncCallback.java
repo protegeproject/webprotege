@@ -3,6 +3,9 @@ package edu.stanford.bmir.protege.web.client.rpc;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -26,7 +29,9 @@ public abstract class AbstractWebProtegeAsyncCallback<T> implements AsyncCallbac
      * @param caught failure encountered while executing a remote procedure call
      */
     @Override
-    public void onFailure(Throwable caught) {
+    public final void onFailure(Throwable caught) {
         GWT.log(caught.getMessage(), caught);
+        Logger logger = Logger.getLogger("AsyncCallbackErrorLogger");
+        logger.log(Level.SEVERE, "Error executing remote call: " + caught.getMessage());
     }
 }

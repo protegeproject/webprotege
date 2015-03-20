@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackInvoker;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.ProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.LoadProjectAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.LoadProjectResult;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
@@ -36,25 +38,30 @@ public class ProjectManager {
         return instance;
     }
 
-    public void loadProject(ProjectId projectId, final AsyncCallback<Project> projectLoadedCallback) {
+    public void loadProject(ProjectId projectId, final DispatchServiceCallback<Project> projectLoadedCallback) {
         checkNotNull(projectLoadedCallback);
         Project project = map.get(checkNotNull(projectId));
         if(project != null) {
-            projectLoadedCallback.onSuccess(project);
+            new DispatchServiceCallbackInvoker<>(projectLoadedCallback).onSuccess(project);
             return;
         }
 
         final LoadProjectAction action = new LoadProjectAction(checkNotNull(projectId));
-        DispatchServiceManager.get().execute(action, new AsyncCallback<LoadProjectResult>() {
+        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<LoadProjectResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-                projectLoadedCallback.onFailure(caught);
+            public void handleSubmittedForExecution() {
+                projectLoadedCallback.handleSubmittedForExecution();
             }
 
             @Override
-            public void onSuccess(LoadProjectResult result) {
+            public void handleExecutionException(Throwable cause) {
+                new DispatchServiceCallbackInvoker<>(projectLoadedCallback).onFailure(cause);
+            }
+
+            @Override
+            public void handleSuccess(LoadProjectResult result) {
                 Project project = registerProject(result.getUserId(), result.getRequestingUserProjectPermissionSet(), result.getProjectDetails());
-                projectLoadedCallback.onSuccess(project);
+                new DispatchServiceCallbackInvoker<>(projectLoadedCallback).onSuccess(project);
             }
         });
     }

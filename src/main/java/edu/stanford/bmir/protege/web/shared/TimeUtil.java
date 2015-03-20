@@ -21,6 +21,8 @@ public class TimeUtil {
 
     private static final long ONE_WEEK = 7 * ONE_DAY;
 
+    private static final long ONE_MONTH = 31 * ONE_DAY;
+
     private static final long ONE_YEAR = 52 * ONE_WEEK;
 
 
@@ -51,6 +53,10 @@ public class TimeUtil {
 
         if(isYesterday(timestamp, referenceTimestamp)) {
             return getYesterdayRendering();
+        }
+
+        if(isLessThanOneMonthAgo(timestamp, referenceTimestamp)) {
+            return getNDaysAgoRendering(timestamp, referenceTimestamp);
         }
 
         return getMinimalDayMonthYearRendering(timestamp, referenceTimestamp);
@@ -90,6 +96,18 @@ public class TimeUtil {
     public static boolean isLessThanOneWeekAgo(long timestamp, long referenceTimestamp) {
         final long delta = referenceTimestamp - timestamp;
         return 0 <= delta && delta < ONE_WEEK;
+    }
+
+    /**
+     * Determines if the specified timestamp is less than one month before the reference timestamp.
+     * @param timestamp The timestamp to test for.
+     * @param referenceTimestamp The reference timestamp which the offset is calculated against.
+     * @return {@code true} if the value of {@code timestamp} is less than one month before the value of
+     * {@code referenceTimestamp}, otherwise {@code false}.
+     */
+    public static boolean isLessThanOneMonthAgo(long timestamp, long referenceTimestamp) {
+        final long delta = referenceTimestamp - timestamp;
+        return 0 <= delta && delta < ONE_MONTH;
     }
 
     /**
@@ -178,7 +196,7 @@ public class TimeUtil {
     }
 
     private static String getNDaysAgoRendering(long timestamp, long referenceTimestamp) {
-        int days = (int) ((referenceTimestamp - timestamp) / ONE_DAY);
+        int days = (int) ((referenceTimestamp - timestamp) / ONE_DAY) + 1;
         if(days == 1) {
             return "one day ago";
         }

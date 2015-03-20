@@ -2,12 +2,13 @@ package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -241,7 +242,7 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
      * Remote calls
      */
 
-    class GetValuesHandler extends AbstractAsyncHandler<List<Triple>> {
+    class GetValuesHandler implements AsyncCallback<List<Triple>> {
 
         private EntityData mySubject;
 
@@ -250,14 +251,14 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             setLoadingStatus(false);
             GWT.log("Error at getting values for " + mySubject + " and " + getProperty(), caught);
             //TODO: notify the user somehow
         }
 
         @Override
-        public void handleSuccess(List<Triple> triples) { //TODO - make a call to get only the prop values
+        public void onSuccess(List<Triple> triples) { //TODO - make a call to get only the prop values
             /*
              * This check is necessary because of the async nature of the call.
              * We should never add values to a widget, if the subject has already changed.

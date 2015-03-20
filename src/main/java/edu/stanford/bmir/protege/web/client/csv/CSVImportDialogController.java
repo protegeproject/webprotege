@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.client.csv;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -12,7 +12,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButto
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.csv.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -42,13 +41,9 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
         this.importRoot = importRootClass;
         csvImportView = new CSVImportViewImpl();
 
-        DispatchServiceManager.get().execute(new GetCSVGridAction(documentId, ROW_LIMIT), new AsyncCallback<GetCSVGridResult>() {
+        DispatchServiceManager.get().execute(new GetCSVGridAction(documentId, ROW_LIMIT), new DispatchServiceCallback<GetCSVGridResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-            }
-
-            @Override
-            public void onSuccess(GetCSVGridResult result) {
+            public void handleSuccess(GetCSVGridResult result) {
                 csvImportView.setCSVGrid(result.getCSVGrid());
             }
         });
@@ -56,20 +51,27 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CSVImportDescriptor>() {
             @Override
             public void handleHide(CSVImportDescriptor data, WebProtegeDialogCloser closer) {
-                UIUtil.showLoadProgessBar("Importing CSV file", "Please wait");
-                DispatchServiceManager.get().execute(new ImportCSVFileAction(projectId, csvDocumentId, importRoot, data), new AsyncCallback<ImportCSVFileResult>() {
+                DispatchServiceManager.get().execute(new ImportCSVFileAction(projectId, csvDocumentId, importRoot, data), new DispatchServiceCallbackWithProgressDisplay<ImportCSVFileResult>() {
                     @Override
-                    public void onFailure(Throwable caught) {
-                        MessageBox.showAlert("Import failed", "There was a problem importing the csv file");
-                        GWT.log("Problem importing CSV file", caught);
+                    protected String getErrorMessage(Throwable throwable) {
+                        return "There was a problem importing the csv file.  Please try again.";
                     }
 
                     @Override
-                    public void onSuccess(ImportCSVFileResult result) {
-                        MessageBox.showAlert("CSV import succeeded", result.getRowCount() + " rows were imported");
+                    public void handleSuccess(ImportCSVFileResult result) {
+                        MessageBox.showMessage("CSV import succeeded", result.getRowCount() + " rows were imported");
+                    }
+
+                    @Override
+                    public String getProgressDisplayTitle() {
+                        return "Importing CSV file";
+                    }
+
+                    @Override
+                    public String getProgressDisplayMessage() {
+                        return "Please wait.";
                     }
                 });
-                UIUtil.hideLoadProgessBar();
                 closer.hide();
             }
         });

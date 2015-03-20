@@ -95,10 +95,11 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
 //            }
 //        }
 
-        public void addAll(List<OWLOntologyChange> changes) {
+        public Builder<R> addAll(List<OWLOntologyChange> changes) {
             for(OWLOntologyChange change : changes) {
                 add(change);
             }
+            return this;
         }
 
         public OntologyChangeList<R> build(R subject) {

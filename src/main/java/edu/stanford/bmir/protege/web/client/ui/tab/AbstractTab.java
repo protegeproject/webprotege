@@ -120,7 +120,7 @@ public abstract class AbstractTab extends Portal {
                @Override
             public void onActivate(Panel panel) {
                    setSelection(GlobalSelectionManager.getGlobalSelection(project.getProjectId()));
-               };
+               }
             };
         }
         return panelListener;

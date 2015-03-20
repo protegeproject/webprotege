@@ -7,12 +7,12 @@ import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.io.OWLParserException;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,8 +27,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Date: 07/03/2012
  */
 public class OWLAPIProjectCache {
-
-    private static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(OWLAPIProjectCache.class);
 
     private final Interner<ProjectId> projectIdInterner;
 
@@ -62,8 +60,12 @@ public class OWLAPIProjectCache {
      */
     private static final long DORMANT_PROJECT_TIME_MS = 3 * 60 * 1000;
 
+    private final WebProtegeLogger logger;
 
-    public OWLAPIProjectCache() {
+
+    @Inject
+    public OWLAPIProjectCache(WebProtegeLogger logger) {
+        this.logger = logger;
         Timer timer = new Timer(true);
         timer.schedule(new TimerTask() {
             @Override
@@ -137,11 +139,11 @@ public class OWLAPIProjectCache {
             try {
                 OWLAPIProject project = projectId2ProjectMap.get(projectId);
                 if (project == null) {
-                    LOGGER.info("Request for unloaded project. Loading %s.", projectId.getId());
+                    logger.info("Request for unloaded project. Loading %s.", projectId.getId());
                     OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
                     project = OWLAPIProject.getProject(documentStore);
                     projectId2ProjectMap.put(projectId, project);
-                    WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(LOGGER);
+                    WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(logger);
                     loggerEx.logMemoryUsage();
                 }
                 if (accessMode == AccessMode.NORMAL) {
@@ -190,7 +192,7 @@ public class OWLAPIProjectCache {
             final int projectsBeingAccessed = lastAccessMap.size();
             LAST_ACCESS_LOCK.writeLock().unlock();
             WRITE_LOCK.unlock();
-            LOGGER.info("Purged project: %s.  %d projects are now being accessed.", projectId.getId(), projectsBeingAccessed);
+            logger.info("Purged project: %s.  %d projects are now being accessed.", projectId.getId(), projectsBeingAccessed);
         }
     }
 
@@ -234,7 +236,7 @@ public class OWLAPIProjectCache {
             int currentSize = lastAccessMap.size();
             lastAccessMap.put(projectId, currentTime);
             if(lastAccessMap.size() > currentSize) {
-                LOGGER.info("%d projects are now being accessed", lastAccessMap.size());
+                logger.info("%d projects are now being accessed", lastAccessMap.size());
             }
         }
         finally {

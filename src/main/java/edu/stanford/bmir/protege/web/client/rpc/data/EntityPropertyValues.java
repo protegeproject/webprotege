@@ -13,6 +13,7 @@ import java.util.*;
  * @author ttania
  *
  */
+@Deprecated
 public class EntityPropertyValues implements Serializable{
 
     private static final long serialVersionUID = -1379727454578048738L;

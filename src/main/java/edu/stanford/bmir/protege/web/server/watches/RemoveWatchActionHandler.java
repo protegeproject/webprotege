@@ -6,10 +6,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesAction;
 import edu.stanford.bmir.protege.web.shared.watches.RemoveWatchesResult;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -18,6 +21,11 @@ import edu.stanford.bmir.protege.web.shared.watches.Watch;
  * Date: 21/03/2013
  */
 public class RemoveWatchActionHandler extends AbstractHasProjectActionHandler<RemoveWatchesAction, RemoveWatchesResult> {
+
+    @Inject
+    public RemoveWatchActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     protected RequestValidator<RemoveWatchesAction> getAdditionalRequestValidator(RemoveWatchesAction action, RequestContext requestContext) {

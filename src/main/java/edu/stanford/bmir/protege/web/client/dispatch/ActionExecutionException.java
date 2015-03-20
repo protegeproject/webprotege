@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+import java.io.Serializable;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -14,6 +18,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ActionExecutionException extends RuntimeException {
 
+    private Throwable serializedCause;
+
     /**
      * For serialization purposes only
      */
@@ -27,7 +33,11 @@ public class ActionExecutionException extends RuntimeException {
      */
     public ActionExecutionException(Throwable cause) {
         super(checkNotNull(cause));
+        this.serializedCause = cause;
     }
 
-
+    @Override
+    public synchronized Throwable getCause() {
+        return serializedCause;
+    }
 }

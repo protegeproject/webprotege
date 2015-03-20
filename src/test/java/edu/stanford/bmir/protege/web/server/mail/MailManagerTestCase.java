@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
+import org.mockito.Mock;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -35,6 +37,9 @@ public class MailManagerTestCase {
     public static final String HOST_NAME = "test.host.name";
 
     private Message message;
+
+    @Mock
+    private WebProtegeLogger logger;
 
     @Before
     public void setUp() throws MessagingException {

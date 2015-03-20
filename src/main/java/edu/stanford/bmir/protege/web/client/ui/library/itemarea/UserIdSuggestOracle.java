@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.library.itemarea;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsAction;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public class UserIdSuggestOracle implements ItemProvider<UserId> {
 
-    private List<UserId> data = Arrays.asList(UserId.getUserId("Matthew Horridge"), UserId.getUserId("Timothy Redmond"), UserId.getUserId("Martin O'Connor"));
+    private List<UserId> data = new ArrayList<>();
 
     public UserIdSuggestOracle() {
         this(Collections.<UserId>emptyList());
@@ -27,9 +26,9 @@ public class UserIdSuggestOracle implements ItemProvider<UserId> {
 
     public UserIdSuggestOracle(final List<UserId> exclude) {
         DispatchServiceManager dispatchServiceManager = DispatchServiceManager.get();
-        dispatchServiceManager.execute(new GetUserIdsAction(), new AbstractWebProtegeAsyncCallback<GetUserIdsResult>() {
+        dispatchServiceManager.execute(new GetUserIdsAction(), new DispatchServiceCallback<GetUserIdsResult>() {
             @Override
-            public void onSuccess(GetUserIdsResult result) {
+            public void handleSuccess(GetUserIdsResult result) {
                 data.clear();
                 data.addAll(result.getUserIds());
                 data.removeAll(exclude);

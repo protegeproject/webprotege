@@ -40,16 +40,10 @@ public interface WatchManager {
      */
     void removeWatch(Watch<?> watch, UserId userId);
 
-    /**
-     * Removes all watches for the specified user.
-     * @param userId The {@link UserId} that specifies the user whose watches are to be removed.  Not {@code null}.
-     * @throws NullPointerException if {@code userId} is {@code null}.
-     */
-    void clearWatches(UserId userId);
 
-    Set<Watch<?>> getDirectWatches(Object watchedObject, UserId userId);
+    Set<Watch<?>> getDirectWatches(OWLEntity watchedObject, UserId userId);
 
-    boolean hasEntityBasedWatch(OWLEntity entity, UserId userId);
+    void handleEntityFrameChanged(OWLEntity entity);
 
 
 

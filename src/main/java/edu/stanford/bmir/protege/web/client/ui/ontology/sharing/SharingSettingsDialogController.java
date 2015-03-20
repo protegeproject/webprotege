@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.SharingSettingsServiceManager;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
@@ -14,6 +13,8 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDia
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
+import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsResult;
 
 /**
  * Author: Matthew Horridge<br>
@@ -39,12 +40,9 @@ public class SharingSettingsDialogController extends WebProtegeOKCancelDialogCon
     }
 
     private void updateSharingSettingsOnServer(final ProjectSharingSettings sharingSettings) {
-        SharingSettingsServiceAsync service = SharingSettingsServiceManager.getService();
-        service.updateSharingSettings(sharingSettings, new AsyncCallback<Void>() {
-            public void onFailure(Throwable caught) {
-            }
-
-            public void onSuccess(Void result) {
+        DispatchServiceManager.get().execute(new SetProjectSharingSettingsAction(sharingSettings), new DispatchServiceCallback<SetProjectSharingSettingsResult>() {
+            @Override
+            public void handleSuccess(SetProjectSharingSettingsResult setProjectSharingSettingsResult) {
                 EventBusManager.getManager().postEvent(new PermissionsChangedEvent(sharingSettings.getProjectId()));
             }
         });

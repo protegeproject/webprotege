@@ -4,12 +4,15 @@ import edu.stanford.bmir.protege.web.server.change.ChangeApplicationResult;
 import edu.stanford.bmir.protege.web.server.change.ChangeDescriptionGenerator;
 import edu.stanford.bmir.protege.web.server.change.ChangeListGenerator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,7 +22,10 @@ import edu.stanford.bmir.protege.web.shared.events.EventTag;
  */
 public abstract class AbstractProjectChangeHandler<T, A extends Action<R> & HasProjectId, R extends Result> extends AbstractHasProjectActionHandler<A, R> {
 
-//    private static final ProjectChangeMessages MESSAGES = GWT.create(ProjectChangeMessages.class);
+    @Inject
+    public AbstractProjectChangeHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     @Override
     final protected R execute(A action, OWLAPIProject project, ExecutionContext executionContext) {

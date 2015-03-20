@@ -55,7 +55,7 @@ public class PublishToBioPortalDialogController extends WebProtegeOKCancelDialog
     private void handleUpload(ProjectDetails details, UserDetails userDetails, PublishToBioPortalInfo publishInfo, final WebProtegeDialogCloser closer) throws IOException {
         BioPortalAPIServiceAsync service = GWT.create(BioPortalAPIService.class);
         RevisionNumber revisionNumber = RevisionNumber.getHeadRevisionNumber();
-        service.uploadProjectToBioPortal(details.getProjectId(), revisionNumber, publishInfo, new AsyncCallback<Void>() {
+        service.uploadProjectToBioPortal(details.getDisplayName(), details.getProjectId(), revisionNumber, publishInfo, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
                 UIUtil.hideLoadProgessBar();
                 MessageBox.alert("There was a problem publishing the ontology to BioPortal.  Error message: " + caught.getMessage());

@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationHost;
+import edu.stanford.bmir.protege.web.server.inject.ApplicationName;
+import edu.stanford.bmir.protege.web.server.inject.MailProperties;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
+import javax.inject.Inject;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -19,7 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/11/2013
  */
-public class MailManager {
+public class MailManager implements SendMail {
 
     public static final String MAIL_SMTP_AUTH = "mail.smtp.auth";
 
@@ -35,8 +38,6 @@ public class MailManager {
 
     public static final String DEFAULT_FROM_VALUE_PREFIX = "no-reply@";
 
-    public static final WebProtegeLogger LOGGER = WebProtegeLoggerManager.get(MailManager.class);
-
     private final Properties properties;
 
     private final MessagingExceptionHandler messagingExceptionHandler;
@@ -44,6 +45,7 @@ public class MailManager {
     private final String applicationName;
 
     private final String applicationHost;
+
 
     /**
      * Constructs a {@code MailManager} using the specified {@link Properties} object and the specified exception handler.
@@ -61,8 +63,11 @@ public class MailManager {
      * @param messagingExceptionHandler An exception handler that handles {@link MessagingException}s.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public MailManager(String applicationName, String applicationHost,
-                       Properties properties, MessagingExceptionHandler messagingExceptionHandler) {
+    @Inject
+    public MailManager(@ApplicationName String applicationName,
+                       @ApplicationHost String applicationHost,
+                       @MailProperties Properties properties,
+                       MessagingExceptionHandler messagingExceptionHandler) {
         this.applicationName = checkNotNull(applicationName);
         this.applicationHost = checkNotNull(applicationHost);
         this.properties = new Properties(checkNotNull(properties));
@@ -110,9 +115,8 @@ public class MailManager {
             Transport.send(msg);
         } catch (MessagingException e) {
             exceptionHandler.handleMessagingException(e);
-            LOGGER.info(e.getMessage());
         } catch (UnsupportedEncodingException e) {
-            LOGGER.info(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

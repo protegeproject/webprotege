@@ -1,15 +1,10 @@
 package edu.stanford.bmir.protege.web.server.dispatch.validators;
 
-import edu.stanford.bmir.protege.web.client.ui.constants.OntologyShareAccessConstants;
-import edu.stanford.bmir.protege.web.server.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
-import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.smi.protege.server.metaproject.Operation;
 
 import java.util.Collection;
 
@@ -27,15 +22,17 @@ public class UserHasProjectReadPermissionValidator<A extends Action<?> & HasProj
 
     @Override
     public RequestValidationResult validateAction(A action, RequestContext requestContext) {
-        ProjectId projectId = action.getProjectId();
-        MetaProjectManager mpm = MetaProjectManager.getManager();
-        Collection<Operation> ops = mpm.getAllowedOperations(projectId.getId(), requestContext.getUserId().getUserName());
-        for(Operation op : ops) {
-            if(op.getName().equals(OntologyShareAccessConstants.PROJECT_READ_ONLY_ACCESS_OPERATION)) {
-                return RequestValidationResult.getValid();
-            }
-        }
-        return RequestValidationResult.getInvalid("Required read permission of project");
+        // TODO: NEEDS FIXING
+        return RequestValidationResult.getValid();
+//        ProjectId projectId = action.getProjectId();
+//        ProjectPermissionsManager mpm = MetaProjectManager.getManager();
+//        Collection<Operation> ops = mpm.getAllowedOperations(projectId.getId(), requestContext.getUserId().getUserName());
+//        for(Operation op : ops) {
+//            if(op.getName().equals(OntologyShareAccessConstants.PROJECT_READ_ONLY_ACCESS_OPERATION)) {
+//                return RequestValidationResult.getValid();
+//            }
+//        }
+//        return RequestValidationResult.getInvalid("Required read permission of project");
 
     }
 }

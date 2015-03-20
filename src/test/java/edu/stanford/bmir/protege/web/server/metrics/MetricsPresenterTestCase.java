@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.metrics;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.RequestRefreshEvent;
 import edu.stanford.bmir.protege.web.client.events.RequestRefreshEventHandler;
@@ -34,7 +35,7 @@ public class MetricsPresenterTestCase {
     private DispatchServiceManager dispatchServiceManager;
 
     @Mock
-    protected AsyncCallback<GetMetricsResult> callback;
+    protected DispatchServiceCallback<GetMetricsResult> callback;
 
     @Mock
     protected GetMetricsResult result;
@@ -59,12 +60,11 @@ public class MetricsPresenterTestCase {
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-                AsyncCallback<GetMetricsResult> action = (AsyncCallback<GetMetricsResult>) invocationOnMock.getArguments()[1];
+                DispatchServiceCallback<GetMetricsResult> action = (DispatchServiceCallback<GetMetricsResult>) invocationOnMock.getArguments()[1];
                 action.onSuccess(result);
                 return null;
             }
-        }
-        ).when(dispatchServiceManager).execute(any(GetMetricsAction.class), any(AsyncCallback.class));
+        }).when(dispatchServiceManager).execute(any(GetMetricsAction.class), any(DispatchServiceCallback.class));
         doAnswer(new Answer<Void>() {
             @Override
             public Void answer(InvocationOnMock invocationOnMock) throws Throwable {

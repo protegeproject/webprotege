@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server;
 
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.obo.OBONamespaceCache;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -28,6 +29,12 @@ import java.util.regex.Pattern;
 public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet implements OBOTextEditorService {
 
     public static final IRI OBO_NAMESPACE_IRI = Obo2OWLConstants.Obo2OWLVocabulary.IRI_OIO_hasOboNamespace.getIRI();
+
+    private OWLAPIProjectManager projectManager;
+
+    public OBOTextEditorServiceImpl() {
+        projectManager = WebProtegeInjector.get().getInstance(OWLAPIProjectManager.class);
+    }
 
     public synchronized Set<OBONamespace> getNamespaces(ProjectId projectId) {
 //        if (cache == null) {
@@ -452,8 +459,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
     }
 
     private OWLAPIProject getProject(ProjectId projectId) {
-        OWLAPIProjectManager pm = OWLAPIProjectManager.getProjectManager();
-        return pm.getProject(projectId);
+        return projectManager.getProject(projectId);
     }
 
     public Collection<OBOTermSynonym> getSynonyms(ProjectId projectId, OWLEntity term) {

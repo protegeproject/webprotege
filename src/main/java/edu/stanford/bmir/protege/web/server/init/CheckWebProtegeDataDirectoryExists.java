@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
+import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import java.io.File;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,15 +16,30 @@ import java.io.File;
  */
 public class CheckWebProtegeDataDirectoryExists implements ConfigurationTask {
 
+    private File dataDirectory;
+
+
+    @Inject
+    public CheckWebProtegeDataDirectoryExists(@DataDirectory File dataDirectory) {
+        this.dataDirectory = checkNotNull(dataDirectory);
+    }
+
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-       File dataDirectory = WebProtegeProperties.get().getDataDirectory();
        if(!dataDirectory.exists()) {
-           throw new WebProtegeConfigurationException(getDataDirectoryDoesNotExistsMessage(dataDirectory));
+           throw new WebProtegeConfigurationException(
+                   getDataDirectoryDoesNotExistsMessage(dataDirectory)
+           );
        }
     }
 
     public static String getDataDirectoryDoesNotExistsMessage(File dataDirectory) {
-        return "The WebProtege data directory cannot be found or WebProtege does not have permission to read this directory.  WebProtege expected the data directory to be located at " + dataDirectory.getAbsolutePath() + ".  Please check that the specified data directory exists and that the user which the servlet container (tomcat) runs under has read permission for this directory and its contents.";
+        return "The WebProtege data directory cannot be found " +
+                "or WebProtege does not have permission to read this directory.  " +
+                "WebProtege expected the data directory to be located at " +
+                dataDirectory.getAbsolutePath() +
+                ".  Please check that the specified data directory exists and that " +
+                "the user which the servlet container (tomcat) runs under has read " +
+                "permission for this directory and its contents.";
     }
 }

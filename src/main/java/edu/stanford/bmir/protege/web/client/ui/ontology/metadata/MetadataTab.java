@@ -12,7 +12,6 @@ import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
  */
 public class MetadataTab extends AbstractTab {
 
-	protected AnnotationsPortlet annotationsPortlet;
 	protected ImportsTreePortlet importsPortlet;
 
 	public MetadataTab(Project project) {
@@ -30,9 +29,7 @@ public class MetadataTab extends AbstractTab {
 		importsPortlet = new ImportsTreePortlet(project);
 		addPortlet(importsPortlet, 0);
 		
-		annotationsPortlet = new AnnotationsPortlet(project);		
-		addPortlet(annotationsPortlet, 1);
-		
+
 		setControllingPortlet(importsPortlet);
 	
 	}

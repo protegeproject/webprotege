@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.SortDir;
@@ -18,7 +19,7 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -102,7 +103,7 @@ public class AllPropertiesGrid extends EditorGridPanel {
               @Override
             public void onCellDblClick(GridPanel grid, int rowIndex, int colindex, EventObject e) {
                  onCellDoubleClick(rowIndex, colindex);
-              };
+              }
            };
        }
         return gridCellListener;
@@ -476,15 +477,15 @@ public class AllPropertiesGrid extends EditorGridPanel {
      * Remote calls
      */
 
-    class GetTriplesHandler extends AbstractAsyncHandler<List<Triple>> {
+    class GetTriplesHandler implements AsyncCallback<List<Triple>> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at getting triples for " + _currentEntity, caught);
         }
 
         @Override
-        public void handleSuccess(List<Triple> triples) {
+        public void onSuccess(List<Triple> triples) {
             store.removeAll();
             if (triples == null) {return;}
             for (Triple triple : triples) {
@@ -521,33 +522,33 @@ public class AllPropertiesGrid extends EditorGridPanel {
 
     }
 
-    class ReplacePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class ReplacePropertyValueHandler implements AsyncCallback<Void> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at replace property value for " + _currentEntity, caught);
             Window.alert("There was an error at setting the property value for " + _currentEntity.getBrowserText()
                     + ".<br>Please try again later.");
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             GWT.log("Success at setting property value for " + _currentEntity.getBrowserText(), null);
             refresh();
         }
     }
 
-    class RemovePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class RemovePropertyValueHandler implements AsyncCallback<Void> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at removing property value for " + _currentEntity, caught);
             Window.alert("There was an error at removing the property value for " + _currentEntity.getBrowserText()
                     + ".<br>Please try again later.");
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             GWT.log("Success at removing property value for " + _currentEntity.getBrowserText(), null);
             refresh();
         }

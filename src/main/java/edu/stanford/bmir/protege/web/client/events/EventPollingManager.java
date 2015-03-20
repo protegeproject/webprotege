@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.client.events;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
@@ -64,13 +64,10 @@ public class EventPollingManager {
     public void pollForProjectEvents() {
         GWT.log("[Event Polling Manager] Polling for project events for " + projectId + " from " + nextTag);
         UserId userId = Application.get().getUserId();
-        DispatchServiceManager.get().execute(new GetProjectEventsAction(nextTag, projectId, userId), new AsyncCallback<GetProjectEventsResult>() {
-            @Override
-            public void onFailure(Throwable caught) {
-            }
+        DispatchServiceManager.get().execute(new GetProjectEventsAction(nextTag, projectId, userId), new DispatchServiceCallback<GetProjectEventsResult>() {
 
             @Override
-            public void onSuccess(GetProjectEventsResult result) {
+            public void handleSuccess(GetProjectEventsResult result) {
                 dispatchEvents(result.getEvents());
             }
         });

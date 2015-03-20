@@ -41,9 +41,9 @@ public class BioPortalRestAPI {
         }
     }
 
-    public void uploadOntologyToBioPortal(ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException {
+    public void uploadOntologyToBioPortal(String projectDisplayName, ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException {
         try {
-            BioPortalUploader uploader = new BioPortalUploader(projectId, revisionNumber, publishInfo);
+            BioPortalUploader uploader = new BioPortalUploader(projectDisplayName, projectId, revisionNumber, publishInfo);
             uploader.uploadToBioPortal(bioportalRestAPIBase);
         }
         catch (IOException e) {

@@ -8,6 +8,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.gwtext.client.core.EventObject;
@@ -18,7 +19,7 @@ import com.gwtext.client.widgets.form.Label;
 import com.gwtext.client.widgets.layout.ColumnLayout;
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
@@ -378,16 +379,16 @@ public class ParentsPanel extends Panel {
      * Remote calls
      */
 
-    class GetParentsHandler extends AbstractAsyncHandler<List<EntityData>> {
+    class GetParentsHandler implements AsyncCallback<List<EntityData>> {
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             MessageBox.alert("Error", "There was an error at retrieving parents of " + UIUtil.getDisplayText(cls) + " from the server.");
             GWT.log("Error at retrieving parents of " + cls.getName() + " from server.", caught);
         }
 
         @Override
-        public void handleSuccess(List<EntityData> parents) {
+        public void onSuccess(List<EntityData> parents) {
             initialParents = new HashSet<EntityData>(parents);
             updatePanel(parents);
         }

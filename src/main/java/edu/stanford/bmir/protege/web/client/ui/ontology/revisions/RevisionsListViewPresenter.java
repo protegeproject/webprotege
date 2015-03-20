@@ -1,19 +1,20 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
-import edu.stanford.bmir.protege.web.client.rpc.RevisionManagerService;
-import edu.stanford.bmir.protege.web.client.rpc.RevisionManagerServiceAsync;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
+import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesResult;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,9 +25,6 @@ import java.util.List;
  * Date: 22/04/2013
  */
 public class RevisionsListViewPresenter implements HasDispose {
-
-    private static final RevisionManagerServiceAsync revisionManagerService = GWT.create(RevisionManagerService.class);
-
 
     private ProjectId projectId;
 
@@ -61,14 +59,16 @@ public class RevisionsListViewPresenter implements HasDispose {
 
 
     public void reload() {
-        revisionManagerService.getRevisionSummaries(projectId, new AsyncCallback<List<RevisionSummary>>() {
-            public void onFailure(Throwable caught) {
-                MessageBox.showErrorMessage("An error occurred retrieving revision information", caught);
+        DispatchServiceManager.get().execute(new GetRevisionSummariesAction(projectId), new DispatchServiceCallback<GetRevisionSummariesResult>() {
+
+            @Override
+            public void handleErrorFinally(Throwable throwable) {
                 setListData(Collections.<RevisionSummary>emptyList());
             }
 
-            public void onSuccess(List<RevisionSummary> result) {
-                setListData(result);
+            @Override
+            public void handleSuccess(GetRevisionSummariesResult result) {
+                setListData(result.getRevisionSummaries());
             }
         });
     }
@@ -88,7 +88,8 @@ public class RevisionsListViewPresenter implements HasDispose {
     }
 
 
-    private void setListData(List<RevisionSummary> result) {
+    private void setListData(List<RevisionSummary> r) {
+        List<RevisionSummary> result = new ArrayList<>(r);
         Collections.sort(result);
         Collections.reverse(result);
         List<RevisionSummary> data = dataProvider.getList();

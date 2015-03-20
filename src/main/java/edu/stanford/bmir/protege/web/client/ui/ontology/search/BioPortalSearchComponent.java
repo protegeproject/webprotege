@@ -16,7 +16,7 @@ import com.gwtext.client.widgets.grid.*;
 import com.gwtext.client.widgets.grid.event.GridCellListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
+
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalReferenceData;
 import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalSearchData;
@@ -589,7 +589,7 @@ public class BioPortalSearchComponent extends GridPanel {
                 Application.get().getUserId(),
                 UIUtil.getAppliedToTransactionString("Create a 'Did not find' reference on "
                         + getEntity().getBrowserText() + " "
-                        + (String) configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
+                        + configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
                 getCreateDNFConceptHandler(noteContent));
     }
 
@@ -612,7 +612,7 @@ public class BioPortalSearchComponent extends GridPanel {
                 bpRefData,
                 Application.get().getUserId(),
                 UIUtil.getAppliedToTransactionString("Created reference on " + getEntity().getBrowserText() + " "
-                        + (String) configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
+                        + configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
                 getCreateManualreferenceHandler());
     }
 
@@ -638,7 +638,7 @@ public class BioPortalSearchComponent extends GridPanel {
                 oldValueEntityData,
                 Application.get().getUserId(),
                 UIUtil.getAppliedToTransactionString("Created reference on " + getEntity().getBrowserText() + " "
-                        + (String) configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
+                        + configPropertiesMap.get(BioPortalConstants.CONFIG_PROPERTY_REFERENCE_PROPERTY), getEntity().getName()),
                 getCreateManualreferenceHandler());
     }
 
@@ -689,9 +689,9 @@ public class BioPortalSearchComponent extends GridPanel {
         return b == null ? BioPortalConstants.DEFAULT_IMPORT_FROM_ORIGINAL_ONTOLOGIES : b.booleanValue();
     }
 
-    class GetSearchURLContentHandler extends AbstractAsyncHandler<String> {
+    class GetSearchURLContentHandler implements AsyncCallback<String> {
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             if (getEl() != null) { //how can it be null?
                 doUnmask(BioPortalSearchComponent.this);
             }
@@ -699,7 +699,7 @@ public class BioPortalSearchComponent extends GridPanel {
         }
 
         @Override
-        public void handleSuccess(String searchXml) {
+        public void onSuccess(String searchXml) {
             if (getEl() != null) { //how can it be null?
                 doUnmask(BioPortalSearchComponent.this);
             }
@@ -735,20 +735,20 @@ public class BioPortalSearchComponent extends GridPanel {
         }
     }
 
-    protected AbstractAsyncHandler<EntityData> getImportBioPortalConceptHandler() {
+    protected AsyncCallback<EntityData> getImportBioPortalConceptHandler() {
         return new ImportBioPortalConceptHandler();
     }
 
-    class ImportBioPortalConceptHandler extends AbstractAsyncHandler<EntityData> {
+    class ImportBioPortalConceptHandler implements AsyncCallback<EntityData> {
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             doUnmask(BioPortalSearchComponent.this);
             GWT.log("Could not import BioPortal concept for " + currentEntity, null);
             MessageBox.alert("Import operation failed!");
         }
 
         @Override
-        public void handleSuccess(EntityData refInstance) {
+        public void onSuccess(EntityData refInstance) {
             doUnmask(BioPortalSearchComponent.this);
             MessageBox.alert(refInstance != null ? "Import operation succeeded. Reference instance: " + refInstance
                     : "Import operation did not succeed");
@@ -757,31 +757,31 @@ public class BioPortalSearchComponent extends GridPanel {
         }
     }
 
-    protected AbstractAsyncHandler<EntityData> getCreateManualreferenceHandler() {
+    protected AsyncCallback<EntityData> getCreateManualreferenceHandler() {
         return new CreateManualreferenceHandler();
     }
 
-    class CreateManualreferenceHandler extends AbstractAsyncHandler<EntityData> {
+    class CreateManualreferenceHandler implements AsyncCallback<EntityData> {
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             doUnmask(BioPortalSearchComponent.this);
             GWT.log("Could not create manual reference for " + currentEntity, null);
             MessageBox.alert("Reference creation failed!");
         }
 
         @Override
-        public void handleSuccess(EntityData refInstance) {
+        public void onSuccess(EntityData refInstance) {
             doUnmask(BioPortalSearchComponent.this);
             MessageBox.alert(refInstance != null ? "Reference creation SUCCEDED! Reference instance: " + refInstance
                     : "Reference creation DID NOT SUCCEDED!");
         }
     }
 
-    protected AbstractAsyncHandler<EntityData> getCreateDNFConceptHandler(NoteContent noteContent) {
+    protected AsyncCallback<EntityData> getCreateDNFConceptHandler(NoteContent noteContent) {
         return new CreateDNFConceptHandler(noteContent);
     }
 
-    class CreateDNFConceptHandler extends AbstractAsyncHandler<EntityData> {
+    class CreateDNFConceptHandler implements AsyncCallback<EntityData> {
         private NoteContent noteContent;
 
         public CreateDNFConceptHandler(NoteContent noteContent) {
@@ -789,14 +789,14 @@ public class BioPortalSearchComponent extends GridPanel {
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             doUnmask(BioPortalSearchComponent.this);
             GWT.log("Could not create DNF reference for " + currentEntity, null);
             MessageBox.alert("Reference creation failed!");
         }
 
         @Override
-        public void handleSuccess(EntityData refInstance) {
+        public void onSuccess(EntityData refInstance) {
             doUnmask(BioPortalSearchComponent.this);
             MessageBox.alert(refInstance != null ? "Reference creation SUCCEDED! Reference instance: " + refInstance : "Reference creation DID NOT SUCCEDED!");
             ReferenceFieldWidget.addUserComment(projectId, noteContent, DataFactory.getOWLClass(refInstance.getName()));

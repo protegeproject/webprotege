@@ -2,12 +2,15 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectResult;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,6 +19,11 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
  * Date: 20/02/2013
  */
 public class UpdateNamedIndividualFrameHandler extends AbstractUpdateFrameHandler<UpdateNamedIndividualFrameAction, NamedIndividualFrame, OWLNamedIndividual> {
+
+    @Inject
+    public UpdateNamedIndividualFrameHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
 
     /**
      * Gets the class of {@link edu.stanford.bmir.protege.web.shared.dispatch.Action} handled by this handler.

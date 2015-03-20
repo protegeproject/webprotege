@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Stopwatch;
-import edu.stanford.bmir.protege.web.server.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerManager;
+import edu.stanford.smi.protege.server.metaproject.MetaProject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class OWLAPIMetaProjectStore {
 
-    private static final WebProtegeLogger logger = WebProtegeLoggerManager.get(OWLAPIMetaProjectStore.class);
+    private final WebProtegeLogger logger;
 
     public static final int SAVE_META_PROJECT_DELAY = 60000;
 
@@ -39,19 +39,20 @@ public class OWLAPIMetaProjectStore {
     private final Timer saveTimer = new Timer();
 
     private OWLAPIMetaProjectStore() {
+        logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
     }
 
     public static OWLAPIMetaProjectStore getStore() {
         return instance;
     }
 
-    public void saveMetaProjectNow(MetaProjectManager metaProjectManager) {
+    public void saveMetaProjectNow(MetaProject metaProject) {
         logger.info("Saving meta-project now.");
         final Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             writeLock.lock();
             List<?> errors = new ArrayList<Object>();
-            metaProjectManager.getMetaProject().save(errors);
+            metaProject.save(errors);
             if(!errors.isEmpty()) {
                 throw new RuntimeException("Problem saving meta project: " + errors.toString());
             }
@@ -63,13 +64,13 @@ public class OWLAPIMetaProjectStore {
         }
     }
 
-    public void saveMetaProject(final MetaProjectManager metaProjectManager) {
+    public void saveMetaProject(final MetaProject metaProject) {
         logger.info("Request to save meta-project received. Scheduling save task.");
         writeLock.lock();
         if (saveTask != null) {
             saveTask.cancel();
         }
-        saveTask = new SaveMetaProjectTask(metaProjectManager);
+        saveTask = new SaveMetaProjectTask(metaProject);
         saveTimer.schedule(saveTask, SAVE_META_PROJECT_DELAY);
         writeLock.unlock();
     }
@@ -79,15 +80,15 @@ public class OWLAPIMetaProjectStore {
 
     private class SaveMetaProjectTask extends TimerTask {
 
-        private MetaProjectManager mpm;
+        private MetaProject metaProject;
 
-        private SaveMetaProjectTask(MetaProjectManager mpm) {
-            this.mpm = mpm;
+        private SaveMetaProjectTask(MetaProject mpm) {
+            this.metaProject = mpm;
         }
 
         @Override
         public void run() {
-            saveMetaProjectNow(mpm);
+            saveMetaProjectNow(metaProject);
         }
     }
 }

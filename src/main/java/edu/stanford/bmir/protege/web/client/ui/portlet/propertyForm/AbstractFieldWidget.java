@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Component;
@@ -19,7 +20,6 @@ import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractAsyncHandler;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
@@ -251,9 +251,9 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
 				double eventTime = new Date().getTime(); //take current time since there is no way to get time from a ClickEvent
 				if (eventTime - timeOfLastClick > 500) { //not the second click in a double click
 					onCellClickOrDblClick(event);
-        		};
+        		}
 
-        		//Set new value for timeOfLastClick the time the last click was handled.
+                //Set new value for timeOfLastClick the time the last click was handled.
         		//We use the current time (and not eventTime), because some time may have passed since eventTime
         		//while executing the onCellClickOrDblClick method.
         		timeOfLastClick = new Date().getTime();
@@ -406,7 +406,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
     /*
      * Remote calls
      */
-    class RemovePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class RemovePropertyValueHandler implements AsyncCallback<Void> {
 
         protected EntityData subject;
         protected EntityData oldEntityData;
@@ -419,7 +419,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at removing value for " + getProperty().getBrowserText() + " and "
                     + subject.getBrowserText(), caught);
             Window.alert("There was an error at removing the property value for " + getProperty().getBrowserText()
@@ -430,7 +430,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             if (subject.equals(getSubject())) {
                 Collection<EntityData> newValues;
                 if (oldValues != null && oldValues.contains(oldEntityData)) {
@@ -446,7 +446,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
 
     }
 
-    protected class ReplacePropertyValueHandler extends AbstractAsyncHandler<Void> {
+    protected class ReplacePropertyValueHandler implements AsyncCallback<Void> {
 
         protected EntityData subject;
         protected EntityData oldEntityData;
@@ -462,7 +462,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at replace property for " + getProperty().getBrowserText() + " and "
                     + subject.getBrowserText(), caught);
             Window.alert("There was an error at setting the property value for " + subject.getBrowserText() + ".");
@@ -472,7 +472,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             //FIXME: we need a reload method
             if (subject.equals(getSubject())) {
                 Collection<EntityData> newValues;
@@ -490,7 +490,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
     }
 
-    class AddPropertyValueHandler extends AbstractAsyncHandler<Void> {
+    class AddPropertyValueHandler implements AsyncCallback<Void> {
 
         protected EntityData subject;
         protected EntityData newEntityData;
@@ -504,7 +504,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleFailure(Throwable caught) {
+        public void onFailure(Throwable caught) {
             GWT.log("Error at add property for " + getProperty().getBrowserText() + " and "
                     + subject.getBrowserText(), caught);
             Window.alert("There was an error at adding the property value for " + subject.getBrowserText() + ".");
@@ -514,7 +514,7 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         }
 
         @Override
-        public void handleSuccess(Void result) {
+        public void onSuccess(Void result) {
             //FIXME: we need a reload method
             if (subject.equals(getSubject())) {
                 Collection<EntityData> newValues;

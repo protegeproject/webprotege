@@ -7,16 +7,24 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsResult;
 import edu.stanford.bmir.protege.web.shared.metrics.MetricValue;
 
+import javax.inject.Inject;
 import java.util.List;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 26/04/2014
  */
 public class GetMetricsActionHandler extends AbstractHasProjectActionHandler<GetMetricsAction, GetMetricsResult> {
+
+    @Inject
+    public GetMetricsActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
+    }
+
     @Override
     protected RequestValidator<GetMetricsAction> getAdditionalRequestValidator(GetMetricsAction action, RequestContext requestContext) {
         return UserHasProjectReadPermissionValidator.get();
