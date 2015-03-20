@@ -504,6 +504,28 @@ public class OWLAPIChangeManager {
         }
     }
 
+    /**
+     * Gets the specified revision
+     * @param revisionNumber The revision number of the revision to return
+     * @return The revision that has the specified revision number, or absent if the revision with the specfied
+     * revision number does not exist.
+     */
+    public Optional<Revision> getRevision(RevisionNumber revisionNumber) {
+        if(getCurrentRevision().getValue() < revisionNumber.getValue()) {
+            return Optional.absent();
+        }
+        try {
+            readLock.lock();
+            int index = getRevisionIndexForRevision(revisionNumber);
+            if(index == -1) {
+                return Optional.absent();
+            }
+            return Optional.of(revisions.get(index));
+        } finally {
+            readLock.unlock();
+        }
+    }
+
     public RevisionSummary getRevisionSummary(RevisionNumber revisionNumber) {
         int index = getRevisionIndexForRevision(revisionNumber);
         if (index == -1) {

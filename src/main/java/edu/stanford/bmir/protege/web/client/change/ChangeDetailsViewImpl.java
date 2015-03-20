@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.diff.DiffLineElementRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffSourceDocumentRenderer;
@@ -64,6 +66,15 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
     @UiField
     protected Label tooManyChangesMessage;
 
+    @UiField
+    protected Button revertButton;
+
+    private RevertRevisionHandler revertRevisionHandler = new RevertRevisionHandler() {
+        @Override
+        public void handleRevertRevision() {
+        }
+    };
+
     @Override
     public void setSubjects(Collection<OWLEntityData> subjects) {
         StringBuilder sb = new StringBuilder();
@@ -74,6 +85,10 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
             sb.append("</span>");
         }
         subjectsField.setHTML(sb.toString().trim());
+    }
+
+    public void setRevertRevisionHandler(RevertRevisionHandler revertRevisionHandler) {
+        this.revertRevisionHandler = checkNotNull(revertRevisionHandler);
     }
 
     @Override
@@ -116,5 +131,16 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
     @Override
     public void setTimestamp(long timestamp) {
         timestampField.setBaseTime(timestamp);
+    }
+
+    @Override
+    public void setRevertRevisionVisible(boolean visible) {
+        revertButton.setVisible(visible);
+    }
+
+
+    @UiHandler("revertButton")
+    protected void handleRevertButtonClicked(ClickEvent clickEvent) {
+        revertRevisionHandler.handleRevertRevision();
     }
 }

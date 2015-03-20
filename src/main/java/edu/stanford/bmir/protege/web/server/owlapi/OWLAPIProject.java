@@ -435,7 +435,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         return Optional.absent();
     }
 
-
     /**
      * Applies a list of changes to ontologies in this project.
      *

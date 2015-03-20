@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
+import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
+import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -35,6 +37,12 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
                 ChangesPortlet.this.handleProjectChanged(event);
             }
         });
+        addApplicationEventHandler(PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
+            @Override
+            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
+                updateDisplayForSelectedEntity();
+            }
+        });
 	}
 
     private void handleProjectChanged(ProjectChangedEvent event) {
@@ -56,10 +64,9 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
     }
 
     private void updateDisplayForSelectedEntity() {
-
         ProjectId projectId = getProjectId();
 		if (getSelectedEntity().isPresent()) {
-			ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, DispatchServiceManager.get());
+			ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, DispatchServiceManager.get(), false);
 			presenter.setChangesForEntity(projectId, getSelectedEntity().get());
 		    setTitle("Changes for " + getSelectedEntityData().get().getBrowserText());
         }

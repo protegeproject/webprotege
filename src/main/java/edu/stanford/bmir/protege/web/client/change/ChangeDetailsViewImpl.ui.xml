@@ -32,6 +32,28 @@
             padding-right: 2px;
         }
 
+        .revertButton {
+            border: none;
+            background: none;
+            color: #c0c0c0;
+            border-radius: 3px;
+            padding: 4px;
+            padding-top: 1px;
+            padding-bottom: 2px;
+            cursor: pointer;
+            line-height: 10px;
+        }
+
+        .revertButton:hover {
+            background: #a0a0a0;
+            color: #ffffff;
+        }
+
+        .revertButtonContent {
+            font-size: 24px;
+            bottom: -5px;
+        }
+
         .highLevelDescription {
             font-size: 12px;
             font-weight: bold;
@@ -72,6 +94,9 @@
         </div>
         <div class="{style.author}">
             <g:InlineLabel ui:field="authorField"/> authored <g:InlineLabel ui:field="changeCountField"/> changes <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
+            <g:Button ui:field="revertButton" title="Revert changes in this revision" addStyleNames="{style.revertButton}">
+                <span class="glyphicon glyphicon-backward"/>
+            </g:Button>
         </div>
         <div class="{style.subjectsField}">
             <g:InlineHTML ui:field="subjectsField"/>
