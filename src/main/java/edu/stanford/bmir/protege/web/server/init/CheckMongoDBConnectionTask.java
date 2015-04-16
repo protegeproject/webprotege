@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.init;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoTimeoutException;
 import edu.stanford.bmir.protege.web.server.inject.DbHost;
 import edu.stanford.bmir.protege.web.server.inject.DbPort;
 
@@ -35,7 +36,7 @@ public class CheckMongoDBConnectionTask implements ConfigurationTask {
             MongoClient mongoClient = new MongoClient(dbHost, dbPort);
             mongoClient.getDatabaseNames();
             mongoClient.close();
-        } catch (UnknownHostException e) {
+        } catch (UnknownHostException | MongoTimeoutException e) {
             throw new WebProtegeConfigurationException(getUnknownHostErrorMessage());
         }
     }
