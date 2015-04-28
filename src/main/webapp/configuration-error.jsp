@@ -1,3 +1,6 @@
+<%@ page import="edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException" %>
+<%@ page import="java.io.StringWriter" %>
+<%@ page import="java.io.PrintWriter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isErrorPage="true"%>
 <html>
 <head>
@@ -10,8 +13,18 @@
     <h2>Error Message</h2>
     <div style="color: #af0002;">
         <%
-            final String message = exception.getMessage();
-            out.println(message.replace("\n", "<br>"));
+            if(exception instanceof WebProtegeConfigurationException) {
+                final String message = exception.getMessage();
+                out.println(message.replace("\n", "<br>"));
+            }
+            else {
+                StringWriter sw = new StringWriter();
+                sw.append("<pre>");
+                exception.printStackTrace(new PrintWriter(sw));
+                sw.append("</pre>");
+                out.println(sw.toString().replace("\n", "<br>"));
+            }
+
         %>
     </div>
 </body>
