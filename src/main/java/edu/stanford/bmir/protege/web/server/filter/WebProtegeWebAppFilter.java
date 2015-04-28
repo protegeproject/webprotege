@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  */
 public class WebProtegeWebAppFilter implements Filter {
 
-    private static RuntimeException configError;
+    private static Throwable configError;
 
     public ResourceCachingManager cachingManager = new ResourceCachingManager(new GwtResourceCachingStrategy());
 
@@ -27,7 +27,7 @@ public class WebProtegeWebAppFilter implements Filter {
     }
 
     public static void setError(Throwable t) {
-        configError = new RuntimeException(t);
+        configError = t;
     }
 
 
@@ -66,7 +66,12 @@ public class WebProtegeWebAppFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if(configError != null) {
-            throw configError;
+            if(configError instanceof RuntimeException) {
+                throw (RuntimeException) configError;
+            }
+            else {
+                throw new RuntimeException(configError);
+            }
         }
         chain.doFilter(request, response);
         if(request instanceof HttpServletRequest) {
