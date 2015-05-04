@@ -30,19 +30,24 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedHandler;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.Set;
 
 /**
  * Class that holds all the tabs corresponding to ontologies. It also contains
  * that MyWebProtege Tab. This class manages the loading of projects and their
  * configurations.
+ *
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
 public class ProjectDisplayContainerPanel extends TabPanel {
 
     private MyWebProtegeTab myWebProTab;
 
-    private final LinkedHashMap<ProjectId, ProjectDisplayImpl> projectId2ProjectPanelMap = new LinkedHashMap<ProjectId, ProjectDisplayImpl>();
+    private final LinkedHashMap<ProjectId, ProjectDisplayImpl> projectId2ProjectPanelMap = new LinkedHashMap<>();
+
+    private final Set<ProjectId> currentlyLoadingProjects = new HashSet<>();
 
     public ProjectDisplayContainerPanel() {
         super();
@@ -52,7 +57,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
 
 
         this.addListener(new TabPanelListenerAdapter() {
-             @Override
+            @Override
             public void onTabChange(TabPanel source, Panel tab) {
                 transmitActiveProject();
             }
@@ -90,14 +95,13 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             }
         });
 
-//        Application.get().getPlaceManager().setCurrentPlace(ProjectListPlace.DEFAULT_PLACE);
     }
 
 
     private Optional<ProjectId> getProjectIdForActiveTab() {
         Panel activeTab = getActiveTab();
         final Optional<ProjectId> projectId;
-        if(activeTab instanceof ProjectDisplay) {
+        if (activeTab instanceof ProjectDisplay) {
             projectId = Optional.of(((ProjectDisplay) activeTab).getProjectId());
         }
         else {
@@ -119,7 +123,6 @@ public class ProjectDisplayContainerPanel extends TabPanel {
     }
 
 
-
     private void respondToActiveProjectChangedEvent(final ActiveProjectChangedEvent event) {
         GWT.runAsync(new RunAsyncCallback() {
             @Override
@@ -129,7 +132,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             @Override
             public void onSuccess() {
                 Optional<ProjectId> projectId = event.getProjectId();
-                if(!projectId.isPresent()) {
+                if (!projectId.isPresent()) {
                     // Go home
                     setActiveTab(0);
                 }
@@ -149,7 +152,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         if (currentPlace instanceof ProjectListPlace) {
             setActiveTab(0);
         }
-        else if(currentPlace instanceof ProjectViewPlace) {
+        else if (currentPlace instanceof ProjectViewPlace) {
             ProjectViewPlace projectViewPlace = (ProjectViewPlace) currentPlace;
             loadProject(projectViewPlace.getProjectId());
         }
@@ -188,16 +191,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         LoadProjectRequestHandler loadProjectRequestHandler = new LoadProjectRequestHandler() {
             @Override
             public void handleProjectLoadRequest(final ProjectId projectId) {
-                GWT.runAsync(new RunAsyncCallback() {
-                    @Override
-                    public void onFailure(Throwable reason) {
-                    }
-
-                    @Override
-                    public void onSuccess() {
-                        loadProject(projectId);
-                    }
-                });
+                loadProject(projectId);
             }
         };
 
@@ -206,90 +200,86 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         add(myWebProTab);
 
 
-
     }
 
-
     private void loadProject(final ProjectId projectId) {
-        GWT.runAsync(new RunAsyncCallback() {
+        GWT.log("Received a request to load " + projectId);
+        ProjectDisplayImpl ontTab = projectId2ProjectPanelMap.get(projectId);
+        if (ontTab != null) {
+            GWT.log(projectId + " is already loaded.  Switching to tab.");
+            activate(ontTab.getId());
+            return;
+        }
+
+        if (currentlyLoadingProjects.contains(projectId)) {
+            GWT.log(projectId + " is already being loaded");
+            return;
+        }
+        currentlyLoadingProjects.add(projectId);
+        GWT.log("Loading project " + projectId);
+        Application.get().loadProject(projectId, new DispatchServiceCallbackWithProgressDisplay<Project>() {
             @Override
-            public void onFailure(Throwable reason) {
+            public String getProgressDisplayTitle() {
+                return "Loading project";
             }
 
             @Override
-            public void onSuccess() {
-                ProjectDisplayImpl ontTab = projectId2ProjectPanelMap.get(projectId);
-                if (ontTab != null) {
-                    activate(ontTab.getId());
-                }
-                else {
-                    Application.get().loadProject(projectId, new DispatchServiceCallbackWithProgressDisplay<Project>() {
-                        @Override
-                        public String getProgressDisplayTitle() {
-                            return "Loading project";
-                        }
+            public String getProgressDisplayMessage() {
+                return "Please wait.";
+            }
 
-                        @Override
-                        public String getProgressDisplayMessage() {
-                            return "Please wait.";
-                        }
+            @Override
+            public void handleSuccess(Project project) {
+                addProjectDisplay(projectId);
+            }
 
-                        @Override
-                        public void handleSuccess(Project project) {
-                            addProjectDisplay(projectId);
-                        }
+            @Override
+            protected String getErrorMessageTitle() {
+                return "Error";
+            }
 
-                        @Override
-                        protected String getErrorMessageTitle() {
-                            return "Error";
-                        }
+            @Override
+            protected String getErrorMessage(Throwable throwable) {
+                return "There was an error whilst loading the project.  Please try again.";
+            }
 
-                        @Override
-                        protected String getErrorMessage(Throwable throwable) {
-                            return "There was an error whilst loading the project.  Please try again.";
-                        }
-                    });
-                }
+            @Override
+            public void handleFinally() {
+                currentlyLoadingProjects.remove(projectId);
             }
         });
-
 
     }
 
     private void addProjectDisplay(final ProjectId projectId) {
-        GWT.runAsync(new RunAsyncCallback() {
+        if(projectId2ProjectPanelMap.containsKey(projectId)) {
+            GWT.log("Ignoring request to add project display as it has already been made for project " + projectId);
+            return;
+        }
+        ProjectDisplayImpl projectPanel = new ProjectDisplayImpl(projectId);
+        projectPanel.setClosable(true);
+        projectId2ProjectPanelMap.put(projectId, projectPanel);
+
+        projectPanel.addListener(new PanelListenerAdapter() {
             @Override
-            public void onFailure(Throwable reason) {
-            }
-
-            @Override
-            public void onSuccess() {
-                ProjectDisplayImpl projectPanel = new ProjectDisplayImpl(projectId);
-                projectPanel.setClosable(true);
-                projectId2ProjectPanelMap.put(projectId, projectPanel);
-
-                projectPanel.addListener(new PanelListenerAdapter() {
-                    @Override
-                    public boolean doBeforeDestroy(Component component) {
-                        if (component instanceof ProjectDisplayImpl) {
-                            ProjectDisplayImpl o = (ProjectDisplayImpl) component;
-                            ProjectId projectId = o.getProjectId();
-                            projectId2ProjectPanelMap.remove(projectId);
-                            ProjectManager.get().unloadProject(projectId);
-                            hideTabStripItem(o);
-                            o.hide();
-                            activate(0);
-                        }
-                        Application.get().setActiveProject(Optional.<ProjectId>absent());
-                        return true;
-                    }
-                });
-
-                add(projectPanel);
-                activate(projectPanel.getId());
-                setActiveTab(projectPanel.getId());
-                projectPanel.layoutProject();
+            public boolean doBeforeDestroy(Component component) {
+                if (component instanceof ProjectDisplayImpl) {
+                    ProjectDisplayImpl o = (ProjectDisplayImpl) component;
+                    ProjectId projectId = o.getProjectId();
+                    projectId2ProjectPanelMap.remove(projectId);
+                    ProjectManager.get().unloadProject(projectId);
+                    hideTabStripItem(o);
+                    o.hide();
+                    activate(0);
+                }
+                Application.get().setActiveProject(Optional.<ProjectId>absent());
+                return true;
             }
         });
+
+        add(projectPanel);
+        activate(projectPanel.getId());
+        setActiveTab(projectPanel.getId());
+        projectPanel.layoutProject();
     }
 }
