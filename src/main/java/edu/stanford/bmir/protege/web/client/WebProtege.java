@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
+import edu.stanford.bmir.protege.web.client.workspace.WorkspaceView;
 import edu.stanford.bmir.protege.web.client.workspace.WorkspaceViewImpl;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
@@ -37,9 +38,10 @@ public class WebProtege implements EntryPoint {
         buildUI();
     }
 
-    protected void buildUI() {
+    private void buildUI() {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
-        RootPanel.get().add(new WorkspaceViewImpl());
+        WorkspaceView view = GWT.create(WorkspaceViewImpl.class);
+        RootPanel.get().add(view);
 
         final Optional<String> appName = Application.get().getClientApplicationProperty(WebProtegePropertyName.APPLICATION_NAME);
         if (appName.isPresent()) {
