@@ -17,21 +17,12 @@ public class SignInRequestHandlerImpl implements SignInRequestHandler {
 
     @Override
     public void handleSignInRequest() {
-        GWT.runAsync(new RunAsyncCallback() {
-            @Override
-            public void onFailure(Throwable reason) {
-            }
-
-            @Override
-            public void onSuccess() {
-                UserId userId = Application.get().getUserId();
-                if (userId.isGuest()) {
-                    SignInPresenter.get().showLoginDialog();
-                }
-                else {
-                    GWT.log("User is already signed in");
-                }
-            }
-        });
+        UserId userId = Application.get().getUserId();
+        if (userId.isGuest()) {
+            SignInPresenter.get().showLoginDialog();
+        }
+        else {
+            GWT.log("User is already signed in");
+        }
     }
 }
