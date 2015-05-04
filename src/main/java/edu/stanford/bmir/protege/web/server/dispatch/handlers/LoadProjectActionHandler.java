@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.base.Stopwatch;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.LoadProjectAction;
-import edu.stanford.bmir.protege.web.client.dispatch.actions.LoadProjectResult;
+import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
+import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
@@ -69,6 +69,6 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
         for (Operation op : ops) {
             builder.addPermission(Permission.getPermission(op.getName()));
         }
-        return new LoadProjectResult(executionContext.getUserId(), builder.build(), projectDetails);
+        return new LoadProjectResult(action.getProjectId(), executionContext.getUserId(), builder.build(), projectDetails);
     }
 }
