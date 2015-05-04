@@ -68,6 +68,8 @@ public class ApplicationInitManager {
 
         private TaskRunner nextRunner;
 
+        private long startTime;
+
         private InitTaskRunner(ApplicationInitializationTask task, TaskRunner nextRunner) {
             this.task = task;
             this.nextRunner = nextRunner;
@@ -75,14 +77,14 @@ public class ApplicationInitManager {
 
         public void runTask() {
             GWT.log("Running init task: " + task.getName() + " ... ");
-            long t0 = new Date().getTime();
+            startTime = new Date().getTime();
             task.run(this);
-            long t1 = new Date().getTime();
-            GWT.log("    ... completed in " + (t1 - t0) + " ms");
         }
 
         @Override
         public void taskComplete() {
+            long finishTime = new Date().getTime();
+            GWT.log("    ... " + task.getName() + " completed in " + (finishTime - startTime) + " ms");
             nextRunner.runTask();
         }
 
