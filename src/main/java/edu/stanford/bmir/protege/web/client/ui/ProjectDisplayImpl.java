@@ -148,6 +148,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     private void getProjectConfiguration() {
+        GWT.log("Getting the project configuration");
         DispatchServiceManager.get().execute(new GetUIConfigurationAction(projectId),
                 new DispatchServiceCallbackWithProgressDisplay<GetUIConfigurationResult>() {
                     @Override
@@ -180,10 +181,12 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
 
-    protected void createOntolgyForm() {
+    private void createOntolgyForm() {
         Project project = ProjectManager.get().getProject(projectId).get();
         List<AbstractTab> tabs = project.getLayoutManager().createTabs(project.getProjectLayoutConfiguration());
+        GWT.log("Creating the ontology form from " + tabs.size() + " tabs");
         for (AbstractTab tab : tabs) {
+            GWT.log("Attempting to add tab " + tab.getLabel());
             addTab(tab);
             updateTabStyle(tab);
         }
@@ -205,7 +208,11 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
     }
 
-    protected void addTab(AbstractTab tab) {
+    private void addTab(AbstractTab tab) {
+        GWT.log("Add Tab: " + tab.getLabel());
+        if(tabs.contains(tab)) {
+            throw new RuntimeException("Tab already present");
+        }
         tabs.add(tab);
         add(tab);
     }
