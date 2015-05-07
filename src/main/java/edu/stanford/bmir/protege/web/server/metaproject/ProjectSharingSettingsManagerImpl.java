@@ -102,11 +102,11 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
         // TODO: Check we are allowed to manage projects permissions
 
-        Map<SharingSetting, Set<User>> usersBySharingSetting = createUsersBySharingSettingMap(projectSharingSettings, metaProject);
+        Map<SharingSetting, Set<User>> usersBySharingSetting = createUsersBySharingSettingMap(projectSharingSettings);
 
-        Set<GroupOperation> allowedGroupOperations = createAllowedGroupOperationsFromSharingSettings(metaProject, projectId, usersBySharingSetting);
+        Set<GroupOperation> allowedGroupOperations = createAllowedGroupOperationsFromSharingSettings(projectId, usersBySharingSetting);
 
-        getWorldAllowedOperations(projectSharingSettings, metaProject, allowedGroupOperations);
+        getWorldAllowedOperations(projectSharingSettings, allowedGroupOperations);
 
         projectInstance.setAllowedGroupOperations(allowedGroupOperations);
 
@@ -129,14 +129,14 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     }
 
 
-    private Set<GroupOperation> createAllowedGroupOperationsFromSharingSettings(MetaProject metaProject, ProjectId projectId, Map<SharingSetting, Set<User>> usersBySharingSetting) {
+    private Set<GroupOperation> createAllowedGroupOperationsFromSharingSettings(ProjectId projectId, Map<SharingSetting, Set<User>> usersBySharingSetting) {
         Set<GroupOperation> allowedGroupOperations = new HashSet<GroupOperation>();
         for(SharingSetting sharingSetting : SharingSetting.values()) {
-            Group sharingSettingGroup = getOrCreateGroup(metaProject, projectId, sharingSetting);
+            Group sharingSettingGroup = getOrCreateGroup(projectId, sharingSetting);
             Set<User> sharingSettingUsers = usersBySharingSetting.get(sharingSetting);
             sharingSettingGroup.setMembers(sharingSettingUsers);
             GroupOperation groupOperation = metaProject.createGroupOperation();
-            Set<Operation> sharingSettingOperatations = getOperationsForSharingSetting(metaProject, sharingSetting);
+            Set<Operation> sharingSettingOperatations = getOperationsForSharingSetting(sharingSetting);
             groupOperation.setAllowedOperations(sharingSettingOperatations);
             groupOperation.setAllowedGroup(sharingSettingGroup);
             allowedGroupOperations.add(groupOperation);
@@ -144,13 +144,13 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         return allowedGroupOperations;
     }
 
-    private Map<SharingSetting, Set<User>> createUsersBySharingSettingMap(ProjectSharingSettings projectSharingSettings, MetaProject metaProject) {
+    private Map<SharingSetting, Set<User>> createUsersBySharingSettingMap(ProjectSharingSettings projectSharingSettings) {
         Map<SharingSetting, Set<User>> usersBySharingSetting = createSharingSettingMap();
 
         for (UserSharingSetting userSharingSetting : projectSharingSettings.getSharingSettings()) {
             UserId userId = userSharingSetting.getUserId();
             if (!userId.isGuest()) {
-                User user = getUserFromUserId(metaProject, userId);
+                User user = getUserFromUserId(userId);
                 if (user != null) {
                     usersBySharingSetting.get(userSharingSetting.getSharingSetting()).add(user);
                 }
@@ -158,7 +158,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
                     if(userId.getUserName().contains("@")) {
                         // Assume it's an email invitation
                         sendEmailInvitation(projectSharingSettings, userSharingSetting);
-                        User freshUser = getUserFromUserId(metaProject, userId);
+                        User freshUser = getUserFromUserId(userId);
                         usersBySharingSetting.get(userSharingSetting.getSharingSetting()).add(freshUser);
                     }
                 }
@@ -180,12 +180,12 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 //        AccessPolicyManager.get().createTemporaryAccountForInvitation(projectSharingSettings.getProjectId(), baseURL, invitations);
     }
 
-    private void getWorldAllowedOperations(ProjectSharingSettings projectSharingSettings, MetaProject metaProject, Set<GroupOperation> allowedGroupOperations) {
+    private void getWorldAllowedOperations(ProjectSharingSettings projectSharingSettings, Set<GroupOperation> allowedGroupOperations) {
         SharingSetting defaultSharingSetting = projectSharingSettings.getDefaultSharingSetting();
-        Group worldGroup = getOrCreateGroup(metaProject, WORLD_GROUP_NAME);
+        Group worldGroup = getOrCreateGroup(WORLD_GROUP_NAME);
         GroupOperation worldGroupOperation = metaProject.createGroupOperation();
         worldGroupOperation.setAllowedGroup(worldGroup);
-        worldGroupOperation.setAllowedOperations(getOperationsForSharingSetting(metaProject, defaultSharingSetting));
+        worldGroupOperation.setAllowedOperations(getOperationsForSharingSetting(defaultSharingSetting));
         allowedGroupOperations.add(worldGroupOperation);
     }
 
@@ -197,16 +197,16 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         return usersBySharingSetting;
     }
 
-    private User getUserFromUserId(MetaProject metaProject, UserId userId) {
+    private User getUserFromUserId(UserId userId) {
         return metaProject.getUser(userId.getUserName());
     }
 
-    private Group getOrCreateGroup(MetaProject metaProject, ProjectId projectId, SharingSetting sharingSetting) {
+    private Group getOrCreateGroup(ProjectId projectId, SharingSetting sharingSetting) {
         String groupName = getGroupName(projectId, sharingSetting);
-        return getOrCreateGroup(metaProject, groupName);
+        return getOrCreateGroup(groupName);
     }
 
-    private Group getOrCreateGroup(MetaProject metaProject, String groupName) {
+    private Group getOrCreateGroup(String groupName) {
         Group group = metaProject.getGroup(groupName);
         if (group == null) {
             group = metaProject.createGroup(groupName);
@@ -237,37 +237,37 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     }
 
 
-    private Set<Operation> getOperationsForSharingSetting(MetaProject metaProject, SharingSetting sharingSetting) {
+    private Set<Operation> getOperationsForSharingSetting(SharingSetting sharingSetting) {
         switch (sharingSetting) {
             case NONE:
                 return Collections.emptySet();
             case VIEW:
                 Set<Operation> viewOps = new HashSet<Operation>();
-                viewOps.add(getReadOperation(metaProject));
-                viewOps.add(getDisplayInProjectListOperation(metaProject));
+                viewOps.add(getReadOperation());
+                viewOps.add(getDisplayInProjectListOperation());
                 return viewOps;
             case COMMENT:
                 Set<Operation> commentOps = new HashSet<Operation>();
-                commentOps.add(getReadOperation(metaProject));
-                commentOps.add(getCommentOperation(metaProject));
-                commentOps.add(getDisplayInProjectListOperation(metaProject));
+                commentOps.add(getReadOperation());
+                commentOps.add(getCommentOperation());
+                commentOps.add(getDisplayInProjectListOperation());
                 return commentOps;
             case EDIT:
                 Set<Operation> editOps = new HashSet<Operation>();
-                editOps.add(getReadOperation(metaProject));
-                editOps.add(getWriteOperation(metaProject));
-                editOps.add(getDisplayInProjectListOperation(metaProject));
+                editOps.add(getReadOperation());
+                editOps.add(getWriteOperation());
+                editOps.add(getDisplayInProjectListOperation());
                 return editOps;
             default:
                 return Collections.emptySet();
         }
     }
 
-    private Operation getWriteOperation(MetaProject metaProject) {
+    private Operation getWriteOperation() {
         return metaProject.getOperation(OperationName.WRITE.getName());
     }
 
-    private Operation getCommentOperation(MetaProject metaProject) {
+    private Operation getCommentOperation() {
         Operation operation = metaProject.getOperation(OperationName.COMMENT.getName());
         if(operation == null) {
             throw new RuntimeException("The '" + OperationName.COMMENT.getName() + "' is not an instance in the meta-project.");
@@ -275,11 +275,11 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         return operation;
     }
 
-    private Operation getDisplayInProjectListOperation(MetaProject metaProject) {
+    private Operation getDisplayInProjectListOperation() {
         return metaProject.getOperation(OperationName.DISPLAY_IN_PROJECT_List.getName());
     }
 
-    private Operation getReadOperation(MetaProject metaProject) {
+    private Operation getReadOperation() {
         return metaProject.getOperation(OperationName.READ.getName());
     }
 
