@@ -156,12 +156,13 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
      * .bmir.protege.web.client.util.EntityData)
      */
     public final void setEntity(EntityData newEntity) {
+        Optional<OWLEntityData> selectedEntityData = getSelectedEntityData();
         GWT.log("Setting entity in " + getClass().getName()
                         + " portlet.  The entity is "
-                        + (newEntity == null ? "NULL" : newEntity.getBrowserText() + " <" + newEntity.getName() + ">"));
-        handleBeforeSetEntity(getSelectedEntityData());
+                        + (selectedEntityData.isPresent() ? selectedEntityData.get() : "Absent"));
+        handleBeforeSetEntity(selectedEntityData);
         _currentEntity = newEntity;
-        handleAfterSetEntity(getSelectedEntityData());
+        handleAfterSetEntity(selectedEntityData);
         // doLayout();
     }
 
