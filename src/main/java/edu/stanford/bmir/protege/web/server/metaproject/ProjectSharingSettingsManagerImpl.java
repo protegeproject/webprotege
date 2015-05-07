@@ -100,8 +100,6 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         ProjectId projectId = projectSharingSettings.getProjectId();
         ProjectInstance projectInstance = metaProject.getProject(projectId.getId());
 
-        // TODO: Check we are allowed to manage projects permissions
-
         Map<SharingSetting, Set<User>> usersBySharingSetting = createUsersBySharingSettingMap(projectSharingSettings);
 
         Set<GroupOperation> allowedGroupOperations = createAllowedGroupOperationsFromSharingSettings(projectId, usersBySharingSetting);
@@ -120,7 +118,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
      */
     @Override
     public void applyDefaultSharingSettings(ProjectId projectId, UserId userId) {
-        List<UserSharingSetting> userSharingSettings = new ArrayList<UserSharingSetting>();
+        List<UserSharingSetting> userSharingSettings = new ArrayList<>();
         if (!userId.isGuest()) {
             userSharingSettings.add(new UserSharingSetting(userId, SharingSetting.EDIT));
         }
@@ -130,7 +128,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
 
     private Set<GroupOperation> createAllowedGroupOperationsFromSharingSettings(ProjectId projectId, Map<SharingSetting, Set<User>> usersBySharingSetting) {
-        Set<GroupOperation> allowedGroupOperations = new HashSet<GroupOperation>();
+        Set<GroupOperation> allowedGroupOperations = new HashSet<>();
         for(SharingSetting sharingSetting : SharingSetting.values()) {
             Group sharingSettingGroup = getOrCreateGroup(projectId, sharingSetting);
             Set<User> sharingSettingUsers = usersBySharingSetting.get(sharingSetting);
@@ -157,7 +155,6 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
                 else {
                     if(userId.getUserName().contains("@")) {
                         // Assume it's an email invitation
-                        sendEmailInvitation(projectSharingSettings, userSharingSetting);
                         User freshUser = getUserFromUserId(userId);
                         usersBySharingSetting.get(userSharingSetting.getSharingSetting()).add(freshUser);
                     }
@@ -167,7 +164,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         return usersBySharingSetting;
     }
 
-    private void sendEmailInvitation(ProjectSharingSettings projectSharingSettings, UserSharingSetting userSharingSetting) {
+//    private void sendEmailInvitation(ProjectSharingSettings projectSharingSettings, UserSharingSetting userSharingSetting) {
 //        UserId userId = userSharingSetting.getUserId();
 //        // Email invitation
 //        List<Invitation> invitations = new ArrayList<Invitation>();
@@ -178,7 +175,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 //        String baseURL = "http://" + WebProtegeProperties.get().getApplicationHostName();
 //
 //        AccessPolicyManager.get().createTemporaryAccountForInvitation(projectSharingSettings.getProjectId(), baseURL, invitations);
-    }
+//    }
 
     private void getWorldAllowedOperations(ProjectSharingSettings projectSharingSettings, Set<GroupOperation> allowedGroupOperations) {
         SharingSetting defaultSharingSetting = projectSharingSettings.getDefaultSharingSetting();
@@ -190,7 +187,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     }
 
     private Map<SharingSetting, Set<User>> createSharingSettingMap() {
-        Map<SharingSetting, Set<User>> usersBySharingSetting = new HashMap<SharingSetting, Set<User>>();
+        Map<SharingSetting, Set<User>> usersBySharingSetting = new HashMap<>();
         for(SharingSetting sharingSetting : SharingSetting.values()) {
             usersBySharingSetting.put(sharingSetting, new HashSet<User>());
         }
@@ -242,18 +239,18 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
             case NONE:
                 return Collections.emptySet();
             case VIEW:
-                Set<Operation> viewOps = new HashSet<Operation>();
+                Set<Operation> viewOps = new HashSet<>();
                 viewOps.add(getReadOperation());
                 viewOps.add(getDisplayInProjectListOperation());
                 return viewOps;
             case COMMENT:
-                Set<Operation> commentOps = new HashSet<Operation>();
+                Set<Operation> commentOps = new HashSet<>();
                 commentOps.add(getReadOperation());
                 commentOps.add(getCommentOperation());
                 commentOps.add(getDisplayInProjectListOperation());
                 return commentOps;
             case EDIT:
-                Set<Operation> editOps = new HashSet<Operation>();
+                Set<Operation> editOps = new HashSet<>();
                 editOps.add(getReadOperation());
                 editOps.add(getWriteOperation());
                 editOps.add(getDisplayInProjectListOperation());
