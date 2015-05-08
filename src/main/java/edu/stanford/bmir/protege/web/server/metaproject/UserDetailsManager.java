@@ -13,18 +13,10 @@ import java.util.Collection;
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public interface UserDetailsManager extends HasUserIds {
+public interface UserDetailsManager extends HasUserIds, HasGetUserByUserIdOrEmail {
 
     @Override
     Collection<UserId> getUserIds();
-
-    /**
-     * Gets a User by its user id or it's email address.
-     * @param userNameOrEmail The user id or email address as a string.  Not {@code null}.
-     * @return The User.  An absent value will be returned if there is not such user with the specified id or email
-     * address. Not {@code null}.
-     */
-    Optional<User> getUserByUserIdOrEmail(String userNameOrEmail);
 
     UserDetails getUserDetails(UserId userId);
 

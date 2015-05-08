@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.metaproject.HasGetUserByUserIdOrEmail;
 import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordResult;
@@ -25,13 +26,13 @@ public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAc
     private final WebProtegeLogger logger;
 
 
-    private final UserDetailsManager userDetailsManager;
+    private final HasGetUserByUserIdOrEmail userDetailsManager;
 
     private final ResetPasswordMailer mailer;
 
     @Inject
     public ResetPasswordActionHandler(
-            UserDetailsManager userDetailsManager, ResetPasswordMailer mailer,
+            HasGetUserByUserIdOrEmail userDetailsManager, ResetPasswordMailer mailer,
             WebProtegeLogger logger) {
         this.userDetailsManager = userDetailsManager;
         this.mailer = mailer;
