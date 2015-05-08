@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
+import com.google.common.base.*;
+import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -24,6 +27,8 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
 
     public static final String WORLD_GROUP_NAME = "World";
+
+    private WebProtegeLogger logger;
 
     public static enum OperationName {
 
@@ -66,10 +71,14 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
     private final ProjectPermissionsManager projectPermissionsManager;
 
+    private final HasGetUserByUserIdOrEmail userLookupManager;
+
     @Inject
-    public ProjectSharingSettingsManagerImpl(MetaProject metaProject, ProjectPermissionsManager projectPermissionsManager) {
+    public ProjectSharingSettingsManagerImpl(MetaProject metaProject,  HasGetUserByUserIdOrEmail userLookupManager, ProjectPermissionsManager projectPermissionsManager, WebProtegeLogger logger) {
         this.metaProject = checkNotNull(metaProject);
+        this.userLookupManager = checkNotNull(userLookupManager);
         this.projectPermissionsManager = checkNotNull(projectPermissionsManager);
+        this.logger = checkNotNull(logger);
     }
 
     @Override
@@ -151,16 +160,12 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         for (UserSharingSetting userSharingSetting : projectSharingSettings.getSharingSettings()) {
             UserId userId = userSharingSetting.getUserId();
             if (!userId.isGuest()) {
-                User user = getUserFromUserId(userId);
-                if (user != null) {
-                    usersBySharingSetting.put(userSharingSetting.getSharingSetting(), user);
+                Optional<User> user = userLookupManager.getUserByUserIdOrEmail(userId.getUserName());
+                if (user.isPresent()) {
+                    usersBySharingSetting.put(userSharingSetting.getSharingSetting(), user.get());
                 }
                 else {
-                    if(userId.getUserName().contains("@")) {
-                        // Assume it's an email invitation
-                        User freshUser = getUserFromUserId(userId);
-                        usersBySharingSetting.put(userSharingSetting.getSharingSetting(), freshUser);
-                    }
+                    logger.info("Cannot share project with user because user does not exist: %s", userId);
                 }
             }
         }
@@ -187,10 +192,6 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         worldGroupOperation.setAllowedGroup(worldGroup);
         worldGroupOperation.setAllowedOperations(getOperationsForSharingSetting(defaultSharingSetting));
         allowedGroupOperations.add(worldGroupOperation);
-    }
-
-    private User getUserFromUserId(UserId userId) {
-        return metaProject.getUser(userId.getUserName());
     }
 
     private Group getOrCreateGroup(ProjectId projectId, SharingSetting sharingSetting) {
