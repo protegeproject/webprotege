@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
+import edu.stanford.bmir.protege.web.server.metaproject.HasGetUserByUserIdOrEmail;
 import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordAction;
 import edu.stanford.bmir.protege.web.shared.chgpwd.ResetPasswordData;
@@ -30,7 +31,7 @@ public class ResetPasswordActionHandler_TestCase {
     private final String EMAIL_ADDRESS = "EMAIL.address";
 
     @Mock
-    private UserDetailsManager mpm;
+    private HasGetUserByUserIdOrEmail mpm;
 
     @Mock
     private User user;

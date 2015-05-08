@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import edu.stanford.bmir.protege.web.server.user.HasUserIds;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 
@@ -26,6 +27,7 @@ public class MetaProjectModule extends AbstractModule {
         bind(ProjectSharingSettingsManager.class).to(ProjectSharingSettingsManagerImpl.class).asEagerSingleton();
         bind(ServerSettingsManager.class).to(ServerSettingsManagerImpl.class).asEagerSingleton();
         bind(UserDetailsManager.class).to(UserDetailsManagerImpl.class).asEagerSingleton();
+        bind(HasGetUserByUserIdOrEmail.class).to(new TypeLiteral<UserDetailsManager>(){});
         bind(HasUserIds.class).to(UserDetailsManagerImpl.class).asEagerSingleton();
     }
 }
