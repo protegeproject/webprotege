@@ -130,8 +130,8 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
     }
 
     @Override
-    public User getUser(String userNameOrEmail) {
-        return userDetailsManager.getUser(userNameOrEmail);
+    public User getUserByUserIdOrEmail(String userNameOrEmail) {
+        return userDetailsManager.getUserByUserIdOrEmail(userNameOrEmail);
     }
 
     @Override
