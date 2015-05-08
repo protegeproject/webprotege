@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
+import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;

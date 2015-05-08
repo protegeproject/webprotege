@@ -1,12 +1,11 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
-import com.google.common.base.*;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
-import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.UserSharingSetting;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

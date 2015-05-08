@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.button.AnnotatedRadioButton;
 
 import java.util.HashMap;

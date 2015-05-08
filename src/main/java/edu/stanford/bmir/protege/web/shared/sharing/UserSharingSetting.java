@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.rpc.data;
+package edu.stanford.bmir.protege.web.shared.sharing;
 
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
