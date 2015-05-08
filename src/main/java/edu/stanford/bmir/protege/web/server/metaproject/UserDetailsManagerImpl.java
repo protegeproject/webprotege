@@ -19,11 +19,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class UserDetailsManagerImpl implements UserDetailsManager {
 
-    private MetaProject metaProject;
+    private final MetaProject metaProject;
 
     @Inject
     public UserDetailsManagerImpl(MetaProject metaProject) {
-        this.metaProject = metaProject;
+        this.metaProject = checkNotNull(metaProject);
     }
 
     public MetaProject getMetaProject() {
@@ -43,29 +43,25 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
     }
 
     @Override
-    public User getUserByUserIdOrEmail(String userNameOrEmail) {
+    public Optional<User> getUserByUserIdOrEmail(String userNameOrEmail) {
+        // Here for silly legacy reasons
         if (userNameOrEmail == null) {
-            return null;
+            return Optional.absent();
         }
 
-        //try to get it by name first
-        User user = getMetaProject().getUser(userNameOrEmail);
-        if (user != null) {
-            return user;
+        // By user Id first
+        final User userById = getMetaProject().getUser(userNameOrEmail);
+        if (userById != null) {
+            return Optional.of(userById);
         }
 
-        //get user by email
-        Set<User> users = getMetaProject().getUsers();
-        Iterator<User> it = users.iterator();
-
-        while (it.hasNext() && user == null) {
-            User u = it.next();
-            if (userNameOrEmail.equals(u.getEmail())) {
-                user = u;
+        // Not found.  There's no index to email so we have to search through the lot of them.
+        for(User user : getMetaProject().getUsers()) {
+            if(userNameOrEmail.equals(user.getEmail())) {
+                return Optional.of(user);
             }
         }
-
-        return user;
+        return Optional.absent();
     }
 
     @Override
@@ -83,11 +79,11 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(userId.isGuest()) {
             return Optional.absent();
         }
-        User user = getUserByUserIdOrEmail(userId.getUserName());
-        if(user == null) {
-            return Optional.absent();
+        Optional<User> user = getUserByUserIdOrEmail(userId.getUserName());
+        if(user.isPresent()) {
+            return Optional.fromNullable(user.get().getEmail());
         }
-        return Optional.fromNullable(user.getEmail());
+        return Optional.absent();
     }
 
     @Override
@@ -97,9 +93,9 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(userId.isGuest()) {
             return;
         }
-        User user = getUserByUserIdOrEmail(userId.getUserName());
-        if(user != null) {
-            user.setEmail(email);
+        Optional<User> user = getUserByUserIdOrEmail(userId.getUserName());
+        if(user.isPresent()) {
+            user.get().setEmail(email);
         }
         OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
     }
