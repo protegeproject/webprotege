@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDown;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDownModel;
 

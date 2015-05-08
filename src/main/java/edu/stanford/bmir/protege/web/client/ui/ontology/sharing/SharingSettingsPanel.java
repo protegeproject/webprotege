@@ -5,9 +5,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
-import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
-import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.UserSharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestBox;
@@ -67,9 +67,10 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
             @Override
             public List<UserId> getItemsMatchingExactly(String itemString) {
                 List<UserId> userIds = super.getItemsMatchingExactly(itemString);
-                if(userIds.isEmpty() && itemString.contains("@")) {
-                    userIds.add(UserId.getUserId(itemString.trim()));
-                }
+                // TODO:  This disables inviting users by email.  Consider whether we really need or want to support this.
+//                if(userIds.isEmpty() && itemString.contains("@")) {
+//                    userIds.add(UserId.getUserId(itemString.trim()));
+//                }
                 return userIds;
             }
         };

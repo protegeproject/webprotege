@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
