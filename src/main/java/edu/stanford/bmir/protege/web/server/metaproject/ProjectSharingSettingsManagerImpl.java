@@ -13,6 +13,8 @@ import edu.stanford.smi.protege.server.metaproject.*;
 import javax.inject.Inject;
 import java.util.*;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -60,14 +62,14 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     public static final String NONE_GROUP_NAME_SUFFIX = "_None";
 
 
-    private MetaProject metaProject;
+    private final MetaProject metaProject;
 
-    private ProjectPermissionsManager projectPermissionsManager;
+    private final ProjectPermissionsManager projectPermissionsManager;
 
     @Inject
     public ProjectSharingSettingsManagerImpl(MetaProject metaProject, ProjectPermissionsManager projectPermissionsManager) {
-        this.metaProject = metaProject;
-        this.projectPermissionsManager = projectPermissionsManager;
+        this.metaProject = checkNotNull(metaProject);
+        this.projectPermissionsManager = checkNotNull(projectPermissionsManager);
     }
 
     @Override
