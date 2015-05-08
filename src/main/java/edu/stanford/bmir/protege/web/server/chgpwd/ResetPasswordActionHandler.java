@@ -53,7 +53,7 @@ public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAc
             ResetPasswordAction action, ExecutionContext executionContext) {
         final String emailAddress = action.getResetPasswordData().getEmailAddress();
         try {
-            User user = userDetailsManager.getUser(emailAddress);
+            User user = userDetailsManager.getUserByUserIdOrEmail(emailAddress);
             if(user == null) {
                 return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
             }

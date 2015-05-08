@@ -43,7 +43,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
     }
 
     @Override
-    public User getUser(String userNameOrEmail) {
+    public User getUserByUserIdOrEmail(String userNameOrEmail) {
         if (userNameOrEmail == null) {
             return null;
         }
@@ -83,7 +83,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(userId.isGuest()) {
             return Optional.absent();
         }
-        User user = getUser(userId.getUserName());
+        User user = getUserByUserIdOrEmail(userId.getUserName());
         if(user == null) {
             return Optional.absent();
         }
@@ -97,7 +97,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(userId.isGuest()) {
             return;
         }
-        User user = getUser(userId.getUserName());
+        User user = getUserByUserIdOrEmail(userId.getUserName());
         if(user != null) {
             user.setEmail(email);
         }
