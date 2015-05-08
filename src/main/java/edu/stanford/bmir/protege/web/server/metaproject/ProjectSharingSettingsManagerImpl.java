@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.SharingSetting;
 import edu.stanford.bmir.protege.web.client.rpc.data.UserSharingSetting;
@@ -100,7 +102,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         ProjectId projectId = projectSharingSettings.getProjectId();
         ProjectInstance projectInstance = metaProject.getProject(projectId.getId());
 
-        Map<SharingSetting, Set<User>> usersBySharingSetting = createUsersBySharingSettingMap(projectSharingSettings);
+        Multimap<SharingSetting, User> usersBySharingSetting = createUsersBySharingSettingMap(projectSharingSettings);
 
         Set<GroupOperation> allowedGroupOperations = createAllowedGroupOperationsFromSharingSettings(projectId, usersBySharingSetting);
 
@@ -127,11 +129,11 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     }
 
 
-    private Set<GroupOperation> createAllowedGroupOperationsFromSharingSettings(ProjectId projectId, Map<SharingSetting, Set<User>> usersBySharingSetting) {
+    private Set<GroupOperation> createAllowedGroupOperationsFromSharingSettings(ProjectId projectId, Multimap<SharingSetting, User> usersBySharingSetting) {
         Set<GroupOperation> allowedGroupOperations = new HashSet<>();
         for(SharingSetting sharingSetting : SharingSetting.values()) {
             Group sharingSettingGroup = getOrCreateGroup(projectId, sharingSetting);
-            Set<User> sharingSettingUsers = usersBySharingSetting.get(sharingSetting);
+            Collection<User> sharingSettingUsers = usersBySharingSetting.get(sharingSetting);
             sharingSettingGroup.setMembers(sharingSettingUsers);
             GroupOperation groupOperation = metaProject.createGroupOperation();
             Set<Operation> sharingSettingOperatations = getOperationsForSharingSetting(sharingSetting);
@@ -142,21 +144,20 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         return allowedGroupOperations;
     }
 
-    private Map<SharingSetting, Set<User>> createUsersBySharingSettingMap(ProjectSharingSettings projectSharingSettings) {
-        Map<SharingSetting, Set<User>> usersBySharingSetting = createSharingSettingMap();
-
+    private Multimap<SharingSetting, User> createUsersBySharingSettingMap(ProjectSharingSettings projectSharingSettings) {
+        Multimap<SharingSetting, User> usersBySharingSetting = HashMultimap.create();
         for (UserSharingSetting userSharingSetting : projectSharingSettings.getSharingSettings()) {
             UserId userId = userSharingSetting.getUserId();
             if (!userId.isGuest()) {
                 User user = getUserFromUserId(userId);
                 if (user != null) {
-                    usersBySharingSetting.get(userSharingSetting.getSharingSetting()).add(user);
+                    usersBySharingSetting.put(userSharingSetting.getSharingSetting(), user);
                 }
                 else {
                     if(userId.getUserName().contains("@")) {
                         // Assume it's an email invitation
                         User freshUser = getUserFromUserId(userId);
-                        usersBySharingSetting.get(userSharingSetting.getSharingSetting()).add(freshUser);
+                        usersBySharingSetting.put(userSharingSetting.getSharingSetting(), freshUser);
                     }
                 }
             }
@@ -184,14 +185,6 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         worldGroupOperation.setAllowedGroup(worldGroup);
         worldGroupOperation.setAllowedOperations(getOperationsForSharingSetting(defaultSharingSetting));
         allowedGroupOperations.add(worldGroupOperation);
-    }
-
-    private Map<SharingSetting, Set<User>> createSharingSettingMap() {
-        Map<SharingSetting, Set<User>> usersBySharingSetting = new HashMap<>();
-        for(SharingSetting sharingSetting : SharingSetting.values()) {
-            usersBySharingSetting.put(sharingSetting, new HashSet<User>());
-        }
-        return usersBySharingSetting;
     }
 
     private User getUserFromUserId(UserId userId) {
