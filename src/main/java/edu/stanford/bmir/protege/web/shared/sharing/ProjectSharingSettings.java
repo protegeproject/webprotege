@@ -16,7 +16,7 @@ public class ProjectSharingSettings implements Serializable {
 
     private ProjectId projectId;
     
-    private List<UserSharingSetting> sharingSettings = new ArrayList<UserSharingSetting>();
+    private List<UserSharingSetting> sharingSettings = new ArrayList<>();
 
     private SharingSetting defaultSharingSetting;
 
@@ -34,12 +34,7 @@ public class ProjectSharingSettings implements Serializable {
     public ProjectSharingSettings(ProjectId projectId, SharingSetting defaultSharingSetting, List<UserSharingSetting> sharingSettings) {
         this.projectId = projectId;
         this.defaultSharingSetting = defaultSharingSetting;
-        this.sharingSettings = new ArrayList<UserSharingSetting>();
-        for(UserSharingSetting userSharingSetting : sharingSettings) {
-            if(!userSharingSetting.getUserId().isGuest()) {
-                this.sharingSettings.add(userSharingSetting);
-            }
-        }
+        this.sharingSettings = new ArrayList<>(sharingSettings);
     }
 
     public ProjectId getProjectId() {
@@ -51,7 +46,7 @@ public class ProjectSharingSettings implements Serializable {
     }
 
     public List<UserSharingSetting> getSharingSettings() {
-        return sharingSettings;
+        return new ArrayList<>(sharingSettings);
     }
 
 
