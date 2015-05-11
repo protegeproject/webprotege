@@ -1,8 +1,11 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -30,14 +33,8 @@ public class UserSharingSetting implements Comparable<UserSharingSetting>, Seria
      * is <code>null</code>.
      */
     public UserSharingSetting(UserId userId, SharingSetting sharingSetting) {
-        if(userId == null) {
-            throw new NullPointerException("The userId parameter must not be null.");
-        }
-        if(sharingSetting == null) {
-            throw new NullPointerException("The sharingSetting parameter must not be null.");
-        }
-        this.userId = userId;
-        this.sharingSetting = sharingSetting;
+        this.userId = checkNotNull(userId);
+        this.sharingSetting = checkNotNull(sharingSetting);
     }
 
     /**
@@ -58,5 +55,31 @@ public class UserSharingSetting implements Comparable<UserSharingSetting>, Seria
 
     public int compareTo(UserSharingSetting o) {
         return userId.compareTo(o.getUserId());
+    }
+
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("UserSharingSetting")
+                .addValue(userId)
+                .addValue(sharingSetting)
+                .toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(userId, sharingSetting);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof UserSharingSetting)) {
+            return false;
+        }
+        UserSharingSetting other = (UserSharingSetting) obj;
+        return this.userId.equals(other.userId) && this.sharingSetting.equals(other.sharingSetting);
     }
 }
