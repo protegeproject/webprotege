@@ -5,7 +5,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
-import edu.stanford.bmir.protege.web.shared.sharing.UserSharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -84,7 +84,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
         ProjectInstance projectInstance = metaProject.getProject(projectId.getId());
         Set<GroupOperation> groupOperations = projectInstance.getAllowedGroupOperations();
-        List<UserSharingSetting> result = new ArrayList<>();
+        List<SharingSetting> result = new ArrayList<>();
         Set<User> usersWithPermissionsOnProject = new HashSet<>();
         SharingPermission defaultSharingPermission = SharingPermission.getDefaultSharingSetting();
         for (GroupOperation groupOperation : groupOperations) {
@@ -98,8 +98,8 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         for (User user : usersWithPermissionsOnProject) {
             Collection<Operation> operations = projectPermissionsManager.getAllowedOperations(projectId.getId(), user.getName());
             SharingPermission sharingPermission = getSharingSettingFromOperations(operations);
-            UserSharingSetting userSharingSetting = new UserSharingSetting(UserId.getUserId(user.getName()), sharingPermission);
-            result.add(userSharingSetting);
+            SharingSetting sharingSetting = new SharingSetting(UserId.getUserId(user.getName()), sharingPermission);
+            result.add(sharingSetting);
         }
         Collections.sort(result);
 
@@ -130,9 +130,9 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
      */
     @Override
     public void applyDefaultSharingSettings(ProjectId projectId, UserId userId) {
-        List<UserSharingSetting> userSharingSettings = new ArrayList<>();
+        List<SharingSetting> userSharingSettings = new ArrayList<>();
         if (!userId.isGuest()) {
-            userSharingSettings.add(new UserSharingSetting(userId, SharingPermission.EDIT));
+            userSharingSettings.add(new SharingSetting(userId, SharingPermission.EDIT));
         }
         ProjectSharingSettings sharingSettings = new ProjectSharingSettings(projectId, SharingPermission.NONE, userSharingSettings);
         this.setProjectSharingSettings(sharingSettings);
@@ -156,12 +156,12 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
     private Multimap<SharingPermission, User> createUsersBySharingSettingMap(ProjectSharingSettings projectSharingSettings) {
         Multimap<SharingPermission, User> usersBySharingSetting = HashMultimap.create();
-        for (UserSharingSetting userSharingSetting : projectSharingSettings.getSharingSettings()) {
-            UserId userId = userSharingSetting.getUserId();
+        for (SharingSetting sharingSetting : projectSharingSettings.getSharingSettings()) {
+            UserId userId = sharingSetting.getUserId();
             if (!userId.isGuest()) {
                 Optional<User> user = userLookupManager.getUserByUserIdOrEmail(userId.getUserName());
                 if (user.isPresent()) {
-                    usersBySharingSetting.put(userSharingSetting.getSharingPermission(), user.get());
+                    usersBySharingSetting.put(sharingSetting.getSharingPermission(), user.get());
                 }
                 else {
                     logger.info("Cannot share project with user because user does not exist: %s", userId);

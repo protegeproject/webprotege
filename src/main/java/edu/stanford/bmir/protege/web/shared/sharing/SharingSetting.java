@@ -16,23 +16,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     Represents a SharingSetting for a particular UserId.
  * </p>
  */
-public class UserSharingSetting implements Comparable<UserSharingSetting>, Serializable {
+public class SharingSetting implements Comparable<SharingSetting>, Serializable {
 
     private UserId userId;
     
     private SharingPermission sharingPermission;
 
-    private UserSharingSetting() {
+    private SharingSetting() {
     }
 
     /**
      * Constructs a UserSharingSetting which specifies the SharingSetting for a particular UserId.
      * @param userId The UserId which the SharingSetting pertains to.  Must not be <code>null</code>.
-     * @param sharingPermission The SharingSetting which pertains the the UserId.  Must not be <code>null</code>.
-     * @throws NullPointerException if the userId parameter is <code>null</code> or the sharingSetting parameter
+     * @param sharingPermission The SharingPermission which pertains the the UserId.  Must not be <code>null</code>.
+     * @throws NullPointerException if the userId parameter is <code>null</code> or the sharingPermission parameter
      * is <code>null</code>.
      */
-    public UserSharingSetting(UserId userId, SharingPermission sharingPermission) {
+    public SharingSetting(UserId userId, SharingPermission sharingPermission) {
         this.userId = checkNotNull(userId);
         this.sharingPermission = checkNotNull(sharingPermission);
     }
@@ -53,7 +53,7 @@ public class UserSharingSetting implements Comparable<UserSharingSetting>, Seria
         return sharingPermission;
     }
 
-    public int compareTo(UserSharingSetting o) {
+    public int compareTo(SharingSetting o) {
         return userId.compareTo(o.getUserId());
     }
 
@@ -76,10 +76,10 @@ public class UserSharingSetting implements Comparable<UserSharingSetting>, Seria
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof UserSharingSetting)) {
+        if (!(obj instanceof SharingSetting)) {
             return false;
         }
-        UserSharingSetting other = (UserSharingSetting) obj;
+        SharingSetting other = (SharingSetting) obj;
         return this.userId.equals(other.userId) && this.sharingPermission.equals(other.sharingPermission);
     }
 }
