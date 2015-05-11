@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLTable;
 import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.UserSharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.button.DeleteButton;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -68,11 +68,11 @@ public class SharingSettingsList extends FlowPanel {
 
 
         final SharingSettingsDropDown lb = new SharingSettingsDropDown();
-        lb.setSelectedItem(listItem.getSharingSetting());
+        lb.setSelectedItem(listItem.getSharingPermission());
         
-        lb.addValueChangeHandler(new ValueChangeHandler<SharingSetting>() {
-            public void onValueChange(ValueChangeEvent<SharingSetting> valueChangeEvent) {
-                SharingSetting value = valueChangeEvent.getValue();
+        lb.addValueChangeHandler(new ValueChangeHandler<SharingPermission>() {
+            public void onValueChange(ValueChangeEvent<SharingPermission> valueChangeEvent) {
+                SharingPermission value = valueChangeEvent.getValue();
                 UserSharingSetting updatedType = new UserSharingSetting(listItem.getUserId(), value);
                 displayedItems.set(rowCount, updatedType);
             }

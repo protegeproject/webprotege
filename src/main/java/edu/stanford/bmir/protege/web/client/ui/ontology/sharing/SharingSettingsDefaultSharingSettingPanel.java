@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.client.ui.library.button.AnnotatedRadioButton;
 
 import java.util.HashMap;
@@ -71,13 +71,13 @@ public class SharingSettingsDefaultSharingSettingPanel extends FlowPanel {
         }
     }
     
-    public void setDefaultSharingSetting(SharingSetting sharingSetting) {
-        if (!sharingSetting.equals(SharingSetting.NONE)) {
-            defaultSharingSettings.setSelectedItem(sharingSetting);
+    public void setDefaultSharingSetting(SharingPermission sharingPermission) {
+        if (!sharingPermission.equals(SharingPermission.NONE)) {
+            defaultSharingSettings.setSelectedItem(sharingPermission);
         }
         for(RadioButton radioButton : radioButtonMap.keySet()) {
             SharingSettingsVisibilityOption visibilityOption = radioButtonMap.get(radioButton);
-            if(visibilityOption.isForSharingSetting(sharingSetting)) {
+            if(visibilityOption.isForSharingSetting(sharingPermission)) {
                 radioButton.setValue(true);
                 break;
             }
@@ -94,9 +94,9 @@ public class SharingSettingsDefaultSharingSettingPanel extends FlowPanel {
         throw new RuntimeException("Missing return value");
     }
 
-    public SharingSetting getDefaultSharingSetting() {
+    public SharingPermission getDefaultSharingSetting() {
         if(getSelectedVisibilityOption().equals(SharingSettingsVisibilityOption.PRIVATE)) {
-            return SharingSetting.NONE;
+            return SharingPermission.NONE;
         }
         else {
             return defaultSharingSettings.getSelectedItem();

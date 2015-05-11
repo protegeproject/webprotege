@@ -21,7 +21,7 @@ public class ProjectSharingSettings implements Serializable {
     
     private List<UserSharingSetting> sharingSettings = new ArrayList<>();
 
-    private SharingSetting defaultSharingSetting;
+    private SharingPermission defaultSharingPermission;
 
     /**
      * Default no-args constructor for GWT serialization purposes.
@@ -29,9 +29,9 @@ public class ProjectSharingSettings implements Serializable {
     private ProjectSharingSettings() {
     }
 
-    public ProjectSharingSettings(ProjectId projectId, SharingSetting defaultSharingSetting, List<UserSharingSetting> sharingSettings) {
+    public ProjectSharingSettings(ProjectId projectId, SharingPermission defaultSharingPermission, List<UserSharingSetting> sharingSettings) {
         this.projectId = checkNotNull(projectId);
-        this.defaultSharingSetting = checkNotNull(defaultSharingSetting);
+        this.defaultSharingPermission = checkNotNull(defaultSharingPermission);
         this.sharingSettings = new ArrayList<>(checkNotNull(sharingSettings));
     }
 
@@ -39,8 +39,8 @@ public class ProjectSharingSettings implements Serializable {
         return projectId;
     }
 
-    public SharingSetting getDefaultSharingSetting() {
-        return defaultSharingSetting;
+    public SharingPermission getDefaultSharingPermission() {
+        return defaultSharingPermission;
     }
 
     public List<UserSharingSetting> getSharingSettings() {
@@ -50,7 +50,7 @@ public class ProjectSharingSettings implements Serializable {
 
     @Override
     public int hashCode() {
-        return projectId.hashCode() + sharingSettings.hashCode() + defaultSharingSetting.hashCode();
+        return projectId.hashCode() + sharingSettings.hashCode() + defaultSharingPermission.hashCode();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ProjectSharingSettings implements Serializable {
             return false;
         }
         ProjectSharingSettings other = (ProjectSharingSettings) obj;
-        return other.projectId.equals(this.projectId) && other.defaultSharingSetting.equals(this.defaultSharingSetting) && other.sharingSettings.equals(this.sharingSettings);
+        return other.projectId.equals(this.projectId) && other.defaultSharingPermission.equals(this.defaultSharingPermission) && other.sharingSettings.equals(this.sharingSettings);
     }
 
 
@@ -70,7 +70,7 @@ public class ProjectSharingSettings implements Serializable {
     public String toString() {
         return Objects.toStringHelper("ProjectSharingSettings")
                 .addValue(projectId)
-                .addValue(defaultSharingSetting)
+                .addValue(defaultSharingPermission)
                 .add("sharingSettings", sharingSettings)
                 .toString();
     }

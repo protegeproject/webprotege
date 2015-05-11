@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
-import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.UserSharingSetting;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
@@ -86,24 +86,24 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         Set<GroupOperation> groupOperations = projectInstance.getAllowedGroupOperations();
         List<UserSharingSetting> result = new ArrayList<>();
         Set<User> usersWithPermissionsOnProject = new HashSet<>();
-        SharingSetting defaultSharingSetting = SharingSetting.getDefaultSharingSetting();
+        SharingPermission defaultSharingPermission = SharingPermission.getDefaultSharingSetting();
         for (GroupOperation groupOperation : groupOperations) {
             if (!isWorld(groupOperation.getAllowedGroup())) {
                 usersWithPermissionsOnProject.addAll(groupOperation.getAllowedGroup().getMembers());
             }
             else {
-                defaultSharingSetting = getSharingSettingFromOperations(groupOperation.getAllowedOperations());
+                defaultSharingPermission = getSharingSettingFromOperations(groupOperation.getAllowedOperations());
             }
         }
         for (User user : usersWithPermissionsOnProject) {
             Collection<Operation> operations = projectPermissionsManager.getAllowedOperations(projectId.getId(), user.getName());
-            SharingSetting sharingSetting = getSharingSettingFromOperations(operations);
-            UserSharingSetting userSharingSetting = new UserSharingSetting(UserId.getUserId(user.getName()), sharingSetting);
+            SharingPermission sharingPermission = getSharingSettingFromOperations(operations);
+            UserSharingSetting userSharingSetting = new UserSharingSetting(UserId.getUserId(user.getName()), sharingPermission);
             result.add(userSharingSetting);
         }
         Collections.sort(result);
 
-        return new ProjectSharingSettings(projectId, defaultSharingSetting, result);
+        return new ProjectSharingSettings(projectId, defaultSharingPermission, result);
     }
 
 
@@ -112,7 +112,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         ProjectId projectId = projectSharingSettings.getProjectId();
         ProjectInstance projectInstance = metaProject.getProject(projectId.getId());
 
-        Multimap<SharingSetting, User> usersBySharingSetting = createUsersBySharingSettingMap(projectSharingSettings);
+        Multimap<SharingPermission, User> usersBySharingSetting = createUsersBySharingSettingMap(projectSharingSettings);
 
         Set<GroupOperation> allowedGroupOperations = createAllowedGroupOperationsFromSharingSettings(projectId, usersBySharingSetting);
 
@@ -132,21 +132,21 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     public void applyDefaultSharingSettings(ProjectId projectId, UserId userId) {
         List<UserSharingSetting> userSharingSettings = new ArrayList<>();
         if (!userId.isGuest()) {
-            userSharingSettings.add(new UserSharingSetting(userId, SharingSetting.EDIT));
+            userSharingSettings.add(new UserSharingSetting(userId, SharingPermission.EDIT));
         }
-        ProjectSharingSettings sharingSettings = new ProjectSharingSettings(projectId, SharingSetting.NONE, userSharingSettings);
+        ProjectSharingSettings sharingSettings = new ProjectSharingSettings(projectId, SharingPermission.NONE, userSharingSettings);
         this.setProjectSharingSettings(sharingSettings);
     }
 
 
-    private Set<GroupOperation> createAllowedGroupOperationsFromSharingSettings(ProjectId projectId, Multimap<SharingSetting, User> usersBySharingSetting) {
+    private Set<GroupOperation> createAllowedGroupOperationsFromSharingSettings(ProjectId projectId, Multimap<SharingPermission, User> usersBySharingSetting) {
         Set<GroupOperation> allowedGroupOperations = new HashSet<>();
-        for(SharingSetting sharingSetting : SharingSetting.values()) {
-            Group sharingSettingGroup = getOrCreateGroup(projectId, sharingSetting);
-            Collection<User> sharingSettingUsers = usersBySharingSetting.get(sharingSetting);
+        for(SharingPermission sharingPermission : SharingPermission.values()) {
+            Group sharingSettingGroup = getOrCreateGroup(projectId, sharingPermission);
+            Collection<User> sharingSettingUsers = usersBySharingSetting.get(sharingPermission);
             sharingSettingGroup.setMembers(sharingSettingUsers);
             GroupOperation groupOperation = metaProject.createGroupOperation();
-            Set<Operation> sharingSettingOperatations = getOperationsForSharingSetting(sharingSetting);
+            Set<Operation> sharingSettingOperatations = getOperationsForSharingSetting(sharingPermission);
             groupOperation.setAllowedOperations(sharingSettingOperatations);
             groupOperation.setAllowedGroup(sharingSettingGroup);
             allowedGroupOperations.add(groupOperation);
@@ -154,14 +154,14 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         return allowedGroupOperations;
     }
 
-    private Multimap<SharingSetting, User> createUsersBySharingSettingMap(ProjectSharingSettings projectSharingSettings) {
-        Multimap<SharingSetting, User> usersBySharingSetting = HashMultimap.create();
+    private Multimap<SharingPermission, User> createUsersBySharingSettingMap(ProjectSharingSettings projectSharingSettings) {
+        Multimap<SharingPermission, User> usersBySharingSetting = HashMultimap.create();
         for (UserSharingSetting userSharingSetting : projectSharingSettings.getSharingSettings()) {
             UserId userId = userSharingSetting.getUserId();
             if (!userId.isGuest()) {
                 Optional<User> user = userLookupManager.getUserByUserIdOrEmail(userId.getUserName());
                 if (user.isPresent()) {
-                    usersBySharingSetting.put(userSharingSetting.getSharingSetting(), user.get());
+                    usersBySharingSetting.put(userSharingSetting.getSharingPermission(), user.get());
                 }
                 else {
                     logger.info("Cannot share project with user because user does not exist: %s", userId);
@@ -185,16 +185,16 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 //    }
 
     private void getWorldAllowedOperations(ProjectSharingSettings projectSharingSettings, Set<GroupOperation> allowedGroupOperations) {
-        SharingSetting defaultSharingSetting = projectSharingSettings.getDefaultSharingSetting();
+        SharingPermission defaultSharingPermission = projectSharingSettings.getDefaultSharingPermission();
         Group worldGroup = getOrCreateGroup(WORLD_GROUP_NAME);
         GroupOperation worldGroupOperation = metaProject.createGroupOperation();
         worldGroupOperation.setAllowedGroup(worldGroup);
-        worldGroupOperation.setAllowedOperations(getOperationsForSharingSetting(defaultSharingSetting));
+        worldGroupOperation.setAllowedOperations(getOperationsForSharingSetting(defaultSharingPermission));
         allowedGroupOperations.add(worldGroupOperation);
     }
 
-    private Group getOrCreateGroup(ProjectId projectId, SharingSetting sharingSetting) {
-        String groupName = getGroupName(projectId, sharingSetting);
+    private Group getOrCreateGroup(ProjectId projectId, SharingPermission sharingPermission) {
+        String groupName = getGroupName(projectId, sharingPermission);
         return getOrCreateGroup(groupName);
     }
 
@@ -206,17 +206,17 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         return group;
     }
 
-    private String getGroupName(ProjectId projectId, SharingSetting sharingSetting) {
-        return projectId.getId() + getGroupNameSuffix(sharingSetting);
+    private String getGroupName(ProjectId projectId, SharingPermission sharingPermission) {
+        return projectId.getId() + getGroupNameSuffix(sharingPermission);
     }
 
     /**
      * Gets the group name suffix for a given sharing setting.
-     * @param sharingSetting The sharing setting
+     * @param sharingPermission The sharing setting
      * @return A string representing the group name suffix for a given sharing setting
      */
-    private String getGroupNameSuffix(SharingSetting sharingSetting) {
-        switch (sharingSetting) {
+    private String getGroupNameSuffix(SharingPermission sharingPermission) {
+        switch (sharingPermission) {
             case VIEW:
                 return READERS_GROUP_NAME_SUFFIX;
             case COMMENT:
@@ -229,8 +229,8 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     }
 
 
-    private Set<Operation> getOperationsForSharingSetting(SharingSetting sharingSetting) {
-        switch (sharingSetting) {
+    private Set<Operation> getOperationsForSharingSetting(SharingPermission sharingPermission) {
+        switch (sharingPermission) {
             case NONE:
                 return Collections.emptySet();
             case VIEW:
@@ -277,21 +277,21 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
 
 
-    private SharingSetting getSharingSettingFromOperations(Collection<Operation> operations) {
-        SharingSetting sharingSetting;
+    private SharingPermission getSharingSettingFromOperations(Collection<Operation> operations) {
+        SharingPermission sharingPermission;
         if (isWriteable(operations)) {
-            sharingSetting = SharingSetting.EDIT;
+            sharingPermission = SharingPermission.EDIT;
         }
         else if (isCommentable(operations)) {
-            sharingSetting = SharingSetting.COMMENT;
+            sharingPermission = SharingPermission.COMMENT;
         }
         else if (isReadable(operations)) {
-            sharingSetting = SharingSetting.VIEW;
+            sharingPermission = SharingPermission.VIEW;
         }
         else {
-            sharingSetting = SharingSetting.NONE;
+            sharingPermission = SharingPermission.NONE;
         }
-        return sharingSetting;
+        return sharingPermission;
     }
 
     private boolean isWorld(Group group) {
