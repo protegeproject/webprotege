@@ -20,7 +20,7 @@ public class UserSharingSetting implements Comparable<UserSharingSetting>, Seria
 
     private UserId userId;
     
-    private SharingSetting sharingSetting;
+    private SharingPermission sharingPermission;
 
     private UserSharingSetting() {
     }
@@ -28,13 +28,13 @@ public class UserSharingSetting implements Comparable<UserSharingSetting>, Seria
     /**
      * Constructs a UserSharingSetting which specifies the SharingSetting for a particular UserId.
      * @param userId The UserId which the SharingSetting pertains to.  Must not be <code>null</code>.
-     * @param sharingSetting The SharingSetting which pertains the the UserId.  Must not be <code>null</code>.
+     * @param sharingPermission The SharingSetting which pertains the the UserId.  Must not be <code>null</code>.
      * @throws NullPointerException if the userId parameter is <code>null</code> or the sharingSetting parameter
      * is <code>null</code>.
      */
-    public UserSharingSetting(UserId userId, SharingSetting sharingSetting) {
+    public UserSharingSetting(UserId userId, SharingPermission sharingPermission) {
         this.userId = checkNotNull(userId);
-        this.sharingSetting = checkNotNull(sharingSetting);
+        this.sharingPermission = checkNotNull(sharingPermission);
     }
 
     /**
@@ -49,8 +49,8 @@ public class UserSharingSetting implements Comparable<UserSharingSetting>, Seria
      * Gets the SharingSetting for this particular UserSharingSetting.
      * @return The SharingSetting.  Not <code>null</code>.
      */
-    public SharingSetting getSharingSetting() {
-        return sharingSetting;
+    public SharingPermission getSharingPermission() {
+        return sharingPermission;
     }
 
     public int compareTo(UserSharingSetting o) {
@@ -62,13 +62,13 @@ public class UserSharingSetting implements Comparable<UserSharingSetting>, Seria
     public String toString() {
         return Objects.toStringHelper("UserSharingSetting")
                 .addValue(userId)
-                .addValue(sharingSetting)
+                .addValue(sharingPermission)
                 .toString();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(userId, sharingSetting);
+        return Objects.hashCode(userId, sharingPermission);
     }
 
     @Override
@@ -80,6 +80,6 @@ public class UserSharingSetting implements Comparable<UserSharingSetting>, Seria
             return false;
         }
         UserSharingSetting other = (UserSharingSetting) obj;
-        return this.userId.equals(other.userId) && this.sharingSetting.equals(other.sharingSetting);
+        return this.userId.equals(other.userId) && this.sharingPermission.equals(other.sharingPermission);
     }
 }

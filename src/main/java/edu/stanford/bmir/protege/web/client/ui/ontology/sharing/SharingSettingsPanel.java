@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
-import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.UserSharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;
@@ -132,14 +132,14 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
 
     private void updateListData(ProjectSharingSettings result) {
         sharingSettingsList.setListData(result.getSharingSettings());
-        defaultSharingSettingPanel.setDefaultSharingSetting(result.getDefaultSharingSetting());
+        defaultSharingSettingPanel.setDefaultSharingSetting(result.getDefaultSharingPermission());
 
     }
 
 
     public ProjectSharingSettings getSharingSettingsListData() {
-        SharingSetting defaultSharingSetting = defaultSharingSettingPanel.getDefaultSharingSetting();
+        SharingPermission defaultSharingPermission = defaultSharingSettingPanel.getDefaultSharingSetting();
         List<UserSharingSetting> sharingSettings = sharingSettingsList.getListData();
-        return new ProjectSharingSettings(projectId, defaultSharingSetting, sharingSettings);
+        return new ProjectSharingSettings(projectId, defaultSharingPermission, sharingSettings);
     }
 }

@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import static org.mockito.Mockito.mock;
 
@@ -21,7 +20,7 @@ public class ProjectSharingSettings_TestCase {
     @Mock
     private ProjectId projectId;
 
-    private SharingSetting defaultSharingSetting = SharingSetting.EDIT;
+    private SharingPermission defaultSharingPermission = SharingPermission.EDIT;
 
     private List<UserSharingSetting> sharingSettings;
 
@@ -30,12 +29,12 @@ public class ProjectSharingSettings_TestCase {
         throws Exception
     {
         sharingSettings = new ArrayList<>();
-        projectSharingSettings = new ProjectSharingSettings(projectId, defaultSharingSetting, sharingSettings);
+        projectSharingSettings = new ProjectSharingSettings(projectId, defaultSharingPermission, sharingSettings);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new ProjectSharingSettings(null, defaultSharingSetting, sharingSettings);
+        new ProjectSharingSettings(null, defaultSharingPermission, sharingSettings);
     }
 
     @Test
@@ -50,12 +49,12 @@ public class ProjectSharingSettings_TestCase {
 
     @Test
     public void shouldReturnSupplied_defaultSharingSetting() {
-        MatcherAssert.assertThat(projectSharingSettings.getDefaultSharingSetting(), Matchers.is(this.defaultSharingSetting));
+        MatcherAssert.assertThat(projectSharingSettings.getDefaultSharingPermission(), Matchers.is(this.defaultSharingPermission));
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_sharingSettings_IsNull() {
-        new ProjectSharingSettings(projectId, defaultSharingSetting, null);
+        new ProjectSharingSettings(projectId, defaultSharingPermission, null);
     }
 
     @Test
@@ -75,29 +74,29 @@ public class ProjectSharingSettings_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(projectSharingSettings, Matchers.is(new ProjectSharingSettings(projectId, defaultSharingSetting, sharingSettings)));
+        MatcherAssert.assertThat(projectSharingSettings, Matchers.is(new ProjectSharingSettings(projectId, defaultSharingPermission, sharingSettings)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        MatcherAssert.assertThat(projectSharingSettings, Matchers.is(Matchers.not(new ProjectSharingSettings(mock(ProjectId.class), defaultSharingSetting, sharingSettings))));
+        MatcherAssert.assertThat(projectSharingSettings, Matchers.is(Matchers.not(new ProjectSharingSettings(mock(ProjectId.class), defaultSharingPermission, sharingSettings))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_defaultSharingSetting() {
-        MatcherAssert.assertThat(projectSharingSettings, Matchers.is(Matchers.not(new ProjectSharingSettings(projectId, SharingSetting.COMMENT, sharingSettings))));
+        MatcherAssert.assertThat(projectSharingSettings, Matchers.is(Matchers.not(new ProjectSharingSettings(projectId, SharingPermission.COMMENT, sharingSettings))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_sharingSettings() {
         ArrayList<UserSharingSetting> otherSettings = new ArrayList<>();
         otherSettings.add(mock(UserSharingSetting.class));
-        MatcherAssert.assertThat(projectSharingSettings, Matchers.is(Matchers.not(new ProjectSharingSettings(projectId, defaultSharingSetting, otherSettings))));
+        MatcherAssert.assertThat(projectSharingSettings, Matchers.is(Matchers.not(new ProjectSharingSettings(projectId, defaultSharingPermission, otherSettings))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(projectSharingSettings.hashCode(), Matchers.is(new ProjectSharingSettings(projectId, defaultSharingSetting, sharingSettings).hashCode()));
+        MatcherAssert.assertThat(projectSharingSettings.hashCode(), Matchers.is(new ProjectSharingSettings(projectId, defaultSharingPermission, sharingSettings).hashCode()));
     }
 
     @Test

@@ -19,18 +19,18 @@ public class UserSharingSetting_TestCase {
     @Mock
     private UserId userId;
 
-    private SharingSetting sharingSetting = SharingSetting.EDIT;
+    private SharingPermission sharingPermission = SharingPermission.EDIT;
 
     @Before
     public void setUp()
         throws Exception
     {
-        userSharingSetting = new UserSharingSetting(userId, sharingSetting);
+        userSharingSetting = new UserSharingSetting(userId, sharingPermission);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_userId_IsNull() {
-        new UserSharingSetting(null, sharingSetting);
+        new UserSharingSetting(null, sharingPermission);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class UserSharingSetting_TestCase {
 
     @Test
     public void shouldReturnSupplied_sharingSetting() {
-        MatcherAssert.assertThat(userSharingSetting.getSharingSetting(), Matchers.is(this.sharingSetting));
+        MatcherAssert.assertThat(userSharingSetting.getSharingPermission(), Matchers.is(this.sharingPermission));
     }
 
     @Test
@@ -60,22 +60,22 @@ public class UserSharingSetting_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(userSharingSetting, Matchers.is(new UserSharingSetting(userId, sharingSetting)));
+        MatcherAssert.assertThat(userSharingSetting, Matchers.is(new UserSharingSetting(userId, sharingPermission)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_userId() {
-        MatcherAssert.assertThat(userSharingSetting, Matchers.is(Matchers.not(new UserSharingSetting(Mockito.mock(UserId.class), sharingSetting))));
+        MatcherAssert.assertThat(userSharingSetting, Matchers.is(Matchers.not(new UserSharingSetting(Mockito.mock(UserId.class), sharingPermission))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_sharingSetting() {
-        MatcherAssert.assertThat(userSharingSetting, Matchers.is(Matchers.not(new UserSharingSetting(userId, SharingSetting.COMMENT))));
+        MatcherAssert.assertThat(userSharingSetting, Matchers.is(Matchers.not(new UserSharingSetting(userId, SharingPermission.COMMENT))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(userSharingSetting.hashCode(), Matchers.is(new UserSharingSetting(userId, sharingSetting).hashCode()));
+        MatcherAssert.assertThat(userSharingSetting.hashCode(), Matchers.is(new UserSharingSetting(userId, sharingPermission).hashCode()));
     }
 
     @Test

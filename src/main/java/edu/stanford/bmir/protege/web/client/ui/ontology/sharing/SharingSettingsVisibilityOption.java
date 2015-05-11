@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 
-import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -14,21 +14,21 @@ import java.util.Set;
  */
 public enum SharingSettingsVisibilityOption {
 
-    PUBLIC("Public", "Appears in list of ontologies.  No sign-in required.", SharingSetting.VIEW, SharingSetting.COMMENT, SharingSetting.EDIT),
+    PUBLIC("Public", "Appears in list of ontologies.  No sign-in required.", SharingPermission.VIEW, SharingPermission.COMMENT, SharingPermission.EDIT),
 
-    PRIVATE("Private",  "Does not appear in the list of ontologies.  Sign-in required.", SharingSetting.NONE);
+    PRIVATE("Private",  "Does not appear in the list of ontologies.  Sign-in required.", SharingPermission.NONE);
 
     
     private String settingTitle;
     
     private String settingDescription;
     
-    private Set<SharingSetting> sharingSettings = new HashSet<SharingSetting>();
+    private Set<SharingPermission> sharingPermissions = new HashSet<SharingPermission>();
 
-    private SharingSettingsVisibilityOption(String settingTitle, String settingDescription, SharingSetting... sharingSettings) {
+    private SharingSettingsVisibilityOption(String settingTitle, String settingDescription, SharingPermission... sharingPermissions) {
         this.settingTitle = settingTitle;
         this.settingDescription = settingDescription;
-        this.sharingSettings.addAll(Arrays.asList(sharingSettings));
+        this.sharingPermissions.addAll(Arrays.asList(sharingPermissions));
     }
 
     public String getSettingTitle() {
@@ -39,11 +39,11 @@ public enum SharingSettingsVisibilityOption {
         return settingDescription;
     }
 
-    public boolean isForSharingSetting(SharingSetting sharingSetting) {
-        return sharingSettings.contains(sharingSetting);
+    public boolean isForSharingSetting(SharingPermission sharingPermission) {
+        return sharingPermissions.contains(sharingPermission);
     }
 
-    public Set<SharingSetting> getSharingSettings() {
-        return sharingSettings;
+    public Set<SharingPermission> getSharingPermissions() {
+        return sharingPermissions;
     }
 }

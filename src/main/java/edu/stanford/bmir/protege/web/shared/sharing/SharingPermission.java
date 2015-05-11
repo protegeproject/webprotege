@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 27/02/2012
  */
-public enum SharingSetting implements Serializable {
+public enum SharingPermission implements Serializable {
 
     /**
      * A user can view a project.
@@ -35,7 +35,7 @@ public enum SharingSetting implements Serializable {
      * Gets the default sharing setting for a project.
      * @return The SharingSetting that represent the default sharing setting.
      */
-    public static SharingSetting getDefaultSharingSetting() {
+    public static SharingPermission getDefaultSharingSetting() {
         return EDIT;
     }
 }
