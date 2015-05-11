@@ -1,10 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -27,9 +30,9 @@ public class ProjectSharingSettings implements Serializable {
     }
 
     public ProjectSharingSettings(ProjectId projectId, SharingSetting defaultSharingSetting, List<UserSharingSetting> sharingSettings) {
-        this.projectId = projectId;
-        this.defaultSharingSetting = defaultSharingSetting;
-        this.sharingSettings = new ArrayList<>(sharingSettings);
+        this.projectId = checkNotNull(projectId);
+        this.defaultSharingSetting = checkNotNull(defaultSharingSetting);
+        this.sharingSettings = new ArrayList<>(checkNotNull(sharingSettings));
     }
 
     public ProjectId getProjectId() {
@@ -60,5 +63,15 @@ public class ProjectSharingSettings implements Serializable {
         }
         ProjectSharingSettings other = (ProjectSharingSettings) obj;
         return other.projectId.equals(this.projectId) && other.defaultSharingSetting.equals(this.defaultSharingSetting) && other.sharingSettings.equals(this.sharingSettings);
+    }
+
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper("ProjectSharingSettings")
+                .addValue(projectId)
+                .addValue(defaultSharingSetting)
+                .add("sharingSettings", sharingSettings)
+                .toString();
     }
 }
