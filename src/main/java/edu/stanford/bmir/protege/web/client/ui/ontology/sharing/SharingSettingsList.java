@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLTable;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
-import edu.stanford.bmir.protege.web.shared.sharing.UserSharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.button.DeleteButton;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -30,7 +30,7 @@ public class SharingSettingsList extends FlowPanel {
 
     private final FlexTable flexTable;
 
-    private List<UserSharingSetting> displayedItems = new ArrayList<UserSharingSetting>();
+    private List<SharingSetting> displayedItems = new ArrayList<SharingSetting>();
 
     public SharingSettingsList() {
         addStyleName(WEB_PROTEGE_SHARING_SETTINGS_LIST);
@@ -40,24 +40,24 @@ public class SharingSettingsList extends FlowPanel {
         refill();
     }
 
-    public void setListData(List<UserSharingSetting> listData) {
+    public void setListData(List<SharingSetting> listData) {
         displayedItems.clear();
         displayedItems.addAll(listData);
         refill();
     }
 
-    public List<UserSharingSetting> getListData() {
-        return new ArrayList<UserSharingSetting>(displayedItems);
+    public List<SharingSetting> getListData() {
+        return new ArrayList<SharingSetting>(displayedItems);
     }
 
     protected void refill() {
         flexTable.removeAllRows();
-        for (UserSharingSetting listItem : displayedItems) {
+        for (SharingSetting listItem : displayedItems) {
             addData(listItem);
         }
     }
 
-    private void addData(final UserSharingSetting listItem) {
+    private void addData(final SharingSetting listItem) {
         final int rowCount = flexTable.getRowCount();
         String userName = listItem.getUserId().getUserName();
         UserId userId = Application.get().getUserId();
@@ -73,7 +73,7 @@ public class SharingSettingsList extends FlowPanel {
         lb.addValueChangeHandler(new ValueChangeHandler<SharingPermission>() {
             public void onValueChange(ValueChangeEvent<SharingPermission> valueChangeEvent) {
                 SharingPermission value = valueChangeEvent.getValue();
-                UserSharingSetting updatedType = new UserSharingSetting(listItem.getUserId(), value);
+                SharingSetting updatedType = new SharingSetting(listItem.getUserId(), value);
                 displayedItems.set(rowCount, updatedType);
             }
         });

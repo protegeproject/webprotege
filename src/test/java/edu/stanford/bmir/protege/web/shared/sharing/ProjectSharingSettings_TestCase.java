@@ -22,7 +22,7 @@ public class ProjectSharingSettings_TestCase {
 
     private SharingPermission defaultSharingPermission = SharingPermission.EDIT;
 
-    private List<UserSharingSetting> sharingSettings;
+    private List<SharingSetting> sharingSettings;
 
     @Before
     public void setUp()
@@ -89,8 +89,8 @@ public class ProjectSharingSettings_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_sharingSettings() {
-        ArrayList<UserSharingSetting> otherSettings = new ArrayList<>();
-        otherSettings.add(mock(UserSharingSetting.class));
+        ArrayList<SharingSetting> otherSettings = new ArrayList<>();
+        otherSettings.add(mock(SharingSetting.class));
         MatcherAssert.assertThat(projectSharingSettings, Matchers.is(Matchers.not(new ProjectSharingSettings(projectId, defaultSharingPermission, otherSettings))));
     }
 

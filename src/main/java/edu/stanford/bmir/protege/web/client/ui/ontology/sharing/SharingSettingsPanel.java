@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
-import edu.stanford.bmir.protege.web.shared.sharing.UserSharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestBox;
@@ -105,9 +105,9 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
     private void handleAdd(ItemListSuggestBox<UserId> suggestBox, SharingSettingsDropDown lb, TextArea addPeopleTextArea) {
         Set<UserId> items = suggestBox.getItems();
         items.removeAll(getUsersInSharingSettingsList());
-        List<UserSharingSetting> listDataItems = new ArrayList<UserSharingSetting>(sharingSettingsList.getListData());
+        List<SharingSetting> listDataItems = new ArrayList<SharingSetting>(sharingSettingsList.getListData());
         for(UserId item : items) {
-            listDataItems.add(new UserSharingSetting(item, lb.getSelectedItem()));
+            listDataItems.add(new SharingSetting(item, lb.getSelectedItem()));
         }
         addPeopleTextArea.setText("");
         sharingSettingsList.setListData(listDataItems);
@@ -115,7 +115,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
 
     private List<UserId> getUsersInSharingSettingsList() {
         List<UserId> result = new ArrayList<UserId>();
-        for(UserSharingSetting item : sharingSettingsList.getListData()) {
+        for(SharingSetting item : sharingSettingsList.getListData()) {
             result.add(item.getUserId());
         }
         return result;
@@ -139,7 +139,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
 
     public ProjectSharingSettings getSharingSettingsListData() {
         SharingPermission defaultSharingPermission = defaultSharingSettingPanel.getDefaultSharingSetting();
-        List<UserSharingSetting> sharingSettings = sharingSettingsList.getListData();
+        List<SharingSetting> sharingSettings = sharingSettingsList.getListData();
         return new ProjectSharingSettings(projectId, defaultSharingPermission, sharingSettings);
     }
 }

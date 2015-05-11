@@ -13,9 +13,9 @@ import org.mockito.Mockito;
 import java.lang.NullPointerException;
 
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
-public class UserSharingSetting_TestCase {
+public class SharingSetting_TestCase {
 
-    private UserSharingSetting userSharingSetting;
+    private SharingSetting sharingSetting;
     @Mock
     private UserId userId;
 
@@ -25,61 +25,61 @@ public class UserSharingSetting_TestCase {
     public void setUp()
         throws Exception
     {
-        userSharingSetting = new UserSharingSetting(userId, sharingPermission);
+        sharingSetting = new SharingSetting(userId, sharingPermission);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_userId_IsNull() {
-        new UserSharingSetting(null, sharingPermission);
+        new SharingSetting(null, sharingPermission);
     }
 
     @Test
     public void shouldReturnSupplied_userId() {
-        MatcherAssert.assertThat(userSharingSetting.getUserId(), Matchers.is(this.userId));
+        MatcherAssert.assertThat(sharingSetting.getUserId(), Matchers.is(this.userId));
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_sharingSetting_IsNull() {
-        new UserSharingSetting(userId, null);
+        new SharingSetting(userId, null);
     }
 
     @Test
     public void shouldReturnSupplied_sharingSetting() {
-        MatcherAssert.assertThat(userSharingSetting.getSharingPermission(), Matchers.is(this.sharingPermission));
+        MatcherAssert.assertThat(sharingSetting.getSharingPermission(), Matchers.is(this.sharingPermission));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        MatcherAssert.assertThat(userSharingSetting, Matchers.is(userSharingSetting));
+        MatcherAssert.assertThat(sharingSetting, Matchers.is(sharingSetting));
     }
 
     @Test
     public void shouldNotBeEqualToNull() {
-        MatcherAssert.assertThat(userSharingSetting.equals(null), Matchers.is(false));
+        MatcherAssert.assertThat(sharingSetting.equals(null), Matchers.is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(userSharingSetting, Matchers.is(new UserSharingSetting(userId, sharingPermission)));
+        MatcherAssert.assertThat(sharingSetting, Matchers.is(new SharingSetting(userId, sharingPermission)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_userId() {
-        MatcherAssert.assertThat(userSharingSetting, Matchers.is(Matchers.not(new UserSharingSetting(Mockito.mock(UserId.class), sharingPermission))));
+        MatcherAssert.assertThat(sharingSetting, Matchers.is(Matchers.not(new SharingSetting(Mockito.mock(UserId.class), sharingPermission))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_sharingSetting() {
-        MatcherAssert.assertThat(userSharingSetting, Matchers.is(Matchers.not(new UserSharingSetting(userId, SharingPermission.COMMENT))));
+        MatcherAssert.assertThat(sharingSetting, Matchers.is(Matchers.not(new SharingSetting(userId, SharingPermission.COMMENT))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(userSharingSetting.hashCode(), Matchers.is(new UserSharingSetting(userId, sharingPermission).hashCode()));
+        MatcherAssert.assertThat(sharingSetting.hashCode(), Matchers.is(new SharingSetting(userId, sharingPermission).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        MatcherAssert.assertThat(userSharingSetting.toString(), Matchers.startsWith("UserSharingSetting"));
+        MatcherAssert.assertThat(sharingSetting.toString(), Matchers.startsWith("UserSharingSetting"));
     }
 }

@@ -19,7 +19,7 @@ public class ProjectSharingSettings implements Serializable {
 
     private ProjectId projectId;
     
-    private List<UserSharingSetting> sharingSettings = new ArrayList<>();
+    private List<SharingSetting> sharingSettings = new ArrayList<>();
 
     private SharingPermission defaultSharingPermission;
 
@@ -29,7 +29,7 @@ public class ProjectSharingSettings implements Serializable {
     private ProjectSharingSettings() {
     }
 
-    public ProjectSharingSettings(ProjectId projectId, SharingPermission defaultSharingPermission, List<UserSharingSetting> sharingSettings) {
+    public ProjectSharingSettings(ProjectId projectId, SharingPermission defaultSharingPermission, List<SharingSetting> sharingSettings) {
         this.projectId = checkNotNull(projectId);
         this.defaultSharingPermission = checkNotNull(defaultSharingPermission);
         this.sharingSettings = new ArrayList<>(checkNotNull(sharingSettings));
@@ -43,7 +43,7 @@ public class ProjectSharingSettings implements Serializable {
         return defaultSharingPermission;
     }
 
-    public List<UserSharingSetting> getSharingSettings() {
+    public List<SharingSetting> getSharingSettings() {
         return new ArrayList<>(sharingSettings);
     }
 
