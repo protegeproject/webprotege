@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
 import com.google.common.base.Objects;
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -11,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * Identifies a Person in a sharing setting.  The person may or may not be a user in webprotege.
  */
-public class PersonId {
+public class PersonId implements Serializable, IsSerializable {
 
     private String id;
 
