@@ -26,11 +26,6 @@ public class ProjectSharingSettings implements Serializable {
     private ProjectSharingSettings() {
     }
 
-    public ProjectSharingSettings(ProjectId projectId) {
-        this.projectId = projectId;
-        this.defaultSharingSetting = SharingSetting.getDefaultSharingSetting();
-    }
-
     public ProjectSharingSettings(ProjectId projectId, SharingSetting defaultSharingSetting, List<UserSharingSetting> sharingSettings) {
         this.projectId = projectId;
         this.defaultSharingSetting = defaultSharingSetting;
