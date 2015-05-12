@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SharingSetting implements Comparable<SharingSetting>, Serializable {
 
-    private UserId userId;
+    private PersonId personId;
     
     private SharingPermission sharingPermission;
 
@@ -26,23 +26,24 @@ public class SharingSetting implements Comparable<SharingSetting>, Serializable 
     }
 
     /**
-     * Constructs a UserSharingSetting which specifies the SharingSetting for a particular UserId.
-     * @param userId The UserId which the SharingSetting pertains to.  Must not be <code>null</code>.
+     * Constructs a UserSharingSetting which specifies the SharingSetting for a particular person.  The person may, or
+     * may not be a registered WebProtege user.
+     * @param personId The PersonId which the SharingSetting pertains to.  Must not be <code>null</code>.
      * @param sharingPermission The SharingPermission which pertains the the UserId.  Must not be <code>null</code>.
      * @throws NullPointerException if the userId parameter is <code>null</code> or the sharingPermission parameter
      * is <code>null</code>.
      */
-    public SharingSetting(UserId userId, SharingPermission sharingPermission) {
-        this.userId = checkNotNull(userId);
+    public SharingSetting(PersonId personId, SharingPermission sharingPermission) {
+        this.personId = checkNotNull(personId);
         this.sharingPermission = checkNotNull(sharingPermission);
     }
 
     /**
-     * Gets the UserId for this UserSharingSetting.
-     * @return The UserId. Not <code>null</code>.
+     * Gets the PersonId for this SharingSetting.
+     * @return The PersonId. Not <code>null</code>.
      */
-    public UserId getUserId() {
-        return userId;
+    public PersonId getPersonId() {
+        return personId;
     }
 
     /**
@@ -54,21 +55,21 @@ public class SharingSetting implements Comparable<SharingSetting>, Serializable 
     }
 
     public int compareTo(SharingSetting o) {
-        return userId.compareTo(o.getUserId());
+        return personId.compareTo(o.personId);
     }
 
 
     @Override
     public String toString() {
         return Objects.toStringHelper("UserSharingSetting")
-                .addValue(userId)
+                .addValue(personId)
                 .addValue(sharingPermission)
                 .toString();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(userId, sharingPermission);
+        return Objects.hashCode(personId, sharingPermission);
     }
 
     @Override
@@ -80,6 +81,6 @@ public class SharingSetting implements Comparable<SharingSetting>, Serializable 
             return false;
         }
         SharingSetting other = (SharingSetting) obj;
-        return this.userId.equals(other.userId) && this.sharingPermission.equals(other.sharingPermission);
+        return this.personId.equals(other.personId) && this.sharingPermission.equals(other.sharingPermission);
     }
 }

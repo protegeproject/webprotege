@@ -11,8 +11,9 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestBox;
-import edu.stanford.bmir.protege.web.client.ui.library.itemarea.UserIdSuggestOracle;
+import edu.stanford.bmir.protege.web.client.ui.library.itemarea.UserIdItemProvider;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
@@ -45,7 +46,7 @@ public class UserIdRangeEditorImpl extends Composite implements UserIdRangeEdito
     private boolean dirty;
 
     public UserIdRangeEditorImpl() {
-        userIdEditor = new ItemListSuggestBox<UserId>(new UserIdSuggestOracle(), new TextBox());
+        userIdEditor = new ItemListSuggestBox<>(new UserIdItemProvider(DispatchServiceManager.get()), new TextBox());
         userIdEditor.getElement().setAttribute("placeholder", "Type user name");
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

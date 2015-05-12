@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
@@ -98,7 +99,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         for (User user : usersWithPermissionsOnProject) {
             Collection<Operation> operations = projectPermissionsManager.getAllowedOperations(projectId.getId(), user.getName());
             SharingPermission sharingPermission = getSharingSettingFromOperations(operations);
-            SharingSetting sharingSetting = new SharingSetting(UserId.getUserId(user.getName()), sharingPermission);
+            SharingSetting sharingSetting = new SharingSetting(new PersonId(user.getName()), sharingPermission);
             result.add(sharingSetting);
         }
         Collections.sort(result);
@@ -132,7 +133,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     public void applyDefaultSharingSettings(ProjectId projectId, UserId userId) {
         List<SharingSetting> userSharingSettings = new ArrayList<>();
         if (!userId.isGuest()) {
-            userSharingSettings.add(new SharingSetting(userId, SharingPermission.EDIT));
+            userSharingSettings.add(new SharingSetting(new PersonId(userId.getUserName()), SharingPermission.EDIT));
         }
         ProjectSharingSettings sharingSettings = new ProjectSharingSettings(projectId, SharingPermission.NONE, userSharingSettings);
         this.setProjectSharingSettings(sharingSettings);
@@ -157,14 +158,15 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     private Multimap<SharingPermission, User> createUsersBySharingSettingMap(ProjectSharingSettings projectSharingSettings) {
         Multimap<SharingPermission, User> usersBySharingSetting = HashMultimap.create();
         for (SharingSetting sharingSetting : projectSharingSettings.getSharingSettings()) {
-            UserId userId = sharingSetting.getUserId();
-            if (!userId.isGuest()) {
-                Optional<User> user = userLookupManager.getUserByUserIdOrEmail(userId.getUserName());
+            PersonId personId = sharingSetting.getPersonId();
+            UserId personIdAsUserId = UserId.getUserId(personId.getId());
+            if (!personIdAsUserId.isGuest()) {
+                Optional<User> user = userLookupManager.getUserByUserIdOrEmail(personId.getId());
                 if (user.isPresent()) {
                     usersBySharingSetting.put(sharingSetting.getSharingPermission(), user.get());
                 }
                 else {
-                    logger.info("Cannot share project with user because user does not exist: %s", userId);
+                    logger.info("Cannot share project with %s because this person is not a registered WebProtege user.", personId);
                 }
             }
         }

@@ -30,7 +30,7 @@ public class ItemSuggestOracle<T> extends SuggestOracle {
     public void requestSuggestions(Request request, Callback callback) {
         String query = request.getQuery();
         String[] split = query.split("\n");
-        Collection<Suggestion> suggestions = new ArrayList<Suggestion>();
+        Collection<Suggestion> suggestions = new ArrayList<>();
 
 
         StringBuilder prefix = new StringBuilder();
