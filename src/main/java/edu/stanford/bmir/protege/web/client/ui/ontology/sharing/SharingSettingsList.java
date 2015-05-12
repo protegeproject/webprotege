@@ -59,12 +59,12 @@ public class SharingSettingsList extends FlowPanel {
 
     private void addData(final SharingSetting listItem) {
         final int rowCount = flexTable.getRowCount();
-        String userName = listItem.getUserId().getUserName();
+        String personId = listItem.getPersonId().getId();
         UserId userId = Application.get().getUserId();
-        if (userName.equals(userId.getUserName())) {
-            userName += " (you)";
+        if (personId.equals(userId.getUserName())) {
+            personId += " (you)";
         }
-        flexTable.setText(rowCount, 0, userName);
+        flexTable.setText(rowCount, 0, personId);
 
 
         final SharingSettingsDropDown lb = new SharingSettingsDropDown();
@@ -73,7 +73,7 @@ public class SharingSettingsList extends FlowPanel {
         lb.addValueChangeHandler(new ValueChangeHandler<SharingPermission>() {
             public void onValueChange(ValueChangeEvent<SharingPermission> valueChangeEvent) {
                 SharingPermission value = valueChangeEvent.getValue();
-                SharingSetting updatedType = new SharingSetting(listItem.getUserId(), value);
+                SharingSetting updatedType = new SharingSetting(listItem.getPersonId(), value);
                 displayedItems.set(rowCount, updatedType);
             }
         });
@@ -81,7 +81,7 @@ public class SharingSettingsList extends FlowPanel {
         flexTable.setWidget(rowCount, 1, lb);
         flexTable.getRowFormatter().addStyleName(rowCount, "web-protege-table-row");
 
-        if (!userId.getUserName().equals(userName)) {
+        if (!userId.getUserName().equals(personId)) {
             DeleteButton deleteButton = new DeleteButton();
             deleteButton.addClickHandler(new ClickHandler() {
                 public void onClick(ClickEvent event) {

@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * Identifies a Person in a sharing setting.  The person may or may not be a user in webprotege.
  */
-public class PersonId implements Serializable, IsSerializable {
+public class PersonId implements Serializable, IsSerializable, Comparable<PersonId> {
 
     private String id;
 
@@ -55,5 +55,17 @@ public class PersonId implements Serializable, IsSerializable {
         }
         PersonId other = (PersonId) obj;
         return this.id.equals(other.id);
+    }
+
+    @Override
+    public int compareTo(PersonId o) {
+        if(this == o) {
+            return 0;
+        }
+        int diff = id.compareToIgnoreCase(o.id);
+        if(diff != 0) {
+            return diff;
+        }
+        return id.compareTo(o.id);
     }
 }

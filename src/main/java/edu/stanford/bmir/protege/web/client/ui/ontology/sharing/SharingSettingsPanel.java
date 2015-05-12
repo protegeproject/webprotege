@@ -5,17 +5,11 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
-import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
-import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.sharing.*;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestBox;
-import edu.stanford.bmir.protege.web.client.ui.library.itemarea.UserIdSuggestOracle;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
-import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsResult;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,18 +57,8 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
         addPeopleTextArea.setCharacterWidth(50);
         addPeopleTextArea.getElement().setAttribute("placeholder", PLACE_HOLDER_TEXT);
 
-        final UserIdSuggestOracle userIdSuggestOracle = new UserIdSuggestOracle(getUsersInSharingSettingsList()) {
-            @Override
-            public List<UserId> getItemsMatchingExactly(String itemString) {
-                List<UserId> userIds = super.getItemsMatchingExactly(itemString);
-                // TODO:  This disables inviting users by email.  Consider whether we really need or want to support this.
-//                if(userIds.isEmpty() && itemString.contains("@")) {
-//                    userIds.add(UserId.getUserId(itemString.trim()));
-//                }
-                return userIds;
-            }
-        };
-        final ItemListSuggestBox<UserId> suggestBox = new ItemListSuggestBox<UserId>(userIdSuggestOracle, addPeopleTextArea);
+        final PersonIdItemProvider itemProvider = new PersonIdItemProvider(null);
+        final ItemListSuggestBox<PersonId> suggestBox = new ItemListSuggestBox<>(itemProvider, addPeopleTextArea);
 
 
         FlowPanel addPeoplePanel = new FlowPanel();
@@ -102,21 +86,21 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
         add(addPeoplePanel);
     }
 
-    private void handleAdd(ItemListSuggestBox<UserId> suggestBox, SharingSettingsDropDown lb, TextArea addPeopleTextArea) {
-        Set<UserId> items = suggestBox.getItems();
-        items.removeAll(getUsersInSharingSettingsList());
-        List<SharingSetting> listDataItems = new ArrayList<SharingSetting>(sharingSettingsList.getListData());
-        for(UserId item : items) {
-            listDataItems.add(new SharingSetting(item, lb.getSelectedItem()));
+    private void handleAdd(ItemListSuggestBox<PersonId> suggestBox, SharingSettingsDropDown lb, TextArea addPeopleTextArea) {
+        Set<PersonId> personIds = suggestBox.getItems();
+        personIds.removeAll(getUsersInSharingSettingsList());
+        List<SharingSetting> listDataItems = new ArrayList<>(sharingSettingsList.getListData());
+        for(PersonId personId : personIds) {
+            listDataItems.add(new SharingSetting(personId, lb.getSelectedItem()));
         }
         addPeopleTextArea.setText("");
         sharingSettingsList.setListData(listDataItems);
     }
 
-    private List<UserId> getUsersInSharingSettingsList() {
-        List<UserId> result = new ArrayList<UserId>();
+    private List<PersonId> getUsersInSharingSettingsList() {
+        List<PersonId> result = new ArrayList<>();
         for(SharingSetting item : sharingSettingsList.getListData()) {
-            result.add(item.getUserId());
+            result.add(item.getPersonId());
         }
         return result;
     }

@@ -16,16 +16,18 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/02/2012
  */
-public class UserIdSuggestOracle implements ItemProvider<UserId> {
+public class UserIdItemProvider implements ItemProvider<UserId> {
+
+    private final DispatchServiceManager dispatchServiceManager;
 
     private List<UserId> data = new ArrayList<>();
 
-    public UserIdSuggestOracle() {
-        this(Collections.<UserId>emptyList());
+    public UserIdItemProvider(DispatchServiceManager dispatchServiceManager) {
+        this(dispatchServiceManager, Collections.<UserId>emptyList());
     }
 
-    public UserIdSuggestOracle(final List<UserId> exclude) {
-        DispatchServiceManager dispatchServiceManager = DispatchServiceManager.get();
+    public UserIdItemProvider(DispatchServiceManager dispatchServiceManager, final List<UserId> exclude) {
+        this.dispatchServiceManager = dispatchServiceManager;
         dispatchServiceManager.execute(new GetUserIdsAction(), new DispatchServiceCallback<GetUserIdsResult>() {
             @Override
             public void handleSuccess(GetUserIdsResult result) {
