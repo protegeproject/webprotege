@@ -5,13 +5,18 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.itemlist.ItemListSuggestBox;
+import edu.stanford.bmir.protege.web.client.itemlist.ItemListSuggestOracle;
+import edu.stanford.bmir.protege.web.client.itemlist.PersonIdItemListSuggestionOracle;
+import edu.stanford.bmir.protege.web.client.itemlist.ValueBoxCursorPositionProvider;
+import edu.stanford.bmir.protege.web.shared.itemlist.*;
 import edu.stanford.bmir.protege.web.shared.sharing.*;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;
-import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestBox;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,8 +62,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
         addPeopleTextArea.setCharacterWidth(50);
         addPeopleTextArea.getElement().setAttribute("placeholder", PLACE_HOLDER_TEXT);
 
-        final PersonIdItemProvider itemProvider = new PersonIdItemProvider(null);
-        final ItemListSuggestBox<PersonId> suggestBox = new ItemListSuggestBox<>(itemProvider, addPeopleTextArea);
+        final SuggestBox suggestBox = new ItemListSuggestBox<>(new PersonIdItemListSuggestionOracle(addPeopleTextArea, DispatchServiceManager.get()), addPeopleTextArea);
 
 
         FlowPanel addPeoplePanel = new FlowPanel();
@@ -86,9 +90,15 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
         add(addPeoplePanel);
     }
 
-    private void handleAdd(ItemListSuggestBox<PersonId> suggestBox, SharingSettingsDropDown lb, TextArea addPeopleTextArea) {
-        Set<PersonId> personIds = suggestBox.getItems();
+    private void handleAdd(SuggestBox suggestBox, SharingSettingsDropDown lb, TextArea addPeopleTextArea) {
+        String suggestBoxText = suggestBox.getText();
+        String [] names = suggestBoxText.trim().split("\n");
+        Set<PersonId> personIds = new HashSet<>();
+        for(String name : names) {
+            personIds.add(new PersonId(name));
+        }
         personIds.removeAll(getUsersInSharingSettingsList());
+
         List<SharingSetting> listDataItems = new ArrayList<>(sharingSettingsList.getListData());
         for(PersonId personId : personIds) {
             listDataItems.add(new SharingSetting(personId, lb.getSelectedItem()));

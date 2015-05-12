@@ -10,10 +10,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.ui.library.itemarea.ItemListSuggestBox;
-import edu.stanford.bmir.protege.web.client.ui.library.itemarea.UserIdItemProvider;
+import edu.stanford.bmir.protege.web.client.itemlist.UserIdItemListSuggestOracle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
@@ -35,7 +35,7 @@ public class UserIdRangeEditorImpl extends Composite implements UserIdRangeEdito
 
 
     @UiField(provided = true)
-    protected ItemListSuggestBox<UserId> userIdEditor;
+    protected SuggestBox userIdEditor;
 
     @UiField
     protected TextBox startEditor;
@@ -46,7 +46,8 @@ public class UserIdRangeEditorImpl extends Composite implements UserIdRangeEdito
     private boolean dirty;
 
     public UserIdRangeEditorImpl() {
-        userIdEditor = new ItemListSuggestBox<>(new UserIdItemProvider(DispatchServiceManager.get()), new TextBox());
+        TextBox valueBoxBase = new TextBox();
+        userIdEditor = new SuggestBox(new UserIdItemListSuggestOracle(valueBoxBase, DispatchServiceManager.get()));
         userIdEditor.getElement().setAttribute("placeholder", "Type user name");
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

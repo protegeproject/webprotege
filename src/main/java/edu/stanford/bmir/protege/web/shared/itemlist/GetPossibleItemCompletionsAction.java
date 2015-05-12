@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.shared.itemlist;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -11,11 +13,11 @@ public abstract class GetPossibleItemCompletionsAction<T> implements Action<GetP
 
     private String completionText;
 
-    private GetPossibleItemCompletionsAction() {
+    protected GetPossibleItemCompletionsAction() {
     }
 
     public GetPossibleItemCompletionsAction(String completionText) {
-        this.completionText = completionText;
+        this.completionText = checkNotNull(completionText);
     }
 
     public String getCompletionText() {
