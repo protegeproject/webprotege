@@ -21,6 +21,8 @@ import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
+import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdCompletionsActionHandler;
+import edu.stanford.bmir.protege.web.server.itemlist.GetUserIdCompletionsActionHandler;
 import edu.stanford.bmir.protege.web.server.mail.GetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.mail.SetEmailAddressActionHandler;
 import edu.stanford.bmir.protege.web.server.merge.ComputeProjectMergeActionHandler;
@@ -45,6 +47,7 @@ import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;
 import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
+import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.project.SetUIConfigurationActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.*;
 /**
@@ -169,5 +172,8 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(GetWatchedEntityChangesActionHandler.class);
 
         multibinder.addBinding().to(RevertRevisionActionHandler.class);
+
+        multibinder.addBinding().to(GetPersonIdCompletionsActionHandler.class);
+        multibinder.addBinding().to(GetUserIdCompletionsActionHandler.class);
     }
 }
