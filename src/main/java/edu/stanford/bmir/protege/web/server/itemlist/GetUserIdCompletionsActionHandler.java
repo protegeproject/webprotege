@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -27,7 +29,7 @@ public class GetUserIdCompletionsActionHandler implements ActionHandler<GetUserI
 
     @Inject
     public GetUserIdCompletionsActionHandler(UserDetailsManager userDetailsManager) {
-        this.userDetailsManager = userDetailsManager;
+        this.userDetailsManager = checkNotNull(userDetailsManager);
     }
 
     @Override
