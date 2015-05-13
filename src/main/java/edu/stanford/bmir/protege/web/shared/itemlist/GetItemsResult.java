@@ -17,7 +17,7 @@ public abstract class GetItemsResult<T> implements Result {
     /**
      * For serialization only
      */
-    private GetItemsResult() {
+    protected GetItemsResult() {
     }
 
     public GetItemsResult(List<T> items) {

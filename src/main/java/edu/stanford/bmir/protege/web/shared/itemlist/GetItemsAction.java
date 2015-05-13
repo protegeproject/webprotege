@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -17,11 +19,11 @@ public abstract class GetItemsAction<T, R extends GetItemsResult<T>> implements 
     /**
      * For serialization only
      */
-    private GetItemsAction() {
+    protected GetItemsAction() {
     }
 
     public GetItemsAction(List<String> itemNames) {
-        this.itemNames = new ArrayList<>();
+        this.itemNames = new ArrayList<>(checkNotNull(itemNames));
     }
 
     public List<String> getItemNames() {
