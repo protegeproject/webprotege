@@ -196,7 +196,7 @@ public final class MetaProjectManager implements HasUserIds, UserDetailsManager,
     }
 
     @Override
-    public UserDetails getUserDetails(UserId userId) {
+    public Optional<UserDetails> getUserDetails(UserId userId) {
         return userDetailsManager.getUserDetails(userId);
     }
 

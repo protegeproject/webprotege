@@ -16,6 +16,7 @@ import edu.stanford.smi.protege.server.metaproject.Group;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,8 +46,13 @@ public class GetCurrentUserInSessionActionHandler implements ActionHandler<GetCu
     public GetCurrentUserInSessionResult execute(GetCurrentUserInSessionAction action, ExecutionContext executionContext) {
         UserId userId = executionContext.getUserId();
         MetaProjectManager mpm = MetaProjectManager.getManager();
-        UserDetails userDetails = mpm.getUserDetails(userId);
-        Set<GroupId> userGroups = mpm.getUserGroups(userId);
-        return new GetCurrentUserInSessionResult(userDetails, userGroups);
+        Optional<UserDetails> userDetails = mpm.getUserDetails(userId);
+        if (userDetails.isPresent()) {
+            Set<GroupId> userGroups = mpm.getUserGroups(userId);
+            return new GetCurrentUserInSessionResult(userDetails.get(), userGroups);
+        }
+        else {
+            return new GetCurrentUserInSessionResult(UserDetails.getGuestUserDetails(), Collections.<GroupId>emptySet());
+        }
     }
 }

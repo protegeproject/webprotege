@@ -1,24 +1,25 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.itemlist.ItemListSuggestBox;
 import edu.stanford.bmir.protege.web.client.itemlist.ItemListSuggestOracle;
 import edu.stanford.bmir.protege.web.client.itemlist.PersonIdItemListSuggestionOracle;
 import edu.stanford.bmir.protege.web.client.itemlist.ValueBoxCursorPositionProvider;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.itemlist.*;
 import edu.stanford.bmir.protege.web.shared.sharing.*;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeLabel;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Author: Matthew Horridge<br>
@@ -90,21 +91,60 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
         add(addPeoplePanel);
     }
 
-    private void handleAdd(SuggestBox suggestBox, SharingSettingsDropDown lb, TextArea addPeopleTextArea) {
+    private void handleAdd(SuggestBox suggestBox, final SharingSettingsDropDown lb, final TextArea addPeopleTextArea) {
+
         String suggestBoxText = suggestBox.getText();
-        String [] names = suggestBoxText.trim().split("\n");
-        Set<PersonId> personIds = new HashSet<>();
-        for(String name : names) {
-            personIds.add(new PersonId(name));
+        final String [] names = suggestBoxText.trim().split("\n");
+        final List<String> itemNames = Arrays.asList(names);
+
+        final SharingPermission sharingPermission = lb.getSelectedItem();
+        DispatchServiceManager.get().execute(new GetPersonIdItemsAction(itemNames), new DispatchServiceCallbackWithProgressDisplay<GetPersonIdItemsResult>() {
+            @Override
+            public String getProgressDisplayTitle() {
+                return "Adding users";
+            }
+
+            @Override
+            public String getProgressDisplayMessage() {
+                return "Adding users to sharing settings";
+            }
+
+            @Override
+            public void handleSuccess(GetPersonIdItemsResult result) {
+                GWT.log("Retrieved PersonIds: " + result);
+                addPersonsToSharingSettings(result, itemNames, sharingPermission, addPeopleTextArea);
+            }
+        });
+    }
+
+    private void addPersonsToSharingSettings(GetPersonIdItemsResult result, List<String> itemNames, SharingPermission sharingPermission, TextArea addPeopleTextArea) {
+        List<PersonId> personIds = result.getItems();
+        List<String> remainingItemNames = new ArrayList<>(itemNames);
+        for(PersonId personId : personIds) {
+            remainingItemNames.remove(personId.getId());
         }
         personIds.removeAll(getUsersInSharingSettingsList());
-
         List<SharingSetting> listDataItems = new ArrayList<>(sharingSettingsList.getListData());
         for(PersonId personId : personIds) {
-            listDataItems.add(new SharingSetting(personId, lb.getSelectedItem()));
+            listDataItems.add(new SharingSetting(personId, sharingPermission));
         }
-        addPeopleTextArea.setText("");
+        StringBuilder remainingPersonNameList = new StringBuilder();
+        for(String remainingItemName : remainingItemNames) {
+            remainingPersonNameList.append(remainingItemName);
+            remainingPersonNameList.append("\n");
+        }
+        addPeopleTextArea.setText(remainingPersonNameList.toString().trim());
         sharingSettingsList.setListData(listDataItems);
+        if(!remainingItemNames.isEmpty()) {
+            String remainingPersonListHtml = remainingPersonNameList.toString().replace("\n", "<br>");
+            MessageBox.showMessage(
+                    "Unable to share the project with the following people",
+                    "<div style=\"margin-left: 20px; margin-top: 10px; margin-bottom: 10px; line-height: 20px; color: maroon;\">"
+                            + remainingPersonListHtml
+                            + "</div>" + "The people above do not have accounts with WebProtégé.  " +
+                            "Projects can only be shared with people who have WebProtégé accounts."
+            );
+        }
     }
 
     private List<PersonId> getUsersInSharingSettingsList() {
