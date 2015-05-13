@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.server.itemlist;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdItemsAction;
@@ -13,7 +14,9 @@ import edu.stanford.smi.protege.server.metaproject.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,8 +46,8 @@ public class GetPersonIdItemsActionHandler_TestCase {
             throws Exception
     {
         actionHandler = new GetPersonIdItemsActionHandler(userDetailsManager);
-        when(userDetailsManager.getUserDetails(johnSmith_UpperCase)).thenReturn(mock(UserDetails.class));
-        when(userDetailsManager.getUserDetails(johnSmith_LowerCase)).thenReturn(mock(UserDetails.class));
+        when(userDetailsManager.getUserDetails(johnSmith_UpperCase)).thenReturn(Optional.of(mock(UserDetails.class)));
+        when(userDetailsManager.getUserDetails(johnSmith_LowerCase)).thenReturn(Optional.of(mock(UserDetails.class)));
     }
 
     @Test(expected = java.lang.NullPointerException.class)
@@ -57,13 +60,6 @@ public class GetPersonIdItemsActionHandler_TestCase {
         when(action.getItemNames()).thenReturn(Arrays.asList("John Smith"));
         GetPersonIdItemsResult result = actionHandler.execute(action, mock(ExecutionContext.class));
         assertThat(result.getItems(), hasItems(new PersonId(johnSmith_UpperCase.getUserName())));
-    }
-
-    @Test
-    public void shouldNotMatchWithinUserName() {
-        when(action.getItemNames()).thenReturn(Arrays.asList("John"));
-        GetPersonIdItemsResult result = actionHandler.execute(action, mock(ExecutionContext.class));
-        assertThat(result.getItems(), is(empty()));
     }
 
 }

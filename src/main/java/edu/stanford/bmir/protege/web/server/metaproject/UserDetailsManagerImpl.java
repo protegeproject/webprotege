@@ -65,13 +65,16 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
     }
 
     @Override
-    public UserDetails getUserDetails(UserId userId) {
+    public Optional<UserDetails> getUserDetails(UserId userId) {
         if(userId.isGuest()) {
-            return UserDetails.getGuestUserDetails();
+            return Optional.of(UserDetails.getGuestUserDetails());
         }
         final MetaProject metaProject = getMetaProject();
         User user = metaProject.getUser(userId.getUserName());
-        return UserDetails.getUserDetails(userId, userId.getUserName(), Optional.fromNullable(user.getEmail()));
+        if(user == null) {
+            return Optional.absent();
+        }
+        return Optional.of(UserDetails.getUserDetails(userId, userId.getUserName(), Optional.fromNullable(user.getEmail())));
     }
 
     @Override

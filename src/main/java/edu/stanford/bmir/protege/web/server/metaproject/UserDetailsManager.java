@@ -18,7 +18,7 @@ public interface UserDetailsManager extends HasUserIds, HasGetUserByUserIdOrEmai
     @Override
     Collection<UserId> getUserIds();
 
-    UserDetails getUserDetails(UserId userId);
+    Optional<UserDetails> getUserDetails(UserId userId);
 
     Optional<String> getEmail(UserId userId);
 

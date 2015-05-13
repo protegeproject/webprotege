@@ -46,7 +46,7 @@ public class GetPersonIdItemsActionHandler implements ActionHandler<GetPersonIdI
     public GetPersonIdItemsResult execute(GetPersonIdItemsAction action, ExecutionContext executionContext) {
         List<PersonId> result = new ArrayList<>();
         for(String itemName : action.getItemNames()) {
-            if(userDetailsManager.getUserDetails(UserId.getUserId(itemName)) != null) {
+            if(userDetailsManager.getUserDetails(UserId.getUserId(itemName)).isPresent()) {
                 result.add(new PersonId(itemName));
             }
         }
