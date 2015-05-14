@@ -76,17 +76,6 @@ public class WebProtegeProperties implements Serializable {
         return ("${" + propertyName.name() + "}").equals(value);
     }
 
-//    /**
-//     * Gets the one and only instance of {@link WebProtegeProperties}.
-//     * @return The singleton instance of {@link WebProtegeProperties}.  Not {@code null}.
-//     */
-//    public static WebProtegeProperties get() {
-//        if(instance == null) {
-//            throw new IllegalStateException("WebProtegeProperties has not been initialized.  WebProtegeProperties.initFromProperties(Properties) must be called ONCE by some initializer.");
-//        }
-//        return instance;
-//    }
-
     /**
      * Gets a property value as a string.
      * @param propertyName The name of the property whose value should be retrieved.  Not {@code null}.
