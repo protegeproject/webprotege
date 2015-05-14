@@ -84,10 +84,6 @@ public interface OntologyService extends RemoteService {
     /*
      * Instance methods
      */
-
-    public EntityData createInstance(String projectName, String instName, String typeName, String user,
-            String operationDescription);
-
     public EntityData createInstanceValue(String projectName, String instName, String typeName, String subjectEntity,
             String propertyEntity, String user, String operationDescription);
 
