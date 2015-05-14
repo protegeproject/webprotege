@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.server.watches;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import edu.stanford.bmir.protege.web.server.app.App;
-import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
