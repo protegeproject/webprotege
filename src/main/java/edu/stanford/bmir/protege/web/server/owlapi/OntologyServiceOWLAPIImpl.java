@@ -623,14 +623,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         throw new RuntimeException("Not implemented");
     }
 
-
-    public EntityData createInstance(String projectName, String instName, String typeName, String user, String operationDescription) {
-        OWLAPIProject project = getProject(projectName);
-        UserId userId = getUserId(user);
-        applyChanges(new CreateInstanceChangeFactory(project, userId, operationDescription, instName, typeName));
-        return getRenderingManager(projectName).getEntityData(instName, EntityType.NAMED_INDIVIDUAL);
-    }
-
     public EntityData createInstanceValue(String projectName, String instName, String typeName, String subjectEntity, String propertyEntity, String user, String operationDescription) {
         OWLAPIProject project = getProject(projectName);
         UserId userId = getUserId(user);

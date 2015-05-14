@@ -119,12 +119,6 @@ public class OntologyServiceManager {
     /*
      * Instance methods
      */
-
-    public void createInstance(ProjectId projectId, String instName, String typeName, UserId userId,
-            String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createInstance(projectId.getId(), instName, typeName, userId.getUserName(), operationDescription, cb);
-    }
-
     public void createInstanceValue(ProjectId projectId, String instName, String typeName, String subjectEntity,
             String propertyEntity, UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
         proxy.createInstanceValue(projectId.getId(), instName, typeName, subjectEntity, propertyEntity, userId.getUserName(),
