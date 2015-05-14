@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.crud.*;
+import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
@@ -24,7 +25,6 @@ import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettings;
-import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepositoryManager;
 import edu.stanford.bmir.protege.web.server.events.EventLifeTime;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.HighLevelEventGenerator;
@@ -132,6 +132,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     private final ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache;
 
     private String defaultLanguage = "en";
+    private final ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository;
 
 
     public static OWLAPIProject getProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
@@ -183,7 +184,9 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         this.projectAccessManager = new ProjectAccessManager(getProjectId(), projectEventManager);
 
-        entityCrudKitHandlerCache = new ProjectEntityCrudKitHandlerCache(getProjectId());
+        WebProtegeInjector injector = WebProtegeInjector.get();
+        entityCrudKitSettingsRepository = injector.getInstance(ProjectEntityCrudKitSettingsRepository.class);
+        entityCrudKitHandlerCache = new ProjectEntityCrudKitHandlerCache(entityCrudKitSettingsRepository, getProjectId());
 
         loadProject();
         initialiseProjectMachinery();
@@ -411,7 +414,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     public void setEntityCrudKitSettings(EntityCrudKitSettings<?> entityCrudKitSettings) {
         ProjectEntityCrudKitSettings projectSettings = new ProjectEntityCrudKitSettings(getProjectId(), entityCrudKitSettings);
-        ProjectEntityCrudKitSettingsRepositoryManager.getRepository().save(projectSettings);
+        entityCrudKitSettingsRepository.save(projectSettings);
     }
 
 
