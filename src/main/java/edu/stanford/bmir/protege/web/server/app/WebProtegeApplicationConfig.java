@@ -1,14 +1,15 @@
 package edu.stanford.bmir.protege.web.server.app;
 
-import com.google.common.base.Optional;
 import com.mongodb.Mongo;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteConcern;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.convert.CustomConversions;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
@@ -26,37 +27,49 @@ import java.util.List;
  */
 @Configuration
 @EnableMongoRepositories(basePackages = "edu.stanford.bmir.protege.web.server")
+@PropertySource(value="classpath:webprotege.properties")
 public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
 
+    public static final String MONGO_PORT_PROPERTY_NAME = "mongodb.port";
 
-    public static final String DEFAULT_HOST_NAME = "localhost";
+    public static final String MONGO_HOST_PROPERTY_NAME = "mongodb.host";
 
-    public static final int DEFAULT_PORT = 27017;
 
-    private WebProtegeProperties webProtegeProperties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
+    private static final String DATABASE_NAME = "webprotege";
+
+    private static final int DEFAULT_PORT = 27017;
+
+    private static final String DEFAULT_HOST = "localhost";
+
+
+    /**
+     * Environment provides properties.  Since we declare a property source (above) that is webprotege.properties
+     * this is loaded and accessible via the Environment.  Note that, if a property is set on the command line (via -D)
+     * this value will override the value in webprotege.properties.
+     */
+    @Autowired
+    Environment environment;
 
     @Override
     protected String getDatabaseName() {
-        return "webprotege";
+        return DATABASE_NAME;
     }
 
     @Override
     public Mongo mongo() throws Exception {
-
-        final String hostName = getHostName();
-        final int port = getPort();
-
+        String host = getHost();
+        int port = getPort();
         try {
-            ServerAddress address = new ServerAddress(hostName, port);
+            ServerAddress address = new ServerAddress(host, port);
             Mongo mongo = new Mongo(address);
             mongo.setWriteConcern(WriteConcern.SAFE);
             return mongo;
         }
         catch (IllegalArgumentException e) {
-            throw new WebProtegeConfigurationException("Port or host name of database out of range: " + hostName + " port " + port);
+            throw new WebProtegeConfigurationException("Port or host name of database out of range: " + host + " port " + port);
         }
         catch (UnknownHostException e) {
-            throw new WebProtegeConfigurationException(getUnknownHostErrorMessage(hostName, port));
+            throw new WebProtegeConfigurationException(getUnknownHostErrorMessage(host, port));
         }
     }
 
@@ -82,27 +95,25 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private int getPort() {
-        Optional<String> overridingPortString = webProtegeProperties.getDBPort();
-        if (!overridingPortString.isPresent()) {
+        String port = environment.getProperty(MONGO_PORT_PROPERTY_NAME);
+        if(port == null) {
             return DEFAULT_PORT;
         }
         try {
-            return Integer.parseInt(overridingPortString.get());
+            return Integer.parseInt(port);
         }
         catch (NumberFormatException e) {
-            System.err.println("Invalid port specification in mongod config file (port = " + overridingPortString + ").  Using default port.");
+            System.err.println("Invalid port specification in mongod config file (port = " + port + ").  Using default port.");
             return DEFAULT_PORT;
         }
     }
 
-    private String getHostName() {
-        Optional<String> overridingHostName = webProtegeProperties.getDBHost();
-        if(overridingHostName.isPresent()) {
-            return overridingHostName.get();
+    private String getHost() {
+        String host = environment.getProperty(MONGO_HOST_PROPERTY_NAME);
+        if(host == null) {
+            return DEFAULT_HOST;
         }
-        else {
-            return DEFAULT_HOST_NAME;
-        }
+        return host;
     }
 
     private static String getUnknownHostErrorMessage(String hostName, int port) {
