@@ -35,9 +35,9 @@ public abstract class AbstractOBOTermPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    protected void handleBeforeSetEntity(Optional<OWLEntityData> entityData) {
-        if(entityData.isPresent() && isDirty()) {
-            commitChangesForEntity(entityData.get().getEntity());
+    protected void handleBeforeSetEntity(Optional<OWLEntityData> existingEntity) {
+        if(existingEntity.isPresent() && isDirty()) {
+            commitChangesForEntity(existingEntity.get().getEntity());
         }
     }
 
