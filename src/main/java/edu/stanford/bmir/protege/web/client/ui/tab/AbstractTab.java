@@ -54,7 +54,9 @@ public abstract class AbstractTab extends Portal {
     private EntityPortlet controllingPortlet;
 
     private SelectionListener selectionControllingListener;
+
     private PanelListener portletDestroyListener;
+
     private PanelListener panelListener;
 
     public AbstractTab(final Project project) {
@@ -178,11 +180,12 @@ public abstract class AbstractTab extends Portal {
                 if (selection == null) {
                     return;
                 } // else do nothing here
-            } else if (currentSel.equals(selection)) {
+            }
+            else if (currentSel.equals(selection)) {
                 return;
             }
+            controllingPortlet.setSelection(selection);
         }
-        controllingPortlet.setSelection(selection);
     }
 
     public int getColumnCount() {
