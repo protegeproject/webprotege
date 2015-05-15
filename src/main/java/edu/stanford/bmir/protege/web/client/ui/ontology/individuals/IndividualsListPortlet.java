@@ -128,27 +128,27 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
     }
 
     @Override
-    protected void handleBeforeSetEntity(Optional<OWLEntityData> entityData) {
-        super.handleBeforeSetEntity(entityData);
+    protected void handleBeforeSetEntity(Optional<OWLEntityData> existingEntity) {
+        super.handleBeforeSetEntity(existingEntity);
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
-        updateTitle(entityData);
         Optional<OWLClass> selectedClass;
         if(preconfiguredClass.isPresent()) {
             selectedClass = preconfiguredClass;
         }
-        else {
-            if(entityData.isPresent() && entityData.get().getEntity() instanceof OWLClass) {
-                selectedClass = Optional.of(entityData.get().getEntity().asOWLClass());
-            }
-            else {
-                selectedClass = Optional.absent();
-            }
+        else if(entityData.isPresent() && entityData.get().getEntity() instanceof OWLClass) {
+            selectedClass = Optional.of(entityData.get().getEntity().asOWLClass());
         }
+        else {
+            selectedClass = Optional.absent();
+        }
+
+
         if(selectedClass.isPresent()) {
             presenter.setType(selectedClass.get());
+            updateTitle(entityData);
         }
         else {
             presenter.clearType();
