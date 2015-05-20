@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.selection;
 
 import com.google.common.base.Optional;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -14,13 +12,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SelectedEntityDataManager<D extends OWLEntityData> {
 
-    private final EventBus eventBus;
 
     private Optional<D> lastSelection = Optional.absent();
 
 
-    public SelectedEntityDataManager(EventBus eventBus) {
-        this.eventBus = eventBus;
+    public SelectedEntityDataManager() {
     }
 
     public Optional<D> getLastSelection() {
@@ -29,15 +25,8 @@ public class SelectedEntityDataManager<D extends OWLEntityData> {
 
     public void setSelection(D entityData) {
         checkNotNull(entityData);
-        Optional<D> sel = Optional.of(entityData);
-        if(!sel.equals(lastSelection)) {
-            Optional<D> lastSelectionCopy = lastSelection;
-            lastSelection = sel;
-            fireEvent(lastSelectionCopy);
-        }
+        lastSelection = Optional.of(entityData);
     }
 
-    private void fireEvent(Optional<D> previousLastSelection) {
-        eventBus.fireEvent(new EntityDataSelectionChangedEvent(previousLastSelection, lastSelection));
-    }
+
 }

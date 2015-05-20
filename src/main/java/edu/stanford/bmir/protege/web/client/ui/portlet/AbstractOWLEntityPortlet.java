@@ -3,11 +3,9 @@ package edu.stanford.bmir.protege.web.client.ui.portlet;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
-import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -25,12 +23,12 @@ import java.util.Collections;
 @SuppressWarnings("deprecated")
 public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
 
-    protected AbstractOWLEntityPortlet(Project project) {
-        super(project);
+    protected AbstractOWLEntityPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
-    protected AbstractOWLEntityPortlet(Project project, boolean initialize) {
-        super(project, initialize);
+    protected AbstractOWLEntityPortlet(SelectionModel selectionModel, Project project, boolean initialize) {
+        super(selectionModel, project, initialize);
     }
 
     /**
@@ -65,15 +63,15 @@ public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
         }
     }
 
-    protected Optional<OWLEntity> toOWLEntity(EntityData entityData) {
-        Optional<OWLEntityData> ed = toOWLEntityData(entityData);
-        if(ed.isPresent()) {
-            return Optional.of(ed.get().getEntity());
-        }
-        else {
-            return Optional.absent();
-        }
-    }
+//    protected Optional<OWLEntity> toOWLEntity(EntityData entityData) {
+//        Optional<OWLEntityData> ed = toOWLEntityData(entityData);
+//        if(ed.isPresent()) {
+//            return Optional.of(ed.get().getEntity());
+//        }
+//        else {
+//            return Optional.absent();
+//        }
+//    }
 
     protected Optional<OWLClass> toOWLClass(EntityData entityData) {
         if(entityData == null) {
@@ -85,10 +83,5 @@ public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
         }
         IRI iri = IRI.create(name);
         return Optional.of(DataFactory.getOWLClass(iri));
-    }
-
-    @Override
-    public Collection<EntityData> getSelection() {
-        return Collections.emptyList();
     }
 }

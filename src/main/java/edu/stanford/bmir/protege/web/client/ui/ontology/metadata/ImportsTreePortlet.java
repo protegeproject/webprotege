@@ -2,18 +2,16 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
-import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.project.Project;
 
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ImportsData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.ArrayList;
 
@@ -25,8 +23,8 @@ public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 	protected TreePanel importsTree;
 	protected ArrayList<EntityData> currentSelection;
 
-	public ImportsTreePortlet(Project project) {
-		super(project);
+	public ImportsTreePortlet(SelectionModel selectionModel, Project project) {
+		super(selectionModel, project);
 	}
 
 	public void initialize() {
@@ -39,14 +37,6 @@ public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 		importsTree.setAutoWidth(true);		
 		importsTree.setAutoScroll(true);
 
-		importsTree.addListener(new TreePanelListenerAdapter() {
-			public void onClick(TreeNode node, EventObject e) {
-				currentSelection = new ArrayList<EntityData>();
-				currentSelection.add((EntityData) node.getUserObject());
-				notifySelectionListeners(new SelectionEvent(ImportsTreePortlet.this));
-			}
-		});
-		
 		TreeNode root = new TreeNode();
 		root.setText(getProject().getDisplayName());
 		root.setId(getProjectId().getId());

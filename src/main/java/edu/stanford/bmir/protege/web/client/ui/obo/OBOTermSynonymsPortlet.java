@@ -1,16 +1,16 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,8 +25,8 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     
 //    private OBOTermEditorView editorView;
 
-    public OBOTermSynonymsPortlet(Project project) {
-        super(project);
+    public OBOTermSynonymsPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override
@@ -59,18 +59,9 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void updateTitle() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Synonyms");
-        EntityData entityData = getEntity();
-        if(entityData != null) {
-            sb.append(" for ");
-            sb.append(entityData.getBrowserText());
-        }
-        setTitle(sb.toString());
+    protected String getTitlePrefix() {
+        return "Synonyms";
     }
-
-
 
     @Override
     public void initialize() {

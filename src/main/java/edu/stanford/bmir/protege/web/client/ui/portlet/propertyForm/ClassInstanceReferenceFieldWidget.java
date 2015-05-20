@@ -25,6 +25,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.Collection;
 import java.util.Map;
@@ -271,15 +272,16 @@ public class ClassInstanceReferenceFieldWidget extends ReferenceFieldWidget {
     }
 
 
-    public Selectable getSelectable() {
+    private Selectable getSelectable() {
         if (selectable == null) {
-            ClassTreePortlet selectableTree = new ClassTreePortlet(getProject(), false, false, false, true, topClass);
+            SelectionModel selectionModel = SelectionModel.create();
+            ClassTreePortlet selectableTree = new ClassTreePortlet(selectionModel, getProject(), false, false, false, true, topClass);
             selectableTree.setDraggable(false);
             selectableTree.setClosable(false);
             selectableTree.setCollapsible(false);
             selectableTree.setHeight(300);
             selectableTree.setWidth(450);
-            selectable = selectableTree;
+//            selectable = selectableTree;
         }
         return selectable;
     }

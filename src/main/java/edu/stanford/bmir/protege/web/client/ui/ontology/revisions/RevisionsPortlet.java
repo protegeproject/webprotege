@@ -2,11 +2,8 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-
-import java.util.Collection;
-import java.util.Collections;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * Author: Matthew Horridge<br>
@@ -20,8 +17,8 @@ public class RevisionsPortlet extends AbstractOWLEntityPortlet {
 
     private RevisionsListViewPresenter presenter;
 
-    public RevisionsPortlet(Project project) {
-        super(project);
+    public RevisionsPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override

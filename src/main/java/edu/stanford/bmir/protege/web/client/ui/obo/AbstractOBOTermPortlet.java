@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -23,8 +24,8 @@ public abstract class AbstractOBOTermPortlet extends AbstractOWLEntityPortlet {
 
     private static final OBOTextEditorServiceAsync SERVICE = GWT.create(OBOTextEditorService.class);
 
-    protected AbstractOBOTermPortlet(Project project) {
-        super(project);
+    protected AbstractOBOTermPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
         addStyleName("web-protege-laf");
         setHeight("300px");
         setAutoScroll(true);
@@ -76,34 +77,21 @@ public abstract class AbstractOBOTermPortlet extends AbstractOWLEntityPortlet {
      */
     protected abstract void clearDisplay();
 
+    protected abstract String getTitlePrefix();
+
     /**
      * Called to update the title.  Implementations should compute a title and then set it using the {@link #setTitle(String)}
      * method.
      */
-    protected abstract void updateTitle();
-
-
-    /**
-     * Gets the current entity which should be displayed.
-     * @return The current entity.  May be <code>null</code>.
-     */
-    public OWLEntity getCurrentEntity() {
-        EntityData entityData = getEntity();
-        if(entityData == null) {
-            return null;
+    final protected void updateTitle() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getTitlePrefix());
+        Optional<OWLEntityData> currentEntity = getSelectedEntityData();
+        if(currentEntity.isPresent()) {
+            sb.append(" for ");
+            sb.append(currentEntity.get().getBrowserText());
         }
-        IRI iri = IRI.create(entityData.getName());
-        if(entityData.getValueType() == ValueType.Cls) {
-            return DataFactory.getOWLClass(iri);
-        }
-        else if(entityData.getValueType() == ValueType.Property) {
-            return DataFactory.getOWLObjectProperty(iri);
-        }
-        else if(entityData.getValueType() == ValueType.Instance) {
-            return DataFactory.getOWLNamedIndividual(iri);
-        }
-        else {
-            return null;
-        }
+        setTitle(sb.toString());
     }
+
 }

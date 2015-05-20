@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEventHandler;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
@@ -31,12 +32,10 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
 
     private AnnotationsView annotationsView;
 
-    private boolean loaded = false;
-
     private Optional<Set<OWLAnnotation>> lastSet = Optional.absent();
 
-    public OntologyAnnotationsPortlet(Project project) {
-        super(project);
+    public OntologyAnnotationsPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override

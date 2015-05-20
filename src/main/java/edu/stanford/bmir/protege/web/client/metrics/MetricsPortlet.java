@@ -3,10 +3,8 @@ package edu.stanford.bmir.protege.web.client.metrics;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-
-import java.util.Collection;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 26/04/2014
@@ -17,8 +15,8 @@ public class MetricsPortlet extends AbstractOWLEntityPortlet {
 
     private MetricsView view;
 
-    public MetricsPortlet(Project project) {
-        super(project);
+    public MetricsPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override

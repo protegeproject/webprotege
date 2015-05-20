@@ -26,11 +26,11 @@ public class MetadataTab extends AbstractTab {
 	}
 	
 	protected void buildUI() {
-		importsPortlet = new ImportsTreePortlet(project);
-		addPortlet(importsPortlet, 0);
-		
-
-		setControllingPortlet(importsPortlet);
+//		importsPortlet = new ImportsTreePortlet(selectionModel, project);
+//		addPortlet(importsPortlet, 0);
+//
+//
+//		setControllingPortlet(importsPortlet);
 	
 	}
 	

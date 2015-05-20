@@ -27,11 +27,10 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
-import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
@@ -74,8 +73,8 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
 
     private EntitiesList<OWLNamedIndividualData> individualsList;
 
-    public IndividualsListPortlet(Project project) {
-        super(project);
+    public IndividualsListPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override
@@ -87,7 +86,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
         individualsList.addSelectionHandler(new SelectionHandler<OWLNamedIndividualData>() {
             @Override
             public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<OWLNamedIndividualData> event) {
-                notifySelectionListeners(new SelectionEvent(IndividualsListPortlet.this));
+                getSelectionModel().setSelection(event.getSelectedItem());
             }
         });
         addToolbarButtons();
@@ -164,23 +163,23 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
         }
     }
 
-    @Override
-    public void setSelection(Collection<EntityData> selection) {
-        if(selection == null) {
-            return;
-        }
-        if(selection.isEmpty()) {
-            return;
-        }
-        for(EntityData entityData : selection) {
-            Optional<OWLEntityData> sel = toOWLEntityData(entityData);
-            if(sel.isPresent() && sel.get() instanceof OWLNamedIndividualData) {
-                setSelectedIndividual((OWLNamedIndividualData) sel.get());
-                break;
-            }
-
-        }
-    }
+//    @Override
+//    public void setSelection(Collection<EntityData> selection) {
+//        if(selection == null) {
+//            return;
+//        }
+//        if(selection.isEmpty()) {
+//            return;
+//        }
+//        for(EntityData entityData : selection) {
+//            Optional<OWLEntityData> sel = toOWLEntityData(entityData);
+//            if(sel.isPresent() && sel.get() instanceof OWLNamedIndividualData) {
+//                setSelectedIndividual((OWLNamedIndividualData) sel.get());
+//                break;
+//            }
+//
+//        }
+//    }
 
     protected void addToolbarButtons() {
         setTopToolbar(new Toolbar());
@@ -223,11 +222,11 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
             @Override
             public void onSpecialKey(Field field, EventObject e) {
                 if (e.getKey() == EventObject.ENTER) {
-                    SearchUtil su = new SearchUtil(getProjectId(), IndividualsListPortlet.this);
-                    //su.setBusyComponent(searchField);  //this does not seem to work
-                    su.setBusyComponent(getTopToolbar());
-                    su.setSearchedValueType(ValueType.Instance);
-                    su.search(searchField.getText());
+                    // TODO: SELECTION
+//                    SearchUtil su = new SearchUtil(getProjectId(), IndividualsListPortlet.this);
+//                    su.setBusyComponent(getTopToolbar());
+//                    su.setSearchedValueType(ValueType.Instance);
+//                    su.search(searchField.getText());
                 }
             }
         });

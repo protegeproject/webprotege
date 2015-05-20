@@ -4,11 +4,9 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-
-import java.util.Collection;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
@@ -17,8 +15,8 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractOWLEntityPortlet 
 
     private ManchesterSyntaxFrameEditorPresenter presenter;
 
-    public OWLEntityDescriptionEditorPortlet(Project project) {
-        super(project);
+    public OWLEntityDescriptionEditorPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override

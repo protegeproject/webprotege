@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
@@ -20,8 +21,8 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
 
     private HTML html;
 
-    public OWLEntityDescriptionBrowserPortlet(Project project) {
-        super(project);
+    public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override

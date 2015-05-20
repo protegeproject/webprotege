@@ -7,11 +7,9 @@ import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermCrossProduct;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
-
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Author: Matthew Horridge<br>
@@ -23,8 +21,8 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermCrossProductEditor editor;
     
-    public OBOTermCrossProductPortlet(Project project) {
-        super(project);
+    public OBOTermCrossProductPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
 
@@ -88,15 +86,8 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
         });
     }
 
-    
-    protected void updateTitle() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Cross product");
-        EntityData entityData = getEntity();
-        if(entityData != null) {
-            sb.append(" for ");
-            sb.append(entityData.getBrowserText());
-        }
-        setTitle(sb.toString());
+    @Override
+    protected String getTitlePrefix() {
+        return "Cross product";
     }
 }

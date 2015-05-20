@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
 import edu.stanford.bmir.protege.web.shared.usage.UsageFilter;
@@ -28,16 +29,10 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
 
     private UsageView usageView;
 
-    public UsagePortlet(Project project) {
-        super(project);
+    public UsagePortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
         setHeight(DEFAULT_HEIGHT);
     }
-
-    public UsagePortlet(Project project, boolean initialize) {
-        super(project, initialize);
-        setHeight(DEFAULT_HEIGHT);
-    }
-
 
     @Override
     public void initialize() {

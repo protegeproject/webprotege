@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.html;
 
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -19,8 +17,8 @@ public class HtmlMessagePortlet extends AbstractOWLEntityPortlet {
 
     private String title;
 
-    public HtmlMessagePortlet(Project project) {
-        super(project);
+    public HtmlMessagePortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override

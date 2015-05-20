@@ -261,24 +261,13 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     protected void onPortletAdded(final String javaClassName) {
-        GWT.runAsync(new RunAsyncCallback() {
-            @Override
-            public void onFailure(Throwable reason) {
-                GWT.log("There was a problem adding the portlet", reason);
-            }
-
-            @Override
-            public void onSuccess() {
-                EntityPortlet portlet = UIFactory.createPortlet(getProject(), javaClassName);
-                if (portlet == null) {
-                    return;
-                }
-                AbstractTab activeTab = getActiveOntologyTab();
-                activeTab.addPortlet(portlet, activeTab.getColumnCount() - 1);
-                doLayout();
-            }
-        });
-
+        AbstractTab activeTab = getActiveOntologyTab();
+        EntityPortlet portlet = UIFactory.createPortlet(activeTab.getSelectionModel(), getProject(), javaClassName);
+        if (portlet == null) {
+            return;
+        }
+        activeTab.addPortlet(portlet, activeTab.getColumnCount() - 1);
+        doLayout();
     }
 
     protected ToolbarMenuButton getAddTabButton() {

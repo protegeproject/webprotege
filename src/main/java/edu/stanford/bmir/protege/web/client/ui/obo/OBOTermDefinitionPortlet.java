@@ -7,10 +7,8 @@ import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermDefinition;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
-
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Author: Matthew Horridge<br>
@@ -22,8 +20,8 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermDefinitionEditor editor;
 
-    public OBOTermDefinitionPortlet(Project project) {
-        super(project);
+    public OBOTermDefinitionPortlet(Project project, SelectionModel selectionModel) {
+        super(selectionModel, project);
         editor = new OBOTermDefinitionEditorImpl();
         add(editor.asWidget());
         setHeight("200px");
@@ -82,15 +80,9 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
         });
     }
 
-    protected void updateTitle() {
-        EntityData currentEntity = getEntity();
-        StringBuilder sb = new StringBuilder();
-        sb.append("Definition");
-        if(currentEntity != null) {
-            sb.append(" for ");
-            sb.append(currentEntity.getBrowserText());
-        }
-        setTitle(sb.toString());
+    @Override
+    protected String getTitlePrefix() {
+        return "Definition";
     }
 
     @Override

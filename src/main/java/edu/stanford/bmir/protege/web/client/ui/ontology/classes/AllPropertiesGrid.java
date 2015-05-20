@@ -32,6 +32,7 @@ import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil;
 import edu.stanford.bmir.protege.web.client.ui.util.SelectionUtil.SelectionCallback;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -446,9 +447,10 @@ public class AllPropertiesGrid extends EditorGridPanel {
         window.show();
     }
 
-    public Selectable createSelectable() {
-        PropertiesTreePortlet propertiesTreePortlet = new PropertiesTreePortlet(project);
-        return propertiesTreePortlet;
+    private Selectable createSelectable() {
+        SelectionModel selectionModel = SelectionModel.create();
+        PropertiesTreePortlet propertiesTreePortlet = new PropertiesTreePortlet(selectionModel, project);
+        return null;//propertiesTreePortlet;
     }
 
     protected void addEmptyPropertyRow(PropertyEntityData prop) {

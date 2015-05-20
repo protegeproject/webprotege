@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.List;
@@ -19,8 +22,8 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
     private XRefListEditor editor;
     
     
-    public OBOTermXRefsEditorPortlet(Project project) {
-        super(project);
+    public OBOTermXRefsEditorPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
 
     }
 
@@ -52,15 +55,8 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
     }
 
     @Override
-    protected void updateTitle() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("XRefs");
-        EntityData entityData = getEntity();
-        if(entityData != null) {
-            sb.append(" for ");
-            sb.append(entityData.getBrowserText());
-        }
-        setTitle(sb.toString());
+    protected String getTitlePrefix() {
+        return "XRefs";
     }
 
     @Override
