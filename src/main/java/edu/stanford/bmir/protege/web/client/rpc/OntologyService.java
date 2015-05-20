@@ -21,29 +21,15 @@ public interface OntologyService extends RemoteService {
      * Project management methods
      */
 
-
-    /**
-     * Loads a project.
-     * @param projectName The name of the project to load.
-     * @return An integer representing the version of the project.
-     */
-    public Integer loadProject(String projectName);
-
     public Boolean hasWritePermission(String projectName, String userName);
 
-
     public ImportsData getImportedOntologies(String projectName);
-
-    public List<Triple> getEntityTriples(String projectName, String entityName);
 
     public List<Triple> getEntityTriples(String projectName, List<String> entities, List<String> properties);
 
     public List<Triple> getEntityTriples(String projectName, List<String> entities, List<String> properties, List<String> reifiedProps);
 
     public List<EntityPropertyValues> getEntityPropertyValues(String projectName, List<String> entities, List<String> properties, List<String> reifiedProps);
-
-    public EntityData renameEntity(String projectName, String oldName, String newName, String user,
-            String operationDescription);
 
     public EntityData getRootEntity(String projectName);
 
@@ -57,11 +43,6 @@ public interface OntologyService extends RemoteService {
     public PaginationData<EntityData> getIndividuals(String projectName, String className, int start, int limit, String sort, String dir);
 
     public List<EntityData> getParents(String projectName, String className, boolean direct);
-
-    /**
-     * Used by the "related properties" table.
-     */
-    public List<Triple> getRelatedProperties(String projectName, String className);
 
     /*
      * Properties methods
@@ -89,8 +70,6 @@ public interface OntologyService extends RemoteService {
 
     public EntityData createInstanceValueWithPropertyValue(String projectName, String instName, String typeName, String subjectEntity,
     		String propertyEntity, PropertyEntityData instancePropertyEntity, EntityData valueEntityData, String user, String operationDescription);
-
-    public List<EntityData> getDirectTypes(String projectName, String instanceName);
 
     /*
      * Search
