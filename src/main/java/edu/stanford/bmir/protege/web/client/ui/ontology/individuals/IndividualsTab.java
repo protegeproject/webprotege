@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,8 +27,8 @@ public class IndividualsTab extends AbstractTab {
 //    private ClassTreePortlet clsTreePortlet;
 //    private IndividualsListPortlet indListPorlet;
 
-    public IndividualsTab(Project project) {
-        super(project);
+    public IndividualsTab(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
 //    @Override

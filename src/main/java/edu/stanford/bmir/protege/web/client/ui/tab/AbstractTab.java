@@ -13,7 +13,6 @@ import com.gwtext.client.widgets.portal.Portal;
 import com.gwtext.client.widgets.portal.PortalColumn;
 import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
@@ -21,11 +20,6 @@ import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassesTab;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
-import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
-import edu.stanford.bmir.protege.web.client.ui.util.GlobalSelectionManager;
-import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.selection.SelectedEntityDataManager;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.*;
@@ -53,54 +47,35 @@ public abstract class AbstractTab extends Portal {
     private Comparator<PortletConfiguration> portletComparator;
     // TODO: cache the portlets for performance
 
-    /**
-     * The portlet that provides the selection for other portlets
-     */
-    private EntityPortlet controllingPortlet;
-
-//    private SelectionListener selectionControllingListener;
-
     private PanelListener portletDestroyListener;
-
-    private PanelListener panelListener;
 
     private final SelectionModel selectionModel;
 
-    public AbstractTab(final Project project) {
+    public AbstractTab(final SelectionModel selectionModel, final Project project) {
         super();
         this.project = project;
         this.portal = new Portal();
-        this.columnToPortletsMap = new LinkedHashMap<PortalColumn, List<EntityPortlet>>();
-        this.tabColumnConfigToColumn = new LinkedHashMap<TabColumnConfiguration, PortalColumn>();
+        this.columnToPortletsMap = new LinkedHashMap<>();
+        this.tabColumnConfigToColumn = new LinkedHashMap<>();
 
-//        this.selectionControllingListener = getSelectionControllingListener();
         this.portletDestroyListener = getPortletDestroyListener();
 
-        this.selectionModel = SelectionModel.create();
-        addListener(this.panelListener = getPanelListener());
-
-    }
-
-    public AbstractTab(final Project project, final int columnCount) {
-        this(project, getDefaultColumnData(columnCount));
+        this.selectionModel = selectionModel;
+        addListener(new PanelListenerAdapter(){
+            @Override
+            public void onActivate(Panel panel) {
+                // Tell the portlets to update themselves
+                for(EntityPortlet entityPortlet : getPortlets()) {
+                    if(entityPortlet instanceof AbstractEntityPortlet) {
+                        ((AbstractEntityPortlet) entityPortlet).handleActivated();
+                    }
+                }
+            }
+        });
     }
 
     public SelectionModel getSelectionModel() {
         return selectionModel;
-    }
-
-    /**
-     * This constructor will build a tab with the column layout provided as an
-     * argument.
-     * <p/>
-     * Instead, please consider calling the {@link #AbstractTab(Project)}
-     * constructor and then call {@link #setTabConfiguration(TabConfiguration)}.
-     *
-     * @param project       - the project displayed by this tab
-     * @param colLayoutData - the layout information for the columns
-     */
-    public AbstractTab(final Project project, final ColumnLayoutData[] colLayoutData) {
-        this(project);
     }
 
     protected static ColumnLayoutData[] getDefaultColumnData(final int columnCount) {
@@ -126,77 +101,8 @@ public abstract class AbstractTab extends Portal {
         return portletDestroyListener;
     }
 
-
-    protected PanelListener getPanelListener() {
-        if (panelListener == null) {
-            panelListener = new PanelListenerAdapter(){
-               @Override
-            public void onActivate(Panel panel) {
-                   setSelection(GlobalSelectionManager.getGlobalSelection(project.getProjectId()));
-               }
-            };
-        }
-        return panelListener;
-    }
-
     private void onPermissionsChanged(final Collection<String> permissions) {
 
-    }
-
-//    protected SelectionListener getSelectionControllingListener() {
-//        if (selectionControllingListener == null) {
-//            this.selectionControllingListener = new SelectionListener() {
-//                public void selectionChanged(final SelectionEvent event) {
-//                    onSelectionChange(event.getSelectable().getSelection());
-//                    GlobalSelectionManager.setGlobalSelection(project.getProjectId(), event.getSelectable().getSelection());
-//                }
-//            };
-//        }
-//
-//        return selectionControllingListener;
-//    }
-
-//    /**
-//     * This method is called when a new selection has been made in the
-//     * controlling portlet. If you override this method, make sure to call
-//     * <code>super.onSelectionChange(newSelection)</code>, otherwise the other
-//     * portlets will not be updated with the new selection.
-//     *
-//     * @param newSelection - the new selection
-//     */
-//    protected void onSelectionChange(final Collection<EntityData> newSelection) {
-//        if (controllingPortlet == null) {
-//            return; // nothing to do
-//        }
-//
-//        //TODO: implement multiple selection
-//
-//        EntityData selection = null;
-//        if (newSelection != null && newSelection.size() > 0) {
-//            selection = newSelection.iterator().next();
-//        }
-//
-//        for (final EntityPortlet portlet : getPortlets()) {
-//            if (!portlet.equals(controllingPortlet)) {
-//                portlet.setEntity(selection);
-//            }
-//        }
-//    }
-
-    public void setSelection(Collection<EntityData> selection) {
-//        if (controllingPortlet != null) {
-//            Collection<EntityData> currentSel = controllingPortlet.getSelection();
-//
-//            if (currentSel == null) {
-//                if (selection == null) {
-//                    return;
-//                } // else do nothing here
-//            }
-//            else if (currentSel.equals(selection)) {
-//                return;
-//            }
-//            controllingPortlet.setSelection(selection);
-//        }
     }
 
     public int getColumnCount() {
@@ -282,7 +188,7 @@ public abstract class AbstractTab extends Portal {
     }
 
     public EntityPortlet getControllingPortlet() {
-        return controllingPortlet;
+        return null;
     }
 
     public void setControllingPortlet(final EntityPortlet newControllingPortlet) {

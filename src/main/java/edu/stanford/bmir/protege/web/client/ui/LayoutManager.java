@@ -9,23 +9,25 @@ import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LayoutManager {
-	private Project project;
+
+	private final Project project;
 
 	public LayoutManager(Project project) {
 		this.project = project;
 	}
 	
-	public List<AbstractTab> createTabs(ProjectLayoutConfiguration projectLayoutConfig) {
+	public List<AbstractTab> createTabs(SelectionModel selectionModel, ProjectLayoutConfiguration projectLayoutConfig) {
 		List<AbstractTab> tabs = new ArrayList<AbstractTab>();
 		List<TabConfiguration> tabConfigs = projectLayoutConfig.getTabs();
 		for (TabConfiguration tabConfig : tabConfigs) {
 			String tabName = tabConfig.getName();
-			AbstractTab tab = createTab(tabName);
+			AbstractTab tab = createTab(selectionModel, tabName);
 			if (tab != null) {
 				setupTab(tab, tabConfig);
 				tabs.add(tab);
@@ -34,8 +36,8 @@ public class LayoutManager {
 		return tabs;
 	}
 	
-	public AbstractTab createTab(String javaClassName) {
-		AbstractTab tab = UIFactory.createTab(project, javaClassName);
+	public AbstractTab createTab(SelectionModel selectionModel, String javaClassName) {
+		AbstractTab tab = UIFactory.createTab(selectionModel, project, javaClassName);
 		return tab;
 	}
 	
@@ -76,8 +78,8 @@ public class LayoutManager {
 		project.getProjectLayoutConfiguration().removeTab(tabConfig);
 	}
 	
-	public AbstractTab addTab(String javaClassName) {
-		AbstractTab tab = createTab(javaClassName);
+	public AbstractTab addTab(SelectionModel selectionModel, String javaClassName) {
+		AbstractTab tab = createTab(selectionModel, javaClassName);
 		if (tab == null) { return null; }
 		setupTab(tab, tab.getDefaultTabConfiguration());
 		project.getProjectLayoutConfiguration().addTab(tab.getTabConfiguration());

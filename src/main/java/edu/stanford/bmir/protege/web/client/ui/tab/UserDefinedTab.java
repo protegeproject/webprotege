@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.tab;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * A user defined tab. The user can compose her own tab and fill it
@@ -15,8 +16,8 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
  */
 public class UserDefinedTab extends AbstractTab {
 
-	public UserDefinedTab(Project project) {
-		super(project);		
+	public UserDefinedTab(SelectionModel selectionModel, Project project) {
+		super(selectionModel, project);
 	}
 
 	@Override
