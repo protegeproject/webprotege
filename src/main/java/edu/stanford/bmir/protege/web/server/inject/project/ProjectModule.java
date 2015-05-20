@@ -1,15 +1,16 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
 import com.google.inject.AbstractModule;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLDataPropertyHierarchyProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectPropertyHierarchyProvider;
+import com.google.inject.TypeLiteral;
+import edu.stanford.bmir.protege.web.server.events.EventManager;
+import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLEntityChecker;
 import edu.stanford.bmir.protege.web.server.mansyntax.WebProtegeOWLOntologyChecker;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
-import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.watches.*;
+import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.expression.OWLEntityChecker;
 import org.semanticweb.owlapi.expression.OWLOntologyChecker;
@@ -54,6 +55,11 @@ public class ProjectModule extends AbstractModule {
         bind(OWLEntityChecker.class).to(WebProtegeOWLEntityChecker.class);
         bind(OWLOntologyChecker.class).to(WebProtegeOWLOntologyChecker.class);
 
+        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLClass>>(){}).to(AssertedClassHierarchyProvider.class);
+        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLObjectProperty>>(){}).to(OWLObjectPropertyHierarchyProvider.class);
+        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLDataProperty>>(){}).to(OWLDataPropertyHierarchyProvider.class);
+        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLAnnotationProperty>>(){}).to(OWLAnnotationPropertyHierarchyProvider.class);
+
         bind(AssertedClassHierarchyProvider.class).toInstance(project.getClassHierarchyProvider());
         bind(OWLObjectPropertyHierarchyProvider.class).toInstance(project.getObjectPropertyHierarchyProvider());
         bind(OWLDataPropertyHierarchyProvider.class).toInstance(project.getDataPropertyHierarchyProvider());
@@ -63,5 +69,10 @@ public class ProjectModule extends AbstractModule {
         bind(WatchManager.class).to(WatchManagerImpl.class).asEagerSingleton();
         bind(WatchStore.class).to(WatchStoreImpl.class).asEagerSingleton();
         bind(WatchTriggeredHandler.class).to(WatchTriggeredHandlerImpl.class);
+
+        bind(BrowserTextProvider.class).toInstance(project.getRenderingManager());
+
+        bind(EventManager.class).toInstance(project.getEventManager());
+        bind(new TypeLiteral<EventManager<ProjectEvent<?>>>(){}).toInstance(project.getEventManager());
     }
 }

@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.inject.ManchesterSyntaxParsingContextModule;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -59,7 +60,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         String syntax = action.getSyntax();
         int from = action.getFrom();
         String triggerText = syntax.substring(0, from) + "\u0000";
-        Injector injector = Guice.createInjector(new ProjectModule(project), new ManchesterSyntaxParsingContextModule(action));
+        Injector injector = WebProtegeInjector.get().createChildInjector(new ProjectModule(project), new ManchesterSyntaxParsingContextModule(action));
         ManchesterSyntaxFrameParser parser = injector.getInstance(ManchesterSyntaxFrameParser.class);
         try {
             parser.parse(triggerText);

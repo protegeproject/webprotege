@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Timer;
@@ -188,7 +189,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
                     new DispatchServiceCallback<CheckManchesterSyntaxFrameResult>() {
 
                         @Override
-                        public void handleFinally() {
+                        public void handleErrorFinally(Throwable throwable) {
                             editor.setApplyChangesViewVisible(false);
                         }
 
@@ -200,7 +201,14 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
                             else {
                                 editor.setError(result.getError().get());
                             }
-                            editor.setApplyChangesViewVisible(result.getResult() == ManchesterSyntaxFrameParseResult.CHANGED);
+                            if(result.getResult() == ManchesterSyntaxFrameParseResult.CHANGED) {
+                                GWT.log("Structural changes encountered in edited expression");
+                                editor.setApplyChangesViewVisible(result.getResult() == ManchesterSyntaxFrameParseResult.CHANGED);
+                            }
+                            else {
+                                GWT.log("No structural changes in edited expression");
+                            }
+
                         }
                     });
         }

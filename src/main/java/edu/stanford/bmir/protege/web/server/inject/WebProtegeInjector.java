@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationModule;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandlersModule;
 import edu.stanford.bmir.protege.web.server.dispatch.DispatchModule;
@@ -45,5 +46,9 @@ public class WebProtegeInjector {
 
     public <T> T getInstance(Class<T> aClass) {
         return injector.getInstance(aClass);
+    }
+
+    public Injector createChildInjector(Module... modules) {
+        return injector.createChildInjector(modules);
     }
 }
