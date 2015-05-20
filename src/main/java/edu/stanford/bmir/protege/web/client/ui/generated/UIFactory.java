@@ -89,9 +89,6 @@ public class UIFactory {
             if(replacementName != null) {
                 portletJavaClassName = replacementName;
             }
-            if (portletJavaClassName.equals(AllPropertiesPortlet.class.getName())) {
-                return new AllPropertiesPortlet(selectionModel, project);
-            }
             else if (portletJavaClassName.equals(ClassTreePortlet.class.getName())) {
                 return new ClassTreePortlet(selectionModel, project);
             }
@@ -208,7 +205,6 @@ public class UIFactory {
                 OntologyAnnotationsPortlet.class.getName(), EditorPortlet.class.getName(),
                 DiscussionThreadPortlet.class.getName(), ChangeSummaryPortlet.class.getName(),
                 ProjectFeedPortlet.class.getName(),
-                AllPropertiesPortlet.class.getName(),
                 ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(),
                 IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(),
                 PropertiesTreePortlet.class.getName(),
