@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -8,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.inject.ManchesterSyntaxParsingContextModule;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxChangeGenerator;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
@@ -39,8 +39,7 @@ public class CheckManchesterSyntaxFrameActionHandler extends AbstractHasProjectA
 
     @Override
     protected CheckManchesterSyntaxFrameResult execute(CheckManchesterSyntaxFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
-//        try {
-            Injector injector = Guice.createInjector(new ProjectModule(project), new ManchesterSyntaxParsingContextModule(action));
+            Injector injector = WebProtegeInjector.get().createChildInjector(new ProjectModule(project), new ManchesterSyntaxParsingContextModule(action));
             ManchesterSyntaxChangeGenerator changeGenerator = injector.getInstance(ManchesterSyntaxChangeGenerator.class);
             try {
                 List<OWLOntologyChange> changeList = changeGenerator.generateChanges(action.getFrom(), action.getTo());
@@ -53,25 +52,6 @@ public class CheckManchesterSyntaxFrameActionHandler extends AbstractHasProjectA
             } catch (ParserException e) {
                 return new CheckManchesterSyntaxFrameResult(ManchesterSyntaxFrameParser.getParseError(e));
             }
-//            ManchesterSyntaxFrameParser fromParser = injector.getInstance(ManchesterSyntaxFrameParser.class);
-//            Set<OntologyAxiomPair> fromPairs = fromParser.parse(action.getFrom());
-//            try {
-//                ManchesterSyntaxFrameParser toParser = injector.getInstance(ManchesterSyntaxFrameParser.class);
-//                Set<OntologyAxiomPair> toPairs = toParser.parse(action.getTo());
-//                ManchesterSyntaxFrameParseResult result;
-//                if(fromPairs.equals(toPairs)) {
-//                    result = ManchesterSyntaxFrameParseResult.UNCHANGED;
-//                }
-//                else {
-//                    result = ManchesterSyntaxFrameParseResult.CHANGED;
-//                }
-//                return new CheckManchesterSyntaxFrameResult(result);
-//            } catch (ParserException e) {
-//                return new CheckManchesterSyntaxFrameResult(ManchesterSyntaxFrameParser.getParseError(e));
-//            }
-//        } catch (ParserException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     @Override
