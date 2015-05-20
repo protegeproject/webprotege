@@ -175,8 +175,6 @@ public class FormGenerator implements HasDispose {
                         widget = createClassSelectionField(map, prop);
                     } else if (component_type.equals(FormConstants.PROPERTY_SELECTION_FIELD)) {
                         widget = createPropertySelectionField(map, prop);
-                    } else if (component_type.equals(FormConstants.HTMLMESSAGE)) {
-                        widget = createHtmlMessage(map, prop);
                     } else if (component_type.equals(FormConstants.INSTANCE_CHECKBOX)) {
                         widget = createInstanceCheckBox(map, prop);
                     } else if (component_type.equals(FormConstants.INSTANCE_RADIOBUTTON)) {
@@ -302,12 +300,6 @@ public class FormGenerator implements HasDispose {
 
     protected PropertyWidget createExternalReference(Map<String, Object> conf, String prop) {
         InstanceGridWidget widget = new ReferenceFieldWidget(project);
-        widget.setup(conf, new PropertyEntityData(prop));
-        return widget;
-    }
-
-    protected PropertyWidget createHtmlMessage(Map<String, Object> conf, String prop) {
-        HtmlMessageWidget widget = new HtmlMessageWidget(project);
         widget.setup(conf, new PropertyEntityData(prop));
         return widget;
     }
