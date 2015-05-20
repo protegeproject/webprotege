@@ -177,31 +177,10 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Integer loadProject(String projectName) {
-        getOntology(projectName);
-        OWLAPIProject project = getProject(projectName);
-        return project.getChangeManager().getCurrentRevision().getValueAsInt();
-    }
-
-
-//    public List<OntologyEvent> getEvents(String projectName, long fromVersion) {
-//        // TODO: Log user
-//        OWLAPIProject project = getProject(projectName);
-//        OWLAPIChangeManager changeManager = project.getChangeManager();
-//        RevisionNumber revisionNumber = RevisionNumber.getRevisionNumber(fromVersion);
-//        return changeManager.getOntologyEventsSinceRevisionNumber(revisionNumber);
-//    }
 
     public Boolean hasWritePermission(String projectName, String userName) {
         return true;
     }
-
-    public String getOntologyURI(String projectName) {
-        OWLOntology ontology = getOntology(projectName);
-        OWLOntologyID id = ontology.getOntologyID();
-        return toName(id);
-    }
-
 
     /**
      * Gets the imports of the root ontology for the specified project.
@@ -347,25 +326,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     /**
-     * Renames all entities that correspond to the specified entity name.  The actual behaviour of this implementation
-     * is defined in {@link RenameEntityChangeFactory}.
-     * @param projectName The project in which renaming should occur.
-     * @param oldName The old name.  Entities that correspond to this name will be renamed.
-     * @param newName The new name.  Should be an IRI, but, as usual, we tolerate browser text.
-     * @param user The user (name).
-     * @param operationDescription A high level description of the change.
-     * @return EntityData corresponding to the renamed entity.
-     */
-    public EntityData renameEntity(String projectName, String oldName, String newName, String user, String operationDescription) {
-        OWLAPIProject project = getProject(projectName);
-        UserId userId = getUserId(user);
-        applyChanges(new RenameEntityChangeFactory(project, userId, operationDescription, oldName, newName));
-        return getEntity(projectName, newName);
-
-    }
-
-
-    /**
      * Gets the subclasses of a given entity.  This implementation uses the {@link edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider} that
      * is used in Protege 4 to answer the request.
      * @param projectName The name of the relevant project.
@@ -478,17 +438,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     public List<EntityData> getParents(String projectName, String className, final boolean direct) {
         OWLAPIProject project = getProject(projectName);
         GetParentsStrategy strategy = new GetParentsStrategy(project, getUserId(), className, direct);
-        return strategy.execute();
-    }
-
-    public String getParentsHtml(String projectName, String className, boolean direct) {
-        /// ????
-        return "Parents HTML";
-    }
-
-    public List<Triple> getRelatedProperties(String projectName, String className) {
-        UserId userId = getUserId();
-        GetRelatedPropertiesStrategy strategy = new GetRelatedPropertiesStrategy(getProject(projectName), userId, className);
         return strategy.execute();
     }
 

@@ -32,10 +32,6 @@ public class OntologyServiceManager {
         proxy.getImportedOntologies(projectId.getId(), cb);
     }
 
-    public void getEntityTriples(ProjectId projectId, String entityName, AsyncCallback<List<Triple>> cb) {
-        proxy.getEntityTriples(projectId.getId(), entityName, cb);
-    }
-
     public void getEntityTriples(ProjectId projectId, List<String> entities, List<String> properties,
             AsyncCallback<List<Triple>> cb) {
         proxy.getEntityTriples(projectId.getId(), entities, properties, cb);
@@ -53,11 +49,6 @@ public class OntologyServiceManager {
 
     public void getRootEntity(ProjectId projectId, AsyncCallback<EntityData> cb) {
         proxy.getRootEntity(projectId.getId(), cb);
-    }
-
-    public void renameEntity(ProjectId projectId, String oldName, String newName, UserId userId,
-            String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.renameEntity(projectId.getId(), oldName, newName, userId.getUserName(), operationDescription, cb);
     }
 
     public void getEntity(ProjectId projectId, String entityName, AsyncCallback<EntityData> cb) {
@@ -85,11 +76,6 @@ public class OntologyServiceManager {
     public void getParents(ProjectId projectId, String className, boolean direct, AsyncCallback<List<EntityData>> cb) {
         proxy.getParents(projectId.getId(), className, direct, cb);
     }
-
-    public void getRelatedProperties(ProjectId projectId, String className, AsyncCallback<List<Triple>> callback) {
-        proxy.getRelatedProperties(projectId.getId(), className, callback);
-    }
-
 
     public void getSubproperties(ProjectId projectId, String propertyName, AsyncCallback<List<EntityData>> cb) {
         proxy.getSubproperties(projectId.getId(), propertyName, cb);
@@ -150,10 +136,6 @@ public class OntologyServiceManager {
 
     public void getPathToRoot(ProjectId projectId, String entityName, AsyncCallback<List<EntityData>> cb) {
         proxy.getPathToRoot(projectId.getId(), entityName, cb);
-    }
-
-    public void getDirectTypes(ProjectId projectId, String instanceName, AsyncCallback<List<EntityData>> cb){
-        proxy.getDirectTypes(projectId.getId(), instanceName, cb);
     }
 
     /*
