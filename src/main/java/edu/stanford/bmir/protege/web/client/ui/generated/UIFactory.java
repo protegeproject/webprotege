@@ -24,7 +24,6 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTre
 import edu.stanford.bmir.protege.web.client.ui.ontology.revisions.RevisionsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalSearchPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.portlet.html.HtmlMessagePortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.PropertyFieldPortlet;
 import edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
@@ -115,9 +114,6 @@ public class UIFactory {
             }
             else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
                 return new WatchedEntitiesPortlet(selectionModel, project);
-            }
-            else if (portletJavaClassName.equals(HtmlMessagePortlet.class.getName())) {
-                return new HtmlMessagePortlet(selectionModel, project);
             }
             else if (portletJavaClassName.equals(ChangesPortlet.class.getName())) {
                 return new ChangesPortlet(selectionModel, project);
