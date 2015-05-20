@@ -23,7 +23,6 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTab
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.revisions.RevisionsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalSearchPortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.OtherTerminologiesTab;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.html.HtmlMessagePortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.PropertyFieldPortlet;
@@ -64,21 +63,18 @@ public class UIFactory {
      * Tab factory
      */
 
-    public static AbstractTab createTab(Project project, String tabJavaClassName) {
+    public static AbstractTab createTab(SelectionModel selectionModel, Project project, String tabJavaClassName) {
         if (tabJavaClassName.equals(ClassesTab.class.getName())) {
-            return new ClassesTab(project);
+            return new ClassesTab(selectionModel, project);
         }
         else if (tabJavaClassName.equals(PropertiesTab.class.getName())) {
-            return new PropertiesTab(project);
+            return new PropertiesTab(selectionModel, project);
         }
         else if (tabJavaClassName.equals(IndividualsTab.class.getName())) {
-            return new IndividualsTab(project);
-        }
-        else if (tabJavaClassName.equals(OtherTerminologiesTab.class.getName())) {
-            return new OtherTerminologiesTab(project);
+            return new IndividualsTab(selectionModel, project);
         }
         else if (tabJavaClassName.equals(UserDefinedTab.class.getName())) {
-            return new UserDefinedTab(project);
+            return new UserDefinedTab(selectionModel, project);
         }
         return null;
     }

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * A tab that shows metadata about an ontology such as the imported 
@@ -12,26 +13,7 @@ import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
  */
 public class MetadataTab extends AbstractTab {
 
-	protected ImportsTreePortlet importsPortlet;
-
-	public MetadataTab(Project project) {
-		super(project);		
+	public MetadataTab(SelectionModel selectionModel, Project project) {
+		super(selectionModel, project);
 	}
-
-	protected static ColumnLayoutData[] getDefaultColumnLayout() {
-		return new ColumnLayoutData[] {
-				new ColumnLayoutData(.5),
-				new ColumnLayoutData(.5)
-		};
-	}
-	
-	protected void buildUI() {
-//		importsPortlet = new ImportsTreePortlet(selectionModel, project);
-//		addPortlet(importsPortlet, 0);
-//
-//
-//		setControllingPortlet(importsPortlet);
-	
-	}
-	
 }

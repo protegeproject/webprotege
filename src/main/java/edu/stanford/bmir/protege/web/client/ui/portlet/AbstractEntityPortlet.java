@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.Event;
@@ -12,6 +13,7 @@ import com.gwtext.client.core.Function;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
+import com.gwtext.client.widgets.event.ComponentListener;
 import com.gwtext.client.widgets.event.ResizableListenerAdapter;
 import com.gwtext.client.widgets.form.Checkbox;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
@@ -64,13 +66,9 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     private Project project;
 
-//    private EntityData _currentEntity;
-
     private AbstractTab tab;
 
     private PortletConfiguration portletConfiguration;
-
-//    private ArrayList<SelectionListener> _selectionListeners = new ArrayList<SelectionListener>();
 
     private final SelectionModel selectionModel;
 
@@ -138,8 +136,17 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         HandlerRegistration handlerRegistration = selectionModel.addSelectionChangedHandler(new EntityDataSelectionChangedHandler() {
             @Override
             public void handleSelectionChanged(EntityDataSelectionChangedEvent event) {
-                handleBeforeSetEntity(event.getPreviousSelection());
-                handleAfterSetEntity(event.getLastSelection());
+                boolean tabIsVisible = false;
+                if(tab != null) {
+                    tabIsVisible = tab.isVisible();
+                    if (tabIsVisible) {
+                        GWT.log("[" + tab.getLabel()+ ", " + AbstractEntityPortlet.this.getClass().getSimpleName() + "] Selection changed in selection model and tab is visible.  Updating portlet selection.");
+                    }
+                }
+                if (tabIsVisible) {
+                    handleBeforeSetEntity(event.getPreviousSelection());
+                    handleAfterSetEntity(event.getLastSelection());
+                }
             }
         });
         handlerRegistrations.add(handlerRegistration);
@@ -149,6 +156,9 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         return selectionModel;
     }
 
+    public void handleActivated() {
+        handleAfterSetEntity(selectionModel.getSelection());
+    }
 
 
     public ProjectId getProjectId() {
@@ -169,25 +179,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         doLayout();
     }
 
-//    /*
-//     * (non-Javadoc)
-//     *
-//     * @see
-//     * edu.stanford.bmir.protege.web.client.ui.EntityPortlet#setEntity(edu.stanford
-//     * .bmir.protege.web.client.util.EntityData)
-//     */
-//    public final void setEntity(EntityData newEntity) {
-//        Optional<OWLEntityData> existingSelection = getSelectedEntityData();
-//        handleBeforeSetEntity(existingSelection);
-//        _currentEntity = newEntity;
-//        Optional<OWLEntityData> newSelection = getSelectedEntityData();
-//        GWT.log("Setting entity in " + getClass().getName()
-//                + " portlet.  The entity is "
-//                + (newSelection.isPresent() ? newSelection.get() : "Absent"));
-//        handleAfterSetEntity(newSelection);
-//        // doLayout();
-//    }
-
     protected void handleBeforeSetEntity(Optional<OWLEntityData> existingEntity) {
 
     }
@@ -195,16 +186,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
 
     }
-
-//    /*
-//     * (non-Javadoc)
-//     *
-//     * @see edu.stanford.bmir.protege.web.client.ui.EntityPortlet#getEntity()
-//     */
-//    public final EntityData getEntity() {
-//        return _currentEntity;
-//    }
-
 
     public Project getProject() {
         return project;
@@ -401,46 +382,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     }
 
     public void onPermissionsChanged() {
-    }
-
-    public void refreshFromServer(int delay) {
-        Timer timer = new Timer() {
-            @Override
-            public void run() {
-                project.forceGetEvents();
-            }
-        };
-
-        timer.schedule(delay);
-    }
-
-    /*
-     * Selectable methods
-     */
-
-    /*
-     * Should be implemented by subclasses
-     */
-//    public void setSelection(Collection<EntityData> selection) {
-//    }
-
-//    public void addSelectionListener(SelectionListener selectionListener) {
-//        _selectionListeners.add(selectionListener);
-//    }
-
-//    public void removeSelectionListener(SelectionListener selectionListener) {
-//        _selectionListeners.remove(selectionListener);
-//    }
-
-    public void notifySelectionListeners(final SelectionEvent selectionEvent) {
-//        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-//            @Override
-//            public void execute() {
-//                for (SelectionListener listener : _selectionListeners) {
-//                    listener.selectionChanged(selectionEvent);
-//                }
-//            }
-//        });
     }
 
     /**

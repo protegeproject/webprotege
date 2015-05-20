@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -55,7 +56,7 @@ public class Project implements HasProjectId, HasDispose {
         return projectDetails.getProjectId();
     }
 
-//    public String getProjectName() {
+    //    public String getProjectName() {
 //        return projectDetails.getDisplayName();
 //    }
 
@@ -78,10 +79,6 @@ public class Project implements HasProjectId, HasDispose {
 
     public ProjectLayoutConfiguration getProjectLayoutConfiguration() {
         return projectLayoutConfiguration;
-    }
-
-    public void setLayoutManager(LayoutManager layoutManager) {
-        this.layoutManager = layoutManager;
     }
 
     public LayoutManager getLayoutManager() {

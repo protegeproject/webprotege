@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * A single view that shows the classes in an ontology.
@@ -11,8 +12,8 @@ import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
  */
 public class ClassesTab extends AbstractTab {
 
-	public ClassesTab(Project project) {		
-		super(project);
+	public ClassesTab(SelectionModel selectionModel, Project project) {
+		super(selectionModel, project);
 	}
 
 }
