@@ -131,9 +131,6 @@ public class UIFactory {
             else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
                 return new WatchedEntitiesPortlet(selectionModel, project);
             }
-            else if (portletJavaClassName.equals(PropertiesViewPortlet.class.getName())) {
-                return new PropertiesViewPortlet(selectionModel, project);
-            }
             else if (portletJavaClassName.equals(OBOTermRelationshipPortlet.class.getName())) {
                 return new OBOTermRelationshipPortlet(project, selectionModel);
             }
@@ -211,7 +208,7 @@ public class UIFactory {
                 OntologyAnnotationsPortlet.class.getName(), EditorPortlet.class.getName(),
                 DiscussionThreadPortlet.class.getName(), ChangeSummaryPortlet.class.getName(),
                 ProjectFeedPortlet.class.getName(),
-                AllPropertiesPortlet.class.getName(), PropertiesViewPortlet.class.getName(),
+                AllPropertiesPortlet.class.getName(),
                 ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(),
                 IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(),
                 PropertiesTreePortlet.class.getName(),
