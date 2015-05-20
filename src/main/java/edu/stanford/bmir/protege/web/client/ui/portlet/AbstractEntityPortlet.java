@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.Event;
@@ -30,7 +29,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
-import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.util.AbstractValidatableTab;
 import edu.stanford.bmir.protege.web.client.ui.util.ValidatableTab;
@@ -41,6 +39,9 @@ import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.selection.EntityDataSelectionChangedEvent;
+import edu.stanford.bmir.protege.web.shared.selection.EntityDataSelectionChangedHandler;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.ArrayList;
@@ -63,21 +64,26 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     private Project project;
 
-    private EntityData _currentEntity;
+//    private EntityData _currentEntity;
 
     private AbstractTab tab;
 
     private PortletConfiguration portletConfiguration;
 
-    private ArrayList<SelectionListener> _selectionListeners = new ArrayList<SelectionListener>();
+//    private ArrayList<SelectionListener> _selectionListeners = new ArrayList<SelectionListener>();
 
-    public AbstractEntityPortlet(Project project) {
-        this(project, true);
+    private final SelectionModel selectionModel;
+
+    private List<HandlerRegistration> handlerRegistrations = new ArrayList<>();
+
+    public AbstractEntityPortlet(SelectionModel selectionModel, Project project) {
+        this(selectionModel, project, true);
     }
 
-    public AbstractEntityPortlet(Project project, boolean initialize) {
+    public AbstractEntityPortlet(SelectionModel selectionModel, Project project, boolean initialize) {
         super();
         this.project = project;
+        this.selectionModel = selectionModel;
 
         setTitle(""); // very important
         setLayout(new FitLayout());
@@ -128,7 +134,22 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
                 commitChanges();
             }
         });
+
+        HandlerRegistration handlerRegistration = selectionModel.addSelectionChangedHandler(new EntityDataSelectionChangedHandler() {
+            @Override
+            public void handleSelectionChanged(EntityDataSelectionChangedEvent event) {
+                handleBeforeSetEntity(event.getPreviousSelection());
+                handleAfterSetEntity(event.getLastSelection());
+            }
+        });
+        handlerRegistrations.add(handlerRegistration);
     }
+
+    public SelectionModel getSelectionModel() {
+        return selectionModel;
+    }
+
+
 
     public ProjectId getProjectId() {
         return project.getProjectId();
@@ -148,24 +169,24 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         doLayout();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * edu.stanford.bmir.protege.web.client.ui.EntityPortlet#setEntity(edu.stanford
-     * .bmir.protege.web.client.util.EntityData)
-     */
-    public final void setEntity(EntityData newEntity) {
-        Optional<OWLEntityData> existingSelection = getSelectedEntityData();
-        handleBeforeSetEntity(existingSelection);
-        _currentEntity = newEntity;
-        Optional<OWLEntityData> newSelection = getSelectedEntityData();
-        GWT.log("Setting entity in " + getClass().getName()
-                + " portlet.  The entity is "
-                + (newSelection.isPresent() ? newSelection.get() : "Absent"));
-        handleAfterSetEntity(newSelection);
-        // doLayout();
-    }
+//    /*
+//     * (non-Javadoc)
+//     *
+//     * @see
+//     * edu.stanford.bmir.protege.web.client.ui.EntityPortlet#setEntity(edu.stanford
+//     * .bmir.protege.web.client.util.EntityData)
+//     */
+//    public final void setEntity(EntityData newEntity) {
+//        Optional<OWLEntityData> existingSelection = getSelectedEntityData();
+//        handleBeforeSetEntity(existingSelection);
+//        _currentEntity = newEntity;
+//        Optional<OWLEntityData> newSelection = getSelectedEntityData();
+//        GWT.log("Setting entity in " + getClass().getName()
+//                + " portlet.  The entity is "
+//                + (newSelection.isPresent() ? newSelection.get() : "Absent"));
+//        handleAfterSetEntity(newSelection);
+//        // doLayout();
+//    }
 
     protected void handleBeforeSetEntity(Optional<OWLEntityData> existingEntity) {
 
@@ -175,14 +196,14 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see edu.stanford.bmir.protege.web.client.ui.EntityPortlet#getEntity()
-     */
-    public final EntityData getEntity() {
-        return _currentEntity;
-    }
+//    /*
+//     * (non-Javadoc)
+//     *
+//     * @see edu.stanford.bmir.protege.web.client.ui.EntityPortlet#getEntity()
+//     */
+//    public final EntityData getEntity() {
+//        return _currentEntity;
+//    }
 
 
     public Project getProject() {
@@ -400,26 +421,26 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     /*
      * Should be implemented by subclasses
      */
-    public void setSelection(Collection<EntityData> selection) {
-    }
+//    public void setSelection(Collection<EntityData> selection) {
+//    }
 
-    public void addSelectionListener(SelectionListener selectionListener) {
-        _selectionListeners.add(selectionListener);
-    }
+//    public void addSelectionListener(SelectionListener selectionListener) {
+//        _selectionListeners.add(selectionListener);
+//    }
 
-    public void removeSelectionListener(SelectionListener selectionListener) {
-        _selectionListeners.remove(selectionListener);
-    }
+//    public void removeSelectionListener(SelectionListener selectionListener) {
+//        _selectionListeners.remove(selectionListener);
+//    }
 
     public void notifySelectionListeners(final SelectionEvent selectionEvent) {
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                for (SelectionListener listener : _selectionListeners) {
-                    listener.selectionChanged(selectionEvent);
-                }
-            }
-        });
+//        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+//            @Override
+//            public void execute() {
+//                for (SelectionListener listener : _selectionListeners) {
+//                    listener.selectionChanged(selectionEvent);
+//                }
+//            }
+//        });
     }
 
     /**
@@ -441,16 +462,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     public void setTab(AbstractTab tab) {
         this.tab = tab;
-        if (tab != null) {
-            EntityPortlet portlet = tab.getControllingPortlet();
-            if (portlet != null) {
-                Collection<EntityData> entityData = portlet.getSelection();
-                if (entityData != null && !entityData.isEmpty()) {
-                    setEntity(entityData.iterator().next());
-                }
-            }
-        }
-
     }
 
 
@@ -459,7 +470,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private List<HandlerRegistration> handlerRegistrations = new ArrayList<HandlerRegistration>();
 
     /**
      * Adds an event handler to the main event bus.  When the portlet is destroyed the handler will automatically be
@@ -498,54 +508,12 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         for (HandlerRegistration reg : handlerRegistrations) {
             reg.removeHandler();
         }
+
     }
 
     public Optional<OWLEntityData> getSelectedEntityData() {
-        Collection<EntityData> selection = getSelection();
-        // Not sure what the difference is here
-        if(selection == null || selection.isEmpty()) {
-            EntityData entityData = getEntity();
-            if(entityData != null) {
-                selection = Collections.singleton(entityData);
-            }
-        }
-
-        if(selection == null) {
-            return Optional.absent();
-        }
-        if(selection.isEmpty()) {
-            return Optional.absent();
-        }
-        EntityData entityData = selection.iterator().next();
-        return toOWLEntityData(entityData);
+        return getSelectionModel().getSelection();
     }
 
-    protected Optional<OWLEntityData> toOWLEntityData(EntityData entityData) {
-        if(entityData instanceof PropertyEntityData) {
-            PropertyEntityData propertyEntityData = (PropertyEntityData) entityData;
-            PropertyType propertyType = propertyEntityData.getPropertyType();
-            if (propertyType != null) {
-                switch(propertyType) {
-                    case OBJECT:
-                        return Optional.<OWLEntityData>of(new OWLObjectPropertyData(DataFactory.getOWLObjectProperty(entityData.getName()), entityData.getBrowserText()));
-                    case DATATYPE:
-                        return Optional.<OWLEntityData>of(new OWLDataPropertyData(DataFactory.getOWLDataProperty(entityData.getName()), entityData.getBrowserText()));
-                    case ANNOTATION:
-                        return Optional.<OWLEntityData>of(new OWLAnnotationPropertyData(DataFactory.getOWLAnnotationProperty(entityData.getName()), entityData.getBrowserText()));
 
-                }
-            }
-        }
-        else if(entityData.getValueType() == ValueType.Cls) {
-            return Optional.<OWLEntityData>of(new OWLClassData(DataFactory.getOWLClass(entityData.getName()), entityData.getBrowserText()));
-        }
-        else if(entityData.getValueType() == ValueType.Instance) {
-            return Optional.<OWLEntityData>of(new OWLNamedIndividualData(DataFactory.getOWLNamedIndividual(entityData.getName()), entityData.getBrowserText()));
-        }
-
-        else if(entityData.getValueType() == ValueType.Property) {
-            return Optional.absent();
-        }
-        return Optional.absent();
-    }
 }

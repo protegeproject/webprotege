@@ -10,8 +10,11 @@ import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
+import com.gwtext.client.widgets.tree.DefaultSelectionModel;
 import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
+import com.gwtext.client.widgets.tree.TreeSelectionModel;
+import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -27,7 +30,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
+import edu.stanford.bmir.protege.web.client.ui.portlet.LegacyCompatUtil;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
@@ -36,6 +39,7 @@ import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedHandler;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.Serializable;
@@ -54,16 +58,14 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     protected TreePanel treePanel;
 
-    private List<EntityData> currentSelection;
-
     private Button createButton;
 
     private Button deleteButton;
 
-    private TreeNode lastSelectedTreeNode;
+//    private TreeNode lastSelectedTreeNode;
 
-    public PropertiesTreePortlet(Project project) {
-        super(project);
+    public PropertiesTreePortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override
@@ -164,13 +166,56 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
                 }
             }
         });
+        DefaultSelectionModel selectionModel = new DefaultSelectionModel();
+        treePanel.setSelectionModel(selectionModel);
+        selectionModel.addSelectionModelListener(new DefaultSelectionModelListenerAdapter() {
+            @Override
+            public void onSelectionChange(DefaultSelectionModel defaultSelectionModel, TreeNode treeNode) {
+                if (treeNode != null) {
+                    Optional<OWLEntityData> sel = getEntityDataFromTreeNode(treeNode);
+                    if (sel.isPresent()) {
+                        getSelectionModel().setSelection(sel.get());
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    private Optional<OWLEntityData> getSelectedTreeNodeEntityData() {
+        TreeSelectionModel tsm = treePanel.getSelectionModel();
+        if (tsm instanceof DefaultSelectionModel) {
+            TreeNode selectedTreeNode = ((DefaultSelectionModel) tsm).getSelectedNode();
+            return getEntityDataFromTreeNode(selectedTreeNode);
+        }
+        else {
+            return Optional.absent();
+        }
+    }
+
+    private static Optional<OWLEntityData> getEntityDataFromTreeNode(TreeNode selectedTreeNode) {
+        if(selectedTreeNode == null) {
+            return Optional.absent();
+        }
+        if(ANNOTATION_PROPERTIES_ROOT_NAME.equals(selectedTreeNode.getText())) {
+            return Optional.absent();
+        }
+        Object userObject = selectedTreeNode.getUserObject();
+        if (userObject instanceof EntityData) {
+            return LegacyCompatUtil.toOWLEntityData((EntityData) userObject);
+        }
+        else {
+            return Optional.absent();
+        }
     }
 
     private void selectNode(TreeNode node) {
-        lastSelectedTreeNode = node;
-        currentSelection = new ArrayList<EntityData>();
-        currentSelection.add((EntityData) node.getUserObject());
-        notifySelectionListeners(new SelectionEvent(this));
+//        lastSelectedTreeNode = node;
+        Optional<OWLEntityData> sel = getSelectedTreeNodeEntityData();
+        if (sel.isPresent()) {
+            getSelectionModel().setSelection(sel.get());
+        }
     }
 
     private void handleRelationshipAdded(final HierarchyChangedEvent<? extends OWLEntity, ?> event) {
@@ -183,16 +228,16 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private void handleRelationshipRemoved(final HierarchyChangedEvent<? extends OWLEntity, ?> event) {
-        if(event.getChild().isBuiltIn()) {
+        if (event.getChild().isBuiltIn()) {
             // Don't remove built in things from the tree
             return;
         }
         TreeNode tn = findTreeNode(event.getChild());
-        if(tn == null) {
+        if (tn == null) {
             return;
         }
         TreeNode parTn = findTreeNode(event.getParent());
-        if(parTn != null) {
+        if (parTn != null) {
             parTn.removeChild(tn);
         }
     }
@@ -209,15 +254,15 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     private void handleRootRemoved(HierarchyRootRemovedEvent<?> event) {
         Object root = event.getRoot();
-        if(root instanceof OWLEntity) {
-            if(((OWLEntity) root).isBuiltIn()) {
+        if (root instanceof OWLEntity) {
+            if (((OWLEntity) root).isBuiltIn()) {
                 // Don't remove built in things!
                 return;
             }
         }
-        if(root instanceof OWLAnnotationProperty) {
+        if (root instanceof OWLAnnotationProperty) {
             TreeNode annoRoot = getAnnotationPropertiesRootNode();
-            if(annoRoot != null) {
+            if (annoRoot != null) {
                 TreeNode childTn = findTreeNode((OWLAnnotationProperty) root);
                 annoRoot.removeChild(childTn);
                 childTn.remove();
@@ -248,14 +293,15 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
 
     private boolean isAnnotationPropertiesRootSelected() {
-        return lastSelectedTreeNode != null && ANNOTATION_PROPERTIES_ROOT_NAME.equals(lastSelectedTreeNode.getText());
+        TreeNode treeNode = ((DefaultSelectionModel) treePanel.getSelectionModel()).getSelectedNode();
+        return treeNode != null && ANNOTATION_PROPERTIES_ROOT_NAME.equals(treeNode.getText());
     }
 
 
     private void handleBrowserTextChanged(BrowserTextChangedEvent event) {
         OWLEntity entity = event.getEntity();
         TreeNode treeNode = findTreeNode(entity);
-        if(treeNode != null) {
+        if (treeNode != null) {
             final Object userObject = treeNode.getUserObject();
             if (userObject instanceof EntityData) {
                 EntityData entityData = (EntityData) userObject;
@@ -271,7 +317,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         TreeNode treeNode = createTreeNode(child);
         parentNode.appendChild(treeNode);
     }
-
 
 
     protected void onPropertyDeleted(EntityData entity) {
@@ -325,6 +370,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     /**
      * Gets the {@link org.semanticweb.owlapi.model.EntityType} of the selected entity.
+     *
      * @return The {@link org.semanticweb.owlapi.model.EntityType} of the selected entity.  Not {@code null}.
      */
     @Override
@@ -412,7 +458,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         createSubProperties(action);
     }
 
-    private <R  extends AbstractCreateEntityInHierarchyResult<E>, E extends OWLEntity> void createSubProperties(AbstractCreateEntityInHierarchyAction<R, E> action) {
+    private <R extends AbstractCreateEntityInHierarchyResult<E>, E extends OWLEntity> void createSubProperties(AbstractCreateEntityInHierarchyAction<R, E> action) {
         DispatchServiceManager.get().execute(action, new DispatchServiceCallback<R>() {
             @Override
             protected String getErrorMessage(Throwable throwable) {
@@ -428,13 +474,13 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     private void handleCreateEntitiesResult(AbstractCreateEntityInHierarchyResult<? extends OWLEntity> result) {
         TreeNode parentNode;
-        if(result.getParent().isPresent()) {
+        if (result.getParent().isPresent()) {
             parentNode = this.findTreeNode(result.getParent().get());
         }
         else {
             parentNode = getAnnotationPropertiesRootNode();
         }
-        if(parentNode != null) {
+        if (parentNode != null) {
             handleChildAdded(parentNode, result.getEntities().iterator().next(), true);
         }
     }
@@ -630,18 +676,18 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         OntologyServiceManager.getInstance().getSubproperties(getProjectId(), propName, new GetSubproperties(propName, getSubpropertiesOfSubproperties));
     }
 
-    public List<EntityData> getSelection() {
-        if (currentSelection == null) {
-            return Collections.emptyList();
-        }
-        List<EntityData> result = new ArrayList<EntityData>();
-        for (EntityData entityData : currentSelection) {
-            if (!"Annotation properties".equals(entityData.getName())) {
-                result.add(entityData);
-            }
-        }
-        return result;
-    }
+//    public List<EntityData> getSelection() {
+//        if (currentSelection == null) {
+//            return Collections.emptyList();
+//        }
+//        List<EntityData> result = new ArrayList<EntityData>();
+//        for (EntityData entityData : currentSelection) {
+//            if (!"Annotation properties".equals(entityData.getName())) {
+//                result.add(entityData);
+//            }
+//        }
+//        return result;
+//    }
 
     protected TreeNode createTreeNode(EntityData entityData) {
         TreeNode node = new TreeNode(entityData.getBrowserText());

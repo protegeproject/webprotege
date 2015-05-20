@@ -6,12 +6,12 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -24,8 +24,8 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermIdEditor editor;
 
-    public OBOTermIdEditorPortlet(Project project) {
-        super(project);
+    public OBOTermIdEditorPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
         setAutoScroll(false);
         setHeight("auto");
     }
@@ -76,17 +76,10 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
         if (editedTermId.isPresent()) {
             getService().setTermId(getProjectId(), entity, editedTermId.get(), new OBOTermEditorApplyChangesAsyncCallback("Your changes to the term Id have not been applied."));
         }
-
     }
 
-    protected void updateTitle() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Term ID Information");
-        EntityData entityData = getEntity();
-        if (entityData != null) {
-            sb.append(" for ");
-            sb.append(entityData.getBrowserText());
-        }
-        setTitle(sb.toString());
+    @Override
+    protected String getTitlePrefix() {
+        return "Term ID Information";
     }
 }

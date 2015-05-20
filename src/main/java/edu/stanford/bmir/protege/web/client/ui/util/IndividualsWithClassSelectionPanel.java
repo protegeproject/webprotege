@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.util;
 
+import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
@@ -9,11 +10,11 @@ import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import com.gwtext.client.widgets.layout.VerticalLayout;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet;
-import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
-import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
+import edu.stanford.bmir.protege.web.client.ui.portlet.LegacyCompatUtil;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.Collection;
 
@@ -47,7 +48,10 @@ public class IndividualsWithClassSelectionPanel extends Panel {
             add(clsesPanel, new ColumnLayoutData(0.5));
         } else {
             EntityData firstItem = UIUtil.getFirstItem(clses);
-            indListPorlet.setEntity(firstItem); //TODO: handle multiple classes
+            Optional<OWLEntityData> firstItemAsOWLEntityData = LegacyCompatUtil.toOWLEntityData(firstItem);
+            if (firstItemAsOWLEntityData.isPresent()) {
+                indListPorlet.getSelectionModel().setSelection(firstItemAsOWLEntityData.get()); //TODO: handle multiple classes
+            }
         }
     }
 
@@ -73,17 +77,19 @@ public class IndividualsWithClassSelectionPanel extends Panel {
             }
         });
 
-        clsTreePortlet.addSelectionListener(new SelectionListener() {
-            public void selectionChanged(SelectionEvent event) {
-                indListPorlet.setEntity(clsTreePortlet.getSelection().get(0));
-            }
-        });
+        // TODO: SELECTION
+//        clsTreePortlet.addSelectionListener(new SelectionListener() {
+//            public void selectionChanged(SelectionEvent event) {
+//                indListPorlet.setEntity(clsTreePortlet.getSelection().get(0));
+//            }
+//        });
 
         return clsesPanel;
     }
 
     protected IndividualsListPortlet createIndividualsListPorlet() {
-       IndividualsListPortlet indPortlet = new IndividualsListPortlet(project);
+        SelectionModel selectionModel = SelectionModel.create();
+       IndividualsListPortlet indPortlet = new IndividualsListPortlet(selectionModel, project);
        indPortlet.setDraggable(false);
        indPortlet.setClosable(false);
        indPortlet.setCollapsible(false);
@@ -92,8 +98,9 @@ public class IndividualsWithClassSelectionPanel extends Panel {
     }
 
     protected ClassTreePortlet createClassTreePortlet(boolean allClasses) {
+        SelectionModel selectionModel = SelectionModel.create();
         EntityData topCls = allClasses ? null : UIUtil.getFirstItem(clses);
-        ClassTreePortlet clsPortlet = new ClassTreePortlet(project, true, true, true, allowMultipleSelection, topCls == null ?  null : topCls.getName());
+        ClassTreePortlet clsPortlet = new ClassTreePortlet(selectionModel, project, true, true, true, allowMultipleSelection, topCls == null ?  null : topCls.getName());
         clsPortlet.setDraggable(false);
         clsPortlet.setClosable(false);
         clsPortlet.setCollapsible(false);

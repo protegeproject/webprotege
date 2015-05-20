@@ -11,13 +11,11 @@ import com.gwtext.client.widgets.grid.GridView;
 import edu.stanford.bmir.protege.web.client.project.Project;
 
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.Triple;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
-import java.util.Collection;
 import java.util.List;
 
 public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
@@ -26,8 +24,8 @@ public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
     private RecordDef recordDef;
     private Store store;
 
-    public PropertiesViewPortlet(Project project) {
-        super(project);
+    public PropertiesViewPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override
@@ -94,11 +92,12 @@ public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
-        setTitle("Related properties" + (getEntity() == null ? " (nothing selected)" : " for " + getEntity().getBrowserText()));
+
+        setTitle("Related properties" + (entityData.isPresent() ? " (nothing selected)" : " for " + entityData.get().getBrowserText()));
 
         store.removeAll();
-        if (getEntity() != null) {
-            OntologyServiceManager.getInstance().getRelatedProperties(getProject().getProjectId(), getEntity().getName(),
+        if (entityData.isPresent()) {
+            OntologyServiceManager.getInstance().getRelatedProperties(getProject().getProjectId(), entityData.get().getEntity().getIRI().toString(),
                                                                       new GetTriplesHandler());
         }
     }
@@ -110,8 +109,7 @@ public class PropertiesViewPortlet extends AbstractOWLEntityPortlet {
 
         @Override
         public void onFailure(Throwable caught) {
-           GWT.log("Error at retrieving props in domain for " + getEntity(), caught);
-           propGrid.setTitle("Error at retrieving the related properties for " + getEntity().getBrowserText());
+           GWT.log("Error at retrieving props in domain for " + getSelectedEntity(), caught);
         }
 
         @Override

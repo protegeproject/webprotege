@@ -12,13 +12,14 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 public class ChangesPortlet extends AbstractOWLEntityPortlet {
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
-	public ChangesPortlet(Project project) {
-		super(project);
+	public ChangesPortlet(SelectionModel selectionModel, Project project) {
+		super(selectionModel, project);
 	}
 
 	private ChangeListView changeListView;

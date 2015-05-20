@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.search;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
@@ -11,17 +12,22 @@ import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
+import edu.stanford.bmir.protege.web.client.ui.portlet.LegacyCompatUtil;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class SearchUtil {
 
     private ProjectId projectId;
 
-    private Selectable selectable;
+    private SelectionModel selectionModel;
 
     private ValueType searchedValueType;
 
@@ -30,13 +36,9 @@ public class SearchUtil {
     private AsyncCallback<Boolean> asyncCallback;
 
 
-    public SearchUtil(ProjectId projectId, Selectable selectable) {
-        this(projectId, selectable, null);
-    }
-
-    public SearchUtil(ProjectId projectId, Selectable selectable, AsyncCallback<Boolean> asyncCallback) {
+    public SearchUtil(ProjectId projectId, SelectionModel selectionModel, AsyncCallback<Boolean> asyncCallback) {
         this.projectId = projectId;
-        this.selectable = selectable;
+        this.selectionModel = checkNotNull(selectionModel);
         this.asyncCallback = asyncCallback;
         init();
     }
@@ -112,11 +114,11 @@ public class SearchUtil {
         if (selection == null) {
             return;
         }
-        if (selectable != null) {
-            Collection<EntityData> selectionCollection = new ArrayList<EntityData>();
-            selectionCollection.add(selection);
-            selectable.setSelection(selectionCollection);
+        Optional<OWLEntityData> sel = LegacyCompatUtil.toOWLEntityData(selection);
+        if(sel.isPresent()) {
+            selectionModel.setSelection(sel.get());
         }
+
     }
 
     public SearchGridPanel getSearchGridPanel() {

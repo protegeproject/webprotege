@@ -11,10 +11,9 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractPropertyWidget;
 import edu.stanford.bmir.protege.web.client.ui.portlet.PropertyWidget;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,8 +47,8 @@ public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
      * work.
      */
 
-    public PropertyFieldPortlet(Project project) {
-        super(project);
+    public PropertyFieldPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override
@@ -93,6 +92,17 @@ public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
 
     protected void onActivate(Panel panel) {
        fillWidgetValues();
+    }
+
+    private EntityData getEntity() {
+        Optional<OWLEntityData> entityData = getSelectedEntityData();
+        if(entityData.isPresent()) {
+            OWLEntityData theEntityData = entityData.get();
+            return new EntityData(theEntityData.getEntity().getIRI().toString(), theEntityData.getBrowserText());
+        }
+        else {
+            return null;
+        }
     }
 
     @Override

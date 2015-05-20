@@ -1,11 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.projectfeed;
 
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-
-import java.util.Collection;
-import java.util.Collections;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,8 +14,8 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
 
     private ProjectFeedBasePanel basePanel;
 
-    public ProjectFeedPortlet(Project project) {
-        super(project);
+    public ProjectFeedPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override

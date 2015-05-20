@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.selection;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
+import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 
 import javax.inject.Inject;
@@ -16,6 +20,8 @@ public class SelectionModel {
 
     public static final Void VOID = null;
 
+    private final EventBus eventBus;
+
     private final SelectedEntityDataManager<OWLClassData> selectedClassDataManager;
 
     private final SelectedEntityDataManager<OWLObjectPropertyData> selectedObjectPropertyDataManager;
@@ -28,20 +34,31 @@ public class SelectionModel {
 
     private final SelectedEntityDataManager<OWLNamedIndividualData> selectedIndividualDataManager;
 
+    private Optional<OWLEntityData> selection = Optional.absent();
 
     @Inject
-    public SelectionModel(SelectedEntityDataManager<OWLClassData> selectedClassDataManager,
+    public SelectionModel(EventBus eventBus,
+                          SelectedEntityDataManager<OWLClassData> selectedClassDataManager,
                           SelectedEntityDataManager<OWLObjectPropertyData> selectedObjectPropertyDataManager,
                           SelectedEntityDataManager<OWLDataPropertyData> selectedDataPropertyDataManager,
                           SelectedEntityDataManager<OWLAnnotationPropertyData> selectedAnnotationPropertyDataManager,
                           SelectedEntityDataManager<OWLDatatypeData> selectedDatatypeDataManager,
                           SelectedEntityDataManager<OWLNamedIndividualData> selectedIndividualDataManager) {
+        this.eventBus = eventBus;
         this.selectedClassDataManager = checkNotNull(selectedClassDataManager);
         this.selectedObjectPropertyDataManager = checkNotNull(selectedObjectPropertyDataManager);
         this.selectedDataPropertyDataManager = checkNotNull(selectedDataPropertyDataManager);
         this.selectedAnnotationPropertyDataManager = checkNotNull(selectedAnnotationPropertyDataManager);
         this.selectedDatatypeDataManager = checkNotNull(selectedDatatypeDataManager);
         this.selectedIndividualDataManager = checkNotNull(selectedIndividualDataManager);
+    }
+
+    public HandlerRegistration addSelectionChangedHandler(EntityDataSelectionChangedHandler handler) {
+        return eventBus.addHandler(EntityDataSelectionChangedEvent.getType(), handler);
+    }
+
+    public Optional<OWLEntityData> getSelection() {
+        return selection;
     }
 
     public Optional<OWLClassData> getLastSelectedClassData() {
@@ -67,8 +84,11 @@ public class SelectionModel {
     public Optional<OWLNamedIndividualData> getLastSelectedNamedIndividualData() {
         return selectedIndividualDataManager.getLastSelection();
     }
-    
+
     public void setSelection(OWLEntityData entityData) {
+        GWT.log("Request to set selection in selection model: " + entityData);
+        Optional<OWLEntityData> previousSelection = selection;
+        selection = Optional.<OWLEntityData>of(entityData);
         entityData.accept(new OWLEntityDataVisitorEx<Void>() {
             @Override
             public Void visit(OWLClassData data) {
@@ -106,5 +126,27 @@ public class SelectionModel {
                 return VOID;
             }
         });
+        if (!previousSelection.equals(selection)) {
+            fireEvent(previousSelection);
+        }
+    }
+
+
+    private void fireEvent(Optional<OWLEntityData> previousLastSelection) {
+        eventBus.fireEvent(new EntityDataSelectionChangedEvent(previousLastSelection, selection));
+    }
+
+
+    public static SelectionModel create() {
+        EventBus selectionEventBus = new SimpleEventBus();
+        return new SelectionModel(
+                selectionEventBus,
+                new SelectedEntityDataManager<OWLClassData>(),
+                new SelectedEntityDataManager<OWLObjectPropertyData>(),
+                new SelectedEntityDataManager<OWLDataPropertyData>(),
+                new SelectedEntityDataManager<OWLAnnotationPropertyData>(),
+                new SelectedEntityDataManager<OWLDatatypeData>(),
+                new SelectedEntityDataManager<OWLNamedIndividualData>()
+        );
     }
 }

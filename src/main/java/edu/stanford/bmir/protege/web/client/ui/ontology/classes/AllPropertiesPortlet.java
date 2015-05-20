@@ -1,12 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-
-import java.util.Collection;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * A portlet that displays the {@link AllPropertiesGrid} (see for more
@@ -18,8 +17,8 @@ public class AllPropertiesPortlet extends AbstractOWLEntityPortlet {
 
     protected AllPropertiesGrid propGrid;
 
-    public AllPropertiesPortlet(Project project) {
-        super(project);
+    public AllPropertiesPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override
@@ -34,7 +33,8 @@ public class AllPropertiesPortlet extends AbstractOWLEntityPortlet {
         if (entityData.isPresent()) {
             setTitle("Properties for " + entityData.get().getBrowserText());
         }
-        propGrid.setEntity(getEntity());
+        GWT.log("NOT IMPLEMENTED");
+//        propGrid.setEntity(getEntity());
     }
 
     @Override

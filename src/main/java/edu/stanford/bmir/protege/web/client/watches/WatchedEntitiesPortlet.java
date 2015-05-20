@@ -8,14 +8,15 @@ import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
     private ChangeListView changeListView;
 
-    public WatchedEntitiesPortlet(Project project) {
-        super(project);
+    public WatchedEntitiesPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override

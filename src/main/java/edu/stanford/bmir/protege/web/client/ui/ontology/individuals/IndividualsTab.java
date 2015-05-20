@@ -23,72 +23,72 @@ import java.util.List;
  */
 public class IndividualsTab extends AbstractTab {
 
-    private ClassTreePortlet clsTreePortlet;
-    private IndividualsListPortlet indListPorlet;
+//    private ClassTreePortlet clsTreePortlet;
+//    private IndividualsListPortlet indListPorlet;
 
     public IndividualsTab(Project project) {
         super(project);
     }
 
-    @Override
-    public void setup() {
-        super.setup();
-
-        clsTreePortlet = (ClassTreePortlet) getPortletByClassName(ClassTreePortlet.class.getName());
-        indListPorlet = (IndividualsListPortlet) getPortletByClassName(IndividualsListPortlet.class.getName());
-
-        setControllingPortlet(indListPorlet);
-
-        if (clsTreePortlet != null && indListPorlet != null) {
-            clsTreePortlet.addSelectionListener(new SelectionListener() {
-                public void selectionChanged(SelectionEvent event) {
-                    List<EntityData> clsSel = clsTreePortlet.getSelection();
-                    if (!clsSel.isEmpty()) {
-                        EntityData selection = clsSel.get(0);
-                        clsTreePortlet.setEntity(selection); //might cause later infinite cycles, if anything will happen in setEntity
-                        Collection<EntityPortlet> portlets = getPortlets();
-                        for (EntityPortlet portlet : portlets) {
-                            portlet.setEntity(selection);
-                        }
-                    }
-
-                }
-            });
-        }
-    }
-
-
-    //FIXME: To be improved
-    @Override
-    public void setSelection(Collection<EntityData> selection) {
-        if (selection == null || selection.size() == 0) {
-            return;
-        }
-
-        /*
-         * FIXME: We need a mechanism that works for the selection of classes and instances.
-         * For now, just be silly: try to select the class and also try to select the instance.
-         * One of these might succeed.
-         */
-
-        // Try class selection, first
-        clsTreePortlet.setSelection(selection);
-
-        // Then, try the instance selection
-
-        //TODO: support multiple selection
-        final EntityData individual = selection.iterator().next();
-        OntologyServiceManager.getInstance().getDirectTypes(this.project.getProjectId(), individual.getName(),
-                new AsyncCallback<List<EntityData>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                GWT.log("Could not select " + individual);
-            }
-
-            @Override
-            public void onSuccess(final List<EntityData> types) {
-                clsTreePortlet.setSelection(types);
-            }
-        });
-    }
+//    @Override
+//    public void setup() {
+//        super.setup();
+//
+//        clsTreePortlet = (ClassTreePortlet) getPortletByClassName(ClassTreePortlet.class.getName());
+//        indListPorlet = (IndividualsListPortlet) getPortletByClassName(IndividualsListPortlet.class.getName());
+//
+//        setControllingPortlet(indListPorlet);
+//
+//        if (clsTreePortlet != null && indListPorlet != null) {
+//            clsTreePortlet.addSelectionListener(new SelectionListener() {
+//                public void selectionChanged(SelectionEvent event) {
+//                    List<EntityData> clsSel = clsTreePortlet.getSelection();
+//                    if (!clsSel.isEmpty()) {
+//                        EntityData selection = clsSel.get(0);
+//                        clsTreePortlet.setEntity(selection); //might cause later infinite cycles, if anything will happen in setEntity
+//                        Collection<EntityPortlet> portlets = getPortlets();
+//                        for (EntityPortlet portlet : portlets) {
+//                            portlet.setEntity(selection);
+//                        }
+//                    }
+//
+//                }
+//            });
+//        }
+//    }
+//
+//
+//    //FIXME: To be improved
+//    @Override
+//    public void setSelection(Collection<EntityData> selection) {
+//        if (selection == null || selection.size() == 0) {
+//            return;
+//        }
+//
+//        /*
+//         * FIXME: We need a mechanism that works for the selection of classes and instances.
+//         * For now, just be silly: try to select the class and also try to select the instance.
+//         * One of these might succeed.
+//         */
+//
+//        // Try class selection, first
+//        clsTreePortlet.setSelection(selection);
+//
+//        // Then, try the instance selection
+//
+//        //TODO: support multiple selection
+//        final EntityData individual = selection.iterator().next();
+//        OntologyServiceManager.getInstance().getDirectTypes(this.project.getProjectId(), individual.getName(),
+//                new AsyncCallback<List<EntityData>>() {
+//            @Override
+//            public void onFailure(Throwable caught) {
+//                GWT.log("Could not select " + individual);
+//            }
+//
+//            @Override
+//            public void onSuccess(final List<EntityData> types) {
+//                clsTreePortlet.setSelection(types);
+//            }
+//        });
+//    }
 }

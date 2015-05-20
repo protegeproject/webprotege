@@ -1,20 +1,19 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.search;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-
-import java.util.ArrayList;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 public class BioPortalSearchPortlet extends AbstractOWLEntityPortlet {
 
     private BioPortalSearchComponent searchComp;
 
-    public BioPortalSearchPortlet(Project project) {
-        super(project);
+    public BioPortalSearchPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override
@@ -36,6 +35,7 @@ public class BioPortalSearchPortlet extends AbstractOWLEntityPortlet {
             return;
         }
         setTitle("BioPortal search results for " + entityData.get().getBrowserText());
-        searchComp.setEntity(getEntity());
+        GWT.log("NOT IMPLEMENTED");
+//        searchComp.setEntity(getEntity());
     }
 }

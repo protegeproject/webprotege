@@ -150,7 +150,8 @@ public class ParentsPanel extends Panel {
                                         href.substring(
                                                 href.indexOf(local_goto_prefix) +
                                                 local_goto_prefix.length() ) );
-                                containerPortlet.setSelection(UIUtil.createCollection(new EntityData(parentName)));
+                                // TODO: SELECTION
+//                                containerPortlet.setSelection(UIUtil.createCollection(new EntityData(parentName)));
                             }
                         }
 

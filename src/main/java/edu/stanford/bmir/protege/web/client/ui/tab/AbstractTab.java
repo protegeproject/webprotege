@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.SimpleEventBus;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.event.PanelListener;
@@ -22,6 +24,9 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
 import edu.stanford.bmir.protege.web.client.ui.util.GlobalSelectionManager;
+import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.selection.SelectedEntityDataManager;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.*;
 
@@ -53,29 +58,35 @@ public abstract class AbstractTab extends Portal {
      */
     private EntityPortlet controllingPortlet;
 
-    private SelectionListener selectionControllingListener;
+//    private SelectionListener selectionControllingListener;
 
     private PanelListener portletDestroyListener;
 
     private PanelListener panelListener;
 
+    private final SelectionModel selectionModel;
+
     public AbstractTab(final Project project) {
         super();
-
         this.project = project;
         this.portal = new Portal();
         this.columnToPortletsMap = new LinkedHashMap<PortalColumn, List<EntityPortlet>>();
         this.tabColumnConfigToColumn = new LinkedHashMap<TabColumnConfiguration, PortalColumn>();
 
-        this.selectionControllingListener = getSelectionControllingListener();
+//        this.selectionControllingListener = getSelectionControllingListener();
         this.portletDestroyListener = getPortletDestroyListener();
 
+        this.selectionModel = SelectionModel.create();
         addListener(this.panelListener = getPanelListener());
 
     }
 
     public AbstractTab(final Project project, final int columnCount) {
         this(project, getDefaultColumnData(columnCount));
+    }
+
+    public SelectionModel getSelectionModel() {
+        return selectionModel;
     }
 
     /**
@@ -132,60 +143,60 @@ public abstract class AbstractTab extends Portal {
 
     }
 
-    protected SelectionListener getSelectionControllingListener() {
-        if (selectionControllingListener == null) {
-            this.selectionControllingListener = new SelectionListener() {
-                public void selectionChanged(final SelectionEvent event) {
-                    onSelectionChange(event.getSelectable().getSelection());
-                    GlobalSelectionManager.setGlobalSelection(project.getProjectId(), event.getSelectable().getSelection());
-                }
-            };
-        }
+//    protected SelectionListener getSelectionControllingListener() {
+//        if (selectionControllingListener == null) {
+//            this.selectionControllingListener = new SelectionListener() {
+//                public void selectionChanged(final SelectionEvent event) {
+//                    onSelectionChange(event.getSelectable().getSelection());
+//                    GlobalSelectionManager.setGlobalSelection(project.getProjectId(), event.getSelectable().getSelection());
+//                }
+//            };
+//        }
+//
+//        return selectionControllingListener;
+//    }
 
-        return selectionControllingListener;
-    }
-
-    /**
-     * This method is called when a new selection has been made in the
-     * controlling portlet. If you override this method, make sure to call
-     * <code>super.onSelectionChange(newSelection)</code>, otherwise the other
-     * portlets will not be updated with the new selection.
-     *
-     * @param newSelection - the new selection
-     */
-    protected void onSelectionChange(final Collection<EntityData> newSelection) {
-        if (controllingPortlet == null) {
-            return; // nothing to do
-        }
-
-        //TODO: implement multiple selection
-
-        EntityData selection = null;
-        if (newSelection != null && newSelection.size() > 0) {
-            selection = newSelection.iterator().next();
-        }
-
-        for (final EntityPortlet portlet : getPortlets()) {
-            if (!portlet.equals(controllingPortlet)) {
-                portlet.setEntity(selection);
-            }
-        }
-    }
+//    /**
+//     * This method is called when a new selection has been made in the
+//     * controlling portlet. If you override this method, make sure to call
+//     * <code>super.onSelectionChange(newSelection)</code>, otherwise the other
+//     * portlets will not be updated with the new selection.
+//     *
+//     * @param newSelection - the new selection
+//     */
+//    protected void onSelectionChange(final Collection<EntityData> newSelection) {
+//        if (controllingPortlet == null) {
+//            return; // nothing to do
+//        }
+//
+//        //TODO: implement multiple selection
+//
+//        EntityData selection = null;
+//        if (newSelection != null && newSelection.size() > 0) {
+//            selection = newSelection.iterator().next();
+//        }
+//
+//        for (final EntityPortlet portlet : getPortlets()) {
+//            if (!portlet.equals(controllingPortlet)) {
+//                portlet.setEntity(selection);
+//            }
+//        }
+//    }
 
     public void setSelection(Collection<EntityData> selection) {
-        if (controllingPortlet != null) {
-            Collection<EntityData> currentSel = controllingPortlet.getSelection();
-
-            if (currentSel == null) {
-                if (selection == null) {
-                    return;
-                } // else do nothing here
-            }
-            else if (currentSel.equals(selection)) {
-                return;
-            }
-            controllingPortlet.setSelection(selection);
-        }
+//        if (controllingPortlet != null) {
+//            Collection<EntityData> currentSel = controllingPortlet.getSelection();
+//
+//            if (currentSel == null) {
+//                if (selection == null) {
+//                    return;
+//                } // else do nothing here
+//            }
+//            else if (currentSel.equals(selection)) {
+//                return;
+//            }
+//            controllingPortlet.setSelection(selection);
+//        }
     }
 
     public int getColumnCount() {
@@ -275,18 +286,18 @@ public abstract class AbstractTab extends Portal {
     }
 
     public void setControllingPortlet(final EntityPortlet newControllingPortlet) {
-        if (controllingPortlet != null) {
-            if (controllingPortlet.equals(newControllingPortlet)) {
-                return;
-            }
-            controllingPortlet.removeSelectionListener(selectionControllingListener);
-            ((AbstractEntityPortlet)controllingPortlet).updateIcon(false);
-        }
-        controllingPortlet = newControllingPortlet;
-        if (controllingPortlet != null) {
-            controllingPortlet.addSelectionListener(selectionControllingListener);
-            ((AbstractEntityPortlet)controllingPortlet).updateIcon(true);
-        }
+//        if (controllingPortlet != null) {
+//            if (controllingPortlet.equals(newControllingPortlet)) {
+//                return;
+//            }
+//            controllingPortlet.removeSelectionListener(selectionControllingListener);
+//            ((AbstractEntityPortlet)controllingPortlet).updateIcon(false);
+//        }
+//        controllingPortlet = newControllingPortlet;
+//        if (controllingPortlet != null) {
+//            controllingPortlet.addSelectionListener(selectionControllingListener);
+//            ((AbstractEntityPortlet)controllingPortlet).updateIcon(true);
+//        }
     }
 
     public TabConfiguration getTabConfiguration() {
@@ -410,7 +421,7 @@ public abstract class AbstractTab extends Portal {
 
     protected EntityPortlet createPortlet(final PortletConfiguration portletConfiguration) {
         final String portletClassName = portletConfiguration.getName();
-        final EntityPortlet portlet = UIFactory.createPortlet(project, portletClassName);
+        final EntityPortlet portlet = UIFactory.createPortlet(selectionModel, project, portletClassName);
         if (portlet == null) {
             return null;
         }

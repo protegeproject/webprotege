@@ -20,18 +20,30 @@ public class EntityDataSelectionChangedEvent extends Event<EntityDataSelectionCh
 
     private final Optional<? extends OWLEntityData> lastSelection;
 
-    public <T extends OWLEntityData> EntityDataSelectionChangedEvent(Optional<T> previousSelection,
-                                           Optional<T> selection) {
+    public EntityDataSelectionChangedEvent(Optional<? extends OWLEntityData> previousSelection,
+                                           Optional<? extends OWLEntityData> selection) {
         this.previousSelection = checkNotNull(previousSelection);
         this.lastSelection = checkNotNull(selection);
     }
 
-    public Optional<? extends OWLEntityData> getPreviousSelection() {
-        return previousSelection;
+    public Optional<OWLEntityData> getPreviousSelection() {
+        if(previousSelection.isPresent()) {
+            return Optional.<OWLEntityData>of(previousSelection.get());
+
+        }
+        else {
+            return Optional.<OWLEntityData>absent();
+        }
     }
 
-    public Optional<? extends OWLEntityData> getLastSelection() {
-        return lastSelection;
+    public Optional<OWLEntityData> getLastSelection() {
+        if(lastSelection.isPresent()) {
+            return Optional.<OWLEntityData>of(lastSelection.get());
+
+        }
+        else {
+            return Optional.<OWLEntityData>absent();
+        }
     }
 
     @Override

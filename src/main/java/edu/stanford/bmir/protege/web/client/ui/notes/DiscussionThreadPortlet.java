@@ -2,12 +2,9 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-
-import java.util.Collection;
-import java.util.Collections;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,12 +16,8 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
 
     private DiscussionThreadPresenter presenter;
 
-    public DiscussionThreadPortlet(Project project) {
-        super(project);
-    }
-
-    public DiscussionThreadPortlet(Project project, boolean initialize) {
-        super(project, initialize);
+    public DiscussionThreadPortlet(Project project, SelectionModel selectionModel) {
+        super(selectionModel, project);
     }
 
     @Override

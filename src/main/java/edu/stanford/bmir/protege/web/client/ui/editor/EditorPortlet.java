@@ -1,14 +1,13 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-
-import java.util.Collection;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * Author: Matthew Horridge<br>
@@ -20,12 +19,8 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
 
     private EditorPresenter editorPresenter;
 
-    public EditorPortlet(Project project) {
-        super(project);
-    }
-
-    public EditorPortlet(Project project, boolean initialize) {
-        super(project, initialize);
+    public EditorPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override
@@ -51,17 +46,16 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
-        Optional<OWLEntityData> sel = getSelectedEntityData();
-        if(!sel.isPresent()) {
+        GWT.log("EditorPortlet: setEntity " + entityData);
+        if(!entityData.isPresent()) {
             // TODO: Show nothing selected
             return;
         }
-        final Optional<EditorCtx> editorContext = getEditorContext();
+        final Optional<EditorCtx> editorContext = getEditorContext(entityData);
         editorPresenter.setEditorContext(editorContext);
     }
 
-    public Optional<EditorCtx> getEditorContext() {
-        Optional<OWLEntityData> sel = getSelectedEntityData();
+    public Optional<EditorCtx> getEditorContext(Optional<OWLEntityData> sel) {
         if(!sel.isPresent()) {
             return Optional.absent();
         }

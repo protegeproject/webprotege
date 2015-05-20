@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAc
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdResult;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,14 +18,8 @@ public class OntologyIdPortlet extends AbstractOWLEntityPortlet {
 
     private OntologyIdEditor editor;
 
-    private boolean loaded = false;
-
-    public OntologyIdPortlet(Project project) {
-        super(project);
-    }
-
-    public OntologyIdPortlet(Project project, boolean initialize) {
-        super(project, initialize);
+    public OntologyIdPortlet(SelectionModel selectionModel, Project project) {
+        super(selectionModel, project);
     }
 
     @Override
