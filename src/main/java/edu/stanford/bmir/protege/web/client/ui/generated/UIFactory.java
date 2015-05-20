@@ -119,9 +119,6 @@ public class UIFactory {
             else if (portletJavaClassName.equals(HtmlMessagePortlet.class.getName())) {
                 return new HtmlMessagePortlet(selectionModel, project);
             }
-            else if (portletJavaClassName.equals(SuperclassesPortlet.class.getName())) {
-                return new SuperclassesPortlet(selectionModel, project);
-            }
             else if (portletJavaClassName.equals(ChangesPortlet.class.getName())) {
                 return new ChangesPortlet(selectionModel, project);
             }
@@ -208,7 +205,7 @@ public class UIFactory {
                 ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(),
                 IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(),
                 PropertiesTreePortlet.class.getName(),
-                BioPortalSearchPortlet.class.getName(), SuperclassesPortlet.class.getName(),
+                BioPortalSearchPortlet.class.getName(),
                 ChangesPortlet.class.getName(), WatchedEntitiesPortlet.class.getName(),
                 OBOTermCrossProductPortlet.class.getName(),
                 OBOTermRelationshipPortlet.class.getName(), OBOTermSynonymsPortlet.class.getName(),
