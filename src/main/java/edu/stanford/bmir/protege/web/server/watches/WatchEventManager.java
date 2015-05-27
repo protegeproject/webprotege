@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.watches;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.shared.event.*;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -16,6 +18,7 @@ public class WatchEventManager {
 
     private WatchManager watchManager;
 
+    @Inject
     public WatchEventManager(WatchManager watchManager, EventManager<ProjectEvent<?>> eventManager) {
         this.watchManager = checkNotNull(watchManager);
         this.eventManager = checkNotNull(eventManager);

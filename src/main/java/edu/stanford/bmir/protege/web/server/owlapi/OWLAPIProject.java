@@ -116,10 +116,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private OWLAPIProjectMetricsManager metricsManager;
 
-    // TODO Dependency injection
     private WatchManager watchManager;
-
-
+    
     private final ReadWriteLock projectChangeLock = new ReentrantReadWriteLock();
 
     private final Lock projectChangeReadLock = projectChangeLock.readLock();
@@ -198,6 +196,9 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         initialiseProjectMachinery();
         projectInjector = WebProtegeInjector.get().createChildInjector(new ProjectModule(this), new EventTranslatorModule());
         eventTranslatorManagerProvider = projectInjector.getProvider(EventTranslatorManager.class);
+        watchManager = projectInjector.getInstance(WatchManager.class);
+        WatchEventManager watchEventManager = projectInjector.getInstance(WatchEventManager.class);
+        watchEventManager.attach();
     }
 
 
@@ -268,31 +269,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 DefaultMetricsCalculators.getDefaultMetrics(rootOntology),
                 projectEventManager,
                 appInjector.getInstance(WebProtegeLogger.class));
-
-
-        OWLAPIProjectFileStore fs = appInjector.getInstance(OWLAPIProjectFileStoreFactory.class).get(getProjectId());
-        File watchFile = new File(fs.getProjectDirectory(), "watches.csv");
-        WebProtegeLogger logger = appInjector.getInstance(WebProtegeLogger.class);
-        watchManager = new WatchManagerImpl(
-                getProjectId(),
-                new WatchStoreImpl(watchFile, getRootOntology().getOWLOntologyManager().getOWLDataFactory(), logger),
-                new WatchIndex(),
-                new IndirectlyWatchedEntitiesFinder(
-                        getRootOntology(),
-                        classHierarchyProvider,
-                        objectPropertyHierarchyProvider,
-                        dataPropertyHierarchyProvider
-                ),
-                new WatchTriggeredHandlerImpl(
-                        getProjectId(),
-                        getRenderingManager(),
-                        appInjector.getInstance(WebProtegeProperties.class).getApplicationHostName(),
-                        appInjector.getInstance(MailManager.class)
-                ),
-                getEventManager());
-
-        WatchEventManager watchEventManager = new WatchEventManager(watchManager, getEventManager());
-        watchEventManager.attach();
 
     }
 

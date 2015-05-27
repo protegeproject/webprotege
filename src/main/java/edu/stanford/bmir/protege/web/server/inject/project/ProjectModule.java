@@ -97,5 +97,9 @@ public class ProjectModule extends AbstractModule {
         bind(HasGetEntitiesInSignature.class).toInstance(project);
 
         bind(HasGetRevisionSummary.class).toInstance(project);
+
+        bind(WatchManager.class).to(WatchManagerImpl.class).asEagerSingleton();
+        bind(WatchStore.class).to(WatchStoreImpl.class).asEagerSingleton();
+        bind(File.class).annotatedWith(WatchFile.class).toProvider(WatchFileProvider.class);
     }
 }
