@@ -54,8 +54,6 @@ public class OWLAPIProjectDocumentStore {
 
     public static final String GENERATED_ONTOLOGY_IRI_PREFIX = "http://webprotege.stanford.edu/project/";
 
-    private static final String PROJECT_ATTRIBUTES_FILE_NAME = "project-attributes.binary";
-
     private final WebProtegeLogger logger;
 
     private ProjectId projectId;
@@ -70,10 +68,6 @@ public class OWLAPIProjectDocumentStore {
     private static Map<ProjectId, ReadWriteLock> projectLockMap = new WeakHashMap<ProjectId, ReadWriteLock>();
 
     private static Map<ProjectId, ReadWriteLock> projectDownloadCacheLock = new WeakHashMap<ProjectId, ReadWriteLock>();
-
-    private static Map<ProjectId, ReadWriteLock> projectAttributesCacheLock = new WeakHashMap<ProjectId,
-            ReadWriteLock>();
-
 
     private static ReadWriteLock getProjectReadWriteLock(ProjectId projectId) {
         // Synchronized on the class because it should be global over all instances of document store for the
@@ -99,18 +93,6 @@ public class OWLAPIProjectDocumentStore {
             return lock;
         }
     }
-
-    private static ReadWriteLock getProjectAttributesCacheLock(ProjectId projectId) {
-        synchronized (OWLAPIProjectDocumentStore.class) {
-            ReadWriteLock lock = projectAttributesCacheLock.get(projectId);
-            if (lock == null) {
-                lock = new ReentrantReadWriteLock();
-                projectAttributesCacheLock.put(projectId, lock);
-            }
-            return lock;
-        }
-    }
-
 
     private OWLAPIProjectManager projectManager;
 
