@@ -79,9 +79,12 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
 
     private ExecutorService changeSerializationExucutor = Executors.newSingleThreadExecutor();
 
+    private final EntitiesByRevisionCache entitiesByRevisionCache;
+
     public OWLAPIChangeManager(OWLAPIProject project) {
         this.project = project;
         this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
+        this.entitiesByRevisionCache = new EntitiesByRevisionCache(project.getAxiomSubjectProvider(), project, project.getDataFactory());
         read();
     }
 
@@ -426,7 +429,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
 
     private Set<OWLEntity> getWatchedEntities(Set<OWLEntity> superEntities, Set<OWLEntity> directWatches, Revision revision) {
         Set<OWLEntity> watchedEntities = new HashSet<>();
-        Set<OWLEntity> entities = revision.getEntities(project);
+        Set<OWLEntity> entities = entitiesByRevisionCache.getEntities(revision);
         for (OWLEntity entity : entities) {
             if (directWatches.contains(entity)) {
                 watchedEntities.add(entity);
@@ -564,7 +567,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
     }
 
     private void getProjectChangesForRevision(Revision revision, Optional<OWLEntity> subject, ImmutableList.Builder<ProjectChange> changesBuilder) {
-        if (!subject.isPresent() || revision.containsEntity(project, subject.get())) {
+        if (!subject.isPresent() || entitiesByRevisionCache.containsEntity(revision, subject.get())) {
 
             final Filter<OWLOntologyChangeRecord> filter;
             if(subject.isPresent()) {
@@ -600,7 +603,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
 
             if (axiomDiffElements.size() < 200) {
                 sortDiff(axiomDiffElements);
-                for(OWLEntity entity : revision.getEntities(project)) {
+                for(OWLEntity entity : entitiesByRevisionCache.getEntities(revision)) {
                     String rendering = project.getRenderingManager().getBrowserText(entity);
                     OWLEntityData entityData = DataFactory.getOWLEntityData(entity, rendering);
                     subjectsBuilder.add(entityData);
