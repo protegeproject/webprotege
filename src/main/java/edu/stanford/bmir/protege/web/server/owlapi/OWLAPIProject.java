@@ -354,7 +354,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     }
 
     public OWLDataFactory getDataFactory() {
-        return delegateManager.getOWLDataFactory();
+        return manager.getOWLDataFactory();
     }
 
     public OWLAPISearchManager getSearchManager() {
