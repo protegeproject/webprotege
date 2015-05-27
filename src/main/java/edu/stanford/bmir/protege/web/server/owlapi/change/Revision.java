@@ -73,47 +73,6 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
         return revision;
     }
 
-    public boolean containsEntity(OWLAPIProject project, OWLEntity entity) {
-        return getEntities(project).contains(entity);
-    }
-
-    public ImmutableSet<OWLEntity> getEntities(OWLAPIProject project) {
-        if (cachedEntities == null) {
-            cachedEntities = getEntitiesInternal(project);
-        }
-        return cachedEntities;
-    }
-
-    private ImmutableSet<OWLEntity> getEntitiesInternal(OWLAPIProject project) {
-        ImmutableSet.Builder<OWLEntity> result = ImmutableSet.builder();
-        Set<IRI> iris = new HashSet<>();
-        AxiomSubjectProvider axiomSubjectProvider = project.getAxiomSubjectProvider();
-        for (OWLOntologyChangeRecord change : changes) {
-            if (change.getData() instanceof AxiomChangeData) {
-                OWLAxiom ax = ((AxiomChangeData) change.getData()).getAxiom();
-                Optional<? extends OWLObject> subject = axiomSubjectProvider.getSubject(ax);
-                if (subject.isPresent()) {
-                    if (subject.get() instanceof OWLEntity) {
-                        result.add((OWLEntity) subject.get());
-                    }
-                    else if (subject.get() instanceof IRI) {
-                        iris.add((IRI) subject.get());
-                    }
-                }
-            }
-        }
-        for (IRI iri : iris) {
-            for(EntityType<?> entityType : EntityType.values()) {
-                OWLEntity entity = project.getDataFactory().getOWLEntity(entityType, iri);
-                if(project.getRootOntology().containsEntityInSignature(entity)) {
-                    result.add(entity);
-                }
-            }
-        }
-        return result.build();
-    }
-
-
     public long getTimestamp() {
         return timestamp;
     }
