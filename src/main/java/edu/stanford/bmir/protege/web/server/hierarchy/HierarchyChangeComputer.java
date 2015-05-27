@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
+import edu.stanford.bmir.protege.web.server.events.EventTranslator;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
@@ -23,7 +24,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/03/2013
  */
-public abstract class HierarchyChangeComputer<T extends OWLEntity> {
+public abstract class HierarchyChangeComputer<T extends OWLEntity> implements EventTranslator {
 
     private final ProjectId projectId;
 
@@ -45,9 +46,14 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> {
         this.hierarchyId = hierarchyId;
     }
 
+    public ProjectId getProjectId() {
+        return projectId;
+    }
+
     @SuppressWarnings("unchecked")
-    public void prepareForChanges(List<OWLOntologyChange> changes) {
-        for(OWLOntologyChange change : changes) {
+    @Override
+    public void prepareForOntologyChanges(List<OWLOntologyChange> submittedChanges) {
+        for(OWLOntologyChange change : submittedChanges) {
             for(OWLEntity entity : change.getSignature()) {
                 if(entity.isType(entityType)) {
                     final T t = (T) entity;
@@ -60,9 +66,9 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<ProjectEvent<?>> get(List<OWLOntologyChange> appliedChanges) {
+    @Override
+    public void translateOntologyChanges(List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
         Set<T> changeSignature = new HashSet<T>();
-        List<ProjectEvent<?>> result = new ArrayList<ProjectEvent<?>>();
         for(OWLOntologyChange change : appliedChanges) {
             for(OWLEntity child : change.getSignature()) {
                 if(child.isType(entityType)) {
@@ -74,13 +80,13 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> {
                         for(T parentBefore : parentsBefore) {
                             if(!parentsAfter.contains(parentBefore)) {
                                 // Removed
-                                result.add(createRemovedEvent(t, parentBefore));
+                                projectEventList.add(createRemovedEvent(t, parentBefore));
                             }
                         }
                         for(T parentAfter : parentsAfter) {
                             if(!parentsBefore.contains(parentAfter)) {
                                 // Added
-                                result.add(createAddedEvent(t, parentAfter));
+                                projectEventList.add(createAddedEvent(t, parentAfter));
                             }
                         }
                     }
@@ -90,15 +96,14 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> {
         Set<T> rootsAfter = new HashSet<T>(hierarchyProvider.getRoots());
         for(T rootAfter : rootsAfter) {
             if(!roots.contains(rootAfter)) {
-                result.add(new HierarchyRootAddedEvent<T>(projectId, hierarchyId, rootAfter));
+                projectEventList.add(new HierarchyRootAddedEvent<T>(projectId, hierarchyId, rootAfter));
             }
         }
         for(T rootBefore : roots) {
             if(!rootsAfter.contains(rootBefore)) {
-                result.add(new HierarchyRootRemovedEvent<T>(projectId, hierarchyId, rootBefore));
+                projectEventList.add(new HierarchyRootRemovedEvent<T>(projectId, hierarchyId, rootBefore));
             }
         }
-        return result;
     }
 
 

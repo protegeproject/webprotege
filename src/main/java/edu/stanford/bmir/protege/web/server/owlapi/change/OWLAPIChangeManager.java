@@ -6,6 +6,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.*;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
+import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
 import edu.stanford.bmir.protege.web.server.diff.SameSubjectFilter;
@@ -52,7 +53,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/04/2012
  */
-public class OWLAPIChangeManager {
+public class OWLAPIChangeManager implements HasGetRevisionSummary {
 
     private final WebProtegeLogger logger;
 
@@ -526,6 +527,7 @@ public class OWLAPIChangeManager {
         }
     }
 
+    @Override
     public RevisionSummary getRevisionSummary(RevisionNumber revisionNumber) {
         int index = getRevisionIndexForRevision(revisionNumber);
         if (index == -1) {

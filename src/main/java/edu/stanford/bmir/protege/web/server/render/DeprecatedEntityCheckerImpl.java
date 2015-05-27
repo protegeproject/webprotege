@@ -1,9 +1,12 @@
 package edu.stanford.bmir.protege.web.server.render;
 
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,7 +20,8 @@ public class DeprecatedEntityCheckerImpl implements DeprecatedEntityChecker {
     private OWLOntology rootOntology;
 
 
-    public DeprecatedEntityCheckerImpl(OWLOntology rootOntology) {
+    @Inject
+    public DeprecatedEntityCheckerImpl(@RootOntology OWLOntology rootOntology) {
         this.rootOntology = checkNotNull(rootOntology);
     }
 
