@@ -81,8 +81,11 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
 
     private final EntitiesByRevisionCache entitiesByRevisionCache;
 
-    public OWLAPIChangeManager(OWLAPIProject project) {
+    private final OWLOntology rootOntology;
+
+    public OWLAPIChangeManager(OWLAPIProject project, OWLOntology rootOntology) {
         this.project = project;
+        this.rootOntology = rootOntology;
         this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         this.entitiesByRevisionCache = new EntitiesByRevisionCache(project.getAxiomSubjectProvider(), project, project.getDataFactory());
         read();
@@ -145,7 +148,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
     private Interner<OWLAxiom> getAxiomInterner() {
         final Interner<OWLAxiom> axiomInterner = Interners.newStrongInterner();
         for (AxiomType<?> axiomType : AxiomType.AXIOM_TYPES) {
-            for (OWLAxiom ax : project.getRootOntology().getAxioms(axiomType)) {
+            for (OWLAxiom ax : rootOntology.getAxioms(axiomType)) {
                 axiomInterner.intern(ax);
             }
         }
@@ -263,7 +266,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
                 }
             }
 
-            for (OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
+            for (OWLOntology ontology : rootOntology.getImportsClosure()) {
                 for (OWLImportsDeclaration declaration : ontology.getImportsDeclarations()) {
                     changes.add(new AddImport(ontology, declaration));
                 }
@@ -272,7 +275,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
                 }
             }
             for (AxiomType<?> axiomType : axiomTypes) {
-                for (OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
+                for (OWLOntology ontology : rootOntology.getImportsClosure()) {
                     for (OWLAxiom axiom : ontology.getAxioms(axiomType)) {
                         changes.add(new AddAxiom(ontology, axiom));
                     }
@@ -383,7 +386,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
             }
             if (manager.getOntologies().isEmpty()) {
                 // No revisions exported.  Just create an empty ontology
-                manager.createOntology(project.getRootOntology().getOntologyID());
+                manager.createOntology(rootOntology.getOntologyID());
             }
             return manager;
         } catch (OWLOntologyCreationException e) {
@@ -466,7 +469,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
 
             @Override
             public Boolean visit(OWLNamedIndividual individual) {
-                final Set<OWLClassExpression> types = individual.getTypes(project.getRootOntology().getImportsClosure());
+                final Set<OWLClassExpression> types = individual.getTypes(rootOntology.getImportsClosure());
                 for (OWLClassExpression ce : types) {
                     if (!ce.isAnonymous()) {
                         if (isWatchedByAncestor(project.getClassHierarchyProvider().getAncestors(ce.asOWLClass()))) {
@@ -595,7 +598,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
             }
 
             Revision2DiffElementsTranslator translator = new Revision2DiffElementsTranslator(
-                    filter, new WebProtegeOntologyIRIShortFormProvider(project.getRootOntology())
+                    filter, new WebProtegeOntologyIRIShortFormProvider(rootOntology)
             );
 
             List<DiffElement<String, OWLOntologyChangeRecord>> axiomDiffElements = translator.getDiffElementsFromRevision(revision, Integer.MAX_VALUE);

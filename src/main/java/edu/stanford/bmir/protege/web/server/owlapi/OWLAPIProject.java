@@ -248,7 +248,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         searchManager = new OWLAPISearchManager(renderingManager, renderingManager.getShortFormProvider());
 
-        changeManager = new OWLAPIChangeManager(this);
+        changeManager = new OWLAPIChangeManager(this, ontology);
 
         notesManager = new OWLAPINotesManagerNotesAPIImpl(this);
 
