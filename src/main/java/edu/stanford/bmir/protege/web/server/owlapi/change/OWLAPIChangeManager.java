@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.axiom.*;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
@@ -83,8 +84,11 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
 
     private final OWLOntology rootOntology;
 
+    private final ProjectId projectId;
+
     public OWLAPIChangeManager(OWLAPIProject project, OWLOntology rootOntology) {
         this.project = project;
+        this.projectId = project.getProjectId();
         this.rootOntology = rootOntology;
         this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         this.entitiesByRevisionCache = new EntitiesByRevisionCache(project.getAxiomSubjectProvider(), project, project.getDataFactory());
@@ -128,7 +132,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
             }, SkipSetting.SKIP_NONE);
             inputStream.close();
             long t1 = System.currentTimeMillis();
-            logger.info(project.getProjectId(), "Change history loading complete.  Loaded %d revisions in %d ms", revisions.size(), (t1 - t0));
+            logger.info(projectId, "Change history loading complete.  Loaded %d revisions in %d ms", revisions.size(), (t1 - t0));
 
         } catch (BinaryOWLParseException e) {
             handleCorruptChangeLog(e);
@@ -333,7 +337,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
 
 
     private File getChangeHistoryFile() {
-        OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(project.getProjectId());
+        OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
         File file = documentStore.getChangeDataFile();
         if (!file.exists()) {
             file.getParentFile().mkdirs();
