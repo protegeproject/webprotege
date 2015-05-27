@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ public class OntologyChangeSubjectProvider implements HasGetChangeSubjects {
 
     private ChangeSubjectProvider changeSubjectProvider;
 
+    @Inject
     public OntologyChangeSubjectProvider(HasGetEntitiesWithIRI entitiesWithIRI) {
         this.changeSubjectProvider = new ChangeSubjectProvider(new AxiomEntitySubjectProvider(entitiesWithIRI));
     }

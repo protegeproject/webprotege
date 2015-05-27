@@ -1,16 +1,20 @@
 package edu.stanford.bmir.protege.web.server.events;
 
+import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
+import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
+import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.AxiomSubjectProvider;
 
+import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -19,23 +23,38 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/03/2013
  */
-public class HighLevelEventGenerator {
+public class HighLevelEventGenerator implements EventTranslator {
 
-    private OWLAPIProject project;
+    private final ProjectId projectId;
 
-    public HighLevelEventGenerator(OWLAPIProject project, UserId userId, RevisionNumber revisionNumber) {
-        this.project = project;
+    private final RevisionNumber revisionNumber;
+
+    private final BrowserTextProvider browserTextProvider;
+
+    private final HasGetRevisionSummary hasGetRevisionSummary;
+
+    private final HasGetEntitiesWithIRI hasGetEntitiesWithIRI;
+
+    @Inject
+    public HighLevelEventGenerator(ProjectId projectId, RevisionNumber revisionNumber, BrowserTextProvider browserTextProvider, HasGetEntitiesWithIRI hasGetEntitiesWithIRI, HasGetRevisionSummary hasGetRevisionSummary) {
+        this.projectId = projectId;
+        this.revisionNumber = revisionNumber;
+        this.browserTextProvider = browserTextProvider;
+        this.hasGetEntitiesWithIRI = hasGetEntitiesWithIRI;
+        this.hasGetRevisionSummary = hasGetRevisionSummary;
     }
 
-    public List<ProjectEvent<?>> getHighLevelEvents(List<OWLOntologyChange> ontologyChanges, RevisionNumber revisionNumber) {
-        // A HORRIBLE HORRIBLE stopgap
-        final List<ProjectEvent<?>> result = new ArrayList<ProjectEvent<?>>();
-        final Set<OWLEntity> changedEntities = new HashSet<OWLEntity>();
-        List<OWLOntologyChangeRecord> changeRecords = new ArrayList<OWLOntologyChangeRecord>();
-        final Set<IRI> deprecationStatusChangedEntites = new HashSet<IRI>();
+    @Override
+    public void prepareForOntologyChanges(List<OWLOntologyChange> submittedChanges) {
 
-        for(OWLOntologyChange change : ontologyChanges) {
-            changeRecords.add(OWLOntologyChangeRecord.createFromOWLOntologyChange(change));
+    }
+
+    @Override
+    public void translateOntologyChanges(List<OWLOntologyChange> appliedChanges, final List<ProjectEvent<?>> projectEventList) {
+        // TODO: NEED TIDYING AND SPLITTING UP
+        final Set<OWLEntity> changedEntities = new HashSet<>();
+
+        for(OWLOntologyChange change : appliedChanges) {
             change.accept(new OWLOntologyChangeVisitor() {
                 @Override
                 public void visit(AddAxiom change) {
@@ -47,17 +66,11 @@ public class HighLevelEventGenerator {
                     AxiomSubjectProvider p = new AxiomSubjectProvider();
                     OWLObject subject = p.getSubject(axiom);
                     Set<OWLEntity> entities;
-                    if (subject instanceof IRI) {
-                        entities = project.getRootOntology().getEntitiesInSignature((IRI) subject);
-                        if(axiom instanceof OWLAnnotationAssertionAxiom) {
-                            if(((OWLAnnotationAssertionAxiom) axiom).isDeprecatedIRIAssertion()) {
-                                deprecationStatusChangedEntites.add((IRI) ((OWLAnnotationAssertionAxiom) axiom).getSubject());
-                            }
-                        }
+                    if(subject instanceof IRI) {
+                        entities = hasGetEntitiesWithIRI.getEntitiesWithIRI((IRI) subject);
                     }
                     else if (subject instanceof OWLEntity) {
                         entities = Collections.singleton((OWLEntity) subject);
-
                     }
                     else {
                         entities = Collections.emptySet();
@@ -68,35 +81,35 @@ public class HighLevelEventGenerator {
                             ProjectEvent<?> event = e.accept(new OWLEntityVisitorEx<ProjectEvent<?>>() {
                                 @Override
                                 public ProjectEvent<?> visit(OWLClass cls) {
-                                    return new ClassFrameChangedEvent(cls, project.getProjectId());
+                                    return new ClassFrameChangedEvent(cls, projectId);
                                 }
 
                                 @Override
                                 public ProjectEvent<?> visit(OWLObjectProperty property) {
-                                    return new ObjectPropertyFrameChangedEvent(property, project.getProjectId());
+                                    return new ObjectPropertyFrameChangedEvent(property, projectId);
                                 }
 
                                 @Override
                                 public ProjectEvent<?> visit(OWLDataProperty property) {
-                                    return new DataPropertyFrameChangedEvent(property, project.getProjectId());
+                                    return new DataPropertyFrameChangedEvent(property, projectId);
                                 }
 
                                 @Override
                                 public ProjectEvent<?> visit(OWLNamedIndividual individual) {
-                                    return new NamedIndividualFrameChangedEvent(individual, project.getProjectId());
+                                    return new NamedIndividualFrameChangedEvent(individual, projectId);
                                 }
 
                                 @Override
                                 public ProjectEvent<?> visit(OWLDatatype datatype) {
-                                    return new DatatypeFrameChangedEvent(datatype, project.getProjectId());
+                                    return new DatatypeFrameChangedEvent(datatype, projectId);
                                 }
 
                                 @Override
                                 public ProjectEvent<?> visit(OWLAnnotationProperty property) {
-                                    return new AnnotationPropertyFrameChangedEvent(property, project.getProjectId());
+                                    return new AnnotationPropertyFrameChangedEvent(property, projectId);
                                 }
                             });
-                            result.add(event);
+                            projectEventList.add(event);
                         }
                     }
                 }
@@ -108,56 +121,39 @@ public class HighLevelEventGenerator {
 
                 @Override
                 public void visit(SetOntologyID change) {
-                    result.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), project.getProjectId()));
+                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
                 }
 
                 @Override
                 public void visit(AddImport change) {
-                    result.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), project.getProjectId()));
+                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
                 }
 
                 @Override
                 public void visit(RemoveImport change) {
-                    result.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), project.getProjectId()));
+                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
                 }
 
                 @Override
                 public void visit(AddOntologyAnnotation change) {
-                    result.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), project.getProjectId()));
+                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
                 }
 
                 @Override
                 public void visit(RemoveOntologyAnnotation change) {
-                    result.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), project.getProjectId()));
+                    projectEventList.add(new OntologyFrameChangedEvent(change.getOntology().getOntologyID(), projectId));
                 }
             });
         }
 
-        for(IRI entityIRI : deprecationStatusChangedEntites) {
-            for (OWLEntity entity : project.getRootOntology().getEntitiesInSignature(entityIRI, true)) {
-                boolean deprecated = project.isDeprecated(entity);
-                result.add(new EntityDeprecatedChangedEvent(project.getProjectId(), entity, deprecated));
-            }
-        }
 
-        Set<OWLEntityData> changedEntitiesData = new HashSet<OWLEntityData>();
+        Set<OWLEntityData> changedEntitiesData = new HashSet<>();
         for (OWLEntity entity : changedEntities) {
-            String browserText = project.getRenderingManager().getBrowserText(entity);
-            changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText));
+            Optional<String> browserText = browserTextProvider.getOWLEntityBrowserText(entity);
+            changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText.or("")));
         }
-        RevisionSummary revisionSummary = project.getChangeManager().getRevisionSummary(revisionNumber);
-        ProjectEvent<?> event = new ProjectChangedEvent(project.getProjectId(), revisionSummary, changedEntitiesData);
-        result.add(event);
-        return result;
+        RevisionSummary revisionSummary = hasGetRevisionSummary.getRevisionSummary(revisionNumber);
+        ProjectEvent<?> event = new ProjectChangedEvent(projectId, revisionSummary, changedEntitiesData);
+        projectEventList.add(event);
     }
-
-
-
-
-
-
-
-
-
-
 }

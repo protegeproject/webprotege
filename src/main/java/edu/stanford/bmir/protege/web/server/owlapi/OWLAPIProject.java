@@ -2,12 +2,14 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
+import com.google.inject.Injector;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
+import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
@@ -17,7 +19,6 @@ import edu.stanford.bmir.protege.web.server.render.EntityIRICheckerImpl;
 import edu.stanford.bmir.protege.web.server.render.NullHighlightedEntityChecker;
 import edu.stanford.bmir.protege.web.server.watches.*;
 import edu.stanford.bmir.protege.web.shared.*;
-import edu.stanford.bmir.protege.web.shared.HasContainsEntityInSignature;
 import edu.stanford.bmir.protege.web.shared.HasDataFactory;
 import edu.stanford.bmir.protege.web.shared.axiom.*;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
@@ -25,9 +26,6 @@ import edu.stanford.bmir.protege.web.shared.object.*;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettings;
-import edu.stanford.bmir.protege.web.server.events.EventLifeTime;
-import edu.stanford.bmir.protege.web.server.events.EventManager;
-import edu.stanford.bmir.protege.web.server.events.HighLevelEventGenerator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
@@ -37,10 +35,10 @@ import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManage
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.*;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
@@ -62,6 +60,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.ParsableOWLOntologyFactory;
 import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOntologyStorer;
 
+import javax.inject.Provider;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -79,7 +78,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 08/03/2012
  */
-public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasApplyChanges, HasLang {
+public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary, HasApplyChanges, HasLang {
 
     static {
         WebProtegeOWLManager.createOWLOntologyManager();
@@ -132,7 +131,14 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     private final ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache;
 
     private String defaultLanguage = "en";
+
     private final ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository;
+
+    private final Provider<EventTranslatorManager> eventTranslatorManagerProvider;
+
+    // This is back to front - the project should be created by the injector.  However, it's like this for legacy
+    // reasons - for now!
+    private final Injector projectInjector;
 
 
     public static OWLAPIProject getProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
@@ -190,7 +196,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         loadProject();
         initialiseProjectMachinery();
-
+        projectInjector = WebProtegeInjector.get().createChildInjector(new ProjectModule(this), new EventTranslatorModule());
+        eventTranslatorManagerProvider = projectInjector.getProvider(EventTranslatorManager.class);
     }
 
 
@@ -268,8 +275,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         WebProtegeLogger logger = appInjector.getInstance(WebProtegeLogger.class);
         watchManager = new WatchManagerImpl(
                 getProjectId(),
-                new WatchStoreImpl(watchFile,
-                getRootOntology().getOWLOntologyManager().getOWLDataFactory(), logger),
+                new WatchStoreImpl(watchFile, getRootOntology().getOWLOntologyManager().getOWLDataFactory(), logger),
                 new WatchIndex(),
                 new IndirectlyWatchedEntitiesFinder(
                         getRootOntology(),
@@ -318,6 +324,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             }
         }
         return false;
+    }
+
+    @Override
+    public RevisionSummary getRevisionSummary(RevisionNumber revisionNumber) {
+        return changeManager.getRevisionSummary(revisionNumber);
     }
 
     private void handleOntologiesChanged(List<? extends OWLOntologyChange> changes) {
@@ -545,21 +556,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 changeSignature.addAll(change.getSignature());
             }
 
-            List<HierarchyChangeComputer<?>> computers = createHierarchyChangeComputers();
-            for (HierarchyChangeComputer<?> computer : computers) {
-                computer.prepareForChanges(minimisedChanges);
-            }
-            BrowserTextChangedEventComputer shortFormChangeComputer = new BrowserTextChangedEventComputer(
-                    new OntologyChangeSubjectProvider(this),
-                    renderingManager.getShortFormProvider(),
-                    this
-            );
-            shortFormChangeComputer.prepareForChanges(minimisedChanges);
-
+            final EventTranslatorManager eventTranslatorManager = eventTranslatorManagerProvider.get();
+            eventTranslatorManager.prepareForOntologyChanges(minimisedChanges);
 
             // Now we do the actual changing, so we lock the project here.  No writes or reads can take place whilst
             // we apply the changes
-            RevisionNumber revisionNumber;
             try {
                 projectChangeWriteLock.lock();
                 appliedChanges = delegateManager.applyChanges(minimisedChanges);
@@ -569,23 +570,16 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 if (!appliedChanges.isEmpty()) {
                     logAppliedChanges(userId, finalResult, changeDescriptionGenerator);
                 }
-                revisionNumber = changeManager.getCurrentRevision();
             } finally {
                 // Release for reads
                 projectChangeWriteLock.unlock();
             }
 
-            WebProtegeInjector.get().getInstance(WebProtegeLogger.class).info(getProjectId(), "%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
+            projectInjector.getInstance(WebProtegeLogger.class).info(getProjectId(), "%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
 
             if (!(changeListGenerator instanceof SilentChangeListGenerator)) {
-                List<ProjectEvent<?>> highLevelEvents = new ArrayList<ProjectEvent<?>>();
-                HighLevelEventGenerator hle = new HighLevelEventGenerator(this, userId, revisionNumber);
-                highLevelEvents.addAll(hle.getHighLevelEvents(appliedChanges, revisionNumber));
-                highLevelEvents.addAll(shortFormChangeComputer.getShortFormChanges(appliedChanges, getProjectId()));
-
-                for (HierarchyChangeComputer<?> computer : computers) {
-                    highLevelEvents.addAll(computer.get(appliedChanges));
-                }
+                List<ProjectEvent<?>> highLevelEvents = new ArrayList<>();
+                eventTranslatorManager.translateOntologyChanges(appliedChanges, highLevelEvents);
                 if (changeListGenerator instanceof HasHighLevelEvents) {
                     highLevelEvents.addAll(((HasHighLevelEvents) changeListGenerator).getHighLevelEvents());
                 }
@@ -598,55 +592,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         return finalResult;
 
 
-    }
-
-    private List<HierarchyChangeComputer<?>> createHierarchyChangeComputers() {
-        List<HierarchyChangeComputer<?>> computers = new ArrayList<HierarchyChangeComputer<?>>();
-        computers.add(new HierarchyChangeComputer<OWLClass>(getProjectId(), EntityType.CLASS, classHierarchyProvider, HierarchyId.CLASS_HIERARCHY) {
-            @Override
-            protected HierarchyChangedEvent<OWLClass, ?> createRemovedEvent(OWLClass child, OWLClass parent) {
-                return new ClassHierarchyParentRemovedEvent(getProjectId(), child, parent, HierarchyId.CLASS_HIERARCHY);
-            }
-
-            @Override
-            protected HierarchyChangedEvent<OWLClass, ?> createAddedEvent(OWLClass child, OWLClass parent) {
-                return new ClassHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.CLASS_HIERARCHY);
-            }
-        });
-        computers.add(new HierarchyChangeComputer<OWLObjectProperty>(getProjectId(), EntityType.OBJECT_PROPERTY, objectPropertyHierarchyProvider, HierarchyId.OBJECT_PROPERTY_HIERARCHY) {
-            @Override
-            protected HierarchyChangedEvent<OWLObjectProperty, ?> createRemovedEvent(OWLObjectProperty child, OWLObjectProperty parent) {
-                return new ObjectPropertyHierarchyParentRemovedEvent(getProjectId(), child, parent, HierarchyId.OBJECT_PROPERTY_HIERARCHY);
-            }
-
-            @Override
-            protected HierarchyChangedEvent<OWLObjectProperty, ?> createAddedEvent(OWLObjectProperty child, OWLObjectProperty parent) {
-                return new ObjectPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.OBJECT_PROPERTY_HIERARCHY);
-            }
-        });
-        computers.add(new HierarchyChangeComputer<OWLDataProperty>(getProjectId(), EntityType.DATA_PROPERTY, dataPropertyHierarchyProvider, HierarchyId.DATA_PROPERTY_HIERARCHY) {
-            @Override
-            protected HierarchyChangedEvent<OWLDataProperty, ?> createRemovedEvent(OWLDataProperty child, OWLDataProperty parent) {
-                return new DataPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.DATA_PROPERTY_HIERARCHY);
-            }
-
-            @Override
-            protected HierarchyChangedEvent<OWLDataProperty, ?> createAddedEvent(OWLDataProperty child, OWLDataProperty parent) {
-                return new DataPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.DATA_PROPERTY_HIERARCHY);
-            }
-        });
-        computers.add(new HierarchyChangeComputer<OWLAnnotationProperty>(getProjectId(), EntityType.ANNOTATION_PROPERTY, annotationPropertyHierarchyProvider, HierarchyId.ANNOTATION_PROPERTY_HIERARCHY) {
-            @Override
-            protected HierarchyChangedEvent<OWLAnnotationProperty, ?> createRemovedEvent(OWLAnnotationProperty child, OWLAnnotationProperty parent) {
-                return new AnnotationPropertyHierarchyParentRemovedEvent(getProjectId(), child, parent, HierarchyId.ANNOTATION_PROPERTY_HIERARCHY);
-            }
-
-            @Override
-            protected HierarchyChangedEvent<OWLAnnotationProperty, ?> createAddedEvent(OWLAnnotationProperty child, OWLAnnotationProperty parent) {
-                return new AnnotationPropertyHierarchyParentAddedEvent(getProjectId(), child, parent, HierarchyId.ANNOTATION_PROPERTY_HIERARCHY);
-            }
-        });
-        return computers;
     }
 
     private List<OWLOntologyChange> getMinimisedChanges(List<OWLOntologyChange> allChangesIncludingRenames) {
@@ -773,6 +718,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     public Set<OWLEntity> getEntitiesWithIRI(IRI iri) {
         return getRootOntology().getEntitiesInSignature(iri, true);
     }
+
+    @Override
+    public Set<OWLEntity> getEntitiesInSignature(IRI entityIRI) {
+        return getRootOntology().getEntitiesInSignature(entityIRI, true);
+    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -861,4 +811,5 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         projectAccessManager.dispose();
 
     }
+
 }
