@@ -3,15 +3,14 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Injector;
-import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.crud.*;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
 import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
-import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.EntitiesByRevisionCache;
+import edu.stanford.bmir.protege.web.server.owlapi.change.ProjectChangesManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.WatchedChangesManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
@@ -63,7 +62,6 @@ import uk.ac.manchester.cs.owl.owlapi.ParsableOWLOntologyFactory;
 import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOntologyStorer;
 
 import javax.inject.Provider;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -113,6 +111,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     private OWLAPINotesManager notesManager;
 
     private OWLAPIChangeManager changeManager;
+
+    private ProjectChangesManager projectChangesManager;
 
     private WatchedChangesManager watchedChangesManager;
 
@@ -267,15 +267,28 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         annotationPropertyHierarchyProvider = new OWLAnnotationPropertyHierarchyProvider(getRootOntology(), getDataFactory());
 
+        EntitiesByRevisionCache entitiesByRevisionCache = new EntitiesByRevisionCache(getAxiomSubjectProvider(), this, getDataFactory());
+
+        projectChangesManager = new ProjectChangesManager(
+                changeManager,
+                entitiesByRevisionCache,
+                ontology,
+                renderingManager,
+                renderingManager,
+                getAxiomComparator(),
+                getOWLObjectComparator()
+        );
+
 
         watchedChangesManager = new WatchedChangesManager(
+                projectChangesManager,
                 classHierarchyProvider,
                 objectPropertyHierarchyProvider,
                 dataPropertyHierarchyProvider,
                 annotationPropertyHierarchyProvider,
                 ontology,
                 changeManager,
-                new EntitiesByRevisionCache(getAxiomSubjectProvider(), this, getDataFactory()));
+                entitiesByRevisionCache);
 
 
         WebProtegeInjector appInjector = WebProtegeInjector.get();
@@ -346,6 +359,10 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     public OWLAPIChangeManager getChangeManager() {
         return changeManager;
+    }
+
+    public ProjectChangesManager getProjectChangesManager() {
+        return projectChangesManager;
     }
 
     public WatchedChangesManager getWatchedChangesManager() {
