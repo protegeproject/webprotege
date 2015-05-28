@@ -1,5 +1,9 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
+import com.google.common.base.*;
+import static com.google.common.base.Objects.*;
+
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.change.*;
@@ -18,30 +22,22 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<Revision> {
 
 
-    private UserId userId;
+    private final UserId userId;
 
-    private RevisionNumber revision;
+    private final RevisionNumber revisionNumber;
 
     private long timestamp;
 
-    private OWLOntologyChangeRecordList changes;
+    private final OWLOntologyChangeRecordList changes;
 
-    private String highLevelDescription;
+    private final String highLevelDescription;
 
-    public Revision(UserId userId, RevisionNumber revision, List<OWLOntologyChangeRecord> changes, long timestamp, String highLevelDescription) {
-        this.changes = checkNotNull(new OWLOntologyChangeRecordList(changes));
+    public Revision(UserId userId, RevisionNumber revisionNumber, OWLOntologyChangeRecordList changes, long timestamp, String highLevelDescription) {
+        this.changes = checkNotNull(changes);
         this.userId = checkNotNull(userId);
-        this.revision = checkNotNull(revision);
+        this.revisionNumber = checkNotNull(revisionNumber);
         this.timestamp = timestamp;
         this.highLevelDescription = checkNotNull(highLevelDescription);
-    }
-
-    public Revision(RevisionNumber revision) {
-        this.userId = UserId.getGuest();
-        this.revision = revision;
-        this.timestamp = 0;
-        this.changes = new OWLOntologyChangeRecordList();
-        this.highLevelDescription = "";
     }
 
     public int getSize() {
@@ -49,7 +45,7 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
     }
 
     public static Revision createEmptyRevisionWithRevisionNumber(RevisionNumber revision) {
-        return new Revision(revision);
+        return new Revision(UserId.getGuest(), revision, new OWLOntologyChangeRecordList(Collections.<OWLOntologyChangeRecord>emptyList()), 0l, "");
     }
 
     public long getTimestamp() {
@@ -61,11 +57,11 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
     }
 
     public RevisionNumber getRevisionNumber() {
-        return revision;
+        return revisionNumber;
     }
 
     public int compareTo(Revision o) {
-        return this.revision.compareTo(o.revision);
+        return this.revisionNumber.compareTo(o.revisionNumber);
     }
 
     public String getHighLevelDescription() {
@@ -76,17 +72,36 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
         return changes.iterator();
     }
 
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(highLevelDescription);
-        sb.append("\n");
-        for (OWLOntologyChangeRecord change : changes) {
-            sb.append(change);
-            sb.append("\n");
-        }
-        return sb.toString();
+        return toStringHelper("Revision")
+                .addValue(revisionNumber)
+                .addValue(userId)
+                .add("timestamp", timestamp)
+                .add("description", highLevelDescription)
+                .addValue(changes)
+                .toString();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Revision)) {
+            return false;
+        }
+        Revision other = (Revision) obj;
+        return this.userId.equals(other.userId)
+                && this.revisionNumber.equals(other.revisionNumber)
+                && this.timestamp == other.timestamp
+                && this.highLevelDescription.equals(other.highLevelDescription)
+                && this.changes.equals(other.changes);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(userId, revisionNumber, timestamp, highLevelDescription, changes);
+    }
 }
