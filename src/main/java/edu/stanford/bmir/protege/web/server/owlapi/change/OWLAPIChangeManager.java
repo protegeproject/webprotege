@@ -106,7 +106,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
                     final UserId userId = UserId.getUserId(userName);
                     final List<OWLOntologyChangeRecord> changeRecords = internChangeRecords(list, axiomInterner);
 
-                    Revision revision = new Revision(userId, revisionNumber, changeRecords, list.getTimestamp(), description);
+                    Revision revision = new Revision(userId, revisionNumber, new OWLOntologyChangeRecordList(changeRecords), list.getTimestamp(), description);
                     addRevision(revision);
                 }
             }, SkipSetting.SKIP_NONE);
@@ -288,7 +288,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
             for (OWLOntologyChange change : changes) {
                 records.add(change.getChangeRecord());
             }
-            final Revision revision = new Revision(userId, revisionNumber, records, timestamp, highlevelDescription);
+            final Revision revision = new Revision(userId, revisionNumber, new OWLOntologyChangeRecordList(records), timestamp, highlevelDescription);
             addRevision(revision);
 
             persistChanges(timestamp, revisionNumber, revisionType, userId, changes, highlevelDescription, immediately);
