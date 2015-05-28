@@ -1,15 +1,8 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableSet;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.axiom.AxiomSubjectProvider;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.change.*;
-import org.semanticweb.owlapi.model.*;
 
 
 import java.util.*;
@@ -25,8 +18,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<Revision> {
 
 
-    private static final int DESCRIPTION_MAX_CHANGE_COUNT = 20;
-
     private UserId userId;
 
     private RevisionNumber revision;
@@ -37,17 +28,12 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
 
     private String highLevelDescription;
 
-    private RevisionType revisionType;
-
-    private ImmutableSet<OWLEntity> cachedEntities = null;
-
-    public Revision(UserId userId, RevisionNumber revision, List<OWLOntologyChangeRecord> changes, long timestamp, String highLevelDescription, RevisionType revisionType) {
+    public Revision(UserId userId, RevisionNumber revision, List<OWLOntologyChangeRecord> changes, long timestamp, String highLevelDescription) {
         this.changes = checkNotNull(new OWLOntologyChangeRecordList(changes));
         this.userId = checkNotNull(userId);
         this.revision = checkNotNull(revision);
         this.timestamp = timestamp;
         this.highLevelDescription = checkNotNull(highLevelDescription);
-        this.revisionType = checkNotNull(revisionType);
     }
 
     public Revision(RevisionNumber revision) {
@@ -56,7 +42,6 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
         this.timestamp = 0;
         this.changes = new OWLOntologyChangeRecordList();
         this.highLevelDescription = "";
-        this.revisionType = RevisionType.EDIT;
     }
 
     public int getSize() {
@@ -65,12 +50,6 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
 
     public static Revision createEmptyRevisionWithRevisionNumber(RevisionNumber revision) {
         return new Revision(revision);
-    }
-
-    public static Revision createEmptyRevisionWithTimestamp(long timestamp) {
-        Revision revision = new Revision(RevisionNumber.getRevisionNumber(0));
-        revision.timestamp = timestamp;
-        return revision;
     }
 
     public long getTimestamp() {
@@ -83,10 +62,6 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
 
     public RevisionNumber getRevisionNumber() {
         return revision;
-    }
-
-    public RevisionType getRevisionType() {
-        return revisionType;
     }
 
     public int compareTo(Revision o) {
@@ -113,21 +88,5 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
         return sb.toString();
     }
 
-
-
-    public static class RevisionTimeStampComparator implements Comparator<Revision> {
-
-        public int compare(Revision o1, Revision o2) {
-            if (o1.timestamp < o2.timestamp) {
-                return -1;
-            }
-            else if (o1.timestamp == o2.timestamp) {
-                return 0;
-            }
-            else {
-                return 1;
-            }
-        }
-    }
 
 }
