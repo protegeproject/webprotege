@@ -36,7 +36,7 @@ public class GetWatchedEntityChangesActionHandler extends AbstractHasProjectActi
     @Override
     protected GetWatchedEntityChangesResult execute(GetWatchedEntityChangesAction action, OWLAPIProject project, ExecutionContext executionContext) {
         Set<Watch<?>> watches = project.getWatchManager().getWatches(action.getUserId());
-        ImmutableList<ProjectChange> changes = project.getChangeManager().getProjectChangesForWatches(watches);
+        ImmutableList<ProjectChange> changes = project.getWatchedChangesManager().getProjectChangesForWatches(watches);
         return new GetWatchedEntityChangesResult(changes);
     }
 

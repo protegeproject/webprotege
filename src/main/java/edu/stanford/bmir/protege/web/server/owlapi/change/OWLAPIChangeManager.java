@@ -27,9 +27,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
-import edu.stanford.bmir.protege.web.shared.watches.HierarchyBranchWatch;
-import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.binaryowl.BinaryOWLChangeLogHandler;
 import org.semanticweb.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.binaryowl.BinaryOWLOntologyChangeLog;
@@ -434,76 +431,8 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
         }
     }
 
-    private Set<OWLEntity> getWatchedEntities(Set<OWLEntity> superEntities, Set<OWLEntity> directWatches, Revision revision) {
-        Set<OWLEntity> watchedEntities = new HashSet<>();
-        Set<OWLEntity> entities = entitiesByRevisionCache.getEntities(revision);
-        for (OWLEntity entity : entities) {
-            if (directWatches.contains(entity)) {
-                watchedEntities.add(entity);
-            }
-            else {
-                boolean watchedByAncestor = isWatchedByAncestor(superEntities, entity);
-                if (watchedByAncestor) {
-                    watchedEntities.add(entity);
-                }
-            }
-        }
-        return watchedEntities;
-    }
-
-
-    private Boolean isWatchedByAncestor(final Set<OWLEntity> watchedAncestors, OWLEntity entity) {
-        return entity.accept(new OWLEntityVisitorEx<Boolean>() {
-            @Override
-            public Boolean visit(OWLClass cls) {
-                final Set<? extends OWLEntity> ancestors = project.getClassHierarchyProvider().getAncestors(cls);
-                return isWatchedByAncestor(ancestors);
-            }
-
-
-            @Override
-            public Boolean visit(OWLObjectProperty property) {
-                return isWatchedByAncestor(project.getObjectPropertyHierarchyProvider().getAncestors(property));
-            }
-
-            @Override
-            public Boolean visit(OWLDataProperty property) {
-                return isWatchedByAncestor(project.getDataPropertyHierarchyProvider().getAncestors(property));
-            }
-
-            @Override
-            public Boolean visit(OWLNamedIndividual individual) {
-                final Set<OWLClassExpression> types = individual.getTypes(rootOntology.getImportsClosure());
-                for (OWLClassExpression ce : types) {
-                    if (!ce.isAnonymous()) {
-                        if (isWatchedByAncestor(project.getClassHierarchyProvider().getAncestors(ce.asOWLClass()))) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            public Boolean visit(OWLDatatype datatype) {
-                return false;
-            }
-
-            @Override
-            public Boolean visit(OWLAnnotationProperty property) {
-                return isWatchedByAncestor(project.getAnnotationPropertyHierarchyProvider().getAncestors(property));
-            }
-
-            private Boolean isWatchedByAncestor(Set<? extends OWLEntity> ancestors) {
-                for (OWLEntity anc : ancestors) {
-                    if (watchedAncestors.contains(anc)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-        });
+    public List<Revision> getRevisions() {
+        return getRevisionsCopy();
     }
 
     private List<Revision> getRevisionsCopy() {
@@ -571,6 +500,12 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
             getProjectChangesForRevision(revision, subject, changes);
         }
         return changes.build();
+    }
+
+    public ImmutableList<ProjectChange> getProjectChangesForSubjectInRevision(OWLEntity subject, Revision revision) {
+        ImmutableList.Builder<ProjectChange> resultBuilder = ImmutableList.builder();
+        getProjectChangesForRevision(revision, Optional.of(subject), resultBuilder);
+        return resultBuilder.build();
     }
 
     private void getProjectChangesForRevision(Revision revision, Optional<OWLEntity> subject, ImmutableList.Builder<ProjectChange> changesBuilder) {
@@ -660,31 +595,4 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
         });
     }
 
-
-    public ImmutableList<ProjectChange> getProjectChangesForWatches(Set<Watch<?>> watches) {
-        Set<OWLEntity> superEntities = new HashSet<>();
-        Set<OWLEntity> directWatches = new HashSet<>();
-        for (Watch<?> watch : watches) {
-            if (watch instanceof HierarchyBranchWatch) {
-                OWLEntity entity = ((HierarchyBranchWatch) watch).getEntity();
-                superEntities.add(entity);
-                directWatches.add(entity);
-            }
-            if (watch instanceof EntityFrameWatch) {
-                directWatches.add(((EntityFrameWatch) watch).getEntity());
-            }
-        }
-        if (superEntities.isEmpty() && directWatches.isEmpty()) {
-            return ImmutableList.of();
-        }
-        ImmutableList.Builder<ProjectChange> result = ImmutableList.builder();
-        List<Revision> revisionsCopy = getRevisionsCopy();
-        for (Revision revision : revisionsCopy) {
-            for (OWLEntity watchedEntity : getWatchedEntities(superEntities, directWatches, revision)) {
-                getProjectChangesForRevision(revision, Optional.of(watchedEntity), result);
-            }
-
-        }
-        return result.build();
-    }
 }
