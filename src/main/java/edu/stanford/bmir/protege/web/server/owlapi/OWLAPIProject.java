@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
+import edu.stanford.bmir.protege.web.server.owlapi.change.EntitiesByRevisionCache;
+import edu.stanford.bmir.protege.web.server.owlapi.change.WatchedChangesManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
@@ -111,6 +113,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     private OWLAPINotesManager notesManager;
 
     private OWLAPIChangeManager changeManager;
+
+    private WatchedChangesManager watchedChangesManager;
 
     final private OWLOntologyManager delegateManager;
 
@@ -263,6 +267,17 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         annotationPropertyHierarchyProvider = new OWLAnnotationPropertyHierarchyProvider(getRootOntology(), getDataFactory());
 
+
+        watchedChangesManager = new WatchedChangesManager(
+                classHierarchyProvider,
+                objectPropertyHierarchyProvider,
+                dataPropertyHierarchyProvider,
+                annotationPropertyHierarchyProvider,
+                ontology,
+                changeManager,
+                new EntitiesByRevisionCache(getAxiomSubjectProvider(), this, getDataFactory()));
+
+
         WebProtegeInjector appInjector = WebProtegeInjector.get();
         metricsManager = new OWLAPIProjectMetricsManager(
                 getProjectId(),
@@ -331,6 +346,10 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     public OWLAPIChangeManager getChangeManager() {
         return changeManager;
+    }
+
+    public WatchedChangesManager getWatchedChangesManager() {
+        return watchedChangesManager;
     }
 
     public AssertedClassHierarchyProvider getClassHierarchyProvider() {
