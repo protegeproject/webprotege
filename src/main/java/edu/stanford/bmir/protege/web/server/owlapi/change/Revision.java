@@ -93,13 +93,8 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
         return this.revision.compareTo(o.revision);
     }
 
-    public String getHighLevelDescription(final OWLAPIProject project, OWLEntity entity) {
+    public String getHighLevelDescription() {
         return highLevelDescription != null ? highLevelDescription : "";
-    }
-
-
-    public String getHighLevelDescription(final OWLAPIProject project) {
-        return getHighLevelDescription(project, null);
     }
 
     public Iterator<OWLOntologyChangeRecord> iterator() {

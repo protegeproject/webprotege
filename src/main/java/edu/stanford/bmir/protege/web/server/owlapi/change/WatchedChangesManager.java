@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.owlapi.change;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
@@ -34,9 +33,12 @@ public class WatchedChangesManager {
 
     private final OWLAPIChangeManager changeManager;
 
+    private final ProjectChangesManager projectChangesManager;
+
     private final EntitiesByRevisionCache entitiesByRevisionCache;
 
-    public WatchedChangesManager(OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider, OWLObjectHierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider, OWLObjectHierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider, OWLObjectHierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider, HasImportsClosure rootOntologyImportsClosureProvider, OWLAPIChangeManager changeManager, EntitiesByRevisionCache entitiesByRevisionCache) {
+    public WatchedChangesManager(ProjectChangesManager projectChangesManager, OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider, OWLObjectHierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider, OWLObjectHierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider, OWLObjectHierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider, HasImportsClosure rootOntologyImportsClosureProvider, OWLAPIChangeManager changeManager, EntitiesByRevisionCache entitiesByRevisionCache) {
+        this.projectChangesManager = checkNotNull(projectChangesManager);
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
         this.objectPropertyHierarchyProvider = checkNotNull(objectPropertyHierarchyProvider);
         this.dataPropertyHierarchyProvider = checkNotNull(dataPropertyHierarchyProvider);
@@ -66,7 +68,7 @@ public class WatchedChangesManager {
         List<Revision> revisionsCopy = changeManager.getRevisions();
         for (Revision revision : revisionsCopy) {
             for (OWLEntity watchedEntity : getWatchedEntities(superEntities, directWatches, revision)) {
-                ImmutableList<ProjectChange> changes = changeManager.getProjectChangesForSubjectInRevision(watchedEntity, revision);
+                ImmutableList<ProjectChange> changes = projectChangesManager.getProjectChangesForSubjectInRevision(watchedEntity, revision);
                 result.addAll(changes);
             }
         }

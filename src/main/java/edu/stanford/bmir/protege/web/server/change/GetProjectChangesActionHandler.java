@@ -41,8 +41,7 @@ public class GetProjectChangesActionHandler extends AbstractHasProjectActionHand
 
     @Override
     protected GetProjectChangesResult execute(final GetProjectChangesAction action, final OWLAPIProject project, ExecutionContext executionContext) {
-
-        List<ProjectChange> changeList = project.getChangeManager().getProjectChanges(action.getSubject());
+        List<ProjectChange> changeList = project.getProjectChangesManager().getProjectChanges(action.getSubject());
         return new GetProjectChangesResult(ImmutableList.copyOf(changeList));
     }
 }
