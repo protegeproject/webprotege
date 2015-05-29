@@ -31,13 +31,13 @@ public class WatchedChangesManager {
 
     private final HasImportsClosure rootOntologyImportsClosureProvider;
 
-    private final OWLAPIChangeManager changeManager;
+    private final RevisionManager changeManager;
 
     private final ProjectChangesManager projectChangesManager;
 
     private final EntitiesByRevisionCache entitiesByRevisionCache;
 
-    public WatchedChangesManager(ProjectChangesManager projectChangesManager, OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider, OWLObjectHierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider, OWLObjectHierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider, OWLObjectHierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider, HasImportsClosure rootOntologyImportsClosureProvider, OWLAPIChangeManager changeManager, EntitiesByRevisionCache entitiesByRevisionCache) {
+    public WatchedChangesManager(ProjectChangesManager projectChangesManager, OWLObjectHierarchyProvider<OWLClass> classHierarchyProvider, OWLObjectHierarchyProvider<OWLObjectProperty> objectPropertyHierarchyProvider, OWLObjectHierarchyProvider<OWLDataProperty> dataPropertyHierarchyProvider, OWLObjectHierarchyProvider<OWLAnnotationProperty> annotationPropertyHierarchyProvider, HasImportsClosure rootOntologyImportsClosureProvider, RevisionManager changeManager, EntitiesByRevisionCache entitiesByRevisionCache) {
         this.projectChangesManager = checkNotNull(projectChangesManager);
         this.classHierarchyProvider = checkNotNull(classHierarchyProvider);
         this.objectPropertyHierarchyProvider = checkNotNull(objectPropertyHierarchyProvider);

@@ -14,7 +14,6 @@ import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShort
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.Filter;
-import edu.stanford.bmir.protege.web.shared.HasBrowserText;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomIRISubjectProvider;
 import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
@@ -36,7 +35,7 @@ import java.util.List;
  */
 public class ProjectChangesManager {
 
-    private final OWLAPIChangeManager changeManager;
+    private final RevisionManager changeManager;
 
     private final EntitiesByRevisionCache entitiesByRevisionCache;
 
@@ -50,7 +49,7 @@ public class ProjectChangesManager {
 
     private final Comparator<? super OWLAnnotation> annotationComparator;
 
-    public ProjectChangesManager(OWLAPIChangeManager changeManager, EntitiesByRevisionCache entitiesByRevisionCache, OWLOntology rootOntology, BrowserTextProvider browserTextProvider, HasHtmlBrowserText hmlBrowserTextProvider, Comparator<OWLAxiom> axiomComparator, Comparator<? super OWLAnnotation> annotationComparator) {
+    public ProjectChangesManager(RevisionManager changeManager, EntitiesByRevisionCache entitiesByRevisionCache, OWLOntology rootOntology, BrowserTextProvider browserTextProvider, HasHtmlBrowserText hmlBrowserTextProvider, Comparator<OWLAxiom> axiomComparator, Comparator<? super OWLAnnotation> annotationComparator) {
         this.changeManager = changeManager;
         this.entitiesByRevisionCache = entitiesByRevisionCache;
         this.rootOntology = rootOntology;

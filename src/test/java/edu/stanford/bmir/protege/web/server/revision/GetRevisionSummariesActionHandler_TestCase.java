@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.revision;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
+import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesResult;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
@@ -40,7 +40,7 @@ public class GetRevisionSummariesActionHandler_TestCase {
     private ExecutionContext executionContext;
 
     @Mock
-    private OWLAPIChangeManager changeManager;
+    private RevisionManager changeManager;
 
     private List<RevisionSummary> revisionSummaries;
 
