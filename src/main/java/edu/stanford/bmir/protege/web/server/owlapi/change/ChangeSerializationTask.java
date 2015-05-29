@@ -47,10 +47,10 @@ public class ChangeSerializationTask implements Callable<Integer> {
 
     public Integer call() throws IOException {
         BinaryOWLMetadata metadata = new BinaryOWLMetadata();
-        metadata.setStringAttribute(OWLAPIChangeManager.USERNAME_METADATA_ATTRIBUTE, userId.getUserName());
-        metadata.setLongAttribute(OWLAPIChangeManager.REVISION_META_DATA_ATTRIBUTE, revisionNumber.getValue());
-        metadata.setStringAttribute(OWLAPIChangeManager.DESCRIPTION_META_DATA_ATTRIBUTE, highlevelDescription);
-        metadata.setStringAttribute(OWLAPIChangeManager.REVISION_TYPE_META_DATA_ATTRIBUTE, type.name());
+        metadata.setStringAttribute(RevisionManager.USERNAME_METADATA_ATTRIBUTE, userId.getUserName());
+        metadata.setLongAttribute(RevisionManager.REVISION_META_DATA_ATTRIBUTE, revisionNumber.getValue());
+        metadata.setStringAttribute(RevisionManager.DESCRIPTION_META_DATA_ATTRIBUTE, highlevelDescription);
+        metadata.setStringAttribute(RevisionManager.REVISION_TYPE_META_DATA_ATTRIBUTE, type.name());
         BinaryOWLOntologyChangeLog changeLog = new BinaryOWLOntologyChangeLog();
         changeLog.appendChanges(Collections.unmodifiableList(changes), timestamp, metadata, file);
         return 0;

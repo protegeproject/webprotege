@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.owlapi.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
-import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
+import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -41,7 +39,7 @@ public class RevisionReverterChangeListGenerator implements ChangeListGenerator<
 
     @Override
     public OntologyChangeList<OWLEntity> generateChanges(OWLAPIProject project, ChangeGenerationContext context) {
-        OWLAPIChangeManager changeManager = project.getChangeManager();
+        RevisionManager changeManager = project.getChangeManager();
         Optional<Revision> revision = changeManager.getRevision(revisionNumber);
         if(!revision.isPresent()) {
             return OntologyChangeList.<OWLEntity>builder().build();

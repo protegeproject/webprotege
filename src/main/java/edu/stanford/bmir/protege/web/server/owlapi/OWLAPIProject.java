@@ -30,7 +30,7 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
+import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.server.metrics.OWLAPIProjectMetricsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -110,7 +110,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private OWLAPINotesManager notesManager;
 
-    private OWLAPIChangeManager changeManager;
+    private RevisionManager changeManager;
 
     private ProjectChangesManager projectChangesManager;
 
@@ -252,7 +252,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         searchManager = new OWLAPISearchManager(renderingManager, renderingManager.getShortFormProvider());
 
-        changeManager = new OWLAPIChangeManager(this, ontology);
+        changeManager = new RevisionManager(this, ontology);
 
         notesManager = new OWLAPINotesManagerNotesAPIImpl(this);
 
@@ -357,7 +357,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         return watchManager;
     }
 
-    public OWLAPIChangeManager getChangeManager() {
+    public RevisionManager getChangeManager() {
         return changeManager;
     }
 

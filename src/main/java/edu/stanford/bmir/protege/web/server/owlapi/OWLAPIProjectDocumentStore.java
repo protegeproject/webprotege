@@ -15,7 +15,7 @@ import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
 import edu.stanford.bmir.protege.web.server.filedownload.DownloadFormat;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.owlapi.change.OWLAPIChangeManager;
+import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
@@ -399,7 +399,7 @@ public class OWLAPIProjectDocumentStore {
                 downloadCacheDirectory.mkdirs();
                 // Create
                 OWLAPIProject project = projectManager.getProject(projectId);
-                OWLAPIChangeManager changeManager = project.getChangeManager();
+                RevisionManager changeManager = project.getChangeManager();
                 RevisionNumber currentRevisionNumber = changeManager.getCurrentRevision();
 
                 BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(cachedFile));
@@ -425,7 +425,7 @@ public class OWLAPIProjectDocumentStore {
 
     private OWLOntologyManager getOntologyManagerForRevision(RevisionNumber revision) {
         OWLAPIProject project = projectManager.getProject(projectId);
-        OWLAPIChangeManager changeManager = project.getChangeManager();
+        RevisionManager changeManager = project.getChangeManager();
         return changeManager.getOntologyManagerForRevision(revision);
     }
 

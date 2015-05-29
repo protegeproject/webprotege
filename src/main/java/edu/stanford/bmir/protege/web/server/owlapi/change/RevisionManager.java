@@ -35,7 +35,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/04/2012
  */
-public class OWLAPIChangeManager implements HasGetRevisionSummary {
+public class RevisionManager implements HasGetRevisionSummary {
 
     private final WebProtegeLogger logger;
 
@@ -67,7 +67,7 @@ public class OWLAPIChangeManager implements HasGetRevisionSummary {
 
     private final ProjectId projectId;
 
-    public OWLAPIChangeManager(OWLAPIProject project, OWLOntology rootOntology) {
+    public RevisionManager(OWLAPIProject project, OWLOntology rootOntology) {
         this.dataFactory = project.getDataFactory();
         this.rootOntology = rootOntology;
         this.projectId = project.getProjectId();
