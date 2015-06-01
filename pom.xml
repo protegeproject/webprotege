@@ -193,7 +193,7 @@
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>binaryowl</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.4</version>
         </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
