@@ -39,6 +39,11 @@ public class OWLAPIProjectOWLOntologyManager implements OWLOntologyManager {
         this.delegate = delegate;
     }
 
+    // Package private
+    OWLOntologyManager getDelegate() {
+        return delegate;
+    }
+
     public void sealDelegate() {
         sealed = true;
     }
