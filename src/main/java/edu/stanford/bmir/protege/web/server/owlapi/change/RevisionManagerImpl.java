@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -39,6 +40,7 @@ public class RevisionManagerImpl implements RevisionManager {
 
     private final RevisionStore revisionStore;
 
+    @Inject
     public RevisionManagerImpl(RevisionStore revisionStore) {
         this.revisionStore = checkNotNull(revisionStore);
     }
