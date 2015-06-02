@@ -25,6 +25,7 @@ import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 
+import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -61,6 +62,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
 
     private final WebProtegeLogger logger;
 
+    @Inject
     public RenderingManager(OWLOntology rootOnt,
                             OWLDataFactory dataFactory,
                             EntityIRIChecker entityIRIChecker,
