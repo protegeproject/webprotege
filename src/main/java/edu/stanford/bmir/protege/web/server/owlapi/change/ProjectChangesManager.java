@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.server.change.ChangeRecordComparator;
 import edu.stanford.bmir.protege.web.server.diff.DiffElementRenderer;
 import edu.stanford.bmir.protege.web.server.diff.Revision2DiffElementsTranslator;
 import edu.stanford.bmir.protege.web.server.diff.SameSubjectFilter;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.pagination.Pager;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
@@ -23,6 +24,7 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,7 +51,14 @@ public class ProjectChangesManager {
 
     private final Comparator<? super OWLAnnotation> annotationComparator;
 
-    public ProjectChangesManager(RevisionManager changeManager, EntitiesByRevisionCache entitiesByRevisionCache, OWLOntology rootOntology, BrowserTextProvider browserTextProvider, HasHtmlBrowserText hmlBrowserTextProvider, Comparator<OWLAxiom> axiomComparator, Comparator<? super OWLAnnotation> annotationComparator) {
+    @Inject
+    public ProjectChangesManager(RevisionManager changeManager,
+                                 EntitiesByRevisionCache entitiesByRevisionCache,
+                                 @RootOntology OWLOntology rootOntology,
+                                 BrowserTextProvider browserTextProvider,
+                                 HasHtmlBrowserText hmlBrowserTextProvider,
+                                 Comparator<OWLAxiom> axiomComparator,
+                                 Comparator<? super OWLAnnotation> annotationComparator) {
         this.changeManager = changeManager;
         this.entitiesByRevisionCache = entitiesByRevisionCache;
         this.rootOntology = rootOntology;
