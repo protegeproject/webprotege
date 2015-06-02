@@ -10,10 +10,13 @@ import edu.stanford.bmir.protege.web.shared.event.UserStoppedViewingProjectEvent
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,8 +27,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class ProjectAccessManager implements HasDispose {
 
     public static final int PURGE_PERIOD = 60000;
-
-//    private OWLAPIProject project;
 
     private ProjectId projectId;
 
@@ -44,9 +45,10 @@ public class ProjectAccessManager implements HasDispose {
 
     private final WebProtegeLogger logger;
 
+    @Inject
     public ProjectAccessManager(ProjectId projectId, HasPostEvents<ProjectEvent<?>> postEvents) {
-        this.projectId = projectId;
-        this.postEvents = postEvents;
+        this.projectId = checkNotNull(projectId);
+        this.postEvents = checkNotNull(postEvents);
         this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         purgeTimer.schedule(new TimerTask() {
             @Override
@@ -83,7 +85,7 @@ public class ProjectAccessManager implements HasDispose {
             final long currentTime = System.currentTimeMillis();
             writeLock.lock();
             int currentUserCount = userIdAccessTimeMap.size();
-            for(UserId userId : new ArrayList<UserId>(userIdAccessTimeMap.keySet())) {
+            for(UserId userId : new ArrayList<>(userIdAccessTimeMap.keySet())) {
                 Long timeStamp = userIdAccessTimeMap.get(userId);
                 if(currentTime - timeStamp > PURGE_PERIOD) {
                     userIdAccessTimeMap.remove(userId);
