@@ -28,6 +28,7 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -67,6 +68,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     
     private File notesOntologyDocument;
 
+    @Inject
     public OWLAPINotesManagerNotesAPIImpl(ProjectId projectId, OWLDataFactory dataFactory, HasPostEvents<ProjectEvent<?>> eventManager, BrowserTextProvider browserTextProvider, WebProtegeLogger logger) {
         this.logger = logger;
         this.projectId = projectId;
