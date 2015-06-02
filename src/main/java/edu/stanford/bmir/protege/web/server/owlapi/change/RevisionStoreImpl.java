@@ -5,6 +5,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
+import edu.stanford.bmir.protege.web.server.inject.project.ChangeHistoryFile;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -18,6 +19,7 @@ import org.semanticweb.binaryowl.chunk.SkipSetting;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
 
+import javax.inject.Inject;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,7 +64,11 @@ public class RevisionStoreImpl implements RevisionStore {
 
     private final WebProtegeLogger logger;
 
-    public RevisionStoreImpl(ProjectId projectId, OWLDataFactory dataFactory, File changeHistoryFile, WebProtegeLogger logger) {
+    @Inject
+    public RevisionStoreImpl(ProjectId projectId,
+                             OWLDataFactory dataFactory,
+                             @ChangeHistoryFile File changeHistoryFile,
+                             WebProtegeLogger logger) {
         this.projectId = checkNotNull(projectId);
         this.dataFactory = checkNotNull(dataFactory);
         this.changeHistoryFile = checkNotNull(changeHistoryFile);
