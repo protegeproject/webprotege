@@ -114,8 +114,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private WatchedChangesManager watchedChangesManager;
 
-    final private OWLOntologyManager delegateManager;
-
     private OWLAPIProjectMetricsManager metricsManager;
 
     private WatchManager watchManager;
@@ -162,7 +160,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         OWLDataFactory df = new OWLDataFactoryImpl(useCachingInDataFactory, useCompressionInDataFactory);
 
         // The delegate - we use the concurrent ontology manager
-        delegateManager = new ProtegeOWLOntologyManager(df);
+        OWLOntologyManager delegateManager = new ProtegeOWLOntologyManager(df);
         // We only support the binary format for speed
         delegateManager.addOntologyStorer(new BinaryOWLOntologyDocumentStorer());
         delegateManager.addOntologyStorer(new RDFXMLOntologyStorer());
@@ -212,8 +210,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             if (!documentStore.exists()) {
                 throw new ProjectDocumentNotFoundException(documentStore.getProjectId());
             }
-            ontology = documentStore.loadRootOntologyIntoManager(delegateManager);
-            delegateManager.addOntologyChangeListener(new OWLOntologyChangeListener() {
+            ontology = documentStore.loadRootOntologyIntoManager(manager.getDelegate());
+            manager.addOntologyChangeListener(new OWLOntologyChangeListener() {
                 public void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws OWLException {
                     handleOntologiesChanged(changes);
                 }
@@ -589,7 +587,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             // we apply the changes
             try {
                 projectChangeWriteLock.lock();
-                appliedChanges = delegateManager.applyChanges(minimisedChanges);
+                appliedChanges = manager.getDelegate().applyChanges(minimisedChanges);
                 final RenameMap renameMap = new RenameMap(iriRenameMap);
                 Optional<R> renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
                 finalResult = new ChangeApplicationResult<R>(renamedResult, appliedChanges, renameMap);
