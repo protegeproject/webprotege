@@ -2,12 +2,14 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ListMultimap;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeProperties;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.owlapi.change.*;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -15,7 +17,6 @@ import edu.stanford.bmir.protege.web.server.IdUtil;
 import edu.stanford.bmir.protege.web.server.ProjectIdFactory;
 import edu.stanford.bmir.protege.web.server.filedownload.DownloadFormat;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
@@ -25,8 +26,7 @@ import org.semanticweb.binaryowl.BinaryOWLMetadata;
 import org.semanticweb.binaryowl.BinaryOWLOntologyDocumentSerializer;
 import org.semanticweb.binaryowl.change.OntologyChangeDataList;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentFormat;
-import org.semanticweb.owlapi.change.OWLOntologyChangeData;
-import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
+import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.io.FileDocumentSource;
 import org.semanticweb.owlapi.model.*;
 
@@ -438,6 +438,7 @@ public class OWLAPIProjectDocumentStore {
             RevisionNumber revisionNumber) throws
                                            IOException,
                                            OWLOntologyStorageException {
+        // TODO: Separate object
         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
         String baseFolder = projectDisplayName.replace(" ", "-") + "-ontologies-" + format.getExtension();
         baseFolder = baseFolder.toLowerCase();
@@ -473,10 +474,7 @@ public class OWLAPIProjectDocumentStore {
             OWLOntology ontology = rootOntologyManager.createOntology(ontologyIRI);
             rootOntologyManager.setOntologyFormat(ontology, new BinaryOWLOntologyDocumentFormat());
             saveNewProjectOntologyAndCreateNotesOntologyDocument(rootOntologyManager, ontology);
-        } catch (OWLOntologyCreationException e) {
-            logger.severe(e);
-            throw new RuntimeException(e);
-        } catch (OWLOntologyStorageException e) {
+        } catch (OWLOntologyCreationException | OWLOntologyStorageException e) {
             logger.severe(e);
             throw new RuntimeException(e);
         }
@@ -501,9 +499,7 @@ public class OWLAPIProjectDocumentStore {
                 RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
                 OWLOntology ontology = importer.importRawProjectSources(projectSources);
 
-                for (OWLOntology ont : rootOntologyManager.getOntologies()) {
-                    rootOntologyManager.setOntologyFormat(ont, new BinaryOWLOntologyDocumentFormat());
-                }
+                generateInitialChanges(newProjectSettings, rootOntologyManager);
                 saveNewProjectOntologyAndCreateNotesOntologyDocument(rootOntologyManager, ontology);
                 deleteSourceFile(uploadedFile);
             }
@@ -511,13 +507,42 @@ public class OWLAPIProjectDocumentStore {
                 throw new FileNotFoundException(uploadedFile.getAbsolutePath());
             }
 
-        } catch (OWLOntologyCreationException e) {
-            logger.severe(e);
-            throw new RuntimeException(e);
-        } catch (OWLOntologyStorageException e) {
+        } catch (OWLOntologyCreationException | OWLOntologyStorageException e) {
             logger.severe(e);
             throw new RuntimeException(e);
         }
+    }
+
+    private void generateInitialChanges(NewProjectSettings newProjectSettings, OWLOntologyManager rootOntologyManager) {
+        File changeHistoryFile = getChangeDataFile();
+        OWLDataFactory dataFactory = rootOntologyManager.getOWLDataFactory();
+        RevisionStore revisionStore = new RevisionStoreImpl(projectId, dataFactory, changeHistoryFile, logger);
+        ImmutableList<OWLOntologyChangeRecord> changeRecords = getInitialChangeRecords(rootOntologyManager);
+        revisionStore.addRevision(
+                new Revision(
+                        newProjectSettings.getProjectOwner(),
+                        RevisionNumber.getRevisionNumber(1),
+                        changeRecords,
+                        System.currentTimeMillis(),
+                        "Initial import"));
+    }
+
+    private ImmutableList<OWLOntologyChangeRecord> getInitialChangeRecords(OWLOntologyManager rootOntologyManager) {
+        // TODO:  Separate change generator
+        ImmutableList.Builder<OWLOntologyChangeRecord> changeRecordList = ImmutableList.builder();
+        for (OWLOntology ont : rootOntologyManager.getOntologies()) {
+            rootOntologyManager.setOntologyFormat(ont, new BinaryOWLOntologyDocumentFormat());
+            for(OWLAxiom axiom : ont.getAxioms()) {
+                changeRecordList.add(new OWLOntologyChangeRecord(ont.getOntologyID(), new AddAxiomData(axiom)));
+            }
+            for(OWLAnnotation annotation : ont.getAnnotations()) {
+                changeRecordList.add(new OWLOntologyChangeRecord(ont.getOntologyID(), new AddOntologyAnnotationData(annotation)));
+            }
+            for(OWLImportsDeclaration importsDeclaration : ont.getImportsDeclarations()) {
+                changeRecordList.add(new OWLOntologyChangeRecord(ont.getOntologyID(), new AddImportData(importsDeclaration)));
+            }
+        }
+        return changeRecordList.build();
     }
 
     private void deleteSourceFile(File sourceFile) {

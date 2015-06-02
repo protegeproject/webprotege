@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
+
 
 /**
  * Matthew Horridge
@@ -10,5 +12,5 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
  */
 public interface HasGetRevisionSummary {
 
-    RevisionSummary getRevisionSummary(RevisionNumber revisionNumber);
+    Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber);
 }
