@@ -263,7 +263,13 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         changeManager = new RevisionManagerImpl(revisionStore);
 
-        notesManager = new OWLAPINotesManagerNotesAPIImpl(this);
+        notesManager = new OWLAPINotesManagerNotesAPIImpl(
+                getProjectId(),
+                getDataFactory(),
+                projectEventManager,
+                renderingManager,
+                appInjector.getInstance(WebProtegeLogger.class)
+        );
 
 
         // MH: All of this is highly dodgy and not at all thread safe.  It is therefore BROKEN!  Needs fixing.

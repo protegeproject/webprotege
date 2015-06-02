@@ -1,18 +1,19 @@
 package edu.stanford.bmir.protege.web.server.notes;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import com.google.common.base.Stopwatch;
+import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.notes.converter.CHAO2NotesConverter;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
+import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.notes.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.apache.commons.io.FileUtils;
 import org.protege.notesapi.NotesException;
 import org.protege.notesapi.NotesManager;
 import org.protege.notesapi.notes.AnnotatableThing;
@@ -27,12 +28,11 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -52,8 +52,16 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     private final WebProtegeLogger logger;
 
 
-    private OWLAPIProject project;
-    
+//    private OWLAPIProject project;
+
+    private final ProjectId projectId;
+
+    private final OWLDataFactory dataFactory;
+
+    private final HasPostEvents<ProjectEvent<?>> eventManager;
+
+    private final BrowserTextProvider browserTextProvider;
+
     private OWLOntology notesOntology;
 
     private final NotesManager notesManager;
@@ -62,13 +70,16 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     
     private File notesOntologyDocument;
 
+    public OWLAPINotesManagerNotesAPIImpl(ProjectId projectId, OWLDataFactory dataFactory, HasPostEvents<ProjectEvent<?>> eventManager, BrowserTextProvider browserTextProvider, WebProtegeLogger logger) {
+        this.logger = logger;
+        this.projectId = projectId;
+        this.dataFactory = dataFactory;
+        this.eventManager = eventManager;
+        this.browserTextProvider = browserTextProvider;
 
-    public OWLAPINotesManagerNotesAPIImpl(OWLAPIProject project) {
-        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
-        this.project = project;
         try {
-            long t0 = System.currentTimeMillis();
-            OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(project.getProjectId());
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
             File notesDataDirectory = documentStore.getNotesDataDirectory();
             notesOntologyDocument = new File(notesDataDirectory, NOTES_ONTOLOGY_DOCUMENT_NAME);
             if(!notesOntologyDocument.exists()) {
@@ -84,43 +95,12 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
                     handleNotesOntologyChanged(Collections.unmodifiableList(changes));
                 }
             });
-            long t1 = System.currentTimeMillis();
-            importLegacyNotesIfNecessary();
-
-            logger.info(project.getProjectId(), "Initialized notes manager in %d ms", (t1 - t0));
+            logger.info(projectId, "Initialized notes manager in %d ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
         }
-        catch (OWLOntologyCreationException e) {
+        catch (OWLOntologyCreationException | NotesException e) {
             // Can't start - too dangerous to do anything without human intervention
             throw new RuntimeException(e);
         }
-        catch (NotesException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void importLegacyNotesIfNecessary() {
-        // Junk to import notes
-        OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(project.getProjectId());
-        File notesDataDirectory = documentStore.getNotesDataDirectory();
-        File legacy = new File(notesDataDirectory, "notes-data.legacy");
-        if(legacy.exists()) {
-            logger.info(project.getProjectId(), "Importing legacy notes data");
-            try {
-                final BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(legacy));
-                OWLOntology legacyNotesOntology = WebProtegeOWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(inputStream);
-                String base = legacyNotesOntology.getOntologyID().getOntologyIRI().toString();
-                logger.info(project.getProjectId(), "Using base obtained from legacy notes ontology: " + base);
-                CHAO2NotesConverter converter = new CHAO2NotesConverter(project.getRootOntology(), legacyNotesOntology, base);
-                converter.convertToNotes(this);
-                inputStream.close();
-                FileUtils.moveFile(legacy, new File(legacy.getParentFile(), "notes-data.legacy.imported-" + System.currentTimeMillis()));
-                logger.info(project.getProjectId(), "Import completed");
-            }
-            catch (Exception e) {
-                logger.severe(e);
-            }
-        }
-
     }
 
     private void loadExistingNotesOntology() throws OWLOntologyCreationException {
@@ -142,10 +122,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             BinaryOWLOntologyDocumentFormat notesOntologyDocumentFormat = new BinaryOWLOntologyDocumentFormat();
             notesOntologyManager.saveOntology(notesOntology, notesOntologyDocumentFormat, notesOntologyDocumentIRI);
         }
-        catch (OWLOntologyCreationException e) {
-            throw new RuntimeException(e);
-        }
-        catch (OWLOntologyStorageException e) {
+        catch (OWLOntologyCreationException | OWLOntologyStorageException e) {
             throw new RuntimeException(e);
         }
     }
@@ -170,10 +147,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             }
 
         }
-        catch (OWLOntologyStorageException e) {
-            throw new RuntimeException(e);
-        }
-        catch (IOException e) {
+        catch (OWLOntologyStorageException | IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -216,11 +190,11 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
      * @return The AnnotatableThing corresponding to the entity.
      */
     private AnnotatableThing getAnnotatableThing(OWLEntity entity) {
-        return new DefaultOntologyComponent(project.getDataFactory().getOWLNamedIndividual(entity.getIRI()), notesOntology);
+        return new DefaultOntologyComponent(dataFactory.getOWLNamedIndividual(entity.getIRI()), notesOntology);
     }
     
     private AnnotatableThing getAnnotatableThingForObjectId(NoteId noteId) {
-        OWLNamedIndividual entity = project.getDataFactory().getOWLNamedIndividual(IRI.create(noteId.getLexicalForm()));
+        OWLNamedIndividual entity = dataFactory.getOWLNamedIndividual(IRI.create(noteId.getLexicalForm()));
         return new DefaultComment(entity, notesOntology);
     }
 
@@ -230,7 +204,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         Annotation note = notesManager.getNote(noteId.getLexicalForm());
         if (note != null) {
             notesManager.deleteNote(noteId.getLexicalForm());
-            project.getEventManager().postEvent(new NoteDeletedEvent(project.getProjectId(), noteId));
+            eventManager.postEvent(new NoteDeletedEvent(projectId, noteId));
         }
     }
 
@@ -241,7 +215,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         if(note == null) {
             // Sometimes we fail to find the note.  I'm not sure why.  This has something to do with the weird internals
             // and typing of the notes API.
-            logger.info(project.getProjectId(), "Failed to find note by Id when changing the note status.  The noteId was %s", noteId);
+            logger.info(projectId, "Failed to find note by Id when changing the note status.  The noteId was %s", noteId);
             return;
         }
         if(noteStatus == NoteStatus.OPEN) {
@@ -250,7 +224,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         else {
             note.setArchived(true);
         }
-        project.getEventManager().postEvent(new NoteStatusChangedEvent(project.getProjectId(), noteId, noteStatus));
+        eventManager.postEvent(new NoteStatusChangedEvent(projectId, noteId, noteStatus));
     }
 
 
@@ -273,7 +247,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         try {
             AnnotatableThing target = getAnnotatableThingForObjectId(inReplyToId);
             Note note = addNoteToTarget(target, replyContent, author, timestamp);
-            project.getEventManager().postEvent(new NotePostedEvent(project.getProjectId(), new NoteDetails(note.getHeader(), replyContent), Optional.of(inReplyToId)));
+            eventManager.postEvent(new NotePostedEvent(projectId, new NoteDetails(note.getHeader(), replyContent), Optional.of(inReplyToId)));
             return note;
         }
         catch (NotesException e) {
@@ -294,9 +268,9 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             checkNotNull(author);
             AnnotatableThing target = getAnnotatableThing(targetEntity);
             Note note = addNoteToTarget(target, noteContent, author, timestamp);
-            OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity, project.getRenderingManager().getBrowserText(targetEntity));
-            final NotePostedEvent evt = new NotePostedEvent(project.getProjectId(), Optional.of(entityData), new NoteDetails(note.getHeader(), note.getContent()));
-            project.getEventManager().postEvent(evt);
+            OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity, browserTextProvider.getOWLEntityBrowserText(targetEntity).or(""));
+            final NotePostedEvent evt = new NotePostedEvent(projectId, Optional.of(entityData), new NoteDetails(note.getHeader(), note.getContent()));
+            eventManager.postEvent(evt);
             return note;
         }
         catch (NotesException e) {
