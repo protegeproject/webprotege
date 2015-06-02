@@ -153,7 +153,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
      */
     private OWLAPIProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
         this.documentStore = documentStore;
-        this.projectEventManager = EventManager.create(PROJECT_EVENT_LIFE_TIME);
+        this.projectEventManager = new EventManager<>(PROJECT_EVENT_LIFE_TIME);
         final boolean useCachingInDataFactory = false;
         final boolean useCompressionInDataFactory = false;
 

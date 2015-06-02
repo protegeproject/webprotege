@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -50,7 +51,8 @@ public class EventManager<E extends SerializableEvent<?>> implements HasDispose,
     private List<HandlerRegistration> registeredHandlers = new ArrayList<HandlerRegistration>();
 
 
-    private EventManager(EventLifeTime eventLifeTime) {
+    @Inject
+    public EventManager(EventLifeTime eventLifeTime) {
         this.eventLifeTime = checkNotNull(eventLifeTime);
         purgeSweepTimer = new Timer(true);
         final long eventLifeTimeInMilliseconds = eventLifeTime.getEventLifeTimeInMilliseconds();
@@ -63,16 +65,6 @@ public class EventManager<E extends SerializableEvent<?>> implements HasDispose,
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Creates a new event manager.
-     * @param <E> The type of events that can be posted to this manager.
-     * @param eventLifeTime The life time of events.
-     * @return An fresh event manager for the specified type of events.  Not {@code null}.
-     */
-    public static <E extends SerializableEvent<?>> EventManager<E> create(EventLifeTime eventLifeTime) {
-        return new EventManager<E>(eventLifeTime);
-    }
 
     /**
      * Posts an event to this event manager.
