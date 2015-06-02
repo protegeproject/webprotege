@@ -51,9 +51,6 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 
     private final WebProtegeLogger logger;
 
-
-//    private OWLAPIProject project;
-
     private final ProjectId projectId;
 
     private final OWLDataFactory dataFactory;
