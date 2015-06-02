@@ -5,6 +5,8 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -29,8 +31,8 @@ public class RevisionSummary implements Serializable, IsSerializable, Comparable
     }
 
     public RevisionSummary(RevisionNumber revisionNumber, UserId usedId, long timestamp, int changeCount) {
-        this.revisionNumber = revisionNumber;
-        this.userId = usedId;
+        this.revisionNumber = checkNotNull(revisionNumber);
+        this.userId = checkNotNull(usedId);
         this.timestamp = timestamp;
         this.changeCount = changeCount;
     }

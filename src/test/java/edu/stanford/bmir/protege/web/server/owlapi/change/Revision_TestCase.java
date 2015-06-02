@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.hamcrest.MatcherAssert;
@@ -32,7 +34,7 @@ public class Revision_TestCase {
     private RevisionNumber revisionNumber;
 
     @Mock
-    private OWLOntologyChangeRecordList changes;
+    private ImmutableList<OWLOntologyChangeRecord> changes;
 
     private long timestamp = 1L;
 
@@ -110,7 +112,7 @@ public class Revision_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_changes() {
-        MatcherAssert.assertThat(revision, Matchers.is(Matchers.not(new Revision(userId, revisionNumber, mock(OWLOntologyChangeRecordList.class), timestamp, highLevelDescription))));
+        MatcherAssert.assertThat(revision, Matchers.is(Matchers.not(new Revision(userId, revisionNumber, mock(ImmutableList.class), timestamp, highLevelDescription))));
     }
 
     @Test

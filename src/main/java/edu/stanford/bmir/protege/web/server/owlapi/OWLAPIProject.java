@@ -9,9 +9,7 @@ import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
-import edu.stanford.bmir.protege.web.server.owlapi.change.EntitiesByRevisionCache;
-import edu.stanford.bmir.protege.web.server.owlapi.change.ProjectChangesManager;
-import edu.stanford.bmir.protege.web.server.owlapi.change.WatchedChangesManager;
+import edu.stanford.bmir.protege.web.server.owlapi.change.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
@@ -30,7 +28,6 @@ import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKi
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
-import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
 import edu.stanford.bmir.protege.web.server.metrics.OWLAPIProjectMetricsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
@@ -47,6 +44,7 @@ import org.coode.owlapi.rdf.rdfxml.RDFXMLOntologyStorer;
 import org.protege.owlapi.model.ProtegeOWLOntologyManager;
 import org.semanticweb.binaryowl.BinaryOWLParseException;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
+import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.io.OWLParserException;
 import org.semanticweb.owlapi.model.*;
@@ -252,7 +250,18 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
         searchManager = new OWLAPISearchManager(renderingManager, renderingManager.getShortFormProvider());
 
-        changeManager = new RevisionManager(this, ontology);
+        WebProtegeInjector appInjector = WebProtegeInjector.get();
+
+
+        RevisionStoreImpl revisionStore = new RevisionStoreImpl(
+                getProjectId(),
+                getDataFactory(),
+                OWLAPIProjectDocumentStore.getProjectDocumentStore(getProjectId()).getChangeDataFile(),
+                appInjector.getInstance(WebProtegeLogger.class)
+        );
+        revisionStore.load();
+
+        changeManager = new RevisionManagerImpl(revisionStore);
 
         notesManager = new OWLAPINotesManagerNotesAPIImpl(this);
 
@@ -291,7 +300,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 entitiesByRevisionCache);
 
 
-        WebProtegeInjector appInjector = WebProtegeInjector.get();
         metricsManager = new OWLAPIProjectMetricsManager(
                 getProjectId(),
                 DefaultMetricsCalculators.getDefaultMetrics(rootOntology),
@@ -331,7 +339,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     }
 
     @Override
-    public RevisionSummary getRevisionSummary(RevisionNumber revisionNumber) {
+    public Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
         return changeManager.getRevisionSummary(revisionNumber);
     }
 
@@ -661,8 +669,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         // Generate a description for the changes that were actually applied
         String changeDescription = changeDescriptionGenerator.generateChangeDescription(finalResult);
         // Log the changes
-        changeManager.logChanges(userId, finalResult.getChangeList(), changeDescription);
-        // TODO Log some metadata about when the changes were applied
+        List<OWLOntologyChangeRecord> changeRecords = new ArrayList<>();
+        for(OWLOntologyChange change : finalResult.getChangeList()) {
+            changeRecords.add(change.getChangeRecord());
+        }
+        changeManager.addRevision(userId, changeRecords, changeDescription);
     }
 
 

@@ -4,8 +4,10 @@ import com.google.common.base.*;
 import static com.google.common.base.Objects.*;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.binaryowl.change.OntologyChangeRecordList;
 import org.semanticweb.owlapi.change.*;
 
 
@@ -28,11 +30,14 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
 
     private long timestamp;
 
-    private final OWLOntologyChangeRecordList changes;
+    private final ImmutableList<OWLOntologyChangeRecord> changes;
 
     private final String highLevelDescription;
 
-    public Revision(UserId userId, RevisionNumber revisionNumber, OWLOntologyChangeRecordList changes, long timestamp, String highLevelDescription) {
+    public Revision(UserId userId, RevisionNumber revisionNumber,
+                    ImmutableList<OWLOntologyChangeRecord> changes,
+                    long timestamp,
+                    String highLevelDescription) {
         this.changes = checkNotNull(changes);
         this.userId = checkNotNull(userId);
         this.revisionNumber = checkNotNull(revisionNumber);
@@ -44,8 +49,12 @@ public class Revision implements Iterable<OWLOntologyChangeRecord>, Comparable<R
         return changes.size();
     }
 
+    public ImmutableList<OWLOntologyChangeRecord> getChanges() {
+        return changes;
+    }
+
     public static Revision createEmptyRevisionWithRevisionNumber(RevisionNumber revision) {
-        return new Revision(UserId.getGuest(), revision, new OWLOntologyChangeRecordList(Collections.<OWLOntologyChangeRecord>emptyList()), 0l, "");
+        return new Revision(UserId.getGuest(), revision, ImmutableList.<OWLOntologyChangeRecord>of(), 0l, "");
     }
 
     public long getTimestamp() {
