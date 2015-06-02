@@ -8,6 +8,8 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -24,6 +26,7 @@ public class ProjectEntityCrudKitHandlerCache {
 
     private EntityCrudKitHandler<?, ?> cachedHandler;
 
+    @Inject
     public ProjectEntityCrudKitHandlerCache(ProjectEntityCrudKitSettingsRepository repository, ProjectId projectId) {
         this.repository = checkNotNull(repository);
         this.projectId = checkNotNull(projectId);

@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.shared.metrics.MetricsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 
+import javax.inject.Inject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,11 @@ public class OWLAPIProjectMetricsManager {
 
     private ProjectId projectId;
 
-    public OWLAPIProjectMetricsManager(ProjectId projectId, List<MetricCalculator> metrics, HasPostEvents<ProjectEvent<?>> eventBus, WebProtegeLogger logger) {
+    @Inject
+    public OWLAPIProjectMetricsManager(ProjectId projectId,
+                                       List<MetricCalculator> metrics,
+                                       HasPostEvents<ProjectEvent<?>> eventBus,
+                                       WebProtegeLogger logger) {
         this.projectId = projectId;
         this.logger = logger;
         this.eventBus = eventBus;
@@ -59,17 +64,6 @@ public class OWLAPIProjectMetricsManager {
         dirtyMetrics.addAll(metrics);
     }
 
-    // TODO:
-//    public void bind(EventBus eventBus) {
-//
-//    }
-
-//    TODO:
-//    public void unbind(EventBus eventBus) {
-//
-//    }
-
-    // TODO: EventBUS
     public void handleOntologyChanges(List<? extends OWLOntologyChange> changes) {
         try {
             writeLock.lock();
