@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 import org.semanticweb.owlapi.util.BidirectionalShortFormProviderAdapter;
@@ -10,6 +11,7 @@ import org.semanticweb.owlapi.vocab.OWL2Datatype;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +35,8 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
 
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    public WebProtegeBidirectionalShortFormProvider(OWLOntology rootOntology, ShortFormProvider shortFormProvider) {
+    @Inject
+    public WebProtegeBidirectionalShortFormProvider(@RootOntology OWLOntology rootOntology, ShortFormProvider shortFormProvider) {
         this.rootOntology = rootOntology;
         final Set<OWLOntology> importsClosure = rootOntology.getImportsClosure();
         delegate = new BidirectionalShortFormProviderAdapter(importsClosure, shortFormProvider) {

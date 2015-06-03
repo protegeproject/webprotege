@@ -29,6 +29,7 @@ public class WebProtegeInitializer implements ServletContextListener {
             WebProtegeWebAppFilter.setConfigError(e);
         }
         catch (ExceptionInInitializerError error) {
+            error.printStackTrace();
             Throwable rootCause = ExceptionUtils.getRootCause(error);
             if (rootCause instanceof CreationException) {
                 for(Message msg : ((CreationException) rootCause.getCause()).getErrorMessages()) {

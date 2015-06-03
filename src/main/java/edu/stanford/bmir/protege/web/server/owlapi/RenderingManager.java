@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
@@ -63,7 +64,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
     private final WebProtegeLogger logger;
 
     @Inject
-    public RenderingManager(OWLOntology rootOnt,
+    public RenderingManager(@RootOntology OWLOntology rootOnt,
                             OWLDataFactory dataFactory,
                             EntityIRIChecker entityIRIChecker,
                             DeprecatedEntityChecker deprecatedChecker,

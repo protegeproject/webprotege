@@ -60,7 +60,7 @@ public class GetManchesterSyntaxFrameCompletionsActionHandler
         String syntax = action.getSyntax();
         int from = action.getFrom();
         String triggerText = syntax.substring(0, from) + "\u0000";
-        Injector injector = WebProtegeInjector.get().createChildInjector(new ProjectModule(project), new ManchesterSyntaxParsingContextModule(action));
+        Injector injector = WebProtegeInjector.get().createChildInjector(new ProjectModule(project.getProjectId()), new ManchesterSyntaxParsingContextModule(action));
         ManchesterSyntaxFrameParser parser = injector.getInstance(ManchesterSyntaxFrameParser.class);
         try {
             parser.parse(triggerText);

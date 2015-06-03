@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 import com.google.common.base.Objects;
+import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 
@@ -12,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-public class SetUIConfigurationAction implements Action<SetUIConfigurationResult> {
+public class SetUIConfigurationAction extends AbstractHasProjectAction<SetUIConfigurationResult> {
 
     private ProjectId projectId;
 

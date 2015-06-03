@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.project;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.GetUIConfigurationAction;
 import edu.stanford.bmir.protege.web.shared.project.GetUIConfigurationResult;
 
@@ -13,23 +15,21 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-public class GetUIConfigurationActionHandler implements ActionHandler<GetUIConfigurationAction, GetUIConfigurationResult> {
-
-    private UIConfigurationManager uiConfigurationManager;
+public class GetUIConfigurationActionHandler extends AbstractHasProjectActionHandler<GetUIConfigurationAction, GetUIConfigurationResult> {
 
     @Inject
-    public GetUIConfigurationActionHandler(UIConfigurationManager uiConfigurationManager) {
-        this.uiConfigurationManager = uiConfigurationManager;
+    public GetUIConfigurationActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
     }
 
     @Override
-    public RequestValidator<GetUIConfigurationAction> getRequestValidator(GetUIConfigurationAction action, RequestContext requestContext) {
+    protected RequestValidator<GetUIConfigurationAction> getAdditionalRequestValidator(GetUIConfigurationAction action, RequestContext requestContext) {
         return UserHasProjectReadPermissionValidator.get();
     }
 
     @Override
-    public GetUIConfigurationResult execute(GetUIConfigurationAction action, ExecutionContext executionContext) {
-        ProjectLayoutConfiguration configuration = uiConfigurationManager.getProjectLayoutConfiguration(
+    protected GetUIConfigurationResult execute(GetUIConfigurationAction action, OWLAPIProject project, ExecutionContext executionContext) {
+        ProjectLayoutConfiguration configuration = project.getUiConfigurationManager().getProjectLayoutConfiguration(
                 action.getProjectId(),
                 executionContext.getUserId()
         );

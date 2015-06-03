@@ -39,7 +39,7 @@ public class CheckManchesterSyntaxFrameActionHandler extends AbstractHasProjectA
 
     @Override
     protected CheckManchesterSyntaxFrameResult execute(CheckManchesterSyntaxFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
-            Injector injector = WebProtegeInjector.get().createChildInjector(new ProjectModule(project), new ManchesterSyntaxParsingContextModule(action));
+            Injector injector = WebProtegeInjector.get().createChildInjector(new ProjectModule(project.getProjectId()), new ManchesterSyntaxParsingContextModule(action));
             ManchesterSyntaxChangeGenerator changeGenerator = injector.getInstance(ManchesterSyntaxChangeGenerator.class);
             try {
                 List<OWLOntologyChange> changeList = changeGenerator.generateChanges(action.getFrom(), action.getTo());

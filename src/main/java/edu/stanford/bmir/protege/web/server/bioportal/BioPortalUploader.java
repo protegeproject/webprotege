@@ -34,8 +34,11 @@ public class BioPortalUploader {
 
     private PublishToBioPortalInfo publishInfo;
 
-    public BioPortalUploader(File ontologyDocument, PublishToBioPortalInfo publishInfo) {
+    private OWLAPIProjectDocumentStore documentStore;
+
+    public BioPortalUploader(File ontologyDocument, OWLAPIProjectDocumentStore documentStore, PublishToBioPortalInfo publishInfo) {
         this.ontologyDocument = ontologyDocument;
+        this.documentStore = documentStore;
         this.publishInfo = publishInfo;
     }
 
@@ -45,12 +48,12 @@ public class BioPortalUploader {
     }
     
     private File getOntologyDocumentFromProjectAndRevision(String projectDisplayName, ProjectId projectId, RevisionNumber revisionNumber) throws IOException, OWLOntologyStorageException {
-        OWLAPIProjectDocumentStore store = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
         File ontologyDocument = File.createTempFile("BioPortalOntology", ".zip");
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(ontologyDocument));
-        store.exportProjectRevision(projectDisplayName, revisionNumber, bos, DownloadFormat.getDefaultFormat());
+//        documentStore.exportProjectRevision(projectDisplayName, revisionNumber, bos, DownloadFormat.getDefaultFormat());
         bos.close();
-        return ontologyDocument;
+        throw new RuntimeException("NOT IMPLEMENTED");
+//        return ontologyDocument;
     }
 
     public void uploadToBioPortal(String bioportalRestAPIBase) throws IOException {
@@ -131,24 +134,24 @@ public class BioPortalUploader {
         }
     }
 
-    public static void main(String[] args) {
-        try {
-            File ontologyDocument = new File("/tmp/root-ontology.owl");
-
-            PublishToBioPortalInfo publishInfo = new PublishToBioPortalInfo(
-                    BioPortalUserId.createFromId(38871),
-                    BioPortalOntologyId.getId(3142),
-                    "Test Ontology 34",
-                    "TONT",
-                    "An ontology for testing the bioportal upload",
-                    "Matthew Horridge",
-                    "matthew.horridge@stanford.edu",
-                    "1.0.2");
-            BioPortalUploader uploader = new BioPortalUploader(ontologyDocument, publishInfo);
-            uploader.uploadToBioPortal("http://stagerest.bioontology.org/bioportal/", ontologyDocument);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args) {
+//        try {
+//            File ontologyDocument = new File("/tmp/root-ontology.owl");
+//
+//            PublishToBioPortalInfo publishInfo = new PublishToBioPortalInfo(
+//                    BioPortalUserId.createFromId(38871),
+//                    BioPortalOntologyId.getId(3142),
+//                    "Test Ontology 34",
+//                    "TONT",
+//                    "An ontology for testing the bioportal upload",
+//                    "Matthew Horridge",
+//                    "matthew.horridge@stanford.edu",
+//                    "1.0.2");
+//            BioPortalUploader uploader = new BioPortalUploader(ontologyDocument, publishInfo);
+//            uploader.uploadToBioPortal("http://stagerest.bioontology.org/bioportal/", ontologyDocument);
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
