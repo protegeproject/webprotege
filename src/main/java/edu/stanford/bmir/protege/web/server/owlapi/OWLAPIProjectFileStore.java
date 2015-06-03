@@ -71,7 +71,7 @@ public class OWLAPIProjectFileStore {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static final String NOTES_DATA_DIRECTORY_NAME = "notes-data";
+//    private static final String NOTES_DATA_DIRECTORY_NAME = "notes-data";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ public class OWLAPIProjectFileStore {
     private File ontologyDataDirectory;
 
     
-    private File notesDataDirectory;
+//    private File notesDataDirectory;
     
     private File changesDataDirectory;
 
@@ -125,7 +125,7 @@ public class OWLAPIProjectFileStore {
 
         this.changesDataDirectory = new File(projectDirectory, CHANGE_DATA_DIRECTORY_NAME);
         this.configurationsDirectory = new File(projectDirectory, CONFIGURATIONS_DIRECTORY_NAME);
-        this.notesDataDirectory = new File(projectDirectory, NOTES_DATA_DIRECTORY_NAME);
+//        this.notesDataDirectory = new File(projectDirectory, NOTES_DATA_DIRECTORY_NAME);
         this.ontologyDataDirectory = new File(projectDirectory, ONTOLOGY_DATA_DIRECTORY_NAME);
         this.downloadCacheDirectory = new File(projectDirectory, DOWNLOAD_CACHE_DIRECTORY);
         this.importsCacheDirectory = new File(projectDirectory, IMPORTS_CACHE_DIRECTORY_NAME);
@@ -134,7 +134,7 @@ public class OWLAPIProjectFileStore {
     public void initDirectories() {
         projectDirectory.mkdirs();
         changesDataDirectory.mkdirs();
-        notesDataDirectory.mkdirs();
+//        notesDataDirectory.mkdirs();
         ontologyDataDirectory.mkdirs();
         downloadCacheDirectory.mkdirs();
         configurationsDirectory.mkdirs();
@@ -152,9 +152,9 @@ public class OWLAPIProjectFileStore {
         return importsCacheDirectory;
     }
 
-    public File getNotesDataDirectory() {
-        return notesDataDirectory;
-    }
+//    public File getNotesDataDirectory() {
+//        return notesDataDirectory;
+//    }
 
     public File getChangesDataDirectory() {
         return changesDataDirectory;

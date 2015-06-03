@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.GetUIConfigurationAction;
 import edu.stanford.bmir.protege.web.shared.project.GetUIConfigurationResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -30,7 +32,7 @@ public class GetUIConfigurationActionHandler_TestCase {
     private GetUIConfigurationActionHandler handler;
 
     @Mock
-    private UIConfigurationManager configurationManager;
+    private OWLAPIProjectManager projectManager;
 
     @Mock
     private GetUIConfigurationAction action;
@@ -41,23 +43,30 @@ public class GetUIConfigurationActionHandler_TestCase {
     @Mock
     private ProjectLayoutConfiguration configuration;
 
+    @Mock
+    private OWLAPIProject project;
+
+    @Mock
+    private UIConfigurationManager uiConfigurationManager;
+
     @Before
     public void setUp() throws Exception {
-        handler = new GetUIConfigurationActionHandler(configurationManager);
+        handler = new GetUIConfigurationActionHandler(projectManager);
+        when(project.getUiConfigurationManager()).thenReturn(uiConfigurationManager);
     }
 
     @Test
     public void shouldReturnConfiguration() {
-        when(configurationManager.getProjectLayoutConfiguration(any(ProjectId.class), any(UserId.class))).thenReturn(configuration);
-        GetUIConfigurationResult result = handler.execute(action, executionContext);
+        when(uiConfigurationManager.getProjectLayoutConfiguration(any(ProjectId.class), any(UserId.class))).thenReturn(configuration);
+        GetUIConfigurationResult result = handler.execute(action, project, executionContext);
         assertThat(result.getConfiguration(), is(configuration));
     }
 
     @Test(expected = ProjectNotRegisteredException.class)
     public void shouldRethrowProjectNotFoundException() {
         ProjectId projectId = mock(ProjectId.class);
-        when(configurationManager.getProjectLayoutConfiguration(any(ProjectId.class), any(UserId.class)))
+        when(uiConfigurationManager.getProjectLayoutConfiguration(any(ProjectId.class), any(UserId.class)))
                 .thenThrow(new ProjectNotRegisteredException(projectId));
-        handler.execute(action, executionContext);
+        handler.execute(action, project, executionContext);
     }
 }

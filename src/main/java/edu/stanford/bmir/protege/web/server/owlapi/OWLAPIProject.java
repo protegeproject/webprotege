@@ -9,8 +9,10 @@ import edu.stanford.bmir.protege.web.server.events.*;
 import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
+import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.owlapi.change.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
+import edu.stanford.bmir.protege.web.server.project.UIConfigurationManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
 import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityCheckerImpl;
@@ -59,6 +61,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.ParsableOWLOntologyFactory;
 import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOntologyStorer;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
 import java.util.*;
@@ -78,46 +81,57 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEntityInSignature, HasGetEntitiesWithIRI, HasGetEntitiesInSignature, HasGetRevisionSummary, HasApplyChanges, HasLang {
 
-    static {
-        WebProtegeOWLManager.createOWLOntologyManager();
-    }
 
-    public static final EventLifeTime PROJECT_EVENT_LIFE_TIME = EventLifeTime.get(60, TimeUnit.SECONDS);
+//    public static final EventLifeTime PROJECT_EVENT_LIFE_TIME = EventLifeTime.get(60, TimeUnit.SECONDS);
 
-    private OWLAPIProjectDocumentStore documentStore;
+    private final OWLAPIProjectDocumentStore documentStore;
 
-    final private OWLAPIProjectOWLOntologyManager manager;
+    private final ProjectId projectId;
 
-    final private ProjectAccessManager projectAccessManager;
+    private final OWLDataFactory dataFactory;
 
-    private RenderingManager renderingManager;
+    private final ProjectAccessManager projectAccessManager;
+
+    private final RenderingManager renderingManager;
 
     private final EventManager<ProjectEvent<?>> projectEventManager;
 
-    private OWLOntology ontology;
+    private final OWLOntology ontology;
 
-    private AssertedClassHierarchyProvider classHierarchyProvider;
+    private final AssertedClassHierarchyProvider classHierarchyProvider;
 
-    private OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
+    private final OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider;
 
-    private OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider;
+    private final OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider;
 
-    private OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
+    private final OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider;
 
-    private OWLAPISearchManager searchManager;
+    private final OWLAPISearchManager searchManager;
 
-    private OWLAPINotesManager notesManager;
+    private final OWLAPINotesManager notesManager;
 
-    private RevisionManager changeManager;
+    private final RevisionManager changeManager;
 
-    private ProjectChangesManager projectChangesManager;
+    private final ProjectChangesManager projectChangesManager;
 
-    private WatchedChangesManager watchedChangesManager;
+    private final WatchedChangesManager watchedChangesManager;
 
-    private OWLAPIProjectMetricsManager metricsManager;
+    private final OWLAPIProjectMetricsManager metricsManager;
 
-    private WatchManager watchManager;
-    
+    private final WatchManager watchManager;
+
+
+    private final ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache;
+
+    private final ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository;
+
+    private final Provider<EventTranslatorManager> eventTranslatorManagerProvider;
+
+    private final UIConfigurationManager uiConfigurationManager;
+
+    private final WebProtegeLogger logger;
+
+
     private final ReadWriteLock projectChangeLock = new ReentrantReadWriteLock();
 
     private final Lock projectChangeReadLock = projectChangeLock.readLock();
@@ -126,199 +140,222 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private final Lock changeProcesssingLock = new ReentrantLock();
 
-    private final ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache;
-
-    private String defaultLanguage = "en";
-
-    private final ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository;
-
-    private final Provider<EventTranslatorManager> eventTranslatorManagerProvider;
-
-    // This is back to front - the project should be created by the injector.  However, it's like this for legacy
-    // reasons - for now!
-    private final Injector projectInjector;
-
-
-    public static OWLAPIProject getProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
-        return new OWLAPIProject(documentStore);
-    }
-
-
-    /**
-     * Constructs and OWLAPIProject over the sources specified by the {@link OWLAPIProjectDocumentStore}.
-     *
-     * @param documentStore The document store.
-     * @throws IOException        If there was a problem reading sources.
-     * @throws OWLParserException If there was a problem parsing sources.
-     */
-    private OWLAPIProject(OWLAPIProjectDocumentStore documentStore) throws IOException, OWLParserException {
+    @Inject
+    public OWLAPIProject(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, ProjectAccessManager projectAccessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, UIConfigurationManager uiConfigurationManager, WebProtegeLogger logger) {
         this.documentStore = documentStore;
-        this.projectEventManager = new EventManager<>(PROJECT_EVENT_LIFE_TIME);
-        final boolean useCachingInDataFactory = false;
-        final boolean useCompressionInDataFactory = false;
-
-        OWLDataFactory df = new OWLDataFactoryImpl(useCachingInDataFactory, useCompressionInDataFactory);
-
-        // The delegate - we use the concurrent ontology manager
-        OWLOntologyManager delegateManager = new ProtegeOWLOntologyManager(df);
-        // We only support the binary format for speed
-        delegateManager.addOntologyStorer(new BinaryOWLOntologyDocumentStorer());
-        delegateManager.addOntologyStorer(new RDFXMLOntologyStorer());
-        delegateManager.addOntologyStorer(new OWLXMLOntologyStorer());
-        delegateManager.addOntologyStorer(new OWLFunctionalSyntaxOntologyStorer());
-        delegateManager.addOntologyStorer(new ManchesterOWLSyntaxOntologyStorer());
-        // Pass through mapping
-        delegateManager.addIRIMapper(new NonMappingOntologyIRIMapper());
-
-        // The wrapper manager
-        manager = new OWLAPIProjectOWLOntologyManager();
-
-        // We have to do some twiddling of the factories so that the delegate manager creates ontologies which point
-        // to the non-delegate manager.
-        EmptyInMemOWLOntologyFactory imMemFactory = new EmptyInMemOWLOntologyFactory();
-        delegateManager.addOntologyFactory(imMemFactory);
-        imMemFactory.setOWLOntologyManager(manager);
-
-
-        ParsableOWLOntologyFactory parsingFactory = new ParsableOWLOntologyFactory();
-        delegateManager.addOntologyFactory(parsingFactory);
-        parsingFactory.setOWLOntologyManager(manager);
-
-        manager.setDelegate(delegateManager);
-
-        this.projectAccessManager = new ProjectAccessManager(getProjectId(), projectEventManager);
-
-        WebProtegeInjector injector = WebProtegeInjector.get();
-        entityCrudKitSettingsRepository = injector.getInstance(ProjectEntityCrudKitSettingsRepository.class);
-        entityCrudKitHandlerCache = new ProjectEntityCrudKitHandlerCache(entityCrudKitSettingsRepository, getProjectId());
-
-        loadProject();
-        initialiseProjectMachinery();
-        projectInjector = WebProtegeInjector.get().createChildInjector(new ProjectModule(this), new EventTranslatorModule());
-        eventTranslatorManagerProvider = projectInjector.getProvider(EventTranslatorManager.class);
-        watchManager = projectInjector.getInstance(WatchManager.class);
-        WatchEventManager watchEventManager = projectInjector.getInstance(WatchEventManager.class);
-        watchEventManager.attach();
+        this.projectId = projectId;
+        this.dataFactory = dataFactory;
+        this.projectAccessManager = projectAccessManager;
+        this.renderingManager = renderingManager;
+        this.projectEventManager = projectEventManager;
+        this.ontology = ontology;
+        this.classHierarchyProvider = classHierarchyProvider;
+        this.objectPropertyHierarchyProvider = objectPropertyHierarchyProvider;
+        this.dataPropertyHierarchyProvider = dataPropertyHierarchyProvider;
+        this.annotationPropertyHierarchyProvider = annotationPropertyHierarchyProvider;
+        this.searchManager = searchManager;
+        this.notesManager = notesManager;
+        this.changeManager = changeManager;
+        this.projectChangesManager = projectChangesManager;
+        this.watchedChangesManager = watchedChangesManager;
+        this.metricsManager = metricsManager;
+        this.watchManager = watchManager;
+        this.entityCrudKitHandlerCache = entityCrudKitHandlerCache;
+        this.entityCrudKitSettingsRepository = entityCrudKitSettingsRepository;
+        this.eventTranslatorManagerProvider = eventTranslatorManagerProvider;
+        this.logger = logger;
+        this.uiConfigurationManager = uiConfigurationManager;
     }
 
 
-    /**
-     * Loads the specified project.  This method is only called from the constructor of this class.
-     */
-    private void loadProject() throws IOException, BinaryOWLParseException {
-        try {
-            if (!documentStore.exists()) {
-                throw new ProjectDocumentNotFoundException(documentStore.getProjectId());
-            }
-            ontology = documentStore.loadRootOntologyIntoManager(manager.getDelegate());
-            manager.addOntologyChangeListener(new OWLOntologyChangeListener() {
-                public void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws OWLException {
-                    handleOntologiesChanged(changes);
-                }
-            });
-            manager.sealDelegate();
-        } catch (OWLOntologyCreationException e) {
-            throw new RuntimeException("Failed to load project: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Call from constructor only.
-     */
-    private void initialiseProjectMachinery() {
-        final OWLOntology rootOntology = getRootOntology();
-        HasAnnotationAssertionAxioms annotationAssertionAxiomProvider = new HasAnnotationAssertionAxiomsImpl(rootOntology);
-
-        WebProtegeShortFormProvider shortFormProvider = new WebProtegeShortFormProvider(
-                new WebProtegeIRIShortFormProvider(
-                        ImmutableList.<IRI>builder()
-                                .addAll(DefaultShortFormAnnotationPropertyIRIs.asImmutableList()).build(),
-                        annotationAssertionAxiomProvider,
-                        this
-                ));
-
-        renderingManager = new RenderingManager(
-                rootOntology,
-                getDataFactory(),
-                new EntityIRICheckerImpl(rootOntology),
-                new DeprecatedEntityCheckerImpl(rootOntology),
-                new WebProtegeBidirectionalShortFormProvider(rootOntology, shortFormProvider),
-                new WebProtegeOntologyIRIShortFormProvider(rootOntology),
-                NullHighlightedEntityChecker.get());
-
-        searchManager = new OWLAPISearchManager(renderingManager, renderingManager.getShortFormProvider());
-
-        WebProtegeInjector appInjector = WebProtegeInjector.get();
+// This is back to front - the project should be created by the injector.  However, it's like this for legacy
+    // reasons - for now!
+//    private final Injector projectInjector;
 
 
-        RevisionStoreImpl revisionStore = new RevisionStoreImpl(
-                getProjectId(),
-                getDataFactory(),
-                OWLAPIProjectDocumentStore.getProjectDocumentStore(getProjectId()).getChangeDataFile(),
-                appInjector.getInstance(WebProtegeLogger.class)
-        );
-        revisionStore.load();
-
-        changeManager = new RevisionManagerImpl(revisionStore);
-
-        notesManager = new OWLAPINotesManagerNotesAPIImpl(
-                getProjectId(),
-                getDataFactory(),
-                projectEventManager,
-                renderingManager,
-                appInjector.getInstance(WebProtegeLogger.class)
-        );
+//    public static OWLAPIProject getProject(ProjectId projectId) throws IOException, OWLParserException {
+//        return new OWLAPIProject(projectId);
+//    }
 
 
-        // MH: All of this is highly dodgy and not at all thread safe.  It is therefore BROKEN!  Needs fixing.
+//    /**
+//     * Constructs and OWLAPIProject over the sources specified by the {@link OWLAPIProjectDocumentStore}.
+//     *
+//     * @param documentStore The document store.
+//     * @throws IOException        If there was a problem reading sources.
+//     * @throws OWLParserException If there was a problem parsing sources.
+//     */
+//    private OWLAPIProject(ProjectId projectId) throws IOException, OWLParserException {
+//
+////        projectInjector = WebProtegeInjector.get().createChildInjector(new ProjectModule(projectId));
+//        /*
+//        this.documentStore = documentStore;
+//        this.projectEventManager = new EventManager<>(PROJECT_EVENT_LIFE_TIME);
+//        final boolean useCachingInDataFactory = false;
+//        final boolean useCompressionInDataFactory = false;
+//
+//        OWLDataFactory df = new OWLDataFactoryImpl(useCachingInDataFactory, useCompressionInDataFactory);
+//
+//        // The delegate - we use the concurrent ontology manager
+//        OWLOntologyManager delegateManager = new ProtegeOWLOntologyManager(df);
+//        // We only support the binary format for speed
+//        delegateManager.addOntologyStorer(new BinaryOWLOntologyDocumentStorer());
+//        delegateManager.addOntologyStorer(new RDFXMLOntologyStorer());
+//        delegateManager.addOntologyStorer(new OWLXMLOntologyStorer());
+//        delegateManager.addOntologyStorer(new OWLFunctionalSyntaxOntologyStorer());
+//        delegateManager.addOntologyStorer(new ManchesterOWLSyntaxOntologyStorer());
+//        // Pass through mapping
+//        delegateManager.addIRIMapper(new NonMappingOntologyIRIMapper());
+//
+//        // The wrapper manager
+//        manager = new OWLAPIProjectOWLOntologyManager();
+//
+//        // We have to do some twiddling of the factories so that the delegate manager creates ontologies which point
+//        // to the non-delegate manager.
+//        EmptyInMemOWLOntologyFactory imMemFactory = new EmptyInMemOWLOntologyFactory();
+//        delegateManager.addOntologyFactory(imMemFactory);
+//        imMemFactory.setOWLOntologyManager(manager);
+//
+//
+//        ParsableOWLOntologyFactory parsingFactory = new ParsableOWLOntologyFactory();
+//        delegateManager.addOntologyFactory(parsingFactory);
+//        parsingFactory.setOWLOntologyManager(manager);
+//
+//        manager.setDelegate(delegateManager);
+//
+//        this.projectAccessManager = new ProjectAccessManager(getProjectId(), projectEventManager);
+//
+//        WebProtegeInjector injector = WebProtegeInjector.get();
+//        entityCrudKitSettingsRepository = injector.getInstance(ProjectEntityCrudKitSettingsRepository.class);
+//        entityCrudKitHandlerCache = new ProjectEntityCrudKitHandlerCache(entityCrudKitSettingsRepository, getProjectId());
+//
+//
+//        loadProject();
+//
+//        initialiseProjectMachinery();
+//
+//        projectInjector = WebProtegeInjector.get().createChildInjector(new ProjectModule(getProjectId()), new EventTranslatorModule());
+//        eventTranslatorManagerProvider = projectInjector.getProvider(EventTranslatorManager.class);
+//        watchManager = projectInjector.getInstance(WatchManager.class);
+//        WatchEventManager watchEventManager = projectInjector.getInstance(WatchEventManager.class);
+//        watchEventManager.attach();
+//
+//        */
+//    }
 
-        classHierarchyProvider = new AssertedClassHierarchyProvider(getRootOntology(), getDataFactory().getOWLThing());
 
-        objectPropertyHierarchyProvider = new OWLObjectPropertyHierarchyProvider(getRootOntology(), getDataFactory().getOWLTopObjectProperty());
+//    /**
+//     * Loads the specified project.  This method is only called from the constructor of this class.
+//     */
+//    private void loadProject() throws IOException, BinaryOWLParseException {
+//        try {
+//            if (!documentStore.exists()) {
+//                throw new ProjectDocumentNotFoundException(documentStore.getProjectId());
+//            }
+//            ontology = documentStore.loadRootOntologyIntoManager(manager.getDelegate());
+//            manager.sealDelegate();
+//        } catch (OWLOntologyCreationException e) {
+//            throw new RuntimeException("Failed to load project: " + e.getMessage(), e);
+//        }
+//    }
 
-        dataPropertyHierarchyProvider = new OWLDataPropertyHierarchyProvider(getRootOntology(), getDataFactory().getOWLTopDataProperty());
-
-        annotationPropertyHierarchyProvider = new OWLAnnotationPropertyHierarchyProvider(getRootOntology(), getDataFactory());
-
-        EntitiesByRevisionCache entitiesByRevisionCache = new EntitiesByRevisionCache(getAxiomSubjectProvider(), this, getDataFactory());
-
-        projectChangesManager = new ProjectChangesManager(
-                changeManager,
-                entitiesByRevisionCache,
-                ontology,
-                renderingManager,
-                renderingManager,
-                getAxiomComparator(),
-                getOWLObjectComparator()
-        );
-
-
-        watchedChangesManager = new WatchedChangesManager(
-                projectChangesManager,
-                classHierarchyProvider,
-                objectPropertyHierarchyProvider,
-                dataPropertyHierarchyProvider,
-                annotationPropertyHierarchyProvider,
-                ontology,
-                changeManager,
-                entitiesByRevisionCache);
-
-
-        metricsManager = new OWLAPIProjectMetricsManager(
-                getProjectId(),
-                DefaultMetricsCalculators.getDefaultMetrics(rootOntology),
-                projectEventManager,
-                appInjector.getInstance(WebProtegeLogger.class));
-
-    }
+//    /**
+//     * Call from constructor only.
+//     */
+//    private void initialiseProjectMachinery() {
+//        final OWLOntology rootOntology = getRootOntology();
+//        HasAnnotationAssertionAxioms annotationAssertionAxiomProvider = new HasAnnotationAssertionAxiomsImpl(rootOntology);
+//
+//        WebProtegeShortFormProvider shortFormProvider = new WebProtegeShortFormProvider(
+//                new WebProtegeIRIShortFormProvider(
+//                        ImmutableList.<IRI>builder()
+//                                .addAll(DefaultShortFormAnnotationPropertyIRIs.asImmutableList()).build(),
+//                        annotationAssertionAxiomProvider,
+//                        this
+//                ));
+//
+//        renderingManager = new RenderingManager(
+//                rootOntology,
+//                getDataFactory(),
+//                new EntityIRICheckerImpl(rootOntology),
+//                new DeprecatedEntityCheckerImpl(rootOntology),
+//                new WebProtegeBidirectionalShortFormProvider(rootOntology, shortFormProvider),
+//                new WebProtegeOntologyIRIShortFormProvider(rootOntology),
+//                NullHighlightedEntityChecker.get());
+//
+//        searchManager = new OWLAPISearchManager(renderingManager, renderingManager.getShortFormProvider());
+//
+//        WebProtegeInjector appInjector = WebProtegeInjector.get();
+//
+//
+//        RevisionStoreImpl revisionStore = new RevisionStoreImpl(
+//                getProjectId(),
+//                getDataFactory(),
+//                OWLAPIProjectDocumentStore.getProjectDocumentStore(getProjectId()).getChangeDataFile(),
+//                appInjector.getInstance(WebProtegeLogger.class)
+//        );
+//        revisionStore.load();
+//
+//        changeManager = new RevisionManagerImpl(revisionStore);
+//
+//        notesManager = new OWLAPINotesManagerNotesAPIImpl(
+//                getProjectId(),
+//                getDataFactory(),
+//                projectEventManager,
+//                renderingManager,
+//                appInjector.getInstance(WebProtegeLogger.class)
+//        );
+//
+//
+//        // MH: All of this is highly dodgy and not at all thread safe.  It is therefore BROKEN!  Needs fixing.
+//
+//        classHierarchyProvider = new AssertedClassHierarchyProvider(getRootOntology(), getDataFactory().getOWLThing());
+//
+//        objectPropertyHierarchyProvider = new OWLObjectPropertyHierarchyProvider(getRootOntology(), getDataFactory().getOWLTopObjectProperty());
+//
+//        dataPropertyHierarchyProvider = new OWLDataPropertyHierarchyProvider(getRootOntology(), getDataFactory().getOWLTopDataProperty());
+//
+//        annotationPropertyHierarchyProvider = new OWLAnnotationPropertyHierarchyProvider(getRootOntology(), getDataFactory());
+//
+//        EntitiesByRevisionCache entitiesByRevisionCache = new EntitiesByRevisionCache(getAxiomSubjectProvider(), this, getDataFactory());
+//
+//        projectChangesManager = new ProjectChangesManager(
+//                changeManager,
+//                entitiesByRevisionCache,
+//                ontology,
+//                renderingManager,
+//                renderingManager,
+//                getAxiomComparator(),
+//                getOWLObjectComparator()
+//        );
+//
+//
+//        watchedChangesManager = new WatchedChangesManager(
+//                projectChangesManager,
+//                classHierarchyProvider,
+//                objectPropertyHierarchyProvider,
+//                dataPropertyHierarchyProvider,
+//                annotationPropertyHierarchyProvider,
+//                ontology,
+//                changeManager,
+//                entitiesByRevisionCache);
+//
+//
+//        metricsManager = new OWLAPIProjectMetricsManager(
+//                getProjectId(),
+//                DefaultMetricsCalculators.getDefaultMetrics(rootOntology),
+//                projectEventManager,
+//                appInjector.getInstance(WebProtegeLogger.class));
+//
+//    }
 
 
     public ProjectId getProjectId() {
-        return documentStore.getProjectId();
+        return projectId;
     }
 
     public String getLang() {
-        return defaultLanguage;
+        return "en";
     }
 
     /**
@@ -347,15 +384,9 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         return changeManager.getRevisionSummary(revisionNumber);
     }
 
-    private void handleOntologiesChanged(List<? extends OWLOntologyChange> changes) {
-        documentStore.saveOntologyChanges(Collections.unmodifiableList(changes));
-        classHierarchyProvider.handleChanges(changes);
-        objectPropertyHierarchyProvider.handleChanges(changes);
-        dataPropertyHierarchyProvider.handleChanges(changes);
-        annotationPropertyHierarchyProvider.handleChanges(changes);
-        metricsManager.handleOntologyChanges(changes);
+    public UIConfigurationManager getUiConfigurationManager() {
+        return uiConfigurationManager;
     }
-
 
     public EventManager<ProjectEvent<?>> getEventManager() {
         return projectEventManager;
@@ -402,7 +433,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     }
 
     public OWLDataFactory getDataFactory() {
-        return manager.getOWLDataFactory();
+        return dataFactory;
     }
 
     public OWLAPISearchManager getSearchManager() {
@@ -561,13 +592,14 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             }
 
 
-            List<OWLOntologyChange> allChangesIncludingRenames = new ArrayList<OWLOntologyChange>();
-            final OWLObjectDuplicator duplicator = new OWLObjectDuplicator(manager.getOWLDataFactory(), iriRenameMap);
+            List<OWLOntologyChange> allChangesIncludingRenames = new ArrayList<>();
+            final OWLObjectDuplicator duplicator = new OWLObjectDuplicator(dataFactory, iriRenameMap);
             for (OWLOntologyChange change : changes) {
                 if (changesToRename.contains(change)) {
                     OWLOntologyChange replacementChange = getRenamedChange(change, duplicator);
                     allChangesIncludingRenames.add(replacementChange);
-                } else {
+                }
+                else {
                     allChangesIncludingRenames.add(change);
                 }
             }
@@ -587,19 +619,19 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             // we apply the changes
             try {
                 projectChangeWriteLock.lock();
+                OWLAPIProjectOWLOntologyManager manager = ((OWLAPIProjectOWLOntologyManager) getRootOntology().getOWLOntologyManager());
                 appliedChanges = manager.getDelegate().applyChanges(minimisedChanges);
                 final RenameMap renameMap = new RenameMap(iriRenameMap);
                 Optional<R> renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
                 finalResult = new ChangeApplicationResult<R>(renamedResult, appliedChanges, renameMap);
                 if (!appliedChanges.isEmpty()) {
-                    logAppliedChanges(userId, finalResult, changeDescriptionGenerator);
+                    logAndBroadcastAppliedChanges(userId, finalResult, changeDescriptionGenerator);
                 }
             } finally {
                 // Release for reads
                 projectChangeWriteLock.unlock();
             }
 
-            projectInjector.getInstance(WebProtegeLogger.class).info(getProjectId(), "%s applied %d changes to %s", userId, appliedChanges.size(), getProjectId());
 
             if (!(changeListGenerator instanceof SilentChangeListGenerator)) {
                 List<ProjectEvent<?>> highLevelEvents = new ArrayList<>();
@@ -625,7 +657,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             if (change.isAddAxiom()) {
                 axiomsToAdd.add(change.getAxiom());
                 axiomsToRemove.remove(change.getAxiom());
-            } else if (change.isRemoveAxiom()) {
+            }
+            else if (change.isRemoveAxiom()) {
                 axiomsToRemove.add(change.getAxiom());
                 axiomsToAdd.remove(change.getAxiom());
             }
@@ -638,11 +671,13 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 if (axiomsToAdd.contains(change.getAxiom())) {
                     minimisedChanges.add(change);
                 }
-            } else if (change.isRemoveAxiom()) {
+            }
+            else if (change.isRemoveAxiom()) {
                 if (axiomsToRemove.contains(change.getAxiom())) {
                     minimisedChanges.add(change);
                 }
-            } else {
+            }
+            else {
                 minimisedChanges.add(change);
             }
         }
@@ -662,22 +697,33 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         if (result.isPresent()) {
             R actualResult = result.get();
             renamedResult = Optional.of(changeListGenerator.getRenamedResult(actualResult, renameMap));
-        } else {
+        }
+        else {
             renamedResult = result;
         }
         return renamedResult;
     }
 
 
-    private <R> void logAppliedChanges(UserId userId, ChangeApplicationResult<R> finalResult, ChangeDescriptionGenerator<R> changeDescriptionGenerator) {
+    private <R> void logAndBroadcastAppliedChanges(UserId userId, ChangeApplicationResult<R> finalResult, ChangeDescriptionGenerator<R> changeDescriptionGenerator) {
         // Generate a description for the changes that were actually applied
         String changeDescription = changeDescriptionGenerator.generateChangeDescription(finalResult);
         // Log the changes
         List<OWLOntologyChangeRecord> changeRecords = new ArrayList<>();
-        for(OWLOntologyChange change : finalResult.getChangeList()) {
+        for (OWLOntologyChange change : finalResult.getChangeList()) {
             changeRecords.add(change.getChangeRecord());
         }
         changeManager.addRevision(userId, changeRecords, changeDescription);
+
+        // TODO: THis list of "listeners" should be injected
+        List<OWLOntologyChange> changes = finalResult.getChangeList();
+        documentStore.saveOntologyChanges(changes);
+
+        classHierarchyProvider.handleChanges(changes);
+        objectPropertyHierarchyProvider.handleChanges(changes);
+        dataPropertyHierarchyProvider.handleChanges(changes);
+        annotationPropertyHierarchyProvider.handleChanges(changes);
+        metricsManager.handleOntologyChanges(changes);
     }
 
 

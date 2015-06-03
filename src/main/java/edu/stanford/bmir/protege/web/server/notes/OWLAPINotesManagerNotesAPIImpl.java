@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.notes;
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
 import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
+import edu.stanford.bmir.protege.web.server.inject.project.NotesOntologyDocument;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
@@ -64,30 +65,30 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 
     private final NotesManager notesManager;
 
-    private static final String NOTES_ONTOLOGY_DOCUMENT_NAME = "notes-data.binary";
-    
     private File notesOntologyDocument;
 
     @Inject
-    public OWLAPINotesManagerNotesAPIImpl(ProjectId projectId, OWLDataFactory dataFactory, HasPostEvents<ProjectEvent<?>> eventManager, BrowserTextProvider browserTextProvider, WebProtegeLogger logger) {
+    public OWLAPINotesManagerNotesAPIImpl(@NotesOntologyDocument File notesOntologyDocument,
+                                          ProjectId projectId,
+                                          OWLDataFactory dataFactory,
+                                          HasPostEvents<ProjectEvent<?>> eventManager,
+                                          BrowserTextProvider browserTextProvider,
+                                          WebProtegeLogger logger) {
         this.logger = logger;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
         this.eventManager = eventManager;
         this.browserTextProvider = browserTextProvider;
+        this.notesOntologyDocument = notesOntologyDocument;
 
         try {
             Stopwatch stopwatch = Stopwatch.createStarted();
-            OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
-            File notesDataDirectory = documentStore.getNotesDataDirectory();
-            notesOntologyDocument = new File(notesDataDirectory, NOTES_ONTOLOGY_DOCUMENT_NAME);
             if(!notesOntologyDocument.exists()) {
                 createEmptyNotesOntology();
             }
             else {
                 loadExistingNotesOntology();
             }
-
             notesManager = NotesManager.createNotesManager(notesOntology, getChangeOntologyDocumentIRI().toString());
             notesManager.getOWLOntology().getOWLOntologyManager().addOntologyChangeListener(new OWLOntologyChangeListener() {
                 public void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws OWLException {

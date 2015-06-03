@@ -3,7 +3,11 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import com.google.common.base.Optional;
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
+import com.google.inject.Injector;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.server.events.EventTranslatorModule;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
@@ -140,8 +144,14 @@ public class OWLAPIProjectCache {
                 OWLAPIProject project = projectId2ProjectMap.get(projectId);
                 if (project == null) {
                     logger.info("Request for unloaded project. Loading %s.", projectId.getId());
-                    OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
-                    project = OWLAPIProject.getProject(documentStore);
+                    WebProtegeInjector appInjector = WebProtegeInjector.get();
+                    Injector projectInjector = appInjector.createChildInjector(
+                            new ProjectModule(projectId),
+                            new EventTranslatorModule());
+                    project = projectInjector.getInstance(OWLAPIProject.class);
+
+//                    OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
+//                    project = OWLAPIProject.getProject(documentStore);
                     projectId2ProjectMap.put(projectId, project);
                     WebProtegeLoggerEx loggerEx = new WebProtegeLoggerEx(logger);
                     loggerEx.logMemoryUsage();
@@ -150,9 +160,6 @@ public class OWLAPIProjectCache {
                     logProjectAccess(projectId);
                 }
                 return project;
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);
             }
             catch (OWLParserException e) {
                 throw new RuntimeException(e);
@@ -171,13 +178,14 @@ public class OWLAPIProjectCache {
     }
 
     public OWLAPIProject getProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException {
-        try {
-            OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.createNewProject(newProjectSettings);
-            return getProject(documentStore.getProjectId());
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        throw new RuntimeException("NOT IMPLEMENTED");
+//        try {
+//            OWLAPIProjectDocumentStore documentStore = OWLAPIProjectDocumentStore.createNewProject(newProjectSettings);
+//            return getProject(documentStore.getProjectId());
+//        }
+//        catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     public void purge(ProjectId projectId) {

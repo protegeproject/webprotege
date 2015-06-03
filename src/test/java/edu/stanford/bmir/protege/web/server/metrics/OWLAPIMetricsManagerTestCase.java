@@ -13,7 +13,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -52,7 +55,7 @@ public class OWLAPIMetricsManagerTestCase {
 
     @Before
     public void setUp() throws Exception {
-        List<MetricCalculator> metricList = Lists.newArrayList();
+        List<MetricCalculator> metricList = new ArrayList<>();
         metricList.add(metric);
         metricsManager = new OWLAPIProjectMetricsManager(projectId, metricList, eventBus, logger);
     }

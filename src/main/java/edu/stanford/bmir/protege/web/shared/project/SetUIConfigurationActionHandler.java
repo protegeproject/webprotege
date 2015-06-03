@@ -1,11 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.project;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.project.UIConfigurationManager;
 
 import javax.inject.Inject;
@@ -15,13 +14,11 @@ import javax.inject.Inject;
  * Stanford Center for Biomedical Informatics Research
  * 21/02/15
  */
-public class SetUIConfigurationActionHandler implements ActionHandler<SetUIConfigurationAction, SetUIConfigurationResult> {
-
-    private UIConfigurationManager uiConfigurationManager;
+public class SetUIConfigurationActionHandler extends AbstractHasProjectActionHandler<SetUIConfigurationAction, SetUIConfigurationResult> {
 
     @Inject
-    public SetUIConfigurationActionHandler(UIConfigurationManager uiConfigurationManager) {
-        this.uiConfigurationManager = uiConfigurationManager;
+    public SetUIConfigurationActionHandler(OWLAPIProjectManager projectManager) {
+        super(projectManager);
     }
 
     @Override
@@ -30,19 +27,21 @@ public class SetUIConfigurationActionHandler implements ActionHandler<SetUIConfi
     }
 
     @Override
-    public RequestValidator<SetUIConfigurationAction> getRequestValidator(SetUIConfigurationAction action, RequestContext requestContext) {
+    protected RequestValidator<SetUIConfigurationAction> getAdditionalRequestValidator(SetUIConfigurationAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 
     @Override
-    public SetUIConfigurationResult execute(SetUIConfigurationAction action, ExecutionContext executionContext) {
+    protected SetUIConfigurationResult execute(SetUIConfigurationAction action, OWLAPIProject project, ExecutionContext executionContext) {
         if(executionContext.getUserId().isGuest()) {
             throw new NotSignedInException("The project layout cannot be saved because you are not signed in");
         }
-        uiConfigurationManager.saveProjectLayoutConfiguration(
+        project.getUiConfigurationManager().saveProjectLayoutConfiguration(
                 action.getProjectId(),
                 executionContext.getUserId(),
                 action.getConfiguration());
         return new SetUIConfigurationResult();
     }
+
+
 }

@@ -3,11 +3,15 @@ package edu.stanford.bmir.protege.web.server.render;
 import com.google.common.base.Objects;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 27/01/15
  */
+@Singleton
 public class NullHighlightedEntityChecker implements HighlightedEntityChecker {
 
     private static final NullHighlightedEntityChecker INSTANCE = new NullHighlightedEntityChecker();
@@ -20,6 +24,7 @@ public class NullHighlightedEntityChecker implements HighlightedEntityChecker {
         return INSTANCE;
     }
 
+    @Inject
     private NullHighlightedEntityChecker() {
     }
 

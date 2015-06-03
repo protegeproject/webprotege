@@ -32,13 +32,17 @@ public class UIConfigurationManager {
     private final DefaultUIConfigurationFileManager defaultUIConfigurationFileManager;
 
 
-    private ProjectDetailsManager projectDetailsManager;
+    private final ProjectDetailsManager projectDetailsManager;
+
+    private final OWLAPIProjectDocumentStore documentStore;
 
     @Inject
     public UIConfigurationManager(ProjectDetailsManager projectDetailsManager,
-                                  DefaultUIConfigurationFileManager defaultUIConfigurationFileManager) {
+                                  DefaultUIConfigurationFileManager defaultUIConfigurationFileManager,
+                                  OWLAPIProjectDocumentStore documentStore) {
         this.projectDetailsManager = projectDetailsManager;
         this.defaultUIConfigurationFileManager = defaultUIConfigurationFileManager;
+        this.documentStore = documentStore;
     }
 
 
@@ -107,12 +111,11 @@ public class UIConfigurationManager {
     }
 
 
-    private static File getProjectConfigurationDirectory(ProjectId projectId) {
-        final OWLAPIProjectDocumentStore projectDocumentStore = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);
-        return projectDocumentStore.getConfigurationsDirectory();
+    private File getProjectConfigurationDirectory(ProjectId projectId) {
+        return documentStore.getConfigurationsDirectory();
     }
 
-    private static File getConfigurationFile(ProjectId projectId, UserId userId) {
+    private File getConfigurationFile(ProjectId projectId, UserId userId) {
         File projectConfigurationDirectory = getProjectConfigurationDirectory(projectId);
         File projectUserConfigurationDirectory = new File(projectConfigurationDirectory, getEscapedUserIdName(userId));
         return new File(projectUserConfigurationDirectory, CONFIGURATION_FILE_NAME);
@@ -122,7 +125,7 @@ public class UIConfigurationManager {
         return userId.getUserName();
     }
 
-    private static File getConfigurationFile(ProjectId projectId) {
+    private File getConfigurationFile(ProjectId projectId) {
         return new File(getProjectConfigurationDirectory(projectId), CONFIGURATION_FILE_NAME);
     }
 
