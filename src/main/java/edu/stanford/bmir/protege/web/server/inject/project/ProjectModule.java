@@ -15,9 +15,12 @@ import edu.stanford.bmir.protege.web.server.metrics.MetricCalculatorsProvider;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManager;
 import edu.stanford.bmir.protege.web.server.notes.OWLAPINotesManagerNotesAPIImpl;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
+import edu.stanford.bmir.protege.web.server.owlapi.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.owlapi.change.*;
 import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.*;
+import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
+import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.watches.*;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
@@ -67,36 +70,132 @@ public class ProjectModule extends AbstractModule {
     @Override
     protected void configure() {
 
+        // @formatter:off
+
         bind(ProjectId.class).toInstance(projectId);
 
+        bind(File.class)
+                .annotatedWith(RootOntologyDocument.class)
+                .toProvider(RootOntologyDocumentProvider.class);
+
+        bind(File.class).annotatedWith(ProjectDirectory.class)
+                .toProvider(ProjectDirectoryProvider.class);
+
+        bind(File.class)
+                .annotatedWith(ChangeHistoryFile.class)
+                .toProvider(ChangeHistoryFileProvider.class);
+
+        bind(File.class)
+                .annotatedWith(ProjectSpecificUiConfigurationDataDirectory.class)
+                .toProvider(ProjectSpecificUiConfigurationDataDirectoryProvider.class);
+
+        bind(File.class)
+                .annotatedWith(NotesOntologyDocument.class)
+                .toProvider(NotesOntologyDocumentProvider.class);
+
+        bind(File.class)
+                .annotatedWith(WatchFile.class)
+                .toProvider(WatchFileProvider.class);
+
+
+        bind(OWLAPIProject.class)
+                .asEagerSingleton();
 
         bind(OWLOntology.class)
                 .annotatedWith(RootOntology.class)
                 .toProvider(RootOntologyProvider.class)
                 .asEagerSingleton();
 
+        bind(OWLAPIProjectDocumentStore.class)
+                .asEagerSingleton();
 
-        bind(File.class).annotatedWith(ProjectDirectory.class)
-                .toProvider(ProjectDirectoryProvider.class);
-        bind(File.class).annotatedWith(ChangeHistoryFile.class).toProvider(ChangeHistoryFileProvider.class);
 
-        bind(OWLDataFactory.class).toInstance(new OWLDataFactoryImpl(false, false));
 
-        bind(OWLAnnotationPropertyProvider.class).to(OWLDataFactoryImpl.class);
+        bind(OWLDataFactory.class)
+                .toInstance(new OWLDataFactoryImpl(false, false));
+
+        bind(OWLEntityProvider.class)
+                .to(OWLDataFactoryImpl.class);
+
+        bind(OWLAnnotationPropertyProvider.class)
+                .to(OWLDataFactoryImpl.class);
+
+
+
 
         bind(OWLClass.class)
                 .annotatedWith(ClassHierarchyRoot.class)
                 .toProvider(ClassHierarchyRootProvider.class);
 
-        bind(OWLObjectProperty.class).annotatedWith(ObjectPropertyHierarchyRoot.class).toProvider(ObjectPropertyHierarchyRootProvider.class);
-        bind(OWLDataProperty.class).annotatedWith(DataPropertyHierarchyRoot.class).toProvider(DataPropertyHierarchyRootProvider.class);
+        bind(OWLObjectProperty.class)
+                .annotatedWith(ObjectPropertyHierarchyRoot.class)
+                .toProvider(ObjectPropertyHierarchyRootProvider.class);
+
+        bind(OWLDataProperty.class)
+                .annotatedWith(DataPropertyHierarchyRoot.class)
+                .toProvider(DataPropertyHierarchyRootProvider.class);
 
 
-        bind(OWLEntityProvider.class).to(OWLDataFactoryImpl.class);
+
+        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLClass>>() {})
+                .to(AssertedClassHierarchyProvider.class);
+
+        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLObjectProperty>>() {})
+                .to(OWLObjectPropertyHierarchyProvider.class);
+
+        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLDataProperty>>() {})
+                .to(OWLDataPropertyHierarchyProvider.class);
+
+        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLAnnotationProperty>>() {})
+                .to(OWLAnnotationPropertyHierarchyProvider.class);
+
+        bind(AssertedClassHierarchyProvider.class)
+                .asEagerSingleton();
+
+        bind(OWLObjectPropertyHierarchyProvider.class)
+                .asEagerSingleton();
+
+        bind(OWLDataPropertyHierarchyProvider.class)
+                .asEagerSingleton();
+
+        bind(OWLAnnotationPropertyHierarchyProvider.class)
+                .asEagerSingleton();
 
 
-        bind(ShortFormProvider.class).to(WebProtegeShortFormProvider.class);
-        bind(IRIShortFormProvider.class).to(WebProtegeIRIShortFormProvider.class);
+
+
+        bind(WatchManager.class)
+                .to(WatchManagerImpl.class)
+                .asEagerSingleton();
+
+        bind(WatchEventManager.class)
+                .toProvider(WatchEventManagerProvider.class)
+                .asEagerSingleton();
+
+        bind(WatchStore.class)
+                .to(WatchStoreImpl.class)
+                .asEagerSingleton();
+
+        bind(WatchTriggeredHandler.class)
+                .to(WatchTriggeredHandlerImpl.class)
+                .asEagerSingleton();
+
+
+
+        bind(RenderingManager.class)
+                .asEagerSingleton();
+
+
+        bind(ShortFormProvider.class)
+                .to(WebProtegeShortFormProvider.class)
+                .asEagerSingleton();
+
+        bind(IRIShortFormProvider.class)
+                .to(WebProtegeIRIShortFormProvider.class)
+                .asEagerSingleton();
+
+        bind(BrowserTextProvider.class)
+                .to(RenderingManager.class);
 
         // TODO: Needs annotation
         bind(new TypeLiteral<ImmutableList<IRI>>(){}).toInstance(ImmutableList.<IRI>builder()
@@ -109,51 +208,48 @@ public class ProjectModule extends AbstractModule {
             }
         });
 
-        bind(HasAnnotationAssertionAxioms.class).to(HasAnnotationAssertionAxiomsImpl.class);
 
-        bind(EntityIRIChecker.class).to(EntityIRICheckerImpl.class);
+        bind(BidirectionalShortFormProvider.class)
+                .to(WebProtegeBidirectionalShortFormProvider.class)
+                .asEagerSingleton();
 
-        // TODO: CHECK
-        bind(BidirectionalShortFormProvider.class).to(WebProtegeBidirectionalShortFormProvider.class).in(SINGLETON);
+        bind(OntologyIRIShortFormProvider.class)
+                .to(WebProtegeOntologyIRIShortFormProvider.class)
+                .asEagerSingleton();
 
-        bind(OntologyIRIShortFormProvider.class).to(WebProtegeOntologyIRIShortFormProvider.class);
-        bind(OWLOntologyChecker.class).to(WebProtegeOWLOntologyChecker.class);
+        bind(EntityIRIChecker.class)
+                .to(EntityIRICheckerImpl.class)
+                .asEagerSingleton();
 
-        bind(HighlightedEntityChecker.class).to(NullHighlightedEntityChecker.class).asEagerSingleton();
+        bind(OWLOntologyChecker.class)
+                .to(WebProtegeOWLOntologyChecker.class)
+                .asEagerSingleton();
 
-        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLClass>>() {})
-                .to(AssertedClassHierarchyProvider.class).in(SINGLETON);
-        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLObjectProperty>>(){})
-                .to(OWLObjectPropertyHierarchyProvider.class).in(SINGLETON);
-        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLDataProperty>>(){})
-                .to(OWLDataPropertyHierarchyProvider.class).in(SINGLETON);
-        bind(new TypeLiteral<OWLObjectHierarchyProvider<OWLAnnotationProperty>>(){})
-                .to(OWLAnnotationPropertyHierarchyProvider.class).in(SINGLETON);
+        bind(HighlightedEntityChecker.class)
+                .to(NullHighlightedEntityChecker.class)
+                .asEagerSingleton();
 
 
-        bind(File.class).annotatedWith(WatchFile.class).toProvider(WatchFileProvider.class);
-        bind(WatchManager.class).to(WatchManagerImpl.class).in(SINGLETON);
-        bind(WatchEventManager.class).toProvider(WatchEventManagerProvider.class).asEagerSingleton();
-        bind(WatchStore.class).to(WatchStoreImpl.class).in(SINGLETON);
-        bind(WatchTriggeredHandler.class).to(WatchTriggeredHandlerImpl.class);
 
-        bind(BrowserTextProvider.class).to(RenderingManager.class);
 
-        bind(RenderingManager.class).in(SINGLETON);
 
-        bind(EventManager.class).asEagerSingleton();
+        bind(EventManager.class)
+                .asEagerSingleton();
 
-        bind(new TypeLiteral<EventManager<ProjectEvent<?>>>(){}).toInstance(new EventManager<ProjectEvent<?>>(PROJECT_EVENT_LIFE_TIME));
+        bind(new TypeLiteral<EventManager<ProjectEvent<?>>>(){})
+                .toInstance(new EventManager<ProjectEvent<?>>(PROJECT_EVENT_LIFE_TIME));
 
-        bind(new TypeLiteral<HasPostEvents<ProjectEvent<?>>>(){}).to(new TypeLiteral<EventManager<ProjectEvent<?>>>(){});
+        bind(new TypeLiteral<HasPostEvents<ProjectEvent<?>>>(){})
+                .to(new TypeLiteral<EventManager<ProjectEvent<?>>>() {
+                });
 
-        bind(EventLifeTime.class).toInstance(PROJECT_EVENT_LIFE_TIME);
+        bind(EventLifeTime.class)
+                .toInstance(PROJECT_EVENT_LIFE_TIME);
 
-        bind(RevisionNumber.class).toProvider(RevisionNumberProvider.class);
+        bind(RevisionNumber.class)
+                .toProvider(RevisionNumberProvider.class);
 
-        bind(HasContainsEntityInSignature.class).to(HasContainsEntityInSignatureImpl.class);
-        bind(HasGetEntitiesWithIRI.class).to(HasGetEntitiesWithIRIImpl.class);
-        bind(HasGetEntitiesInSignature.class).to(HasGetEntitiesInSignatureImpl.class);
+
 
         bind(HasGetChangeSubjects.class).to(OntologyChangeSubjectProvider.class);
 
@@ -167,7 +263,6 @@ public class ProjectModule extends AbstractModule {
         bind(WatchManager.class).to(WatchManagerImpl.class).asEagerSingleton();
         bind(WatchStore.class).to(WatchStoreImpl.class).asEagerSingleton();
 
-        bind(File.class).annotatedWith(NotesOntologyDocument.class).toProvider(NotesOntologyDocumentProvider.class);
         bind(OWLAPINotesManager.class).to(OWLAPINotesManagerNotesAPIImpl.class).in(SINGLETON);
 
         bind(LegacyEntityDataProvider.class).to(RenderingManager.class);
@@ -242,5 +337,23 @@ public class ProjectModule extends AbstractModule {
         bind(new TypeLiteral<List<MetricCalculator>>(){})
                 .toProvider(MetricCalculatorsProvider.class);
 
+
+        bind(HasContainsEntityInSignature.class)
+                .to(HasContainsEntityInSignatureImpl.class);
+
+        bind(HasGetEntitiesWithIRI.class)
+                .to(HasGetEntitiesWithIRIImpl.class);
+
+        bind(HasGetEntitiesInSignature.class)
+                .to(HasGetEntitiesInSignatureImpl.class);
+
+        bind(HasAnnotationAssertionAxioms.class)
+                .to(HasAnnotationAssertionAxiomsImpl.class);
+
+
+        bind(HasApplyChanges.class)
+                .to(OWLAPIProject.class);
+
+        // @formatter:on
     }
 }

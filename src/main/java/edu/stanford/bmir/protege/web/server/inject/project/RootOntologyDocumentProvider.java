@@ -13,6 +13,8 @@ public class RootOntologyDocumentProvider implements Provider<File> {
 
     private File projectDirectory;
 
+
+
     @Inject
     public RootOntologyDocumentProvider(@ProjectDirectory File projectDirectory) {
         this.projectDirectory = projectDirectory;

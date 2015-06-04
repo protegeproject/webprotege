@@ -139,6 +139,10 @@ public class RevisionStoreImpl implements RevisionStore {
     public void load() {
         try {
             writeLock.lock();
+            if(!changeHistoryFile.exists()) {
+                changeHistoryFile.getParentFile().mkdirs();
+                return;
+            }
             final ImmutableList.Builder<Revision> revisionsBuilder = ImmutableList.builder();
             try {
                 Stopwatch stopwatch = Stopwatch.createStarted();

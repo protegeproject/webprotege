@@ -42,16 +42,17 @@ public class BioPortalRestAPI {
     }
 
     public void uploadOntologyToBioPortal(String projectDisplayName, ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException {
-        try {
-            BioPortalUploader uploader = new BioPortalUploader(projectDisplayName, projectId, revisionNumber, publishInfo);
-            uploader.uploadToBioPortal(bioportalRestAPIBase);
-        }
-        catch (IOException e) {
-            throw new IOException(e);
-        }
-        catch (OWLOntologyStorageException e) {
-            throw new IOException(e);
-        }
+//        try {
+            throw new RuntimeException("NOT IMPLEMENTED");
+//            BioPortalUploader uploader = new BioPortalUploader(projectDisplayName, projectId, revisionNumber, publishInfo);
+//            uploader.uploadToBioPortal(bioportalRestAPIBase);
+//        }
+//        catch (IOException e) {
+//            throw new IOException(e);
+//        }
+//        catch (OWLOntologyStorageException e) {
+//            throw new IOException(e);
+//        }
     }
 
 
