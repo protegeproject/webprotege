@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.init;
 
-import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
-import edu.stanford.bmir.protege.web.server.inject.UiConfigurationDirectory;
+import edu.stanford.bmir.protege.web.server.inject.DefaultUiConfigurationDirectory;
 import org.apache.commons.io.FileUtils;
 
 import javax.inject.Inject;
@@ -20,7 +19,7 @@ public class CheckUIConfigurationDataExists implements ConfigurationTask {
     private final File defaultConfigurationDirectory;
 
     @Inject
-    public CheckUIConfigurationDataExists(@UiConfigurationDirectory File defaultConfigurationDirectory) {
+    public CheckUIConfigurationDataExists(@DefaultUiConfigurationDirectory File defaultConfigurationDirectory) {
         this.defaultConfigurationDirectory = defaultConfigurationDirectory;
     }
 

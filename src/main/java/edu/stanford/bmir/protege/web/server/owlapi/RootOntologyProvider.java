@@ -1,37 +1,21 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import com.google.common.base.Stopwatch;
-import edu.stanford.bmir.protege.web.server.crud.ProjectEntityCrudKitHandlerCache;
-import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.owlapi.ImportsCacheManager;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectOWLOntologyManager;
-import edu.stanford.bmir.protege.web.server.owlapi.ProjectAccessManager;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
 import org.coode.owlapi.rdf.rdfxml.RDFXMLOntologyStorer;
 import org.protege.owlapi.model.ProtegeOWLOntologyManager;
-import org.semanticweb.binaryowl.BinaryOWLParseException;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
-import org.semanticweb.owlapi.io.FileDocumentSource;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.NonMappingOntologyIRIMapper;
 import uk.ac.manchester.cs.owl.owlapi.EmptyInMemOWLOntologyFactory;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.ParsableOWLOntologyFactory;
 import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOntologyStorer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Matthew Horridge
@@ -51,6 +35,7 @@ public class RootOntologyProvider implements Provider<OWLOntology> {
 
     private final WebProtegeLogger logger;
 
+    private OWLOntology rootOntology = null;
 
     @Inject
     public RootOntologyProvider(OWLAPIProjectDocumentStore documentStore,
@@ -61,8 +46,10 @@ public class RootOntologyProvider implements Provider<OWLOntology> {
     }
 
     @Override
-    public OWLOntology get() {
-
+    public synchronized OWLOntology get() {
+        if(rootOntology != null) {
+            return rootOntology;
+        }
 
         // The delegate - we use the concurrent ontology manager
         OWLOntologyManager delegateManager = new ProtegeOWLOntologyManager(dataFactory);
@@ -85,25 +72,20 @@ public class RootOntologyProvider implements Provider<OWLOntology> {
         imMemFactory.setOWLOntologyManager(manager);
 
 
-        ParsableOWLOntologyFactory parsingFactory = new ParsableOWLOntologyFactory();
-        delegateManager.addOntologyFactory(parsingFactory);
-        parsingFactory.setOWLOntologyManager(manager);
+        OWLOntologyFactory factory = new BinaryOWLOntologyFactory();
+        delegateManager.addOntologyFactory(factory);
+        factory.setOWLOntologyManager(manager);
 
         manager.setDelegate(delegateManager);
 
-
         try {
-            if (!documentStore.exists()) {
-                throw new ProjectDocumentNotFoundException(documentStore.getProjectId());
-            }
-            OWLOntology rootOntology = documentStore.loadRootOntologyIntoManager(manager.getDelegate());
+            rootOntology = documentStore.initialiseOntologyManagerWithProject(manager.getDelegate());
             manager.sealDelegate();
             return rootOntology;
-        } catch (OWLOntologyCreationException e) {
+        } catch (OWLOntologyCreationException | OWLOntologyStorageException e) {
             throw new RuntimeException("Failed to load project: " + e.getMessage(), e);
         }
-
-
-
     }
+
+
 }

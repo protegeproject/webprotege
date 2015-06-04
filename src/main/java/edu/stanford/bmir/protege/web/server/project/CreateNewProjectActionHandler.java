@@ -13,8 +13,11 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
 import javax.inject.Inject;
+import java.io.IOException;
 
 /**
  * Matthew Horridge
@@ -48,14 +51,18 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
 
     @Override
     public CreateNewProjectResult execute(CreateNewProjectAction action, ExecutionContext executionContext) {
-        NewProjectSettings newProjectSettings = action.getNewProjectSettings();
-        OWLAPIProject project = pm.createNewProject(newProjectSettings);
-        ProjectId projectId = project.getProjectId();
-        if (!projectDetailsManager.isExistingProject(projectId)) {
-            projectDetailsManager.registerProject(projectId, newProjectSettings);
-            projectSharingSettingsManager.applyDefaultSharingSettings(projectId, executionContext.getUserId());
+        try {
+            NewProjectSettings newProjectSettings = action.getNewProjectSettings();
+            OWLAPIProject project = pm.createNewProject(newProjectSettings);
+            ProjectId projectId = project.getProjectId();
+            if (!projectDetailsManager.isExistingProject(projectId)) {
+                projectDetailsManager.registerProject(projectId, newProjectSettings);
+                projectSharingSettingsManager.applyDefaultSharingSettings(projectId, executionContext.getUserId());
+            }
+            return new CreateNewProjectResult(projectDetailsManager.getProjectDetails(projectId));
+        } catch (OWLOntologyCreationException | OWLOntologyStorageException | IOException e) {
+            throw new RuntimeException(e);
         }
-        return new CreateNewProjectResult(projectDetailsManager.getProjectDetails(projectId));
     }
 
 

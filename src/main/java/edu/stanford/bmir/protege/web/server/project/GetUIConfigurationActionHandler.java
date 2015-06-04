@@ -30,7 +30,6 @@ public class GetUIConfigurationActionHandler extends AbstractHasProjectActionHan
     @Override
     protected GetUIConfigurationResult execute(GetUIConfigurationAction action, OWLAPIProject project, ExecutionContext executionContext) {
         ProjectLayoutConfiguration configuration = project.getUiConfigurationManager().getProjectLayoutConfiguration(
-                action.getProjectId(),
                 executionContext.getUserId()
         );
         return new GetUIConfigurationResult(configuration);

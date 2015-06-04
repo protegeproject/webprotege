@@ -34,7 +34,7 @@ public class BioPortalUploader {
 
     private PublishToBioPortalInfo publishInfo;
 
-    private OWLAPIProjectDocumentStore documentStore;
+    private final OWLAPIProjectDocumentStore documentStore;
 
     public BioPortalUploader(File ontologyDocument, OWLAPIProjectDocumentStore documentStore, PublishToBioPortalInfo publishInfo) {
         this.ontologyDocument = ontologyDocument;
@@ -42,8 +42,9 @@ public class BioPortalUploader {
         this.publishInfo = publishInfo;
     }
 
-    public BioPortalUploader(String projectDisplayName, ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException, OWLOntologyStorageException {
+    public BioPortalUploader(String projectDisplayName, OWLAPIProjectDocumentStore documentStore, ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException, OWLOntologyStorageException {
         this.publishInfo = publishInfo;
+        this.documentStore = documentStore;
         ontologyDocument = getOntologyDocumentFromProjectAndRevision(projectDisplayName, projectId, revisionNumber);
     }
     

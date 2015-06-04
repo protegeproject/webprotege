@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public class UiConfigurationDirectoryProvider implements Provider<File> {
+public class DefaultUiConfigurationDirectoryProvider implements Provider<File> {
 
     /**
      * The name of the directory where default UI configuration data is saved to
@@ -22,7 +22,7 @@ public class UiConfigurationDirectoryProvider implements Provider<File> {
     private final File dataDirectory;
 
     @Inject
-    public UiConfigurationDirectoryProvider(@DataDirectory File dataDirectory) {
+    public DefaultUiConfigurationDirectoryProvider(@DataDirectory File dataDirectory) {
         this.dataDirectory = checkNotNull(dataDirectory);
     }
 

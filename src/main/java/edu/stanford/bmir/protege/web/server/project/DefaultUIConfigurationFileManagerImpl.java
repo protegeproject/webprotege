@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
+import edu.stanford.bmir.protege.web.server.inject.DefaultUiConfigurationDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 
 import javax.inject.Inject;
@@ -18,24 +19,24 @@ public class DefaultUIConfigurationFileManagerImpl implements DefaultUIConfigura
     private static final String DEFAULT_OWL_CONFIGURATION_FILE_NAME = "default-owl-configuration.xml";
 
 
-    private WebProtegeFileStore webProtegeFileStore;
+    private File defaultUiConfigurationDirectory;
 
     @Inject
-    public DefaultUIConfigurationFileManagerImpl(WebProtegeFileStore webProtegeFileStore) {
-        this.webProtegeFileStore = webProtegeFileStore;
+    public DefaultUIConfigurationFileManagerImpl(@DefaultUiConfigurationDirectory File defaultUiConfigurationDirectory) {
+        this.defaultUiConfigurationDirectory = defaultUiConfigurationDirectory;
     }
 
     @Override
     public File getDefaultConfigurationFile(OWLAPIProjectType projectType) {
         if(projectType == OWLAPIProjectType.getOBOProjectType()) {
             return new File(
-                    webProtegeFileStore.getDefaultUIConfigurationDataDirectory(),
+                    defaultUiConfigurationDirectory,
                     DEFAULT_OBO_CONFIGURATION_FILE_NAME
             );
         }
         else {
             return new File(
-                    webProtegeFileStore.getDefaultUIConfigurationDataDirectory(),
+                    defaultUiConfigurationDirectory,
                     DEFAULT_OWL_CONFIGURATION_FILE_NAME
             );
         }

@@ -57,7 +57,7 @@ public class GetUIConfigurationActionHandler_TestCase {
 
     @Test
     public void shouldReturnConfiguration() {
-        when(uiConfigurationManager.getProjectLayoutConfiguration(any(ProjectId.class), any(UserId.class))).thenReturn(configuration);
+        when(uiConfigurationManager.getProjectLayoutConfiguration(any(UserId.class))).thenReturn(configuration);
         GetUIConfigurationResult result = handler.execute(action, project, executionContext);
         assertThat(result.getConfiguration(), is(configuration));
     }
@@ -65,7 +65,7 @@ public class GetUIConfigurationActionHandler_TestCase {
     @Test(expected = ProjectNotRegisteredException.class)
     public void shouldRethrowProjectNotFoundException() {
         ProjectId projectId = mock(ProjectId.class);
-        when(uiConfigurationManager.getProjectLayoutConfiguration(any(ProjectId.class), any(UserId.class)))
+        when(uiConfigurationManager.getProjectLayoutConfiguration(any(UserId.class)))
                 .thenThrow(new ProjectNotRegisteredException(projectId));
         handler.execute(action, project, executionContext);
     }

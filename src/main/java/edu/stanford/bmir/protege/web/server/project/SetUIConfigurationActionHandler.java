@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.shared.project;
+package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.project.UIConfigurationManager;
+import edu.stanford.bmir.protege.web.shared.project.SetUIConfigurationAction;
+import edu.stanford.bmir.protege.web.shared.project.SetUIConfigurationResult;
 
 import javax.inject.Inject;
 
@@ -37,7 +39,6 @@ public class SetUIConfigurationActionHandler extends AbstractHasProjectActionHan
             throw new NotSignedInException("The project layout cannot be saved because you are not signed in");
         }
         project.getUiConfigurationManager().saveProjectLayoutConfiguration(
-                action.getProjectId(),
                 executionContext.getUserId(),
                 action.getConfiguration());
         return new SetUIConfigurationResult();

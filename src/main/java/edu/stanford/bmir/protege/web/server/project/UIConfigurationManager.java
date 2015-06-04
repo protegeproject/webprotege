@@ -6,9 +6,9 @@ import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfigu
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.server.UIConfigurationManagerException;
-import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
+import edu.stanford.bmir.protege.web.server.inject.DefaultUiConfigurationDirectory;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectSpecificUiConfigurationDataDirectory;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -31,25 +31,28 @@ public class UIConfigurationManager {
 
     private final DefaultUIConfigurationFileManager defaultUIConfigurationFileManager;
 
+    private final ProjectId projectId;
 
     private final ProjectDetailsManager projectDetailsManager;
 
-    private final OWLAPIProjectDocumentStore documentStore;
+    private final File projectSpecificUiConfigurationDirectory;
 
     @Inject
-    public UIConfigurationManager(ProjectDetailsManager projectDetailsManager,
+    public UIConfigurationManager(ProjectId projectId,
+                                  ProjectDetailsManager projectDetailsManager,
                                   DefaultUIConfigurationFileManager defaultUIConfigurationFileManager,
-                                  OWLAPIProjectDocumentStore documentStore) {
+                                  @ProjectSpecificUiConfigurationDataDirectory File projectSpecificUiConfigurationDirectory) {
+        this.projectId = projectId;
         this.projectDetailsManager = projectDetailsManager;
         this.defaultUIConfigurationFileManager = defaultUIConfigurationFileManager;
-        this.documentStore = documentStore;
+        this.projectSpecificUiConfigurationDirectory = projectSpecificUiConfigurationDirectory;
     }
 
 
-    public ProjectLayoutConfiguration getProjectLayoutConfiguration(ProjectId projectId, UserId userId) throws UIConfigurationManagerException {
+    public ProjectLayoutConfiguration getProjectLayoutConfiguration(UserId userId) throws UIConfigurationManagerException {
         try {
-            InputStream inputStream = getUIConfigurationInputStream(projectId, userId);
-            ProjectLayoutConfiguration configuration = convertXMLToConfiguration(inputStream, projectId);
+            InputStream inputStream = getUIConfigurationInputStream(userId);
+            ProjectLayoutConfiguration configuration = convertXMLToConfiguration(inputStream);
             inputStream.close();
             return configuration;
         }
@@ -59,9 +62,9 @@ public class UIConfigurationManager {
     }
 
 
-    public void saveProjectLayoutConfiguration(ProjectId projectId, UserId userId, ProjectLayoutConfiguration config) throws UIConfigurationManagerException {
+    public void saveProjectLayoutConfiguration(UserId userId, ProjectLayoutConfiguration config) throws UIConfigurationManagerException {
         try {
-            OutputStream outputStream = getUIConfigurationOutputStream(projectId, userId);
+            OutputStream outputStream = getUIConfigurationOutputStream(userId);
             convertConfigDetailsToXML(config, outputStream);
             outputStream.close();
         }
@@ -73,27 +76,25 @@ public class UIConfigurationManager {
 
     /**
      * Gets an input stream which can be used to read the UI configuration for the specified projectId and userId.
-     * @param projectId The {@link ProjectId} of the project whose UI configuration is to be read.  Not {@code null}.
      * @param userId The {@link UserId} of the current user.  Not {@code null}.  May correspond to the guest user
      * (see {@link edu.stanford.bmir.protege.web.shared.user.UserId#getGuest()}.
      * @return An {@link InputStream} which can be used to read the UI configuration for the specified user and
      *         specified project.  Not {@code null}.
      * @throws NullPointerException if {@code projectId} or {@code userId} is {@code null}.
      */
-    private InputStream getUIConfigurationInputStream(ProjectId projectId, UserId userId) throws IOException {
-        checkNotNull(projectId);
+    private InputStream getUIConfigurationInputStream(UserId userId) throws IOException {
         checkNotNull(userId);
-        return new BufferedInputStream(new FileInputStream(getUIConfigurationFile(projectId, userId)));
+        return new BufferedInputStream(new FileInputStream(getUIConfigurationFile(userId)));
     }
 
 
-    private File getUIConfigurationFile(ProjectId projectId, UserId userId) {
-        final File projectUserFile = getConfigurationFile(projectId, userId);
+    private File getUIConfigurationFile(UserId userId) {
+        final File projectUserFile = getProjectAndUserSpecificConfigurationFile(userId);
         if (projectUserFile.exists()) {
             return projectUserFile;
         }
 
-        final File projectFile = getConfigurationFile(projectId);
+        final File projectFile = getProjectSpecificUiConfigurationFile();
         if (projectFile.exists()) {
             return projectFile;
         }
@@ -102,22 +103,15 @@ public class UIConfigurationManager {
         return defaultUIConfigurationFileManager.getDefaultConfigurationFile(projectType);
     }
 
-    private OutputStream getUIConfigurationOutputStream(ProjectId projectId, UserId userId) throws IOException {
-        checkNotNull(projectId);
+    private OutputStream getUIConfigurationOutputStream(UserId userId) throws IOException {
         checkNotNull(userId);
-        final File configurationFile = getConfigurationFile(projectId, userId);
+        final File configurationFile = getProjectAndUserSpecificConfigurationFile(userId);
         configurationFile.getParentFile().mkdirs();
         return new BufferedOutputStream(new FileOutputStream(configurationFile));
     }
 
-
-    private File getProjectConfigurationDirectory(ProjectId projectId) {
-        return documentStore.getConfigurationsDirectory();
-    }
-
-    private File getConfigurationFile(ProjectId projectId, UserId userId) {
-        File projectConfigurationDirectory = getProjectConfigurationDirectory(projectId);
-        File projectUserConfigurationDirectory = new File(projectConfigurationDirectory, getEscapedUserIdName(userId));
+    private File getProjectAndUserSpecificConfigurationFile(UserId userId) {
+        File projectUserConfigurationDirectory = new File(projectSpecificUiConfigurationDirectory, getEscapedUserIdName(userId));
         return new File(projectUserConfigurationDirectory, CONFIGURATION_FILE_NAME);
     }
 
@@ -125,8 +119,8 @@ public class UIConfigurationManager {
         return userId.getUserName();
     }
 
-    private File getConfigurationFile(ProjectId projectId) {
-        return new File(getProjectConfigurationDirectory(projectId), CONFIGURATION_FILE_NAME);
+    private File getProjectSpecificUiConfigurationFile() {
+        return new File(projectSpecificUiConfigurationDirectory, CONFIGURATION_FILE_NAME);
     }
 
 
@@ -143,7 +137,7 @@ public class UIConfigurationManager {
         xstream.toXML(config, outputStream);
     }
 
-    public ProjectLayoutConfiguration convertXMLToConfiguration(InputStream in, ProjectId projectId) {
+    public ProjectLayoutConfiguration convertXMLToConfiguration(InputStream in) {
         XStream xstream = new XStream();
         xstream.alias("project", ProjectLayoutConfiguration.class);
         xstream.alias("tab", TabConfiguration.class);

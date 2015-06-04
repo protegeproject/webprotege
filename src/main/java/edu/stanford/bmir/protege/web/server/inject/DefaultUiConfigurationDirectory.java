@@ -14,5 +14,5 @@ import java.lang.annotation.Target;
  */
 @BindingAnnotation
 @Target({ElementType.PARAMETER}) @Retention(RetentionPolicy.RUNTIME)
-public @interface UiConfigurationDirectory {
+public @interface DefaultUiConfigurationDirectory {
 }

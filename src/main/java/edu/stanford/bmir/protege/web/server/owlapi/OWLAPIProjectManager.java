@@ -5,8 +5,11 @@ import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
 import javax.inject.Inject;
+import java.io.IOException;
 
 /**
  * Author: Matthew Horridge<br>
@@ -39,7 +42,7 @@ public class OWLAPIProjectManager {
         return projectCache.isActive(projectId);
     }
     
-    public OWLAPIProject createNewProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException {
+    public OWLAPIProject createNewProject(NewProjectSettings newProjectSettings) throws ProjectAlreadyExistsException, OWLOntologyCreationException, IOException, OWLOntologyStorageException {
         return projectCache.getProject(newProjectSettings);
     }
 

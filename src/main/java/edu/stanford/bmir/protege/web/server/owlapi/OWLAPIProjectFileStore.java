@@ -83,7 +83,7 @@ public class OWLAPIProjectFileStore {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private static final String CONFIGURATIONS_DIRECTORY_NAME = "configuration-data";
+//    private static final String CONFIGURATIONS_DIRECTORY_NAME = "configuration-data";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ public class OWLAPIProjectFileStore {
     
     private File changesDataDirectory;
 
-    private File configurationsDirectory;
+//    private File configurationsDirectory;
     
     private File downloadCacheDirectory;
 
@@ -124,7 +124,7 @@ public class OWLAPIProjectFileStore {
         this.projectDirectory = new File(allProjectsDirectory, projectId.getId());
 
         this.changesDataDirectory = new File(projectDirectory, CHANGE_DATA_DIRECTORY_NAME);
-        this.configurationsDirectory = new File(projectDirectory, CONFIGURATIONS_DIRECTORY_NAME);
+//        this.configurationsDirectory = new File(projectDirectory, CONFIGURATIONS_DIRECTORY_NAME);
 //        this.notesDataDirectory = new File(projectDirectory, NOTES_DATA_DIRECTORY_NAME);
         this.ontologyDataDirectory = new File(projectDirectory, ONTOLOGY_DATA_DIRECTORY_NAME);
         this.downloadCacheDirectory = new File(projectDirectory, DOWNLOAD_CACHE_DIRECTORY);
@@ -137,7 +137,7 @@ public class OWLAPIProjectFileStore {
 //        notesDataDirectory.mkdirs();
         ontologyDataDirectory.mkdirs();
         downloadCacheDirectory.mkdirs();
-        configurationsDirectory.mkdirs();
+//        configurationsDirectory.mkdirs();
     }
 
     public File getProjectDirectory() {
@@ -164,7 +164,7 @@ public class OWLAPIProjectFileStore {
         return downloadCacheDirectory;
     }
 
-    public File getConfigurationsDirectory() {
-        return configurationsDirectory;
-    }
+//    public File getConfigurationsDirectory() {
+//        return configurationsDirectory;
+//    }
 }

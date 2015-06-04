@@ -79,7 +79,7 @@ public class CreateNewProjectActionHandler_TestCase {
     }
 
     @Test
-    public void shouldCreateNewProject() {
+    public void shouldCreateNewProject() throws Exception {
         executeCreateNewProject();
         verify(projectManager, times(1)).createNewProject(newProjectSettings);
     }
