@@ -61,55 +61,18 @@ public class OWLAPIProjectDocumentStore {
 
     private final Lock writeLock = readWriteLock.writeLock();
 
-
-    private final ReadWriteLock downloadCacheReadWriteLock = new ReentrantReadWriteLock();
-
-    private final Lock downloadCacheReadLock = downloadCacheReadWriteLock.readLock();
-
-    private final Lock downloadCacheWriteLock = downloadCacheReadWriteLock.writeLock();
-
-
-    private final File uploadsDirectory;
-
     private final File rootOntologyDocument;
-
-    private final RevisionStore revisionStore;
-
 
 
     @Inject
     public OWLAPIProjectDocumentStore(ProjectId projectId,
-                                      @UploadsDirectory File uploadsDirectory,
                                       @RootOntologyDocument File rootOntologyDocument,
-                                      RevisionStore revisionStore,
                                       WebProtegeLogger logger) {
         this.logger = logger;
         this.projectId = projectId;
         this.rootOntologyDocument = rootOntologyDocument;
-        this.uploadsDirectory = uploadsDirectory;
-        this.revisionStore = revisionStore;
     }
 
-//    private OWLAPIProjectDocumentStore(NewProjectSettings newProjectSettings) throws
-//                                                                              ProjectAlreadyExistsException,
-//                                                                              IOException {
-//        this.projectId = ProjectIdFactory.getFreshProjectId();
-//        this.logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
-//        this.projectManager = WebProtegeInjector.get().getInstance(OWLAPIProjectManager.class);
-//        this.projectFileStore = WebProtegeInjector.get().getInstance(OWLAPIProjectFileStoreFactory.class).get(projectId);
-//        if (projectFileStore.getProjectDirectory().exists()) {
-//            throw new ProjectDocumentExistsException(projectId);
-//        }
-//        this.projectFileStore.initDirectories();
-//        if (newProjectSettings.hasSourceDocument()) {
-//            createProjectFromSources(newProjectSettings);
-//        }
-//        else {
-//            createEmptyProject(newProjectSettings);
-//        }
-//    }
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,43 +80,6 @@ public class OWLAPIProjectDocumentStore {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//    public static OWLAPIProjectDocumentStore getProjectDocumentStore(ProjectId projectId) {
-//        return new OWLAPIProjectDocumentStore(projectId);
-//    }
-
-
-//    public static OWLAPIProjectDocumentStore createNewProject(NewProjectSettings newProjectSettings) throws
-//                                                                                                     ProjectAlreadyExistsException,
-//                                                                                                     IOException {
-//        return new OWLAPIProjectDocumentStore(newProjectSettings);
-//    }
-
-
-//    public void exportProject(String projectDisplayName, OutputStream outputStream, DownloadFormat format) throws
-//                                                                                IOException,
-//                                                                                OWLOntologyStorageException {
-//        // Does it already exist in the download cache?
-//        createDownloadCacheIfNecessary(projectDisplayName, format);
-//        // Feed cached file to caller
-//        final ReadWriteLock projectDownloadCacheLock = getProjectDownloadCacheLock(projectId);
-//        try {
-//            projectDownloadCacheLock.readLock().lock();
-//            byte[] buffer = new byte[4096];
-//            File downloadCache = getDownloadCacheFile(format);
-//            InputStream is = new BufferedInputStream(new FileInputStream(downloadCache));
-//            int read;
-//            while ((read = is.read(buffer)) != -1) {
-//                outputStream.write(buffer, 0, read);
-//            }
-//            is.close();
-//            outputStream.flush();
-//        } finally {
-//            projectDownloadCacheLock.readLock().unlock();
-//        }
-//    }
-
 
     public void saveOntologyChanges(List<OWLOntologyChange> rawChangeList) {
         // Put changes into a buffer
@@ -168,15 +94,11 @@ public class OWLAPIProjectDocumentStore {
                     IRI docIRI = ontology.getOWLOntologyManager().getOntologyDocumentIRI(ontology);
                     if (docIRI == null) {
                         // Generate new ontology
-                        logger.info("There is no ontology document for %s.  Generating one.", ontology.getOntologyID());
-//                        OWLOntologyManager delegate = ((OWLAPIProjectOWLOntologyManager) ontology.getOWLOntologyManager()).getDelegate();
-//                        File file = new File(rootOntologyDocument.getParentFile(), )
-//                        delegate.setOntologyDocumentIRI(ontology, );
+                        throw new RuntimeException("No ontology document specified for ontology");
                     }
-                    else {
-                        if (!"file".equalsIgnoreCase(docIRI.toURI().getScheme())) {
-                            throw new RuntimeException("Document IRI is not a local file IRI");
-                        }
+                    if (!"file".equalsIgnoreCase(docIRI.toURI().getScheme())) {
+                        throw new RuntimeException("Document IRI is not a local file IRI");
+                    }
                         List<OWLOntologyChange> ontologyChangeList = changesByOntology.get(ontology);
                         List<OWLOntologyChangeData> infoList = new ArrayList<OWLOntologyChangeData>();
                         for (OWLOntologyChange change : ontologyChangeList) {
@@ -189,7 +111,7 @@ public class OWLAPIProjectDocumentStore {
                                 System.currentTimeMillis(),
                                 BinaryOWLMetadata.emptyMetadata
                                         ()));
-                    }
+
 
 
 
@@ -367,74 +289,6 @@ public class OWLAPIProjectDocumentStore {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-//    private File getBinaryOntologyDocumentFile() {
-//        return new File(projectFileStore.getOntologyDataDirectory(), ROOT_ONTOLOGY_DOCUMENT_NAME);
-//    }
-
-
-//    private void createEmptyProject(NewProjectSettings newProjectSettings) throws IOException, OWLOntologyCreationException, OWLOntologyStorageException {
-//        IRI ontologyIRI = createUniqueOntologyIRI();
-//        OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
-//        OWLOntology ontology = rootOntologyManager.createOntology(ontologyIRI);
-//        rootOntologyManager.setOntologyFormat(ontology, new BinaryOWLOntologyDocumentFormat());
-//        writeNewProject(rootOntologyManager, ontology);
-//    }
-
-    public void createProjectFromSources(DocumentId sourcesId, UserId owner) throws IOException, OWLOntologyCreationException, OWLOntologyStorageException {
-        File uploadedFile = new File(uploadsDirectory, sourcesId.getDocumentId());
-        UploadedProjectSourcesExtractor extractor = WebProtegeInjector.get().getInstance(UploadedProjectSourcesExtractor.class);
-
-//        UploadedProjectSourcesExtractor extractor = new UploadedProjectSourcesExtractor(new ZipInputStreamChecker
-//                (),
-//                new ZipArchiveProjectSourcesExtractor(new TempFileFactoryImpl(), new RootOntologyDocumentMatcherImpl()), new SingleDocumentProjectSourcesExtractor());
-
-        if (uploadedFile.exists()) {
-            OWLOntologyManager rootOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
-            RawProjectSources projectSources = extractor.extractProjectSources(uploadedFile);
-            OWLOntologyLoaderConfiguration loaderConfig = new OWLOntologyLoaderConfiguration()
-                    .setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
-            RawProjectSourcesImporter importer = new RawProjectSourcesImporter(rootOntologyManager, loaderConfig);
-            OWLOntology ontology = importer.importRawProjectSources(projectSources);
-
-            generateInitialChanges(owner, rootOntologyManager);
-            writeNewProject(rootOntologyManager, ontology);
-            deleteSourceFile(uploadedFile);
-        }
-        else {
-            throw new FileNotFoundException(uploadedFile.getAbsolutePath());
-        }
-
-    }
-
-    private void generateInitialChanges(UserId owner, OWLOntologyManager rootOntologyManager) {
-        ImmutableList<OWLOntologyChangeRecord> changeRecords = getInitialChangeRecords(rootOntologyManager);
-        revisionStore.addRevision(
-                new Revision(
-                        owner,
-                        RevisionNumber.getRevisionNumber(1),
-                        changeRecords,
-                        System.currentTimeMillis(),
-                        "Initial import"));
-    }
-
-    private ImmutableList<OWLOntologyChangeRecord> getInitialChangeRecords(OWLOntologyManager rootOntologyManager) {
-        // TODO:  Separate change generator
-        ImmutableList.Builder<OWLOntologyChangeRecord> changeRecordList = ImmutableList.builder();
-        for (OWLOntology ont : rootOntologyManager.getOntologies()) {
-            rootOntologyManager.setOntologyFormat(ont, new BinaryOWLOntologyDocumentFormat());
-            for(OWLAxiom axiom : ont.getAxioms()) {
-                changeRecordList.add(new OWLOntologyChangeRecord(ont.getOntologyID(), new AddAxiomData(axiom)));
-            }
-            for(OWLAnnotation annotation : ont.getAnnotations()) {
-                changeRecordList.add(new OWLOntologyChangeRecord(ont.getOntologyID(), new AddOntologyAnnotationData(annotation)));
-            }
-            for(OWLImportsDeclaration importsDeclaration : ont.getImportsDeclarations()) {
-                changeRecordList.add(new OWLOntologyChangeRecord(ont.getOntologyID(), new AddImportData(importsDeclaration)));
-            }
-        }
-        return changeRecordList.build();
-    }
 
     private void deleteSourceFile(File sourceFile) {
         FileUtils.deleteQuietly(sourceFile);
