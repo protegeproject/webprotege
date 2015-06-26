@@ -29,5 +29,6 @@ public class MetaProjectModule extends AbstractModule {
         bind(UserDetailsManager.class).to(UserDetailsManagerImpl.class).asEagerSingleton();
         bind(HasGetUserByUserIdOrEmail.class).to(new TypeLiteral<UserDetailsManager>(){});
         bind(HasUserIds.class).to(UserDetailsManagerImpl.class).asEagerSingleton();
+        bind(MetaProjectStore.class).asEagerSingleton();
     }
 }

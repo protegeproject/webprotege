@@ -5,19 +5,13 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
-import javax.swing.text.html.Option;
-
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -32,6 +26,9 @@ public class UserDetailsManagerImpl_TestCase {
     private MetaProject metaProject;
 
     @Mock
+    private MetaProjectStore metaProjectStore;
+
+    @Mock
     private User user;
 
     private String userName = "THE USER NAME";
@@ -42,14 +39,19 @@ public class UserDetailsManagerImpl_TestCase {
     public void setUp()
         throws Exception
     {
-        userDetailsManagerImpl = new UserDetailsManagerImpl(metaProject);
+        userDetailsManagerImpl = new UserDetailsManagerImpl(metaProject, metaProjectStore);
         when(user.getName()).thenReturn(userName);
         when(user.getEmail()).thenReturn(email);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_metaProject_IsNull() {
-        new UserDetailsManagerImpl(null);
+        new UserDetailsManagerImpl(null, metaProjectStore);
+    }
+
+    @Test(expected = java.lang.NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIf_metaProjectStore_IsNull() {
+        new UserDetailsManagerImpl(metaProject, null);
     }
 
 

@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
@@ -21,9 +20,12 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
 
     private final MetaProject metaProject;
 
+    private final MetaProjectStore metaProjectStore;
+
     @Inject
-    public UserDetailsManagerImpl(MetaProject metaProject) {
+    public UserDetailsManagerImpl(MetaProject metaProject, MetaProjectStore metaProjectStore) {
         this.metaProject = checkNotNull(metaProject);
+        this.metaProjectStore = checkNotNull(metaProjectStore);
     }
 
     public MetaProject getMetaProject() {
@@ -100,6 +102,6 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(user.isPresent()) {
             user.get().setEmail(email);
         }
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
+        metaProjectStore.saveMetaProject(metaProject);
     }
 }
