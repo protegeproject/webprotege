@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.*;
@@ -69,13 +68,16 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
     private final MetaProject metaProject;
 
+    private final MetaProjectStore metaProjectStore;
+
     private final ProjectPermissionsManager projectPermissionsManager;
 
     private final HasGetUserByUserIdOrEmail userLookupManager;
 
     @Inject
-    public ProjectSharingSettingsManagerImpl(MetaProject metaProject,  HasGetUserByUserIdOrEmail userLookupManager, ProjectPermissionsManager projectPermissionsManager, WebProtegeLogger logger) {
+    public ProjectSharingSettingsManagerImpl(MetaProject metaProject, MetaProjectStore metaProjectStore,  HasGetUserByUserIdOrEmail userLookupManager, ProjectPermissionsManager projectPermissionsManager, WebProtegeLogger logger) {
         this.metaProject = checkNotNull(metaProject);
+        this.metaProjectStore = checkNotNull(metaProjectStore);
         this.userLookupManager = checkNotNull(userLookupManager);
         this.projectPermissionsManager = checkNotNull(projectPermissionsManager);
         this.logger = checkNotNull(logger);
@@ -121,7 +123,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
         projectInstance.setAllowedGroupOperations(allowedGroupOperations);
 
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
+        metaProjectStore.saveMetaProject(metaProject);
     }
 
     /**

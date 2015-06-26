@@ -2,13 +2,13 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
-import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.*;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
+
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -21,9 +21,12 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
 
     private final MetaProject metaProject;
 
+    private final MetaProjectStore metaProjectStore;
+
     @Inject
-    public AuthenticationManagerImpl(MetaProject metaProject) {
+    public AuthenticationManagerImpl(MetaProject metaProject, MetaProjectStore metaProjectStore) {
         this.metaProject = metaProject;
+        this.metaProjectStore = metaProjectStore;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         String encodedSalt = BaseEncoding.base16().lowerCase().encode(salt.getBytes());
         newUser.setDigestedPassword(encodedPassword, encodedSalt);
         newUser.setEmail(email.getEmailAddress());
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
+        metaProjectStore.saveMetaProject(metaProject);
         return UserDetails.getUserDetails(userId, userId.getUserName(), email.getEmailAddress());
     }
 
@@ -58,7 +61,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
             throw new IllegalArgumentException("Invalid user name: " + userName);
         }
         user.setPassword(password);
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
+        metaProjectStore.saveMetaProject(metaProject);
     }
 
     @Override
@@ -72,7 +75,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         }
         String encodedDigest = BaseEncoding.base16().lowerCase().encode(saltedPasswordDigest.getBytes());
         user.setDigestedPassword(encodedDigest, BaseEncoding.base16().lowerCase().encode(salt.getBytes()));
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
+        metaProjectStore.saveMetaProject(metaProject);
     }
 
     @Override

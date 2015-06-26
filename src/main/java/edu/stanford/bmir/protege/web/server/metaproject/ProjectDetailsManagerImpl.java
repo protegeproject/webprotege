@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIMetaProjectStore;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -41,15 +39,18 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
     private final MetaProject metaProject;
 
+    private final MetaProjectStore metaProjectStore;
+
     @Inject
-    public ProjectDetailsManagerImpl(MetaProject metaProject) {
+    public ProjectDetailsManagerImpl(MetaProject metaProject, MetaProjectStore metaProjectStore) {
         this.metaProject = metaProject;
+        this.metaProjectStore = metaProjectStore;
     }
 
     @Override
     public void registerProject(ProjectId projectId, NewProjectSettings newProjectSettings) {
         addProjectToMetaProject(projectId, newProjectSettings);
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
+        metaProjectStore.saveMetaProject(metaProject);
     }
 
     @Override
@@ -160,7 +161,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         if (inTrashSlot != null) {
             instance.setOwnSlotValue(inTrashSlot, b);
         }
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
+        metaProjectStore.saveMetaProject(metaProject);
     }
 
     public OWLAPIProjectType getType(ProjectId projectId) {
@@ -190,7 +191,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         }
         propertyValues.add(pv);
         pi.setPropertyValues(propertyValues);
-        OWLAPIMetaProjectStore.getStore().saveMetaProject(metaProject);
+        metaProjectStore.saveMetaProject(metaProject);
     }
 
     private String getPropertyValue(ProjectId projectId, String propertyName, String defaultValue) {
