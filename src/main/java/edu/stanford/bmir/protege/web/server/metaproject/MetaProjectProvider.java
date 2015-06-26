@@ -27,7 +27,7 @@ public class MetaProjectProvider implements Provider<MetaProject> {
 
     private MetaProjectImpl metaProject;
 
-    private Logger logger;
+    private final Logger logger;
 
     @Inject
     public MetaProjectProvider(@MetaProjectURI URI metaProjectURI, Logger logger) {

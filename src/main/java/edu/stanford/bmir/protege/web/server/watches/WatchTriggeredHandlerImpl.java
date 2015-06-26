@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.watches;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
+import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
@@ -27,22 +27,24 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
     private ExecutorService emailExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setPriority(Thread.MIN_PRIORITY).build());
 
 
+    private final ProjectId projectId;
 
-    private ProjectId projectId;
+    private final BrowserTextProvider browserTextProvider;
 
-    private BrowserTextProvider browserTextProvider;
+    private final String applicationHost;
 
-    private String applicationHost;
+    private final SendMail mailManager;
 
-    private SendMail mailManager;
+    private final UserDetailsManager userDetailsManager;
 
 
     @Inject
-    public WatchTriggeredHandlerImpl(ProjectId projectId, BrowserTextProvider browserTextProvider, String applicationHost, SendMail mailManager) {
+    public WatchTriggeredHandlerImpl(ProjectId projectId, BrowserTextProvider browserTextProvider, String applicationHost, SendMail mailManager, UserDetailsManager userDetailsManager) {
         this.projectId = projectId;
         this.browserTextProvider = browserTextProvider;
         this.applicationHost = applicationHost;
         this.mailManager = mailManager;
+        this.userDetailsManager = userDetailsManager;
     }
 
     @Override
@@ -50,7 +52,7 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
         emailExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                Optional<UserDetails> userDetailsOptional = MetaProjectManager.getManager().getUserDetails(userId);
+                Optional<UserDetails> userDetailsOptional = userDetailsManager.getUserDetails(userId);
                 if(!userDetailsOptional.isPresent()) {
                     return;
                 }

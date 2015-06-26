@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.base.Stopwatch;
+import edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -31,13 +31,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction, LoadProjectResult> {
 
-    private ProjectDetailsManager projectDetailsManager;
+    private final ProjectDetailsManager projectDetailsManager;
 
-    private OWLAPIProjectManager projectManager;
+    private final ProjectPermissionsManager projectPermissionsManager;
+
+    private final OWLAPIProjectManager projectManager;
 
     @Inject
-    public LoadProjectActionHandler(ProjectDetailsManager projectDetailsManager, OWLAPIProjectManager projectManager) {
+    public LoadProjectActionHandler(ProjectDetailsManager projectDetailsManager, ProjectPermissionsManager projectPermissionsManager, OWLAPIProjectManager projectManager) {
         this.projectDetailsManager = projectDetailsManager;
+        this.projectPermissionsManager = projectPermissionsManager;
         this.projectManager = projectManager;
     }
 
@@ -64,7 +67,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
 
         ProjectDetails projectDetails = projectDetailsManager.getProjectDetails(projectId);
 
-        Collection<Operation> ops = MetaProjectManager.getManager().getAllowedOperations(projectId.getId(), executionContext.getUserId().getUserName());
+        Collection<Operation> ops = projectPermissionsManager.getAllowedOperations(projectId.getId(), executionContext.getUserId().getUserName());
         PermissionsSet.Builder builder = PermissionsSet.builder();
         for (Operation op : ops) {
             builder.addPermission(Permission.getPermission(op.getName()));

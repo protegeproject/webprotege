@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,6 +16,13 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * Date: 06/11/2013
  */
 public class SetEmailAddressRequestValidator implements RequestValidator<SetEmailAddressAction> {
+
+    private final ProjectPermissionsManager projectPermissionsManager;
+
+    @Inject
+    public SetEmailAddressRequestValidator(ProjectPermissionsManager projectPermissionsManager) {
+        this.projectPermissionsManager = projectPermissionsManager;
+    }
 
     @Override
     public RequestValidationResult validateAction(SetEmailAddressAction action, RequestContext requestContext) {
@@ -32,7 +40,6 @@ public class SetEmailAddressRequestValidator implements RequestValidator<SetEmai
      * where that user is an admin, otherwise <code>false</code>
      */
     protected boolean isUserAdmin(UserId userId) {
-        ProjectPermissionsManager mpm = MetaProjectManager.getManager();
-        return mpm.isUserAdmin(userId);
+        return projectPermissionsManager.isUserAdmin(userId);
     }
 }

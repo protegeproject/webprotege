@@ -39,7 +39,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
     private static final String PROJECT_TYPE_PROPERTY_NAME = "projectType";
 
 
-    private MetaProject metaProject;
+    private final MetaProject metaProject;
 
     @Inject
     public ProjectDetailsManagerImpl(MetaProject metaProject) {

@@ -47,26 +47,26 @@ public class OWLAPIMetaProjectStore {
     }
 
     public void saveMetaProjectNow(MetaProject metaProject) {
-        logger.info("Saving meta-project now.");
-        final Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             writeLock.lock();
-            List<?> errors = new ArrayList<Object>();
+            logger.info("Saving meta-project now.");
+            final Stopwatch stopwatch = Stopwatch.createStarted();
+            List<?> errors = new ArrayList<>();
             metaProject.save(errors);
             if(!errors.isEmpty()) {
-                throw new RuntimeException("Problem saving meta project: " + errors.toString());
+                throw new RuntimeException("Failed to save meta-project: " + errors.toString());
             }
+            stopwatch.stop();
+            logger.info("Saved meta-project in %d ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
         }
         finally {
             writeLock.unlock();
-            stopwatch.stop();
-            logger.info("Saved meta-project in %d ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
         }
     }
 
     public void saveMetaProject(final MetaProject metaProject) {
-        logger.info("Request to save meta-project received. Scheduling save task.");
         writeLock.lock();
+        logger.info("Request to save meta-project received. Scheduling save task.");
         if (saveTask != null) {
             saveTask.cancel();
         }
@@ -80,7 +80,7 @@ public class OWLAPIMetaProjectStore {
 
     private class SaveMetaProjectTask extends TimerTask {
 
-        private MetaProject metaProject;
+        private final MetaProject metaProject;
 
         private SaveMetaProjectTask(MetaProject mpm) {
             this.metaProject = mpm;

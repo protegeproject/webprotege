@@ -20,11 +20,11 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     private static final String ADMIN_GROUP = "AdminGroup";
 
-    private MetaProject metaProject;
+    private final MetaProject metaProject;
 
-    private ProjectDetailsManager projectDetailsManager;
+    private final ProjectDetailsManager projectDetailsManager;
 
-    private ProjectExistsFilter projectExistsFilter;
+    private final ProjectExistsFilter projectExistsFilter;
 
     @Inject
     public ProjectPermissionsManagerImpl(MetaProject metaProject, ProjectDetailsManager projectDetailsManager, ProjectExistsFilter projectExistsFilter) {
