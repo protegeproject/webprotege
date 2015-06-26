@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.init;
 
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 
 import javax.inject.Inject;
@@ -14,17 +13,20 @@ import javax.servlet.ServletContext;
  */
 public class WarmUpMetaProjectTask implements ConfigurationTask {
 
-    private WebProtegeLogger logger;
+
+    private final ProjectDetailsManager projectDetailsManager;
+
+    private final WebProtegeLogger logger;
 
     @Inject
-    public WarmUpMetaProjectTask(WebProtegeLogger logger) {
+    public WarmUpMetaProjectTask(ProjectDetailsManager projectDetailsManager, WebProtegeLogger logger) {
+        this.projectDetailsManager = projectDetailsManager;
         this.logger = logger;
     }
 
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-        ProjectDetailsManager metaProjectManager = MetaProjectManager.getManager();
-        int projectInstanceCount = metaProjectManager.getProjectCount();
+        int projectInstanceCount = projectDetailsManager.getProjectCount();
         logger.info("Loaded meta-project.  There are %d project instances.", projectInstanceCount);
     }
 }

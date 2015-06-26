@@ -28,7 +28,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
     public static final String WORLD_GROUP_NAME = "World";
 
-    private WebProtegeLogger logger;
+    private final WebProtegeLogger logger;
 
     public static enum OperationName {
 

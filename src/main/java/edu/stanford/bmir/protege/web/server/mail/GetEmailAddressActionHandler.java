@@ -2,13 +2,14 @@ package edu.stanford.bmir.protege.web.server.mail;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,6 +18,13 @@ import javax.annotation.Nullable;
  * Date: 06/11/2013
  */
 public class GetEmailAddressActionHandler implements ActionHandler<GetEmailAddressAction, GetEmailAddressResult> {
+
+    private final UserDetailsManager userDetailsManager;
+
+    @Inject
+    public GetEmailAddressActionHandler(UserDetailsManager userDetailsManager) {
+        this.userDetailsManager = userDetailsManager;
+    }
 
     @Override
     public Class<GetEmailAddressAction> getActionClass() {
@@ -40,7 +48,7 @@ public class GetEmailAddressActionHandler implements ActionHandler<GetEmailAddre
 
     @Override
     public GetEmailAddressResult execute(GetEmailAddressAction action, ExecutionContext executionContext) {
-        Optional<EmailAddress> address = MetaProjectManager.getManager().getEmail(action.getUserId()).transform(new Function<String, EmailAddress>() {
+        Optional<EmailAddress> address = userDetailsManager.getEmail(action.getUserId()).transform(new Function<String, EmailAddress>() {
             @Nullable
             @Override
             public EmailAddress apply(String s) {

@@ -6,10 +6,7 @@ import com.google.gwt.user.server.rpc.SerializationPolicy;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectManager;
-import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,10 +28,6 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
 
     public WebProtegeRemoteServiceServlet() {
         logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
-    }
-
-    protected MetaProjectManager getMetaProjectManager() {
-        return MetaProjectManager.getManager();
     }
 
     /**
@@ -74,29 +67,6 @@ public abstract class WebProtegeRemoteServiceServlet extends RemoteServiceServle
         getUserInSessionAndEnsureSignedIn();
     }
 
-    /**
-     * Detemines if the signed in user is the owner of the specified project
-     *
-     * @param projectId The project id
-     * @return <code>true</code> if the project exists AND there is a user signed in AND the signed in user is the
-     *         owner of the project, otherwise <code>false</code>.
-     */
-    protected boolean isSignedInUserProjectOwner(ProjectId projectId) {
-        UserId userId = getUserInSession();
-        ProjectDetailsManager mpm = getMetaProjectManager();
-        return mpm.isProjectOwner(userId, projectId);
-    }
-
-    /**
-     * Determines if the signed in user is an admin.
-     *
-     * @return <code>true</code> if there is a user signed in AND the signed in user corresponds to a user which exists
-     *         where that user is an admin, otherwise <code>false</code>
-     */
-    protected boolean isSignedInUserAdmin() {
-        UserId userId = getUserInSession();
-        return getMetaProjectManager().isUserAdmin(userId);
-    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

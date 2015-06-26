@@ -17,9 +17,9 @@ import java.util.Collections;
  */
 public class ServerSettingsManagerImpl implements ServerSettingsManager {
 
-    private MetaProject metaProject;
+    private final MetaProject metaProject;
 
-    private WebProtegeProperties webProtegeProperties;
+    private final WebProtegeProperties webProtegeProperties;
 
     @Inject
     public ServerSettingsManagerImpl(MetaProject metaProject, WebProtegeProperties webProtegeProperties) {

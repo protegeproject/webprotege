@@ -19,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class AuthenticationManagerImpl implements AuthenticationManager {
 
-    private MetaProject metaProject;
+    private final MetaProject metaProject;
 
     @Inject
     public AuthenticationManagerImpl(MetaProject metaProject) {
