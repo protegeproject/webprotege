@@ -41,6 +41,11 @@ public class MetaProjectStore {
         this.logger = logger;
     }
 
+    /**
+     * Causes the meta project to be written to disk immediately.  The calling thread will block until the
+     * project has been written to disk.
+     * @param metaProject The meta project.  Not {@code null}.
+     */
     public void saveMetaProjectNow(MetaProject metaProject) {
         try {
             lock.lock();
@@ -59,6 +64,11 @@ public class MetaProjectStore {
         }
     }
 
+    /**
+     * Requests that the meta project is saved to disk.  The project will be scheduled for being saved.  Any pending
+     * save requests will be cancelled.
+     * @param metaProject The meta project to be saved.  Not {@code null}.
+     */
     public void saveMetaProject(final MetaProject metaProject) {
         try {
             lock.lock();
