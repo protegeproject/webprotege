@@ -659,8 +659,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         );
     }
 
-    // TODO:
-
     private final ProjectPermissionsManager permissionsManager = new DummyPermissionsManager();
 
     private ProjectPermissionsManager getPermissionsManager() {
@@ -695,7 +693,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         dataPropertyHierarchyProvider.dispose();
         annotationPropertyHierarchyProvider.dispose();
         projectAccessManager.dispose();
-
     }
 
 }
