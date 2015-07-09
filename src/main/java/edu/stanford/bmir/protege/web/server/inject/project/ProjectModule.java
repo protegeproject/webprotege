@@ -65,8 +65,6 @@ public class ProjectModule extends AbstractModule {
         this.projectId = projectId;
     }
 
-    public static final EventLifeTime PROJECT_EVENT_LIFE_TIME = EventLifeTime.get(60, TimeUnit.SECONDS);
-
     @Override
     protected void configure() {
 
@@ -237,14 +235,15 @@ public class ProjectModule extends AbstractModule {
                 .asEagerSingleton();
 
         bind(new TypeLiteral<EventManager<ProjectEvent<?>>>(){})
-                .toInstance(new EventManager<ProjectEvent<?>>(PROJECT_EVENT_LIFE_TIME));
+                .toProvider(EventManagerProvider.class)
+                .asEagerSingleton();
 
         bind(new TypeLiteral<HasPostEvents<ProjectEvent<?>>>(){})
                 .to(new TypeLiteral<EventManager<ProjectEvent<?>>>() {
                 });
 
         bind(EventLifeTime.class)
-                .toInstance(PROJECT_EVENT_LIFE_TIME);
+                .toInstance(EventManagerProvider.PROJECT_EVENT_LIFE_TIME);
 
         bind(RevisionNumber.class)
                 .toProvider(RevisionNumberProvider.class);

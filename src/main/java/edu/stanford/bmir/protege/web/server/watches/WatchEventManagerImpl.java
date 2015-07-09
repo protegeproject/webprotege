@@ -25,36 +25,22 @@ public class WatchEventManagerImpl implements WatchEventManager {
     }
 
     public void attach() {
-
-        eventManager.addHandler(ClassFrameChangedEvent.TYPE, new ClassFrameChangedEventHandler() {
-            @Override
-            public void classFrameChanged(ClassFrameChangedEvent event) {
-                watchManager.handleEntityFrameChanged(event.getEntity());
-            }
+        // Note, there is no need to keep hold of Handler Registrations here as these will be cleaned up and
+        // terminated when the relevant project is disposed.
+        eventManager.addHandler(ClassFrameChangedEvent.TYPE, event -> {
+            watchManager.handleEntityFrameChanged(event.getEntity());
         });
-        eventManager.addHandler(ObjectPropertyFrameChangedEvent.TYPE, new ObjectPropertyFrameChangedEventHandler() {
-            @Override
-            public void objectPropertyFrameChanged(ObjectPropertyFrameChangedEvent event) {
-                watchManager.handleEntityFrameChanged(event.getEntity());
-            }
+        eventManager.addHandler(ObjectPropertyFrameChangedEvent.TYPE, event -> {
+            watchManager.handleEntityFrameChanged(event.getEntity());
         });
-        eventManager.addHandler(DataPropertyFrameChangedEvent.TYPE, new DataPropertyFrameChangedEventHandler() {
-            @Override
-            public void dataPropertyFrameChanged(DataPropertyFrameChangedEvent event) {
-                watchManager.handleEntityFrameChanged(event.getEntity());
-            }
+        eventManager.addHandler(DataPropertyFrameChangedEvent.TYPE, event -> {
+            watchManager.handleEntityFrameChanged(event.getEntity());
         });
-        eventManager.addHandler(AnnotationPropertyFrameChangedEvent.TYPE, new AnnotationPropertyFrameChangedEventHandler() {
-            @Override
-            public void annotationPropertyFrameChanged(AnnotationPropertyFrameChangedEvent event) {
-                watchManager.handleEntityFrameChanged(event.getEntity());
-            }
+        eventManager.addHandler(AnnotationPropertyFrameChangedEvent.TYPE, event -> {
+            watchManager.handleEntityFrameChanged(event.getEntity());
         });
-        eventManager.addHandler(NamedIndividualFrameChangedEvent.TYPE, new NamedIndividualFrameChangedEventHandler() {
-            @Override
-            public void namedIndividualFrameChanged(NamedIndividualFrameChangedEvent event) {
-                watchManager.handleEntityFrameChanged(event.getEntity());
-            }
+        eventManager.addHandler(NamedIndividualFrameChangedEvent.TYPE, event -> {
+            watchManager.handleEntityFrameChanged(event.getEntity());
         });
     }
 }
