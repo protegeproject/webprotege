@@ -149,9 +149,6 @@ public class EditorPresenter implements HasDispose {
 
     private <C extends EditorCtx, O extends Serializable> void commitCurrentValue(final EditorState<C, O> editorState) {
         final EditorView<O> view = editorState.getEditorView();
-        if(!view.isDirty()) {
-            return;
-        }
         final Optional<O> value = view.getValue();
         if(!value.isPresent()) {
             return;
