@@ -137,8 +137,8 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
         if(preconfiguredClass.isPresent()) {
             selectedClass = preconfiguredClass;
         }
-        else if(entityData.isPresent() && entityData.get().getEntity() instanceof OWLClass) {
-            selectedClass = Optional.of(entityData.get().getEntity().asOWLClass());
+        else if(getSelectionModel().getLastSelectedClassData().isPresent()) {
+            selectedClass = Optional.of(getSelectionModel().getLastSelectedClassData().get().getEntity());
         }
         else {
             selectedClass = Optional.absent();
@@ -162,24 +162,6 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
             setTitle("Individuals (nothing selected)");
         }
     }
-
-//    @Override
-//    public void setSelection(Collection<EntityData> selection) {
-//        if(selection == null) {
-//            return;
-//        }
-//        if(selection.isEmpty()) {
-//            return;
-//        }
-//        for(EntityData entityData : selection) {
-//            Optional<OWLEntityData> sel = toOWLEntityData(entityData);
-//            if(sel.isPresent() && sel.get() instanceof OWLNamedIndividualData) {
-//                setSelectedIndividual((OWLNamedIndividualData) sel.get());
-//                break;
-//            }
-//
-//        }
-//    }
 
     protected void addToolbarButtons() {
         setTopToolbar(new Toolbar());
