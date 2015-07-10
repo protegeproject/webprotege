@@ -1617,8 +1617,12 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         public void handleSuccess(final CreateClassResult result) {
             onClassCreated(result.getObject(), result.getSuperClasses());
             SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(), result.getBrowserText(result.getObject()).or(""), Collections.<EntityData>emptyList(), 0);
-            onSubclassAdded(new EntityData(result.getPathToRoot().getSecondToLastElement().getIRI().toString()), Arrays.<EntityData>asList(subClassData), false);
-            selectPathInTree(result.getPathToRoot());
+            ObjectPath<OWLClass> pathToRoot = result.getPathToRoot();
+            if(pathToRoot.isEmpty()) {
+                return;
+            }
+            onSubclassAdded(new EntityData(pathToRoot.getSecondToLastElement().getIRI().toString()), Arrays.<EntityData>asList(subClassData), false);
+            selectPathInTree(pathToRoot);
         }
     }
 

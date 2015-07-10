@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.action.CreateHandler;
 import edu.stanford.bmir.protege.web.client.action.DeleteHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -85,10 +86,13 @@ public class IndividualsListViewPresenter {
                 DispatchServiceManager.get().execute(new CreateNamedIndividualsAction(projectId, currentType, browserTexts), new DispatchServiceCallback<CreateNamedIndividualsResult>() {
                     @Override
                     public void handleSuccess(CreateNamedIndividualsResult result) {
+                        GWT.log("Individuals successfully added: " + result.getIndividuals());
                         Set<OWLNamedIndividualData> individuals = result.getIndividuals();
                         view.addListData(individuals);
                         if(!individuals.isEmpty()) {
-                            view.setSelectedIndividual(individuals.iterator().next());
+                            OWLNamedIndividualData next = individuals.iterator().next();
+                            GWT.log("Selecting new individual: " + next);
+                            view.setSelectedIndividual(next);
                         }
                     }
                 });
