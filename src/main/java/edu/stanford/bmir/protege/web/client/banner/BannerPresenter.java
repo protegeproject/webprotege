@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.banner;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.actionbar.application.*;
@@ -26,6 +25,11 @@ public class BannerPresenter {
     private BannerView bannerView = new BannerViewImpl();
 
     public BannerPresenter() {
+        Boolean accountCreationEnabled = Application.get().getClientApplicationProperty(
+                WebProtegePropertyName.USER_ACCOUNT_CREATION_ENABLED, true);
+        GWT.log("Account creation enabled: " + accountCreationEnabled);
+
+
         final ProjectActionBar projectActionBar = bannerView.getProjectActionBar();
         projectActionBar.setProjectId(Application.get().getActiveProject());
         projectActionBar.setShowShareSettingsHandler(new ShareSettingsHandlerImpl());
@@ -33,7 +37,6 @@ public class BannerPresenter {
         projectActionBar.setShowProjectDetailsHandler(new ShowProjectDetailsHandlerImpl());
         projectActionBar.setUploadAndMergeHandler(new UploadAndMergeHandlerImpl());
         final ApplicationActionBar w = bannerView.getApplicationActionBar();
-        w.setSignedInUser(Application.get().getUserId());
         w.setSignInRequestHandler(new SignInRequestHandlerImpl());
         w.setSignOutRequestHandler(new SignOutRequestHandlerImpl());
         w.setSignUpForAccountHandler(new SignUpForAccountHandlerImpl());
@@ -42,10 +45,7 @@ public class BannerPresenter {
         w.setShowAboutBoxHandler(new ShowAboutBoxHandlerImpl());
         w.setShowUserGuideHandler(new ShowUserGuideHandlerImpl());
 
-        Boolean accountCreationEnabled = Application.get().getClientApplicationProperty(
-                WebProtegePropertyName.USER_ACCOUNT_CREATION_ENABLED, true);
-        GWT.log("Account creation enabled: " + accountCreationEnabled);
-        w.setSignUpForAccountVisible(accountCreationEnabled);
+        updateSignedInUser(Application.get().getUserId());
 
         EventBusManager.getManager().registerHandler(ActiveProjectChangedEvent.TYPE, new ActiveProjectChangedHandler() {
             @Override
@@ -56,14 +56,14 @@ public class BannerPresenter {
         EventBusManager.getManager().registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {
-                w.setSignedInUser(event.getUserId());
+                updateSignedInUser(event.getUserId());
                 projectActionBar.setProjectId(Application.get().getActiveProject());
             }
         });
         EventBusManager.getManager().registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
             @Override
             public void handleUserLoggedOut(UserLoggedOutEvent event) {
-                w.setSignedInUser(UserId.getGuest());
+                updateSignedInUser(UserId.getGuest());
                 projectActionBar.setProjectId(Application.get().getActiveProject());
             }
         });
@@ -71,5 +71,18 @@ public class BannerPresenter {
 
     public BannerView getView() {
         return bannerView;
+    }
+
+    private void updateSignedInUser(UserId userId) {
+        final ApplicationActionBar bar = bannerView.getApplicationActionBar();
+        bar.setSignedInUser(userId);
+        Boolean accountCreationEnabled = Application.get().getClientApplicationProperty(
+                WebProtegePropertyName.USER_ACCOUNT_CREATION_ENABLED, true);
+        if(accountCreationEnabled) {
+            bar.setSignUpForAccountVisible(userId.isGuest());
+        }
+        else {
+            bar.setSignUpForAccountVisible(false);
+        }
     }
 }
