@@ -40,10 +40,9 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
 
     @Override
     protected ChangeListGenerator<Void> getChangeListGenerator(SetManchesterSyntaxFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        Injector injector = WebProtegeInjector.get().createChildInjector(new ProjectModule(project.getProjectId()), new ManchesterSyntaxParsingContextModule(action));
-        ManchesterSyntaxChangeGenerator changeGenerator = injector.getInstance(ManchesterSyntaxChangeGenerator.class);
-        List<OWLOntologyChange> changes = changeGenerator.generateChanges(action.getFromRendering(), action.getToRendering());
-        return new FixedChangeListGenerator<Void>(changes);
+        ManchesterSyntaxChangeGenerator changeGenerator = new ManchesterSyntaxChangeGenerator(project.getManchesterSyntaxFrameParser());
+        List<OWLOntologyChange> changes = changeGenerator.generateChanges(action.getFromRendering(), action.getToRendering(), action);
+        return new FixedChangeListGenerator<>(changes);
     }
 
     @Override
