@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import org.coode.owlapi.manchesterowlsyntax.OntologyAxiomPair;
 import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.*;
@@ -29,15 +30,15 @@ public class ManchesterSyntaxChangeGenerator {
      * @return A list of changes.  May be empty of the to pieces of syntax encode the same axioms in the same ontology.
      * @throws ParserException If there was a problem parsing either {@code from} or {@code to}.
      */
-    public List<OWLOntologyChange> generateChanges(String from, String to) throws ParserException {
-        Set<OntologyAxiomPair> toPairs = getOntologyAxiomPairs(checkNotNull(to));
-        Set<OntologyAxiomPair> fromPairs = getOntologyAxiomPairs(checkNotNull(from));
+    public List<OWLOntologyChange> generateChanges(String from, String to, HasFreshEntities hasFreshEntities) throws ParserException {
+        Set<OntologyAxiomPair> toPairs = getOntologyAxiomPairs(checkNotNull(to), checkNotNull(hasFreshEntities));
+        Set<OntologyAxiomPair> fromPairs = getOntologyAxiomPairs(checkNotNull(from), checkNotNull(hasFreshEntities));
         OntologyAxiomPairChangeGenerator pairsChangeGenerator = new OntologyAxiomPairChangeGenerator();
         return pairsChangeGenerator.generateChanges(fromPairs, toPairs);
     }
 
-    private Set<OntologyAxiomPair> getOntologyAxiomPairs(String rendering) throws ParserException {
-        return parser.parse(rendering);
+    private Set<OntologyAxiomPair> getOntologyAxiomPairs(String rendering, HasFreshEntities hasFreshEntities) throws ParserException {
+        return parser.parse(rendering, hasFreshEntities);
     }
 
 }

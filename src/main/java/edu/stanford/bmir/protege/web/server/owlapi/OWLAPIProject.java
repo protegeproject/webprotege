@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.hierarchy.*;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.owlapi.change.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.project.UIConfigurationManager;
@@ -128,6 +129,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private final UIConfigurationManager uiConfigurationManager;
 
+    private final Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider;
+
 
     private final ReadWriteLock projectChangeLock = new ReentrantReadWriteLock();
 
@@ -138,7 +141,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     private final Lock changeProcesssingLock = new ReentrantLock();
 
     @Inject
-    public OWLAPIProject(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, ProjectAccessManager projectAccessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, UIConfigurationManager uiConfigurationManager) {
+    public OWLAPIProject(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, ProjectAccessManager projectAccessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, UIConfigurationManager uiConfigurationManager, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider) {
         this.documentStore = documentStore;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
@@ -161,6 +164,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         this.entityCrudKitSettingsRepository = entityCrudKitSettingsRepository;
         this.eventTranslatorManagerProvider = eventTranslatorManagerProvider;
         this.uiConfigurationManager = uiConfigurationManager;
+        this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
     }
 
     public ProjectId getProjectId() {
@@ -227,6 +231,10 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     public AssertedClassHierarchyProvider getClassHierarchyProvider() {
         return classHierarchyProvider;
+    }
+
+    public ManchesterSyntaxFrameParser getManchesterSyntaxFrameParser() {
+        return manchesterSyntaxFrameParserProvider.get();
     }
 
     public OWLObjectPropertyHierarchyProvider getObjectPropertyHierarchyProvider() {

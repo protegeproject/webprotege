@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.mansyntax;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
+import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
 import edu.stanford.bmir.protege.web.shared.frame.ManchesterSyntaxFrameParseError;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxFramesParser;
@@ -14,6 +15,7 @@ import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.util.BidirectionalShortFormProvider;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,26 +26,30 @@ import java.util.Set;
  */
 public class ManchesterSyntaxFrameParser {
 
-    private OWLOntology rootOntology;
+    private final OWLOntology rootOntology;
 
-    private OWLDataFactory dataFactory;
+    private final OWLDataFactory dataFactory;
 
-    private OWLEntityChecker entityChecker;
+    private final BidirectionalShortFormProvider shortFormProvider;
 
-    private OWLOntologyChecker ontologyChecker;
+    private final OWLOntologyChecker ontologyChecker;
 
     @Inject
     public ManchesterSyntaxFrameParser(@RootOntology OWLOntology rootOntology,
-                                       OWLEntityChecker entityChecker,
+                                       BidirectionalShortFormProvider shortFormProvider,
                                        OWLOntologyChecker ontologyChecker,
                                        OWLDataFactory dataFactory) {
-        this.entityChecker = entityChecker;
+        this.shortFormProvider = shortFormProvider;
         this.ontologyChecker = ontologyChecker;
         this.dataFactory = dataFactory;
         this.rootOntology = rootOntology;
     }
 
-    public Set<OntologyAxiomPair> parse(String syntax) throws ParserException {
+    public Set<OntologyAxiomPair> parse(String syntax, HasFreshEntities hasFreshEntities) throws ParserException {
+        OWLEntityChecker entityChecker = new WebProtegeOWLEntityChecker(
+                shortFormProvider,
+                hasFreshEntities
+        );
         ManchesterOWLSyntaxFramesParser parser = new ManchesterOWLSyntaxFramesParser(dataFactory, entityChecker);
         parser.setOWLOntologyChecker(ontologyChecker);
         parser.setDefaultOntology(rootOntology);
