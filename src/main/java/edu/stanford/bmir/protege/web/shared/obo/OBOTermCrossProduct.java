@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.obo;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 
 import java.io.Serializable;
 import java.util.Collections;
+
+import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -29,12 +33,8 @@ public class OBOTermCrossProduct implements Serializable {
     }
 
     public OBOTermCrossProduct(OWLClassData genus, OBOTermRelationships relationships) {
-        this.genus = genus;
-        this.relationships = relationships;
-    }
-
-    public OBOTermCrossProduct(OWLClassData genus) {
-        this(genus, new OBOTermRelationships(Collections.<OBORelationship>emptySet()));
+        this.genus = checkNotNull(genus);
+        this.relationships = checkNotNull(relationships);
     }
 
     public OWLClassData getGenus() {
@@ -47,5 +47,31 @@ public class OBOTermCrossProduct implements Serializable {
     
     public boolean isEmpty() {
         return relationships.isEmpty();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(genus, relationships);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof OBOTermCrossProduct)) {
+            return false;
+        }
+        OBOTermCrossProduct other = (OBOTermCrossProduct) obj;
+        return this.genus.equals(other.genus) && this.relationships.equals(other.relationships);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("OBOTermCrossProduct")
+                .addValue(genus)
+                .addValue(relationships)
+                .toString();
     }
 }
