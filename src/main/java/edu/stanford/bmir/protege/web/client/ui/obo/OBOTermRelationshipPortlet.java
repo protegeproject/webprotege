@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import com.google.common.base.*;
+import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -23,6 +23,8 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
     
     private OBOTermRelationshipEditor editor;
 
+    private Optional<List<OBORelationship>> pristineValue = Optional.absent();
+
     public OBOTermRelationshipPortlet(Project project, SelectionModel selectionModel) {
         super(selectionModel, project);
     }
@@ -30,7 +32,9 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected boolean isDirty() {
-        return editor.isDirty();
+        boolean dirty = !editor.getValue().equals(pristineValue);
+        GWT.log("OBO Term Relationship Portlet: isDirty = " + dirty);
+        return dirty;
     }
 
     @Override
@@ -47,10 +51,12 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
         com.google.common.base.Optional<OWLEntity> current = getSelectedEntity();
         if(!current.isPresent()) {
             editor.clearValue();
+            pristineValue = Optional.absent();
             return;
         }
         if(!(current.get() instanceof OWLClass)) {
             editor.clearValue();
+            pristineValue = Optional.absent();
             return;
         }
         getService().getRelationships(getProjectId(),  (OWLClass) current.get(), new AsyncCallback<OBOTermRelationships>() {
@@ -59,7 +65,10 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
             }
 
             public void onSuccess(OBOTermRelationships result) {
-                editor.setValue(new ArrayList<OBORelationship>(result.getRelationships()));
+                Set<OBORelationship> relationships = result.getRelationships();
+                List<OBORelationship> listOfRels = new ArrayList<OBORelationship>(relationships);
+                pristineValue = Optional.of(listOfRels);
+                editor.setValue(listOfRels);
             }
         });
     }
@@ -67,6 +76,7 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
     @Override
     protected void clearDisplay() {
         editor.clearValue();
+        pristineValue = Optional.absent();
     }
 
     @Override
@@ -77,6 +87,7 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
     @Override
     public void initialize() {
         editor = new OBOTermRelationshipEditor();
+        editor.setEnabled(true);
         add(editor.getWidget());
     }
 }
