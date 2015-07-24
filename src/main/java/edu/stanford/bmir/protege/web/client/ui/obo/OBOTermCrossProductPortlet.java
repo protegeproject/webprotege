@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtext.client.widgets.MessageBox;
@@ -20,6 +21,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermCrossProductEditor editor;
+
+    private Optional<OBOTermCrossProduct> pristineValue = Optional.absent();
     
     public OBOTermCrossProductPortlet(SelectionModel selectionModel, Project project) {
         super(selectionModel, project);
@@ -34,6 +37,7 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected void clearDisplay() {
+        pristineValue = Optional.absent();
         editor.clearValue();
     }
 
@@ -50,6 +54,7 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
                 }
 
                 public void onSuccess(OBOTermCrossProduct result) {
+                    pristineValue = Optional.of(result);
                     editor.setValue(result);
                 }
             });
@@ -58,7 +63,7 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     @Override
     protected boolean isDirty() {
-        return editor.isDirty();
+        return !pristineValue.equals(editor.getValue());
     }
 
     @Override

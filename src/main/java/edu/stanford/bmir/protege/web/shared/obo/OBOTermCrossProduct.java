@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.obo;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 
 import java.io.Serializable;
@@ -17,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OBOTermCrossProduct implements Serializable {
 
-    private OWLClassData genus;
+    private Optional<OWLClassData> genus;
 
     private OBOTermRelationships relationships;
 
@@ -29,15 +30,15 @@ public class OBOTermCrossProduct implements Serializable {
     }
     
     public static OBOTermCrossProduct emptyOBOTermCrossProduct() {
-        return new OBOTermCrossProduct(null, new OBOTermRelationships(Collections.<OBORelationship>emptySet()));
+        return new OBOTermCrossProduct(Optional.<OWLClassData>absent(), new OBOTermRelationships(Collections.<OBORelationship>emptySet()));
     }
 
-    public OBOTermCrossProduct(OWLClassData genus, OBOTermRelationships relationships) {
+    public OBOTermCrossProduct(Optional<OWLClassData> genus, OBOTermRelationships relationships) {
         this.genus = checkNotNull(genus);
         this.relationships = checkNotNull(relationships);
     }
 
-    public OWLClassData getGenus() {
+    public Optional<OWLClassData> getGenus() {
         return genus;
     }
 
@@ -46,7 +47,7 @@ public class OBOTermCrossProduct implements Serializable {
     }
     
     public boolean isEmpty() {
-        return relationships.isEmpty();
+        return !genus.isPresent() || relationships.isEmpty();
     }
 
     @Override

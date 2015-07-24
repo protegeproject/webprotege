@@ -86,7 +86,7 @@ public class OBOTermCrossProductEditorImpl extends Composite implements OBOTermC
             clearValue();
         }
         else {
-            genusField.setValue(object.getGenus());
+            genusField.setValue(object.getGenus().get());
             relationshipsField.setValue(new ArrayList<OBORelationship>(object.getRelationships().getRelationships()));
         }
     }
@@ -107,7 +107,7 @@ public class OBOTermCrossProductEditorImpl extends Composite implements OBOTermC
         }
         final OWLClassData genus = (OWLClassData) genusField.getValue().get();
         final OBOTermRelationships relationships = new OBOTermRelationships(new HashSet<OBORelationship>(relationshipsField.getValue().get()));
-        return Optional.of(new OBOTermCrossProduct(genus, relationships));
+        return Optional.of(new OBOTermCrossProduct(Optional.of(genus), relationships));
     }
 
     @Override
