@@ -23,7 +23,7 @@
             </tr>
             <tr>
                 <td>
-                    <obo:OBOTermRelationshipEditor ui:field="relationshipsField" addStyleNames="{style.cross-product-editor}"/>
+                    <obo:OBOTermRelationshipEditor ui:field="relationshipsField" addStyleNames="{style.cross-product-editor}" enabled="true"/>
                 </td>
             </tr>
         </table>
