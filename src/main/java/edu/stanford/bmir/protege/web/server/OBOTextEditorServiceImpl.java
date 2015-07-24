@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server;
 
+import com.google.common.base.*;
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
@@ -704,7 +706,7 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
             OBORelationship oboRel = new OBORelationship(property, filler);
             discriminatingRelationships.add(oboRel);
         }
-        return new OBOTermCrossProduct(visualCls, new OBOTermRelationships(discriminatingRelationships));
+        return new OBOTermCrossProduct(Optional.of(visualCls), new OBOTermRelationships(discriminatingRelationships));
 
     }
 
@@ -772,9 +774,9 @@ public class OBOTextEditorServiceImpl extends WebProtegeRemoteServiceServlet imp
 
         Set<OWLClassExpression> intersectionOperands = new HashSet<OWLClassExpression>();
 
-        OWLClassData visualGenus = crossProduct.getGenus();
-        if (visualGenus != null) {
-            OWLClass cls = toOWLClass(df, visualGenus.getEntity());
+        Optional<OWLClassData> visualGenus = crossProduct.getGenus();
+        if (visualGenus.isPresent()) {
+            OWLClass cls = toOWLClass(df, visualGenus.get().getEntity());
             intersectionOperands.add(cls);
         }
 

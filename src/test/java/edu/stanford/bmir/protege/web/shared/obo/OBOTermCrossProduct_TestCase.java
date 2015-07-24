@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.obo;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -8,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.lang.NullPointerException;
@@ -21,10 +21,10 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class OBOTermCrossProduct_TestCase {
 
-    private OBOTermCrossProduct oBOTermCrossProduct;
+    private OBOTermCrossProduct crossProduct;
 
     @Mock
-    private OWLClassData genus;
+    private Optional<OWLClassData> genus;
 
     @Mock
     private OBOTermRelationships relationships;
@@ -33,7 +33,7 @@ public class OBOTermCrossProduct_TestCase {
     public void setUp()
         throws Exception
     {
-        oBOTermCrossProduct = new OBOTermCrossProduct(genus, relationships);
+        crossProduct = new OBOTermCrossProduct(genus, relationships);
     }
 
     @Test(expected = NullPointerException.class)
@@ -43,7 +43,7 @@ public class OBOTermCrossProduct_TestCase {
 
     @Test
     public void shouldReturnSupplied_genus() {
-        MatcherAssert.assertThat(oBOTermCrossProduct.getGenus(), is(this.genus));
+        MatcherAssert.assertThat(crossProduct.getGenus(), is(this.genus));
     }
 
     @Test(expected = NullPointerException.class)
@@ -53,50 +53,51 @@ public class OBOTermCrossProduct_TestCase {
 
     @Test
     public void shouldReturnSupplied_relationships() {
-        MatcherAssert.assertThat(oBOTermCrossProduct.getRelationships(), is(this.relationships));
+        MatcherAssert.assertThat(crossProduct.getRelationships(), is(this.relationships));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        MatcherAssert.assertThat(oBOTermCrossProduct, is(oBOTermCrossProduct));
+        MatcherAssert.assertThat(crossProduct, is(crossProduct));
     }
 
     @Test
     public void shouldNotBeEqualToNull() {
-        MatcherAssert.assertThat(oBOTermCrossProduct.equals(null), is(false));
+        MatcherAssert.assertThat(crossProduct.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        MatcherAssert.assertThat(oBOTermCrossProduct, is(new OBOTermCrossProduct(genus, relationships)));
+        MatcherAssert.assertThat(crossProduct, is(new OBOTermCrossProduct(genus, relationships)));
     }
 
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_relationships() {
-        MatcherAssert.assertThat(oBOTermCrossProduct, is(Matchers.not(new OBOTermCrossProduct(genus, mock(OBOTermRelationships.class)))));
+        MatcherAssert.assertThat(crossProduct, is(Matchers.not(new OBOTermCrossProduct(genus, mock(OBOTermRelationships.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        MatcherAssert.assertThat(oBOTermCrossProduct.hashCode(), is(new OBOTermCrossProduct(genus, relationships).hashCode()));
+        MatcherAssert.assertThat(crossProduct.hashCode(), is(new OBOTermCrossProduct(genus, relationships).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        MatcherAssert.assertThat(oBOTermCrossProduct.toString(), startsWith("OBOTermCrossProduct"));
+        MatcherAssert.assertThat(crossProduct.toString(), startsWith("OBOTermCrossProduct"));
     }
 
     @Test
     public void shouldReturn_true_For_isEmpty() {
         when(relationships.isEmpty()).thenReturn(true);
-        MatcherAssert.assertThat(oBOTermCrossProduct.isEmpty(), is(true));
+        MatcherAssert.assertThat(crossProduct.isEmpty(), is(true));
     }
 
     @Test
     public void shouldReturn_false_For_isEmpty() {
         when(relationships.isEmpty()).thenReturn(false);
-        MatcherAssert.assertThat(oBOTermCrossProduct.isEmpty(), is(false));
+        when(genus.isPresent()).thenReturn(true);
+        MatcherAssert.assertThat(crossProduct.isEmpty(), is(false));
     }
 
 }
