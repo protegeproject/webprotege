@@ -8,11 +8,11 @@
     <g:HTMLPanel addStyleNames="{wp.style.formMain}">
         <div class="{wp.style.formGroup}">
             <g:Label text="Definition" addStyleNames="{wp.style.formLabel}"/>
-            <text:ExpandingTextBoxImpl ui:field="definitionField" width="100%" placeholder="Enter definition"/>
+            <text:ExpandingTextBoxImpl ui:field="definitionField" width="100%" placeholder="Enter definition" anchorVisible="false"/>
         </div>
         <div class="{wp.style.formGroup}">
             <g:Label text="XRefs" addStyleNames="{wp.style.formLabel}"/>
-            <obo:XRefListEditor ui:field="xrefsField" width="100%"/>
+            <obo:XRefListEditor ui:field="xrefsField" width="100%" enabled="true"/>
         </div>
 
     </g:HTMLPanel>
