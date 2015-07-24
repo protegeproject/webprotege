@@ -34,4 +34,21 @@ public class OBOTermRelationships implements Serializable {
     public String toString() {
         return "OBOTermRelationships(" + relationships.size() + ":  " + relationships + ")";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof OBOTermRelationships)) {
+            return false;
+        }
+        OBOTermRelationships other = (OBOTermRelationships) obj;
+        return this.relationships.equals(other.relationships);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(relationships);
+    }
 }
