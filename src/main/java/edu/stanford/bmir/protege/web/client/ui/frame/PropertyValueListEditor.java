@@ -158,7 +158,7 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
     @Override
     public boolean isDirty() {
-        return false;
+        return editor.isDirty();
     }
 
     @Override
