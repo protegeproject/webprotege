@@ -36,7 +36,6 @@ public abstract class DispatchServiceCallback<T> {
 
     public final void onFailure(Throwable throwable) {
         if (throwable instanceof ActionExecutionException) {
-            GWT.log("ActionExecutionException: " + throwable.getCause().getClass().getName());
             handleExecutionException(throwable.getCause());
         } else if (throwable instanceof PermissionDeniedException) {
             handlePermissionDeniedException((PermissionDeniedException) throwable);
@@ -98,8 +97,6 @@ public abstract class DispatchServiceCallback<T> {
     }
 
     private void displayAndLogError(Throwable throwable) {
-//        Logger logger = Logger.getLogger("AsyncCallbackErrorLogger");
-//        logger.log(Level.SEVERE, "Error executing remote call: " + throwable.getMessage());
         errorMessageDisplay.displayGeneralErrorMessage(getErrorMessageTitle(), getErrorMessage(throwable));
     }
 
