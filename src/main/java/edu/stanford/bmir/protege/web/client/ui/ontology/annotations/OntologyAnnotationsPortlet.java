@@ -65,7 +65,7 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
             @Override
             public void handleSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
                 final Set<OWLAnnotation> object = result.getObject();
-                if(!annotationsView.getValue().equals(Optional.of(result.getObject()))) {
+                if(!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(result.getObject()))) {
                     lastSet = Optional.of(object);
                     annotationsView.setValue(object);
                 }
