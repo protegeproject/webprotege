@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
+import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
+import org.semanticweb.owlapi.model.HasShortForm;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -9,13 +11,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+import static com.google.common.base.Objects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/01/2013
  */
-public class OntologyFrame implements HasSignature, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues {
+public class OntologyFrame implements HasSignature, Serializable, HasPropertyValueList, HasPropertyValues, HasAnnotationPropertyValues, HasShortForm {
+
+    private String shortForm;
 
     private OWLOntologyID subject;
 
@@ -24,9 +31,14 @@ public class OntologyFrame implements HasSignature, Serializable, HasPropertyVal
     private OntologyFrame() {
     }
 
-    public OntologyFrame(OWLOntologyID subject, Collection<PropertyAnnotationValue> propertyValues) {
-        this.subject = subject;
-        this.propertyValueList = new PropertyValueList(Collections.<PropertyValue>unmodifiableCollection(propertyValues));
+    public OntologyFrame(OWLOntologyID subject, PropertyValueList propertyValueList, String shortForm) {
+        this.subject = checkNotNull(subject);
+        this.propertyValueList = checkNotNull(propertyValueList);
+        this.shortForm = checkNotNull(shortForm);
+    }
+
+    public String getShortForm() {
+        return shortForm;
     }
 
     @Override
@@ -55,7 +67,7 @@ public class OntologyFrame implements HasSignature, Serializable, HasPropertyVal
 
     @Override
     public int hashCode() {
-        return "OntologyFrame".hashCode() + subject.hashCode() + propertyValueList.hashCode();
+        return Objects.hashCode(subject, propertyValueList, shortForm);
     }
 
     @Override
@@ -67,6 +79,16 @@ public class OntologyFrame implements HasSignature, Serializable, HasPropertyVal
             return false;
         }
         OntologyFrame other = (OntologyFrame) obj;
-        return this.subject.equals(other.subject) && this.propertyValueList.equals(other.propertyValueList);
+        return this.subject.equals(other.subject) && this.propertyValueList.equals(other.propertyValueList) && this.shortForm.equals(other.shortForm);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("OntologyFrame")
+                .addValue(subject)
+                .addValue(propertyValueList)
+                .add("shortForm", shortForm)
+                .toString();
     }
 }
