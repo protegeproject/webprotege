@@ -4,7 +4,7 @@
 
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
-    <g:HTMLPanel styleName="{wp.style.formMain}">
+    <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{wp.style.formMain}">
 
             <wp:PropertyValueListEditor ui:field="editor" enabled="true"/>
 
