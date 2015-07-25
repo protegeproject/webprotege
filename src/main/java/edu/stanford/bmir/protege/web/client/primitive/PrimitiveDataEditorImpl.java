@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -365,6 +366,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     @Override
     public void setValue(OWLPrimitiveData object) {
         checkNotNull(object);
+        dirty = false;
         setCurrentData(Optional.of(object), EventStrategy.DO_NOT_FIRE_EVENTS);
     }
 
@@ -373,6 +375,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
         view.setText("");
         view.setPrimitiveDataStyleName(Optional.<String>absent());
         languageEditor.setValue("");
+        dirty = false;
         setCurrentData(Optional.<OWLPrimitiveData>absent(), EventStrategy.DO_NOT_FIRE_EVENTS);
     }
 
@@ -415,6 +418,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
     }
 
     private void handleValueChanged() {
+        GWT.log("[PrimitiveDataEditorImpl] Handling changed value");
         reparsePrimitiveData();
         dirty = true;
     }
@@ -695,7 +699,7 @@ public class PrimitiveDataEditorImpl extends Composite implements PrimitiveDataE
 
     private void setCurrentData(Optional<OWLPrimitiveData> nextCurrentData, EventStrategy eventStrategy) {
         checkNotNull(nextCurrentData);
-        dirty = false;
+//        dirty = false;
         if (currentData.equals(nextCurrentData)) {
             return;
         }
