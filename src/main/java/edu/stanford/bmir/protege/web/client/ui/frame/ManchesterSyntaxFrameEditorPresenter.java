@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
+import edu.stanford.bmir.protege.web.shared.frame.SetManchesterSyntaxFrameException;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
@@ -243,6 +244,26 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
                     if(reformatText) {
                         editor.setValue(result.getFrameText());
                     }
+                }
+
+                @Override
+                protected String getErrorMessageTitle() {
+                    return "Could not apply changes to due to invalid syntax";
+                }
+
+                @Override
+                protected String getErrorMessage(Throwable throwable) {
+                    if(throwable instanceof SetManchesterSyntaxFrameException) {
+                        return throwable.getMessage();
+                    }
+                    else {
+                        return super.getErrorMessage(throwable);
+                    }
+                }
+
+                @Override
+                public void handleErrorFinally(Throwable throwable) {
+                    editor.clearError();
                 }
             });
         }
