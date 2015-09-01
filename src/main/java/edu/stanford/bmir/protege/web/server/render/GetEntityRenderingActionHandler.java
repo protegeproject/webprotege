@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.render;
 
 import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
@@ -27,7 +28,7 @@ public class GetEntityRenderingActionHandler extends AbstractHasProjectActionHan
     @Override
     protected RequestValidator<GetEntityRenderingAction> getAdditionalRequestValidator(GetEntityRenderingAction action,
                                                                                        RequestContext requestContext) {
-        return null;
+        return UserHasProjectReadPermissionValidator.get();
     }
 
     @Override
