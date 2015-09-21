@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
 import edu.stanford.bmir.protege.web.server.mail.MessagingExceptionHandler;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
@@ -14,7 +15,7 @@ public class ResetPasswordMailer {
 
     public static final String SUBJECT = "Your WebProtégé password has been reset";
 
-    public static final String BODY_TEMPLATE = "Your WebProtégé password has been reset to:" +
+    public static final String BODY_TEMPLATE = "Your WebProtégé password (for user name %s) has been reset to:" +
             "\n\n " +
             "\t\t%s" +
             "\n\n" +
@@ -31,14 +32,12 @@ public class ResetPasswordMailer {
         this.logger = logger;
     }
 
-    public void sendEmail(final String emailAddress, final String pwd) {
-        mailManager.sendMail(emailAddress, SUBJECT, String.format(BODY_TEMPLATE, pwd), new MessagingExceptionHandler() {
-            @Override
-            public void handleMessagingException(MessagingException e) {
-                logger.info("An password reset email could not be sent to %s.  The password was reset to %s.",
-                            emailAddress,
-                            pwd);
-            }
+    public void sendEmail(final UserId userId, final String emailAddress, final String pwd) {
+        mailManager.sendMail(emailAddress, SUBJECT, String.format(BODY_TEMPLATE, userId.getUserName(), pwd), e -> {
+            logger.info("A password reset email could not be sent to user % at %s.  The password was reset to %s.",
+                    userId.getUserName(),
+                    emailAddress,
+                    pwd);
         });
     }
 }
