@@ -67,7 +67,7 @@ public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAc
             }
             String pwd = IdUtil.getBase62UUID();
             user.get().setPassword(pwd);
-            mailer.sendEmail(emailAddress, pwd);
+            mailer.sendEmail(executionContext.getUserId(), emailAddress, pwd);
             return new ResetPasswordResult(SUCCESS);
         } catch (Exception e) {
             logger.info("Could not reset the user password " +

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.chgpwd;
 
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.mail.MailManager;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/10/2014
@@ -22,6 +24,8 @@ public class ResetPasswordMailer_TestCase {
 
     private static final String PWD = "xzy123xzy";
 
+    public static final String THE_USER_NAME = "the user name";
+
     private ResetPasswordMailer mailer;
 
     @Mock
@@ -30,21 +34,25 @@ public class ResetPasswordMailer_TestCase {
     @Mock
     private WebProtegeLogger logger;
 
+    @Mock
+    private UserId userId;
+
     @Before
     public void setUp() throws Exception {
         mailer = new ResetPasswordMailer(mailManager, logger);
+        when(userId.getUserName()).thenReturn(THE_USER_NAME);
     }
 
     @Test
     public void shouldSendEmailToSpecifiedAddress() {
-        mailer.sendEmail(EMAIL_ADDRESS, PWD);
+        mailer.sendEmail(userId, EMAIL_ADDRESS, PWD);
         // I have no idea why this doesn't work
 //        verify(mailManager, times(1)).sendMail(anyString(), anyString(), anyString());
     }
 
     @Test
     public void shouldSendEmailContainingPasswordSurroundedByWhiteSpace() {
-        mailer.sendEmail(EMAIL_ADDRESS, PWD);
+        mailer.sendEmail(userId, EMAIL_ADDRESS, PWD);
         // I have no idea why this doesn't work
 //        verify(mailManager, times(1)).sendMail(anyString(), anyString(), anyString());
     }
