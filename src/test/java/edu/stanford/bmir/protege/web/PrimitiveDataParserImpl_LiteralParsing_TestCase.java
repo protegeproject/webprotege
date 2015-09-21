@@ -89,15 +89,33 @@ public class PrimitiveDataParserImpl_LiteralParsing_TestCase {
     }
 
     @Test
-     public void shouldParseIntegerAsXSDInteger() {
+    public void shouldParseDecimalWithCommaSeparatorsAsXSDDecimal() {
+        parser.parsePrimitiveData("3,333.3", Optional.<String>absent(), primitiveTypes, primitiveDataParserCallback);
+        verifyResult("3333.3", OWL2Datatype.XSD_DECIMAL);
+    }
+
+    @Test
+    public void shouldParseIntegerAsXSDInteger() {
         parser.parsePrimitiveData("3", Optional.<String>absent(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("3", OWL2Datatype.XSD_INTEGER);
+    }
+
+    @Test
+    public void shouldParseIntegerWithCommanSeparatorsAsXSDInteger() {
+        parser.parsePrimitiveData("3,333", Optional.<String>absent(), primitiveTypes, primitiveDataParserCallback);
+        verifyResult("3333", OWL2Datatype.XSD_INTEGER);
     }
 
     @Test
     public void shouldParseFloatAsXSDFloat() {
         parser.parsePrimitiveData("3f", Optional.<String>absent(), primitiveTypes, primitiveDataParserCallback);
         verifyResult("3", OWL2Datatype.XSD_FLOAT);
+    }
+
+    @Test
+    public void shouldParseFloatWithCommaSeparatorsAsXSDFloat() {
+        parser.parsePrimitiveData("3,333f", Optional.<String>absent(), primitiveTypes, primitiveDataParserCallback);
+        verifyResult("3333", OWL2Datatype.XSD_FLOAT);
     }
 
     @Test
