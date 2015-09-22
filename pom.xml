@@ -125,13 +125,13 @@
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>4.0</version>
+            <version>3.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-multibindings</artifactId>
-            <version>4.0</version>
+            <version>3.0</version>
         </dependency>
 
         <dependency>
@@ -325,7 +325,7 @@
                     <runTarget>WebProtege.jsp</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <extraJvmArgs>-Xms1000M -Xmx2000M -XX:MaxPermSize=500M -XX:PermSize=128M</extraJvmArgs>
-                    <logLevel>INFO</logLevel>
+                    <logLevel>ERROR</logLevel>
                     <localWorkers>1</localWorkers>
                 </configuration>
             </plugin>
