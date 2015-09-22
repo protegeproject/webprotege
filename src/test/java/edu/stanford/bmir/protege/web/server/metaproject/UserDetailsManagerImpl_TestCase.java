@@ -2,6 +2,7 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
@@ -82,5 +83,19 @@ public class UserDetailsManagerImpl_TestCase {
     public void should_getEmail() {
         when(metaProject.getUser(userName)).thenReturn(user);
         assertThat(userDetailsManagerImpl.getEmail(UserId.getUserId(userName)), is(Optional.of(email)));
+    }
+
+    @Test
+    public void shouldGetUserIdByEmail() {
+        when(metaProject.getUsers()).thenReturn(Collections.singleton(user));
+        EmailAddress emailAddress = new EmailAddress(email);
+        assertThat(userDetailsManagerImpl.getUserIdByEmailAddress(emailAddress), is(Optional.of(UserId.getUserId(userName))));
+    }
+
+    @Test
+    public void shouldNotGetUserIdByEmail() {
+        when(metaProject.getUsers()).thenReturn(Collections.singleton(user));
+        EmailAddress emailAddress = new EmailAddress("Other Email");
+        assertThat(userDetailsManagerImpl.getUserIdByEmailAddress(emailAddress), is(Optional.absent()));
     }
 }
