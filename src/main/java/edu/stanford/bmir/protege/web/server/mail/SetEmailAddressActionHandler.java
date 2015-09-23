@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.smi.protege.server.metaproject.User;
 
 import javax.inject.Inject;
 
@@ -37,7 +41,21 @@ public class SetEmailAddressActionHandler implements ActionHandler<SetEmailAddre
 
     @Override
     public SetEmailAddressResult execute(SetEmailAddressAction action, ExecutionContext executionContext) {
-        userDetailsManager.setEmail(action.getUserId(), action.getEmailAddress());
-        return new SetEmailAddressResult();
+        String emailAddress = action.getEmailAddress();
+        Optional<UserId> userId = userDetailsManager.getUserIdByEmailAddress(new EmailAddress(emailAddress));
+        if(userId.isPresent()) {
+            if(userId.get().equals(action.getUserId())) {
+                // Same user, same address
+                return new SetEmailAddressResult(SetEmailAddressResult.Result.ADDRESS_UNCHANGED);
+            }
+            else {
+                // Already exists
+                return new SetEmailAddressResult(SetEmailAddressResult.Result.ADDRESS_ALREADY_EXISTS);
+            }
+        }
+        else {
+            userDetailsManager.setEmail(action.getUserId(), emailAddress);
+            return new SetEmailAddressResult(SetEmailAddressResult.Result.ADDRESS_CHANGED);
+        }
     }
 }
