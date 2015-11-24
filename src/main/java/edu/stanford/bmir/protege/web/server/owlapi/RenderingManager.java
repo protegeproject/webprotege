@@ -27,6 +27,7 @@ import org.semanticweb.owlapi.vocab.SKOSVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 
 import javax.inject.Inject;
+import java.awt.event.ActionListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -771,12 +772,7 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
                 LiteralStyle.BRACKETED,
                 new DefaultHttpLinkRenderer(),
                 new MarkdownLiteralRenderer());
-        return renderer.render(object, highlightChecker, new DeprecatedEntityChecker() {
-            @Override
-            public boolean isDeprecated(OWLEntity entity) {
-                return deprecatedEntityChecker.isDeprecated(entity);
-            }
-        });
+        return renderer.render(object, highlightChecker, deprecatedEntityChecker);
     }
 
 
