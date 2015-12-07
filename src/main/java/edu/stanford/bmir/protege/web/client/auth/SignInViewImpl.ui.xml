@@ -22,7 +22,7 @@
             <g:PasswordTextBox visibleLength="60" ui:field="passwordField"/>
         </div>
         <div class="{wp.style.formGroup}">
-            <g:Anchor text="Forgot password" ui:field="forgotPasswordButton"
+            <g:Anchor text="Forgot user name or password" ui:field="forgotPasswordButton"
                       addStyleNames="{style.forgotPasswordButton}"/>
         </div>
     </g:HTMLPanel>
