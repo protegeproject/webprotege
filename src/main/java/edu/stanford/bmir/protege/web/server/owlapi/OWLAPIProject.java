@@ -45,7 +45,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
 import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
 import org.coode.owlapi.rdf.rdfxml.RDFXMLOntologyStorer;
-import org.protege.owlapi.model.ProtegeOWLOntologyManager;
 import org.semanticweb.binaryowl.BinaryOWLParseException;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
 import org.semanticweb.owlapi.change.AddAxiomData;
@@ -438,6 +437,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
             // Now we do the actual changing, so we lock the project here.  No writes or reads can take place whilst
             // we apply the changes
+            Optional<RevisionNumber> revisionNumber;
             try {
                 projectChangeWriteLock.lock();
                 OWLAPIProjectOWLOntologyManager manager = ((OWLAPIProjectOWLOntologyManager) getRootOntology().getOWLOntologyManager());
@@ -447,6 +447,10 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 finalResult = new ChangeApplicationResult<R>(renamedResult, appliedChanges, renameMap);
                 if (!appliedChanges.isEmpty()) {
                     logAndBroadcastAppliedChanges(userId, finalResult, changeDescriptionGenerator);
+                    revisionNumber = Optional.of(getRevisionNumber());
+                }
+                else {
+                    revisionNumber = Optional.absent();
                 }
             } finally {
                 // Release for reads
@@ -454,9 +458,9 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             }
 
 
-            if (!(changeListGenerator instanceof SilentChangeListGenerator)) {
+            if (revisionNumber.isPresent() && !(changeListGenerator instanceof SilentChangeListGenerator)) {
                 List<ProjectEvent<?>> highLevelEvents = new ArrayList<>();
-                eventTranslatorManager.translateOntologyChanges(appliedChanges, highLevelEvents);
+                eventTranslatorManager.translateOntologyChanges(revisionNumber.get(), appliedChanges, highLevelEvents);
                 if (changeListGenerator instanceof HasHighLevelEvents) {
                     highLevelEvents.addAll(((HasHighLevelEvents) changeListGenerator).getHighLevelEvents());
                 }

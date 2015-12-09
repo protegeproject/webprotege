@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
 import java.util.List;
@@ -24,6 +25,6 @@ public interface EventTranslator {
      * @param appliedChanges The applied changes.
      * @param projectEventList A list to be filled with high level project events that were generated from the changes.
      */
-    void translateOntologyChanges(List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList);
+    void translateOntologyChanges(RevisionNumber revisionNumber, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList);
 }
 

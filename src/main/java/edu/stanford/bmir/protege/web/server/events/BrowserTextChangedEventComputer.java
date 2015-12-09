@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.HasGetChangeSubjects;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.model.HasContainsEntityInSignature;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -56,7 +57,7 @@ public class BrowserTextChangedEventComputer implements EventTranslator {
     }
 
     @Override
-    public void translateOntologyChanges(List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(RevisionNumber revisionNumber, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
         for(OWLOntologyChange change : appliedChanges) {
             for(OWLEntity entity : hasChangeSubject.getChangeSubjects(change)) {
                 String shortForm = shortFormProvider.getShortForm(entity);

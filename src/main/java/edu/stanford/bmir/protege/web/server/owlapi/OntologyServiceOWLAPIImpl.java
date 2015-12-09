@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
-import edu.stanford.smi.protege.util.Log;
 import org.ncbo.stanford.bean.concept.ClassBean;
 import org.ncbo.stanford.util.BioPortalServerConstants;
 import org.ncbo.stanford.util.BioPortalUtil;
@@ -689,7 +688,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         try {
             encodedConceptId = URLEncoder.encode(bpRefData.getConceptId(), "UTF-8");
         } catch (UnsupportedEncodingException e1) {
-            Log.getLogger().log(Level.WARNING, "Error at encoding BP search url", e1);
+            logger.info("Error at encoding BP search url", e1);
         }
         String urlString = bpSearchData.getBpRestBaseUrl() + BioPortalServerConstants.CONCEPTS_REST + "/"
                 + bpRefData.getOntologyVersionId() + "/?conceptid=" + encodedConceptId;
@@ -698,7 +697,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         try {
             url = new URL(urlString);
         } catch (MalformedURLException e) {
-            Log.getLogger().log(Level.WARNING, "Invalid BP search URL: " + urlString, e);
+            logger.info("Invalid BP search URL: " + urlString, e);
         }
         if (url == null) {
             return "";
