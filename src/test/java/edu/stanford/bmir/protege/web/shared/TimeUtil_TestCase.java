@@ -24,6 +24,10 @@ public class TimeUtil_TestCase {
 
     public static final long THU_SEPTEMBER_FIRST_2011 = 1314917789000l;
 
+    public static final long THU_SEPTEMBER_TWENTY_FIRST_2011 = 1316645789000l;
+
+    public static final long THU_SEPTEMBER_THIRTIETH_2011 = 1317423389000l;
+
     private final long t0 = 1000;
 
     @Test
@@ -87,13 +91,13 @@ public class TimeUtil_TestCase {
 
     @Test
     public void shouldReturnDateRendering21() {
-        String rendering = TimeUtil.getTimeRendering(THU_SEPTEMBER_FIRST_2011 + ONE_DAY * 21);
+        String rendering = TimeUtil.getTimeRendering(THU_SEPTEMBER_TWENTY_FIRST_2011);
         assertThat(rendering, is("21st September 2011"));
     }
 
     @Test
     public void shouldReturnDateRendering30() {
-        String rendering = TimeUtil.getTimeRendering(THU_SEPTEMBER_FIRST_2011 + ONE_DAY * 30);
+        String rendering = TimeUtil.getTimeRendering(THU_SEPTEMBER_THIRTIETH_2011);
         assertThat(rendering, is("30th September 2011"));
     }
 

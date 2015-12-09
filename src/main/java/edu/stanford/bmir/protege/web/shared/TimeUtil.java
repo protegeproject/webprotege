@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.shared;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
-
 import java.util.Date;
 
 /**
@@ -126,7 +123,61 @@ public class TimeUtil {
     }
 
     private static int getDaysBetween(long timestamp, long referenceTimestamp) {
-        return CalendarUtil.getDaysBetween(new Date(timestamp), new Date(referenceTimestamp));
+        // Taken from CalendarUtil
+        return getDaysBetween(new Date(timestamp), new Date(referenceTimestamp));
+    }
+
+
+    /**
+     * Taken from {@link com.google.gwt.user.datepicker.client.CalendarUtil}
+     */
+    private static int getDaysBetween(Date start, Date finish) {
+        // Convert the dates to the same time
+        start = copyDate(start);
+        resetTime(start);
+        finish = copyDate(finish);
+        resetTime(finish);
+
+        long aTime = start.getTime();
+        long bTime = finish.getTime();
+
+        long adjust = 60 * 60 * 1000;
+        adjust = (bTime > aTime) ? adjust : -adjust;
+
+        return (int) ((bTime - aTime + adjust) / (24 * 60 * 60 * 1000));
+    }
+
+
+    /**
+     * Taken from {@link com.google.gwt.user.datepicker.client.CalendarUtil}
+     */
+    private static Date copyDate(Date date) {
+        if (date == null) {
+            return null;
+        }
+        Date newDate = new Date();
+        newDate.setTime(date.getTime());
+        return newDate;
+    }
+
+    /**
+     * Taken from {@link com.google.gwt.user.datepicker.client.CalendarUtil}
+     */
+    private static void resetTime(Date date) {
+        long msec = resetMilliseconds(date.getTime());
+        date.setTime(msec);
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+    }
+
+    private static long resetMilliseconds(long msec) {
+        int offset = (int) (msec % 1000);
+        // Normalize if time is before epoch
+        if (offset < 0) {
+            offset += 1000;
+        }
+        return msec - offset;
     }
 
     /**
