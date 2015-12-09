@@ -27,8 +27,6 @@ public class HighLevelEventGenerator implements EventTranslator {
 
     private final ProjectId projectId;
 
-    private final RevisionNumber revisionNumber;
-
     private final BrowserTextProvider browserTextProvider;
 
     private final HasGetRevisionSummary hasGetRevisionSummary;
@@ -36,9 +34,8 @@ public class HighLevelEventGenerator implements EventTranslator {
     private final HasGetEntitiesWithIRI hasGetEntitiesWithIRI;
 
     @Inject
-    public HighLevelEventGenerator(ProjectId projectId, RevisionNumber revisionNumber, BrowserTextProvider browserTextProvider, HasGetEntitiesWithIRI hasGetEntitiesWithIRI, HasGetRevisionSummary hasGetRevisionSummary) {
+    public HighLevelEventGenerator(ProjectId projectId, BrowserTextProvider browserTextProvider, HasGetEntitiesWithIRI hasGetEntitiesWithIRI, HasGetRevisionSummary hasGetRevisionSummary) {
         this.projectId = projectId;
-        this.revisionNumber = revisionNumber;
         this.browserTextProvider = browserTextProvider;
         this.hasGetEntitiesWithIRI = hasGetEntitiesWithIRI;
         this.hasGetRevisionSummary = hasGetRevisionSummary;
@@ -50,7 +47,7 @@ public class HighLevelEventGenerator implements EventTranslator {
     }
 
     @Override
-    public void translateOntologyChanges(List<OWLOntologyChange> appliedChanges, final List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(RevisionNumber revisionNumber, List<OWLOntologyChange> appliedChanges, final List<ProjectEvent<?>> projectEventList) {
         // TODO: NEED TIDYING AND SPLITTING UP
         final Set<OWLEntity> changedEntities = new HashSet<>();
 

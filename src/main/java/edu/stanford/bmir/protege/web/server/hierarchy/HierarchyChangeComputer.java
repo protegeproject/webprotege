@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyRootAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyRootRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -67,7 +68,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
 
     @SuppressWarnings("unchecked")
     @Override
-    public void translateOntologyChanges(List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(RevisionNumber revisionNumber, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
         Set<T> changeSignature = new HashSet<T>();
         for(OWLOntologyChange change : appliedChanges) {
             for(OWLEntity child : change.getSignature()) {
