@@ -88,12 +88,7 @@ public class ProjectChangesManager {
             final Filter<OWLOntologyChangeRecord> filter;
             if(subject.isPresent()) {
                 filter = new SameSubjectFilter(
-                        new AxiomIRISubjectProvider(new Comparator<IRI>() {
-                            @Override
-                            public int compare(IRI o1, IRI o2) {
-                                return o1.compareTo(o2);
-                            }
-                        }), subject.transform(new Function<OWLEntity, IRI>() {
+                        new AxiomIRISubjectProvider(IRI::compareTo), subject.transform(new Function<OWLEntity, IRI>() {
                     @Nullable
                     @Override
                     public IRI apply(OWLEntity entity) {
@@ -102,12 +97,7 @@ public class ProjectChangesManager {
                 }));
             }
             else {
-                filter = new Filter<OWLOntologyChangeRecord>() {
-                    @Override
-                    public boolean isIncluded(OWLOntologyChangeRecord object) {
-                        return true;
-                    }
-                };
+                filter = object -> true;
             }
 
             Revision2DiffElementsTranslator translator = new Revision2DiffElementsTranslator(
