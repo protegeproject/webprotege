@@ -31,6 +31,8 @@ public class ProjectChangeEventPanel extends Composite implements ProjectFeedIte
     @UiField
     protected FlexTable changedEntitiesTable;
 
+    @UiField
+    protected InlineLabel descriptionField;
 
 
 
@@ -54,6 +56,9 @@ public class ProjectChangeEventPanel extends Composite implements ProjectFeedIte
 
     }
 
+    public void setDescription(String description) {
+        descriptionField.setText(description);
+    }
 
     public void setChangedEntities(final Set<OWLEntityData> entities) {
         changedEntitiesTable.removeAllRows();

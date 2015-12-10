@@ -68,6 +68,7 @@ public class ProjectFeedPanel extends Composite {
         changePanel.setUserName(event.getUserId().getUserName());
         changePanel.setTimestamp(event.getTimestamp());
         changePanel.setChangedEntities(event.getSubjects());
+        changePanel.setDescription(event.getRevisionSummary().getDescription());
         insertWidgetIntoFeed(changePanel);
     }
 

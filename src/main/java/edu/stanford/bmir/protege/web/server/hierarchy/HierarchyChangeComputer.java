@@ -3,18 +3,17 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import edu.stanford.bmir.protege.web.server.events.EventTranslator;
+import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyId;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyRootAddedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.HierarchyRootRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,7 +67,7 @@ public abstract class HierarchyChangeComputer<T extends OWLEntity> implements Ev
 
     @SuppressWarnings("unchecked")
     @Override
-    public void translateOntologyChanges(RevisionNumber revisionNumber, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
         Set<T> changeSignature = new HashSet<T>();
         for(OWLOntologyChange change : appliedChanges) {
             for(OWLEntity child : change.getSignature()) {

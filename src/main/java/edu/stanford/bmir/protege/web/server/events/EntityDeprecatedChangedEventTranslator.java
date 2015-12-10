@@ -1,11 +1,11 @@
 package edu.stanford.bmir.protege.web.server.events;
 
+import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
 import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityChecker;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.event.EntityDeprecatedChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
@@ -39,7 +39,7 @@ public class EntityDeprecatedChangedEventTranslator implements EventTranslator {
     }
 
     @Override
-    public void translateOntologyChanges(RevisionNumber revisionNumber, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
         for(OWLOntologyChange change : appliedChanges) {
             if (change.isAxiomChange()) {
                 if (change.getAxiom() instanceof OWLAnnotationAssertionAxiom) {

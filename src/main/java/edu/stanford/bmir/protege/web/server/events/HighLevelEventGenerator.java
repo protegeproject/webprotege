@@ -2,11 +2,10 @@ package edu.stanford.bmir.protege.web.server.events;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
-import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityChecker;
+import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.HasGetEntitiesWithIRI;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
@@ -47,7 +46,7 @@ public class HighLevelEventGenerator implements EventTranslator {
     }
 
     @Override
-    public void translateOntologyChanges(RevisionNumber revisionNumber, List<OWLOntologyChange> appliedChanges, final List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision, List<OWLOntologyChange> appliedChanges, final List<ProjectEvent<?>> projectEventList) {
         // TODO: NEED TIDYING AND SPLITTING UP
         final Set<OWLEntity> changedEntities = new HashSet<>();
 
@@ -149,7 +148,7 @@ public class HighLevelEventGenerator implements EventTranslator {
             Optional<String> browserText = browserTextProvider.getOWLEntityBrowserText(entity);
             changedEntitiesData.add(DataFactory.getOWLEntityData(entity, browserText.or("")));
         }
-        Optional<RevisionSummary> revisionSummary = hasGetRevisionSummary.getRevisionSummary(revisionNumber);
+        Optional<RevisionSummary> revisionSummary = hasGetRevisionSummary.getRevisionSummary(revision.getRevisionNumber());
         if (revisionSummary.isPresent()) {
             ProjectEvent<?> event = new ProjectChangedEvent(projectId, revisionSummary.get(), changedEntitiesData);
             projectEventList.add(event);

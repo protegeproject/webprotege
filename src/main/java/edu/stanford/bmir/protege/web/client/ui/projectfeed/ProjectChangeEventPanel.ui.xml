@@ -28,7 +28,7 @@
                         <div>
                             <div>
                                 <g:InlineLabel ui:field="userNameLabel" addStyleNames="{style.user-name}"/>
-                                edited:
+                                <g:InlineLabel ui:field="descriptionField"/>
                             </div>
 
                             <g:FlexTable ui:field="changedEntitiesTable"/>
