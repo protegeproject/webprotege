@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.revision;
 
+import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -22,6 +24,8 @@ public class RevisionSummary implements Serializable, IsSerializable, Comparable
     private long timestamp;
     
     private int changeCount;
+
+    private String description;
     
 
     /**
@@ -30,11 +34,12 @@ public class RevisionSummary implements Serializable, IsSerializable, Comparable
     private RevisionSummary() {
     }
 
-    public RevisionSummary(RevisionNumber revisionNumber, UserId usedId, long timestamp, int changeCount) {
+    public RevisionSummary(RevisionNumber revisionNumber, UserId userId, long timestamp, int changeCount, String description) {
         this.revisionNumber = checkNotNull(revisionNumber);
-        this.userId = checkNotNull(usedId);
+        this.userId = checkNotNull(userId);
         this.timestamp = timestamp;
         this.changeCount = changeCount;
+        this.description = checkNotNull(description);
     }
 
     public RevisionNumber getRevisionNumber() {
@@ -53,9 +58,13 @@ public class RevisionSummary implements Serializable, IsSerializable, Comparable
         return changeCount;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public int hashCode() {
-        return "RevisionSummary".hashCode() + revisionNumber.hashCode() + userId.hashCode() + ((int) timestamp) + changeCount;
+        return Objects.hashCode(revisionNumber, userId, timestamp, changeCount, description);
     }
 
     @Override
@@ -67,7 +76,7 @@ public class RevisionSummary implements Serializable, IsSerializable, Comparable
             return false;
         }
         RevisionSummary other = (RevisionSummary) obj;
-        return this.timestamp == other.timestamp && this.revisionNumber.equals(other.revisionNumber) && this.userId.equals(other.userId) && this.changeCount == other.changeCount;
+        return this.timestamp == other.timestamp && this.revisionNumber.equals(other.revisionNumber) && this.userId.equals(other.userId) && this.changeCount == other.changeCount && this.description.equals(other.description);
     }
 
     /**
@@ -100,21 +109,15 @@ public class RevisionSummary implements Serializable, IsSerializable, Comparable
         }
     }
 
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("RevisionSummary(");
-        sb.append(revisionNumber);
-        sb.append(" ");
-        sb.append("ChangeCount(");
-        sb.append(changeCount);
-        sb.append(") ");
-        sb.append(userId);
-        sb.append(" ");
-        sb.append("Timestamp(");
-        sb.append(timestamp);
-        sb.append(")");
-        sb.append(")");
-        return sb.toString();
+        return toStringHelper("RevisionSummary")
+                .addValue(revisionNumber)
+                .addValue(userId)
+                .add("timestamp", timestamp)
+                .add("changeCount", changeCount)
+                .add("description", description)
+                .toString();
     }
 }

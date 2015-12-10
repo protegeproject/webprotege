@@ -437,7 +437,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
             // Now we do the actual changing, so we lock the project here.  No writes or reads can take place whilst
             // we apply the changes
-            Optional<RevisionNumber> revisionNumber;
+            final Optional<Revision> revision;
             try {
                 projectChangeWriteLock.lock();
                 OWLAPIProjectOWLOntologyManager manager = ((OWLAPIProjectOWLOntologyManager) getRootOntology().getOWLOntologyManager());
@@ -446,11 +446,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
                 Optional<R> renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
                 finalResult = new ChangeApplicationResult<R>(renamedResult, appliedChanges, renameMap);
                 if (!appliedChanges.isEmpty()) {
-                    logAndBroadcastAppliedChanges(userId, finalResult, changeDescriptionGenerator);
-                    revisionNumber = Optional.of(getRevisionNumber());
+                    Revision rev = logAndBroadcastAppliedChanges(userId, finalResult, changeDescriptionGenerator);
+                    revision = Optional.of(rev);
                 }
                 else {
-                    revisionNumber = Optional.absent();
+                    revision = Optional.absent();
                 }
             } finally {
                 // Release for reads
@@ -458,9 +458,9 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             }
 
 
-            if (revisionNumber.isPresent() && !(changeListGenerator instanceof SilentChangeListGenerator)) {
+            if (revision.isPresent() && !(changeListGenerator instanceof SilentChangeListGenerator)) {
                 List<ProjectEvent<?>> highLevelEvents = new ArrayList<>();
-                eventTranslatorManager.translateOntologyChanges(revisionNumber.get(), appliedChanges, highLevelEvents);
+                eventTranslatorManager.translateOntologyChanges(revision.get(), appliedChanges, highLevelEvents);
                 if (changeListGenerator instanceof HasHighLevelEvents) {
                     highLevelEvents.addAll(((HasHighLevelEvents) changeListGenerator).getHighLevelEvents());
                 }
@@ -530,7 +530,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     }
 
 
-    private <R> void logAndBroadcastAppliedChanges(UserId userId, ChangeApplicationResult<R> finalResult, ChangeDescriptionGenerator<R> changeDescriptionGenerator) {
+    private <R> Revision logAndBroadcastAppliedChanges(UserId userId, ChangeApplicationResult<R> finalResult, ChangeDescriptionGenerator<R> changeDescriptionGenerator) {
         // Generate a description for the changes that were actually applied
         String changeDescription = changeDescriptionGenerator.generateChangeDescription(finalResult);
         // Log the changes
@@ -538,7 +538,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         for (OWLOntologyChange change : finalResult.getChangeList()) {
             changeRecords.add(change.getChangeRecord());
         }
-        changeManager.addRevision(userId, changeRecords, changeDescription);
+        Revision revision = changeManager.addRevision(userId, changeRecords, changeDescription);
 
         // TODO: THis list of "listeners" should be injected
         List<OWLOntologyChange> changes = finalResult.getChangeList();
@@ -549,6 +549,8 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         dataPropertyHierarchyProvider.handleChanges(changes);
         annotationPropertyHierarchyProvider.handleChanges(changes);
         metricsManager.handleOntologyChanges(changes);
+
+        return revision;
     }
 
 

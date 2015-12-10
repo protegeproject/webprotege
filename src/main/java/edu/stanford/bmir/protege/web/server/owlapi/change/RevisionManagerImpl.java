@@ -2,15 +2,8 @@ package edu.stanford.bmir.protege.web.server.owlapi.change;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.*;
-import com.googlecode.gwt.crypto.util.Sys;
-import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
-import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.change.*;
@@ -46,7 +39,7 @@ public class RevisionManagerImpl implements RevisionManager {
     }
 
     @Override
-    public void addRevision(UserId userId, List<? extends OWLOntologyChangeRecord> changes, String desc) {
+    public Revision addRevision(UserId userId, List<? extends OWLOntologyChangeRecord> changes, String desc) {
         try {
             writeLock.lock();
             long timestamp = System.currentTimeMillis();
@@ -59,6 +52,7 @@ public class RevisionManagerImpl implements RevisionManager {
                     timestamp,
                     highlevelDescription);
             revisionStore.addRevision(revision);
+            return revision;
         } finally {
             writeLock.unlock();
         }
@@ -149,7 +143,7 @@ public class RevisionManagerImpl implements RevisionManager {
     }
 
     private RevisionSummary getRevisionSummaryFromRevision(Revision revision) {
-        return new RevisionSummary(revision.getRevisionNumber(), revision.getUserId(), revision.getTimestamp(), revision.getSize());
+        return new RevisionSummary(revision.getRevisionNumber(), revision.getUserId(), revision.getTimestamp(), revision.getSize(), revision.getHighLevelDescription());
     }
 
 }
