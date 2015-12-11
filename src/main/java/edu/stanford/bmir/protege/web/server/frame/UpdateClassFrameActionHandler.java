@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateClassFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -10,13 +8,9 @@ import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectResult;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
-import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLObject;
 
 import javax.inject.Inject;
-import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>
@@ -53,15 +47,5 @@ public class UpdateClassFrameActionHandler extends AbstractUpdateFrameHandler<Up
     @Override
     protected String getChangeDescription(LabelledFrame<ClassFrame> from, LabelledFrame<ClassFrame> to) {
         return "Edited class";
-    }
-
-    private Multimap<OWLEntity, OWLObject> createMultimap(Set<PropertyValue> propertyValues) {
-        Multimap<OWLEntity, OWLObject> fromPropertyValues = HashMultimap.create();
-        for(PropertyValue propertyValue : propertyValues) {
-            OWLEntity property = propertyValue.getProperty();
-            OWLObject value = propertyValue.getValue();
-            fromPropertyValues.put(property, value);
-        }
-        return fromPropertyValues;
     }
 }
