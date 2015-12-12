@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.entitylabel.EntityLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.Set;
 
@@ -35,6 +36,7 @@ public class ProjectChangeEventPanel extends Composite implements ProjectFeedIte
     protected InlineLabel descriptionField;
 
 
+    private SelectionModel selectionModel;
 
     interface ChangeEventPanelUiBinder extends UiBinder<HTMLPanel, ProjectChangeEventPanel> {
 
@@ -42,8 +44,9 @@ public class ProjectChangeEventPanel extends Composite implements ProjectFeedIte
 
     private static ChangeEventPanelUiBinder ourUiBinder = GWT.create(ChangeEventPanelUiBinder.class);
 
-    public ProjectChangeEventPanel() {
+    public ProjectChangeEventPanel(SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
+        this.selectionModel = selectionModel;
         initWidget(rootElement);
     }
 
@@ -66,6 +69,7 @@ public class ProjectChangeEventPanel extends Composite implements ProjectFeedIte
         for(OWLEntityData entityData : entities) {
             final EntityLabel changedEntityLabel = new EntityLabel();
             changedEntityLabel.setEntity(entityData);
+            changedEntityLabel.setSelectionModel(selectionModel);
             changedEntitiesTable.setWidget(row, 0, changedEntityLabel);
             row++;
         }

@@ -28,6 +28,7 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
+import org.yaml.snakeyaml.nodes.NodeId;
 
 import javax.inject.Inject;
 import java.io.File;

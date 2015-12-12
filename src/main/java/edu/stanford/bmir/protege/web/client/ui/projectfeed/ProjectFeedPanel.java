@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.event.UserStartingViewingProjectEven
 import edu.stanford.bmir.protege.web.shared.event.UserStoppedViewingProjectEvent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -35,6 +36,8 @@ public class ProjectFeedPanel extends Composite {
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
+    private SelectionModel selectionModel;
+
     private Timer elapsedTimesUpdateTimer = new Timer() {
         @Override
         public void run() {
@@ -54,8 +57,9 @@ public class ProjectFeedPanel extends Composite {
 
     private static RollingProjectChangedEventPanelUiBinder ourUiBinder = GWT.create(RollingProjectChangedEventPanelUiBinder.class);
 
-    public ProjectFeedPanel(ProjectId projectId) {
+    public ProjectFeedPanel(ProjectId projectId, SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
+        this.selectionModel = selectionModel;
         initWidget(rootElement);
     }
 
@@ -64,7 +68,7 @@ public class ProjectFeedPanel extends Composite {
             return;
         }
         lastRevisionNumber = event.getRevisionNumber();
-        final ProjectChangeEventPanel changePanel = new ProjectChangeEventPanel();
+        final ProjectChangeEventPanel changePanel = new ProjectChangeEventPanel(selectionModel);
         changePanel.setUserName(event.getUserId().getUserName());
         changePanel.setTimestamp(event.getTimestamp());
         changePanel.setChangedEntities(event.getSubjects());
