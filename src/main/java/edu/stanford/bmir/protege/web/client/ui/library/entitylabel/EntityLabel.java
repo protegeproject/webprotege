@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.client.ui.library.entitylabel;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,12 +27,14 @@ public class EntityLabel extends Composite {
     protected InlineLabel typeLabel;
 
     @UiField
-    protected InlineLabel browserTextLabel;
+    protected InlineHyperlink browserTextLabel;
 
     @UiField
     protected InlineLabel iriLabel;
 
     private OWLEntityData entityData;
+
+    private SelectionModel selectionModel;
 
     public EntityLabel() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
@@ -44,6 +47,10 @@ public class EntityLabel extends Composite {
         updateDisplay();
     }
 
+    public void setSelectionModel(SelectionModel selectionModel) {
+        this.selectionModel = selectionModel;
+    }
+
     public OWLEntityData getEntityData() {
         return entityData;
     }
@@ -53,6 +60,14 @@ public class EntityLabel extends Composite {
     private void updateDisplay() {
         typeLabel.setText(entityData.getEntity().getEntityType().getName() + ": ");
         browserTextLabel.setText(entityData.getBrowserText());
+        browserTextLabel.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                if (selectionModel != null) {
+                    selectionModel.setSelection(entityData);
+                }
+            }
+        });
         iriLabel.setText("(" + entityData.getEntity().getIRI().toQuotedString() + ")");
     }
 }

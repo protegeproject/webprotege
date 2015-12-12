@@ -20,7 +20,7 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     public void initialize() {
-        basePanel = new ProjectFeedBasePanel(getProjectId(), this);
+        basePanel = new ProjectFeedBasePanel(getProjectId(), this, getSelectionModel());
         setTitle("Project feed");
         setSize(300, 180);
         add(basePanel);
