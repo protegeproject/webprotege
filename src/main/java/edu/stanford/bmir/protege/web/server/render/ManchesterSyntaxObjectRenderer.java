@@ -258,7 +258,6 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
                 object.accept(this);
                 if (it.hasNext()) {
                     stringBuilder.append(separator);
-                    renderSpace();
                 }
             }
         }
@@ -323,7 +322,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             }
             else {
                 renderSectionKeyword(sectionKeyword);
-                renderCollection(elements, ",");
+                renderCollection(elements, ", ");
             }
         }
 
@@ -478,7 +477,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         public void visit(OWLDisjointUnionAxiom axiom) {
             axiom.getOWLClass().accept(this);
             renderBinaryKeyword(DISJOINT_UNION_OF);
-            renderCollection(axiom.getClassExpressions(), ",");
+            renderCollection(axiom.getClassExpressions(), ", ");
         }
 
         @Override
@@ -550,7 +549,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
 
         @Override
         public void visit(OWLSubPropertyChainOfAxiom axiom) {
-            renderCollection(axiom.getPropertyChain(), "o");
+            renderCollection(axiom.getPropertyChain(), " o ");
             renderBinaryKeyword(SUB_PROPERTY_OF);
             axiom.getSuperProperty().accept(this);
         }
@@ -566,7 +565,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         public void visit(OWLHasKeyAxiom axiom) {
             axiom.getClassExpression().accept(this);
             renderBinaryKeyword(HAS_KEY);
-            renderCollection(axiom.getPropertyExpressions(), ",");
+            renderCollection(axiom.getPropertyExpressions(), ", ");
         }
 
         @Override
@@ -578,9 +577,9 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
 
         @Override
         public void visit(SWRLRule rule) {
-            renderCollection(rule.getBody(), ",");
+            renderCollection(rule.getBody(), ", ");
             stringBuilder.append(" -> ");
-            renderCollection(rule.getHead(), ",");
+            renderCollection(rule.getHead(), ", ");
         }
 
         @Override
@@ -742,7 +741,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         @Override
         public void visit(OWLObjectOneOf ce) {
             renderOpenBrace();
-            renderCollection(ce.getIndividuals(), ",");
+            renderCollection(ce.getIndividuals(), ", ");
             renderCloseBrace();
         }
 
@@ -881,7 +880,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         public void visit(OWLDatatypeRestriction node) {
             node.getDatatype().accept(this);
             renderOpenSquareBracket();
-            renderCollection(node.getFacetRestrictions(), ",");
+            renderCollection(node.getFacetRestrictions(), ", ");
             renderCloseSquareBracket();
         }
 
@@ -901,7 +900,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         public void visit(SWRLClassAtom node) {
             node.getPredicate().accept(this);
             renderOpenBracket();
-            renderCollection(node.getAllArguments(), ",");
+            renderCollection(node.getAllArguments(), ", ");
             renderCloseBracket();
         }
 
@@ -909,7 +908,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         public void visit(SWRLDataRangeAtom node) {
             node.getPredicate().accept(this);
             renderOpenBracket();
-            renderCollection(node.getAllArguments(), ",");
+            renderCollection(node.getAllArguments(), ", ");
             renderCloseBracket();
         }
 
@@ -917,7 +916,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         public void visit(SWRLObjectPropertyAtom node) {
             node.getPredicate().accept(this);
             renderOpenBracket();
-            renderCollection(node.getAllArguments(), ",");
+            renderCollection(node.getAllArguments(), ", ");
             renderCloseBracket();
         }
 
@@ -934,7 +933,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         public void visit(SWRLBuiltInAtom node) {
             node.getPredicate().accept(this);
             renderOpenBracket();
-            renderCollection(node.getAllArguments(), ",");
+            renderCollection(node.getAllArguments(), ", ");
             renderCloseBracket();
         }
 
@@ -959,7 +958,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         public void visit(SWRLSameIndividualAtom node) {
             stringBuilder.append("SameIndividual");
             renderOpenBracket();
-            renderCollection(node.getAllArguments(), ",");
+            renderCollection(node.getAllArguments(), ", ");
             renderCloseBracket();
         }
 
@@ -967,7 +966,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
         public void visit(SWRLDifferentIndividualsAtom node) {
             stringBuilder.append("DifferentIndividuals");
             renderOpenBracket();
-            renderCollection(node.getAllArguments(), ",");
+            renderCollection(node.getAllArguments(), ", ");
             renderCloseBracket();
         }
     }
