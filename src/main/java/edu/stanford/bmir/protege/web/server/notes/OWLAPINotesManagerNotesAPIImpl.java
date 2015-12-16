@@ -169,7 +169,6 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     public Note getNoteForAnnotation(Annotation annotation, Optional<NoteId> inReplyTo) {
         UserId author = UserId.getUserId(annotation.getAuthor());
         String body = annotation.getBody() == null ? "" : annotation.getBody();

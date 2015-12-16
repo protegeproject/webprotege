@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
+import com.google.gwt.user.client.Timer;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
@@ -16,7 +17,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.place.PlaceManager;
 import edu.stanford.bmir.protege.web.client.place.ProjectListPlace;
-import edu.stanford.bmir.protege.web.client.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedHandler;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -25,10 +26,13 @@ import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.MyWebProtegeTab;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.place.TabId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedHandler;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -53,7 +57,9 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         super();
         buildUI();
 
-        displayCurrentPlace();
+        PlaceManager placeManager = Application.get().getPlaceManager();
+        Place currentPlace = placeManager.getCurrentPlace();
+        displayCurrentPlace(currentPlace);
 
 
         this.addListener(new TabPanelListenerAdapter() {
@@ -82,7 +88,8 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         EventBusManager.getManager().registerHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
             @Override
             public void onPlaceChange(PlaceChangeEvent event) {
-                displayCurrentPlace();
+                GWT.log("[ProjectDisplayContainerPanel] Place has changed.  New place: " + event.getNewPlace());
+                displayCurrentPlace(event.getNewPlace());
             }
         });
 
@@ -115,7 +122,19 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         final Optional<ProjectId> projectId = getProjectIdForActiveTab();
         Application.get().setActiveProject(projectId);
         if (projectId.isPresent()) {
-            Application.get().getPlaceManager().setCurrentPlace(new ProjectViewPlace(projectId.get()));
+            Place place = Application.get().getPlaceManager().getCurrentPlace();
+            Optional<OWLEntity> entity;
+            Optional<TabId> tabId;
+            if(place instanceof ProjectViewPlace) {
+                ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
+                entity = projectViewPlace.getEntity();
+                tabId = projectViewPlace.getTabId();
+            }
+            else {
+                entity = Optional.absent();
+                tabId = Optional.absent();
+            }
+            Application.get().getPlaceManager().setCurrentPlace(new ProjectViewPlace(projectId.get(), tabId, entity));
         }
         else {
             Application.get().getPlaceManager().setCurrentPlace(ProjectListPlace.DEFAULT_PLACE);
@@ -146,14 +165,13 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         });
     }
 
-    private void displayCurrentPlace() {
-        PlaceManager placeManager = Application.get().getPlaceManager();
-        Place currentPlace = placeManager.getCurrentPlace();
-        if (currentPlace instanceof ProjectListPlace) {
+    private void displayCurrentPlace(Place place) {
+        GWT.log("[ProjectDisplayContainerPanel] Request to display current place: " + place);
+        if (place instanceof ProjectListPlace) {
             setActiveTab(0);
         }
-        else if (currentPlace instanceof ProjectViewPlace) {
-            ProjectViewPlace projectViewPlace = (ProjectViewPlace) currentPlace;
+        else if (place instanceof ProjectViewPlace) {
+            final ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
             loadProject(projectViewPlace.getProjectId());
         }
     }
