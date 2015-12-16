@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -25,6 +26,7 @@ import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.place.PlaceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 
@@ -39,10 +41,14 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.place.TabId;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,10 +100,9 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         EventBusManager.getManager().registerHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
             @Override
             public void onPlaceChange(PlaceChangeEvent event) {
-                updateFromPlace();
+                displayPlace(event.getNewPlace());
             }
         });
-        updateFromPlace();
     }
 
 
@@ -119,31 +124,19 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         return project.get();
     }
 
-    private void updateFromPlace() {
-//        WebProtegePlace place = Application.get().getPlaceManager().getCurrentPlace();
-//        final Optional<ProjectId> placeProjectId = place.getProjectId();
-//        if(!placeProjectId.isPresent()) {
-//            return;
-//        }
-//        if(!placeProjectId.get().equals(projectId)) {
-//            return;
-//        }
-//        Optional<String> perspectiveName = place.getCoordinateValue(PLACE_COORDINATE_NAME);
-//        if(!perspectiveName.isPresent()) {
-//            setActiveTab(0);
-//        }
-//        else {
-//            GWT.log("Set active tab: " + perspectiveName.get());
-//            for(AbstractTab tab : tabs) {
-//                String title = tab.getTitle();
-//                if(perspectiveName.get().equals(title)) {
-//                    setActiveTab(tab.getId());
-//                    break;
-//                }
-//            }
-//        }
+    private void displayPlace(Place place) {
+        if(place instanceof ProjectViewPlace) {
+            ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
+            Optional<TabId> tabId = projectViewPlace.getTabId();
+            if(tabId.isPresent()) {
+                selectTabWithName(tabId.get().getTabName());
+            }
 
-
+            Optional<OWLEntity> selection = projectViewPlace.getEntity();
+            if(selection.isPresent()) {
+                selectionModel.setSelection(DataFactory.getOWLEntityData(selection.get(), "Selection"));
+            }
+        }
     }
 
     public void buildUI() {
@@ -151,7 +144,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     private void getProjectConfiguration() {
-        GWT.log("Getting the project configuration");
+        GWT.log("[ProjectDisplayImpl] Getting the project configuration");
         DispatchServiceManager.get().execute(new GetUIConfigurationAction(projectId),
                 new DispatchServiceCallbackWithProgressDisplay<GetUIConfigurationResult>() {
                     @Override
@@ -187,9 +180,9 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     private void createOntolgyForm() {
         Project project = ProjectManager.get().getProject(projectId).get();
         List<AbstractTab> tabs = project.getLayoutManager().createTabs(selectionModel, project.getProjectLayoutConfiguration());
-        GWT.log("Creating the ontology form from " + tabs.size() + " tabs");
+        GWT.log("[ProjectDisplayImpl] Creating the ontology form from " + tabs.size() + " tabs");
         for (AbstractTab tab : tabs) {
-            GWT.log("Attempting to add tab " + tab.getLabel());
+            GWT.log("[ProjectDisplayImpl] Attempting to add tab " + tab.getLabel());
             addTab(tab);
             updateTabStyle(tab);
         }
@@ -212,7 +205,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     private void addTab(AbstractTab tab) {
-        GWT.log("Add Tab: " + tab.getLabel());
+        GWT.log("[ProjectDisplayImpl] Add Tab: " + tab.getLabel());
         if(tabs.contains(tab)) {
             throw new RuntimeException("Tab already present");
         }
@@ -546,17 +539,20 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     private void setInitialSelection() {
-        final String ontologyName = com.google.gwt.user.client.Window.Location.getParameter("ontology");
-        if (ontologyName == null || !projectId.getId().equals(ontologyName)) {
-            return;
-        }
+        PlaceManager placeManager = Application.get().getPlaceManager();
+        Place place = placeManager.getCurrentPlace();
+        displayPlace(place);
 
-        final String tabNameToSelect = com.google.gwt.user.client.Window.Location.getParameter("tab");
-        if (tabNameToSelect == null) {
-            return;
-        }
+//        final String ontologyName = com.google.gwt.user.client.Window.Location.getParameter("ontology");
+//        if (ontologyName == null || !projectId.getId().equals(ontologyName)) {
+//            return;
+//        }
+//
+//        final String tabNameToSelect = com.google.gwt.user.client.Window.Location.getParameter("tab");
+//        if (tabNameToSelect == null) {
+//            return;
+//        }
 
-        selectTabWithName(tabNameToSelect);
     }
 
     private void selectTabWithName(String tabNameToSelect) {

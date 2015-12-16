@@ -2,10 +2,18 @@ package edu.stanford.bmir.protege.web.shared.selection;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.SimpleEventBus;
+import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.place.PlaceManager;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.smi.protege.ui.ProjectView;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 
@@ -34,10 +42,15 @@ public class SelectionModel {
 
     private final SelectedEntityDataManager<OWLNamedIndividualData> selectedIndividualDataManager;
 
+    private final PlaceManager placeManager;
+
     private Optional<OWLEntityData> selection = Optional.absent();
+
+
 
     @Inject
     public SelectionModel(EventBus eventBus,
+                          PlaceManager placeManager,
                           SelectedEntityDataManager<OWLClassData> selectedClassDataManager,
                           SelectedEntityDataManager<OWLObjectPropertyData> selectedObjectPropertyDataManager,
                           SelectedEntityDataManager<OWLDataPropertyData> selectedDataPropertyDataManager,
@@ -45,12 +58,27 @@ public class SelectionModel {
                           SelectedEntityDataManager<OWLDatatypeData> selectedDatatypeDataManager,
                           SelectedEntityDataManager<OWLNamedIndividualData> selectedIndividualDataManager) {
         this.eventBus = eventBus;
+        this.placeManager = placeManager;
         this.selectedClassDataManager = checkNotNull(selectedClassDataManager);
         this.selectedObjectPropertyDataManager = checkNotNull(selectedObjectPropertyDataManager);
         this.selectedDataPropertyDataManager = checkNotNull(selectedDataPropertyDataManager);
         this.selectedAnnotationPropertyDataManager = checkNotNull(selectedAnnotationPropertyDataManager);
         this.selectedDatatypeDataManager = checkNotNull(selectedDatatypeDataManager);
         this.selectedIndividualDataManager = checkNotNull(selectedIndividualDataManager);
+        eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
+            @Override
+            public void onPlaceChange(PlaceChangeEvent event) {
+                Place newPlace = event.getNewPlace();
+                if(newPlace instanceof ProjectViewPlace) {
+                    ProjectViewPlace projectViewPlace = (ProjectViewPlace) newPlace;
+                    Optional<OWLEntity> entity = projectViewPlace.getEntity();
+                    if(entity.isPresent()) {
+                        GWT.log("[SelectionModel] Detected place change.  Synchronising selection model with place: " + newPlace);
+                        setSelection(DataFactory.getOWLEntityData(entity.get(), "NextSelection"));
+                    }
+                }
+            }
+        });
     }
 
     public HandlerRegistration addSelectionChangedHandler(EntityDataSelectionChangedHandler handler) {
@@ -86,7 +114,7 @@ public class SelectionModel {
     }
 
     public void setSelection(OWLEntityData entityData) {
-        GWT.log("Request to set selection in selection model: " + entityData);
+        GWT.log("[SelectionModel] Request to set selection in selection model to: " + entityData);
         Optional<OWLEntityData> previousSelection = selection;
         selection = Optional.<OWLEntityData>of(entityData);
         entityData.accept(new OWLEntityDataVisitorEx<Void>() {
@@ -127,7 +155,16 @@ public class SelectionModel {
             }
         });
         if (!previousSelection.equals(selection)) {
+            Place place = placeManager.getCurrentPlace();
+            GWT.log("[SelectionModel] Current place: " + place);
+            if(place instanceof ProjectViewPlace) {
+                ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
+                ProjectViewPlace nextPlace = new ProjectViewPlace(projectViewPlace.getProjectId(), projectViewPlace.getTabId(), Optional.<OWLEntity>of(selection.get().getEntity()));
+                GWT.log("[SelectionModel] Next place: " + nextPlace);
+                placeManager.setCurrentPlace(nextPlace);
+            }
             fireEvent(previousSelection);
+
         }
     }
 
@@ -141,6 +178,7 @@ public class SelectionModel {
         EventBus selectionEventBus = new SimpleEventBus();
         return new SelectionModel(
                 selectionEventBus,
+                Application.get().getPlaceManager(),
                 new SelectedEntityDataManager<OWLClassData>(),
                 new SelectedEntityDataManager<OWLObjectPropertyData>(),
                 new SelectedEntityDataManager<OWLDataPropertyData>(),

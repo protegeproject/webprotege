@@ -10,6 +10,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 
@@ -49,27 +50,9 @@ public class PlaceManager {
 
     public void setCurrentPlace(Place place) {
         if (!place.equals(placeController.getWhere())) {
-            GWT.log("SETTING CURRENT PLACE: " + place);
+            GWT.log("[PlaceManager] Setting current place: " + place);
         }
         placeController.goTo(place);
     }
-
-//    public void updateCurrentPlace() {
-//        final Place currentPlace = createPlace();
-//        placeController.goTo(currentPlace);
-//    }
-
-
-    private Place createPlace() {
-        final Optional<ProjectId> activeProject = Application.get().getActiveProject();
-        if(!activeProject.isPresent()) {
-            return DEFAULT_PLACE;
-        }
-        else {
-            return new ProjectViewPlace(activeProject.get());
-        }
-    }
-
-
 
 }

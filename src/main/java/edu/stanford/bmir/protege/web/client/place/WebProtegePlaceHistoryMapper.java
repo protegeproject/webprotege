@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.place;
 
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.WithTokenizers;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 
 /**
  * Author: Matthew Horridge<br>
