@@ -19,8 +19,11 @@ public abstract class AbstractPropertyWidgetWithNotes extends AbstractPropertyWi
 
     public static final String COMMENT_ICON_STYLE_STRING = "style=\"position:relative; top:2px;\"";
 
-    public AbstractPropertyWidgetWithNotes(Project project) {
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public AbstractPropertyWidgetWithNotes(Project project, DispatchServiceManager dispatchServiceManager) {
         super(project);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     protected void onEditNotes(String value) {
@@ -41,7 +44,7 @@ public abstract class AbstractPropertyWidgetWithNotes extends AbstractPropertyWi
                 public void handleAccept(Optional<NoteContent> noteContent) {
                     if (noteContent.isPresent()) {
                         OWLEntity entity = DataFactory.getOWLClass(value);
-                        DispatchServiceManager.get().execute(new AddNoteToEntityAction(getProjectId(), entity, noteContent.get()), new DispatchServiceCallback<AddNoteToEntityResult>() {
+                        dispatchServiceManager.execute(new AddNoteToEntityAction(getProjectId(), entity, noteContent.get()), new DispatchServiceCallback<AddNoteToEntityResult>() {
 
                             @Override
                             public void handleSuccess(AddNoteToEntityResult result) {

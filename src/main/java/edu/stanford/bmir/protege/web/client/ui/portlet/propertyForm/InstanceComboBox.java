@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.form.ComboBox;
 import com.gwtext.client.widgets.form.Field;
@@ -33,13 +34,19 @@ public class InstanceComboBox extends AbstractFieldWidget {
 
     private static int DEFAULT_PAGE_SIZE = 20;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private ComboBox comboBox;
     private Store store;
     private PagedIndividualsProxyImpl proxy;
     private RecordDef recordDef;
 
-    public InstanceComboBox(Project project) {
-        super(project);
+    private final EventBus eventBus;
+
+    public InstanceComboBox(Project project, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        super(project, dispatchServiceManager);
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
 
@@ -126,7 +133,7 @@ public class InstanceComboBox extends AbstractFieldWidget {
 
     protected void addOntolgyChangeListener() {
         GWT.log("WARNING:  InstanceComboBox is adding a listener that will never be removed.  This needs cleaning up!");
-        EventBusManager.getManager().registerHandler(NamedIndividualFrameChangedEvent.TYPE, new NamedIndividualFrameChangedEventHandler() {
+        eventBus.addHandler(NamedIndividualFrameChangedEvent.TYPE, new NamedIndividualFrameChangedEventHandler() {
             @Override
             public void namedIndividualFrameChanged(NamedIndividualFrameChangedEvent event) {
                 cacheAllowedValues();
@@ -141,7 +148,7 @@ public class InstanceComboBox extends AbstractFieldWidget {
         }
         store.removeAll();
         GetIndividualsAction action = new GetIndividualsAction(getProjectId(), DataFactory.getOWLClass(allowedType), Optional.<PageRequest>absent());
-        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<GetIndividualsResult>() {
+        dispatchServiceManager.execute(action, new DispatchServiceCallback<GetIndividualsResult>() {
 
 
             @Override

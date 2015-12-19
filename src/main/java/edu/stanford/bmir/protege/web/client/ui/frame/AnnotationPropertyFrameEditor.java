@@ -12,8 +12,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
-import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -71,10 +72,13 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
 
     private ProjectId projectId;
 
+    private DispatchServiceManager dispatchServiceManager;
 
-    public AnnotationPropertyFrameEditor(ProjectId projectId) {
+
+    public AnnotationPropertyFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
-        annotations = new PropertyValueListEditor(projectId);
+        this.dispatchServiceManager = dispatchServiceManager;
+        annotations = new PropertyValueListEditor(projectId, dispatchServiceManager);
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(PrimitiveType.CLASS,
                                               PrimitiveType.OBJECT_PROPERTY,
@@ -137,13 +141,9 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
         final AnnotationPropertyFrame frame = object.getFrame();
         iriField.setText(frame.getSubject().getIRI().toString());
         annotations.setValue(frame.getPropertyValueList());
-        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getDomains())), new AsyncCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(frame.getDomains())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-            }
-
-            @Override
-            public void onSuccess(GetEntityDataResult result) {
+            public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
                 for (OWLEntity cls : frame.getDomains()) {
                     final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));
@@ -154,13 +154,9 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
                 domains.setValue(primitiveDatas);
             }
         });
-        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new AsyncCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-            }
-
-            @Override
-            public void onSuccess(GetEntityDataResult result) {
+            public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
                 for (OWLEntity dt : frame.getRanges()) {
                     final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(dt));

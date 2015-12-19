@@ -14,6 +14,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
+import edu.stanford.bmir.protege.web.client.inject.ApplicationClientInjector;
 import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -63,8 +64,8 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     private PropertyValueState propertyValueState = PropertyValueState.ASSERTED;
 
     public PropertyValueDescriptorEditorImpl() {
-        propertyField = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
-        valueField = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
+        propertyField = ApplicationClientInjector.instance.getPrimitiveDataEditor();
+        valueField = ApplicationClientInjector.instance.getPrimitiveDataEditor();
         languageField = (DefaultLanguageEditor) valueField.getLanguageEditor();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

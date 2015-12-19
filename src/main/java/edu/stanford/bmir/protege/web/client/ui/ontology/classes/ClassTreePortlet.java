@@ -7,6 +7,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
 import com.gwtext.client.dd.DragData;
@@ -36,7 +37,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
@@ -47,7 +47,6 @@ import edu.stanford.bmir.protege.web.client.ui.notes.editor.DiscussionThreadDial
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.portlet.LegacyCompatUtil;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileResultHandler;
@@ -125,19 +124,22 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     private TreeNodeListenerAdapter nodeListener;
 
     private boolean registeredEventHandlers = false;
+    
+    private final DispatchServiceManager dispatchServiceManager;
 
     /*
     * Configuration constants and defaults
     */
     private static Set<EntityData> nodesWithNotesOpen = new HashSet<EntityData>();
 
-    public ClassTreePortlet(SelectionModel selectionModel, final Project project) {
-        this(selectionModel, project, true, true, true, true, null);
+    public ClassTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, final Project project) {
+        this(selectionModel, eventBus, dispatchServiceManager, project, true, true, true, true, null);
     }
 
-    public ClassTreePortlet(SelectionModel selectionModel, final Project project, final boolean showToolbar, final boolean showTitle, final boolean showTools, final boolean allowsMultiSelection, final String topClass) {
-        super(selectionModel, project, false);
+    public ClassTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, final Project project, final boolean showToolbar, final boolean showTitle, final boolean showTools, final boolean allowsMultiSelection, final String topClass) {
+        super(selectionModel, eventBus, project, false);
         this.showToolbar = showToolbar;
+        this.dispatchServiceManager = dispatchServiceManager;
         this.showTitle = showTitle;
         this.showTools = showTools;
         this.allowsMultiSelection = allowsMultiSelection;
@@ -227,14 +229,10 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     private void handleParentAddedEvent(final ClassHierarchyParentAddedEvent event) {
         final TreeNode tn = findTreeNode(event.getParent());
         if (tn != null) {
-            RenderingManager.getManager().execute(new GetEntityDataAction(getProjectId(), ImmutableSet.copyOf(event.getSignature())), new AsyncCallback<GetEntityDataResult>() {
+            GetEntityDataAction action = new GetEntityDataAction(getProjectId(), ImmutableSet.copyOf(event.getSignature()));
+            dispatchServiceManager.execute(action, new DispatchServiceCallback<GetEntityDataResult>() {
                 @Override
-                public void onFailure(Throwable caught) {
-                    GWT.log("Problem getting classes", caught);
-                }
-
-                @Override
-                public void onSuccess(GetEntityDataResult result) {
+                public void handleSuccess(GetEntityDataResult result) {
                     SubclassEntityData subClassData = new SubclassEntityData(event.getChild().toStringID(), result.getEntityDataMap().get(event.getChild()).getBrowserText(), Collections.<EntityData>emptyList(), 0);
                     subClassData.setValueType(ValueType.Cls);
                     onSubclassAdded((EntityData) tn.getUserObject(), Arrays.<EntityData>asList(subClassData), false);
@@ -902,10 +900,10 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 }
                 final Set<String> browserTexts = new HashSet<String>(createEntityInfo.getBrowserTexts());
                 if (browserTexts.size() > 1) {
-                    DispatchServiceManager.get().execute(new CreateClassesAction(getProjectId(), superCls.get(), browserTexts), getCreateClassesActionAsyncHandler());
+                    dispatchServiceManager.execute(new CreateClassesAction(getProjectId(), superCls.get(), browserTexts), getCreateClassesActionAsyncHandler());
                 }
                 else {
-                    DispatchServiceManager.get().execute(new CreateClassAction(getProjectId(), browserTexts.iterator().next(), superCls.get()), getCreateClassAsyncHandler());
+                    dispatchServiceManager.execute(new CreateClassAction(getProjectId(), browserTexts.iterator().next(), superCls.get()), getCreateClassAsyncHandler());
                 }
             }
         }));
@@ -919,7 +917,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         UploadFileDialogController controller = new UploadFileDialogController("Upload CSV", new UploadFileResultHandler() {
             @Override
             public void handleFileUploaded(final DocumentId fileDocumentId) {
-                WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<CSVImportDescriptor>(new CSVImportDialogController(getProjectId(), fileDocumentId, selCls.get()));
+                WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<CSVImportDescriptor>(new CSVImportDialogController(getProjectId(), fileDocumentId, selCls.get(), dispatchServiceManager));
                 csvImportDialog.setVisible(true);
 
             }
@@ -993,7 +991,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private void deleteCls(final OWLClass cls) {
-        DispatchServiceManager.get().execute(new DeleteEntityAction(cls, getProjectId()), new DeleteClassHandler());
+        dispatchServiceManager.execute(new DeleteEntityAction(cls, getProjectId()), new DeleteClassHandler());
     }
 
     protected void onWatchCls() {
@@ -1002,7 +1000,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return;
         }
         EntityFrameWatch entityWatch = new EntityFrameWatch(sel.get());
-        DispatchServiceManager.get().execute(new AddWatchAction(entityWatch, getProjectId(), getUserId()), new DispatchServiceCallback<AddWatchResult>() {
+        dispatchServiceManager.execute(new AddWatchAction(entityWatch, getProjectId(), getUserId()), new DispatchServiceCallback<AddWatchResult>() {
             @Override
             public void handleSuccess(AddWatchResult result) {
 
@@ -1016,7 +1014,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return;
         }
         Watch<?> watch = new HierarchyBranchWatch(sel.get());
-        DispatchServiceManager.get().execute(new AddWatchAction(watch, getProjectId(), getUserId()), new DispatchServiceCallback<AddWatchResult>() {
+        dispatchServiceManager.execute(new AddWatchAction(watch, getProjectId(), getUserId()), new DispatchServiceCallback<AddWatchResult>() {
 
             @Override
             public void handleSuccess(AddWatchResult result) {
@@ -1031,7 +1029,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             Object userObject = selTreeNode.getUserObject();
             if (userObject instanceof EntityData) {
                 Set<Watch<?>> watches = ((EntityData) userObject).getWatches();
-                DispatchServiceManager.get().execute(new RemoveWatchesAction(watches, getProjectId(), getUserId()), new DispatchServiceCallback<RemoveWatchesResult>() {
+                dispatchServiceManager.execute(new RemoveWatchesAction(watches, getProjectId(), getUserId()), new DispatchServiceCallback<RemoveWatchesResult>() {
 
                     @Override
                     public void handleSuccess(RemoveWatchesResult result) {
@@ -1368,7 +1366,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         SubclassEntityData subClassData = (SubclassEntityData) node.getUserObject();
         String name = subClassData.getName();
         OWLClass cls = DataFactory.getOWLClass(name);
-        DiscussionThreadDialog.showDialog(getProjectId(), cls);
+        DiscussionThreadDialog.showDialog(getProjectId(), getEventBus(), dispatchServiceManager, cls);
     }
 
     private boolean hasChild(final TreeNode parentNode, final String childId) {

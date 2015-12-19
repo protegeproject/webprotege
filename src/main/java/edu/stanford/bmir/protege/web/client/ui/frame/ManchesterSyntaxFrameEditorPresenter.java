@@ -35,9 +35,9 @@ import java.util.Set;
  */
 public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntity>, HasFreshEntities {
 
-    private ManchesterSyntaxFrameEditor editor;
+    private final DispatchServiceManager dispatchServiceManager;
 
-    private DispatchServiceManager dispatchService;
+    private ManchesterSyntaxFrameEditor editor;
 
     private ProjectId projectId;
 
@@ -81,14 +81,12 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     };
 
 
-
-
-    public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, HasUserId hasUserId, PermissionChecker permissionChecker, DispatchServiceManager dispatchService) {
+    public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, HasUserId hasUserId, PermissionChecker permissionChecker, DispatchServiceManager dispatchServiceManager) {
         this.editor = editor;
         this.hasUserId = hasUserId;
         this.permissionChecker = permissionChecker;
-        this.dispatchService = dispatchService;
         this.projectId = projectId;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     public void attach(HasEventHandlerManagement management) {
@@ -100,7 +98,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
             }
         });
         editor.setCreateAsEntityTypeHandler(createAsEntityTypeHandler);
-        editor.setAutoCompletionHandler(new ManchesterSyntaxFrameAutoCompletionHandler(DispatchServiceManager.get(),
+        editor.setAutoCompletionHandler(new ManchesterSyntaxFrameAutoCompletionHandler(dispatchServiceManager,
                                                                                        projectId, this, this));
         editor.setApplyChangesHandler(applyChangesActionHandler);
         management.addProjectEventHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
@@ -186,7 +184,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         }
         else {
             String newRendering = editor.getValue().get();
-            dispatchService.execute(new CheckManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), newRendering, freshEntities),
+            dispatchServiceManager.execute(new CheckManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), newRendering, freshEntities),
                     new DispatchServiceCallback<CheckManchesterSyntaxFrameResult>() {
 
                         @Override
@@ -238,7 +236,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         final Optional<String> editorText = editor.getValue();
         if(!isPristine() && pristineValue.isPresent() && editorText.isPresent() && currentSubject.isPresent()) {
             String text = editorText.get();
-            dispatchService.execute(new SetManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new DispatchServiceCallback<SetManchesterSyntaxFrameResult>() {
+            dispatchServiceManager.execute(new SetManchesterSyntaxFrameAction(projectId, currentSubject.get(), pristineValue.get(), text, freshEntities, commitMessage), new DispatchServiceCallback<SetManchesterSyntaxFrameResult>() {
                 @Override
                 public void handleSuccess(SetManchesterSyntaxFrameResult result) {
                     if(reformatText) {
@@ -273,7 +271,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     private void replaceTextWithFrameRendering(final OWLEntity subject) {
         editor.setApplyChangesViewVisible(false);
         freshEntities.clear();
-        dispatchService.execute(new GetManchesterSyntaxFrameAction(projectId, subject), new DispatchServiceCallback<GetManchesterSyntaxFrameResult>() {
+        dispatchServiceManager.execute(new GetManchesterSyntaxFrameAction(projectId, subject), new DispatchServiceCallback<GetManchesterSyntaxFrameResult>() {
             @Override
             public void handleSuccess(GetManchesterSyntaxFrameResult result) {
                 editor.setValue(result.getManchesterSyntax());

@@ -294,23 +294,18 @@ public class UIUtil {
         }
     }
 
-    public static boolean confirmOperationAllowed(ProjectId projectId) {
-        return checkOperationAllowed(projectId, true);
+    public static boolean confirmOperationAllowed(Project project) {
+        return checkOperationAllowed(project, true);
     }
 
-    public static boolean checkOperationAllowed(ProjectId projectId, boolean showUserAlerts) {
+    public static boolean checkOperationAllowed(Project project, boolean showUserAlerts) {
         if (Application.get().isGuestUser()) {
             if (showUserAlerts) {
                 MessageBox.alert("Sign in", "Please sign in first.");
             }
             return false;
         }
-
-        Optional<Project> project = ProjectManager.get().getProject(projectId);
-        if (!project.isPresent()) {
-            return false;
-        }
-        if (project.get().hasWritePermission()) {
+        if (project.hasWritePermission()) {
             return true;
         }
         else {

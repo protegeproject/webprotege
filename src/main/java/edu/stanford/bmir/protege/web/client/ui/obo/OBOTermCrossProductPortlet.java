@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -24,8 +25,8 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     private Optional<OBOTermCrossProduct> pristineValue = Optional.absent();
     
-    public OBOTermCrossProductPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    public OBOTermCrossProductPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
+        super(selectionModel, eventBus, project);
     }
 
 

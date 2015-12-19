@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
@@ -50,7 +51,8 @@ public class OBOIdSuffixSettingsEditor extends Composite implements EntityCrudKi
         userRangeTable = new ValueListEditorImpl<UserIdRange>(new ValueEditorFactory<UserIdRange>() {
             @Override
             public ValueEditor<UserIdRange> createEditor() {
-                return new UserIdRangeEditorImpl();
+//                return new UserIdRangeEditorImpl(null);
+                throw new RuntimeException();
             }
         });
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);

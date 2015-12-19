@@ -8,6 +8,7 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
@@ -30,7 +31,6 @@ import edu.stanford.bmir.protege.web.client.place.PlaceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
@@ -42,7 +42,6 @@ import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.place.TabId;
 import edu.stanford.bmir.protege.web.shared.project.*;
@@ -70,6 +69,8 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private final ProjectId projectId;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private Map<String, String> shortToLongPortletNameMap;
 
     private Map<String, String> shortToLongTabNameMap;
@@ -78,9 +79,16 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private final SelectionModel selectionModel;
 
-    public ProjectDisplayImpl(ProjectId projectId) {
+    private final EventBus eventBus;
+
+    private final ProjectManager projectManager;
+
+    public ProjectDisplayImpl(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectManager projectManager) {
         this.projectId = checkNotNull(projectId);
+        this.eventBus = eventBus;
+        this.projectManager = projectManager;
         this.selectionModel = SelectionModel.create();
+        this.dispatchServiceManager = dispatchServiceManager;
         setTitle(getLabel());
         setTopToolbar(new Toolbar()); //TODO: make it configurable
         setEnableTabScroll(true);
@@ -97,7 +105,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         });
 
 
-        EventBusManager.getManager().registerHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
+        eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
             @Override
             public void onPlaceChange(PlaceChangeEvent event) {
                 displayPlace(event.getNewPlace());
@@ -117,7 +125,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
      * @return The {@link Project}.  Not {@code null}.
      */
     public Project getProject() {
-        Optional<Project> project = ProjectManager.get().getProject(projectId);
+        Optional<Project> project = projectManager.getProject(projectId);
         if (!project.isPresent()) {
             throw new IllegalStateException("Unknown project: " + project);
         }
@@ -145,7 +153,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private void getProjectConfiguration() {
         GWT.log("[ProjectDisplayImpl] Getting the project configuration");
-        DispatchServiceManager.get().execute(new GetUIConfigurationAction(projectId),
+        dispatchServiceManager.execute(new GetUIConfigurationAction(projectId),
                 new DispatchServiceCallbackWithProgressDisplay<GetUIConfigurationResult>() {
                     @Override
                     public void handleSuccess(GetUIConfigurationResult result) {
@@ -178,7 +186,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
 
     private void createOntolgyForm() {
-        Project project = ProjectManager.get().getProject(projectId).get();
+        Project project = projectManager.getProject(projectId).get();
         List<AbstractTab> tabs = project.getLayoutManager().createTabs(selectionModel, project.getProjectLayoutConfiguration());
         GWT.log("[ProjectDisplayImpl] Creating the ontology form from " + tabs.size() + " tabs");
         for (AbstractTab tab : tabs) {
@@ -258,7 +266,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     protected void onPortletAdded(final String javaClassName) {
         AbstractTab activeTab = getActiveOntologyTab();
-        EntityPortlet portlet = UIFactory.createPortlet(activeTab.getSelectionModel(), getProject(), javaClassName);
+        EntityPortlet portlet = UIFactory.createPortlet(activeTab.getSelectionModel(), eventBus, dispatchServiceManager, getProject(), javaClassName);
         if (portlet == null) {
             return;
         }
@@ -382,7 +390,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
         ProjectLayoutConfiguration config = getProject().getProjectLayoutConfiguration();
         config.setProjectId(projectId);
-        DispatchServiceManager.get().execute(new SetUIConfigurationAction(projectId, config),
+        dispatchServiceManager.execute(new SetUIConfigurationAction(projectId, config),
                 new DispatchServiceCallbackWithProgressDisplay<SetUIConfigurationResult>() {
                     @Override
                     public void handleSuccess(SetUIConfigurationResult setUIConfigurationResult) {
@@ -404,7 +412,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     public String getLabel() {
-        return ProjectManager.get().getProject(projectId).get().getProjectDetails().getDisplayName();
+        return projectManager.getProject(projectId).get().getProjectDetails().getDisplayName();
     }
 
 
@@ -507,7 +515,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
         public AbstractTab createTab() {
             final Project project = getProject();
-            UserDefinedTab userDefinedTab = new UserDefinedTab(selectionModel, project);
+            UserDefinedTab userDefinedTab = new UserDefinedTab(selectionModel, eventBus, dispatchServiceManager, project);
             TabConfiguration userDefinedTabConfiguration = getUserDefinedTabConfiguration();
             project.getLayoutManager().setupTab(userDefinedTab, userDefinedTabConfiguration);
             project.getProjectLayoutConfiguration().addTab(userDefinedTabConfiguration);

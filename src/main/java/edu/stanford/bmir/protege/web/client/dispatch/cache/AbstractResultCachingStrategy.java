@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.dispatch.cache;
 
 import com.google.web.bindery.event.shared.Event;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
@@ -26,8 +27,11 @@ public abstract class AbstractResultCachingStrategy<A extends Action<R>, R exten
 
     private ProjectId projectId;
 
-    protected AbstractResultCachingStrategy(ProjectId projectId) {
-        this.projectId = projectId;
+    private final EventBus eventBus;
+
+    protected AbstractResultCachingStrategy(ProjectId projectId, EventBus eventBus) {
+        this.projectId = checkNotNull(projectId);
+        this.eventBus = checkNotNull(eventBus);
     }
 
     @Override
@@ -45,8 +49,7 @@ public abstract class AbstractResultCachingStrategy<A extends Action<R>, R exten
     }
 
     protected  <T> void registerProjectEventHandler(Event.Type<T> type, T handler) {
-        final EventBusManager manager = EventBusManager.getManager();
-        HandlerRegistration reg = manager.registerHandlerToProject(projectId, checkNotNull(type), checkNotNull(handler));
+        HandlerRegistration reg = eventBus.addHandlerToSource(checkNotNull(type), projectId, checkNotNull(handler));
         handlerRegistrations.add(reg);
     }
 

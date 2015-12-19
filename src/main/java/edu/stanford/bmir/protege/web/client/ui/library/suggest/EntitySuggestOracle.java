@@ -22,6 +22,8 @@ public class EntitySuggestOracle extends SuggestOracle {
 
     public static final int DEFAULT_SUGGEST_LIMIT = 30;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private int suggestLimit = DEFAULT_SUGGEST_LIMIT;
 
     final private ProjectId projectId;
@@ -29,9 +31,10 @@ public class EntitySuggestOracle extends SuggestOracle {
     final Set<EntityType<?>> entityTypes = new HashSet<EntityType<?>>();
 
     @Inject
-    public EntitySuggestOracle(ProjectId projectId, @EntitySuggestOracleSuggestLimit int suggestLimit) {
+    public EntitySuggestOracle(ProjectId projectId, @EntitySuggestOracleSuggestLimit int suggestLimit, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.suggestLimit = suggestLimit;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     public void setEntityTypes(Set<EntityType<?>> entityTypes) {
@@ -49,7 +52,7 @@ public class EntitySuggestOracle extends SuggestOracle {
             callback.onSuggestionsReady(request, new Response(Collections.<Suggestion>emptyList()));
             return;
         }
-        DispatchServiceManager.get().execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), new DispatchServiceCallback<LookupEntitiesResult>() {
+        dispatchServiceManager.execute(new LookupEntitiesAction(projectId, new EntityLookupRequest(request.getQuery(), SearchType.getDefault(), suggestLimit, entityTypes)), new DispatchServiceCallback<LookupEntitiesResult>() {
             @Override
             public void handleSuccess(LookupEntitiesResult result) {
                 List<EntitySuggestion> suggestions = new ArrayList<EntitySuggestion>();

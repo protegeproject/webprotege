@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
-import com.gwtext.client.widgets.layout.ColumnLayoutData;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -13,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
  */
 public class MetadataTab extends AbstractTab {
 
-	public MetadataTab(SelectionModel selectionModel, Project project) {
-		super(selectionModel, project);
+	public MetadataTab(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+		super(selectionModel, eventBus, dispatchServiceManager, project);
 	}
 }

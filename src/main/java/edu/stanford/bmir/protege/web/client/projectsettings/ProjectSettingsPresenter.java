@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.projectsettings;
 
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -17,13 +18,16 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.*;
  */
 public class ProjectSettingsPresenter {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private ProjectSettingsView projectSettingsView;
 
-    private EventBusManager eventBusManager;
+    private EventBus eventBus;
 
-    public ProjectSettingsPresenter(ProjectSettingsView projectSettingsView, EventBusManager eventBusManager) {
+    public ProjectSettingsPresenter(ProjectSettingsView projectSettingsView,  EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         this.projectSettingsView = projectSettingsView;
-        this.eventBusManager = eventBusManager;
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     public void showDialog(ProjectId projectId) {
@@ -37,7 +41,7 @@ public class ProjectSettingsPresenter {
         });
 
 
-        DispatchServiceManager.get().execute(new GetProjectSettingsAction(projectId),
+        dispatchServiceManager.execute(new GetProjectSettingsAction(projectId),
                 new DispatchServiceCallback<GetProjectSettingsResult>() {
                     @Override
                     public void handleSuccess(GetProjectSettingsResult result) {
@@ -56,11 +60,11 @@ public class ProjectSettingsPresenter {
 
 
     private void hideDialogAndSaveSettings(final ProjectSettings data, final WebProtegeDialogCloser closer) {
-        DispatchServiceManager.get().execute(new SetProjectSettingsAction(data), new DispatchServiceCallback<SetProjectSettingsResult>() {
+        dispatchServiceManager.execute(new SetProjectSettingsAction(data), new DispatchServiceCallback<SetProjectSettingsResult>() {
             @Override
             public void handleSuccess(SetProjectSettingsResult setProjectSettingsResult) {
                 closer.hide();
-                eventBusManager.postEvent(new ProjectSettingsChangedEvent(data));
+                eventBus.fireEvent(new ProjectSettingsChangedEvent(data));
             }
         });
     }

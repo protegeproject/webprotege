@@ -29,7 +29,9 @@ public class WebProtegeSignupDialogController extends WebProtegeOKCancelDialogCo
 
     private final WebProtegeSignupDialogForm form;
 
-    public WebProtegeSignupDialogController() {
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public WebProtegeSignupDialogController(DispatchServiceManager dispatchServiceManager) {
         super(TITLE);
         form = new WebProtegeSignupDialogForm();
         addDialogValidator(form);
@@ -45,6 +47,7 @@ public class WebProtegeSignupDialogController extends WebProtegeOKCancelDialogCo
                 closer.hide();
             }
         });
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -83,7 +86,7 @@ public class WebProtegeSignupDialogController extends WebProtegeOKCancelDialogCo
 
     private void handleSuccess(final SignupInfo data, final WebProtegeDialogCloser dialogCloser) {
         CreateUserAccountExecutor executor = new CreateUserAccountExecutor(
-                DispatchServiceManager.get(),
+                dispatchServiceManager,
                 new PasswordDigestAlgorithm(new Md5DigestAlgorithmProvider()),
                 new SaltProvider()
         );

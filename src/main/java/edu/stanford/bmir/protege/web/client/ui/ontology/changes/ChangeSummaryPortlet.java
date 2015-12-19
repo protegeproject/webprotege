@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.ToolbarButton;
@@ -24,10 +25,14 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
 
     public static final String REFRESH_TO_SEE_THE_LATEST_CHANGES = "Click to see the latest changes";
     public static final String LATEST_CHANGES_VISIBLE = "Latest changes displayed";
+
+    private final DispatchServiceManager dispatchServiceManager;
+
     private ToolbarButton refreshButton;
 
-    public ChangeSummaryPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    public ChangeSummaryPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
@@ -78,7 +83,7 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
     @Override
     protected void onRefresh() {
         ProjectId projectId = getProjectId();
-        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, DispatchServiceManager.get(), hasWritePermission());
+        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager, hasWritePermission());
         presenter.setChangesForProject(projectId);
         setTitle("Changes for project");
         refreshButton.setDisabled(true);

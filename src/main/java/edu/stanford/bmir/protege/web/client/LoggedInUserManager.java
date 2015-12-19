@@ -3,8 +3,10 @@ package edu.stanford.bmir.protege.web.client;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
@@ -19,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -31,6 +34,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class LoggedInUserManager {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private UserId userId = UserId.getGuest();
 
     private UserDetails userDetails = UserDetails.getGuestUserDetails();
@@ -39,8 +44,12 @@ public class LoggedInUserManager {
 
     private Map<String, String> currentUserProperties = new HashMap<String, String>();
 
+    private EventBus eventBus;
 
-    private LoggedInUserManager() {
+    @Inject
+    private LoggedInUserManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     /**
@@ -51,8 +60,8 @@ public class LoggedInUserManager {
      * @return A {@link LoggedInUserManager} instances which is initialised immediately with the guest user details and
      * initialised asynchronously with the server side session details.
      */
-    public static LoggedInUserManager getAndRestoreFromServer(Optional<AsyncCallback<UserDetails>> initCompleteCallback) {
-        LoggedInUserManager manager = new LoggedInUserManager();
+    public static LoggedInUserManager getAndRestoreFromServer(EventBus eventBus, DispatchServiceManager dispatchServiceManager, Optional<AsyncCallback<UserDetails>> initCompleteCallback) {
+        LoggedInUserManager manager = new LoggedInUserManager(eventBus, dispatchServiceManager);
         manager.readUserInSession(initCompleteCallback);
         return manager;
     }
@@ -88,7 +97,7 @@ public class LoggedInUserManager {
         if(userId.isGuest()) {
             return;
         }
-        DispatchServiceManager.get().execute(new LogOutUserAction(), new DispatchServiceCallback<LogOutUserResult>() {
+        dispatchServiceManager.execute(new LogOutUserAction(), new DispatchServiceCallback<LogOutUserResult>() {
             @Override
             public void handleSuccess(LogOutUserResult logOutUserResult) {
                 replaceUserAndBroadcastChanges(UserDetails.getGuestUserDetails(), Collections.<GroupId>emptySet());
@@ -97,23 +106,23 @@ public class LoggedInUserManager {
     }
 
     private void restoreUserFromServerSideSession(final Optional<AsyncCallback<UserDetails>> callback) {
-        DispatchServiceManager.get().execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>() {
+        dispatchServiceManager.execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>() {
             @Override
             public void handleExecutionException(Throwable cause) {
-                if(callback.isPresent()) {
+                if (callback.isPresent()) {
                     callback.get().onFailure(cause);
                 }
             }
 
             @Override
-                public void handleSuccess(GetCurrentUserInSessionResult result) {
-                    replaceUserAndBroadcastChanges(result.getUserDetails(), result.getUserGroupIds());
-                    if(callback.isPresent()) {
-                        callback.get().onSuccess(result.getUserDetails());
-                    }
+            public void handleSuccess(GetCurrentUserInSessionResult result) {
+                replaceUserAndBroadcastChanges(result.getUserDetails(), result.getUserGroupIds());
+                if (callback.isPresent()) {
+                    callback.get().onSuccess(result.getUserDetails());
                 }
+            }
 
-            });
+        });
     }
 
     private void readUserInSession(Optional<AsyncCallback<UserDetails>> callback) {
@@ -173,10 +182,10 @@ public class LoggedInUserManager {
         this.userDetails = newUserDetails;
         this.groups.addAll(newUserGroups);
         if(userId.isGuest()) {
-            EventBusManager.getManager().postEvent(new UserLoggedOutEvent(previousUserId));
+            eventBus.fireEvent(new UserLoggedOutEvent(previousUserId));
         }
         else {
-            EventBusManager.getManager().postEvent(new UserLoggedInEvent(userId));
+            eventBus.fireEvent(new UserLoggedInEvent(userId));
         }
     }
 

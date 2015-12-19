@@ -8,6 +8,7 @@ import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -43,9 +44,9 @@ public class ResultCache {
 
     private Multimap<InvalidationKeyWrapper, Action> invalidationKey2ActionMap = HashMultimap.create();
 
-    public ResultCache(ProjectId projectId) {
-        install(new GetClassFrameActionResultCachingStrategy(projectId));
-        install(new LookupEntitiesActionResultCachingStrategy(projectId));
+    public ResultCache(ProjectId projectId, EventBus eventBus) {
+        install(new GetClassFrameActionResultCachingStrategy(projectId, eventBus));
+        install(new LookupEntitiesActionResultCachingStrategy(projectId, eventBus));
     }
 
     private void install(ResultCachingStrategy<?,?,?> invalidator) {

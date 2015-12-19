@@ -17,6 +17,7 @@ import com.gwtext.client.widgets.grid.event.GridCellListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
 
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalReferenceData;
 import edu.stanford.bmir.protege.web.client.rpc.data.BioPortalSearchData;
@@ -57,14 +58,16 @@ public class BioPortalSearchComponent extends GridPanel {
 
     private String currentValue; //TODO: logic is inverted - should not be here but in the widget; import should call a callback
 
+    private final Project project;
 
-    public BioPortalSearchComponent(ProjectId projectId, boolean isSingleValued) {
-        this(projectId, null, new PropertyEntityData(null), isSingleValued);
+    public BioPortalSearchComponent(ProjectId projectId, Project project, boolean isSingleValued) {
+        this(projectId, project, null, new PropertyEntityData(null), isSingleValued);
     }
 
-    public BioPortalSearchComponent(ProjectId projectId, ReferenceFieldWidget referenceFieldWidget,
+    public BioPortalSearchComponent(ProjectId projectId, Project project, ReferenceFieldWidget referenceFieldWidget,
             PropertyEntityData referenceProperty, boolean isSingleValued) {
         this.projectId = projectId;
+        this.project = project;
         this.isSingleValued = isSingleValued;
         createGrid();
     }
@@ -187,7 +190,7 @@ public class BioPortalSearchComponent extends GridPanel {
             @Override
             public void onCellClick(GridPanel grid, int rowIndex, int colindex, EventObject e) {
                 if (grid.getColumnModel().getDataIndex(colindex).equals("importLink")) {
-                    if (UIUtil.confirmOperationAllowed(projectId)) {
+                    if (UIUtil.confirmOperationAllowed(project)) {
                         Record record = grid.getStore().getAt(rowIndex);
                         onImportReference(record);
                     }

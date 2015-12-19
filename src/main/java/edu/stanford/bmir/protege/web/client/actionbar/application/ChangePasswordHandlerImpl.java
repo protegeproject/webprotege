@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordPresenter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 
 /**
  * Author: Matthew Horridge<br>
@@ -12,6 +13,12 @@ import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordPresenter;
  * Date: 23/08/2013
  */
 public class ChangePasswordHandlerImpl implements ChangePasswordHandler {
+
+    private DispatchServiceManager dispatchServiceManager;
+
+    public ChangePasswordHandlerImpl(DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = dispatchServiceManager;
+    }
 
     @Override
     public void handleChangePassword() {
@@ -22,7 +29,7 @@ public class ChangePasswordHandlerImpl implements ChangePasswordHandler {
 
             @Override
             public void onSuccess() {
-                ChangePasswordPresenter changePasswordPresenter = new ChangePasswordPresenter(Application.get().getUserId());
+                ChangePasswordPresenter changePasswordPresenter = new ChangePasswordPresenter(Application.get().getUserId(), dispatchServiceManager);
                 changePasswordPresenter.changePassword();
             }
         });

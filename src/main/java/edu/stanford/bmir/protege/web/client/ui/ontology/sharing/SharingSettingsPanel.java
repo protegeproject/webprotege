@@ -28,7 +28,9 @@ import java.util.*;
  * Date: 24/02/2012
  */
 public class SharingSettingsPanel extends WebProtegeDialogForm {
-    
+
+    private final DispatchServiceManager dispatchServiceManager;
+
     private ProjectId projectId;
     
     private final SharingSettingsList sharingSettingsList;
@@ -37,8 +39,9 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
     
     public static final String PLACE_HOLDER_TEXT = "Enter names (1 per line)";
 
-    public SharingSettingsPanel(final ProjectId projectId) {
+    public SharingSettingsPanel(final ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
+        this.dispatchServiceManager = dispatchServiceManager;
 
         defaultSharingSettingPanel = new SharingSettingsDefaultSharingSettingPanel();
         add(defaultSharingSettingPanel);
@@ -63,7 +66,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
         addPeopleTextArea.setCharacterWidth(50);
         addPeopleTextArea.getElement().setAttribute("placeholder", PLACE_HOLDER_TEXT);
 
-        final SuggestBox suggestBox = new ItemListSuggestBox<>(new PersonIdItemListSuggestionOracle(addPeopleTextArea, DispatchServiceManager.get()), addPeopleTextArea);
+        final SuggestBox suggestBox = new ItemListSuggestBox<>(new PersonIdItemListSuggestionOracle(addPeopleTextArea, dispatchServiceManager), addPeopleTextArea);
 
 
         FlowPanel addPeoplePanel = new FlowPanel();
@@ -98,7 +101,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
         final List<String> itemNames = Arrays.asList(names);
 
         final SharingPermission sharingPermission = lb.getSelectedItem();
-        DispatchServiceManager.get().execute(new GetPersonIdItemsAction(itemNames), new DispatchServiceCallbackWithProgressDisplay<GetPersonIdItemsResult>() {
+        dispatchServiceManager.execute(new GetPersonIdItemsAction(itemNames), new DispatchServiceCallbackWithProgressDisplay<GetPersonIdItemsResult>() {
             @Override
             public String getProgressDisplayTitle() {
                 return "Adding users";
@@ -156,7 +159,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
     }
 
     private void refillSharingSettingsList(final ProjectId projectId) {
-        DispatchServiceManager.get().execute(new GetProjectSharingSettingsAction(projectId), new DispatchServiceCallback<GetProjectSharingSettingsResult>() {
+        dispatchServiceManager.execute(new GetProjectSharingSettingsAction(projectId), new DispatchServiceCallback<GetProjectSharingSettingsResult>() {
             @Override
             public void handleSuccess(GetProjectSharingSettingsResult result) {
                 updateListData(result.getProjectSharingSettings());

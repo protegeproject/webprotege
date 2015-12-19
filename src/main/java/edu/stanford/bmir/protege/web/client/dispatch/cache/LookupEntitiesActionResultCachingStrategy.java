@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch.cache;
 
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.shared.entity.EntityLookupResult;
 import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesAction;
 import edu.stanford.bmir.protege.web.shared.entity.LookupEntitiesResult;
@@ -19,8 +20,8 @@ import java.util.List;
  */
 public class LookupEntitiesActionResultCachingStrategy extends AbstractResultCachingStrategy<LookupEntitiesAction, LookupEntitiesResult, OWLEntity> {
 
-    public LookupEntitiesActionResultCachingStrategy(ProjectId projectId) {
-        super(projectId);
+    public LookupEntitiesActionResultCachingStrategy(ProjectId projectId, EventBus eventBus) {
+        super(projectId, eventBus);
     }
 
     @Override

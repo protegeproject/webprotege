@@ -36,13 +36,15 @@ import java.util.Set;
  */
 public class IndividualsListViewPresenter {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private IndividualsListView view;
 
     private ProjectId projectId;
 
     private Optional<OWLClass> currentType = Optional.absent();
 
-    public IndividualsListViewPresenter(ProjectId projectId, IndividualsListView view) {
+    public IndividualsListViewPresenter(ProjectId projectId, IndividualsListView view, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.view = view;
         this.view.setCreateHandler(new CreateHandler() {
@@ -57,6 +59,7 @@ public class IndividualsListViewPresenter {
                 handleDeleteIndividuals();
             }
         });
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     public void clearType() {
@@ -70,7 +73,7 @@ public class IndividualsListViewPresenter {
 
     private void updateList() {
         GetIndividualsAction action = new GetIndividualsAction(projectId, currentType.or(DataFactory.getOWLThing()), Optional.<PageRequest>absent());
-        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<GetIndividualsResult>() {
+        dispatchServiceManager.execute(action, new DispatchServiceCallback<GetIndividualsResult>() {
             @Override
             public void handleSuccess(GetIndividualsResult result) {
                 view.setListData(result.getIndividuals());
@@ -83,13 +86,13 @@ public class IndividualsListViewPresenter {
             @Override
             public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
                 final Set<String> browserTexts = createEntityInfo.getBrowserTexts();
-                DispatchServiceManager.get().execute(new CreateNamedIndividualsAction(projectId, currentType, browserTexts), new DispatchServiceCallback<CreateNamedIndividualsResult>() {
+                dispatchServiceManager.execute(new CreateNamedIndividualsAction(projectId, currentType, browserTexts), new DispatchServiceCallback<CreateNamedIndividualsResult>() {
                     @Override
                     public void handleSuccess(CreateNamedIndividualsResult result) {
                         GWT.log("Individuals successfully added: " + result.getIndividuals());
                         Set<OWLNamedIndividualData> individuals = result.getIndividuals();
                         view.addListData(individuals);
-                        if(!individuals.isEmpty()) {
+                        if (!individuals.isEmpty()) {
                             OWLNamedIndividualData next = individuals.iterator().next();
                             GWT.log("Selecting new individual: " + next);
                             view.setSelectedIndividual(next);
@@ -127,7 +130,7 @@ public class IndividualsListViewPresenter {
     }
 
     protected void deleteIndividual(final OWLNamedIndividualData entity) {
-        DispatchServiceManager.get().execute(new DeleteEntityAction(entity.getEntity(), projectId), new DispatchServiceCallback<DeleteEntityResult>() {
+        dispatchServiceManager.execute(new DeleteEntityAction(entity.getEntity(), projectId), new DispatchServiceCallback<DeleteEntityResult>() {
             @Override
             public void handleSuccess(DeleteEntityResult result) {
                 view.removeListData(Collections.singleton(entity));

@@ -17,16 +17,19 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 public class DeleteNoteHandlerImpl implements DeleteNoteHandler {
 
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private NoteId noteId;
 
-    public DeleteNoteHandlerImpl(NoteId noteId) {
+    public DeleteNoteHandlerImpl(DispatchServiceManager dispatchServiceManager, NoteId noteId) {
+        this.dispatchServiceManager = dispatchServiceManager;
         this.noteId = noteId;
     }
 
     @Override
     public void handleDeleteNote() {
         ProjectId projectId = Application.get().getActiveProject().get();
-        DispatchServiceManager.get().execute(new DeleteNoteAction(projectId, noteId), new DispatchServiceCallback<DeleteNoteResult>() {
+        dispatchServiceManager.execute(new DeleteNoteAction(projectId, noteId), new DispatchServiceCallback<DeleteNoteResult>() {
             @Override
             public void handleSuccess(DeleteNoteResult result) {
 

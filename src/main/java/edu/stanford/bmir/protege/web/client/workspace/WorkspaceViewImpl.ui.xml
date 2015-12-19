@@ -23,6 +23,6 @@
     </ui:style>
     <g:HTMLPanel width="100%" height="100%">
         <banner:BannerViewImpl ui:field="bannerView" addStyleNames="{style.north}"/>
-        <workspace:GwtExtAdapterPanel addStyleNames="{style.center}"/>
+        <workspace:GwtExtAdapterPanel ui:field="adapterPanel" addStyleNames="{style.center}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

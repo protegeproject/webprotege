@@ -7,9 +7,12 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
 
 /**
@@ -20,9 +23,9 @@ import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
  */
 public class GwtExtAdapterPanel extends FlowPanel {
 
-    public GwtExtAdapterPanel() {
+    public GwtExtAdapterPanel(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectManager projectManager) {
 
-        final ProjectDisplayContainerPanel projectDisplayContainerPanel = new ProjectDisplayContainerPanel();
+        final ProjectDisplayContainerPanel projectDisplayContainerPanel = new ProjectDisplayContainerPanel(eventBus, dispatchServiceManager, projectManager);
         add(projectDisplayContainerPanel);
 
         Window.addResizeHandler(new ResizeHandler() {

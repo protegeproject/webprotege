@@ -9,7 +9,9 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
-import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
@@ -44,8 +46,11 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
     private PropertyValueGridGrammar grammar = PropertyValueGridGrammar.getClassGrammar();
 
-    public PropertyValueListEditor(ProjectId projectId) {
+    private DispatchServiceManager dispatchServiceManager;
+
+    public PropertyValueListEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
+        this.dispatchServiceManager = dispatchServiceManager;
         this.editor = new ValueListEditorImpl<PropertyValueDescriptor>(
                 new ValueEditorFactory<PropertyValueDescriptor>() {
                     @Override
@@ -74,9 +79,9 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
     @Override
     public void setValue(final PropertyValueList propertyValueList) {
-        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(propertyValueList.getSignature())), new AbstractWebProtegeAsyncCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(propertyValueList.getSignature())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
-            public void onSuccess(final GetEntityDataResult result) {
+            public void handleSuccess(final GetEntityDataResult result) {
                 fillUp(propertyValueList, new HasEntityDataProvider() {
                     @Override
                     public Optional<OWLEntityData> getEntityData(OWLEntity entity) {

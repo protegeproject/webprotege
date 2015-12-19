@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.project;
 
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
 import edu.stanford.bmir.protege.web.client.permissions.ProjectPermissionManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
@@ -43,12 +45,12 @@ public class Project implements HasProjectId, HasDispose {
      * @param permissionsForCurrentUser The permissions for the current logged in user.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public Project(ProjectDetails projectDetails, PermissionsSet permissionsForCurrentUser) {
+    public Project(ProjectDetails projectDetails, PermissionsSet permissionsForCurrentUser, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         this.projectDetails = checkNotNull(projectDetails);
-        this.permissionManager = new ProjectPermissionManager(getProjectId());
+        this.permissionManager = new ProjectPermissionManager(getProjectId(), eventBus, dispatchServiceManager);
         this.permissionManager.setUserPermissions(Application.get().getUserId(), checkNotNull(permissionsForCurrentUser));
-        this.layoutManager = new LayoutManager(this);
-        this.eventPollingManager = EventPollingManager.get(10 * 1000, projectDetails.getProjectId());
+        this.layoutManager = new LayoutManager(this, eventBus, dispatchServiceManager);
+        this.eventPollingManager = EventPollingManager.get(10 * 1000, projectDetails.getProjectId(), eventBus, dispatchServiceManager);
         eventPollingManager.start();
     }
 

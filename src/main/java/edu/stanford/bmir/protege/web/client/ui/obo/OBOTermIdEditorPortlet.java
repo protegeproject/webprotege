@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
@@ -24,8 +25,8 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermIdEditor editor;
 
-    public OBOTermIdEditorPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    public OBOTermIdEditorPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
+        super(selectionModel, eventBus, project);
         setAutoScroll(false);
         setHeight("auto");
     }

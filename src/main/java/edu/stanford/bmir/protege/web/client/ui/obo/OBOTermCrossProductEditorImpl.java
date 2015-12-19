@@ -11,8 +11,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorGinjector;
+import edu.stanford.bmir.protege.web.client.inject.ApplicationClientInjector;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -50,7 +49,7 @@ public class OBOTermCrossProductEditorImpl extends Composite implements OBOTermC
 
 
     public OBOTermCrossProductEditorImpl() {
-        genusField = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
+        genusField = ApplicationClientInjector.instance.getPrimitiveDataEditor();
         relationshipsField = new OBOTermRelationshipEditor();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

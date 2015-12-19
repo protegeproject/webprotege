@@ -8,6 +8,9 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +34,13 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
 
     private Set<NoteHeaderPresenter> currentPresenters = new HashSet<NoteHeaderPresenter>();
 
-    public DiscussionThreadViewImpl() {
+    private final EventBus eventBus;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public DiscussionThreadViewImpl(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
@@ -79,7 +88,7 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
         Widget noteView = notePresenter.getWidget();
         if(!notePresenter.getNote().getInReplyTo().isPresent()) {
             final NoteHeaderView noteHeaderLabel = new NoteHeaderViewImpl();
-            NoteHeaderPresenter subjectPresenter = new NoteHeaderPresenter(noteHeaderLabel);
+            NoteHeaderPresenter subjectPresenter = new NoteHeaderPresenter(noteHeaderLabel, eventBus, dispatchServiceManager);
             currentPresenters.add(subjectPresenter);
             subjectPresenter.setNote(notePresenter.getNote());
             notesList.setWidget(notesList.getRowCount(), 0, subjectPresenter.getWidget());

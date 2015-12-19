@@ -15,9 +15,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.TextBox;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
-import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
@@ -74,10 +74,13 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
 
     private Set<ObjectPropertyCharacteristic> characteristics = Sets.newHashSet();
 
-    public ObjectPropertyFrameEditor(ProjectId projectId) {
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public ObjectPropertyFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         this.projectId = projectId;
-        annotations = new PropertyValueListEditor(projectId);
+        this.dispatchServiceManager = dispatchServiceManager;
+        annotations = new PropertyValueListEditor(projectId, dispatchServiceManager);
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(PrimitiveType.CLASS);
         domains.setPlaceholder("Enter class name");
@@ -164,9 +167,9 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         annotations.setValue(new PropertyValueList(Collections.<PropertyValue>unmodifiableSet(frame.getAnnotationPropertyValues())));
         characteristics.clear();
         characteristics.addAll(object.getFrame().getCharacteristics());
-        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getDomains())), new AbstractWebProtegeAsyncCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getDomains())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
-            public void onSuccess(GetEntityDataResult result) {
+            public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
                 for (OWLClass cls : frame.getDomains()) {
                     final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));
@@ -177,9 +180,9 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
                 domains.setValue(primitiveDatas);
             }
         });
-        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new AbstractWebProtegeAsyncCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
-            public void onSuccess(GetEntityDataResult result) {
+            public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
                 for (OWLClass cls : frame.getRanges()) {
                     final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));

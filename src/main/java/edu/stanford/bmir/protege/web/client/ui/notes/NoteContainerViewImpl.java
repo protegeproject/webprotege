@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 
@@ -36,11 +37,11 @@ public class NoteContainerViewImpl extends Composite implements NoteContainerVie
 
     private NoteActionPresenter noteActionPresenter;
 
-    public NoteContainerViewImpl() {
+    public NoteContainerViewImpl(DispatchServiceManager dispatchServiceManager) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         this.notePresenter = new NotePresenter(noteView);
-        this.noteActionPresenter = new NoteActionPresenter(noteActionView);
+        this.noteActionPresenter = new NoteActionPresenter(noteActionView, dispatchServiceManager);
     }
 
 

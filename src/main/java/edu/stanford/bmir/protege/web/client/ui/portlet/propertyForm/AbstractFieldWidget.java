@@ -18,6 +18,7 @@ import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.ColumnLayout;
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -44,8 +45,8 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
     protected PropertyValueUtil propertyValueUtil;
     protected List<String> allowedValueNames;
 
-    public AbstractFieldWidget(Project project) {
-        super(project);
+    public AbstractFieldWidget(Project project, DispatchServiceManager dispatchServiceManager) {
+        super(project, dispatchServiceManager);
         propertyValueUtil = new PropertyValueUtil();
     }
 
@@ -75,8 +76,8 @@ public abstract class AbstractFieldWidget extends AbstractPropertyWidgetWithNote
         return wrappingPanel;
     }
 
-    protected AbstractFieldWidget(Project project, List<String> allowedValueNames) {
-        this(project);
+    protected AbstractFieldWidget(Project project, List<String> allowedValueNames, DispatchServiceManager dispatchServiceManager) {
+        this(project, dispatchServiceManager);
         //FIXME This is a temporary hack. Get rid of the second argument and the field
         this.allowedValueNames = allowedValueNames;
     }

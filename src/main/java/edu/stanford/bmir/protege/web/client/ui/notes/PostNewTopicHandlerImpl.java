@@ -23,10 +23,13 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public class PostNewTopicHandlerImpl implements PostNewTopicHandler {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private Optional<OWLEntity> entity;
 
-    public PostNewTopicHandlerImpl(Optional<OWLEntity> entity) {
+    public PostNewTopicHandlerImpl(Optional<OWLEntity> entity, DispatchServiceManager dispatchServiceManager) {
         this.entity = entity;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -50,7 +53,7 @@ public class PostNewTopicHandlerImpl implements PostNewTopicHandler {
 
     private void doPost(NoteContent content) {
         ProjectId projectId = Application.get().getActiveProject().get();
-        DispatchServiceManager.get().execute(new AddNoteToEntityAction(projectId, entity.get(), content), new DispatchServiceCallback<AddNoteToEntityResult>() {
+        dispatchServiceManager.execute(new AddNoteToEntityAction(projectId, entity.get(), content), new DispatchServiceCallback<AddNoteToEntityResult>() {
 
             @Override
             public void handleSuccess(AddNoteToEntityResult result) {

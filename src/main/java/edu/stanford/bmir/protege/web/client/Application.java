@@ -2,13 +2,16 @@ package edu.stanford.bmir.protege.web.client;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.app.ClientApplicationPropertiesDecoder;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitManagerInitializationTask;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
@@ -19,7 +22,6 @@ import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -57,8 +59,25 @@ public class Application implements HasUserId, PermissionChecker {
 
     private ClientApplicationProperties clientApplicationProperties;
 
+    private final EventBus eventBus;
+
+    private final ProjectManager projectManager;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
     private Application() {
-        placeManager = new PlaceManager();
+        eventBus = new SimpleEventBus();
+        placeManager = new PlaceManager(eventBus);
+        dispatchServiceManager = new DispatchServiceManager(eventBus);
+        projectManager = new ProjectManager(eventBus, dispatchServiceManager);
+    }
+
+    public EventBus getEventBus() {
+        return eventBus;
+    }
+
+    public ProjectManager getProjectManager() {
+        return projectManager;
     }
 
     // Package level access - should be called by the module.
@@ -110,7 +129,7 @@ public class Application implements HasUserId, PermissionChecker {
         List<ApplicationInitManager.ApplicationInitializationTask> initTasks = new ArrayList<ApplicationInitManager.ApplicationInitializationTask>();
         initTasks.add(new InitializeClientApplicationPropertiesTask());
         initTasks.add(new RestoreUserFromServerSessionTask());
-        initTasks.add(new EntityCrudKitManagerInitializationTask());
+        initTasks.add(new EntityCrudKitManagerInitializationTask(dispatchServiceManager));
         ApplicationInitManager initManager = new ApplicationInitManager(initTasks);
         // Run the tasks and mark proper initalization on finish.
         initManager.runTasks(new AsyncCallback<Void>() {
@@ -198,7 +217,7 @@ public class Application implements HasUserId, PermissionChecker {
      */
     public void loadProject(final ProjectId projectId, final DispatchServiceCallback<Project> callback) {
         checkNotNull(callback);
-        ProjectManager.get().loadProject(projectId, callback);
+        projectManager.loadProject(projectId, callback);
     }
 
     public void closeProject(ProjectId projectId, AsyncCallback<ProjectId> callback) {
@@ -228,7 +247,7 @@ public class Application implements HasUserId, PermissionChecker {
             return false;
         }
         ProjectId projectId = activeProject.get();
-        Optional<Project> project = ProjectManager.get().getProject(projectId);
+        Optional<Project> project = projectManager.getProject(projectId);
         if(!project.isPresent()) {
             return false;
         }
@@ -248,7 +267,7 @@ public class Application implements HasUserId, PermissionChecker {
         this.activeProject = activeProject;
 //        placeManager.updateCurrentPlace();
 
-        EventBusManager.getManager().postEvent(new ActiveProjectChangedEvent(activeProject));
+        eventBus.fireEvent(new ActiveProjectChangedEvent(activeProject));
 
     }
 
@@ -374,13 +393,13 @@ public class Application implements HasUserId, PermissionChecker {
 
     @Override
     public boolean hasWritePermissionForProject(UserId userId, ProjectId projectId) {
-        Optional<Project> project = ProjectManager.get().getProject(projectId);
+        Optional<Project> project = projectManager.getProject(projectId);
         return project.isPresent() && project.get().hasWritePermission(userId);
     }
 
     @Override
     public boolean hasReadPermissionForProject(UserId userId, ProjectId projectId) {
-        Optional<Project> project = ProjectManager.get().getProject(projectId);
+        Optional<Project> project = projectManager.getProject(projectId);
         return project.isPresent() && project.get().hasReadPermission(userId);
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -429,7 +448,7 @@ public class Application implements HasUserId, PermissionChecker {
 
         @Override
         public void run(final ApplicationInitManager.ApplicationInitTaskCallback taskFinishedCallback) {
-            userManager = LoggedInUserManager.getAndRestoreFromServer(Optional.<AsyncCallback<UserDetails>>of(new AsyncCallback<UserDetails>() {
+            userManager = LoggedInUserManager.getAndRestoreFromServer(eventBus, dispatchServiceManager, Optional.<AsyncCallback<UserDetails>>of(new AsyncCallback<UserDetails>() {
                 @Override
                 public void onFailure(Throwable caught) {
                     taskFinishedCallback.taskFailed(caught);

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.common.base.Optional;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -23,8 +24,8 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermSynonymListEditor editor;
     
-    public OBOTermSynonymsPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    public OBOTermSynonymsPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
+        super(selectionModel, eventBus, project);
     }
 
     @Override

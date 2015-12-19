@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 import com.gwtext.client.data.*;
 import com.gwtext.client.widgets.form.ComboBox;
 import com.gwtext.client.widgets.form.TextField;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -25,8 +26,8 @@ public class ComboBoxWidget extends AbstractFieldWidget {
 	private Store store;
 	private RecordDef recordDef;
 
-	public ComboBoxWidget(Project project) {
-		super(project);
+	public ComboBoxWidget(Project project, DispatchServiceManager dispatchServiceManager) {
+		super(project, dispatchServiceManager);
 	}
 
 

@@ -10,10 +10,10 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
-import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -26,7 +26,6 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
-import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
@@ -75,12 +74,14 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
 
     private boolean dirty = false;
 
-    private ProjectId projectId;
+    private final ProjectId projectId;
 
-    public DataPropertyFrameEditor(ProjectId projectId) {
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public DataPropertyFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
-
-        annotations = new PropertyValueListEditor(projectId);
+        this.dispatchServiceManager = dispatchServiceManager;
+        annotations = new PropertyValueListEditor(projectId, dispatchServiceManager);
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         domains = new PrimitiveDataListEditor(PrimitiveType.CLASS);
         ranges = new PrimitiveDataListEditor(PrimitiveType.DATA_TYPE);
@@ -142,13 +143,9 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         final DataPropertyFrame frame = object.getFrame();
         iriField.setText(frame.getSubject().getIRI().toString());
         annotations.setValue(frame.getPropertyValueList());
-        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getDomains())), new AsyncCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getDomains())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-            }
-
-            @Override
-            public void onSuccess(GetEntityDataResult result) {
+            public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
                 for (OWLClass cls : frame.getDomains()) {
                     final Optional<OWLEntityData> entityData = Optional.fromNullable(result.getEntityDataMap().get(cls));
@@ -159,13 +156,9 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
                 domains.setValue(primitiveDatas);
             }
         });
-        RenderingManager.getManager().execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new AsyncCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.<OWLEntity>copyOf(frame.getRanges())), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-            }
-
-            @Override
-            public void onSuccess(GetEntityDataResult result) {
+            public void handleSuccess(GetEntityDataResult result) {
                 List<OWLPrimitiveData> primitiveDatas = new ArrayList<OWLPrimitiveData>();
                 for (OWLDatatype dt : frame.getRanges()) {
                     final Optional<OWLEntityData> entityData = Optional.of(result.getEntityDataMap().get(dt));

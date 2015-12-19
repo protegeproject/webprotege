@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.search;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
@@ -12,14 +13,14 @@ public class BioPortalSearchPortlet extends AbstractOWLEntityPortlet {
 
     private BioPortalSearchComponent searchComp;
 
-    public BioPortalSearchPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    public BioPortalSearchPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
+        super(selectionModel, eventBus, project);
     }
 
     @Override
     public void initialize() {
         setTitle("BioPortal Search");
-        searchComp = new BioPortalSearchComponent(getProjectId(), false);
+        searchComp = new BioPortalSearchComponent(getProjectId(), getProject(), false);
         add(searchComp);
     }
 

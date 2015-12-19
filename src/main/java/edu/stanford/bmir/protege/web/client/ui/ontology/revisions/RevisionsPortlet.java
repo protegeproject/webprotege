@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.layout.FitLayout;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -17,15 +19,21 @@ public class RevisionsPortlet extends AbstractOWLEntityPortlet {
 
     private RevisionsListViewPresenter presenter;
 
-    public RevisionsPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    private final EventBus eventBus;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public RevisionsPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
     public void initialize() {
         setLayout(new FitLayout());
         setHeight(INITIAL_HEIGHT);
-        presenter = new RevisionsListViewPresenter(getProjectId(), new RevisionsListViewImpl());
+        presenter = new RevisionsListViewPresenter(getProjectId(), eventBus,  new RevisionsListViewImpl(), dispatchServiceManager);
         presenter.reload();
         add(presenter.getWidget());
         setTitle("Revisions");

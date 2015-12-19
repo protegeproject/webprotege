@@ -15,6 +15,12 @@ import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitsResult;
  */
 public class EntityCrudKitManagerInitializationTask implements ApplicationInitManager.ApplicationInitializationTask {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public EntityCrudKitManagerInitializationTask(DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = dispatchServiceManager;
+    }
+
     @Override
     public String getName() {
         return  "EntityCrudKitManager initialization";
@@ -22,7 +28,7 @@ public class EntityCrudKitManagerInitializationTask implements ApplicationInitMa
 
     @Override
     public void run(final ApplicationInitManager.ApplicationInitTaskCallback callback) {
-        DispatchServiceManager.get().execute(new GetEntityCrudKitsAction(), new DispatchServiceCallback<GetEntityCrudKitsResult>() {
+        dispatchServiceManager.execute(new GetEntityCrudKitsAction(), new DispatchServiceCallback<GetEntityCrudKitsResult>() {
             @Override
             public void handleSuccess(GetEntityCrudKitsResult result) {
                 EntityCrudKitManager.get().init(result.getKits());

@@ -25,17 +25,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ChangePasswordPresenter {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private ChangePasswordView changePasswordView;
 
     private UserId userId;
 
-    public ChangePasswordPresenter(ChangePasswordView changePasswordView, UserId userId) {
+    public ChangePasswordPresenter(ChangePasswordView changePasswordView, UserId userId, DispatchServiceManager dispatchServiceManager) {
         this.changePasswordView = changePasswordView;
         this.userId = checkNotNull(userId);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
-    public ChangePasswordPresenter(UserId userId) {
-        this(new ChangePasswordViewImpl(), userId);
+    public ChangePasswordPresenter(UserId userId, DispatchServiceManager dispatchServiceManager) {
+        this(new ChangePasswordViewImpl(), userId, dispatchServiceManager);
     }
 
     public void changePassword() {
@@ -81,7 +84,7 @@ public class ChangePasswordPresenter {
 
 
     private void executeChangePassword(final ChangePasswordData data, final WebProtegeDialogCloser closer) {
-        AuthenticatedActionExecutor executor = new AuthenticatedActionExecutor(DispatchServiceManager.get(), new PasswordDigestAlgorithm(new Md5DigestAlgorithmProvider()), new ChapResponseDigestAlgorithm(new Md5DigestAlgorithmProvider()));
+        AuthenticatedActionExecutor executor = new AuthenticatedActionExecutor(dispatchServiceManager, new PasswordDigestAlgorithm(new Md5DigestAlgorithmProvider()), new ChapResponseDigestAlgorithm(new Md5DigestAlgorithmProvider()));
         String currentPassword = data.getOldPassword();
         String newPassword = data.getNewPassword();
         ChangePasswordActionFactory actionFactory = new ChangePasswordActionFactory(newPassword, new SaltProvider());

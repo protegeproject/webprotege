@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 import com.google.web.bindery.event.shared.Event;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -17,6 +18,12 @@ public class HandlerRegistrationManager {
 
     private List<HandlerRegistration> handlerRegistrationList = new ArrayList<HandlerRegistration>();
 
+    private final EventBus eventBus;
+
+    public HandlerRegistrationManager(EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
+
     public void addHandlerRegistration(HandlerRegistration handlerRegistration) {
         handlerRegistrationList.add(handlerRegistration);
     }
@@ -31,12 +38,12 @@ public class HandlerRegistrationManager {
     /**
      */
     public <H> void registerHandler(Event.Type<H> type, H handler) {
-        HandlerRegistration registration = EventBusManager.getManager().registerHandler(type, handler);
+        HandlerRegistration registration = eventBus.addHandler(type, handler);
         addHandlerRegistration(registration);
     }
 
     public <H> void registerHandlerToProject(ProjectId projectId, Event.Type<H> type, H handler) {
-        HandlerRegistration registration = EventBusManager.getManager().registerHandler(type, handler);
+        HandlerRegistration registration = eventBus.addHandlerToSource(type, projectId, handler);
         addHandlerRegistration(registration);
     }
 }

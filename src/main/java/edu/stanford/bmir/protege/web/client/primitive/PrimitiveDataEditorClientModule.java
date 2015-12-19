@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.gwt.inject.client.AbstractGinModule;
-import edu.stanford.bmir.protege.web.client.ApplicationClientModule;
+import edu.stanford.bmir.protege.web.client.inject.ApplicationClientModule;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectIdProvider;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -17,7 +17,6 @@ public class PrimitiveDataEditorClientModule extends AbstractGinModule {
 
     @Override
     protected void configure() {
-        install(new ApplicationClientModule());
         bind(PrimitiveDataEditor.class).to(PrimitiveDataEditorImpl.class);
         bind(PrimitiveDataEditorView.class).to(PrimitiveDataEditorViewImpl.class);
         bind(LanguageEditor.class).to(DefaultLanguageEditor.class);

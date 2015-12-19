@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
@@ -26,6 +28,8 @@ import java.util.List;
  */
 public class RevisionsListViewPresenter implements HasDispose {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private ProjectId projectId;
 
     private RevisionsListView view;
@@ -34,15 +38,18 @@ public class RevisionsListViewPresenter implements HasDispose {
 
     private final HandlerRegistrationManager registrationManager;
 
+    private final EventBus eventBus;
 
-    public RevisionsListViewPresenter(ProjectId projectId, RevisionsListView view) {
+    public RevisionsListViewPresenter(ProjectId projectId, EventBus eventBus, RevisionsListView view, DispatchServiceManager dispatchServiceManager) {
         this.view = view;
+        this.eventBus = eventBus;
         this.projectId = projectId;
+        this.dispatchServiceManager = dispatchServiceManager;
         dataProvider = new ListDataProvider<RevisionSummary>();
         view.setDataProvider(dataProvider);
         view.setDownloadRevisionRequestHandler(new DownloadRevisionRequestHandlerImpl(projectId));
 
-        registrationManager = new HandlerRegistrationManager();
+        registrationManager = new HandlerRegistrationManager(eventBus);
         registrationManager.registerHandlerToProject(projectId, ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override
             public void handleProjectChanged(ProjectChangedEvent event) {
@@ -59,7 +66,7 @@ public class RevisionsListViewPresenter implements HasDispose {
 
 
     public void reload() {
-        DispatchServiceManager.get().execute(new GetRevisionSummariesAction(projectId), new DispatchServiceCallback<GetRevisionSummariesResult>() {
+        dispatchServiceManager.execute(new GetRevisionSummariesAction(projectId), new DispatchServiceCallback<GetRevisionSummariesResult>() {
 
             @Override
             public void handleErrorFinally(Throwable throwable) {

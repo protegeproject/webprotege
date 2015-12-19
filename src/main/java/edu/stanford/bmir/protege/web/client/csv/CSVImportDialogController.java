@@ -26,6 +26,8 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
 
     private static final int ROW_LIMIT = 50;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private CSVImportViewImpl csvImportView;
 
     private ProjectId projectId;
@@ -34,14 +36,15 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
 
     private OWLClass importRoot;
 
-    public CSVImportDialogController(ProjectId projId, DocumentId documentId, OWLClass importRootClass) {
+    public CSVImportDialogController(ProjectId projId, DocumentId documentId, OWLClass importRootClass, DispatchServiceManager manager) {
         super("Import CSV File");
         this.projectId = projId;
         this.csvDocumentId = documentId;
         this.importRoot = importRootClass;
         csvImportView = new CSVImportViewImpl();
+        this.dispatchServiceManager = manager;
 
-        DispatchServiceManager.get().execute(new GetCSVGridAction(documentId, ROW_LIMIT), new DispatchServiceCallback<GetCSVGridResult>() {
+        dispatchServiceManager.execute(new GetCSVGridAction(documentId, ROW_LIMIT), new DispatchServiceCallback<GetCSVGridResult>() {
             @Override
             public void handleSuccess(GetCSVGridResult result) {
                 csvImportView.setCSVGrid(result.getCSVGrid());
@@ -51,7 +54,7 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<CSVImportDescriptor>() {
             @Override
             public void handleHide(CSVImportDescriptor data, WebProtegeDialogCloser closer) {
-                DispatchServiceManager.get().execute(new ImportCSVFileAction(projectId, csvDocumentId, importRoot, data), new DispatchServiceCallbackWithProgressDisplay<ImportCSVFileResult>() {
+                dispatchServiceManager.execute(new ImportCSVFileAction(projectId, csvDocumentId, importRoot, data), new DispatchServiceCallbackWithProgressDisplay<ImportCSVFileResult>() {
                     @Override
                     protected String getErrorMessage(Throwable throwable) {
                         return "There was a problem importing the csv file.  Please try again.";
