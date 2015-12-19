@@ -11,10 +11,16 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
  */
 public class ForgotPasswordHandlerImpl implements ForgotPasswordHandler {
 
+    private final DispatchServiceManager dispatchService;
+
+    public ForgotPasswordHandlerImpl(DispatchServiceManager dispatchService) {
+        this.dispatchService = dispatchService;
+    }
+
     @Override
     public void handleForgotPassword() {
         ResetPasswordPresenter presenter = new ResetPasswordPresenter(
-                DispatchServiceManager.get(),
+                dispatchService,
                 new ResetPasswordViewImpl());
         presenter.resetPassword();
     }

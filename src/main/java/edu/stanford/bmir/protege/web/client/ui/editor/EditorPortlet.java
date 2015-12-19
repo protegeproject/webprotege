@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
@@ -19,17 +21,24 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
 
     private EditorPresenter editorPresenter;
 
-    public EditorPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    private final EventBus eventBus;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
+
+    public EditorPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
+        this.dispatchServiceManager = dispatchServiceManager;
+        this.eventBus = eventBus;
     }
 
     @Override
     public void initialize() {
         setTitle("Nothing selected");
         EditorContextMapper contextMapper = new EditorContextMapper();
-        contextMapper.registerSelector(new EntityDataContextSelector());
+        contextMapper.registerSelector(new EntityDataContextSelector(dispatchServiceManager));
 
-        editorPresenter = new EditorPresenter(getProjectId(), contextMapper);
+        editorPresenter = new EditorPresenter(getProjectId(), eventBus, dispatchServiceManager, getProject(), contextMapper);
         editorPresenter.addEditorContextChangedHandler(new EditorContextChangedHandler() {
             @Override
             public void handleEditorContextChanged(EditorContextChangedEvent editorContextChangedEvent) {

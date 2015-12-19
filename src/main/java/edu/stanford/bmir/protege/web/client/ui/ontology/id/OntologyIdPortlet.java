@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.id;
 
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAction;
@@ -16,10 +17,13 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
  */
 public class OntologyIdPortlet extends AbstractOWLEntityPortlet {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private OntologyIdEditor editor;
 
-    public OntologyIdPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    public OntologyIdPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -32,7 +36,7 @@ public class OntologyIdPortlet extends AbstractOWLEntityPortlet {
     }
 
     private void updateDisplay() {
-        DispatchServiceManager.get().execute(new GetRootOntologyIdAction(getProjectId()), new DispatchServiceCallback<GetRootOntologyIdResult>() {
+        dispatchServiceManager.execute(new GetRootOntologyIdAction(getProjectId()), new DispatchServiceCallback<GetRootOntologyIdResult>() {
 
             @Override
             public void handleSuccess(GetRootOntologyIdResult result) {

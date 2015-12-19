@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
@@ -18,8 +19,11 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
-	public ChangesPortlet(SelectionModel selectionModel, Project project) {
-		super(selectionModel, project);
+    private final DispatchServiceManager dispatchServiceManager;
+
+	public ChangesPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+		super(selectionModel, eventBus, project);
+        this.dispatchServiceManager = dispatchServiceManager;
 	}
 
 	private ChangeListView changeListView;
@@ -67,7 +71,7 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
     private void updateDisplayForSelectedEntity() {
         ProjectId projectId = getProjectId();
 		if (getSelectedEntity().isPresent()) {
-			ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, DispatchServiceManager.get(), false);
+			ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager, false);
 			presenter.setChangesForEntity(projectId, getSelectedEntity().get());
 		    setTitle("Changes for " + getSelectedEntityData().get().getBrowserText());
         }

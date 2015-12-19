@@ -4,7 +4,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
-import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
@@ -24,25 +25,24 @@ public abstract class AbstractFrameEditor<O> extends SimplePanel implements Valu
 
     private ProjectId projectId;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     /**
      * Creates an empty panel that uses a DIV for its contents.
      */
-    protected AbstractFrameEditor(ProjectId projectId) {
+    protected AbstractFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
     final public void setValue(final O object) {
         if (object instanceof HasSignature) {
-            RenderingManager renderingManager = RenderingManager.getManager();
             final HasSignature hasSignature = (HasSignature) object;
-            renderingManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(hasSignature.getSignature())), new AsyncCallback<GetEntityDataResult>() {
-                @Override
-                public void onFailure(Throwable caught) {
-                }
+            dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(hasSignature.getSignature())), new DispatchServiceCallback<GetEntityDataResult>() {
 
                 @Override
-                public void onSuccess(final GetEntityDataResult result) {
+                public void handleSuccess(final GetEntityDataResult result) {
                     setValue(object, new HasEntityDataProvider() {
                         @Override
                         public Optional<OWLEntityData> getEntityData(OWLEntity entity) {

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
@@ -16,8 +18,8 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
  */
 public class UserDefinedTab extends AbstractTab {
 
-	public UserDefinedTab(SelectionModel selectionModel, Project project) {
-		super(selectionModel, project);
+	public UserDefinedTab(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+		super(selectionModel, eventBus, dispatchServiceManager, project);
 	}
 
 	@Override

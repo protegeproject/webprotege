@@ -27,16 +27,16 @@ public class EventBusManager {
 
     private final EventBus globalEventBus = new SimpleEventBus();
 
-    static {
-        getManager();
-    }
+//    static {
+//        getManager();
+//    }
 
     private EventBusManager() {
     }
 
-    public static EventBusManager getManager() {
-        return instance;
-    }
+//    public static EventBusManager getManager() {
+//        return instance;
+//    }
 
     /**
      * Posts an event onto the event bus.

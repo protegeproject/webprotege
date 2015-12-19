@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.ui.generated;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.metrics.MetricsPortlet;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.renderer.OWLEntityDescriptionBrowserPortlet;
@@ -62,18 +64,18 @@ public class UIFactory {
      * Tab factory
      */
 
-    public static AbstractTab createTab(SelectionModel selectionModel, Project project, String tabJavaClassName) {
+    public static AbstractTab createTab(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project, String tabJavaClassName) {
         if (tabJavaClassName.equals(ClassesTab.class.getName())) {
-            return new ClassesTab(selectionModel, project);
+            return new ClassesTab(selectionModel, eventBus, dispatchServiceManager, project);
         }
         else if (tabJavaClassName.equals(PropertiesTab.class.getName())) {
-            return new PropertiesTab(selectionModel, project);
+            return new PropertiesTab(selectionModel, eventBus, dispatchServiceManager, project);
         }
         else if (tabJavaClassName.equals(IndividualsTab.class.getName())) {
-            return new IndividualsTab(selectionModel, project);
+            return new IndividualsTab(selectionModel, eventBus, dispatchServiceManager, project);
         }
         else if (tabJavaClassName.equals(UserDefinedTab.class.getName())) {
-            return new UserDefinedTab(selectionModel, project);
+            return new UserDefinedTab(selectionModel, eventBus, dispatchServiceManager, project);
         }
         return null;
     }
@@ -82,88 +84,88 @@ public class UIFactory {
      * Portlet factory
      */
 
-    public static EntityPortlet createPortlet(SelectionModel selectionModel, Project project, String portletJavaClassName) {
+    public static EntityPortlet createPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project, String portletJavaClassName) {
         try {
             String replacementName = backwardsCompatMap.get(portletJavaClassName);
             if(replacementName != null) {
                 portletJavaClassName = replacementName;
             }
             else if (portletJavaClassName.equals(ClassTreePortlet.class.getName())) {
-                return new ClassTreePortlet(selectionModel, project);
+                return new ClassTreePortlet(selectionModel, eventBus, dispatchServiceManager, project);
             }
             else if (portletJavaClassName.equals(ImportsTreePortlet.class.getName())) {
-                return new ImportsTreePortlet(selectionModel, project);
+                return new ImportsTreePortlet(selectionModel, eventBus, dispatchServiceManager,project);
             }
             else if (portletJavaClassName.equals(IndividualsListPortlet.class.getName())) {
-                return new IndividualsListPortlet(selectionModel, project);
+                return new IndividualsListPortlet(selectionModel, eventBus, dispatchServiceManager,project);
             }
             else if (portletJavaClassName.equals(MetricsPortlet.class.getName())) {
-                return new MetricsPortlet(selectionModel, project);
+                return new MetricsPortlet(selectionModel, eventBus, dispatchServiceManager, project);
             }
             else if (portletJavaClassName.equals(PropertiesTreePortlet.class.getName())) {
-                return new PropertiesTreePortlet(selectionModel, project);
+                return new PropertiesTreePortlet(selectionModel, eventBus, dispatchServiceManager, project);
             }
             else if (portletJavaClassName.equals(PropertyFieldPortlet.class.getName())) {
-                return new PropertyFieldPortlet(selectionModel, project);
+                return new PropertyFieldPortlet(selectionModel, eventBus, dispatchServiceManager, project);
             }
             else if (portletJavaClassName.equals(BioPortalSearchPortlet.class.getName())) {
-                return new BioPortalSearchPortlet(selectionModel, project);
+                return new BioPortalSearchPortlet(selectionModel, eventBus, project);
             }
             else if (portletJavaClassName.equals(ChangeSummaryPortlet.class.getName())) {
-                return new ChangeSummaryPortlet(selectionModel, project);
+                return new ChangeSummaryPortlet(selectionModel, eventBus, dispatchServiceManager, project);
             }
             else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
-                return new WatchedEntitiesPortlet(selectionModel, project);
+                return new WatchedEntitiesPortlet(selectionModel, eventBus, dispatchServiceManager,project);
             }
             else if (portletJavaClassName.equals(ChangesPortlet.class.getName())) {
-                return new ChangesPortlet(selectionModel, project);
+                return new ChangesPortlet(selectionModel, eventBus, dispatchServiceManager, project);
             }
             else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
-                return new WatchedEntitiesPortlet(selectionModel, project);
+                return new WatchedEntitiesPortlet(selectionModel, eventBus, dispatchServiceManager,project);
             }
             else if (portletJavaClassName.equals(OBOTermRelationshipPortlet.class.getName())) {
-                return new OBOTermRelationshipPortlet(project, selectionModel);
+                return new OBOTermRelationshipPortlet(project, eventBus, selectionModel);
             }
             else if (portletJavaClassName.equals(OBOTermDefinitionPortlet.class.getName())) {
-                return new OBOTermDefinitionPortlet(project, selectionModel);
+                return new OBOTermDefinitionPortlet(project, selectionModel, eventBus);
             }
             else if (portletJavaClassName.equals(OBOTermIdEditorPortlet.class.getName())) {
-                return new OBOTermIdEditorPortlet(selectionModel, project);
+                return new OBOTermIdEditorPortlet(selectionModel, eventBus, project);
             }
             else if (portletJavaClassName.equals(OBOTermSynonymsPortlet.class.getName())) {
-                return new OBOTermSynonymsPortlet(selectionModel, project);
+                return new OBOTermSynonymsPortlet(selectionModel, eventBus, project);
             }
             else if (portletJavaClassName.equals(OBOTermCrossProductPortlet.class.getName())) {
-                return new OBOTermCrossProductPortlet(selectionModel, project);
+                return new OBOTermCrossProductPortlet(selectionModel, eventBus, project);
             }
             else if (portletJavaClassName.equals(OBOTermXRefsEditorPortlet.class.getName())) {
-                return new OBOTermXRefsEditorPortlet(selectionModel, project);
+                return new OBOTermXRefsEditorPortlet(selectionModel, eventBus, project);
             }
             else if (portletJavaClassName.equals(RevisionsPortlet.class.getName())) {
-                return new RevisionsPortlet(selectionModel, project);
+                return new RevisionsPortlet(selectionModel, eventBus, dispatchServiceManager,project);
             }
             else if (portletJavaClassName.equals(OntologyIdPortlet.class.getName())) {
-                return new OntologyIdPortlet(selectionModel, project);
+                return new OntologyIdPortlet(selectionModel, eventBus, dispatchServiceManager,project);
             }
             else if (portletJavaClassName.equals(OntologyAnnotationsPortlet.class.getName())) {
-                return new OntologyAnnotationsPortlet(selectionModel, project);
+                return new OntologyAnnotationsPortlet(selectionModel, eventBus, dispatchServiceManager, project);
             }
             else if (portletJavaClassName.equals(ProjectFeedPortlet.class.getName())) {
-                return new ProjectFeedPortlet(selectionModel, project);
+                return new ProjectFeedPortlet(selectionModel, eventBus, project);
             }
             else if (portletJavaClassName.equals(DiscussionThreadPortlet.class.getName())) {
-                return new DiscussionThreadPortlet(project, selectionModel);
+                return new DiscussionThreadPortlet(project, eventBus, dispatchServiceManager, selectionModel);
             }
             else if (portletJavaClassName.equals(EditorPortlet.class.getName())) {
-                return new EditorPortlet(selectionModel, project);
+                return new EditorPortlet(selectionModel, eventBus, dispatchServiceManager, project);
             }
             else if (portletJavaClassName.equals(UsagePortlet.class.getName())) {
-                return new UsagePortlet(selectionModel, project);
+                return new UsagePortlet(selectionModel, eventBus, dispatchServiceManager, project);
             } else if (portletJavaClassName.equals(OWLEntityDescriptionBrowserPortlet.class.getName())) {
-                return new OWLEntityDescriptionBrowserPortlet(selectionModel, project);
+                return new OWLEntityDescriptionBrowserPortlet(selectionModel, eventBus, dispatchServiceManager,project);
             }
             else if (portletJavaClassName.endsWith(OWLEntityDescriptionEditorPortlet.class.getName())) {
-                return new OWLEntityDescriptionEditorPortlet(selectionModel, project);
+                return new OWLEntityDescriptionEditorPortlet(selectionModel, eventBus, dispatchServiceManager, project);
             }
             else {
                 GWT.log("Portlet not found: " + portletJavaClassName);

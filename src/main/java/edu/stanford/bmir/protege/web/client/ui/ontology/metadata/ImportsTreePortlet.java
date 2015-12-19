@@ -2,9 +2,11 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
@@ -23,8 +25,8 @@ public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 	protected TreePanel importsTree;
 	protected ArrayList<EntityData> currentSelection;
 
-	public ImportsTreePortlet(SelectionModel selectionModel, Project project) {
-		super(selectionModel, project);
+	public ImportsTreePortlet(SelectionModel selectionModel,  EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+		super(selectionModel, eventBus, project);
 	}
 
 	public void initialize() {

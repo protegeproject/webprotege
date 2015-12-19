@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 
 public class PropertySelectionFieldWidget extends AbstractSelectionFieldWidget {
 
-	public PropertySelectionFieldWidget(Project project) {
-		super(project);		
+	public PropertySelectionFieldWidget(Project project, DispatchServiceManager dispatchServiceManager) {
+		super(project, dispatchServiceManager);
 	}
 
 	@Override

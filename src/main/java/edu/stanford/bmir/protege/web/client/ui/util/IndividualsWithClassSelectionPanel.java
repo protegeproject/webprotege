@@ -4,10 +4,12 @@ import com.google.common.base.Optional;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.layout.ColumnLayout;
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import com.gwtext.client.widgets.layout.VerticalLayout;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
@@ -29,8 +31,14 @@ public class IndividualsWithClassSelectionPanel extends Panel {
     private Anchor seeAllClassesAnchor;
     private boolean seeAllClasses = false;
 
-    public IndividualsWithClassSelectionPanel(Project project, Collection<EntityData> clses, boolean allowMultipleSelection, boolean showClsesPanel) {
+    private final EventBus eventBus;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public IndividualsWithClassSelectionPanel(Project project, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Collection<EntityData> clses, boolean allowMultipleSelection, boolean showClsesPanel) {
         this.project = project;
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
         this.clses = clses;
         this.allowMultipleSelection = allowMultipleSelection;
         this.showClsesPanel = showClsesPanel;
@@ -89,7 +97,7 @@ public class IndividualsWithClassSelectionPanel extends Panel {
 
     protected IndividualsListPortlet createIndividualsListPorlet() {
         SelectionModel selectionModel = SelectionModel.create();
-       IndividualsListPortlet indPortlet = new IndividualsListPortlet(selectionModel, project);
+       IndividualsListPortlet indPortlet = new IndividualsListPortlet(selectionModel, eventBus, dispatchServiceManager, project);
        indPortlet.setDraggable(false);
        indPortlet.setClosable(false);
        indPortlet.setCollapsible(false);
@@ -100,7 +108,7 @@ public class IndividualsWithClassSelectionPanel extends Panel {
     protected ClassTreePortlet createClassTreePortlet(boolean allClasses) {
         SelectionModel selectionModel = SelectionModel.create();
         EntityData topCls = allClasses ? null : UIUtil.getFirstItem(clses);
-        ClassTreePortlet clsPortlet = new ClassTreePortlet(selectionModel, project, true, true, true, allowMultipleSelection, topCls == null ?  null : topCls.getName());
+        ClassTreePortlet clsPortlet = new ClassTreePortlet(selectionModel, eventBus, dispatchServiceManager, project, true, true, true, allowMultipleSelection, topCls == null ?  null : topCls.getName());
         clsPortlet.setDraggable(false);
         clsPortlet.setClosable(false);
         clsPortlet.setCollapsible(false);

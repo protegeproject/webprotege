@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -21,6 +22,8 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class NoteHeaderPresenter implements HasDispose {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private NoteHeaderView noteHeaderView;
 
     private Note note;
@@ -29,15 +32,17 @@ public class NoteHeaderPresenter implements HasDispose {
 
     private HandlerRegistration registration;
 
-    public NoteHeaderPresenter(NoteHeaderView view) {
+    public NoteHeaderPresenter(NoteHeaderView view,  EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         this.noteHeaderView = view;
+        this.dispatchServiceManager = dispatchServiceManager;
         noteHeaderView.setResolveNoteHandler(new ResolveNoteHandler() {
             @Override
             public void handleResolvePressed() {
                 setNoteResolved();
             }
         });
-        registration = EventBusManager.getManager().registerHandlerToProject(Application.get().getActiveProject().get(), NoteStatusChangedEvent.TYPE, new NoteStatusChangedHandler() {
+        registration = eventBus.addHandlerToSource(NoteStatusChangedEvent.TYPE, Application.get().getActiveProject().get(),
+        new NoteStatusChangedHandler() {
             @Override
             public void handleNoteStatusChanged(NoteStatusChangedEvent event) {
                 if (note != null && event.getNoteId().equals(note.getNoteId())) {
@@ -61,7 +66,7 @@ public class NoteHeaderPresenter implements HasDispose {
     private void setNoteResolved() {
         ProjectId projectId = Application.get().getActiveProject().get();
         NoteStatus status = currentNoteStatus == NoteStatus.OPEN ? NoteStatus.RESOLVED : NoteStatus.OPEN;
-        DispatchServiceManager.get().execute(new                 SetNoteStatusAction(projectId, note.getNoteId(), status), new DispatchServiceCallback<SetNoteStatusResult>() {
+        dispatchServiceManager.execute(new SetNoteStatusAction(projectId, note.getNoteId(), status), new DispatchServiceCallback<SetNoteStatusResult>() {
             @Override
             public void handleSuccess(SetNoteStatusResult result) {
                 currentNoteStatus = result.getNoteStatus();

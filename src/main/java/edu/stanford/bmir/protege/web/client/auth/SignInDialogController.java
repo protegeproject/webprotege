@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.auth;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogValidator;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
@@ -17,10 +18,10 @@ public class SignInDialogController extends WebProtegeOKCancelDialogController<S
 
     private SignInView signInView;
 
-    public SignInDialogController(final SignInView signInView) {
+    public SignInDialogController(final SignInView signInView, DispatchServiceManager dispatchServiceManager) {
         super("Sign in");
         this.signInView = signInView;
-        this.signInView.setForgotPasswordHandler(new ForgotPasswordHandlerImpl());
+        this.signInView.setForgotPasswordHandler(new ForgotPasswordHandlerImpl(dispatchServiceManager));
         addDialogValidator(new WebProtegeDialogValidator() {
             @Override
             public ValidationState getValidationState() {

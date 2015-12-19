@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.ui.frame.ObjectPropertyFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
@@ -21,11 +22,17 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
 
     private ProjectId projectId;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public ObjectPropertyFrameEditorManager(DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = dispatchServiceManager;
+    }
+
     @Override
     public EditorView<LabelledFrame<ObjectPropertyFrame>> getView(OWLEntityDataContext editorContext) {
         if (editor == null || !projectId.equals(editorContext.getProjectId())) {
             projectId = editorContext.getProjectId();
-            editor = new ObjectPropertyFrameEditor(editorContext.getProjectId());
+            editor = new ObjectPropertyFrameEditor(editorContext.getProjectId(), dispatchServiceManager);
         }
         return editor;
     }

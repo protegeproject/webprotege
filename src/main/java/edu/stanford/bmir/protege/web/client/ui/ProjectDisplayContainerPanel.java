@@ -6,6 +6,7 @@ import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Timer;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
@@ -13,6 +14,7 @@ import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.place.PlaceManager;
@@ -25,13 +27,11 @@ import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.MyWebProtegeTab;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.place.TabId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedHandler;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.HashSet;
@@ -53,8 +53,17 @@ public class ProjectDisplayContainerPanel extends TabPanel {
 
     private final Set<ProjectId> currentlyLoadingProjects = new HashSet<>();
 
-    public ProjectDisplayContainerPanel() {
+    private final EventBus eventBus;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
+    private ProjectManager projectManager;
+
+    public ProjectDisplayContainerPanel(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectManager projectManager) {
         super();
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
+        this.projectManager = projectManager;
         buildUI();
 
         PlaceManager placeManager = Application.get().getPlaceManager();
@@ -70,7 +79,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         });
 
 
-        EventBusManager.getManager().registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
+        eventBus.addHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
             @Override
             public void handleUserLoggedOut(UserLoggedOutEvent event) {
                 // TODO: This is a bit extreme.  We only need to remove the tabs for which the user had no access rights
@@ -78,14 +87,14 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             }
         });
 
-        EventBusManager.getManager().registerHandler(ActiveProjectChangedEvent.TYPE, new ActiveProjectChangedHandler() {
+        eventBus.addHandler(ActiveProjectChangedEvent.TYPE, new ActiveProjectChangedHandler() {
             @Override
             public void handleActiveProjectChanged(ActiveProjectChangedEvent event) {
                 respondToActiveProjectChangedEvent(event);
             }
         });
 
-        EventBusManager.getManager().registerHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
+        eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
             @Override
             public void onPlaceChange(PlaceChangeEvent event) {
                 GWT.log("[ProjectDisplayContainerPanel] Place has changed.  New place: " + event.getNewPlace());
@@ -93,7 +102,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             }
         });
 
-        EventBusManager.getManager().registerHandler(ProjectSettingsChangedEvent.getType(), new ProjectSettingsChangedHandler() {
+        eventBus.addHandler(ProjectSettingsChangedEvent.getType(), new ProjectSettingsChangedHandler() {
             @Override
             public void handleProjectSettingsChanged(ProjectSettingsChangedEvent event) {
                 ProjectSettings projectSettings = event.getProjectSettings();
@@ -191,7 +200,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             public void onSuccess() {
                 for (ProjectDisplayImpl ontologyTabPanel : projectId2ProjectPanelMap.values()) {
                     Project project = ontologyTabPanel.getProject();
-                    ProjectManager.get().unloadProject(project.getProjectId());
+                    projectManager.unloadProject(project.getProjectId());
                     hideTabStripItem(ontologyTabPanel);
                     ontologyTabPanel.hide();
                     ontologyTabPanel.destroy();
@@ -213,7 +222,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             }
         };
 
-        myWebProTab = new MyWebProtegeTab(loadProjectRequestHandler);
+        myWebProTab = new MyWebProtegeTab(loadProjectRequestHandler, eventBus, dispatchServiceManager);
 //        myWebProTab.setTitle(myWebProTab.getLabel());
         add(myWebProTab);
 
@@ -274,7 +283,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             GWT.log("Ignoring request to add project display as it has already been made for project " + projectId);
             return;
         }
-        ProjectDisplayImpl projectPanel = new ProjectDisplayImpl(projectId);
+        ProjectDisplayImpl projectPanel = new ProjectDisplayImpl(projectId, eventBus, dispatchServiceManager, projectManager);
         projectPanel.setClosable(true);
         projectId2ProjectPanelMap.put(projectId, projectPanel);
 
@@ -285,7 +294,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
                     ProjectDisplayImpl o = (ProjectDisplayImpl) component;
                     ProjectId projectId = o.getProjectId();
                     projectId2ProjectPanelMap.remove(projectId);
-                    ProjectManager.get().unloadProject(projectId);
+                    projectManager.unloadProject(projectId);
                     hideTabStripItem(o);
                     o.hide();
                     activate(0);

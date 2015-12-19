@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -28,6 +29,8 @@ import java.util.*;
  */
 public class ProjectManagerPresenter {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private ProjectManagerView projectManagerView;
 
     private Map<ProjectManagerViewCategory, ProjectListFilter> viewCat2Filter = new HashMap<ProjectManagerViewCategory, ProjectListFilter>();
@@ -40,9 +43,12 @@ public class ProjectManagerPresenter {
 
     private ProjectDetailsCache projectDetailsCache = new ProjectDetailsCache();
 
-    public ProjectManagerPresenter(LoadProjectRequestHandler loadProjectRequestHandler) {
-        this.projectManagerView = new ProjectManagerViewImpl();
+    private final EventBus eventBus;
 
+    public ProjectManagerPresenter(LoadProjectRequestHandler loadProjectRequestHandler, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        this.projectManagerView = new ProjectManagerViewImpl();
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
         includeAllFilter = new ProjectListFilter() {
             @Override
             public boolean isIncluded(ProjectDetails projectDetails) {
@@ -75,10 +81,10 @@ public class ProjectManagerPresenter {
 
         projectManagerView.setLoadProjectRequestHandler(loadProjectRequestHandler);
 
-        projectManagerView.setCreateProjectRequestHandler(new CreateProjectRequestHandlerImpl());
-        projectManagerView.setUploadProjectRequestHandler(new UploadProjectRequestHandlerImpl());
+        projectManagerView.setCreateProjectRequestHandler(new CreateProjectRequestHandlerImpl(eventBus, dispatchServiceManager));
+        projectManagerView.setUploadProjectRequestHandler(new UploadProjectRequestHandlerImpl(eventBus, dispatchServiceManager));
         projectManagerView.setDownloadProjectRequestHandler(new DownloadProjectRequestHandlerImpl());
-        projectManagerView.setTrashManagerRequestHandler(new TrashManagerRequestHandlerImpl());
+        projectManagerView.setTrashManagerRequestHandler(new TrashManagerRequestHandlerImpl(dispatchServiceManager));
 
         projectManagerView.setViewCategoryChangedHandler(new ViewCategoryChangedHandler() {
             @Override
@@ -87,7 +93,7 @@ public class ProjectManagerPresenter {
             }
         });
 
-        EventBusManager.getManager().registerHandler(ProjectCreatedEvent.TYPE, new ProjectCreatedHandler() {
+        eventBus.addHandler(ProjectCreatedEvent.TYPE, new ProjectCreatedHandler() {
             @Override
             public void handleProjectCreated(ProjectCreatedEvent event) {
                 projectDetailsCache.add(event.getProjectDetails());
@@ -96,7 +102,7 @@ public class ProjectManagerPresenter {
             }
         });
 
-        EventBusManager.getManager().registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
+        eventBus.addHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {
                 handleUserChange();
@@ -104,7 +110,7 @@ public class ProjectManagerPresenter {
             }
         });
 
-        EventBusManager.getManager().registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
+        eventBus.addHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
             @Override
             public void handleUserLoggedOut(UserLoggedOutEvent event) {
                 handleUserChange();
@@ -112,7 +118,7 @@ public class ProjectManagerPresenter {
             }
         });
 
-        EventBusManager.getManager().registerHandler(ProjectMovedToTrashEvent.TYPE, new ProjectMovedToTrashHandler() {
+        eventBus.addHandler(ProjectMovedToTrashEvent.TYPE, new ProjectMovedToTrashHandler() {
             @Override
             public void handleProjectMovedToTrash(ProjectMovedToTrashEvent event) {
                 if(projectDetailsCache.setInTrash(event.getProjectId(), true)) {
@@ -121,7 +127,7 @@ public class ProjectManagerPresenter {
             }
         });
 
-        EventBusManager.getManager().registerHandler(ProjectMovedFromTrashEvent.TYPE, new ProjectMovedFromTrashHandler() {
+        eventBus.addHandler(ProjectMovedFromTrashEvent.TYPE, new ProjectMovedFromTrashHandler() {
             @Override
             public void handleProjectMovedFromTrash(ProjectMovedFromTrashEvent event) {
                 if(projectDetailsCache.setInTrash(event.getProjectId(), false)) {
@@ -130,7 +136,7 @@ public class ProjectManagerPresenter {
             }
         });
 
-        EventBusManager.getManager().registerHandler(ProjectSettingsChangedEvent.getType(), new ProjectSettingsChangedHandler() {
+        eventBus.addHandler(ProjectSettingsChangedEvent.getType(), new ProjectSettingsChangedHandler() {
             @Override
             public void handleProjectSettingsChanged(ProjectSettingsChangedEvent event) {
                 reloadFromServer();
@@ -166,12 +172,12 @@ public class ProjectManagerPresenter {
         GWT.log("Reloading project view");
 
         GetAvailableProjectsAction action = new GetAvailableProjectsAction();
-        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<GetAvailableProjectsResult>() {
+        dispatchServiceManager.execute(action, new DispatchServiceCallback<GetAvailableProjectsResult>() {
             @Override
             public void handleSuccess(GetAvailableProjectsResult result) {
                 projectDetailsCache.setProjectDetails(result.getDetails());
                 displayProjectDetails();
-                if(selectId.isPresent()) {
+                if (selectId.isPresent()) {
                     projectManagerView.setSelectedProject(selectId.get());
                 }
             }

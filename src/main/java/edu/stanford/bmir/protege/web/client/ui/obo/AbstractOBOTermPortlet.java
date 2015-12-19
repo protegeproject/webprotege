@@ -2,16 +2,13 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
@@ -24,8 +21,8 @@ public abstract class AbstractOBOTermPortlet extends AbstractOWLEntityPortlet {
 
     private static final OBOTextEditorServiceAsync SERVICE = GWT.create(OBOTextEditorService.class);
 
-    protected AbstractOBOTermPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    protected AbstractOBOTermPortlet(SelectionModel selectionModel,  EventBus eventBus, Project project) {
+        super(selectionModel, eventBus, project);
         addStyleName("web-protege-laf");
         setHeight("300px");
         setAutoScroll(true);

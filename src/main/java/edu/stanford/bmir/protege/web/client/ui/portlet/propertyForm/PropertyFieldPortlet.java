@@ -1,10 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
 import com.google.common.base.Optional;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.event.PanelListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
@@ -36,6 +38,10 @@ public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
 
     private PanelListener panelListener;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
+    private final EventBus eventBus;
+
     /*
      * This portlet should replace the displayed form based on the
      * configuration. However! I had problems with adding and removing
@@ -47,8 +53,10 @@ public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
      * work.
      */
 
-    public PropertyFieldPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    public PropertyFieldPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -247,7 +255,7 @@ public class PropertyFieldPortlet extends AbstractOWLEntityPortlet {
 
     protected FormGenerator createFormGenerator() {
         Map<String, Object> properties = getPortletConfiguration().getProperties();
-        formGenerator = new FormGenerator(getProject(), properties);
+        formGenerator = new FormGenerator(getProject(), eventBus, dispatchServiceManager, properties);
         formGenerator.addFormToTabPanel(wrappingPanel);
         attachPanelListenerToTabs();
         wrappingPanel.activate(0);

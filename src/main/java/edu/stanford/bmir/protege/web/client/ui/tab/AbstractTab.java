@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
@@ -12,6 +11,7 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.portal.Portal;
 import com.gwtext.client.widgets.portal.PortalColumn;
 import com.gwtext.client.widgets.portal.Portlet;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
@@ -51,8 +51,15 @@ public abstract class AbstractTab extends Portal {
 
     private final SelectionModel selectionModel;
 
-    public AbstractTab(final SelectionModel selectionModel, final Project project) {
+    private final EventBus eventBus;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
+
+    public AbstractTab(final SelectionModel selectionModel, final EventBus eventBus, final DispatchServiceManager dispatchServiceManager, final Project project) {
         super();
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
         this.project = project;
         this.portal = new Portal();
         this.columnToPortletsMap = new LinkedHashMap<>();
@@ -327,7 +334,7 @@ public abstract class AbstractTab extends Portal {
 
     protected EntityPortlet createPortlet(final PortletConfiguration portletConfiguration) {
         final String portletClassName = portletConfiguration.getName();
-        final EntityPortlet portlet = UIFactory.createPortlet(selectionModel, project, portletClassName);
+        final EntityPortlet portlet = UIFactory.createPortlet(selectionModel, eventBus, dispatchServiceManager, project, portletClassName);
         if (portlet == null) {
             return null;
         }

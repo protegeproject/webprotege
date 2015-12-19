@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.widgets.*;
@@ -14,6 +15,7 @@ import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.grid.GridEditor;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -35,8 +37,8 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 
     protected Map<String, Object> bpSearchProperties;
 
-    public ReferenceFieldWidget(Project project) {
-        super(project);
+    public ReferenceFieldWidget(Project project, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        super(project, eventBus, dispatchServiceManager);
     }
 
     @Override
@@ -159,7 +161,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
         window.setHeight(400);
         window.setLayout(new FitLayout());
 
-        bpSearchComponent = new BioPortalSearchComponent(getProjectId(), !multiValue) {
+        bpSearchComponent = new BioPortalSearchComponent(getProjectId(), getProject(), !multiValue) {
             @Override
             protected AsyncCallback<EntityData> getImportBioPortalConceptHandler() {
                 return new ImportBioPortalConceptHandler(this);
@@ -254,7 +256,7 @@ public class ReferenceFieldWidget extends InstanceGridWidget {
 
     private void createNewReference(String label, String termId, String ontologyId, String url) {
 //    private void createNewReference(String label, String termId, String ontologyId, String url, final NoteInputPanel noteInputPanel) {
-        bpSearchComponent = new BioPortalSearchComponent(getProjectId(), !multiValue) {
+        bpSearchComponent = new BioPortalSearchComponent(getProjectId(), getProject(), !multiValue) {
             @Override
             protected AsyncCallback<EntityData> getCreateManualreferenceHandler() {
                 return new CreateManualReferenceHandler();

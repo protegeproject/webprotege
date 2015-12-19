@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
 import com.gwtext.client.widgets.Button;
@@ -21,7 +22,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.renderer.RenderingManager;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -56,16 +56,19 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     public static final String ANNOTATION_PROPERTIES_TREE_NODE_ID = "Annotation properties";
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     protected TreePanel treePanel;
 
     private Button createButton;
 
     private Button deleteButton;
 
-//    private TreeNode lastSelectedTreeNode;
+    //    private TreeNode lastSelectedTreeNode;
 
-    public PropertiesTreePortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    public PropertiesTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -459,7 +462,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private <R extends AbstractCreateEntityInHierarchyResult<E>, E extends OWLEntity> void createSubProperties(AbstractCreateEntityInHierarchyAction<R, E> action) {
-        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<R>() {
+        dispatchServiceManager.execute(action, new DispatchServiceCallback<R>() {
             @Override
             protected String getErrorMessage(Throwable throwable) {
                 return "There was a problem creating the properties";
@@ -584,7 +587,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         if (propertyEntityData == null) {
             return;
         }
-        DispatchServiceManager.get().execute(new DeleteEntityAction(propertyEntityData.getEntity(), getProjectId()), new DeletePropertyHandler());
+        dispatchServiceManager.execute(new DeleteEntityAction(propertyEntityData.getEntity(), getProjectId()), new DeletePropertyHandler());
     }
 
     private TreeNode getDirectChild(TreeNode parentNode, String childId) {
@@ -826,13 +829,9 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private void updateTextAsync(final OWLEntity entity, final TreeNode node) {
-        RenderingManager.getManager().execute(new GetEntityDataAction(getProjectId(), ImmutableSet.<OWLEntity>of(entity)), new AsyncCallback<GetEntityDataResult>() {
+        dispatchServiceManager.execute(new GetEntityDataAction(getProjectId(), ImmutableSet.<OWLEntity>of(entity)), new DispatchServiceCallback<GetEntityDataResult>() {
             @Override
-            public void onFailure(Throwable caught) {
-            }
-
-            @Override
-            public void onSuccess(GetEntityDataResult result) {
+            public void handleSuccess(GetEntityDataResult result) {
                 node.setText(result.getEntityDataMap().get(entity).getBrowserText());
             }
         });

@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
@@ -69,9 +70,9 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     private static NamedIndividualFrameEditorUiBinder ourUiBinder = GWT.create(NamedIndividualFrameEditorUiBinder.class);
 
-    public NamedIndividualFrameEditor(ProjectId projectId) {
-        super(projectId);
-        assertions = new PropertyValueListEditor(projectId);
+    public NamedIndividualFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+        super(projectId, dispatchServiceManager);
+        assertions = new PropertyValueListEditor(projectId, dispatchServiceManager);
         assertions.setGrammar(PropertyValueGridGrammar.getNamedIndividualGrammar());
         types = new PrimitiveDataListEditor(PrimitiveType.CLASS);
         types.setPlaceholder("Enter class name");

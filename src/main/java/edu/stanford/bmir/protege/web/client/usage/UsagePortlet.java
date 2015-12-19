@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.usage;
 import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -29,9 +31,12 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
 
     private UsageView usageView;
 
-    public UsagePortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public UsagePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
         setHeight(DEFAULT_HEIGHT);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -65,7 +70,7 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
     private void showUsageForEntity(final OWLEntityData entityData) {
         final OWLEntity entity = entityData.getEntity();
         final GetUsageAction action = new GetUsageAction(entity, getProjectId(), Optional.of(usageView.getUsageFilter()));
-        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<GetUsageResult>() {
+        dispatchServiceManager.execute(action, new DispatchServiceCallback<GetUsageResult>() {
 
             @Override
             protected String getErrorMessage(Throwable throwable) {

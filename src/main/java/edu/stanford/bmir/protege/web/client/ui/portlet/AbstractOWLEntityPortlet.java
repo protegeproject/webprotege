@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import com.google.common.base.Optional;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -11,9 +13,6 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.util.Collection;
-import java.util.Collections;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -23,12 +22,12 @@ import java.util.Collections;
 @SuppressWarnings("deprecated")
 public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
 
-    protected AbstractOWLEntityPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    protected AbstractOWLEntityPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
+        super(selectionModel, eventBus, project);
     }
 
-    protected AbstractOWLEntityPortlet(SelectionModel selectionModel, Project project, boolean initialize) {
-        super(selectionModel, project, initialize);
+    protected AbstractOWLEntityPortlet(SelectionModel selectionModel, EventBus eventBus, Project project, boolean initialize) {
+        super(selectionModel, eventBus, project, initialize);
     }
 
     /**

@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -20,8 +21,8 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermDefinitionEditor editor;
 
-    public OBOTermDefinitionPortlet(Project project, SelectionModel selectionModel) {
-        super(selectionModel, project);
+    public OBOTermDefinitionPortlet(Project project, SelectionModel selectionModel, EventBus eventBus) {
+        super(selectionModel, eventBus, project);
         editor = new OBOTermDefinitionEditorImpl();
         add(editor.asWidget());
         setHeight("200px");

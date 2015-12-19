@@ -24,28 +24,31 @@ public class SignInPresenter {
 
     private final SignInSuccessfulHandler signInSuccessfulHandler;
 
+    private final DispatchServiceManager dispatchServiceManager;
 
-    public static SignInPresenter get() {
+    public static SignInPresenter get(DispatchServiceManager dispatchServiceManager) {
         return new SignInPresenter(
-                getAuthenticatedActionExecutor(), new SignInDialogPresenter(new SignInDialogController(new SignInViewImpl())),
+                getAuthenticatedActionExecutor(dispatchServiceManager), new SignInDialogPresenter(new SignInDialogController(new SignInViewImpl(), dispatchServiceManager)),
                 new MessageBoxSignInMessageDisplay(),
                 new SignInSuccessfulHandler() {
                     @Override
                     public void handleLoginSuccessful(UserId userId) {
                         Application.get().setCurrentUser(userId);
                     }
-                }
+                }, dispatchServiceManager
         );
     }
 
     public SignInPresenter(AuthenticatedActionExecutor loginExecutor,
                            SignInDialogPresenter signInDialogPresenter,
                            SignInMessageDisplay signInMessageDisplay,
-                           SignInSuccessfulHandler signInSuccessfulHandler) {
+                           SignInSuccessfulHandler signInSuccessfulHandler,
+                           DispatchServiceManager dispatchServiceManager) {
         this.dialogPresenter = signInDialogPresenter;
         this.loginExecutor = loginExecutor;
         this.signInMessageDisplay = signInMessageDisplay;
         this.signInSuccessfulHandler = signInSuccessfulHandler;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     public void showLoginDialog() {
@@ -80,10 +83,10 @@ public class SignInPresenter {
     }
 
 
-    private static AuthenticatedActionExecutor getAuthenticatedActionExecutor() {
+    private static AuthenticatedActionExecutor getAuthenticatedActionExecutor(DispatchServiceManager dispatchServiceManager) {
         Provider<MessageDigestAlgorithm> digestAlgorithmProvider = new Md5DigestAlgorithmProvider();
         PasswordDigestAlgorithm passwordDigestAlgorithm = new PasswordDigestAlgorithm(digestAlgorithmProvider);
         ChapResponseDigestAlgorithm chapResponseDigestAlgorithm = new ChapResponseDigestAlgorithm(digestAlgorithmProvider);
-        return new AuthenticatedActionExecutor(DispatchServiceManager.get(), passwordDigestAlgorithm, chapResponseDigestAlgorithm);
+        return new AuthenticatedActionExecutor(dispatchServiceManager, passwordDigestAlgorithm, chapResponseDigestAlgorithm);
     }
 }

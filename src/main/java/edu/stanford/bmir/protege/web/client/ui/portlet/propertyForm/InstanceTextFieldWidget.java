@@ -6,6 +6,7 @@ import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -20,8 +21,8 @@ public class InstanceTextFieldWidget extends TextFieldWidget {
 	private String property;
 	private Map<EntityData, EntityData> valuesToDisplayValuesMap;
 
-	public InstanceTextFieldWidget(Project project) {
-		super(project);
+	public InstanceTextFieldWidget(Project project, DispatchServiceManager dispatchServiceManager) {
+		super(project, dispatchServiceManager);
 		valuesToDisplayValuesMap = new HashMap<EntityData, EntityData>();
 	}
 

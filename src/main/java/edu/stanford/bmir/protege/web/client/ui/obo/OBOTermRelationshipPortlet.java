@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
@@ -25,8 +26,8 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
 
     private Optional<List<OBORelationship>> pristineValue = Optional.absent();
 
-    public OBOTermRelationshipPortlet(Project project, SelectionModel selectionModel) {
-        super(selectionModel, project);
+    public OBOTermRelationshipPortlet(Project project, EventBus eventBus, SelectionModel selectionModel) {
+        super(selectionModel, eventBus, project);
     }
 
 

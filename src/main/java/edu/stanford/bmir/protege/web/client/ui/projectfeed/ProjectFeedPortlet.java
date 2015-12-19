@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.projectfeed;
 
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -14,8 +15,8 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
 
     private ProjectFeedBasePanel basePanel;
 
-    public ProjectFeedPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    public ProjectFeedPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
+        super(selectionModel, eventBus, project);
     }
 
     @Override

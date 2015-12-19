@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
@@ -19,11 +20,17 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
 
     private NamedIndividualFrameEditor editor;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public NamedIndividualFrameEditorManager(DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = dispatchServiceManager;
+    }
+
     @Override
     public EditorView<LabelledFrame<NamedIndividualFrame>> getView(OWLEntityDataContext context) {
         if (editor == null) {
             ProjectId projectId = context.getProjectId();
-            editor = new NamedIndividualFrameEditor(projectId);
+            editor = new NamedIndividualFrameEditor(projectId, dispatchServiceManager);
         }
         return editor;
     }

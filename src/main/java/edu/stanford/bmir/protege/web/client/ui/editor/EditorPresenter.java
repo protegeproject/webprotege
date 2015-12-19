@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -47,6 +48,8 @@ public class EditorPresenter implements HasDispose {
 
     private static final int VALUE_CHANGED_COMMIT_DELAY_MS = 1000;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private EditorContextMapper editorContextMapper;
 
 
@@ -63,7 +66,7 @@ public class EditorPresenter implements HasDispose {
 
     private int counter = 0;
 
-    private HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
+    private HandlerRegistrationManager handlerRegistrationManager;
 
     private Timer commitOnValueChangedTimer = new Timer() {
         @Override
@@ -72,9 +75,13 @@ public class EditorPresenter implements HasDispose {
         }
     };
 
+    private final Project project;
 
-    public EditorPresenter(ProjectId projectId, EditorContextMapper editorContextMapper) {
+    public EditorPresenter(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project, EditorContextMapper editorContextMapper) {
         this.editorContextMapper = editorContextMapper;
+        this.project = project;
+        this.dispatchServiceManager = dispatchServiceManager;
+        this.handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
         handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {
@@ -95,7 +102,7 @@ public class EditorPresenter implements HasDispose {
                 updatePermissionBasedItems();
             }
         });
-        
+
         handlerRegistrationManager.registerHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
             @Override
             public void onPlaceChange(PlaceChangeEvent event) {
@@ -165,7 +172,7 @@ public class EditorPresenter implements HasDispose {
         if (editorManager.isPresent()) {
             setEditorState(editedValue, editorCtx, view, editorManager.get());
         }
-        DispatchServiceManager.get().execute(updateAction, new DispatchServiceCallback<Result>() {
+        dispatchServiceManager.execute(updateAction, new DispatchServiceCallback<Result>() {
             @Override
             public void handleSuccess(Result result) {
                 GWT.log("Object successfully updated");
@@ -181,7 +188,7 @@ public class EditorPresenter implements HasDispose {
 //            editorHolder.setWidget(LOADING_INDICATOR_WIDGET);
             final EditorManager<C, O> editorManager = selectedMan.get();
             GetObjectAction<O> action = editorManager.createGetObjectAction(editorCtx);
-            DispatchServiceManager.get().execute(action, new DispatchServiceCallback<GetObjectResult<O>>() {
+            dispatchServiceManager.execute(action, new DispatchServiceCallback<GetObjectResult<O>>() {
 
                 private int executionCounter = counter;
 
@@ -191,7 +198,7 @@ public class EditorPresenter implements HasDispose {
                 }
 
                 private void handleGetObjectSuccess(GetObjectResult<O> result) {
-                    if(executionCounter != counter) {
+                    if (executionCounter != counter) {
                         return;
                     }
                     final O value = result.getObject();
@@ -206,9 +213,8 @@ public class EditorPresenter implements HasDispose {
                     });
                     final Widget editorWidget = editorView.asWidget();
 
-                    if(editorWidget instanceof HasEnabled) {
-                        Optional<Project> project = ProjectManager.get().getProject(editorCtx.getProjectId());
-                            ((HasEnabled) editorWidget).setEnabled(project.isPresent() && project.get().hasWritePermission());
+                    if (editorWidget instanceof HasEnabled) {
+                        ((HasEnabled) editorWidget).setEnabled(project.hasWritePermission());
                     }
 
                     editorHolder.setWidget(editorWidget);
@@ -244,12 +250,6 @@ public class EditorPresenter implements HasDispose {
         if(!activeProjectId.isPresent()) {
             return false;
         }
-        ProjectId projectId = activeProjectId.get();
-        final Optional<Project> activeProject = ProjectManager.get().getProject(projectId);
-        if(!activeProject.isPresent()) {
-            return false;
-        }
-        Project project = activeProject.get();
         return project.hasWritePermission();
     }
 

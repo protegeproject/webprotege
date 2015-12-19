@@ -25,6 +25,12 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class ChangeEmailAddressPresenter {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public ChangeEmailAddressPresenter(DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = dispatchServiceManager;
+    }
+
     public void changeEmail() {
         final UserId userId = Application.get().getUserId();
         if(userId.isGuest()) {
@@ -33,7 +39,7 @@ public class ChangeEmailAddressPresenter {
         }
         ProgressMonitor.get().showProgressMonitor("Retrieving email address", "Please wait.");
 
-        DispatchServiceManager.get().execute(new GetEmailAddressAction(userId), new DispatchServiceCallback<GetEmailAddressResult>() {
+        dispatchServiceManager.execute(new GetEmailAddressAction(userId), new DispatchServiceCallback<GetEmailAddressResult>() {
             @Override
             public void handleSuccess(GetEmailAddressResult result) {
                 showDialog(result.getEmailAddress());
@@ -57,10 +63,10 @@ public class ChangeEmailAddressPresenter {
             @Override
             public void handleHide(Optional<EmailAddress> data, final WebProtegeDialogCloser closer) {
                 if(data.isPresent()) {
-                    DispatchServiceManager.get().execute(new SetEmailAddressAction(userId, data.get().getEmailAddress()), new DispatchServiceCallback<SetEmailAddressResult>() {
+                    dispatchServiceManager.execute(new SetEmailAddressAction(userId, data.get().getEmailAddress()), new DispatchServiceCallback<SetEmailAddressResult>() {
                         @Override
                         public void handleSuccess(SetEmailAddressResult result) {
-                            if(result.getResult() == SetEmailAddressResult.Result.ADDRESS_ALREADY_EXISTS) {
+                            if (result.getResult() == SetEmailAddressResult.Result.ADDRESS_ALREADY_EXISTS) {
                                 MessageBox.showMessage("Address already taken",
                                         "The email address that you have specified is taken by another user.  " +
                                                 "Please specify a different email address.");

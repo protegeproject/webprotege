@@ -25,11 +25,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private NoteId noteId;
 
 
-    public ReplyToNoteHandlerImpl(NoteId noteId) {
+    public ReplyToNoteHandlerImpl(NoteId noteId, DispatchServiceManager dispatchServiceManager) {
         this.noteId = checkNotNull(noteId);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
 
     private void doReply(NoteContent content) {
         ProjectId projectId = Application.get().getActiveProject().get();
-        DispatchServiceManager.get().execute(new AddReplyToNoteAction(projectId, noteId, content), new DispatchServiceCallback<AddReplyToNoteResult>() {
+        dispatchServiceManager.execute(new AddReplyToNoteAction(projectId, noteId, content), new DispatchServiceCallback<AddReplyToNoteResult>() {
             @Override
             public void handleSuccess(AddReplyToNoteResult result) {
                 GWT.log("Replied o.k. " + result);

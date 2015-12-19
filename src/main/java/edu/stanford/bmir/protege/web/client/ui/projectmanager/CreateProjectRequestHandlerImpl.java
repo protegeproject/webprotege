@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.NewProjectDialogController;
 
@@ -13,6 +15,15 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.home.NewProjectDialogCon
  */
 public class CreateProjectRequestHandlerImpl implements CreateProjectRequestHandler {
 
+    private final EventBus eventBus;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public CreateProjectRequestHandlerImpl(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
+    }
+
     @Override
     public void handleCreateProjectRequest() {
         // Code splitting
@@ -23,7 +34,7 @@ public class CreateProjectRequestHandlerImpl implements CreateProjectRequestHand
 
             @Override
             public void onSuccess() {
-                WebProtegeDialog.showDialog(new NewProjectDialogController());
+                WebProtegeDialog.showDialog(new NewProjectDialogController(eventBus, dispatchServiceManager));
             }
         });
     }

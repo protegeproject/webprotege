@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackInvoker;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -12,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,17 +27,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProjectManager {
 
-    private static final ProjectManager instance = new ProjectManager();
-
     private Map<ProjectId, Project> map = new HashMap<ProjectId, Project>();
 
+    private final EventBus eventBus;
 
-    public ProjectManager() {
+    private final DispatchServiceManager dispatchServiceManager;
 
-    }
-
-    public static ProjectManager get() {
-        return instance;
+    @Inject
+    public ProjectManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     public void loadProject(ProjectId projectId, final DispatchServiceCallback<Project> projectLoadedCallback) {
@@ -47,7 +48,7 @@ public class ProjectManager {
         }
 
         final LoadProjectAction action = new LoadProjectAction(checkNotNull(projectId));
-        DispatchServiceManager.get().execute(action, new DispatchServiceCallback<LoadProjectResult>() {
+        dispatchServiceManager.execute(action, new DispatchServiceCallback<LoadProjectResult>() {
             @Override
             public void handleSubmittedForExecution() {
                 projectLoadedCallback.handleSubmittedForExecution();
@@ -78,7 +79,7 @@ public class ProjectManager {
             throw new RuntimeException("Double registration of project: " + projectId);
         }
 
-        final Project project = new Project(projectDetails, userPermissions);
+        final Project project = new Project(projectDetails, userPermissions, eventBus, dispatchServiceManager);
         map.put(projectId, project);
         return project;
     }

@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
@@ -32,7 +34,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProjectPermissionManager implements HasDispose {
 
-    private ProjectId projectId;
+    private final ProjectId projectId;
+
+    private final EventBus eventBus;
+
+    private final DispatchServiceManager dispatchServiceManager;
 
     private Map<UserId, PermissionsSet> user2permissionMap = new HashMap<UserId, PermissionsSet>();
 
@@ -40,17 +46,18 @@ public class ProjectPermissionManager implements HasDispose {
 
     private HandlerRegistration loggedOutHandler;
 
-    public ProjectPermissionManager(ProjectId projectId) {
+    public ProjectPermissionManager(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
-
-        loggedInHandler = EventBusManager.getManager().registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
+        loggedInHandler = eventBus.addHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {
                 updateProjectPermissions();
             }
         });
 
-        loggedOutHandler = EventBusManager.getManager().registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
+        loggedOutHandler = eventBus.addHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
             @Override
             public void handleUserLoggedOut(UserLoggedOutEvent event) {
                 user2permissionMap.remove(event.getUserId());
@@ -90,7 +97,7 @@ public class ProjectPermissionManager implements HasDispose {
     public void setUserPermissions(UserId userId, PermissionsSet permissions) {
         PermissionsSet old = user2permissionMap.put(checkNotNull(userId), checkNotNull(permissions));
         if(old == null || old.equals(permissions)) {
-            EventBusManager.getManager().postEvent(new PermissionsChangedEvent(projectId));
+            eventBus.fireEventFromSource(new PermissionsChangedEvent(projectId), projectId);
         }
     }
 
@@ -104,7 +111,7 @@ public class ProjectPermissionManager implements HasDispose {
     }
 
     private void updatePermissionsForUserId(final UserId userId) {
-        DispatchServiceManager.get().execute(new GetPermissionsAction(projectId, userId), new DispatchServiceCallback<GetPermissionsResult>() {
+        dispatchServiceManager.execute(new GetPermissionsAction(projectId, userId), new DispatchServiceCallback<GetPermissionsResult>() {
             @Override
             public void handleSuccess(GetPermissionsResult result) {
                 setUserPermissions(userId, result.getPermissionsSet());

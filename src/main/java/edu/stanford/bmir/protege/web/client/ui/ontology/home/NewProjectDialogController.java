@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
@@ -25,10 +26,16 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
 
     public static final String TITLE = "Create project";
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private NewProjectInfoWidget widget = new NewProjectInfoWidget();
 
-    public NewProjectDialogController() {
+    private final EventBus eventBus;
+
+    public NewProjectDialogController(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         super(TITLE);
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
         this.widget = new NewProjectInfoWidget();
         for(WebProtegeDialogValidator validator : widget.getDialogValidators()) {
             addDialogValidator(validator);
@@ -47,7 +54,7 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
             throw new RuntimeException("User is guest.  Guest users are not allowed to create projects.");
         }
         NewProjectSettings newProjectSettings = new NewProjectSettings(userId, data.getProjectName(), data.getProjectDescription(), data.getProjectType());
-        DispatchServiceManager.get().execute(new CreateNewProjectAction(newProjectSettings), new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectResult>() {
+        dispatchServiceManager.execute(new CreateNewProjectAction(newProjectSettings), new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectResult>() {
             @Override
             public String getProgressDisplayTitle() {
                 return "Creating project";
@@ -60,20 +67,20 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
 
             @Override
             public void handleSuccess(CreateNewProjectResult result) {
-                EventBusManager.getManager().postEvent(new ProjectCreatedEvent(result.getProjectDetails()));
+                eventBus.fireEvent(new ProjectCreatedEvent(result.getProjectDetails()));
             }
 
             @Override
             public void handleExecutionException(Throwable cause) {
-                if(cause instanceof NotSignedInException) {
+                if (cause instanceof NotSignedInException) {
                     MessageBox.alert("You must be signed in to create new projects");
                 }
-                else if(cause instanceof ProjectAlreadyRegisteredException) {
+                else if (cause instanceof ProjectAlreadyRegisteredException) {
                     ProjectAlreadyRegisteredException ex = (ProjectAlreadyRegisteredException) cause;
                     String projectName = ex.getProjectId().getId();
                     MessageBox.alert("The project name " + projectName + " is already registered.  Please try a different name.");
                 }
-                else if(cause instanceof ProjectDocumentExistsException) {
+                else if (cause instanceof ProjectDocumentExistsException) {
                     ProjectDocumentExistsException ex = (ProjectDocumentExistsException) cause;
                     String projectName = ex.getProjectId().getId();
                     MessageBox.alert("There is already a non-empty project on the server with the id " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");

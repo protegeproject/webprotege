@@ -6,6 +6,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.Event;
+import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.ExtElement;
@@ -20,6 +21,7 @@ import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
@@ -72,16 +74,19 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     private final SelectionModel selectionModel;
 
+    private final EventBus eventBus;
+
     private List<HandlerRegistration> handlerRegistrations = new ArrayList<>();
 
-    public AbstractEntityPortlet(SelectionModel selectionModel, Project project) {
-        this(selectionModel, project, true);
+    public AbstractEntityPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
+        this(selectionModel, eventBus, project, true);
     }
 
-    public AbstractEntityPortlet(SelectionModel selectionModel, Project project, boolean initialize) {
+    public AbstractEntityPortlet(SelectionModel selectionModel, EventBus eventBus, Project project, boolean initialize) {
         super();
         this.project = project;
         this.selectionModel = selectionModel;
+        this.eventBus = eventBus;
 
         setTitle(""); // very important
         setLayout(new FitLayout());
@@ -150,6 +155,10 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
             }
         });
         handlerRegistrations.add(handlerRegistration);
+    }
+
+    public EventBus getEventBus() {
+        return eventBus;
     }
 
     public SelectionModel getSelectionModel() {
@@ -421,14 +430,12 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
      * @throws NullPointerException if any parameters are {@code null}.
      */
     public <T> void addProjectEventHandler(Event.Type<T> type, T handler) {
-        final EventBusManager manager = EventBusManager.getManager();
-        HandlerRegistration reg = manager.registerHandlerToProject(getProjectId(), checkNotNull(type), checkNotNull(handler));
+        HandlerRegistration reg = eventBus.addHandlerToSource(checkNotNull(type), getProjectId(), checkNotNull(handler));
         handlerRegistrations.add(reg);
     }
 
     public <T> void addApplicationEventHandler(Event.Type<T> type, T handler) {
-        EventBusManager manager = EventBusManager.getManager();
-        HandlerRegistration reg = manager.registerHandler(checkNotNull(type), checkNotNull(handler));
+        HandlerRegistration reg = eventBus.addHandler(checkNotNull(type), checkNotNull(handler));
         handlerRegistrations.add(reg);
     }
 

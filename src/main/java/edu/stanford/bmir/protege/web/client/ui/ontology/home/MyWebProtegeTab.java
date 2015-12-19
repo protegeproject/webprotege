@@ -1,8 +1,10 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
 import com.google.common.base.Optional;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.Panel;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerView;
@@ -17,8 +19,8 @@ public class MyWebProtegeTab extends Panel {
 
     private static final String DEFAULT_TAB_NAME = "WebProt\u00E9g\u00E9";
 
-    public MyWebProtegeTab(LoadProjectRequestHandler loadProjectRequestHandler) {
-        projectManagerPresenter = new ProjectManagerPresenter(loadProjectRequestHandler);
+    public MyWebProtegeTab(LoadProjectRequestHandler loadProjectRequestHandler, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        projectManagerPresenter = new ProjectManagerPresenter(loadProjectRequestHandler, eventBus, dispatchServiceManager);
         ProjectManagerView projectManagerView = projectManagerPresenter.getProjectManagerView();
         add(projectManagerView.getWidget());
         setMonitorResize(true);

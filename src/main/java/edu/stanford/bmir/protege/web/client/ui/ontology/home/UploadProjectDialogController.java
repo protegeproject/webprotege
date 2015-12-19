@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -30,12 +31,17 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
 
     private static final String TITLE = "Upload ontology";
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private UploadFileWidget uploadFileWidget = new UploadFileWidget();
 
     public static final String PROGRESS_DIALOG_TITLE = "Uploading project";
 
-    public UploadProjectDialogController() {
+    private final EventBus eventBus;
+
+    public UploadProjectDialogController(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         super(TITLE);
+        this.eventBus = eventBus;
         for (WebProtegeDialogValidator validator : uploadFileWidget.getDialogValidators()) {
             addDialogValidator(validator);
         }
@@ -53,6 +59,7 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
                 data.submit();
             }
         });
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
 
@@ -79,7 +86,7 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
         ProjectType projectType = data.getProjectSettings().getProjectType();
         NewProjectSettings newProjectSettings = new NewProjectSettings(userId, projectName, projectDescription, projectType, documentId);
 
-        DispatchServiceManager.get().execute(new CreateNewProjectAction(newProjectSettings), new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectResult>() {
+        dispatchServiceManager.execute(new CreateNewProjectAction(newProjectSettings), new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectResult>() {
             @Override
             public String getProgressDisplayTitle() {
                 return "Creating project";
@@ -94,15 +101,18 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
             public void handleExecutionException(Throwable caught) {
                 if (caught instanceof NotSignedInException) {
                     MessageBox.showAlert("You must be signed in to create new projects.", "Please sign in.");
-                } else if (caught instanceof ProjectAlreadyRegisteredException) {
+                }
+                else if (caught instanceof ProjectAlreadyRegisteredException) {
                     ProjectAlreadyRegisteredException ex = (ProjectAlreadyRegisteredException) caught;
                     String projectName = ex.getProjectId().getId();
                     MessageBox.showMessage("The project name " + projectName + " is already taken.  Please try a different name.");
-                } else if (caught instanceof ProjectDocumentExistsException) {
+                }
+                else if (caught instanceof ProjectDocumentExistsException) {
                     ProjectDocumentExistsException ex = (ProjectDocumentExistsException) caught;
                     String projectName = ex.getProjectId().getId();
                     MessageBox.showAlert("Project already exists", "There is already a non-empty project on the server which is named " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
-                } else {
+                }
+                else {
                     MessageBox.showAlert(caught.getMessage());
                 }
             }
@@ -110,7 +120,7 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
             @Override
             public void handleSuccess(CreateNewProjectResult result) {
                 MessageBox.showMessage("Project uploaded", "Your ontology was uploaded and the project was successfully created.");
-                EventBusManager.getManager().postEvent(new ProjectCreatedEvent(result.getProjectDetails()));
+                eventBus.fireEvent(new ProjectCreatedEvent(result.getProjectDetails()));
             }
         });
     }

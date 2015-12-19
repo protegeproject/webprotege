@@ -10,6 +10,7 @@ import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -22,8 +23,8 @@ import java.util.Map;
 
 public abstract class AbstractSelectionFieldWidget extends TextFieldWidget {
 
-    public AbstractSelectionFieldWidget(Project project) {
-        super(project);
+    public AbstractSelectionFieldWidget(Project project, DispatchServiceManager dispatchServiceManager) {
+        super(project, dispatchServiceManager);
     }
 
     @Override

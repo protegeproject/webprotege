@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.widgets.Button;
@@ -14,6 +15,7 @@ import com.gwtext.client.widgets.Window;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
@@ -44,8 +46,14 @@ public class ClassInstanceReferenceFieldWidget extends ReferenceFieldWidget {
     private String ontologyIdPropertyName;
     private String conceptIdPropertyName;
 
-    public ClassInstanceReferenceFieldWidget(Project project) {
-        super(project);
+    private final EventBus eventBus;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public ClassInstanceReferenceFieldWidget(Project project, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        super(project, eventBus, dispatchServiceManager);
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -275,7 +283,7 @@ public class ClassInstanceReferenceFieldWidget extends ReferenceFieldWidget {
     private Selectable getSelectable() {
         if (selectable == null) {
             SelectionModel selectionModel = SelectionModel.create();
-            ClassTreePortlet selectableTree = new ClassTreePortlet(selectionModel, getProject(), false, false, false, true, topClass);
+            ClassTreePortlet selectableTree = new ClassTreePortlet(selectionModel, eventBus, dispatchServiceManager, getProject(), false, false, false, true, topClass);
             selectableTree.setDraggable(false);
             selectableTree.setClosable(false);
             selectableTree.setCollapsible(false);

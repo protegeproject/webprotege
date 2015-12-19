@@ -14,9 +14,14 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class UploadAndMergeHandlerImpl implements UploadAndMergeHandler {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public UploadAndMergeHandlerImpl(DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = dispatchServiceManager;
+    }
+
     @Override
     public void handleUploadAndMerge() {
-        DispatchServiceManager dispatchServiceManager = DispatchServiceManager.get();
         MergeUploadedProjectWorkflow mergeWorkflow = new MergeUploadedProjectWorkflow(dispatchServiceManager);
         UploadAndMergeProjectWorkflow workflow = new UploadAndMergeProjectWorkflow(mergeWorkflow);
         Optional<ProjectId> currentProject = Application.get().getActiveProject();

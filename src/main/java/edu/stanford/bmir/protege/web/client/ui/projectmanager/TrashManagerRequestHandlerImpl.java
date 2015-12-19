@@ -14,13 +14,19 @@ import java.util.Collections;
  */
 public class TrashManagerRequestHandlerImpl implements TrashManagerRequestHandler {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public TrashManagerRequestHandlerImpl(DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = dispatchServiceManager;
+    }
+
     @Override
     public void handleMoveProjectToTrash(final ProjectId projectId) {
-        DispatchServiceManager.get().execute(new MoveProjectsToTrashAction(Collections.singleton(projectId)), new EmptySuccessWebProtegeCallback<MoveProjectsToTrashResult>());
+        dispatchServiceManager.execute(new MoveProjectsToTrashAction(Collections.singleton(projectId)), new EmptySuccessWebProtegeCallback<MoveProjectsToTrashResult>());
     }
 
     @Override
     public void handleRemoveProjectFromTrash(final ProjectId projectId) {
-        DispatchServiceManager.get().execute(new RemoveProjectsFromTrashAction(Collections.singleton(projectId)), new EmptySuccessWebProtegeCallback<RemoveProjectsFromTrashResult>());
+        dispatchServiceManager.execute(new RemoveProjectsFromTrashAction(Collections.singleton(projectId)), new EmptySuccessWebProtegeCallback<RemoveProjectsFromTrashResult>());
     }
 }

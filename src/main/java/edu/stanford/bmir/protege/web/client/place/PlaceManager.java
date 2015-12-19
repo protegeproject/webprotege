@@ -13,6 +13,8 @@ import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.inject.Inject;
+
 
 /**
  * Author: Matthew Horridge<br>
@@ -26,20 +28,13 @@ public class PlaceManager {
 
     private PlaceController placeController;
 
-    public PlaceManager() {
-        EventBus placeEventBus = new SimpleEventBus();
-        placeEventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
-            @Override
-            public void onPlaceChange(PlaceChangeEvent event) {
-                // Fire it on to the real event bus
-                EventBusManager.getManager().postEvent(event);
-            }
-        });
-        placeController = new PlaceController(placeEventBus);
+    @Inject
+    public PlaceManager(EventBus eventBus) {
+        placeController = new PlaceController(eventBus);
 
         WebProtegePlaceHistoryMapper placeHistoryMapper = GWT.create(WebProtegePlaceHistoryMapper.class);
         PlaceHistoryHandler placeHistoryHandler = new PlaceHistoryHandler(placeHistoryMapper);
-        placeHistoryHandler.register(placeController, placeEventBus, Place.NOWHERE);
+        placeHistoryHandler.register(placeController, eventBus, Place.NOWHERE);
         placeHistoryHandler.handleCurrentHistory();
     }
 

@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import com.gwtext.client.widgets.portal.Portlet;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
@@ -18,8 +20,14 @@ public class LayoutManager {
 
 	private final Project project;
 
-	public LayoutManager(Project project) {
+	private final EventBus eventBus;
+
+	private final DispatchServiceManager dispatchServiceManager;
+
+	public LayoutManager(Project project, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
 		this.project = project;
+		this.eventBus = eventBus;
+		this.dispatchServiceManager = dispatchServiceManager;
 	}
 	
 	public List<AbstractTab> createTabs(SelectionModel selectionModel, ProjectLayoutConfiguration projectLayoutConfig) {
@@ -37,7 +45,7 @@ public class LayoutManager {
 	}
 	
 	public AbstractTab createTab(SelectionModel selectionModel, String javaClassName) {
-		AbstractTab tab = UIFactory.createTab(selectionModel, project, javaClassName);
+		AbstractTab tab = UIFactory.createTab(selectionModel, eventBus, dispatchServiceManager, project, javaClassName);
 		return tab;
 	}
 	

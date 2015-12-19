@@ -10,6 +10,8 @@ import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -28,8 +30,11 @@ public class TextFieldMultiWidget extends AbstractPropertyWidget {
 
 	private Collection<EntityData> values;
 
-	public TextFieldMultiWidget(Project project) {
+	private final DispatchServiceManager dispatchServiceManager;
+
+	public TextFieldMultiWidget(Project project, DispatchServiceManager dispatchServiceManager) {
 		super(project);
+		this.dispatchServiceManager = dispatchServiceManager;
 		widgets = new ArrayList<PropertyWidget>();
 		}
 
@@ -126,7 +131,7 @@ public class TextFieldMultiWidget extends AbstractPropertyWidget {
 	}
 
 	private TextFieldWidget createInnerWidget() {
-	    TextFieldWidget widget = new TextFieldWidget(getProject());
+	    TextFieldWidget widget = new TextFieldWidget(getProject(), dispatchServiceManager);
 
 	    HashMap<String, Object> widgetConfig = new HashMap<String, Object>();
 	    widget.setWidgetConfiguration(widgetConfig); //TODO: check what else to put in the widget config

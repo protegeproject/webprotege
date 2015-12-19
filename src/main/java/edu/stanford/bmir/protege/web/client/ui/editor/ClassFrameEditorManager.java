@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateClassFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.*;
@@ -20,17 +21,19 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityDataConte
 
     private ProjectId projectId;
 
-    public ClassFrameEditorManager() {
+    private final DispatchServiceManager dispatchServiceManager;
 
+    public ClassFrameEditorManager(DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
     public EditorView<LabelledFrame<ClassFrame>> getView(OWLEntityDataContext context) {
         if (editor == null || !projectId.equals(context.getProjectId())) {
             projectId = context.getProjectId();
-            PropertyValueListEditor annotationsEditor = new PropertyValueListEditor(projectId);
+            PropertyValueListEditor annotationsEditor = new PropertyValueListEditor(projectId, dispatchServiceManager);
             annotationsEditor.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-            PropertyValueListEditor propertiesEditor = new PropertyValueListEditor(projectId);
+            PropertyValueListEditor propertiesEditor = new PropertyValueListEditor(projectId, dispatchServiceManager);
             propertiesEditor.setGrammar(PropertyValueGridGrammar.getClassGrammar());
             editor = new ClassFrameEditor(projectId, annotationsEditor, propertiesEditor);
         }

@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
@@ -26,11 +27,17 @@ public class SharingSettingsDialogController extends WebProtegeOKCancelDialogCon
 
     public static final String TITLE = "Sharing settings";
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private SharingSettingsPanel sharingSettingsPanel;
 
-    public SharingSettingsDialogController(ProjectId projectId) {
+    private final EventBus eventBus;
+
+    public SharingSettingsDialogController(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         super(TITLE);
-        sharingSettingsPanel = new SharingSettingsPanel(projectId);
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
+        sharingSettingsPanel = new SharingSettingsPanel(projectId, dispatchServiceManager);
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectSharingSettings>() {
             public void handleHide(ProjectSharingSettings data, WebProtegeDialogCloser closer) {
                 updateSharingSettingsOnServer(data);
@@ -40,10 +47,10 @@ public class SharingSettingsDialogController extends WebProtegeOKCancelDialogCon
     }
 
     private void updateSharingSettingsOnServer(final ProjectSharingSettings sharingSettings) {
-        DispatchServiceManager.get().execute(new SetProjectSharingSettingsAction(sharingSettings), new DispatchServiceCallback<SetProjectSharingSettingsResult>() {
+        dispatchServiceManager.execute(new SetProjectSharingSettingsAction(sharingSettings), new DispatchServiceCallback<SetProjectSharingSettingsResult>() {
             @Override
             public void handleSuccess(SetProjectSharingSettingsResult setProjectSharingSettingsResult) {
-                EventBusManager.getManager().postEvent(new PermissionsChangedEvent(sharingSettings.getProjectId()));
+                eventBus.fireEvent(new PermissionsChangedEvent(sharingSettings.getProjectId()));
             }
         });
     }

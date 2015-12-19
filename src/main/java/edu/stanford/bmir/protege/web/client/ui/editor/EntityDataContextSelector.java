@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import org.semanticweb.owlapi.model.EntityType;
 
+import java.io.DataInputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,13 +18,12 @@ public class EntityDataContextSelector implements EditorManagerSelector {
 
     private Map<EntityType<?>, EditorManager<?, ?>> map = new HashMap<EntityType<?>, EditorManager<?, ?>>();
 
-
-    public EntityDataContextSelector() {
-        map.put(EntityType.CLASS, new ClassFrameEditorManager());
-        map.put(EntityType.OBJECT_PROPERTY, new ObjectPropertyFrameEditorManager());
-        map.put(EntityType.DATA_PROPERTY, new DataPropertyFrameEditorManager());
-        map.put(EntityType.ANNOTATION_PROPERTY, new AnnotationPropertyFrameEditorManager());
-        map.put(EntityType.NAMED_INDIVIDUAL, new NamedIndividualFrameEditorManager());
+    public EntityDataContextSelector(DispatchServiceManager dispatchServiceManager) {
+        map.put(EntityType.CLASS, new ClassFrameEditorManager(dispatchServiceManager));
+        map.put(EntityType.OBJECT_PROPERTY, new ObjectPropertyFrameEditorManager(dispatchServiceManager));
+        map.put(EntityType.DATA_PROPERTY, new DataPropertyFrameEditorManager(dispatchServiceManager));
+        map.put(EntityType.ANNOTATION_PROPERTY, new AnnotationPropertyFrameEditorManager(dispatchServiceManager));
+        map.put(EntityType.NAMED_INDIVIDUAL, new NamedIndividualFrameEditorManager(dispatchServiceManager));
     }
 
     @Override

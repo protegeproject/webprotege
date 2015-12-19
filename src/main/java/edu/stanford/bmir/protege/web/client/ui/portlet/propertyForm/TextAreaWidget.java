@@ -2,13 +2,14 @@ package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
 import com.gwtext.client.widgets.form.TextArea;
 import com.gwtext.client.widgets.form.TextField;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 
 
 public class TextAreaWidget extends AbstractFieldWidget {
 
-	public TextAreaWidget(Project project) {
-		super(project);	
+	public TextAreaWidget(Project project, DispatchServiceManager dispatchServiceManager) {
+		super(project, dispatchServiceManager);
 	}
 	
 	 @Override

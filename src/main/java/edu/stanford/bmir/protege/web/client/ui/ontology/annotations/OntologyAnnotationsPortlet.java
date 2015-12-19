@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
@@ -34,14 +35,17 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
 
     private Optional<Set<OWLAnnotation>> lastSet = Optional.absent();
 
-    public OntologyAnnotationsPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public OntologyAnnotationsPortlet(SelectionModel selectionModel, EventBus eventBus,  DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
     public void initialize() {
         setTitle("Ontology annotations");
-        annotationsView = new AnnotationsViewImpl(getProjectId());
+        annotationsView = new AnnotationsViewImpl(getProjectId(), dispatchServiceManager);
         add(new ScrollPanel(annotationsView.asWidget()));
         annotationsView.addValueChangeHandler(new ValueChangeHandler<Optional<Set<OWLAnnotation>>>() {
             @Override
@@ -61,11 +65,11 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
     }
 
     private void updateView() {
-        DispatchServiceManager.get().execute(new GetOntologyAnnotationsAction(getProjectId()), new DispatchServiceCallback<RenderableGetObjectResult<Set<OWLAnnotation>>>() {
+        dispatchServiceManager.execute(new GetOntologyAnnotationsAction(getProjectId()), new DispatchServiceCallback<RenderableGetObjectResult<Set<OWLAnnotation>>>() {
             @Override
             public void handleSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
                 final Set<OWLAnnotation> object = result.getObject();
-                if(!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(result.getObject()))) {
+                if (!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(result.getObject()))) {
                     lastSet = Optional.of(object);
                     annotationsView.setValue(object);
                 }
@@ -102,7 +106,7 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
         }
         Optional<Set<OWLAnnotation>> annotations = annotationsView.getValue();
         if (annotations.isPresent() && lastSet.isPresent()) {
-            DispatchServiceManager.get().execute(new SetOntologyAnnotationsAction(getProjectId(), lastSet.get(), annotations.get()), new DispatchServiceCallback<SetOntologyAnnotationsResult>() {
+            dispatchServiceManager.execute(new SetOntologyAnnotationsAction(getProjectId(), lastSet.get(), annotations.get()), new DispatchServiceCallback<SetOntologyAnnotationsResult>() {
                 @Override
                 public void handleSuccess(SetOntologyAnnotationsResult result) {
 

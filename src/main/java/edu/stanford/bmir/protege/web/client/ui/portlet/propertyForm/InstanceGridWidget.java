@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.core.*;
 import com.gwtext.client.data.*;
@@ -30,6 +31,7 @@ import com.gwtext.client.widgets.menu.Menu;
 import com.gwtext.client.widgets.menu.MenuItem;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.model.PropertyValueUtil;
 import edu.stanford.bmir.protege.web.client.project.Project;
 
@@ -87,9 +89,14 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
 
     protected PropertyValueUtil propertyValueUtil;
 
+    private final EventBus eventBus;
 
-    public InstanceGridWidget(Project project) {
-        super(project);
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public InstanceGridWidget(Project project, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        super(project, dispatchServiceManager);
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
         propertyValueUtil = new PropertyValueUtil();
     }
 
@@ -280,7 +287,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
         String type = UIUtil.getStringConfigurationProperty(getWidgetConfiguration(), FormConstants.ONT_TYPE, null);
         if (type == null) { return;  } //TODO: not type specified, maybe use range of property
 
-        SelectionUtil.selectIndividuals(getProject(), UIUtil.createCollection(new EntityData(type)), true, false, new SelectionCallback() {
+        SelectionUtil.selectIndividuals(getProject(), eventBus, dispatchServiceManager, UIUtil.createCollection(new EntityData(type)), true, false, new SelectionCallback() {
             public void onSelect(Collection<EntityData> selection) {
                 addExistingValues(selection);
             }
@@ -563,7 +570,7 @@ public class InstanceGridWidget extends AbstractPropertyWidgetWithNotes {
     protected void onCommentColumnClicked(final int rowIndex) {
         Record record = store.getAt(rowIndex);
         if (record != null) {
-            if (UIUtil.confirmOperationAllowed(getProjectId())) {
+            if (UIUtil.confirmOperationAllowed(getProject())) {
                 onEditNotes(rowIndex);
             }
         }

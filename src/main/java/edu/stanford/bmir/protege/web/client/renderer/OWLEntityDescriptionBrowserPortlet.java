@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.renderer;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -21,14 +22,17 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
 
     private HTML html;
 
-    public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
         if(entityData.isPresent()) {
-            DispatchServiceManager.get().execute(new GetEntityRenderingAction(getProjectId(), entityData.get().getEntity()),
+            dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), entityData.get().getEntity()),
                                                  new DispatchServiceCallback<GetEntityRenderingResult>() {
                                                      @Override
                                                      public void handleSuccess(GetEntityRenderingResult result) {

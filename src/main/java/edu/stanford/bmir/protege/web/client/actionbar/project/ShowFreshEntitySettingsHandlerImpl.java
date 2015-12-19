@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsDialogController;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -25,8 +26,10 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettingsHandler {
 
-    public ShowFreshEntitySettingsHandlerImpl() {
+    private final DispatchServiceManager dispatchServiceManager;
 
+    public ShowFreshEntitySettingsHandlerImpl(DispatchServiceManager dispatchServiceManager) {
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
 
     private void getSettingsAndShowDialog(Optional<ProjectId> activeProject) {
         GetEntityCrudKitSettingsAction action = new GetEntityCrudKitSettingsAction(activeProject.get());
-        DispatchServiceManager.get().execute(action, new DispatchServiceCallbackWithProgressDisplay<GetEntityCrudKitSettingsResult>() {
+        dispatchServiceManager.execute(action, new DispatchServiceCallbackWithProgressDisplay<GetEntityCrudKitSettingsResult>() {
             @Override
             public String getProgressDisplayTitle() {
                 return "Retrieving settings";
@@ -112,7 +115,7 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
             return;
         }
         ProjectId projectId = activeProject.get();
-        DispatchServiceManager.get().execute(new SetEntityCrudKitSettingsAction(projectId, fromSettings, toSettings, iriPrefixUpdateStrategy), new DispatchServiceCallback<SetEntityCrudKitSettingsResult>() {
+        dispatchServiceManager.execute(new SetEntityCrudKitSettingsAction(projectId, fromSettings, toSettings, iriPrefixUpdateStrategy), new DispatchServiceCallback<SetEntityCrudKitSettingsResult>() {
             @Override
             public void handleSuccess(SetEntityCrudKitSettingsResult result) {
                 closer.hide();

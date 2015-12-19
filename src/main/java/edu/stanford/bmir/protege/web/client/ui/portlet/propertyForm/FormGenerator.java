@@ -1,11 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm;
 
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.Ext;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.form.FieldSet;
 import com.gwtext.client.widgets.layout.FormLayout;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -37,8 +40,14 @@ public class FormGenerator implements HasDispose {
     private Map<Panel, Collection<String>> tab2TypesAny;
     //TODO: treat types_all
 
-    public FormGenerator(Project project, Map<String, Object> formConfiguration) {
+    private final EventBus eventBus;
+
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public FormGenerator(Project project, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Map<String, Object> formConfiguration) {
         this.project = project;
+        this.eventBus = eventBus;
+        this.dispatchServiceManager = dispatchServiceManager;
         this.formConf = formConfiguration;
         this.widgets = new ArrayList<PropertyWidget>();
         tab2PropWidgets = new LinkedHashMap<Panel, Collection<PropertyWidget>>();
@@ -213,32 +222,32 @@ public class FormGenerator implements HasDispose {
 
 
     protected PropertyWidget createTextField(Map<String, Object> conf, String property) {
-        TextFieldWidget textFieldWidget = new TextFieldWidget(project);
+        TextFieldWidget textFieldWidget = new TextFieldWidget(project, dispatchServiceManager);
         textFieldWidget.setup(conf, new PropertyEntityData(property));
         return textFieldWidget;
     }
 
     protected ClassSelectionFieldWidget createClassSelectionField(Map<String, Object> conf, String property) {
-        ClassSelectionFieldWidget widget = new ClassSelectionFieldWidget(project);
+        ClassSelectionFieldWidget widget = new ClassSelectionFieldWidget(project, dispatchServiceManager);
         widget.setup(conf, new PropertyEntityData(property));
         return widget;
     }
 
     protected PropertySelectionFieldWidget createPropertySelectionField(Map<String, Object> conf, String property) {
-        PropertySelectionFieldWidget widget = new PropertySelectionFieldWidget(project);
+        PropertySelectionFieldWidget widget = new PropertySelectionFieldWidget(project, dispatchServiceManager);
         widget.setup(conf, new PropertyEntityData(property));
         return widget;
     }
 
     protected PropertyWidget createTextArea(Map<String, Object> conf, String property) {
-        TextAreaWidget textareaWidget = new TextAreaWidget(project);
+        TextAreaWidget textareaWidget = new TextAreaWidget(project, dispatchServiceManager);
         textareaWidget.setup(conf, new PropertyEntityData(property));
         return textareaWidget;
     }
 
     protected PropertyWidget createComboBox(Map<String, Object> conf, String property) {
         //FIXME Get rid of this special treatment for combobox initialization
-        ComboBoxWidget comboBoxWidget = new ComboBoxWidget(project);
+        ComboBoxWidget comboBoxWidget = new ComboBoxWidget(project, dispatchServiceManager);
         final PropertyEntityData propertyEntityData = new PropertyEntityData(property);
         propertyEntityData.setValueType(ValueType.Instance);
         comboBoxWidget.setup(conf, propertyEntityData);
@@ -246,7 +255,7 @@ public class FormGenerator implements HasDispose {
     }
 
     protected PropertyWidget createHtmlEditor(Map<String, Object> conf, String property) {
-        HTMLEditorWidget htmlEditorWidget = new HTMLEditorWidget(project);
+        HTMLEditorWidget htmlEditorWidget = new HTMLEditorWidget(project, dispatchServiceManager);
         htmlEditorWidget.setup(conf, new PropertyEntityData(property));
         return htmlEditorWidget;
     }
@@ -273,13 +282,13 @@ public class FormGenerator implements HasDispose {
     }
 
     private PropertyWidget createMultiTextField(Map<String, Object> conf, String property) {
-        TextFieldMultiWidget widget = new TextFieldMultiWidget(project);
+        TextFieldMultiWidget widget = new TextFieldMultiWidget(project, dispatchServiceManager);
         widget.setup(conf, new PropertyEntityData(property));
         return widget;
     }
 
     private PropertyWidget createInstanceTextField(Map<String, Object> conf, String property) {
-    	InstanceTextFieldWidget widget = new InstanceTextFieldWidget(project);
+    	InstanceTextFieldWidget widget = new InstanceTextFieldWidget(project, dispatchServiceManager);
         final PropertyEntityData propertyEntityData = new PropertyEntityData(property);
         propertyEntityData.setValueType(ValueType.Instance);
         widget.setup(conf, propertyEntityData);
@@ -287,19 +296,19 @@ public class FormGenerator implements HasDispose {
     }
 
     private PropertyWidget createInstanceReferenceField(Map<String, Object> conf, String property) {
-    	ClassInstanceReferenceFieldWidget widget = new ClassInstanceReferenceFieldWidget(project);
+    	ClassInstanceReferenceFieldWidget widget = new ClassInstanceReferenceFieldWidget(project, eventBus, dispatchServiceManager);
     	widget.setup(conf, new PropertyEntityData(property));
     	return widget;
     }
 
     protected PropertyWidget createGrid(Map<String, Object> conf, String prop) {
-        InstanceGridWidget widget = new InstanceGridWidget(project);
+        InstanceGridWidget widget = new InstanceGridWidget(project, eventBus, dispatchServiceManager);
         widget.setup(conf, new PropertyEntityData(prop));
         return widget;
     }
 
     protected PropertyWidget createExternalReference(Map<String, Object> conf, String prop) {
-        InstanceGridWidget widget = new ReferenceFieldWidget(project);
+        InstanceGridWidget widget = new ReferenceFieldWidget(project, eventBus, dispatchServiceManager);
         widget.setup(conf, new PropertyEntityData(prop));
         return widget;
     }
@@ -317,7 +326,7 @@ public class FormGenerator implements HasDispose {
     }
 
     private PropertyWidget createInstanceComboBox(Map<String, Object> conf, String prop) {
-        InstanceComboBox widget = new InstanceComboBox(project);
+        InstanceComboBox widget = new InstanceComboBox(project, eventBus, dispatchServiceManager);
         widget.setup(conf, new PropertyEntityData(prop));
         return widget;
     }

@@ -5,8 +5,13 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.banner.BannerPresenter;
 import edu.stanford.bmir.protege.web.client.banner.BannerViewImpl;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.project.ProjectManager;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -25,9 +30,14 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
     @UiField(provided = true)
     protected BannerViewImpl bannerView;
 
-    public WorkspaceViewImpl() {
-        BannerPresenter bannerPresenter = new BannerPresenter();
+    @UiField(provided = true)
+    protected GwtExtAdapterPanel adapterPanel;
+
+    @Inject
+    public WorkspaceViewImpl(EventBus eventBus, ProjectManager projectManager, DispatchServiceManager dispatchServiceManager) {
+        BannerPresenter bannerPresenter = new BannerPresenter(eventBus, dispatchServiceManager);
         bannerView = (BannerViewImpl) bannerPresenter.getView();
+        adapterPanel = new GwtExtAdapterPanel(eventBus, dispatchServiceManager, projectManager);
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

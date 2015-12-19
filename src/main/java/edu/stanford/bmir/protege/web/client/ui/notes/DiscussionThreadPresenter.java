@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -33,6 +34,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DiscussionThreadPresenter implements HasDispose {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private DiscussionThreadView view;
 
     private OWLEntity currentTarget;
@@ -41,11 +44,13 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private Set<NoteId> currentNoteIds = new HashSet<NoteId>();
 
-    private HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
+    private final HandlerRegistrationManager handlerRegistrationManager;
 
 
-    public DiscussionThreadPresenter(ProjectId projectId) {
-        view = new DiscussionThreadViewImpl();
+    public DiscussionThreadPresenter(ProjectId projectId,  EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        view = new DiscussionThreadViewImpl(eventBus, dispatchServiceManager);
+        this.dispatchServiceManager = dispatchServiceManager;
+        handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
         this.projectId = checkNotNull(projectId);
 
         handlerRegistrationManager.registerHandlerToProject(projectId, NotePostedEvent.TYPE, new NotePostedHandler() {
@@ -83,14 +88,14 @@ public class DiscussionThreadPresenter implements HasDispose {
         view.removeAllNotes();
         currentTarget = null;
         view.setPostNewTopicEnabled(false);
-        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget)));
+        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget), dispatchServiceManager));
     }
 
     public void setTarget(OWLEntity target) {
         currentTarget = target;
         UserId userId = Application.get().getUserId();
         view.setPostNewTopicEnabled(currentTarget != null && !userId.isGuest());
-        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget)));
+        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget), dispatchServiceManager));
         reload();
     }
 
@@ -99,7 +104,7 @@ public class DiscussionThreadPresenter implements HasDispose {
         if(currentTarget == null) {
             return;
         }
-        DispatchServiceManager.get().execute(new GetDiscussionThreadAction(projectId, currentTarget), new DispatchServiceCallback<GetDiscussionThreadResult>() {
+        dispatchServiceManager.execute(new GetDiscussionThreadAction(projectId, currentTarget), new DispatchServiceCallback<GetDiscussionThreadResult>() {
 
             @Override
             public void handleSuccess(GetDiscussionThreadResult result) {
@@ -142,7 +147,7 @@ public class DiscussionThreadPresenter implements HasDispose {
 
 
     private void appendNote(Note note, int depth, DiscussionThread discussionThread) {
-        NoteContainerPresenter noteContainerPresenter = new NoteContainerPresenter(new NoteContainerViewImpl());
+        NoteContainerPresenter noteContainerPresenter = new NoteContainerPresenter(new NoteContainerViewImpl(dispatchServiceManager));
         noteContainerPresenter.setNote(note, discussionThread);
         view.addNote(noteContainerPresenter, depth);
         for(Note childNote : discussionThread.getReplies(note.getNoteId())) {

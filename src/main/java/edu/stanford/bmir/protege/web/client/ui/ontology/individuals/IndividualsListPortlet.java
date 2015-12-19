@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.Toolbar;
@@ -18,6 +19,7 @@ import edu.stanford.bmir.protege.web.client.action.CreateHandler;
 import edu.stanford.bmir.protege.web.client.action.DeleteHandler;
 import edu.stanford.bmir.protege.web.client.action.NullCreateHandler;
 import edu.stanford.bmir.protege.web.client.action.NullDeleteHandler;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesList;
 import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesListImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
@@ -73,8 +75,11 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
 
     private EntitiesList<OWLNamedIndividualData> individualsList;
 
-    public IndividualsListPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    private final DispatchServiceManager dispatchServiceManager;
+
+    public IndividualsListPortlet(SelectionModel selectionModel,  EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -96,7 +101,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
         }
         deleteHandler = new NullDeleteHandler();
         createHandler = new NullCreateHandler();
-        presenter = new IndividualsListViewPresenter(getProjectId(), this);
+        presenter = new IndividualsListViewPresenter(getProjectId(), this, dispatchServiceManager);
     }
 
     @Override

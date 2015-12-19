@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.watches;
 
 import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
@@ -13,10 +14,13 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private ChangeListView changeListView;
 
-    public WatchedEntitiesPortlet(SelectionModel selectionModel, Project project) {
-        super(selectionModel, project);
+    public WatchedEntitiesPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
+        super(selectionModel, eventBus, project);
+        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
@@ -43,7 +47,7 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     protected void onRefresh() {
-        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, DispatchServiceManager.get(), false);
+        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager, false);
         presenter.setChangesForWatches(getProjectId(), getUserId());
         setTitle(generateTitle());
     }

@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.client.events;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.event.shared.Event;
+import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
@@ -24,6 +26,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class EventPollingManager {
 
+    private final DispatchServiceManager dispatchServiceManager;
+
     private int pollingPeriodInMS;
 
     private Timer pollingTimer;
@@ -32,12 +36,14 @@ public class EventPollingManager {
 
     private ProjectId projectId;
 
+    private EventBus eventBus;
 
-    public static EventPollingManager get(int pollingPeriodInMS, ProjectId projectId) {
-        return new EventPollingManager(pollingPeriodInMS, projectId);
+    public static EventPollingManager get(int pollingPeriodInMS, ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        return new EventPollingManager(pollingPeriodInMS, projectId, eventBus, dispatchServiceManager);
     }
 
-    private EventPollingManager(int pollingPeriodInMS, ProjectId projectId) {
+    private EventPollingManager(int pollingPeriodInMS, ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+        this.eventBus = eventBus;
         if(pollingPeriodInMS < 1) {
             throw new IllegalArgumentException("pollingPeriodInMS must be greater than 0");
         }
@@ -50,6 +56,8 @@ public class EventPollingManager {
                 pollForProjectEvents();
             }
         };
+        this.dispatchServiceManager = dispatchServiceManager;
+
     }
 
     public void start() {
@@ -64,7 +72,7 @@ public class EventPollingManager {
     public void pollForProjectEvents() {
         GWT.log("[Event Polling Manager] Polling for project events for " + projectId + " from " + nextTag);
         UserId userId = Application.get().getUserId();
-        DispatchServiceManager.get().execute(new GetProjectEventsAction(nextTag, projectId, userId), new DispatchServiceCallback<GetProjectEventsResult>() {
+        dispatchServiceManager.execute(new GetProjectEventsAction(nextTag, projectId, userId), new DispatchServiceCallback<GetProjectEventsResult>() {
 
             @Override
             public void handleSuccess(GetProjectEventsResult result) {
@@ -89,8 +97,13 @@ public class EventPollingManager {
             GWT.log("[Event Polling Manager] Dispatching events from polling manager...");
             for(Event<?> event : eventList.getEvents()) {
                 GWT.log("[Event Polling Manager] Event: " + event.toString());
+                if (event.getSource() != null) {
+                    eventBus.fireEventFromSource(event, event.getSource());
+                }
+                else {
+                    eventBus.fireEvent(event);
+                }
             }
-            EventBusManager.getManager().postEvents(eventList.getEvents());
         }
     }
 

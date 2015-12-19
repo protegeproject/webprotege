@@ -9,6 +9,7 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.project.Project;
 
+import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -175,7 +176,7 @@ public abstract class AbstractPropertyWidget implements PropertyWidget {
     }
     
     public boolean isWriteOperationAllowed(boolean showUserAlerts) {
-        if (!UIUtil.checkOperationAllowed(getProjectId(), showUserAlerts)) {
+        if (!UIUtil.checkOperationAllowed(getProject(), showUserAlerts)) {
             return false;
         }
         if (isReadOnly()) {

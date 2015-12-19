@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.inject.ApplicationClientInjector;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
@@ -21,7 +22,7 @@ public class PrimitiveDataListEditor extends ValueListEditorImpl<OWLPrimitiveDat
         super(new ValueEditorFactory<OWLPrimitiveData>() {
             @Override
             public ValueEditor<OWLPrimitiveData> createEditor() {
-                PrimitiveDataEditorImpl editor = PrimitiveDataEditorGinjector.INSTANCE.getEditor();
+                PrimitiveDataEditorImpl editor = ApplicationClientInjector.instance.getPrimitiveDataEditor();
                 editor.setAllowedTypes(Arrays.asList(allowedTypes));
                 editor.setFreshEntitiesSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
                 return editor;
