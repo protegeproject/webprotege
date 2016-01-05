@@ -53,8 +53,11 @@ public abstract class AbstractTab extends Portal {
 
     private final ProjectManager projectManager;
 
-    public AbstractTab(final SelectionModel selectionModel, ProjectId projectId, ProjectManager projectManager) {
+    private String tabId;
+
+    public AbstractTab(final String tabId, final SelectionModel selectionModel, ProjectId projectId, ProjectManager projectManager) {
         super();
+        this.tabId = tabId;
         this.projectId = projectId;
         this.projectManager = projectManager;
         this.portal = new Portal();
@@ -360,7 +363,7 @@ public abstract class AbstractTab extends Portal {
         column.setWidth((float) 1.0);
         colList.add(column);
         tabConfiguration.setColumns(colList);
-        tabConfiguration.setName(this.getClass().getName());
+        tabConfiguration.setName(tabId);
         return tabConfiguration;
     }
 

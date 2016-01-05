@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
+import com.google.inject.assistedinject.Assisted;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -23,7 +24,7 @@ import javax.inject.Inject;
 public class UserDefinedTab extends AbstractTab {
 
 	@Inject
-	public UserDefinedTab(SelectionModel selectionModel, ProjectId projectId, ProjectManager projectManager) {
-		super(selectionModel, projectId, projectManager);
+	public UserDefinedTab(@Assisted String tabId, SelectionModel selectionModel, ProjectId projectId, ProjectManager projectManager) {
+		super(tabId, selectionModel, projectId, projectManager);
 	}
 }

@@ -38,7 +38,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
-import edu.stanford.bmir.protege.web.client.ui.tab.TabId;
+import edu.stanford.bmir.protege.web.client.ui.tab.BuiltInTabId;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
@@ -294,8 +294,8 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
 
         Menu addTabMenu = new Menu();
-        for (TabId tabId : TabId.values()) {
-            CheckItem item = new CheckItem(tabId.getShortName(), enabledTabs.contains(shortToLongTabNameMap.get(tabId.getId())));
+        for (BuiltInTabId builtInTabId : BuiltInTabId.values()) {
+            CheckItem item = new CheckItem(builtInTabId.getShortName(), enabledTabs.contains(shortToLongTabNameMap.get(builtInTabId.getId())));
             addTabMenu.addItem(item);
             item.addListener(new CheckItemListenerAdapter() {
                 @Override
