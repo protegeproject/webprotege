@@ -208,8 +208,8 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             @Override
             public void onSuccess() {
                 for (ProjectDisplayImpl ontologyTabPanel : projectId2ProjectPanelMap.values()) {
-                    Project project = ontologyTabPanel.getProject();
-                    projectManager.unloadProject(project.getProjectId());
+                    ProjectId projectId = ontologyTabPanel.getProjectId();
+                    projectManager.unloadProject(projectId);
                     hideTabStripItem(ontologyTabPanel);
                     ontologyTabPanel.hide();
                     ontologyTabPanel.destroy();
