@@ -33,9 +33,6 @@ import java.util.*;
  * Abstract class that should be extended by all tabs that can be added to the
  * main UI of WebProtege.
  * <p/>
- * The tab has a reference to all the portlets that are currently part of the
- * tab and a reference to the controlling portlet -> the portlet that provides
- * the selection for the other portlets.
  *
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
@@ -358,19 +355,6 @@ public abstract class AbstractTab extends Portal {
             }
         }
         return null;
-    }
-
-    protected EntityPortlet getDefaultControllingPortlet() {
-        // take the first portlet from the first column
-        final PortalColumn portalColumn = columnToPortletsMap.keySet().iterator().next();
-        if (portalColumn == null) {
-            return null;
-        }
-        final List<EntityPortlet> portlets = columnToPortletsMap.get(portalColumn);
-        if (portlets.isEmpty()) {
-            return null;
-        }
-        return portlets.iterator().next();
     }
 
     /**
