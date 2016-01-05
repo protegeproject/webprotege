@@ -178,11 +178,6 @@ public abstract class AbstractTab extends Portal {
         }
     }
 
-    public PortalColumn getPortalColumnAt(final int index) {
-        final TabColumnConfiguration config = getTabColumnConfigurationAt(index);
-        return config == null ? null : tabColumnConfigToColumn.get(config);
-    }
-
     public TabColumnConfiguration getTabColumnConfigurationAt(final int index) {
         final Collection<TabColumnConfiguration> tabCols = tabColumnConfigToColumn.keySet();
         if (tabCols.size() < index) {
@@ -344,19 +339,6 @@ public abstract class AbstractTab extends Portal {
         return portlet;
     }
 
-    public EntityPortlet getPortletByClassName(final String javaClassName) {
-        for (final PortalColumn portalColumn2 : columnToPortletsMap.keySet()) {
-            final PortalColumn portalColumn = portalColumn2;
-            final List<EntityPortlet> portlets = columnToPortletsMap.get(portalColumn);
-            for (final EntityPortlet entityPortlet : portlets) {
-                if (entityPortlet.getClass().getName().equals(javaClassName)) {
-                    return entityPortlet;
-                }
-            }
-        }
-        return null;
-    }
-
     /**
      * Overwrite this method to provide a default tab configuration for a tab.
      * For example, the {@link ClassesTab} may set up in the default
@@ -401,11 +383,4 @@ public abstract class AbstractTab extends Portal {
         final String tabHeaderClass = tabConfiguration != null ? tabConfiguration.getHeaderCssClass() : null;
         return tabHeaderClass == null || tabHeaderClass.trim().isEmpty() ? null : tabHeaderClass;
     }
-    
-    public void setHeaderClass(final String className) {
-        if (tabConfiguration != null) {
-            tabConfiguration.setHeaderCssClass(className);
-        }
-    }
-
 }
