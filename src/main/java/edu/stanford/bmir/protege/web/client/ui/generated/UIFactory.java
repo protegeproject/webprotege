@@ -61,8 +61,7 @@ public class UIFactory {
 
 
     @Inject
-    public UIFactory(Provider<ClassesTab> classesTabProvider, Provider<PropertiesTab> propertiesTabProvider, Provider<IndividualsTab> individualsTabProvider, Provider<UserDefinedTab> userDefinedTabProvider, Provider<ClassTreePortlet> classTreePortletProvider, Provider<ImportsTreePortlet> importsTreePortletProvider, Provider<IndividualsListPortlet> individualsListPortletProvider, Provider<MetricsPortlet> metricsPortletProvider, Provider<PropertiesTreePortlet> propertiesTreePortletProvider, Provider<ChangeSummaryPortlet> changeSummaryPortletProvider, Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider, Provider<ChangesPortlet> changesPortletProvider, Provider<OBOTermRelationshipPortlet> oboTermRelationshipPortletProvider, Provider<OBOTermDefinitionPortlet> oboTermDefinitionPortletProvider, Provider<OBOTermIdEditorPortlet> oboTermIdEditorPortletProvider, Provider<OBOTermSynonymsPortlet> oboTermSynonymsPortletProvider, Provider<OBOTermCrossProductPortlet> oboTermCrossProductPortletProvider, Provider<OBOTermXRefsEditorPortlet> oboTermXRefsEditorPortletProvider, Provider<RevisionsPortlet> revisionsPortletProvider, Provider<OntologyIdPortlet> ontologyIdPortletProvider, Provider<OntologyAnnotationsPortlet> ontologyAnnotationsPortletProvider, Provider<ProjectFeedPortlet> projectFeedPortletProvider, Provider<DiscussionThreadPortlet> discussionThreadPortletProvider, Provider<EditorPortlet> editorPortletProvider, Provider<UsagePortlet> usagePortletProvider, Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider, Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider) {
-        this.classesTabProvider = classesTabProvider;
+    public UIFactory(Provider<PropertiesTab> propertiesTabProvider, Provider<IndividualsTab> individualsTabProvider, Provider<UserDefinedTab> userDefinedTabProvider, Provider<ClassTreePortlet> classTreePortletProvider, Provider<ImportsTreePortlet> importsTreePortletProvider, Provider<IndividualsListPortlet> individualsListPortletProvider, Provider<MetricsPortlet> metricsPortletProvider, Provider<PropertiesTreePortlet> propertiesTreePortletProvider, Provider<ChangeSummaryPortlet> changeSummaryPortletProvider, Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider, Provider<ChangesPortlet> changesPortletProvider, Provider<OBOTermRelationshipPortlet> oboTermRelationshipPortletProvider, Provider<OBOTermDefinitionPortlet> oboTermDefinitionPortletProvider, Provider<OBOTermIdEditorPortlet> oboTermIdEditorPortletProvider, Provider<OBOTermSynonymsPortlet> oboTermSynonymsPortletProvider, Provider<OBOTermCrossProductPortlet> oboTermCrossProductPortletProvider, Provider<OBOTermXRefsEditorPortlet> oboTermXRefsEditorPortletProvider, Provider<RevisionsPortlet> revisionsPortletProvider, Provider<OntologyIdPortlet> ontologyIdPortletProvider, Provider<OntologyAnnotationsPortlet> ontologyAnnotationsPortletProvider, Provider<ProjectFeedPortlet> projectFeedPortletProvider, Provider<DiscussionThreadPortlet> discussionThreadPortletProvider, Provider<EditorPortlet> editorPortletProvider, Provider<UsagePortlet> usagePortletProvider, Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider, Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider) {
         this.propertiesTabProvider = propertiesTabProvider;
         this.individualsTabProvider = individualsTabProvider;
         this.userDefinedTabProvider = userDefinedTabProvider;
@@ -91,8 +90,6 @@ public class UIFactory {
         this.entityDescriptionEditorPortletProvider = entityDescriptionEditorPortletProvider;
     }
 
-    private final Provider<ClassesTab> classesTabProvider;
-
     private final Provider<PropertiesTab> propertiesTabProvider;
 
     private final Provider<IndividualsTab> individualsTabProvider;
@@ -103,10 +100,7 @@ public class UIFactory {
 
     public AbstractTab createTab(String tabJavaClassName) {
         AbstractTab abstractTab;
-        if (tabJavaClassName.equals(ClassesTab.class.getName())) {
-            abstractTab = classesTabProvider.get();
-        }
-        else if (tabJavaClassName.equals(PropertiesTab.class.getName())) {
+        if (tabJavaClassName.equals(PropertiesTab.class.getName())) {
             abstractTab = propertiesTabProvider.get();
         }
         else if (tabJavaClassName.equals(IndividualsTab.class.getName())) {
@@ -266,7 +260,7 @@ public class UIFactory {
          * OtherTerminologiesTab.class.getName(),
          *
          */
-        String[] tabs = {ClassesTab.class.getName(), PropertiesTab.class.getName(), IndividualsTab.class.getName(),
+        String[] tabs = {PropertiesTab.class.getName(), IndividualsTab.class.getName(),
                 MetadataTab.class.getName()};
         return Arrays.asList(tabs);
     }
