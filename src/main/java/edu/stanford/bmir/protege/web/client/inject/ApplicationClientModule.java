@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.inject;
 
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.inject.client.AbstractGinModule;
+import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
@@ -32,6 +33,8 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsV
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListView;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl;
+import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
+import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTabFactory;
 import edu.stanford.bmir.protege.web.client.workspace.WorkspaceView;
 import edu.stanford.bmir.protege.web.client.workspace.WorkspaceViewImpl;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
@@ -49,6 +52,10 @@ public class ApplicationClientModule extends AbstractGinModule {
 
     @Override
     protected void configure() {
+
+        install(new GinFactoryModuleBuilder()
+                .implement(UserDefinedTab.class, UserDefinedTab.class)
+                .build(UserDefinedTabFactory.class));
 
         bind(ProjectId.class).toProvider(ProjectIdProvider.class);
         bind(Project.class).toProvider(ProjectProvider.class);

@@ -5,7 +5,7 @@ package edu.stanford.bmir.protege.web.client.ui.tab;
  * Stanford Center for Biomedical Informatics Research
  * 04/01/16
  */
-public enum TabId {
+public enum BuiltInTabId {
 
     CLASSES_TAB("edu.stanford.bmir.protege.web.client.ui.ontology.classes", "Classes"),
 
@@ -21,7 +21,7 @@ public enum TabId {
 
     private final String shortName;
 
-    TabId(String tabId, String shortName) {
+    BuiltInTabId(String tabId, String shortName) {
         this.id = tabId;
         this.shortName = shortName;
     }
