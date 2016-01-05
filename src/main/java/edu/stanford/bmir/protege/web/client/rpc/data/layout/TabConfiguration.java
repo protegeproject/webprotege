@@ -16,9 +16,7 @@ public class TabConfiguration extends GenericConfiguration implements Serializab
 
     private List<TabColumnConfiguration> columns = new ArrayList<TabColumnConfiguration>();
 
-    private PortletConfiguration controllingPortlet;
-
-	public TabConfiguration() {		
+	public TabConfiguration() {
 	}
 
 	public String getName() {
@@ -44,12 +42,6 @@ public class TabConfiguration extends GenericConfiguration implements Serializab
 	}
 	public void setColumns(List<TabColumnConfiguration> columns) {
 		this.columns = columns;
-	}
-	public PortletConfiguration getControllingPortlet() {
-		return controllingPortlet;
-	}
-	public void setControllingPortlet(PortletConfiguration controllingPortlet) {
-		this.controllingPortlet = controllingPortlet;
 	}
 
 	//convenience accessor methods to read values of commonly expected properties

@@ -308,7 +308,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     }
 
     protected Panel createGeneralConfigPanel() {
-        final Checkbox isControllingPortletCheckbox = new Checkbox("Set as controlling portlet (the controlling portlet sets the selection for the entire tab)");
 
         Panel generalPanel = new AbstractValidatableTab() {
             @Override
@@ -324,19 +323,9 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         generalPanel.setTitle("General");
         generalPanel.setPaddings(10);
 
-        generalPanel.add(isControllingPortletCheckbox, new AnchorLayoutData("100%"));
         return generalPanel;
     }
 
-    public void updateIcon(boolean isControlling) {
-        setIconCls(isControlling ? "ctrl_portlet" : null);
-        if (isRendered() && !isControlling) {
-            ExtElement header = this.getHeader();
-            if (header != null) {
-                header.removeClass("x-panel-icon");
-            }
-        }
-    }
 
     protected void onClose() {
         commitChanges();
