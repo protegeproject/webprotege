@@ -2,6 +2,9 @@ package edu.stanford.bmir.protege.web.client.ui.tab;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.event.PanelListener;
@@ -16,7 +19,9 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 
 import java.util.*;
 
-public abstract class AbstractTab extends Portal implements PortletContainer {
+public abstract class AbstractTab implements PortletContainer, IsWidget {
+
+    private final Portal baseContainer = new Portal();
 
     private final Portal portal = new Portal();
 
@@ -40,15 +45,15 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
     public AbstractTab(final TabId tabId) {
         super();
         this.tabId = tabId;
-        addListener(new PanelListenerAdapter(){
+        baseContainer.addListener(new PanelListenerAdapter() {
             @Override
             public void onActivate(Panel panel) {
                 activatePortlets();
             }
         });
-        setLayout(new FitLayout());
-        setHideBorders(true);
-        add(portal);
+        baseContainer.setLayout(new FitLayout());
+        baseContainer.setHideBorders(true);
+        baseContainer.add(portal);
     }
 
     public TabId getTabId() {
@@ -119,10 +124,23 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
     }
 
     public String getLabel() {
-        return getTitle();
+        return baseContainer.getTitle();
     }
 
     public void setLabel(final String label) {
-        setTitle(label);
+        baseContainer.setTitle(label);
+    }
+
+    public void setClosable(boolean closable) {
+        baseContainer.setClosable(closable);
+    }
+
+    public boolean isVisible() {
+        return baseContainer.isVisible();
+    }
+
+    @Override
+    public Widget asWidget() {
+        return baseContainer;
     }
 }
