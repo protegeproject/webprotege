@@ -2,10 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.generated;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.metrics.MetricsPortlet;
-import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.renderer.OWLEntityDescriptionBrowserPortlet;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet;
 import edu.stanford.bmir.protege.web.client.ui.frame.OWLEntityDescriptionEditorPortlet;
@@ -14,13 +11,12 @@ import edu.stanford.bmir.protege.web.client.ui.obo.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.OntologyAnnotationsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet;
 import edu.stanford.bmir.protege.web.client.change.ChangesPortlet;
+import edu.stanford.bmir.protege.web.client.ui.tab.Tabs;
 import edu.stanford.bmir.protege.web.client.watches.WatchedEntitiesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.id.OntologyIdPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.ImportsTreePortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.MetadataTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.revisions.RevisionsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
@@ -60,8 +56,7 @@ public class UIFactory {
 
 
     @Inject
-    public UIFactory(Provider<IndividualsTab> individualsTabProvider, Provider<UserDefinedTab> userDefinedTabProvider, Provider<ClassTreePortlet> classTreePortletProvider, Provider<ImportsTreePortlet> importsTreePortletProvider, Provider<IndividualsListPortlet> individualsListPortletProvider, Provider<MetricsPortlet> metricsPortletProvider, Provider<PropertiesTreePortlet> propertiesTreePortletProvider, Provider<ChangeSummaryPortlet> changeSummaryPortletProvider, Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider, Provider<ChangesPortlet> changesPortletProvider, Provider<OBOTermRelationshipPortlet> oboTermRelationshipPortletProvider, Provider<OBOTermDefinitionPortlet> oboTermDefinitionPortletProvider, Provider<OBOTermIdEditorPortlet> oboTermIdEditorPortletProvider, Provider<OBOTermSynonymsPortlet> oboTermSynonymsPortletProvider, Provider<OBOTermCrossProductPortlet> oboTermCrossProductPortletProvider, Provider<OBOTermXRefsEditorPortlet> oboTermXRefsEditorPortletProvider, Provider<RevisionsPortlet> revisionsPortletProvider, Provider<OntologyIdPortlet> ontologyIdPortletProvider, Provider<OntologyAnnotationsPortlet> ontologyAnnotationsPortletProvider, Provider<ProjectFeedPortlet> projectFeedPortletProvider, Provider<DiscussionThreadPortlet> discussionThreadPortletProvider, Provider<EditorPortlet> editorPortletProvider, Provider<UsagePortlet> usagePortletProvider, Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider, Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider) {
-        this.individualsTabProvider = individualsTabProvider;
+    public UIFactory(Provider<UserDefinedTab> userDefinedTabProvider, Provider<ClassTreePortlet> classTreePortletProvider, Provider<ImportsTreePortlet> importsTreePortletProvider, Provider<IndividualsListPortlet> individualsListPortletProvider, Provider<MetricsPortlet> metricsPortletProvider, Provider<PropertiesTreePortlet> propertiesTreePortletProvider, Provider<ChangeSummaryPortlet> changeSummaryPortletProvider, Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider, Provider<ChangesPortlet> changesPortletProvider, Provider<OBOTermRelationshipPortlet> oboTermRelationshipPortletProvider, Provider<OBOTermDefinitionPortlet> oboTermDefinitionPortletProvider, Provider<OBOTermIdEditorPortlet> oboTermIdEditorPortletProvider, Provider<OBOTermSynonymsPortlet> oboTermSynonymsPortletProvider, Provider<OBOTermCrossProductPortlet> oboTermCrossProductPortletProvider, Provider<OBOTermXRefsEditorPortlet> oboTermXRefsEditorPortletProvider, Provider<RevisionsPortlet> revisionsPortletProvider, Provider<OntologyIdPortlet> ontologyIdPortletProvider, Provider<OntologyAnnotationsPortlet> ontologyAnnotationsPortletProvider, Provider<ProjectFeedPortlet> projectFeedPortletProvider, Provider<DiscussionThreadPortlet> discussionThreadPortletProvider, Provider<EditorPortlet> editorPortletProvider, Provider<UsagePortlet> usagePortletProvider, Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider, Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider) {
         this.userDefinedTabProvider = userDefinedTabProvider;
         this.classTreePortletProvider = classTreePortletProvider;
         this.importsTreePortletProvider = importsTreePortletProvider;
@@ -88,25 +83,12 @@ public class UIFactory {
         this.entityDescriptionEditorPortletProvider = entityDescriptionEditorPortletProvider;
     }
 
-    private final Provider<IndividualsTab> individualsTabProvider;
-
     private final Provider<UserDefinedTab> userDefinedTabProvider;
 
 
 
     public AbstractTab createTab(String tabJavaClassName) {
-        AbstractTab abstractTab;
-        if (tabJavaClassName.equals(IndividualsTab.class.getName())) {
-            abstractTab = individualsTabProvider.get();
-        }
-        else if (tabJavaClassName.equals(UserDefinedTab.class.getName())) {
-            abstractTab = userDefinedTabProvider.get();
-        }
-        else {
-            GWT.log("[UIFactory] Unknown Tab: " + tabJavaClassName);
-            abstractTab = userDefinedTabProvider.get();
-        }
-        return abstractTab;
+        return userDefinedTabProvider.get();
     }
 
 
@@ -246,14 +228,6 @@ public class UIFactory {
         return entityPortlet;
     }
 
-    //TODO: taking out ManageHierarchyTab.class.getName() - must be de-icd-ezed
-    public static List<String> getAvailableTabNames() {
-   
-        String[] tabs = {IndividualsTab.class.getName(),
-                MetadataTab.class.getName()};
-        return Arrays.asList(tabs);
-    }
-
     public static List<String> getAvailablePortletNames() {
         /*
          * Removed portlets:
@@ -287,18 +261,6 @@ public class UIFactory {
         return portletsList;
     }
 
-    /*
-     * Generic utils
-     */
-
-    public static List<String> getAvailableTabShortNames() {
-        List<String> tabs = getAvailableTabNames();
-        List<String> shortNames = new ArrayList<String>();
-        for (String tab : tabs) {
-            shortNames.add(tab.substring(tab.lastIndexOf(".") + 1));
-        }
-        return shortNames;
-    }
 
     /**
      * @return A map from the short names of the portlets to the full java class
@@ -352,21 +314,6 @@ public class UIFactory {
 
     private static boolean isNextCharacterLowerCase(String s, int currentIndex) {
         return currentIndex < s.length() - 1 && Character.isLowerCase(s.charAt(currentIndex + 1));
-    }
-
-
-    /**
-     * @return A map from the short names of tabs (label) to the full java class
-     * name of the tabs.
-     */
-    public static Map<String, String> getAvailableTabNameMap() {
-        List<String> tabs = getAvailableTabNames();
-        Collections.sort(tabs);
-        Map<String, String> map = new LinkedHashMap<String, String>();
-        for (String tab : tabs) {
-            map.put(tab.substring(tab.lastIndexOf(".") + 1), tab);
-        }
-        return map;
     }
 
 }
