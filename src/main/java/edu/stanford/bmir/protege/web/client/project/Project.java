@@ -4,7 +4,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -17,8 +16,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Project implements HasProjectId, HasDispose {
 
     private final ProjectDetails projectDetails;
-
-    private ProjectLayoutConfiguration projectLayoutConfiguration;
 
     private EventPollingManager eventPollingManager;
 
@@ -44,14 +41,6 @@ public class Project implements HasProjectId, HasDispose {
 
     public ProjectDetails getProjectDetails() {
         return projectDetails;
-    }
-
-    public void setProjectLayoutConfiguration(ProjectLayoutConfiguration projectLayoutConfiguration) {
-        this.projectLayoutConfiguration = projectLayoutConfiguration;
-    }
-
-    public ProjectLayoutConfiguration getProjectLayoutConfiguration() {
-        return projectLayoutConfiguration;
     }
 
     public void dispose() {

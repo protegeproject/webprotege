@@ -52,12 +52,6 @@ import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * The main user interface for displaying one ontology.
- *
- * @author Jennifer Vendetti <vendetti@stanford.edu>
- * @author Tania Tudorache <tudorache@stanford.edu>
- */
 public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     public static final String SHOW_ONTOLOGY_TOOLBAR = "showOntologyToolbar";
@@ -83,6 +77,8 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     private final LoggedInUserProvider loggedInUserProvider;
 
     private final PlaceController placeController;
+
+    private Optional<ProjectLayoutConfiguration> projectLayoutConfiguration = Optional.absent();
 
 
     @Inject
@@ -150,13 +146,13 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
     }
 
-    private void getProjectConfiguration() {
-        GWT.log("[ProjectDisplayImpl] Getting the project configuration");
+    public void loadProjectDisplay() {
+        GWT.log("[ProjectDisplayImpl] Loading project display for project " + projectId);
         dispatchServiceManager.execute(new GetUIConfigurationAction(projectId),
                 new DispatchServiceCallbackWithProgressDisplay<GetUIConfigurationResult>() {
                     @Override
                     public void handleSuccess(GetUIConfigurationResult result) {
-                        getProject().setProjectLayoutConfiguration(result.getConfiguration());
+                        projectLayoutConfiguration = Optional.of(result.getConfiguration());
                         createOntolgyForm();
                         displayCurrentPlace();
                     }
@@ -178,16 +174,13 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
                 });
     }
 
-    public void loadProjectDisplay() {
-        getProjectConfiguration();
-    }
-
 
     private void createOntolgyForm() {
-        Project project = projectManager.getProject(projectId).get();
-        ProjectLayoutConfiguration conf = project.getProjectLayoutConfiguration();
+        if(!projectLayoutConfiguration.isPresent()) {
+            throw new RuntimeException("ProjectLayoutConfiguration has not be loaded.");
+        }
         List<AbstractTab> tabs = new ArrayList<>();
-        for(TabConfiguration tabConf : conf.getTabs()) {
+        for(TabConfiguration tabConf : projectLayoutConfiguration.get().getTabs()) {
             AbstractTab tab = WebProtegeClientInjector.getUiFactory(projectId).createTab(new TabId(tabConf.getName()));
             TabBuilder tabBuilder = new TabBuilder(projectId, tab, tabConf);
             tabBuilder.build();
@@ -368,12 +361,16 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     private void saveProjectConfiguration() {
+        if(!projectLayoutConfiguration.isPresent()) {
+            throw new RuntimeException("Cannot save non-existant project configuration");
+        }
         UserId userId = loggedInUserProvider.getCurrentUserId();
         if (userId.isGuest()) {
             MessageBox.showAlert("You are not signed in", "To save the layout, you need to sign in first.");
             return;
         }
-        ProjectLayoutConfiguration config = getProject().getProjectLayoutConfiguration();
+        // TODO: Generate a fresh configuration!
+        ProjectLayoutConfiguration config = projectLayoutConfiguration.get();
         config.setProjectId(projectId);
         dispatchServiceManager.execute(new SetUIConfigurationAction(projectId, config),
                 new DispatchServiceCallbackWithProgressDisplay<SetUIConfigurationResult>() {
