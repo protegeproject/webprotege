@@ -170,26 +170,17 @@ public class ProjectDisplayContainerPanel extends TabPanel {
 
 
     private void respondToActiveProjectChangedEvent(final ActiveProjectChangedEvent event) {
-        GWT.runAsync(new RunAsyncCallback() {
-            @Override
-            public void onFailure(Throwable reason) {
+        Optional<ProjectId> projectId = event.getProjectId();
+        if (!projectId.isPresent()) {
+            // Go home
+            setActiveTab(0);
+        }
+        else {
+            ProjectDisplayImpl display = projectId2ProjectPanelMap.get(projectId.get());
+            if (display != null) {
+                setActiveTab(display.getLabel());
             }
-
-            @Override
-            public void onSuccess() {
-                Optional<ProjectId> projectId = event.getProjectId();
-                if (!projectId.isPresent()) {
-                    // Go home
-                    setActiveTab(0);
-                }
-                else {
-                    ProjectDisplayImpl display = projectId2ProjectPanelMap.get(projectId.get());
-                    if (display != null) {
-                        setActiveTab(display.getLabel());
-                    }
-                }
-            }
-        });
+        }
     }
 
     private void displayCurrentPlace(Place place) {
