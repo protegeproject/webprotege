@@ -48,14 +48,11 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
 
     private final SelectionModel selectionModel;
 
-    private final ProjectId projectId;
-
     private TabId tabId;
 
-    public AbstractTab(final TabId tabId, final SelectionModel selectionModel, ProjectId projectId, ProjectManager projectManager) {
+    public AbstractTab(final TabId tabId, final SelectionModel selectionModel) {
         super();
         this.tabId = tabId;
-        this.projectId = projectId;
         this.selectionModel = selectionModel;
         addListener(new PanelListenerAdapter(){
             @Override
