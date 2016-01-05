@@ -226,7 +226,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         add(tab);
     }
 
-    protected void createToolbarButtons() {
+    private void createToolbarButtons() {
         Toolbar toolbar = getTopToolbar();
         toolbar.addFill();
         toolbar.addButton(getAddPortletButton());
@@ -237,7 +237,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
 
-    protected ToolbarMenuButton getAddPortletButton() {
+    private ToolbarMenuButton getAddPortletButton() {
         shortToLongPortletNameMap = UIFactory.getAvailablePortletNameMap();
 
         Menu addPortletMenu = new Menu();
@@ -257,7 +257,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         return addPortletButton;
     }
 
-    protected void onPortletAdded(final String javaClassName) {
+    private void onPortletAdded(final String javaClassName) {
         AbstractTab activeTab = getActiveOntologyTab();
         // TODO: Inject the UI Factory
         UIFactory uiFactory = WebProtegeClientInjector.getUiFactory(projectId);
@@ -269,7 +269,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         doLayout();
     }
 
-    protected ToolbarMenuButton getAddTabButton() {
+    private ToolbarMenuButton getAddTabButton() {
         shortToLongTabNameMap = new HashMap<>();
 
         List<String> enabledTabs = new ArrayList<String>();
@@ -310,7 +310,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         return addTabButton;
     }
 
-    protected ToolbarButton getSaveConfigurationButton() {
+    private ToolbarButton getSaveConfigurationButton() {
         ToolbarButton saveConfigButton = new ToolbarButton(null, new ButtonListenerAdapter() {
             @Override
             public void onClick(Button button, EventObject e) {
@@ -331,7 +331,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         return saveConfigButton;
     }
 
-    protected void onUserDefinedTabAdded() {
+    private void onUserDefinedTabAdded() {
         final Window window = new Window();
         window.setTitle("Create your own tab");
         window.setClosable(true);
@@ -362,7 +362,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         // doLayout();
     }
 
-    public AbstractTab getTabById(TabId tabId) {
+    private AbstractTab getTabById(TabId tabId) {
         for (AbstractTab tab : tabs) {
             if (tab.getTabId().equals(tabId)) {
                 return tab;
@@ -371,12 +371,12 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         return null;
     }
 
-    public AbstractTab getActiveOntologyTab() {
+    private AbstractTab getActiveOntologyTab() {
         Panel panel = getActiveTab();
         return (panel instanceof AbstractTab) ? (AbstractTab) panel : null;
     }
 
-    protected void saveProjectConfiguration() {
+    private void saveProjectConfiguration() {
         UserId userId = loggedInUserProvider.getCurrentUserId();
         if (userId.isGuest()) {
             MessageBox.showAlert("You are not signed in", "To save the layout, you need to sign in first.");
