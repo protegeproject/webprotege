@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
-import com.google.common.base.*;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.gwtext.client.widgets.Component;
@@ -13,7 +12,6 @@ import com.gwtext.client.widgets.portal.Portal;
 import com.gwtext.client.widgets.portal.PortalColumn;
 import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
@@ -21,7 +19,6 @@ import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfigurati
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.LayoutManager;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
-import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassesTab;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

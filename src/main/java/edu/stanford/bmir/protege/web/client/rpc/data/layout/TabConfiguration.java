@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.layout;
 
+import com.gwtext.client.widgets.portal.Portlet;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,6 +17,8 @@ public class TabConfiguration extends GenericConfiguration implements Serializab
     private String headerCssClass = null;
 
     private List<TabColumnConfiguration> columns = new ArrayList<TabColumnConfiguration>();
+
+	private PortletConfiguration controllingPortlet;
 
 	public TabConfiguration() {
 	}
@@ -42,6 +46,15 @@ public class TabConfiguration extends GenericConfiguration implements Serializab
 	}
 	public void setColumns(List<TabColumnConfiguration> columns) {
 		this.columns = columns;
+	}
+
+	@Deprecated
+	public PortletConfiguration getControllingPortlet() {
+		return controllingPortlet;
+	}
+	@Deprecated
+	public void setControllingPortlet(PortletConfiguration controllingPortlet) {
+		this.controllingPortlet = controllingPortlet;
 	}
 
 	//convenience accessor methods to read values of commonly expected properties
