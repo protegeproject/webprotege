@@ -136,7 +136,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
             ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
             Optional<TabName> tabId = projectViewPlace.getTabId();
             if(tabId.isPresent()) {
-                selectTabWithName(tabId.get().getTabName());
+                selectTabWithName(tabId.get());
             }
 
             Optional<OWLEntity> selection = projectViewPlace.getEntity();
@@ -207,7 +207,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
             throw new RuntimeException("Tab already present");
         }
         tabs.add(tab);
-        add(tab);
+        add(tab.asWidget());
     }
 
     private void createToolbarButtons() {
@@ -331,9 +331,9 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
             return;
         }
         tabs.remove(tab);
-        hideTabStripItem(tab);
-        remove(tab);
-        tab.hide();
+        hideTabStripItem((Panel) tab.asWidget());
+        remove(tab.asWidget());
+//        tab.hide();
         doLayout();
     }
 
@@ -357,7 +357,12 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private AbstractTab getActiveOntologyTab() {
         Panel panel = getActiveTab();
-        return (panel instanceof AbstractTab) ? (AbstractTab) panel : null;
+        for(AbstractTab tab : tabs) {
+            if(tab.asWidget() == panel) {
+                return tab;
+            }
+        }
+        return null;
     }
 
     private void saveProjectConfiguration() {
@@ -458,7 +463,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
                     AbstractTab tab = createTab();
                     addTab(tab);
                     CreateUserDefinedTabForm.this.parent.close();
-                    activate(tab.getId());
+                    activate(tabs.size() - 1);
                 }
             });
 
@@ -534,14 +539,14 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         displayPlace(place);
     }
 
-    private void selectTabWithName(String tabNameToSelect) {
+    private void selectTabWithName(TabName tabName) {
+        int index = 0;
         for (AbstractTab tab : tabs) {
-            String tabName = tab.getClass().getName();
-            tabName = tabName.substring(tabName.lastIndexOf(".") + 1);
-            if (tabName.equals(tabNameToSelect)) {
-                activate(tab.getId());
+            if (tab.getLabel().equals(tabName.getTabName())) {
+                activate(index);
                 doLayout();
             }
+            index++;
         }
     }
 }
