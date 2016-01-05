@@ -33,30 +33,27 @@ public class LayoutManager {
 		this.layoutConfiguration = layoutConfiguration;
 	}
 
-	public List<AbstractTab> createTabs(ProjectLayoutConfiguration projectLayoutConfig) {
-		List<AbstractTab> tabs = new ArrayList<AbstractTab>();
-		List<TabConfiguration> tabConfigs = projectLayoutConfig.getTabs();
-		for (TabConfiguration tabConfig : tabConfigs) {
-			String tabName = tabConfig.getName();
-			AbstractTab tab = createTab(tabName);
-			if (tab != null) {
-				setupTab(tab, tabConfig);
-				tabs.add(tab);
-			}
-		}
-		return tabs;
-	}
+//	public List<AbstractTab> createTabs(ProjectLayoutConfiguration projectLayoutConfig) {
+//		List<AbstractTab> tabs = new ArrayList<AbstractTab>();
+//		List<TabConfiguration> tabConfigs = projectLayoutConfig.getTabs();
+//		for (TabConfiguration tabConfig : tabConfigs) {
+//			String tabName = tabConfig.getName();
+//			AbstractTab tab = createTab(tabName);
+//			if (tab != null) {
+//				tabs.add(tab);
+//			}
+//		}
+//		return tabs;
+//	}
+//
+//	public AbstractTab createTab(String javaClassName) {
+//		GWT.log("[LayoutManager] Creating tab: " + javaClassName);
+//		UIFactory uiFactory = WebProtegeClientInjector.getUiFactory(projectId);
+//		return uiFactory.createTab(javaClassName);
+//	}
 	
-	public AbstractTab createTab(String javaClassName) {
-		GWT.log("[LayoutManager] Creating tab: " + javaClassName);
-		UIFactory uiFactory = WebProtegeClientInjector.getUiFactory(projectId);
-		return uiFactory.createTab(javaClassName);
-	}
-	
-	public void setupTab(AbstractTab tab, TabConfiguration tabConfig) {
-		tab.setTabConfiguration(tabConfig);
-		tab.setup();
-	}
+//	public void setupTab(AbstractTab tab, TabConfiguration tabConfig) {
+//	}
 	
 //	public EntityPortlet createPortlet(PortletConfiguration portletConfig) {
 //		if (portletConfig == null) {return null;}
@@ -84,19 +81,18 @@ public class LayoutManager {
 		return portletConfiguration;
 	}
 	
-	public void removeTab(AbstractTab tab) {
-		TabConfiguration tabConfig = tab.getTabConfiguration();
-		if (tabConfig == null) { return; }
-		layoutConfiguration.removeTab(tabConfig);
-	}
-	
-	public AbstractTab addTab(String javaClassName) {
-		AbstractTab tab = createTab(javaClassName);
-		if (tab == null) { return null; }
-		setupTab(tab, tab.getDefaultTabConfiguration());
-		layoutConfiguration.addTab(tab.getTabConfiguration());
-		return tab;
-	}
+//	public void removeTab(AbstractTab tab) {
+//		TabConfiguration tabConfig = tab.getTabConfiguration();
+//		if (tabConfig == null) { return; }
+//		layoutConfiguration.removeTab(tabConfig);
+//	}
+//
+//	public AbstractTab addTab(String javaClassName) {
+//		AbstractTab tab = createTab(javaClassName);
+//		if (tab == null) { return null; }
+//		layoutConfiguration.addTab(tab.getTabConfiguration());
+//		return tab;
+//	}
 
 	
 }

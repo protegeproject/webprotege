@@ -39,6 +39,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.tab.BuiltInTabId;
+import edu.stanford.bmir.protege.web.client.ui.tab.TabBuilder;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
@@ -195,7 +196,14 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private void createOntolgyForm() {
         Project project = projectManager.getProject(projectId).get();
-        List<AbstractTab> tabs = project.getLayoutManager().createTabs(project.getProjectLayoutConfiguration());
+        ProjectLayoutConfiguration conf = project.getProjectLayoutConfiguration();
+        List<AbstractTab> tabs = new ArrayList<>();
+        for(TabConfiguration tabConf : conf.getTabs()) {
+            AbstractTab tab = WebProtegeClientInjector.getUiFactory(projectId).createTab(tabConf.getName());
+            TabBuilder tabBuilder = new TabBuilder(projectId, tab, tabConf);
+            tabBuilder.build();
+            tabs.add(tab);
+        }
         GWT.log("[ProjectDisplayImpl] Creating the ontology form from " + tabs.size() + " tabs");
         for (AbstractTab tab : tabs) {
             GWT.log("[ProjectDisplayImpl] Attempting to add tab " + tab.getLabel());
@@ -281,7 +289,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         if (portlet == null) {
             return;
         }
-        activeTab.addPortlet(portlet, activeTab.getColumnCount() - 1);
+        activeTab.addPortletToColumn(portlet, activeTab.getColumnCount() - 1);
         doLayout();
     }
 
@@ -357,12 +365,11 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         window.show();
     }
 
-    protected void onTabRemoved(String javaClassName) {
+    private void onTabRemoved(String javaClassName) {
         AbstractTab tab = getTabByClassName(javaClassName);
         if (tab == null) {
             return;
         }
-        getProject().getLayoutManager().removeTab(tab);
         tabs.remove(tab);
         hideTabStripItem(tab);
         remove(tab);
@@ -370,11 +377,11 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         doLayout();
     }
 
-    protected void onTabAdded(String javaClassName) {
-        AbstractTab tab = getProject().getLayoutManager().addTab(javaClassName);
-        if (tab == null) {
-            return;
-        }
+    private void onTabAdded(String javaClassName) {
+        AbstractTab tab = WebProtegeClientInjector.getUiFactory(projectId).createTab(javaClassName);
+        // TODO: This should load the config somehow!
+        TabBuilder tabBuilder = new TabBuilder(projectId, tab, new TabConfiguration());
+        tabBuilder.build();
         addTab(tab);
         // doLayout();
     }
@@ -529,8 +536,8 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
             AbstractTab tab = uiFactory.createTab(UserDefinedTab.class.getName());
             final Project project = getProject();
             TabConfiguration userDefinedTabConfiguration = getUserDefinedTabConfiguration();
-            project.getLayoutManager().setupTab(tab, userDefinedTabConfiguration);
-            project.getProjectLayoutConfiguration().addTab(userDefinedTabConfiguration);
+            TabBuilder tabBuilder = new TabBuilder(projectId, tab, userDefinedTabConfiguration);
+            tabBuilder.build();
             return tab;
         }
 
