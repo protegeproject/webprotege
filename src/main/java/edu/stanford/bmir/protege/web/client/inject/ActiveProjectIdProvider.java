@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.project;
+package edu.stanford.bmir.protege.web.client.inject;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;

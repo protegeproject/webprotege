@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.actionbar.project;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -10,9 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -22,7 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/08/2013
  */
-public class ProjectBarImpl extends Composite implements ProjectActionBar {
+public class ProjectActionBarImpl extends Composite implements ProjectActionBar {
 
     private ShowShareSettingsHandler showShareSettingsHandler = new ShowShareSettingsHandler() {
         @Override
@@ -50,13 +47,13 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
     };
 
 
-    interface ProjectBarImplUiBinder extends UiBinder<HTMLPanel, ProjectBarImpl> {
+    interface ProjectBarImplUiBinder extends UiBinder<HTMLPanel, ProjectActionBarImpl> {
 
     }
 
     private static ProjectBarImplUiBinder ourUiBinder = GWT.create(ProjectBarImplUiBinder.class);
 
-    public ProjectBarImpl() {
+    public ProjectActionBarImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
@@ -97,11 +94,6 @@ public class ProjectBarImpl extends Composite implements ProjectActionBar {
         });
 
         popupMenu.showRelativeTo(projectSettingsItem);
-    }
-
-    @Override
-    public void setProjectId(Optional<ProjectId> projectId) {
-        setVisible(projectId.isPresent() && Application.get().isLoggedInUserOwnerOfActiveProject());
     }
 
     @Override
