@@ -5,7 +5,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
@@ -22,7 +21,6 @@ import com.gwtext.client.widgets.menu.Item;
 import com.gwtext.client.widgets.menu.Menu;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import com.gwtext.client.widgets.menu.event.CheckItemListenerAdapter;
-import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -74,7 +72,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private Map<String, TabId> shortToLongTabNameMap;
 
-    private List<AbstractTab> tabs;
+    private final List<AbstractTab> tabs = new ArrayList<>();
 
     private final SelectionModel selectionModel;
 
@@ -99,8 +97,6 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         setTitle(getLabel());
         setTopToolbar(new Toolbar()); //TODO: make it configurable
         setEnableTabScroll(true);
-        buildUI();
-
 
         //TODO: use this to remove tab from config
         addListener(new TabPanelListenerAdapter() {
@@ -154,10 +150,6 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
     }
 
-    public void buildUI() {
-        tabs = new ArrayList<>();
-    }
-
     private void getProjectConfiguration() {
         GWT.log("[ProjectDisplayImpl] Getting the project configuration");
         dispatchServiceManager.execute(new GetUIConfigurationAction(projectId),
@@ -166,8 +158,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
                     public void handleSuccess(GetUIConfigurationResult result) {
                         getProject().setProjectLayoutConfiguration(result.getConfiguration());
                         createOntolgyForm();
-                        doLayout();
-                        setInitialSelection();
+                        displayCurrentPlace();
                     }
 
                     @Override
@@ -187,7 +178,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
                 });
     }
 
-    public void layoutProject() {
+    public void loadProjectDisplay() {
         getProjectConfiguration();
     }
 
@@ -541,20 +532,9 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
     }
 
-    private void setInitialSelection() {
+    private void displayCurrentPlace() {
         Place place = placeController.getWhere();
         displayPlace(place);
-
-//        final String ontologyName = com.google.gwt.user.client.Window.Location.getParameter("ontology");
-//        if (ontologyName == null || !projectId.getId().equals(ontologyName)) {
-//            return;
-//        }
-//
-//        final String tabNameToSelect = com.google.gwt.user.client.Window.Location.getParameter("tab");
-//        if (tabNameToSelect == null) {
-//            return;
-//        }
-
     }
 
     private void selectTabWithName(String tabNameToSelect) {

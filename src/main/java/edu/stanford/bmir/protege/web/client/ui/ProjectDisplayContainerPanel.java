@@ -52,8 +52,6 @@ import java.util.Set;
  */
 public class ProjectDisplayContainerPanel extends TabPanel {
 
-    private MyWebProtegeTab myWebProTab;
-
     private final LinkedHashMap<ProjectId, ProjectDisplayImpl> projectId2ProjectPanelMap = new LinkedHashMap<>();
 
     private final Set<ProjectId> currentlyLoadingProjects = new HashSet<>();
@@ -242,7 +240,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             }
         };
 
-        myWebProTab = new MyWebProtegeTab(new ProjectManagerPresenter(
+        MyWebProtegeTab myWebProTab = new MyWebProtegeTab(new ProjectManagerPresenter(
                 loadProjectRequestHandler,
                 eventBus,
                 dispatchServiceManager,
@@ -334,6 +332,6 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         add(projectPanel);
         activate(projectPanel.getId());
         setActiveTab(projectPanel.getId());
-        projectPanel.layoutProject();
+        projectPanel.loadProjectDisplay();
     }
 }
