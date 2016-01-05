@@ -7,7 +7,9 @@ package edu.stanford.bmir.protege.web.client.ui.tab;
  */
 public enum TabNames {
 
-    CLASSES_TAB("edu.stanford.bmir.protege.web.client.ui.ontology.classes");
+    CLASSES_TAB("edu.stanford.bmir.protege.web.client.ui.ontology.classes"),
+
+    PROPERTIES_TAB("edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTab");
 
     private final String tabName;
 
