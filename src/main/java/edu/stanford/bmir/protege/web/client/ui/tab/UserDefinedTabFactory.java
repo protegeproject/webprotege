@@ -7,5 +7,5 @@ package edu.stanford.bmir.protege.web.client.ui.tab;
  */
 public interface UserDefinedTabFactory {
 
-    UserDefinedTab createUserDefinedTab(String tabId);
+    UserDefinedTab createUserDefinedTab(TabId tabId);
 }

@@ -1,30 +1,27 @@
-package edu.stanford.bmir.protege.web.shared.place;
-
-import com.google.common.base.Objects;
+package edu.stanford.bmir.protege.web.client.ui.tab;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 14/12/15
+ * 04/01/16
  */
 public class TabId {
 
-    private final String tabName;
+    private final String tabId;
 
-    public TabId(String tabName) {
-        this.tabName = checkNotNull(tabName);
+    public TabId(String tabId) {
+        this.tabId = tabId;
     }
 
-    public String getTabName() {
-        return tabName;
+    public String getTabId() {
+        return tabId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(tabName);
+        return tabId.hashCode();
     }
 
     @Override
@@ -36,13 +33,14 @@ public class TabId {
             return false;
         }
         TabId other = (TabId) obj;
-        return this.tabName.equals(other.tabName);
+        return this.tabId.equals(other.tabId);
     }
+
 
     @Override
     public String toString() {
         return toStringHelper("TabId")
-                .addValue(tabName)
+                .addValue(tabId)
                 .toString();
     }
 }

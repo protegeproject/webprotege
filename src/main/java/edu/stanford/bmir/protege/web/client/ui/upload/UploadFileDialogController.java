@@ -10,7 +10,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButto
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
-import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 
 /**
