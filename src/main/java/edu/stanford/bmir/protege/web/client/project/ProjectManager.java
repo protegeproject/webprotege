@@ -65,7 +65,7 @@ public class ProjectManager {
 
             @Override
             public void handleSuccess(LoadProjectResult result) {
-                Project project = registerProject(result.getUserId(), result.getRequestingUserProjectPermissionSet(), result.getProjectDetails());
+                Project project = registerProject(result.getProjectDetails());
                 new DispatchServiceCallbackInvoker<>(projectLoadedCallback).onSuccess(project);
             }
         });
@@ -77,13 +77,13 @@ public class ProjectManager {
     }
 
 
-    private Project registerProject(final UserId userId, final PermissionsSet userPermissions, final ProjectDetails projectDetails) {
+    private Project registerProject(final ProjectDetails projectDetails) {
         final ProjectId projectId = projectDetails.getProjectId();
         if(map.containsKey(projectId)) {
             throw new RuntimeException("Double registration of project: " + projectId);
         }
 
-        final Project project = new Project(projectDetails, userPermissions, eventBus, dispatchServiceManager, loggedInUserProvider);
+        final Project project = new Project(projectDetails, eventBus, dispatchServiceManager, loggedInUserProvider);
         map.put(projectId, project);
         return project;
     }

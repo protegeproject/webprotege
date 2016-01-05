@@ -32,10 +32,6 @@ public class Project implements HasProjectId, HasDispose {
 
     private final ProjectDetails projectDetails;
 
-    private final ProjectPermissionManager permissionManager;
-
-    private final LoggedInUserProvider loggedInUserProvider;
-
     private ProjectLayoutConfiguration projectLayoutConfiguration;
 
     private LayoutManager layoutManager;
@@ -45,16 +41,12 @@ public class Project implements HasProjectId, HasDispose {
     /**
      * Creates a project from the specified details.
      * @param projectDetails The details.  Not {@code null}.
-     * @param permissionsForCurrentUser The permissions for the current logged in user.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
     @Inject
-    public Project(ProjectDetails projectDetails, PermissionsSet permissionsForCurrentUser, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
+    public Project(ProjectDetails projectDetails, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.projectDetails = checkNotNull(projectDetails);
-        this.permissionManager = new ProjectPermissionManager(getProjectId(), eventBus, dispatchServiceManager, loggedInUserProvider);
-        this.permissionManager.setUserPermissions(loggedInUserProvider.getCurrentUserId(), checkNotNull(permissionsForCurrentUser));
         this.layoutManager = new LayoutManager(projectDetails.getProjectId(), new ProjectLayoutConfiguration());
-        this.loggedInUserProvider = loggedInUserProvider;
         this.eventPollingManager = EventPollingManager.get(10 * 1000, projectDetails.getProjectId(), eventBus, dispatchServiceManager, loggedInUserProvider);
         eventPollingManager.start();
     }
@@ -82,10 +74,9 @@ public class Project implements HasProjectId, HasDispose {
     public LayoutManager getLayoutManager() {
         return layoutManager;
     }
-    
+
     public void dispose() {
         // TODO: we might notify the session that project has been closed
-        permissionManager.dispose();
         eventPollingManager.stop();
     }
 }
