@@ -5,11 +5,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -21,24 +26,20 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
 
     private EditorPresenter editorPresenter;
 
-    private final EventBus eventBus;
-
-    private final DispatchServiceManager dispatchServiceManager;
-
-
-    public EditorPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
-        super(selectionModel, eventBus, project);
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.eventBus = eventBus;
+    @Inject
+    public EditorPortlet(
+            SelectionModel selectionModel,
+                         EventBus eventBus,
+                         ProjectId projectId,
+                         LoggedInUserProvider loggedInUserProvider,
+            EditorPresenter editorPresenter) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        this.editorPresenter = editorPresenter;
     }
 
     @Override
     public void initialize() {
         setTitle("Nothing selected");
-        EditorContextMapper contextMapper = new EditorContextMapper();
-        contextMapper.registerSelector(new EntityDataContextSelector(dispatchServiceManager));
-
-        editorPresenter = new EditorPresenter(getProjectId(), eventBus, dispatchServiceManager, getProject(), contextMapper);
         editorPresenter.addEditorContextChangedHandler(new EditorContextChangedHandler() {
             @Override
             public void handleEditorContextChanged(EditorContextChangedEvent editorContextChangedEvent) {
@@ -47,7 +48,6 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
         });
 
         final Widget editorHolder = editorPresenter.getEditorHolder();
-//        editorHolder.setSize("100%", "100%");
         ScrollPanel sp = new ScrollPanel(editorHolder);
         sp.setSize("100%", "100%");
         add(sp);

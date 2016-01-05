@@ -11,6 +11,6 @@ import edu.stanford.bmir.protege.web.server.rest.BioPortalRestCall;
 public class BioPortalGetOntologiesRestCall extends BioPortalRestCall<BioPortalOntologiesList> {
 
     public BioPortalGetOntologiesRestCall(String restServiceBase) {
-        super(restServiceBase, "ontologies", BioPortalOntologiesList.class);
+//        super(restServiceBase, "ontologies", BioPortalOntologiesList.class);
     }
 }

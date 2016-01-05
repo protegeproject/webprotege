@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.rest;
 
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
 import edu.stanford.bmir.protege.web.server.bioportal.BioPortalUserInfoBean;
 
 
@@ -19,13 +18,14 @@ public class BioPortalUserInfoRestCall extends BioPortalRestCall<BioPortalUserIn
     public static final String PASSWORD_PARAMETER_NAME = "password";
 
     public BioPortalUserInfoRestCall(String username, String userpassword) {
-        this(BioPortalConstants.DEFAULT_BIOPORTAL_REST_BASE_URL, username, userpassword);
-        
+//        this(BioPortalConstants.DEFAULT_BIOPORTAL_REST_BASE_URL, username, userpassword);
+        this(null, username, userpassword);
+
     }
 
     public BioPortalUserInfoRestCall(String restServiceBase, String username, String userpassword) {
-        super(restServiceBase, AUTH_REST_SERVICE_CALL_NAME, BioPortalUserInfoBean.class);
-        addParameterValue(USERNAME_PARAMETER_NAME, username);
-        addParameterValue(PASSWORD_PARAMETER_NAME, userpassword);
+//        super(restServiceBase, AUTH_REST_SERVICE_CALL_NAME, BioPortalUserInfoBean.class);
+//        addParameterValue(USERNAME_PARAMETER_NAME, username);
+//        addParameterValue(PASSWORD_PARAMETER_NAME, userpassword);
     }
 }

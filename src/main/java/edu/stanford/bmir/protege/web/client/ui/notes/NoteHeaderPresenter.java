@@ -4,14 +4,16 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import javax.inject.Inject;
 
 
 /**
@@ -24,6 +26,10 @@ public class NoteHeaderPresenter implements HasDispose {
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    private final ActiveProjectManager activeProjectManager;
+
     private NoteHeaderView noteHeaderView;
 
     private Note note;
@@ -32,16 +38,19 @@ public class NoteHeaderPresenter implements HasDispose {
 
     private HandlerRegistration registration;
 
-    public NoteHeaderPresenter(NoteHeaderView view,  EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public NoteHeaderPresenter(NoteHeaderView view,  EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, ActiveProjectManager activeProjectManager) {
         this.noteHeaderView = view;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
+        this.activeProjectManager = activeProjectManager;
         noteHeaderView.setResolveNoteHandler(new ResolveNoteHandler() {
             @Override
             public void handleResolvePressed() {
                 setNoteResolved();
             }
         });
-        registration = eventBus.addHandlerToSource(NoteStatusChangedEvent.TYPE, Application.get().getActiveProject().get(),
+        registration = eventBus.addHandlerToSource(NoteStatusChangedEvent.TYPE, activeProjectManager.getActiveProjectId().get(),
         new NoteStatusChangedHandler() {
             @Override
             public void handleNoteStatusChanged(NoteStatusChangedEvent event) {
@@ -64,7 +73,7 @@ public class NoteHeaderPresenter implements HasDispose {
 
 
     private void setNoteResolved() {
-        ProjectId projectId = Application.get().getActiveProject().get();
+        ProjectId projectId = activeProjectManager.getActiveProjectId().get();
         NoteStatus status = currentNoteStatus == NoteStatus.OPEN ? NoteStatus.RESOLVED : NoteStatus.OPEN;
         dispatchServiceManager.execute(new SetNoteStatusAction(projectId, note.getNoteId(), status), new DispatchServiceCallback<SetNoteStatusResult>() {
             @Override
@@ -81,7 +90,7 @@ public class NoteHeaderPresenter implements HasDispose {
 
     private void updateStatus() {
         noteHeaderView.setStatus(Optional.of(currentNoteStatus));
-        final UserId userId = Application.get().getUserId();
+        final UserId userId = loggedInUserProvider.getCurrentUserId();
         noteHeaderView.setResolveOptionVisible(!userId.isGuest() && userId.equals(note.getAuthor()));
     }
 

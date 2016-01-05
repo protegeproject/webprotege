@@ -5,14 +5,13 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEvent;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -32,9 +31,12 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
 
     private final EventBus eventBus;
 
-    public NewProjectDialogController(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    public NewProjectDialogController(EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         super(TITLE);
         this.eventBus = eventBus;
+        this.loggedInUserProvider = loggedInUserProvider;
         this.dispatchServiceManager = dispatchServiceManager;
         this.widget = new NewProjectInfoWidget();
         for(WebProtegeDialogValidator validator : widget.getDialogValidators()) {
@@ -49,7 +51,7 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
     }
 
     private void handleCreateNewProject(NewProjectInfo data) {
-        UserId userId = Application.get().getUserId();
+        UserId userId = loggedInUserProvider.getCurrentUserId();
         if(userId.isGuest()) {
             throw new RuntimeException("User is guest.  Guest users are not allowed to create projects.");
         }

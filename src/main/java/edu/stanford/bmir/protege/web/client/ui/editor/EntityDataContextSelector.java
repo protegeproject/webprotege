@@ -1,9 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import com.google.inject.Inject;
 import org.semanticweb.owlapi.model.EntityType;
 
-import java.io.DataInputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,14 +15,19 @@ import java.util.Map;
  */
 public class EntityDataContextSelector implements EditorManagerSelector {
 
-    private Map<EntityType<?>, EditorManager<?, ?>> map = new HashMap<EntityType<?>, EditorManager<?, ?>>();
+    private Map<EntityType<?>, EditorManager<?, ?>> map = new HashMap<>();
 
-    public EntityDataContextSelector(DispatchServiceManager dispatchServiceManager) {
-        map.put(EntityType.CLASS, new ClassFrameEditorManager(dispatchServiceManager));
-        map.put(EntityType.OBJECT_PROPERTY, new ObjectPropertyFrameEditorManager(dispatchServiceManager));
-        map.put(EntityType.DATA_PROPERTY, new DataPropertyFrameEditorManager(dispatchServiceManager));
-        map.put(EntityType.ANNOTATION_PROPERTY, new AnnotationPropertyFrameEditorManager(dispatchServiceManager));
-        map.put(EntityType.NAMED_INDIVIDUAL, new NamedIndividualFrameEditorManager(dispatchServiceManager));
+    @Inject
+    public EntityDataContextSelector(ClassFrameEditorManager classFrameEditorManager,
+                                     ObjectPropertyFrameEditorManager objectPropertyFrameEditorManager,
+                                     DataPropertyFrameEditorManager dataPropertyFrameEditorManager,
+                                     AnnotationPropertyFrameEditorManager annotationPropertyFrameEditorManager,
+                                     NamedIndividualFrameEditorManager namedIndividualFrameEditorManager) {
+        map.put(EntityType.CLASS, classFrameEditorManager);
+        map.put(EntityType.OBJECT_PROPERTY, objectPropertyFrameEditorManager);
+        map.put(EntityType.DATA_PROPERTY, dataPropertyFrameEditorManager);
+        map.put(EntityType.ANNOTATION_PROPERTY, annotationPropertyFrameEditorManager);
+        map.put(EntityType.NAMED_INDIVIDUAL, namedIndividualFrameEditorManager);
     }
 
     @Override

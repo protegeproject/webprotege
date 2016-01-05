@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueGridGrammar;
 import edu.stanford.bmir.protege.web.client.ui.frame.PropertyValueListEditor;
@@ -45,8 +46,9 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
     @UiField(provided = true)
     protected PropertyValueListEditor editor;
 
-    public AnnotationsViewImpl(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
-        editor = new PropertyValueListEditor(projectId, dispatchServiceManager);
+    @Inject
+    public AnnotationsViewImpl(PropertyValueListEditor propertyValueListEditor) {
+        editor = propertyValueListEditor;
         editor.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

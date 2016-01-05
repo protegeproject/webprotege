@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateAnnotationPropertyFrameAction;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -17,12 +19,11 @@ import edu.stanford.bmir.protege.web.shared.frame.UpdateAnnotationPropertyFrameA
  */
 public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEntityDataContext, LabelledFrame<AnnotationPropertyFrame>> {
 
-    private AnnotationPropertyFrameEditor editor;
+    private final AnnotationPropertyFrameEditor editor;
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    public AnnotationPropertyFrameEditorManager(DispatchServiceManager dispatchServiceManager) {
-        this.dispatchServiceManager = dispatchServiceManager;
+    @Inject
+    public AnnotationPropertyFrameEditorManager(AnnotationPropertyFrameEditor editor) {
+        this.editor = editor;
     }
 
     @Override
@@ -32,9 +33,6 @@ public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEn
 
     @Override
     public EditorView<LabelledFrame<AnnotationPropertyFrame>> getView(OWLEntityDataContext editorContext) {
-        if (editor == null) {
-            editor = new AnnotationPropertyFrameEditor(editorContext.getProjectId(), dispatchServiceManager);
-        }
         return editor;
     }
 

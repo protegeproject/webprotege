@@ -15,8 +15,6 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public interface ProjectActionBar extends IsWidget {
 
-    void setProjectId(Optional<ProjectId> projectId);
-
     void setShowProjectDetailsHandler(ShowProjectDetailsHandler showProjectDetailsHandler);
 
     void setShowFreshEntitySettingsHandler(ShowFreshEntitySettingsHandler showNewEntitiesHandler);

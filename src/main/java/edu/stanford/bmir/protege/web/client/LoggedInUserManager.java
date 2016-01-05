@@ -6,7 +6,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
@@ -14,7 +13,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSes
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserAction;
 import edu.stanford.bmir.protege.web.shared.user.LogOutUserResult;
@@ -32,7 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/04/2013
  */
-public class LoggedInUserManager {
+public class LoggedInUserManager implements LoggedInUserProvider {
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -47,7 +45,7 @@ public class LoggedInUserManager {
     private EventBus eventBus;
 
     @Inject
-    private LoggedInUserManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+    public LoggedInUserManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
     }
@@ -55,14 +53,12 @@ public class LoggedInUserManager {
     /**
      * Creates a {@link LoggedInUserManager} with the guest user as the current user.  A call will be made to the server
      * to asynchronously restore the current user from the server side session.
-     * @param initCompleteCallback An optional call back that will be invoked (if present) when the user has been
-     * restored from the server side session.
      * @return A {@link LoggedInUserManager} instances which is initialised immediately with the guest user details and
      * initialised asynchronously with the server side session details.
      */
-    public static LoggedInUserManager getAndRestoreFromServer(EventBus eventBus, DispatchServiceManager dispatchServiceManager, Optional<AsyncCallback<UserDetails>> initCompleteCallback) {
+    public static LoggedInUserManager getAndRestoreFromServer(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         LoggedInUserManager manager = new LoggedInUserManager(eventBus, dispatchServiceManager);
-        manager.readUserInSession(initCompleteCallback);
+        manager.readUserInSession();
         return manager;
     }
 
@@ -73,6 +69,11 @@ public class LoggedInUserManager {
      * of the guest user.
      */
     public UserId getLoggedInUserId() {
+        return userId;
+    }
+
+    @Override
+    public UserId getCurrentUserId() {
         return userId;
     }
 
@@ -125,15 +126,12 @@ public class LoggedInUserManager {
         });
     }
 
-    private void readUserInSession(Optional<AsyncCallback<UserDetails>> callback) {
+    private void readUserInSession() {
         UserInSessionDecoder decoder = new UserInSessionDecoder();
         UserInSession userInSession  = ClientObjectReader.create("userInSession", decoder).read();
         UserDetails userDetails = userInSession.getUserDetails();
         GWT.log("Decoded user in session: " + userDetails);
         replaceUserAndBroadcastChanges(userDetails, new HashSet<GroupId>(userInSession.getGroups()));
-        if(callback.isPresent()) {
-            callback.get().onSuccess(userDetails);
-        }
     }
 
     public String getLoggedInUserDisplayName() {

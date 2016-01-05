@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
+import edu.stanford.bmir.protege.web.shared.notes.NoteId;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -8,5 +10,5 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
  */
 public interface DeleteNoteHandler {
 
-    void handleDeleteNote();
+    void handleDeleteNote(NoteId noteId);
 }

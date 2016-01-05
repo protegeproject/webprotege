@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,6 +11,8 @@ import com.google.gwt.user.client.ui.Widget;
  * Date: 09/04/2013
  */
 public interface NoteActionView extends IsWidget {
+
+    void setNoteId(NoteId noteId);
 
     void setReplyToNoteHandler(ReplyToNoteHandler handler);
 

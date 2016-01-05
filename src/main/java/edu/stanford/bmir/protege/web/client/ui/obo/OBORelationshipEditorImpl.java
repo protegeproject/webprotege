@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.inject.ApplicationClientInjector;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
@@ -42,17 +43,14 @@ public class OBORelationshipEditorImpl extends Composite implements ValueEditor<
     @UiField(provided = true)
     protected PrimitiveDataEditorImpl valueField;
 
-    public OBORelationshipEditorImpl() {
-        propertyField = createPrimitiveDataEditor();
-        valueField = createPrimitiveDataEditor();
+    @Inject
+    public OBORelationshipEditorImpl(PrimitiveDataEditorImpl propertyField, PrimitiveDataEditorImpl valueField) {
+        this.propertyField = propertyField;
+        this.valueField = valueField;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         propertyField.asWidget().getElement().setAttribute("placeholder", "Enter property name");
         valueField.asWidget().getElement().setAttribute("placeholder", "Enter class name");
-    }
-
-    private static PrimitiveDataEditorImpl createPrimitiveDataEditor() {
-        return ApplicationClientInjector.instance.getPrimitiveDataEditor();
     }
 
     @UiHandler("propertyField")

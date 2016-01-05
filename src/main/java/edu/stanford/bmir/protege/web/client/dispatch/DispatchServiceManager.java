@@ -64,12 +64,10 @@ public class DispatchServiceManager {
             ResultCache resultCache = getResultCache(projectId, eventBus);
             Optional<R> result = resultCache.getCachedResult(action);
             if (result.isPresent()) {
-                GWT.log("[DISPATCH] Using cached result (" + action + ")");
                 callback.onSuccess(result.get());
                 return;
             }
         }
-        GWT.log("[DISPATCH] Making request to server.  Request " + requestCount + ". (" + action + ")");
         requestCount++;
         async.executeAction(action, new AsyncCallbackProxy(action, callback));
     }

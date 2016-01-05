@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.banner.BannerPresenter;
 import edu.stanford.bmir.protege.web.client.banner.BannerViewImpl;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
+import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
 
 import javax.inject.Inject;
 
@@ -34,10 +35,9 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView {
     protected GwtExtAdapterPanel adapterPanel;
 
     @Inject
-    public WorkspaceViewImpl(EventBus eventBus, ProjectManager projectManager, DispatchServiceManager dispatchServiceManager) {
-        BannerPresenter bannerPresenter = new BannerPresenter(eventBus, dispatchServiceManager);
+    public WorkspaceViewImpl(ProjectDisplayContainerPanel projectDisplayContainerPanel, BannerPresenter bannerPresenter) {
         bannerView = (BannerViewImpl) bannerPresenter.getView();
-        adapterPanel = new GwtExtAdapterPanel(eventBus, dispatchServiceManager, projectManager);
+        adapterPanel = new GwtExtAdapterPanel(projectDisplayContainerPanel);
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

@@ -23,6 +23,7 @@ import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
 /**
@@ -68,10 +69,13 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
     private static ClassFrameEditor2UiBinder ourUiBinder = GWT.create(ClassFrameEditor2UiBinder.class);
 
+    @Inject
     public ClassFrameEditor(ProjectId projectId, PropertyValueListEditor annotations, PropertyValueListEditor properties) {
         this.projectId = projectId;
         this.annotations = annotations;
+        this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         this.properties = properties;
+        this.properties.setGrammar(PropertyValueGridGrammar.getClassGrammar());
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);

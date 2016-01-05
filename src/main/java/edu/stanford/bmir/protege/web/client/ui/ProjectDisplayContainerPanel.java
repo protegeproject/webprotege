@@ -5,20 +5,23 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.event.TabPanelListenerAdapter;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.inject.ProjectIdProvider;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
-import edu.stanford.bmir.protege.web.client.place.PlaceManager;
 import edu.stanford.bmir.protege.web.client.place.ProjectListPlace;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedHandler;
@@ -34,6 +37,8 @@ import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChang
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedHandler;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -57,17 +62,32 @@ public class ProjectDisplayContainerPanel extends TabPanel {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private ProjectManager projectManager;
+    private final ActiveProjectManager activeProjectManager;
 
-    public ProjectDisplayContainerPanel(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectManager projectManager) {
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    private final PlaceController placeController;
+
+    private final ProjectManager projectManager;
+
+    private final HasClientApplicationProperties hasClientApplicationProperties;
+
+    private final Provider<ProjectDisplayImpl> projectDisplayProvider;
+
+    @Inject
+    public ProjectDisplayContainerPanel(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager, ProjectManager projectManager, PlaceController placeController, LoggedInUserProvider loggedInUserProvider, HasClientApplicationProperties hasClientApplicationProperties, Provider<ProjectDisplayImpl> projectDisplayProvider) {
         super();
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
         this.projectManager = projectManager;
+        this.activeProjectManager = activeProjectManager;
+        this.placeController = placeController;
+        this.loggedInUserProvider = loggedInUserProvider;
+        this.hasClientApplicationProperties = hasClientApplicationProperties;
+        this.projectDisplayProvider = projectDisplayProvider;
         buildUI();
 
-        PlaceManager placeManager = Application.get().getPlaceManager();
-        Place currentPlace = placeManager.getCurrentPlace();
+        Place currentPlace = placeController.getWhere();
         displayCurrentPlace(currentPlace);
 
 
@@ -129,9 +149,9 @@ public class ProjectDisplayContainerPanel extends TabPanel {
 
     private void transmitActiveProject() {
         final Optional<ProjectId> projectId = getProjectIdForActiveTab();
-        Application.get().setActiveProject(projectId);
+        activeProjectManager.setActiveProject(projectId);
         if (projectId.isPresent()) {
-            Place place = Application.get().getPlaceManager().getCurrentPlace();
+            Place place = placeController.getWhere();
             Optional<OWLEntity> entity;
             Optional<TabId> tabId;
             if(place instanceof ProjectViewPlace) {
@@ -143,10 +163,10 @@ public class ProjectDisplayContainerPanel extends TabPanel {
                 entity = Optional.absent();
                 tabId = Optional.absent();
             }
-            Application.get().getPlaceManager().setCurrentPlace(new ProjectViewPlace(projectId.get(), tabId, entity));
+            placeController.goTo(new ProjectViewPlace(projectId.get(), tabId, entity));
         }
         else {
-            Application.get().getPlaceManager().setCurrentPlace(ProjectListPlace.DEFAULT_PLACE);
+            placeController.goTo(ProjectListPlace.DEFAULT_PLACE);
         }
     }
 
@@ -222,7 +242,11 @@ public class ProjectDisplayContainerPanel extends TabPanel {
             }
         };
 
-        myWebProTab = new MyWebProtegeTab(loadProjectRequestHandler, eventBus, dispatchServiceManager);
+        myWebProTab = new MyWebProtegeTab(new ProjectManagerPresenter(
+                loadProjectRequestHandler,
+                eventBus,
+                dispatchServiceManager,
+                loggedInUserProvider), hasClientApplicationProperties);
 //        myWebProTab.setTitle(myWebProTab.getLabel());
         add(myWebProTab);
 
@@ -230,21 +254,21 @@ public class ProjectDisplayContainerPanel extends TabPanel {
     }
 
     private void loadProject(final ProjectId projectId) {
-        GWT.log("Received a request to load " + projectId);
+        GWT.log("[ProjectDisplayContainerPanel] Received a request to load " + projectId);
         ProjectDisplayImpl ontTab = projectId2ProjectPanelMap.get(projectId);
         if (ontTab != null) {
-            GWT.log(projectId + " is already loaded.  Switching to tab.");
+            GWT.log("[ProjectDisplayContainerPanel] " + projectId + " is already loaded.  Switching to tab.");
             activate(ontTab.getId());
             return;
         }
 
         if (currentlyLoadingProjects.contains(projectId)) {
-            GWT.log(projectId + " is already being loaded");
+            GWT.log("[ProjectDisplayContainerPanel] " + projectId + " is already being loaded");
             return;
         }
         currentlyLoadingProjects.add(projectId);
-        GWT.log("Loading project " + projectId);
-        Application.get().loadProject(projectId, new DispatchServiceCallbackWithProgressDisplay<Project>() {
+        GWT.log("[ProjectDisplayContainerPanel] Loading project " + projectId);
+        projectManager.loadProject(projectId, new DispatchServiceCallbackWithProgressDisplay<Project>() {
             @Override
             public String getProgressDisplayTitle() {
                 return "Loading project";
@@ -280,10 +304,13 @@ public class ProjectDisplayContainerPanel extends TabPanel {
 
     private void addProjectDisplay(final ProjectId projectId) {
         if(projectId2ProjectPanelMap.containsKey(projectId)) {
-            GWT.log("Ignoring request to add project display as it has already been made for project " + projectId);
+            GWT.log("[ProjectDisplayContainerPanel] Ignoring request to add project display as it has already been made for project " + projectId);
             return;
         }
-        ProjectDisplayImpl projectPanel = new ProjectDisplayImpl(projectId, eventBus, dispatchServiceManager, projectManager);
+
+        // TODO: FIX!!!
+        ProjectIdProvider.setProjectId(projectId);
+        ProjectDisplayImpl projectPanel = projectDisplayProvider.get();//new ProjectDisplayImpl(projectId, eventBus, dispatchServiceManager, projectManager, loggedInUserProvider, placeController, selectionModel);
         projectPanel.setClosable(true);
         projectId2ProjectPanelMap.put(projectId, projectPanel);
 
@@ -299,7 +326,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
                     o.hide();
                     activate(0);
                 }
-                Application.get().setActiveProject(Optional.<ProjectId>absent());
+                activeProjectManager.setActiveProject(Optional.<ProjectId>absent());
                 return true;
             }
         });

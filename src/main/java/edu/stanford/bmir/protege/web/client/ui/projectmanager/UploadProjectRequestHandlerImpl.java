@@ -7,6 +7,9 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.UploadProjectDialogController;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -15,13 +18,11 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.home.UploadProjectDialog
  */
 public class UploadProjectRequestHandlerImpl implements UploadProjectRequestHandler {
 
-    private final EventBus eventBus;
+    private final Provider<UploadProjectDialogController> uploadProjectDialogController;
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    public UploadProjectRequestHandlerImpl(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
-        this.eventBus = eventBus;
-        this.dispatchServiceManager = dispatchServiceManager;
+    @Inject
+    public UploadProjectRequestHandlerImpl(Provider<UploadProjectDialogController> uploadProjectDialogController) {
+        this.uploadProjectDialogController = uploadProjectDialogController;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class UploadProjectRequestHandlerImpl implements UploadProjectRequestHand
 
             @Override
             public void onSuccess() {
-                WebProtegeDialog.showDialog(new UploadProjectDialogController(eventBus, dispatchServiceManager));
+                WebProtegeDialog.showDialog(uploadProjectDialogController.get());
             }
         });
     }

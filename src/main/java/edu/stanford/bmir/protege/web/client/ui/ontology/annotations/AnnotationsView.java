@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.annotations;
 
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.inject.ProvidedBy;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 

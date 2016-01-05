@@ -12,6 +12,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,13 +36,14 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
 
     private Set<NoteHeaderPresenter> currentPresenters = new HashSet<NoteHeaderPresenter>();
 
-    private final EventBus eventBus;
-
     private final DispatchServiceManager dispatchServiceManager;
 
-    public DiscussionThreadViewImpl(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
-        this.eventBus = eventBus;
+    private final Provider<NoteHeaderPresenter> noteHeaderPresenterProvider;
+
+    @Inject
+    public DiscussionThreadViewImpl(Provider<NoteHeaderPresenter> noteHeaderPresenterProvider, DispatchServiceManager dispatchServiceManager) {
         this.dispatchServiceManager = dispatchServiceManager;
+        this.noteHeaderPresenterProvider = noteHeaderPresenterProvider;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
@@ -87,8 +90,7 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
     public void addNote(NoteContainerPresenter notePresenter, int depth) {
         Widget noteView = notePresenter.getWidget();
         if(!notePresenter.getNote().getInReplyTo().isPresent()) {
-            final NoteHeaderView noteHeaderLabel = new NoteHeaderViewImpl();
-            NoteHeaderPresenter subjectPresenter = new NoteHeaderPresenter(noteHeaderLabel, eventBus, dispatchServiceManager);
+            NoteHeaderPresenter subjectPresenter = noteHeaderPresenterProvider.get();
             currentPresenters.add(subjectPresenter);
             subjectPresenter.setNote(notePresenter.getNote());
             notesList.setWidget(notesList.getRowCount(), 0, subjectPresenter.getWidget());

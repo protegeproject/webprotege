@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
@@ -32,6 +33,8 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,14 +51,15 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
 
     private DispatchServiceManager dispatchServiceManager;
 
-    public PropertyValueListEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public PropertyValueListEditor(ProjectId projectId, final Provider<PrimitiveDataEditorImpl> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         this.editor = new ValueListEditorImpl<PropertyValueDescriptor>(
                 new ValueEditorFactory<PropertyValueDescriptor>() {
                     @Override
                     public ValueEditor<PropertyValueDescriptor> createEditor() {
-                        PropertyValueDescriptorEditorImpl propertyValueEditor = new PropertyValueDescriptorEditorImpl();
+                        PropertyValueDescriptorEditorImpl propertyValueEditor = new PropertyValueDescriptorEditorImpl(primitiveDataEditorProvider.get(), primitiveDataEditorProvider.get());
                         PropertyValueDescriptorEditorPresenter presenter = new PropertyValueDescriptorEditorPresenter(propertyValueEditor);
                         presenter.setGrammar(grammar);
                         return presenter;

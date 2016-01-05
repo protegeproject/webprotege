@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -13,9 +14,21 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class ActiveProjectIdProvider implements Provider<ProjectId> {
 
+    private ActiveProjectManager activeProjectManager;
+
+    @Inject
+    public ActiveProjectIdProvider(ActiveProjectManager activeProjectManager) {
+        this.activeProjectManager = activeProjectManager;
+    }
+
     @Override
     public ProjectId get() {
-        // This doesn't seem right.
-        return Application.get().getActiveProject().get();
+        Optional<ProjectId> activeProjectId = activeProjectManager.getActiveProjectId();
+        if(activeProjectId.isPresent()) {
+            return activeProjectId.get();
+        }
+        else {
+            throw new RuntimeException("Active project Id is not present.  Cannot provide it.");
+        }
     }
 }

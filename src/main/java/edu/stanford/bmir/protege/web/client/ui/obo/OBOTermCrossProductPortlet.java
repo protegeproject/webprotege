@@ -3,12 +3,15 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermCrossProduct;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -24,15 +27,16 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
     private OBOTermCrossProductEditor editor;
 
     private Optional<OBOTermCrossProduct> pristineValue = Optional.absent();
-    
-    public OBOTermCrossProductPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
-        super(selectionModel, eventBus, project);
+
+    @Inject
+    public OBOTermCrossProductPortlet(OBOTermCrossProductEditor editor, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        this.editor = editor;
     }
 
 
     @Override
     public void initialize() {
-        editor = new OBOTermCrossProductEditorImpl();
         add(editor.asWidget());
     }
 

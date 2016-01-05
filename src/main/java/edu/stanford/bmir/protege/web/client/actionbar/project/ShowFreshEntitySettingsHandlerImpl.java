@@ -2,10 +2,9 @@ package edu.stanford.bmir.protege.web.client.actionbar.project;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
-import edu.stanford.bmir.protege.web.client.Application;
+import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsDialogController;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -28,26 +27,21 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public ShowFreshEntitySettingsHandlerImpl(DispatchServiceManager dispatchServiceManager) {
+    private final ActiveProjectManager activeProjectManager;
+
+    @Inject
+    public ShowFreshEntitySettingsHandlerImpl(DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager) {
         this.dispatchServiceManager = dispatchServiceManager;
+        this.activeProjectManager = activeProjectManager;
     }
 
     @Override
     public void handleShowFreshEntitySettings() {
-        GWT.runAsync(new RunAsyncCallback() {
-            @Override
-            public void onFailure(Throwable reason) {
-            }
-
-            @Override
-            public void onSuccess() {
-                Optional<ProjectId> activeProject = Application.get().getActiveProject();
-                if(!activeProject.isPresent()) {
-                    return;
-                }
-                getSettingsAndShowDialog(activeProject);
-            }
-        });
+        Optional<ProjectId> activeProject = activeProjectManager.getActiveProjectId();
+        if(!activeProject.isPresent()) {
+            return;
+        }
+        getSettingsAndShowDialog(activeProject);
     }
 
     private void getSettingsAndShowDialog(Optional<ProjectId> activeProject) {
@@ -109,7 +103,7 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
 
 
     private void updateFreshEntitySettingsWithStrategy(EntityCrudKitSettings<?> fromSettings, EntityCrudKitSettings<?> toSettings, final WebProtegeDialogCloser closer, IRIPrefixUpdateStrategy iriPrefixUpdateStrategy) {
-        Optional<ProjectId> activeProject = Application.get().getActiveProject();
+        Optional<ProjectId> activeProject = activeProjectManager.getActiveProjectId();
         if(!activeProject.isPresent()) {
             GWT.log("Active project is not present");
             return;

@@ -2,12 +2,15 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermDefinition;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -21,8 +24,9 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermDefinitionEditor editor;
 
-    public OBOTermDefinitionPortlet(Project project, SelectionModel selectionModel, EventBus eventBus) {
-        super(selectionModel, eventBus, project);
+    @Inject
+    public OBOTermDefinitionPortlet(ProjectId projectId, SelectionModel selectionModel, EventBus eventBus, LoggedInUserProvider loggedInUserProvider) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
         editor = new OBOTermDefinitionEditorImpl();
         add(editor.asWidget());
         setHeight("200px");

@@ -4,13 +4,15 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
+import edu.stanford.bmir.protege.web.client.ui.ontology.home.UploadProjectDialogController;
+import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsAction;
 import edu.stanford.bmir.protege.web.shared.project.GetAvailableProjectsResult;
@@ -19,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedHandler;
 
+import javax.inject.Provider;
 import java.util.*;
 
 /**
@@ -30,6 +33,8 @@ import java.util.*;
 public class ProjectManagerPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;
+
+    private final LoggedInUserProvider loggedInUserProvider;
 
     private ProjectManagerView projectManagerView;
 
@@ -45,10 +50,11 @@ public class ProjectManagerPresenter {
 
     private final EventBus eventBus;
 
-    public ProjectManagerPresenter(LoadProjectRequestHandler loadProjectRequestHandler, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
-        this.projectManagerView = new ProjectManagerViewImpl();
+    public ProjectManagerPresenter(LoadProjectRequestHandler loadProjectRequestHandler, final EventBus eventBus, final DispatchServiceManager dispatchServiceManager, final LoggedInUserProvider loggedInUserProvider) {
+        this.projectManagerView = new ProjectManagerViewImpl(new ProjectListViewImpl(loggedInUserProvider));
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
         includeAllFilter = new ProjectListFilter() {
             @Override
             public boolean isIncluded(ProjectDetails projectDetails) {
@@ -61,14 +67,14 @@ public class ProjectManagerPresenter {
         viewCat2Filter.put(ProjectManagerViewCategory.OWNED_BY_ME, new ProjectListFilter() {
             @Override
             public boolean isIncluded(ProjectDetails projectDetails) {
-                return !projectDetails.isInTrash() && projectDetails.getOwner().equals(Application.get().getUserId());
+                return !projectDetails.isInTrash() && projectDetails.getOwner().equals(loggedInUserProvider.getCurrentUserId());
             }
         });
 
         viewCat2Filter.put(ProjectManagerViewCategory.TRASH, new ProjectListFilter() {
             @Override
             public boolean isIncluded(ProjectDetails projectDetails) {
-                return projectDetails.isInTrash() && projectDetails.getOwner().equals(Application.get().getUserId());
+                return projectDetails.isInTrash() && projectDetails.getOwner().equals(loggedInUserProvider.getCurrentUserId());
             }
         });
 
@@ -81,8 +87,13 @@ public class ProjectManagerPresenter {
 
         projectManagerView.setLoadProjectRequestHandler(loadProjectRequestHandler);
 
-        projectManagerView.setCreateProjectRequestHandler(new CreateProjectRequestHandlerImpl(eventBus, dispatchServiceManager));
-        projectManagerView.setUploadProjectRequestHandler(new UploadProjectRequestHandlerImpl(eventBus, dispatchServiceManager));
+        projectManagerView.setCreateProjectRequestHandler(new CreateProjectRequestHandlerImpl(eventBus, dispatchServiceManager, loggedInUserProvider));
+        projectManagerView.setUploadProjectRequestHandler(new UploadProjectRequestHandlerImpl(new Provider<UploadProjectDialogController>() {
+            @Override
+            public UploadProjectDialogController get() {
+                return new UploadProjectDialogController(eventBus, dispatchServiceManager, loggedInUserProvider);
+            }
+        }));
         projectManagerView.setDownloadProjectRequestHandler(new DownloadProjectRequestHandlerImpl());
         projectManagerView.setTrashManagerRequestHandler(new TrashManagerRequestHandlerImpl(dispatchServiceManager));
 
@@ -199,7 +210,7 @@ public class ProjectManagerPresenter {
     }
 
     private void handleUserChange() {
-        final boolean guest = Application.get().getUserId().isGuest();
+        final boolean guest = loggedInUserProvider.getCurrentUserId().isGuest();
         projectManagerView.setCreateProjectEnabled(!guest);
         projectManagerView.setUploadProjectEnabled(!guest);
         if (guest) {

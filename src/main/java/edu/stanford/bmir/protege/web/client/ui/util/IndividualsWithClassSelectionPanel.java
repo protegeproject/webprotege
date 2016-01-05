@@ -9,6 +9,7 @@ import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.layout.ColumnLayout;
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
 import com.gwtext.client.widgets.layout.VerticalLayout;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -18,6 +19,7 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.LegacyCompatUtil;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
+import javax.inject.Provider;
 import java.util.Collection;
 
 public class IndividualsWithClassSelectionPanel extends Panel {
@@ -35,13 +37,19 @@ public class IndividualsWithClassSelectionPanel extends Panel {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public IndividualsWithClassSelectionPanel(Project project, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Collection<EntityData> clses, boolean allowMultipleSelection, boolean showClsesPanel) {
+    private final Provider<SelectionModel> selectionModelProvider;
+
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    public IndividualsWithClassSelectionPanel(Provider<SelectionModel> selectionModelProvider, Project project, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, Collection<EntityData> clses, boolean allowMultipleSelection, boolean showClsesPanel) {
         this.project = project;
+        this.selectionModelProvider = selectionModelProvider;
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
         this.clses = clses;
         this.allowMultipleSelection = allowMultipleSelection;
         this.showClsesPanel = showClsesPanel;
+        this.loggedInUserProvider = loggedInUserProvider;
         buildUI();
     }
 
@@ -96,25 +104,32 @@ public class IndividualsWithClassSelectionPanel extends Panel {
     }
 
     protected IndividualsListPortlet createIndividualsListPorlet() {
-        SelectionModel selectionModel = SelectionModel.create();
-       IndividualsListPortlet indPortlet = new IndividualsListPortlet(selectionModel, eventBus, dispatchServiceManager, project);
-       indPortlet.setDraggable(false);
-       indPortlet.setClosable(false);
-       indPortlet.setCollapsible(false);
-       indPortlet.setHeight(390);
-        return indPortlet;
+//       IndividualsListPortlet indPortlet = new IndividualsListPortlet(
+//               selectionModelProvider.get(),
+//               eventBus,
+//               dispatchServiceManager,
+//               loggedInUserProvider,
+//               project);
+//       indPortlet.setDraggable(false);
+//       indPortlet.setClosable(false);
+//       indPortlet.setCollapsible(false);
+//       indPortlet.setHeight(390);
+//        return indPortlet;
+
+        throw new RuntimeException("NOT IMPLEMENTED");
     }
 
     protected ClassTreePortlet createClassTreePortlet(boolean allClasses) {
-        SelectionModel selectionModel = SelectionModel.create();
-        EntityData topCls = allClasses ? null : UIUtil.getFirstItem(clses);
-        ClassTreePortlet clsPortlet = new ClassTreePortlet(selectionModel, eventBus, dispatchServiceManager, project, true, true, true, allowMultipleSelection, topCls == null ?  null : topCls.getName());
-        clsPortlet.setDraggable(false);
-        clsPortlet.setClosable(false);
-        clsPortlet.setCollapsible(false);
-        clsPortlet.setHeight(390);
-        clsPortlet.setWidth(375);
-        return clsPortlet;
+//        EntityData topCls = allClasses ? null : UIUtil.getFirstItem(clses);
+//        ClassTreePortlet clsPortlet = new ClassTreePortlet(
+//                selectionModelProvider.get(), eventBus, dispatchServiceManager, loggedInUserProvider, project, true, true, true, allowMultipleSelection, topCls == null ?  null : topCls.getName());
+//        clsPortlet.setDraggable(false);
+//        clsPortlet.setClosable(false);
+//        clsPortlet.setCollapsible(false);
+//        clsPortlet.setHeight(390);
+//        clsPortlet.setWidth(375);
+//        return clsPortlet;
+        throw new RuntimeException("NOT IMPLEMENTED");
     }
 
     protected Anchor createSeeAllClassesAnchor() {

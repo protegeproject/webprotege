@@ -11,11 +11,12 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsResult;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -33,11 +34,12 @@ public class SharingSettingsDialogController extends WebProtegeOKCancelDialogCon
 
     private final EventBus eventBus;
 
-    public SharingSettingsDialogController(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public SharingSettingsDialogController(EventBus eventBus, DispatchServiceManager dispatchServiceManager, SharingSettingsPanel sharingSettingsPanel) {
         super(TITLE);
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
-        sharingSettingsPanel = new SharingSettingsPanel(projectId, dispatchServiceManager);
+        this.sharingSettingsPanel = sharingSettingsPanel;
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectSharingSettings>() {
             public void handleHide(ProjectSharingSettings data, WebProtegeDialogCloser closer) {
                 updateSharingSettingsOnServer(data);

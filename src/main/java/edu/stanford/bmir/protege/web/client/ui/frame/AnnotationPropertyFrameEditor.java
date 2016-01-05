@@ -32,6 +32,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -75,19 +76,25 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     private DispatchServiceManager dispatchServiceManager;
 
 
-    public AnnotationPropertyFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public AnnotationPropertyFrameEditor(ProjectId projectId,
+                                         PropertyValueListEditor annotationsEditor,
+
+                                         DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
-        annotations = new PropertyValueListEditor(projectId, dispatchServiceManager);
+        annotations = annotationsEditor;
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        domains = new PrimitiveDataListEditor(PrimitiveType.CLASS,
+        domains = new PrimitiveDataListEditor(projectId,
+                PrimitiveType.CLASS,
                                               PrimitiveType.OBJECT_PROPERTY,
                                               PrimitiveType.DATA_PROPERTY,
                                               PrimitiveType.ANNOTATION_PROPERTY,
                                               PrimitiveType.NAMED_INDIVIDUAL,
                                               PrimitiveType.DATA_TYPE);
         domains.setPlaceholder("Enter an entity name");
-        ranges = new PrimitiveDataListEditor(PrimitiveType.DATA_TYPE,
+        ranges = new PrimitiveDataListEditor(projectId,
+                PrimitiveType.DATA_TYPE,
                                              PrimitiveType.CLASS,
                                              PrimitiveType.OBJECT_PROPERTY,
                                              PrimitiveType.DATA_PROPERTY,

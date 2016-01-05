@@ -6,6 +6,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Timer;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
@@ -27,6 +28,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,6 +38,8 @@ import java.util.Set;
 public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntity>, HasFreshEntities {
 
     private final DispatchServiceManager dispatchServiceManager;
+
+    private final LoggedInUserProvider loggedInUserProvider;
 
     private ManchesterSyntaxFrameEditor editor;
 
@@ -53,8 +57,6 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     };
 
     private Set<OWLEntityData> freshEntities = new HashSet<OWLEntityData>();
-
-    private HasUserId hasUserId;
 
     private PermissionChecker permissionChecker;
 
@@ -81,12 +83,13 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
     };
 
 
-    public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, HasUserId hasUserId, PermissionChecker permissionChecker, DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, PermissionChecker permissionChecker, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.editor = editor;
-        this.hasUserId = hasUserId;
         this.permissionChecker = permissionChecker;
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
     }
 
     public void attach(HasEventHandlerManagement management) {
@@ -167,7 +170,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
 
     private void updateState() {
-        UserId userId = hasUserId.getUserId();
+        UserId userId = loggedInUserProvider.getCurrentUserId();
         boolean writePermission = permissionChecker.hasWritePermissionForProject(userId, projectId);
         setEnabled(writePermission);
     }

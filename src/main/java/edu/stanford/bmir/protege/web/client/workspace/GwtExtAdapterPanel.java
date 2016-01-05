@@ -15,6 +15,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -23,9 +25,9 @@ import edu.stanford.bmir.protege.web.client.ui.ProjectDisplayContainerPanel;
  */
 public class GwtExtAdapterPanel extends FlowPanel {
 
-    public GwtExtAdapterPanel(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectManager projectManager) {
+    @Inject
+    public GwtExtAdapterPanel(final ProjectDisplayContainerPanel projectDisplayContainerPanel) {
 
-        final ProjectDisplayContainerPanel projectDisplayContainerPanel = new ProjectDisplayContainerPanel(eventBus, dispatchServiceManager, projectManager);
         add(projectDisplayContainerPanel);
 
         Window.addResizeHandler(new ResizeHandler() {

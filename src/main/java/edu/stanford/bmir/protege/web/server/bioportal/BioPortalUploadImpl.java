@@ -7,7 +7,6 @@ package edu.stanford.bmir.protege.web.server.bioportal;
  * Date: 09/10/2012
  */
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalUpload;
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
 import edu.stanford.bmir.protege.web.server.URLUtil;
 
 
@@ -82,12 +81,12 @@ public class BioPortalUploadImpl implements BioPortalUpload {
         addIfNotNull(params, "userId", userId);
 
         //TODO: should be configurable
-        params.append(BioPortalConstants.DEFAULT_BIOPORTAL_REST_CALL_SUFFIX);
+//        params.append(BioPortalConstants.DEFAULT_BIOPORTAL_REST_CALL_SUFFIX);
 
-        StringBuffer url = new StringBuffer(bpRestBase == null ? BioPortalConstants.DEFAULT_BIOPORTAL_REST_BASE_URL : bpRestBase);
-        url.append("ontologies");
-
-        URLUtil.httpPost(url.toString(), params.toString());
+//        StringBuffer url = new StringBuffer(bpRestBase == null ? BioPortalConstants.DEFAULT_BIOPORTAL_REST_BASE_URL : bpRestBase);
+//        url.append("ontologies");
+//
+//        URLUtil.httpPost(url.toString(), params.toString());
         return null;
     }
 

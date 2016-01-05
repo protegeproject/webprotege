@@ -2,7 +2,8 @@ package edu.stanford.bmir.protege.web.client.actionbar.application;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
-import edu.stanford.bmir.protege.web.client.Application;
+import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.chgpwd.ChangePasswordPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 
@@ -14,10 +15,14 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
  */
 public class ChangePasswordHandlerImpl implements ChangePasswordHandler {
 
-    private DispatchServiceManager dispatchServiceManager;
+    private final DispatchServiceManager dispatchServiceManager;
 
-    public ChangePasswordHandlerImpl(DispatchServiceManager dispatchServiceManager) {
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    @Inject
+    public ChangePasswordHandlerImpl(DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
     }
 
     @Override
@@ -29,7 +34,7 @@ public class ChangePasswordHandlerImpl implements ChangePasswordHandler {
 
             @Override
             public void onSuccess() {
-                ChangePasswordPresenter changePasswordPresenter = new ChangePasswordPresenter(Application.get().getUserId(), dispatchServiceManager);
+                ChangePasswordPresenter changePasswordPresenter = new ChangePasswordPresenter(loggedInUserProvider.getCurrentUserId(), dispatchServiceManager);
                 changePasswordPresenter.changePassword();
             }
         });

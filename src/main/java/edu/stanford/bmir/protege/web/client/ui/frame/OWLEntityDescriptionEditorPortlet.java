@@ -2,31 +2,31 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+
+import javax.inject.Inject;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
 public class OWLEntityDescriptionEditorPortlet extends AbstractOWLEntityPortlet {
 
-    private final DispatchServiceManager dispatchServiceManager;
+    private final ManchesterSyntaxFrameEditorPresenter presenter;
 
-    private ManchesterSyntaxFrameEditorPresenter presenter;
-
-    public OWLEntityDescriptionEditorPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
-        super(selectionModel, eventBus, project);
-        this.dispatchServiceManager = dispatchServiceManager;
+    @Inject
+    public OWLEntityDescriptionEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, ManchesterSyntaxFrameEditorPresenter presenter) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        this.presenter = presenter;
     }
 
     @Override
     public void initialize() {
         ManchesterSyntaxFrameEditorImpl editor = new ManchesterSyntaxFrameEditorImpl();
-        presenter = new ManchesterSyntaxFrameEditorPresenter(editor, getProjectId(), Application.get(), Application.get(), dispatchServiceManager);
         presenter.attach(this);
         add(editor);
         setHeight(500);

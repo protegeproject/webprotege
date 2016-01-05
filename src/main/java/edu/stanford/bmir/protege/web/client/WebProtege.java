@@ -7,21 +7,20 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
-import edu.stanford.bmir.protege.web.client.inject.ApplicationClientInjector;
+import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.workspace.WorkspaceView;
-import edu.stanford.bmir.protege.web.client.workspace.WorkspaceViewImpl;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
 
 /**
- * @author Jennifer Vendetti <vendetti@stanford.edu>
- * @author Tania Tudorache <tudorache@stanford.edu>
+ * @author Matthew Horridge
  */
 public class WebProtege implements EntryPoint {
 
     public void onModuleLoad() {
-        Application.init(new AsyncCallback<Void>() {
+        WebProtegeInitializer initializer = WebProtegeClientInjector.getWebProtegeInitializer();
+        initializer.init(new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
                 GWT.log("There was a problem initializing WebProtege", caught);
@@ -41,14 +40,11 @@ public class WebProtege implements EntryPoint {
 
     private void buildUI() {
 
-        // EvenBus
-        // ProjectManager
-        // DispatchServiceManager
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
-        WorkspaceView view = ApplicationClientInjector.instance.getWorkspaceView();
+        WorkspaceView view = WebProtegeClientInjector.getWorkspaceView();
         RootPanel.get().add(view);
-
-        final Optional<String> appName = Application.get().getClientApplicationProperty(WebProtegePropertyName.APPLICATION_NAME);
+        HasClientApplicationProperties properties = WebProtegeClientInjector.getClientApplicationProperties();
+        final Optional<String> appName = properties.getClientApplicationProperty(WebProtegePropertyName.APPLICATION_NAME);
         if (appName.isPresent()) {
             Window.setTitle(appName.get());
         }

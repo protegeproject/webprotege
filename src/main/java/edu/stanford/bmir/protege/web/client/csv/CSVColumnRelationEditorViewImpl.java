@@ -48,16 +48,16 @@ public class CSVColumnRelationEditorViewImpl extends Composite implements CSVCol
 
 
 
-    public CSVColumnRelationEditorViewImpl() {
-        propertyField = ApplicationClientInjector.instance.getPrimitiveDataEditor();
-        propertyField.setFreshEntitiesSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
+    public CSVColumnRelationEditorViewImpl(PrimitiveDataEditorImpl propertyField) {
+        this.propertyField = propertyField;
+        this.propertyField.setFreshEntitiesSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
 //        propertyField.setSuggestMode(FreshEntitySuggestMode.SUGGEST_CREATE_FRESH_ENTITIES);
 
-        propertyField.setFreshEntitiesHandler(new MutableFreshEntitiesHandler());
+        this.propertyField.setFreshEntitiesHandler(new MutableFreshEntitiesHandler());
 
-        propertyField.setObjectPropertiesAllowed(true);
-        propertyField.setDataPropertiesAllowed(true);
-        propertyField.setAnnotationPropertiesAllowed(true);
+        this.propertyField.setObjectPropertiesAllowed(true);
+        this.propertyField.setDataPropertiesAllowed(true);
+        this.propertyField.setAnnotationPropertiesAllowed(true);
 
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         relationTypeField.getElement().setAttribute("placeholder", "Select value type");

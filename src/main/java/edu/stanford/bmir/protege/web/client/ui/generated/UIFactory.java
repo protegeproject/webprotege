@@ -24,15 +24,14 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.metadata.MetadataTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTab;
 import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTreePortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.revisions.RevisionsPortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalSearchPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.PropertyFieldPortlet;
 import edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
 import edu.stanford.bmir.protege.web.client.usage.UsagePortlet;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.*;
 
 /**
@@ -60,120 +59,204 @@ public class UIFactory {
                     "edu.stanford.bmir.protege.web.client.watches.WatchedEntitiesPortlet")
             .build();
 
-    /*
-     * Tab factory
-     */
 
-    public static AbstractTab createTab(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project, String tabJavaClassName) {
-        if (tabJavaClassName.equals(ClassesTab.class.getName())) {
-            return new ClassesTab(selectionModel, eventBus, dispatchServiceManager, project);
-        }
-        else if (tabJavaClassName.equals(PropertiesTab.class.getName())) {
-            return new PropertiesTab(selectionModel, eventBus, dispatchServiceManager, project);
-        }
-        else if (tabJavaClassName.equals(IndividualsTab.class.getName())) {
-            return new IndividualsTab(selectionModel, eventBus, dispatchServiceManager, project);
-        }
-        else if (tabJavaClassName.equals(UserDefinedTab.class.getName())) {
-            return new UserDefinedTab(selectionModel, eventBus, dispatchServiceManager, project);
-        }
-        return null;
+    @Inject
+    public UIFactory(Provider<ClassesTab> classesTabProvider, Provider<PropertiesTab> propertiesTabProvider, Provider<IndividualsTab> individualsTabProvider, Provider<UserDefinedTab> userDefinedTabProvider, Provider<ClassTreePortlet> classTreePortletProvider, Provider<ImportsTreePortlet> importsTreePortletProvider, Provider<IndividualsListPortlet> individualsListPortletProvider, Provider<MetricsPortlet> metricsPortletProvider, Provider<PropertiesTreePortlet> propertiesTreePortletProvider, Provider<ChangeSummaryPortlet> changeSummaryPortletProvider, Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider, Provider<ChangesPortlet> changesPortletProvider, Provider<OBOTermRelationshipPortlet> oboTermRelationshipPortletProvider, Provider<OBOTermDefinitionPortlet> oboTermDefinitionPortletProvider, Provider<OBOTermIdEditorPortlet> oboTermIdEditorPortletProvider, Provider<OBOTermSynonymsPortlet> oboTermSynonymsPortletProvider, Provider<OBOTermCrossProductPortlet> oboTermCrossProductPortletProvider, Provider<OBOTermXRefsEditorPortlet> oboTermXRefsEditorPortletProvider, Provider<RevisionsPortlet> revisionsPortletProvider, Provider<OntologyIdPortlet> ontologyIdPortletProvider, Provider<OntologyAnnotationsPortlet> ontologyAnnotationsPortletProvider, Provider<ProjectFeedPortlet> projectFeedPortletProvider, Provider<DiscussionThreadPortlet> discussionThreadPortletProvider, Provider<EditorPortlet> editorPortletProvider, Provider<UsagePortlet> usagePortletProvider, Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider, Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider) {
+        this.classesTabProvider = classesTabProvider;
+        this.propertiesTabProvider = propertiesTabProvider;
+        this.individualsTabProvider = individualsTabProvider;
+        this.userDefinedTabProvider = userDefinedTabProvider;
+        this.classTreePortletProvider = classTreePortletProvider;
+        this.importsTreePortletProvider = importsTreePortletProvider;
+        this.individualsListPortletProvider = individualsListPortletProvider;
+        this.metricsPortletProvider = metricsPortletProvider;
+        this.propertiesTreePortletProvider = propertiesTreePortletProvider;
+        this.changeSummaryPortletProvider = changeSummaryPortletProvider;
+        this.watchedEntitiesPortletProvider = watchedEntitiesPortletProvider;
+        this.changesPortletProvider = changesPortletProvider;
+        this.oboTermRelationshipPortletProvider = oboTermRelationshipPortletProvider;
+        this.oboTermDefinitionPortletProvider = oboTermDefinitionPortletProvider;
+        this.oboTermIdEditorPortletProvider = oboTermIdEditorPortletProvider;
+        this.oboTermSynonymsPortletProvider = oboTermSynonymsPortletProvider;
+        this.oboTermCrossProductPortletProvider = oboTermCrossProductPortletProvider;
+        this.oboTermXRefsEditorPortletProvider = oboTermXRefsEditorPortletProvider;
+        this.revisionsPortletProvider = revisionsPortletProvider;
+        this.ontologyIdPortletProvider = ontologyIdPortletProvider;
+        this.ontologyAnnotationsPortletProvider = ontologyAnnotationsPortletProvider;
+        this.projectFeedPortletProvider = projectFeedPortletProvider;
+        this.discussionThreadPortletProvider = discussionThreadPortletProvider;
+        this.editorPortletProvider = editorPortletProvider;
+        this.usagePortletProvider = usagePortletProvider;
+        this.entityDescriptionBrowserPortletProvider = entityDescriptionBrowserPortletProvider;
+        this.entityDescriptionEditorPortletProvider = entityDescriptionEditorPortletProvider;
     }
 
-    /*
-     * Portlet factory
-     */
+    private final Provider<ClassesTab> classesTabProvider;
 
-    public static EntityPortlet createPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project, String portletJavaClassName) {
+    private final Provider<PropertiesTab> propertiesTabProvider;
+
+    private final Provider<IndividualsTab> individualsTabProvider;
+
+    private final Provider<UserDefinedTab> userDefinedTabProvider;
+
+
+
+    public AbstractTab createTab(String tabJavaClassName) {
+        AbstractTab abstractTab;
+        if (tabJavaClassName.equals(ClassesTab.class.getName())) {
+            abstractTab = classesTabProvider.get();
+        }
+        else if (tabJavaClassName.equals(PropertiesTab.class.getName())) {
+            abstractTab = propertiesTabProvider.get();
+        }
+        else if (tabJavaClassName.equals(IndividualsTab.class.getName())) {
+            abstractTab = individualsTabProvider.get();
+        }
+        else if (tabJavaClassName.equals(UserDefinedTab.class.getName())) {
+            abstractTab = userDefinedTabProvider.get();
+        }
+        else {
+            GWT.log("[UIFactory] Unknown Tab: " + tabJavaClassName);
+            abstractTab = userDefinedTabProvider.get();
+        }
+        return abstractTab;
+    }
+
+
+    private final Provider<ClassTreePortlet> classTreePortletProvider;
+
+    private final Provider<ImportsTreePortlet> importsTreePortletProvider;
+
+    private final Provider<IndividualsListPortlet> individualsListPortletProvider;
+
+    private final Provider<MetricsPortlet> metricsPortletProvider;
+
+    private final Provider<PropertiesTreePortlet> propertiesTreePortletProvider;
+
+    private final Provider<ChangeSummaryPortlet> changeSummaryPortletProvider;
+
+    private final Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider;
+
+    private final Provider<ChangesPortlet> changesPortletProvider;
+
+    private final Provider<OBOTermRelationshipPortlet> oboTermRelationshipPortletProvider;
+
+    private final Provider<OBOTermDefinitionPortlet> oboTermDefinitionPortletProvider;
+
+    private final Provider<OBOTermIdEditorPortlet> oboTermIdEditorPortletProvider;
+
+    private final Provider<OBOTermSynonymsPortlet> oboTermSynonymsPortletProvider;
+
+    private final Provider<OBOTermCrossProductPortlet> oboTermCrossProductPortletProvider;
+
+    private final Provider<OBOTermXRefsEditorPortlet> oboTermXRefsEditorPortletProvider;
+
+    private final Provider<RevisionsPortlet> revisionsPortletProvider;
+
+    private final Provider<OntologyIdPortlet> ontologyIdPortletProvider;
+
+    private final Provider<OntologyAnnotationsPortlet> ontologyAnnotationsPortletProvider;
+
+    private final Provider<ProjectFeedPortlet> projectFeedPortletProvider;
+
+    private final Provider<DiscussionThreadPortlet> discussionThreadPortletProvider;
+
+    private final Provider<EditorPortlet> editorPortletProvider;
+
+    private final Provider<UsagePortlet> usagePortletProvider;
+
+    private final Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider;
+
+    private final Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider;
+
+
+    public EntityPortlet createPortlet(String portletJavaClassName) {
+        EntityPortlet entityPortlet = null;
         try {
             String replacementName = backwardsCompatMap.get(portletJavaClassName);
             if(replacementName != null) {
                 portletJavaClassName = replacementName;
             }
-            else if (portletJavaClassName.equals(ClassTreePortlet.class.getName())) {
-                return new ClassTreePortlet(selectionModel, eventBus, dispatchServiceManager, project);
+            
+            if (portletJavaClassName.equals(ClassTreePortlet.class.getName())) {
+                entityPortlet = classTreePortletProvider.get();
             }
             else if (portletJavaClassName.equals(ImportsTreePortlet.class.getName())) {
-                return new ImportsTreePortlet(selectionModel, eventBus, dispatchServiceManager,project);
+                entityPortlet = importsTreePortletProvider.get();
             }
             else if (portletJavaClassName.equals(IndividualsListPortlet.class.getName())) {
-                return new IndividualsListPortlet(selectionModel, eventBus, dispatchServiceManager,project);
+                entityPortlet = individualsListPortletProvider.get();
             }
             else if (portletJavaClassName.equals(MetricsPortlet.class.getName())) {
-                return new MetricsPortlet(selectionModel, eventBus, dispatchServiceManager, project);
+                entityPortlet = metricsPortletProvider.get();
             }
             else if (portletJavaClassName.equals(PropertiesTreePortlet.class.getName())) {
-                return new PropertiesTreePortlet(selectionModel, eventBus, dispatchServiceManager, project);
-            }
-            else if (portletJavaClassName.equals(PropertyFieldPortlet.class.getName())) {
-                return new PropertyFieldPortlet(selectionModel, eventBus, dispatchServiceManager, project);
-            }
-            else if (portletJavaClassName.equals(BioPortalSearchPortlet.class.getName())) {
-                return new BioPortalSearchPortlet(selectionModel, eventBus, project);
+                entityPortlet = propertiesTreePortletProvider.get();
             }
             else if (portletJavaClassName.equals(ChangeSummaryPortlet.class.getName())) {
-                return new ChangeSummaryPortlet(selectionModel, eventBus, dispatchServiceManager, project);
+                entityPortlet = changeSummaryPortletProvider.get();
             }
             else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
-                return new WatchedEntitiesPortlet(selectionModel, eventBus, dispatchServiceManager,project);
+                entityPortlet = watchedEntitiesPortletProvider.get();
             }
             else if (portletJavaClassName.equals(ChangesPortlet.class.getName())) {
-                return new ChangesPortlet(selectionModel, eventBus, dispatchServiceManager, project);
-            }
-            else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
-                return new WatchedEntitiesPortlet(selectionModel, eventBus, dispatchServiceManager,project);
+                entityPortlet = changesPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermRelationshipPortlet.class.getName())) {
-                return new OBOTermRelationshipPortlet(project, eventBus, selectionModel);
+                entityPortlet = oboTermRelationshipPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermDefinitionPortlet.class.getName())) {
-                return new OBOTermDefinitionPortlet(project, selectionModel, eventBus);
+                entityPortlet = oboTermDefinitionPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermIdEditorPortlet.class.getName())) {
-                return new OBOTermIdEditorPortlet(selectionModel, eventBus, project);
+                entityPortlet = oboTermIdEditorPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermSynonymsPortlet.class.getName())) {
-                return new OBOTermSynonymsPortlet(selectionModel, eventBus, project);
+                entityPortlet = oboTermSynonymsPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermCrossProductPortlet.class.getName())) {
-                return new OBOTermCrossProductPortlet(selectionModel, eventBus, project);
+                entityPortlet = oboTermCrossProductPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermXRefsEditorPortlet.class.getName())) {
-                return new OBOTermXRefsEditorPortlet(selectionModel, eventBus, project);
+                entityPortlet = oboTermXRefsEditorPortletProvider.get();
             }
             else if (portletJavaClassName.equals(RevisionsPortlet.class.getName())) {
-                return new RevisionsPortlet(selectionModel, eventBus, dispatchServiceManager,project);
+                entityPortlet = revisionsPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OntologyIdPortlet.class.getName())) {
-                return new OntologyIdPortlet(selectionModel, eventBus, dispatchServiceManager,project);
+                entityPortlet = ontologyIdPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OntologyAnnotationsPortlet.class.getName())) {
-                return new OntologyAnnotationsPortlet(selectionModel, eventBus, dispatchServiceManager, project);
+                entityPortlet = ontologyAnnotationsPortletProvider.get();
             }
             else if (portletJavaClassName.equals(ProjectFeedPortlet.class.getName())) {
-                return new ProjectFeedPortlet(selectionModel, eventBus, project);
+                entityPortlet = projectFeedPortletProvider.get();
             }
             else if (portletJavaClassName.equals(DiscussionThreadPortlet.class.getName())) {
-                return new DiscussionThreadPortlet(project, eventBus, dispatchServiceManager, selectionModel);
+                entityPortlet = discussionThreadPortletProvider.get();
             }
             else if (portletJavaClassName.equals(EditorPortlet.class.getName())) {
-                return new EditorPortlet(selectionModel, eventBus, dispatchServiceManager, project);
+                entityPortlet = editorPortletProvider.get();
             }
             else if (portletJavaClassName.equals(UsagePortlet.class.getName())) {
-                return new UsagePortlet(selectionModel, eventBus, dispatchServiceManager, project);
+                entityPortlet = usagePortletProvider.get();
             } else if (portletJavaClassName.equals(OWLEntityDescriptionBrowserPortlet.class.getName())) {
-                return new OWLEntityDescriptionBrowserPortlet(selectionModel, eventBus, dispatchServiceManager,project);
+                entityPortlet = entityDescriptionBrowserPortletProvider.get();
             }
             else if (portletJavaClassName.endsWith(OWLEntityDescriptionEditorPortlet.class.getName())) {
-                return new OWLEntityDescriptionEditorPortlet(selectionModel, eventBus, dispatchServiceManager, project);
+                entityPortlet = entityDescriptionEditorPortletProvider.get();
             }
             else {
-                GWT.log("Portlet not found: " + portletJavaClassName);
+                GWT.log("[UIFactory] Portlet not found: " + portletJavaClassName);
+            }
+            if(entityPortlet != null) {
+                entityPortlet.initialize();
+                GWT.log("[UIFactory] Initialized portlet: " + portletJavaClassName);
             }
         } catch (Exception e) {
-            GWT.log("Error when creating portlet", e);
+            GWT.log("[UIFactory] An error occurred when creating an instance of " + portletJavaClassName, e);
         }
-        return null;
+        return entityPortlet;
     }
 
     //TODO: taking out ManageHierarchyTab.class.getName() - must be de-icd-ezed
@@ -203,7 +286,6 @@ public class UIFactory {
                 ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(),
                 IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(),
                 PropertiesTreePortlet.class.getName(),
-                BioPortalSearchPortlet.class.getName(),
                 ChangesPortlet.class.getName(), WatchedEntitiesPortlet.class.getName(),
                 OBOTermCrossProductPortlet.class.getName(),
                 OBOTermRelationshipPortlet.class.getName(), OBOTermSynonymsPortlet.class.getName(),

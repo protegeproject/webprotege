@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.mail;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -17,6 +17,8 @@ import edu.stanford.bmir.protege.web.shared.mail.SetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -27,12 +29,16 @@ public class ChangeEmailAddressPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public ChangeEmailAddressPresenter(DispatchServiceManager dispatchServiceManager) {
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    @Inject
+    public ChangeEmailAddressPresenter(DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
     }
 
     public void changeEmail() {
-        final UserId userId = Application.get().getUserId();
+        final UserId userId = loggedInUserProvider.getCurrentUserId();
         if(userId.isGuest()) {
             MessageBox.showAlert("You must be logged in to change your email address");
             return;
@@ -54,7 +60,7 @@ public class ChangeEmailAddressPresenter {
     }
 
     private void showDialog(Optional<EmailAddress> emailAddress) {
-        final UserId userId = Application.get().getUserId();
+        final UserId userId = loggedInUserProvider.getCurrentUserId();
         ChangeEmailAddressDialogController controller = new ChangeEmailAddressDialogController();
         if (emailAddress.isPresent()) {
             controller.setValue(emailAddress.get());

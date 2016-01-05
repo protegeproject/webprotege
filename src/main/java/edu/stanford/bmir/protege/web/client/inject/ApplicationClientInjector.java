@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
+import edu.stanford.bmir.protege.web.client.WebProtegeInitializer;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientModule;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
+import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.workspace.WorkspaceView;
+import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 
 /**
  * Matthew Horridge
@@ -15,9 +17,13 @@ import edu.stanford.bmir.protege.web.client.workspace.WorkspaceView;
 @GinModules({ApplicationClientModule.class, PrimitiveDataEditorClientModule.class})
 public interface ApplicationClientInjector extends Ginjector {
 
-    public static final ApplicationClientInjector instance = GWT.create(ApplicationClientInjector.class);
+    public WebProtegeInitializer getWebProtegeInitializer();
 
     public WorkspaceView getWorkspaceView();
 
     public PrimitiveDataEditorImpl getPrimitiveDataEditor();
+
+    public UIFactory getUiFactory();
+
+    public ClientApplicationProperties getClientApplicationProperties();
 }

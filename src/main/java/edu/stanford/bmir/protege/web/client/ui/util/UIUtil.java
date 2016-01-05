@@ -1,23 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.util;
 
-import com.google.common.base.Optional;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.HTML;
-import com.gwtext.client.core.ExtElement;
 import com.gwtext.client.widgets.MessageBox;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.SubclassEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.GenericConfiguration;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
-import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.*;
 
@@ -40,18 +29,6 @@ public class UIUtil {
 
     public static void hideLoadProgessBar() {
         ProgressMonitor.get().hideProgressMonitor();
-    }
-
-    public static void mask(final ExtElement el, final String message, final boolean animate, int delayInMilliSeconds) {
-        Timer timer = new Timer() {
-            @Override
-            public void run() {
-                el.mask(message, animate);
-            }
-        };
-        if (delayInMilliSeconds > 0) {
-            timer.schedule(delayInMilliSeconds);
-        }
     }
 
     public static String getDisplayText(Object object) {
@@ -186,7 +163,7 @@ public class UIUtil {
         }
         try {
             Map<String, String> allowedValues = null;
-            Object allowedValuesObject = config.get(FormConstants.ALLOWED_VALUES);
+            Object allowedValuesObject = null;//config.get(FormConstants.ALLOWED_VALUES);
             if (allowedValuesObject instanceof Map) {
                 allowedValues = (Map<String, String>) allowedValuesObject;
             }
@@ -283,8 +260,8 @@ public class UIUtil {
         return text.toString();
     }
 
-    public static boolean confirmIsLoggedIn() {
-        if (Application.get().isGuestUser()) {
+    public static boolean confirmIsLoggedIn(LoggedInUserProvider loggedInUserProvider) {
+        if (loggedInUserProvider.getCurrentUserId().isGuest()) {
             MessageBox.alert("Sign in", "Please sign in first.");
             return false;
         }
@@ -294,12 +271,12 @@ public class UIUtil {
         }
     }
 
-    public static boolean confirmOperationAllowed(Project project) {
-        return checkOperationAllowed(project, true);
+    public static boolean confirmOperationAllowed(Project project, LoggedInUserProvider loggedInUserProvider) {
+        return checkOperationAllowed(project, loggedInUserProvider, true);
     }
 
-    public static boolean checkOperationAllowed(Project project, boolean showUserAlerts) {
-        if (Application.get().isGuestUser()) {
+    public static boolean checkOperationAllowed(Project project, LoggedInUserProvider loggedInUserProvider, boolean showUserAlerts) {
+        if (loggedInUserProvider.getCurrentUserId().isGuest()) {
             if (showUserAlerts) {
                 MessageBox.alert("Sign in", "Please sign in first.");
             }

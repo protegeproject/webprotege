@@ -5,7 +5,7 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
@@ -17,7 +17,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEvent;
 import edu.stanford.bmir.protege.web.client.ui.upload.FileUploadResponse;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -39,9 +38,12 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
 
     private final EventBus eventBus;
 
-    public UploadProjectDialogController(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    public UploadProjectDialogController(EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         super(TITLE);
         this.eventBus = eventBus;
+        this.loggedInUserProvider = loggedInUserProvider;
         for (WebProtegeDialogValidator validator : uploadFileWidget.getDialogValidators()) {
             addDialogValidator(validator);
         }
@@ -79,7 +81,7 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
 
     private void createProjectFromUpload(UploadFileInfo data, FileUploadResponse result) {
         UIUtil.showLoadProgessBar(PROGRESS_DIALOG_TITLE, "Creating project");
-        UserId userId = Application.get().getUserId();
+        UserId userId = loggedInUserProvider.getCurrentUserId();
         DocumentId documentId = result.getDocumentId();
         String projectName = data.getProjectSettings().getProjectName();
         String projectDescription = data.getProjectSettings().getProjectDescription();

@@ -4,15 +4,18 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
 import java.util.Set;
 
 /**
@@ -25,8 +28,9 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermIdEditor editor;
 
-    public OBOTermIdEditorPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
-        super(selectionModel, eventBus, project);
+    @Inject
+    public OBOTermIdEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
         setAutoScroll(false);
         setHeight("auto");
     }

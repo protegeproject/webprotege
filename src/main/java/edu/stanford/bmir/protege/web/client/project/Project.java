@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
 import edu.stanford.bmir.protege.web.client.permissions.ProjectPermissionManager;
@@ -13,8 +13,9 @@ import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,6 +34,8 @@ public class Project implements HasProjectId, HasDispose {
 
     private final ProjectPermissionManager permissionManager;
 
+    private final LoggedInUserProvider loggedInUserProvider;
+
     private ProjectLayoutConfiguration projectLayoutConfiguration;
 
     private LayoutManager layoutManager;
@@ -45,12 +48,14 @@ public class Project implements HasProjectId, HasDispose {
      * @param permissionsForCurrentUser The permissions for the current logged in user.  Not {@code null}.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public Project(ProjectDetails projectDetails, PermissionsSet permissionsForCurrentUser, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public Project(ProjectDetails projectDetails, PermissionsSet permissionsForCurrentUser, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.projectDetails = checkNotNull(projectDetails);
-        this.permissionManager = new ProjectPermissionManager(getProjectId(), eventBus, dispatchServiceManager);
-        this.permissionManager.setUserPermissions(Application.get().getUserId(), checkNotNull(permissionsForCurrentUser));
-        this.layoutManager = new LayoutManager(this, eventBus, dispatchServiceManager);
-        this.eventPollingManager = EventPollingManager.get(10 * 1000, projectDetails.getProjectId(), eventBus, dispatchServiceManager);
+        this.permissionManager = new ProjectPermissionManager(getProjectId(), eventBus, dispatchServiceManager, loggedInUserProvider);
+        this.permissionManager.setUserPermissions(loggedInUserProvider.getCurrentUserId(), checkNotNull(permissionsForCurrentUser));
+        this.layoutManager = new LayoutManager(projectDetails.getProjectId(), new ProjectLayoutConfiguration());
+        this.loggedInUserProvider = loggedInUserProvider;
+        this.eventPollingManager = EventPollingManager.get(10 * 1000, projectDetails.getProjectId(), eventBus, dispatchServiceManager, loggedInUserProvider);
         eventPollingManager.start();
     }
 
@@ -96,7 +101,7 @@ public class Project implements HasProjectId, HasDispose {
     }
 
     public boolean hasWritePermission() {
-        return hasWritePermission(Application.get().getUserId());
+        return hasWritePermission(loggedInUserProvider.getCurrentUserId());
     }
 
     public boolean hasReadPermission(UserId userId) {

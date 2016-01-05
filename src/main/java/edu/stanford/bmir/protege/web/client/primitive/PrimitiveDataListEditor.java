@@ -2,11 +2,13 @@ package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.inject.ApplicationClientInjector;
+import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.util.Arrays;
 
@@ -18,11 +20,11 @@ import java.util.Arrays;
  */
 public class PrimitiveDataListEditor extends ValueListEditorImpl<OWLPrimitiveData> implements HasEnabled  {
 
-    public PrimitiveDataListEditor(final PrimitiveType ... allowedTypes) {
+    public PrimitiveDataListEditor(final ProjectId projectId, final PrimitiveType ... allowedTypes) {
         super(new ValueEditorFactory<OWLPrimitiveData>() {
             @Override
             public ValueEditor<OWLPrimitiveData> createEditor() {
-                PrimitiveDataEditorImpl editor = ApplicationClientInjector.instance.getPrimitiveDataEditor();
+                PrimitiveDataEditorImpl editor = WebProtegeClientInjector.getPrimitiveDataEditor(projectId);
                 editor.setAllowedTypes(Arrays.asList(allowedTypes));
                 editor.setFreshEntitiesSuggestStrategy(new SimpleFreshEntitySuggestStrategy());
                 return editor;

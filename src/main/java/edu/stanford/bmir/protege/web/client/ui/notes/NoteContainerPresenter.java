@@ -4,6 +4,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -20,6 +22,7 @@ public class NoteContainerPresenter {
         return note;
     }
 
+    @Inject
     public NoteContainerPresenter(NoteContainerView noteContainerView) {
         this.noteContainerView = noteContainerView;
     }

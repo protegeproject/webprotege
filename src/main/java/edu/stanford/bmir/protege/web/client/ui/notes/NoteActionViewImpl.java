@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -27,14 +28,14 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
 
     private ReplyToNoteHandler replyToNoteHandler = new ReplyToNoteHandler() {
         @Override
-        public void handleReplyToNote() {
+        public void handleReplyToNote(NoteId noteId) {
             GWT.log("No ReplyToNoteHandler registered");
         }
     };
 
     private DeleteNoteHandler deleteNoteHandler = new DeleteNoteHandler() {
         @Override
-        public void handleDeleteNote() {
+        public void handleDeleteNote(NoteId noteId) {
             GWT.log("No DeleteNoteHandler registered");
         }
     };
@@ -45,20 +46,26 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
     @UiField
     protected ButtonBase deleteWidget;
 
-
     @UiHandler("replyWidget")
     protected void handleReplyClicked(ClickEvent clickEvent) {
-        replyToNoteHandler.handleReplyToNote();
+        replyToNoteHandler.handleReplyToNote(noteId);
     }
 
     @UiHandler("deleteWidget")
     protected void handleDeleteClicked(ClickEvent clickEvent) {
-        deleteNoteHandler.handleDeleteNote();
+        deleteNoteHandler.handleDeleteNote(noteId);
     }
+
+    private NoteId noteId;
 
     public NoteActionViewImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
+    }
+
+    @Override
+    public void setNoteId(NoteId noteId) {
+        this.noteId = noteId;
     }
 
     @Override

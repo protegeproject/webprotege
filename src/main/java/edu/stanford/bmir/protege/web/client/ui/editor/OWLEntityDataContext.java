@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.ui.editor;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -20,5 +22,13 @@ public class OWLEntityDataContext extends EditorCtx {
 
     public OWLEntityData getEntityData() {
         return entityData;
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("OWLEntityDataContext")
+                .addValue(entityData)
+                .toString();
     }
 }

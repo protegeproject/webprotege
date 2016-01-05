@@ -1,9 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
+import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
+
+import javax.inject.Provider;
 
 /**
  * Author: Matthew Horridge<br>
@@ -13,11 +18,14 @@ import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
  */
 public class OBOTermRelationshipEditor extends ValueListEditorImpl<OBORelationship> {
 
-    public OBOTermRelationshipEditor() {
+    @Inject
+    public OBOTermRelationshipEditor(final Provider<PrimitiveDataEditorImpl> primitiveDataEditorProvider) {
         super(new ValueEditorFactory<OBORelationship>() {
             @Override
             public ValueEditor<OBORelationship> createEditor() {
-                return new OBORelationshipEditorImpl();
+                return new OBORelationshipEditorImpl(
+                        primitiveDataEditorProvider.get(),
+                        primitiveDataEditorProvider.get());
             }
         });
     }

@@ -7,4 +7,7 @@ package edu.stanford.bmir.protege.web.client.permissions;
  */
 public interface LoggedInUserProjectPermissionChecker {
 
+    boolean hasWritePermission();
+
+    boolean hasReadPermission();
 }

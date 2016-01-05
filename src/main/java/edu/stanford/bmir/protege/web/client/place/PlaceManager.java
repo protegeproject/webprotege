@@ -1,17 +1,10 @@
 package edu.stanford.bmir.protege.web.client.place;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.SimpleEventBus;
-import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
-import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 

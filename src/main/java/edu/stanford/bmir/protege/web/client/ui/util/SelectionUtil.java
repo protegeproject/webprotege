@@ -74,53 +74,54 @@ public class SelectionUtil {
 
 
     public static void selectIndividuals(Project project, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Collection<EntityData> clses, boolean allowMultiple, boolean showClsesPanel, final SelectionCallback callback) {
-        final IndividualsWithClassSelectionPanel classSelectionPanel = new IndividualsWithClassSelectionPanel(project, eventBus, dispatchServiceManager, clses, allowMultiple, showClsesPanel);
-        final Window selectWindow = new com.gwtext.client.widgets.Window();
-        selectWindow.setTitle("Select individuals");
-        selectWindow.setWidth(800);
-        selectWindow.setHeight(500);
-        selectWindow.setLayout(new FitLayout());
-        selectWindow.setPaddings(5);
-        selectWindow.setButtonAlign(Position.CENTER);
-        selectWindow.setPlain(true);
-
-        com.gwtext.client.widgets.Button cancelButton = new com.gwtext.client.widgets.Button("Cancel");
-        cancelButton.addListener(new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                selectWindow.hide();
-                selectWindow.destroy();
-            }
-        });
-
-        com.gwtext.client.widgets.Button selectButton = new com.gwtext.client.widgets.Button("Select");
-        selectButton.addListener(new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                Collection<EntityData> tmpselection = classSelectionPanel.getSelection();
-                if (tmpselection == null || tmpselection.size() == 0) {
-                    MessageBox.alert("No selection", "No entity selected. Please make a selection in the right panel.");
-                    return;
-                } else {
-                    final Collection<EntityData> selection = new HashSet<EntityData>();
-                    for (EntityData sel : tmpselection) {
-                        selection.add(sel);
-                    }
-                    if (callback != null) {
-                        callback.onSelect(selection);
-                    }
-                }
-                selectWindow.hide();
-                selectWindow.destroy();
-            }
-        });
-
-        selectWindow.add(classSelectionPanel);
-        selectWindow.addButton(selectButton);
-        selectWindow.addButton(cancelButton);
-
-        selectWindow.show();
-        selectWindow.center();
+//        final IndividualsWithClassSelectionPanel classSelectionPanel = new IndividualsWithClassSelectionPanel(project, eventBus, dispatchServiceManager, clses, allowMultiple, showClsesPanel);
+//        final Window selectWindow = new com.gwtext.client.widgets.Window();
+//        selectWindow.setTitle("Select individuals");
+//        selectWindow.setWidth(800);
+//        selectWindow.setHeight(500);
+//        selectWindow.setLayout(new FitLayout());
+//        selectWindow.setPaddings(5);
+//        selectWindow.setButtonAlign(Position.CENTER);
+//        selectWindow.setPlain(true);
+//
+//        com.gwtext.client.widgets.Button cancelButton = new com.gwtext.client.widgets.Button("Cancel");
+//        cancelButton.addListener(new ButtonListenerAdapter() {
+//            @Override
+//            public void onClick(Button button, EventObject e) {
+//                selectWindow.hide();
+//                selectWindow.destroy();
+//            }
+//        });
+//
+//        com.gwtext.client.widgets.Button selectButton = new com.gwtext.client.widgets.Button("Select");
+//        selectButton.addListener(new ButtonListenerAdapter() {
+//            @Override
+//            public void onClick(Button button, EventObject e) {
+//                Collection<EntityData> tmpselection = classSelectionPanel.getSelection();
+//                if (tmpselection == null || tmpselection.size() == 0) {
+//                    MessageBox.alert("No selection", "No entity selected. Please make a selection in the right panel.");
+//                    return;
+//                } else {
+//                    final Collection<EntityData> selection = new HashSet<EntityData>();
+//                    for (EntityData sel : tmpselection) {
+//                        selection.add(sel);
+//                    }
+//                    if (callback != null) {
+//                        callback.onSelect(selection);
+//                    }
+//                }
+//                selectWindow.hide();
+//                selectWindow.destroy();
+//            }
+//        });
+//
+//        selectWindow.add(classSelectionPanel);
+//        selectWindow.addButton(selectButton);
+//        selectWindow.addButton(cancelButton);
+//
+//        selectWindow.show();
+//        selectWindow.center();
+        throw new RuntimeException("NEEDS REIMPLEMENTING");
     }
 
 
