@@ -10,11 +10,13 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -24,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/08/2013
  */
-public class ApplicationBarImpl extends Composite implements ApplicationActionBar {
+public class ApplicationActionBarImpl extends Composite implements ApplicationActionBar {
 
     private SignInRequestHandler signInRequestHandler = new SignInRequestHandler() {
         @Override
@@ -84,7 +86,7 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
         signUpForAccountItem.setVisible(visible);
     }
 
-    interface ApplicationBarImplUiBinder extends UiBinder<HTMLPanel, ApplicationBarImpl> {
+    interface ApplicationBarImplUiBinder extends UiBinder<HTMLPanel, ApplicationActionBarImpl> {
 
     }
 
@@ -99,7 +101,11 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
     @UiField
     protected ButtonBase helpItem;
 
-    public ApplicationBarImpl() {
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    @Inject
+    public ApplicationActionBarImpl(LoggedInUserProvider loggedInUserProvider) {
+        this.loggedInUserProvider = loggedInUserProvider;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         helpItem.setHTML("Help&nbsp;&nbsp;&#x25BE");
@@ -112,7 +118,7 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
 
     @UiHandler("userNameItem")
     protected void handleSignInItemClicked(ClickEvent clickEvent) {
-        if (!Application.get().isGuestUser()) {
+        if (!loggedInUserProvider.getCurrentUserId().isGuest()) {
             showSignedInPopup();
         } else {
             signInRequestHandler.handleSignInRequest();

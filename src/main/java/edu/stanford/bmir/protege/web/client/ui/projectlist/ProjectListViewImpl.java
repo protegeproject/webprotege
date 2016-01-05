@@ -20,7 +20,7 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.DownloadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.TrashManagerRequestHandler;
@@ -28,6 +28,7 @@ import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,9 +42,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 11/10/2013
  */
-public class ProjectListViewUIImpl extends Composite implements ProjectListView {
+public class ProjectListViewImpl extends Composite implements ProjectListView {
 
-    interface ProjectListViewUIImplUiBinder extends UiBinder<HTMLPanel, ProjectListViewUIImpl> {
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    interface ProjectListViewUIImplUiBinder extends UiBinder<HTMLPanel, ProjectListViewImpl> {
 
     }
 
@@ -89,7 +92,9 @@ public class ProjectListViewUIImpl extends Composite implements ProjectListView 
 
 
 
-    public ProjectListViewUIImpl() {
+    @Inject
+    public ProjectListViewImpl(LoggedInUserProvider loggedInUserProvider) {
+        this.loggedInUserProvider = loggedInUserProvider;
         ProvidesKey<ProjectListEntry> keyProvider = new ProvidesKey<ProjectListEntry>() {
             @Override
             public Object getKey(ProjectListEntry item) {
@@ -155,7 +160,7 @@ public class ProjectListViewUIImpl extends Composite implements ProjectListView 
         selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
             @Override
             public void onSelectionChange(SelectionChangeEvent event) {
-                SelectionEvent.fire(ProjectListViewUIImpl.this, selectionModel.getSelectedObject().getProjectId());
+                SelectionEvent.fire(ProjectListViewImpl.this, selectionModel.getSelectedObject().getProjectId());
             }
         });
 
@@ -345,7 +350,7 @@ public class ProjectListViewUIImpl extends Composite implements ProjectListView 
         }
 
         private boolean isOwnerOfProjectEntry(ProjectListEntry object) {
-            return object.getProjectDetails().getOwner().equals(Application.get().getUserId());
+            return object.getProjectDetails().getOwner().equals(loggedInUserProvider.getCurrentUserId());
         }
     }
 
