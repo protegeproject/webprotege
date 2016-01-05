@@ -21,6 +21,7 @@ import com.gwtext.client.widgets.menu.Item;
 import com.gwtext.client.widgets.menu.Menu;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import com.gwtext.client.widgets.menu.event.CheckItemListenerAdapter;
+import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -34,6 +35,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
+import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.*;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
@@ -232,7 +234,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
                 @Override
                 public void onClick(BaseItem item, EventObject e) {
                     String javaClassName = shortToLongPortletNameMap.get(((Item) item).getText());
-                    onPortletAdded(javaClassName);
+                    handleAddPortlet(javaClassName);
                 }
             });
         }
@@ -241,7 +243,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         return addPortletButton;
     }
 
-    private void onPortletAdded(final String javaClassName) {
+    private void handleAddPortlet(final String javaClassName) {
         AbstractTab activeTab = getActiveOntologyTab();
         // TODO: Inject the UI Factory
         UIFactory uiFactory = WebProtegeClientInjector.getUiFactory(projectId);
@@ -249,7 +251,9 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         if (portlet == null) {
             return;
         }
+        ((AbstractEntityPortlet) portlet).setTab(activeTab);
         activeTab.addPortletToColumn(portlet, activeTab.getColumnCount() - 1);
+        portlet.initialize();
         doLayout();
     }
 
