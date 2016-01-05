@@ -30,7 +30,7 @@ import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.MyWebProtegeTab;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
-import edu.stanford.bmir.protege.web.shared.place.TabId;
+import edu.stanford.bmir.protege.web.shared.place.TabName;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettings;
 import edu.stanford.bmir.protege.web.shared.projectsettings.ProjectSettingsChangedEvent;
@@ -153,7 +153,7 @@ public class ProjectDisplayContainerPanel extends TabPanel {
         if (projectId.isPresent()) {
             Place place = placeController.getWhere();
             Optional<OWLEntity> entity;
-            Optional<TabId> tabId;
+            Optional<TabName> tabId;
             if(place instanceof ProjectViewPlace) {
                 ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
                 entity = projectViewPlace.getEntity();

@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.client.ui.obo.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.OntologyAnnotationsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet;
 import edu.stanford.bmir.protege.web.client.change.ChangesPortlet;
+import edu.stanford.bmir.protege.web.client.ui.tab.TabId;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTabFactory;
 import edu.stanford.bmir.protege.web.client.watches.WatchedEntitiesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.*;
@@ -85,7 +86,7 @@ public class UIFactory {
 
     private final UserDefinedTabFactory userDefinedTabFactory;
 
-    public AbstractTab createTab(String tabId) {
+    public AbstractTab createTab(TabId tabId) {
         return userDefinedTabFactory.createUserDefinedTab(tabId);
     }
 

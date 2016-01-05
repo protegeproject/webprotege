@@ -18,28 +18,28 @@ public class ProjectViewPlaceTokenizer_TestCase {
 
     private final ProjectId projectId = ProjectId.get("aaaabbbb-cccc-dddd-eeee-ffffffffffffffff");
 
-    private final TabId tabId = new TabId("MyTab");
+    private final TabName tabName = new TabName("MyTab");
 
     private final IRI entityIri = IRI.create("http://stuff.com#A");
 
     @Test
     public void shouldTokenizeProjectViewPlace() {
-        String token = "projectId="+projectId.getId()+"&tab="+tabId.getTabName()+"&entity=Class("+entityIri.toQuotedString()+")";
+        String token = "projectId="+projectId.getId()+"&tab="+ tabName.getTabName()+"&entity=Class("+entityIri.toQuotedString()+")";
         ProjectViewPlace.Tokenizer tokenizer = new ProjectViewPlace.Tokenizer();
         ProjectViewPlace place = tokenizer.getPlace(token);
         assertThat(place.getProjectId(), is(projectId));
-        assertThat(place.getTabId(), is(Optional.of(tabId)));
+        assertThat(place.getTabId(), is(Optional.of(tabName)));
         assertThat(place.getEntity(), is(Optional.of(DataFactory.getOWLClass(entityIri))));
     }
 
 
     @Test
     public void shouldTokenizeIgnoringVarNameCaseProjectViewPlace() {
-        String token = "ProjectId="+projectId.getId()+"&Tab="+tabId.getTabName()+"&Entity=Class("+entityIri.toQuotedString()+")";
+        String token = "ProjectId="+projectId.getId()+"&Tab="+ tabName.getTabName()+"&Entity=Class("+entityIri.toQuotedString()+")";
         ProjectViewPlace.Tokenizer tokenizer = new ProjectViewPlace.Tokenizer();
         ProjectViewPlace place = tokenizer.getPlace(token);
         assertThat(place.getProjectId(), is(projectId));
-        assertThat(place.getTabId(), is(Optional.of(tabId)));
+        assertThat(place.getTabId(), is(Optional.of(tabName)));
         assertThat(place.getEntity(), is(Optional.of(DataFactory.getOWLClass(entityIri))));
     }
 

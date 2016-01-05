@@ -24,7 +24,7 @@ import javax.inject.Inject;
 public class UserDefinedTab extends AbstractTab {
 
 	@Inject
-	public UserDefinedTab(@Assisted String tabId, SelectionModel selectionModel, ProjectId projectId, ProjectManager projectManager) {
+	public UserDefinedTab(@Assisted TabId tabId, SelectionModel selectionModel, ProjectId projectId, ProjectManager projectManager) {
 		super(tabId, selectionModel, projectId, projectManager);
 	}
 }

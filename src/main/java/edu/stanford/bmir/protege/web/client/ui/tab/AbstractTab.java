@@ -12,9 +12,6 @@ import com.gwtext.client.widgets.portal.Portal;
 import com.gwtext.client.widgets.portal.PortalColumn;
 import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -53,9 +50,9 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
 
     private final ProjectId projectId;
 
-    private String tabId;
+    private TabId tabId;
 
-    public AbstractTab(final String tabId, final SelectionModel selectionModel, ProjectId projectId, ProjectManager projectManager) {
+    public AbstractTab(final TabId tabId, final SelectionModel selectionModel, ProjectId projectId, ProjectManager projectManager) {
         super();
         this.tabId = tabId;
         this.projectId = projectId;
@@ -74,6 +71,10 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
         setLayout(new FitLayout());
         setHideBorders(true);
         add(portal);
+    }
+
+    public TabId getTabId() {
+        return tabId;
     }
 
     public SelectionModel getSelectionModel() {
@@ -130,7 +131,7 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
     @Override
     public void addPortletToColumn(EntityPortlet entityPortlet, int columnIndex) {
         PortalColumn portalColumn = columns.get(columnIndex);
-        portalColumn.add((AbstractEntityPortlet) entityPortlet);
+        portalColumn.add((Portlet) entityPortlet);
         column2Portlets.put(portalColumn, entityPortlet);
         portlet2Column.put(entityPortlet, portalColumn);
         ((Portlet) entityPortlet).addListener(portletDestroyListener);
@@ -139,38 +140,6 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
     public String getLabel() {
         return getTitle();
     }
-
-
-
-
-    /**
-     * Overwrite this method to provide a default tab configuration for a tab.
-     * For example, the ClassesTab may set up in the default
-     * configuration the default portlets to be shown in the UI (e.g., classes
-     * tree portlet, properties portlet and restriction portlet). The default
-     * tab configuration will be used if the user has not performed any
-     * customization to this tab.
-     * <p>
-     * This method will not se the tab configuration to the return value of this
-     * method. It is responsability of the calling code to make so.
-     * </p>
-     * <p>
-     * The default implementation will return an empty tab.
-     * </p>
-     *
-     * @return the default configuration of this tab
-     */
-    public TabConfiguration getDefaultTabConfiguration() {
-        final TabConfiguration tabConfiguration = new TabConfiguration();
-        final List<TabColumnConfiguration> colList = new ArrayList<TabColumnConfiguration>();
-        final TabColumnConfiguration column = new TabColumnConfiguration();
-        column.setWidth((float) 1.0);
-        colList.add(column);
-        tabConfiguration.setColumns(colList);
-        tabConfiguration.setName(tabId);
-        return tabConfiguration;
-    }
-
 
     public void setLabel(final String label) {
         setTitle(label);

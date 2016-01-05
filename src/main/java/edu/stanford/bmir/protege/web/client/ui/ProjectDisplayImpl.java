@@ -37,12 +37,10 @@ import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
-import edu.stanford.bmir.protege.web.client.ui.tab.BuiltInTabId;
-import edu.stanford.bmir.protege.web.client.ui.tab.TabBuilder;
-import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
+import edu.stanford.bmir.protege.web.client.ui.tab.*;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.place.TabName;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -74,7 +72,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private Map<String, String> shortToLongPortletNameMap;
 
-    private Map<String, String> shortToLongTabNameMap;
+    private Map<String, TabId> shortToLongTabNameMap;
 
     private List<AbstractTab> tabs;
 
@@ -144,7 +142,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     private void displayPlace(Place place) {
         if(place instanceof ProjectViewPlace) {
             ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
-            Optional<edu.stanford.bmir.protege.web.shared.place.TabId> tabId = projectViewPlace.getTabId();
+            Optional<TabName> tabId = projectViewPlace.getTabId();
             if(tabId.isPresent()) {
                 selectTabWithName(tabId.get().getTabName());
             }
@@ -199,7 +197,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         ProjectLayoutConfiguration conf = project.getProjectLayoutConfiguration();
         List<AbstractTab> tabs = new ArrayList<>();
         for(TabConfiguration tabConf : conf.getTabs()) {
-            AbstractTab tab = WebProtegeClientInjector.getUiFactory(projectId).createTab(tabConf.getName());
+            AbstractTab tab = WebProtegeClientInjector.getUiFactory(projectId).createTab(new TabId(tabConf.getName()));
             TabBuilder tabBuilder = new TabBuilder(projectId, tab, tabConf);
             tabBuilder.build();
             tabs.add(tab);
@@ -308,11 +306,11 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
             item.addListener(new CheckItemListenerAdapter() {
                 @Override
                 public void onCheckChange(CheckItem item, boolean checked) {
-                    String javaClassName = shortToLongTabNameMap.get(item.getText());
+                    TabId tabId = shortToLongTabNameMap.get(item.getText());
                     if (checked) {
-                        onTabAdded(javaClassName);
+                        onTabAdded(tabId);
                     } else {
-                        onTabRemoved(javaClassName);
+                        onTabRemoved(tabId);
                     }
                 }
             });
@@ -365,8 +363,8 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         window.show();
     }
 
-    private void onTabRemoved(String javaClassName) {
-        AbstractTab tab = getTabByClassName(javaClassName);
+    private void onTabRemoved(TabId tabId) {
+        AbstractTab tab = getTabById(tabId);
         if (tab == null) {
             return;
         }
@@ -377,8 +375,8 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         doLayout();
     }
 
-    private void onTabAdded(String javaClassName) {
-        AbstractTab tab = WebProtegeClientInjector.getUiFactory(projectId).createTab(javaClassName);
+    private void onTabAdded(TabId tabId) {
+        AbstractTab tab = WebProtegeClientInjector.getUiFactory(projectId).createTab(tabId);
         // TODO: This should load the config somehow!
         TabBuilder tabBuilder = new TabBuilder(projectId, tab, new TabConfiguration());
         tabBuilder.build();
@@ -386,9 +384,9 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         // doLayout();
     }
 
-    public AbstractTab getTabByClassName(String javaClassName) {
+    public AbstractTab getTabById(TabId tabId) {
         for (AbstractTab tab : tabs) {
-            if (tab.getClass().getName().equals(javaClassName)) {
+            if (tab.getTabId().equals(tabId)) {
                 return tab;
             }
         }
@@ -533,8 +531,8 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
         public AbstractTab createTab() {
             UIFactory uiFactory = WebProtegeClientInjector.getUiFactory(projectId);
-            AbstractTab tab = uiFactory.createTab(UserDefinedTab.class.getName());
-            final Project project = getProject();
+            TabId tabId = new TabId(UserDefinedTab.class.getName());
+            AbstractTab tab = uiFactory.createTab(tabId);
             TabConfiguration userDefinedTabConfiguration = getUserDefinedTabConfiguration();
             TabBuilder tabBuilder = new TabBuilder(projectId, tab, userDefinedTabConfiguration);
             tabBuilder.build();

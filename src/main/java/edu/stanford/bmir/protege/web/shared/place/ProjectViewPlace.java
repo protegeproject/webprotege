@@ -22,11 +22,11 @@ public class ProjectViewPlace extends Place {
 
     private ProjectId projectId;
 
-    private Optional<TabId> tabId;
+    private Optional<TabName> tabId;
 
     private Optional<OWLEntity> entity;
 
-    public ProjectViewPlace(ProjectId projectId, Optional<TabId> tabId, Optional<OWLEntity> entity) {
+    public ProjectViewPlace(ProjectId projectId, Optional<TabName> tabId, Optional<OWLEntity> entity) {
         this.projectId = projectId;
         this.tabId = tabId;
         this.entity = entity;
@@ -36,7 +36,7 @@ public class ProjectViewPlace extends Place {
         return projectId;
     }
 
-    public Optional<TabId> getTabId() {
+    public Optional<TabName> getTabId() {
         return tabId;
     }
 
@@ -84,7 +84,7 @@ public class ProjectViewPlace extends Place {
         public ProjectViewPlace getPlace(String token) {
             String [] components = token.split("\\&");
             Optional<ProjectId> projectId = Optional.absent();
-            Optional<TabId> tabId = Optional.absent();
+            Optional<TabName> tabId = Optional.absent();
             Optional<OWLEntity> entity = Optional.absent();
             for(String component : components) {
                 String lowerCaseComponent = component.toLowerCase();
@@ -92,7 +92,7 @@ public class ProjectViewPlace extends Place {
                     projectId = Optional.of(ProjectId.get(component.substring(PROJECT_ID_VAR.length())));
                 }
                 else if(lowerCaseComponent.startsWith(TAB_VAR)) {
-                    tabId = Optional.of(new TabId(component.substring(TAB_VAR.length())));
+                    tabId = Optional.of(new TabName(component.substring(TAB_VAR.length())));
                 }
                 else if(lowerCaseComponent.startsWith(ENTITY_VAR)) {
                     entity = new DeclarationParser(DataFactory.get()).parseEntity(component.substring(ENTITY_VAR.length()));
@@ -106,7 +106,7 @@ public class ProjectViewPlace extends Place {
             StringBuilder sb = new StringBuilder();
             sb.append(PROJECT_ID_VAR);
             sb.append(place.getProjectId().getId());
-            Optional<TabId> tabId = place.getTabId();
+            Optional<TabName> tabId = place.getTabId();
             if(tabId.isPresent()) {
                 sb.append("&");
                 sb.append(TAB_VAR);
