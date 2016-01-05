@@ -57,12 +57,7 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
         addListener(new PanelListenerAdapter(){
             @Override
             public void onActivate(Panel panel) {
-                // Tell the portlets to update themselves
-                for(EntityPortlet entityPortlet : getPortlets()) {
-                    if(entityPortlet instanceof AbstractEntityPortlet) {
-                        ((AbstractEntityPortlet) entityPortlet).handleActivated();
-                    }
-                }
+                activatePortlets();
             }
         });
         setLayout(new FitLayout());
@@ -78,6 +73,13 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
         return selectionModel;
     }
 
+    private void activatePortlets() {
+        for(EntityPortlet entityPortlet : getPortlets()) {
+            if(entityPortlet instanceof AbstractEntityPortlet) {
+                ((AbstractEntityPortlet) entityPortlet).handleActivated();
+            }
+        }
+    }
 
     @Override
     public List<EntityPortlet> getPortlets() {
@@ -140,9 +142,5 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
 
     public void setLabel(final String label) {
         setTitle(label);
-    }
-    
-    public String getHeaderClass() {
-        return null;
     }
 }

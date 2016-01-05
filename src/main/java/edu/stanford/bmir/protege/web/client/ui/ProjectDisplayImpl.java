@@ -206,7 +206,6 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         for (AbstractTab tab : tabs) {
             GWT.log("[ProjectDisplayImpl] Attempting to add tab " + tab.getLabel());
             addTab(tab);
-            updateTabStyle(tab);
         }
         if (tabs.size() > 0) {
             activate(0);
@@ -216,15 +215,6 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
             createToolbarButtons();
 //        }
         doLayout();
-    }
-
-
-    private void updateTabStyle(AbstractTab tab) {
-        String tabHeaderClass = tab.getHeaderClass();
-        if (tabHeaderClass != null) {
-            Element tabEl = getTabEl(tab);
-            tabEl.addClassName(tabHeaderClass);
-        }
     }
 
     private void addTab(AbstractTab tab) {
