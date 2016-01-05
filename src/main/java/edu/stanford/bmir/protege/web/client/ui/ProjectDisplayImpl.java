@@ -52,6 +52,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -288,7 +289,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     protected ToolbarMenuButton getAddTabButton() {
-        shortToLongTabNameMap = UIFactory.getAvailableTabNameMap();
+        shortToLongTabNameMap = new HashMap<>();
 
         List<String> enabledTabs = new ArrayList<String>();
         for (AbstractTab tab : tabs) {
