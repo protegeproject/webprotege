@@ -466,7 +466,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             if (applicationURL.contains("#")) {
                 applicationURL = applicationURL.substring(0, applicationURL.indexOf("#"));
             }
-            String tabName = getTab().getTabConfiguration().getName();
+            String tabName = getTab().getLabel();
             if (tabName.contains(".")) {
                 tabName = tabName.substring(tabName.lastIndexOf(".") + 1);
             }

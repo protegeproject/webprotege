@@ -1,13 +1,12 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.layout;
 
-import com.gwtext.client.widgets.portal.Portlet;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class TabConfiguration extends GenericConfiguration implements Serializable{
+
 	private static final long serialVersionUID = 9187571983105881720L;
 
 	private String name;
@@ -16,7 +15,7 @@ public class TabConfiguration extends GenericConfiguration implements Serializab
 
     private String headerCssClass = null;
 
-    private List<TabColumnConfiguration> columns = new ArrayList<TabColumnConfiguration>();
+    private List<TabColumnConfiguration> columns = new ArrayList<>();
 
 	private PortletConfiguration controllingPortlet;
 
