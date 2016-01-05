@@ -11,22 +11,11 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.portal.Portal;
 import com.gwtext.client.widgets.portal.PortalColumn;
 import com.gwtext.client.widgets.portal.Portlet;
-import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.*;
 
-/**
- * Abstract class that should be extended by all tabs that can be added to the
- * main UI of WebProtege.
- * <p/>
- *
- * @author Tania Tudorache <tudorache@stanford.edu>
- */
-// TODO: reordering of portlets in a column at drang-n-drop does not work yet
 public abstract class AbstractTab extends Portal implements PortletContainer {
 
     private final Portal portal = new Portal();
@@ -46,14 +35,11 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
         }
     };
 
-    private final SelectionModel selectionModel;
-
     private TabId tabId;
 
-    public AbstractTab(final TabId tabId, final SelectionModel selectionModel) {
+    public AbstractTab(final TabId tabId) {
         super();
         this.tabId = tabId;
-        this.selectionModel = selectionModel;
         addListener(new PanelListenerAdapter(){
             @Override
             public void onActivate(Panel panel) {
@@ -67,10 +53,6 @@ public abstract class AbstractTab extends Portal implements PortletContainer {
 
     public TabId getTabId() {
         return tabId;
-    }
-
-    public SelectionModel getSelectionModel() {
-        return selectionModel;
     }
 
     private void activatePortlets() {
