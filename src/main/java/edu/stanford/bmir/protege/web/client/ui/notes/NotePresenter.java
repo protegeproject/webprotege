@@ -5,6 +5,8 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -17,6 +19,7 @@ public class NotePresenter  {
 
     private Note note;
 
+    @Inject
     public NotePresenter(NoteView noteView) {
         this.noteView = noteView;
     }

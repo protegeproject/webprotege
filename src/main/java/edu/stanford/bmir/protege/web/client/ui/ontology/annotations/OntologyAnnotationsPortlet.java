@@ -5,20 +5,25 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsResult;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEventHandler;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
+import javax.inject.Inject;
 import java.util.Set;
 
 /**
@@ -31,21 +36,25 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
 
     private static final int DEFAULT_HEIGHT = 400;
 
-    private AnnotationsView annotationsView;
+    private final AnnotationsView annotationsView;
 
     private Optional<Set<OWLAnnotation>> lastSet = Optional.absent();
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public OntologyAnnotationsPortlet(SelectionModel selectionModel, EventBus eventBus,  DispatchServiceManager dispatchServiceManager, Project project) {
-        super(selectionModel, eventBus, project);
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
+    @Inject
+    public OntologyAnnotationsPortlet(AnnotationsView annotationsView, SelectionModel selectionModel, EventBus eventBus,  DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, LoggedInUserProjectPermissionChecker permissionChecker) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.permissionChecker = permissionChecker;
     }
 
     @Override
     public void initialize() {
         setTitle("Ontology annotations");
-        annotationsView = new AnnotationsViewImpl(getProjectId(), dispatchServiceManager);
         add(new ScrollPanel(annotationsView.asWidget()));
         annotationsView.addValueChangeHandler(new ValueChangeHandler<Optional<Set<OWLAnnotation>>>() {
             @Override
@@ -79,7 +88,7 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
 
 
     private void updateState() {
-        annotationsView.setEnabled(hasWritePermission());
+        annotationsView.setEnabled(permissionChecker.hasWritePermission());
     }
 
     @Override

@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -37,11 +39,12 @@ public class NoteContainerViewImpl extends Composite implements NoteContainerVie
 
     private NoteActionPresenter noteActionPresenter;
 
-    public NoteContainerViewImpl(DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public NoteContainerViewImpl(NotePresenter notePresenter, NoteActionPresenter noteActionPresenter) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
-        this.notePresenter = new NotePresenter(noteView);
-        this.noteActionPresenter = new NoteActionPresenter(noteActionView, dispatchServiceManager);
+        this.notePresenter = notePresenter;
+        this.noteActionPresenter = noteActionPresenter;
     }
 
 

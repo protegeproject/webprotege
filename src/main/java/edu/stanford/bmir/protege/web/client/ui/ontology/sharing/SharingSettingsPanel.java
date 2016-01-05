@@ -4,6 +4,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
@@ -39,7 +42,8 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
     
     public static final String PLACE_HOLDER_TEXT = "Enter names (1 per line)";
 
-    public SharingSettingsPanel(final ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public SharingSettingsPanel(final ProjectId projectId, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
 
@@ -51,7 +55,7 @@ public class SharingSettingsPanel extends WebProtegeDialogForm {
         listLabel.addStyleName("web-protege-header-label");
 
 
-        sharingSettingsList = new SharingSettingsList();
+        sharingSettingsList = new SharingSettingsList(loggedInUserProvider);
         
         refillSharingSettingsList(projectId);
 

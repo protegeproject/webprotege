@@ -3,9 +3,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -55,7 +53,6 @@ public class MutableFreshEntitiesHandler implements FreshEntitiesHandler {
         if(entity != null) {
             return (E) entity;
         }
-        UserId userId = Application.get().getUserId();
         E freshEntity = DataFactory.getFreshOWLEntity(type, browserText);
         entitiesTable.put(browserText, type, freshEntity);
         return freshEntity;

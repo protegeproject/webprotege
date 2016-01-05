@@ -5,13 +5,18 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.*;
 
 /**
@@ -22,12 +27,14 @@ import java.util.*;
  */
 public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
     
-    private OBOTermRelationshipEditor editor;
+    private final OBOTermRelationshipEditor editor;
 
     private Optional<List<OBORelationship>> pristineValue = Optional.absent();
 
-    public OBOTermRelationshipPortlet(Project project, EventBus eventBus, SelectionModel selectionModel) {
-        super(selectionModel, eventBus, project);
+    @Inject
+    public OBOTermRelationshipPortlet(OBOTermRelationshipEditor editor, ProjectId projectId, EventBus eventBus, SelectionModel selectionModel, LoggedInUserProvider loggedInUserProvider) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        this.editor = editor;
     }
 
 
@@ -87,7 +94,6 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
 
     @Override
     public void initialize() {
-        editor = new OBOTermRelationshipEditor();
         editor.setEnabled(true);
         add(editor.getWidget());
     }

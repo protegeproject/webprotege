@@ -30,6 +30,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -70,13 +71,14 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     private static NamedIndividualFrameEditorUiBinder ourUiBinder = GWT.create(NamedIndividualFrameEditorUiBinder.class);
 
-    public NamedIndividualFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public NamedIndividualFrameEditor(PropertyValueListEditor assertionsEditor, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         super(projectId, dispatchServiceManager);
-        assertions = new PropertyValueListEditor(projectId, dispatchServiceManager);
+        assertions = assertionsEditor;
         assertions.setGrammar(PropertyValueGridGrammar.getNamedIndividualGrammar());
-        types = new PrimitiveDataListEditor(PrimitiveType.CLASS);
+        types = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
         types.setPlaceholder("Enter class name");
-        sameAs = new PrimitiveDataListEditor(PrimitiveType.NAMED_INDIVIDUAL);
+        sameAs = new PrimitiveDataListEditor(projectId, PrimitiveType.NAMED_INDIVIDUAL);
         sameAs.setPlaceholder("Enter individual name");
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);

@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateObjectPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -18,22 +20,15 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntityDataContext, LabelledFrame<ObjectPropertyFrame>> {
 
-    private ObjectPropertyFrameEditor editor;
+    private final ObjectPropertyFrameEditor editor;
 
-    private ProjectId projectId;
-
-    private final DispatchServiceManager dispatchServiceManager;
-
-    public ObjectPropertyFrameEditorManager(DispatchServiceManager dispatchServiceManager) {
-        this.dispatchServiceManager = dispatchServiceManager;
+    @Inject
+    public ObjectPropertyFrameEditorManager(ObjectPropertyFrameEditor editor) {
+        this.editor = editor;
     }
 
     @Override
     public EditorView<LabelledFrame<ObjectPropertyFrame>> getView(OWLEntityDataContext editorContext) {
-        if (editor == null || !projectId.equals(editorContext.getProjectId())) {
-            projectId = editorContext.getProjectId();
-            editor = new ObjectPropertyFrameEditor(editorContext.getProjectId(), dispatchServiceManager);
-        }
         return editor;
     }
 

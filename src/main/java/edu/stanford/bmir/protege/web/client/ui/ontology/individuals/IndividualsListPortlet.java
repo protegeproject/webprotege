@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
@@ -14,7 +15,7 @@ import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.action.CreateHandler;
 import edu.stanford.bmir.protege.web.client.action.DeleteHandler;
 import edu.stanford.bmir.protege.web.client.action.NullCreateHandler;
@@ -24,6 +25,8 @@ import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesList;
 import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesListImpl;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewPresenter;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
@@ -32,6 +35,7 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -77,9 +81,21 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public IndividualsListPortlet(SelectionModel selectionModel,  EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
-        super(selectionModel, eventBus, project);
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
+    @Inject
+    public IndividualsListPortlet(SelectionModel selectionModel,
+                                  EventBus eventBus,
+                                  DispatchServiceManager dispatchServiceManager,
+                                  LoggedInUserProvider loggedInUserProvider,
+                                  ProjectId projectId,
+                                  LoggedInUserProjectPermissionChecker permissionChecker) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
+        this.permissionChecker = permissionChecker;
     }
 
     @Override
@@ -179,7 +195,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
                 createHandler.handleCreate();
             }
         });
-        createButton.setDisabled(!getProject().hasWritePermission(Application.get().getUserId()));
+        createButton.setDisabled(!permissionChecker.hasWritePermission());
         toolbar.addButton(createButton);
         deleteButton = new ToolbarButton("Delete");
         deleteButton.setCls("toolbar-button");
@@ -189,7 +205,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
                 getDeleteHandler().handleDelete();
             }
         });
-        deleteButton.setDisabled(!getProject().hasWritePermission(Application.get().getUserId()));
+        deleteButton.setDisabled(!permissionChecker.hasWritePermission());
         toolbar.addButton(deleteButton);
 
         Widget searchField = createSearchField();
@@ -241,7 +257,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
     }
 
     public void updateButtonStates() {
-        if (getProject().hasWritePermission(Application.get().getUserId())) {
+        if (permissionChecker.hasWritePermission()) {
             createButton.enable();
             deleteButton.enable();
         } else {

@@ -35,6 +35,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
+import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -76,15 +77,16 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public ObjectPropertyFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public ObjectPropertyFrameEditor(PropertyValueListEditor annotationsEditor, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
-        annotations = new PropertyValueListEditor(projectId, dispatchServiceManager);
+        annotations = annotationsEditor;
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        domains = new PrimitiveDataListEditor(PrimitiveType.CLASS);
+        domains = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
         domains.setPlaceholder("Enter class name");
-        ranges = new PrimitiveDataListEditor(PrimitiveType.CLASS);
+        ranges = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
         ranges.setPlaceholder("Enter class name");
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         add(rootElement);

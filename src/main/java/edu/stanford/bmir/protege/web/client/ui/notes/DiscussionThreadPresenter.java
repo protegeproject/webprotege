@@ -4,7 +4,8 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadAction;
@@ -22,6 +23,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -46,12 +49,27 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private final HandlerRegistrationManager handlerRegistrationManager;
 
+    private final LoggedInUserProvider loggedInUserProvider;
 
-    public DiscussionThreadPresenter(ProjectId projectId,  EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
-        view = new DiscussionThreadViewImpl(eventBus, dispatchServiceManager);
+    private final ActiveProjectManager activeProjectManager;
+
+    private final Provider<NoteContainerPresenter> noteContainerPresenterProvider;
+
+    @Inject
+    public DiscussionThreadPresenter(ProjectId projectId,
+                                     EventBus eventBus,
+                                     DispatchServiceManager dispatchServiceManager,
+                                     LoggedInUserProvider loggedInUserProvider,
+                                     DiscussionThreadView view,
+                                     ActiveProjectManager activeProjectManager,
+                                     Provider<NoteContainerPresenter> noteContainerPresenterProvider) {
+        this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.noteContainerPresenterProvider = noteContainerPresenterProvider;
+        this.loggedInUserProvider = loggedInUserProvider;
         handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
         this.projectId = checkNotNull(projectId);
+        this.activeProjectManager = activeProjectManager;
 
         handlerRegistrationManager.registerHandlerToProject(projectId, NotePostedEvent.TYPE, new NotePostedHandler() {
             @Override
@@ -88,14 +106,14 @@ public class DiscussionThreadPresenter implements HasDispose {
         view.removeAllNotes();
         currentTarget = null;
         view.setPostNewTopicEnabled(false);
-        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget), dispatchServiceManager));
+        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget), dispatchServiceManager, activeProjectManager));
     }
 
     public void setTarget(OWLEntity target) {
         currentTarget = target;
-        UserId userId = Application.get().getUserId();
+        UserId userId = loggedInUserProvider.getCurrentUserId();
         view.setPostNewTopicEnabled(currentTarget != null && !userId.isGuest());
-        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget), dispatchServiceManager));
+        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget), dispatchServiceManager, activeProjectManager));
         reload();
     }
 
@@ -147,7 +165,7 @@ public class DiscussionThreadPresenter implements HasDispose {
 
 
     private void appendNote(Note note, int depth, DiscussionThread discussionThread) {
-        NoteContainerPresenter noteContainerPresenter = new NoteContainerPresenter(new NoteContainerViewImpl(dispatchServiceManager));
+        NoteContainerPresenter noteContainerPresenter = noteContainerPresenterProvider.get();
         noteContainerPresenter.setNote(note, discussionThread);
         view.addNote(noteContainerPresenter, depth);
         for(Note childNote : discussionThread.getReplies(note.getNoteId())) {

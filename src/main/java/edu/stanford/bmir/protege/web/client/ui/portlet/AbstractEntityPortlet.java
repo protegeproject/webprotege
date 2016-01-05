@@ -14,31 +14,22 @@ import com.gwtext.client.core.Function;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
-import com.gwtext.client.widgets.event.ComponentListener;
 import com.gwtext.client.widgets.event.ResizableListenerAdapter;
 import com.gwtext.client.widgets.form.Checkbox;
 import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.portal.Portlet;
-import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
-import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
-import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.util.AbstractValidatableTab;
 import edu.stanford.bmir.protege.web.client.ui.util.ValidatableTab;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
@@ -48,11 +39,11 @@ import edu.stanford.bmir.protege.web.shared.selection.EntityDataSelectionChanged
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -66,7 +57,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Deprecated
 public abstract class AbstractEntityPortlet extends Portlet implements EntityPortlet, HasEventHandlerManagement {
 
-    private Project project;
+//    private Project project;
 
     private AbstractTab tab;
 
@@ -76,17 +67,26 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     private final EventBus eventBus;
 
+    private final LoggedInUserProvider loggedInUserProvider;
+
     private List<HandlerRegistration> handlerRegistrations = new ArrayList<>();
 
-    public AbstractEntityPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
-        this(selectionModel, eventBus, project, true);
+    private final ProjectId projectId;
+
+    @Inject
+    public AbstractEntityPortlet(SelectionModel selectionModel,
+                                 EventBus eventBus,
+                                 LoggedInUserProvider loggedInUserProvider,
+                                 ProjectId projectId) {
+        this(selectionModel, eventBus, projectId, true, loggedInUserProvider);
     }
 
-    public AbstractEntityPortlet(SelectionModel selectionModel, EventBus eventBus, Project project, boolean initialize) {
+    private AbstractEntityPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, boolean initialize, LoggedInUserProvider loggedInUserProvider) {
         super();
-        this.project = project;
         this.selectionModel = selectionModel;
         this.eventBus = eventBus;
+        this.loggedInUserProvider = loggedInUserProvider;
+        this.projectId = projectId;
 
         setTitle(""); // very important
         setLayout(new FitLayout());
@@ -104,10 +104,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
         if (initialize) {
             setTools(getTools());
-            initialize();
         }
-
-        updateIcon(isControllingPortlet());
 
         addApplicationEventHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
@@ -171,15 +168,11 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
 
     public ProjectId getProjectId() {
-        return project.getProjectId();
+        return projectId;
     }
 
     public UserId getUserId() {
-        return Application.get().getUserId();
-    }
-
-    public boolean hasWritePermission() {
-        return getProject().hasWritePermission(Application.get().getUserId());
+        return loggedInUserProvider.getCurrentUserId();
     }
 
     protected void doOnResize(int width, int height) {
@@ -196,9 +189,9 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     }
 
-    public Project getProject() {
-        return project;
-    }
+//    public Project getProject() {
+//        return project;
+//    }
 
     /*
      * (non-Javadoc)
@@ -316,23 +309,10 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     protected Panel createGeneralConfigPanel() {
         final Checkbox isControllingPortletCheckbox = new Checkbox("Set as controlling portlet (the controlling portlet sets the selection for the entire tab)");
-        isControllingPortletCheckbox.setChecked(isControllingPortlet());
 
         Panel generalPanel = new AbstractValidatableTab() {
             @Override
             public void onSave() {
-                if (isControllingPortletCheckbox.getValue()) { //true - is checked
-                    setAsControllingPortlet();
-                }
-                else {
-                    if (isControllingPortlet()) {
-                        AbstractTab tab = getTab();
-                        if (tab == null) {
-                            return;
-                        }
-                        tab.setControllingPortlet(null);
-                    }
-                }
             }
 
             @Override
@@ -346,26 +326,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
         generalPanel.add(isControllingPortletCheckbox, new AnchorLayoutData("100%"));
         return generalPanel;
-    }
-
-
-    public boolean isControllingPortlet() {
-        AbstractTab tab = getTab();
-        if (tab == null) {
-            return false;
-        }
-        return this.equals(tab.getControllingPortlet());
-    }
-
-    public void setAsControllingPortlet() {
-        AbstractTab tab = getTab();
-        if (tab == null) {
-            return;
-        }
-        EntityPortlet oldCtrlPortlet = tab.getControllingPortlet();
-        if (!(this.equals(oldCtrlPortlet))) {
-            tab.setControllingPortlet(this);
-        }
     }
 
     public void updateIcon(boolean isControlling) {
@@ -464,4 +424,10 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     }
 
 
+    @Override
+    public String toString() {
+        return toStringHelper("EntityPortlet")
+                .addValue(getClass().getName())
+                .toString();
+    }
 }

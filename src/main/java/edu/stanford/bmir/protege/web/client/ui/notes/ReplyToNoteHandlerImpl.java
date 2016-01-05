@@ -2,7 +2,8 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.Application;
+import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
@@ -15,8 +16,6 @@ import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -27,21 +26,21 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private NoteId noteId;
+    private final ActiveProjectManager activeProjectManager;
 
-
-    public ReplyToNoteHandlerImpl(NoteId noteId, DispatchServiceManager dispatchServiceManager) {
-        this.noteId = checkNotNull(noteId);
+    @Inject
+    public ReplyToNoteHandlerImpl(DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager) {
         this.dispatchServiceManager = dispatchServiceManager;
+        this.activeProjectManager = activeProjectManager;
     }
 
     @Override
-    public void handleReplyToNote() {
+    public void handleReplyToNote(final NoteId noteId) {
         NoteEditorDialogController controller = new NoteEditorDialogController(new NoteContentEditorHandler() {
             @Override
             public void handleAccept(Optional<NoteContent> noteContent) {
                 if (noteContent.isPresent()) {
-                    doReply(noteContent.get());
+                    doReply(noteId, noteContent.get());
                 }
             }
         });
@@ -49,8 +48,8 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
         WebProtegeDialog.showDialog(controller);
     }
 
-    private void doReply(NoteContent content) {
-        ProjectId projectId = Application.get().getActiveProject().get();
+    private void doReply(NoteId noteId, NoteContent content) {
+        ProjectId projectId = activeProjectManager.getActiveProjectId().get();
         dispatchServiceManager.execute(new AddReplyToNoteAction(projectId, noteId, content), new DispatchServiceCallback<AddReplyToNoteResult>() {
             @Override
             public void handleSuccess(AddReplyToNoteResult result) {

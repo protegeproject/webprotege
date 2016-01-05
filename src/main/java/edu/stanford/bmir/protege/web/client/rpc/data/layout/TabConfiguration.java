@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.layout;
 
-import edu.stanford.bmir.protege.web.client.ui.portlet.propertyForm.FormConstants;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,7 +54,7 @@ public class TabConfiguration extends GenericConfiguration implements Serializab
 
 	//convenience accessor methods to read values of commonly expected properties
 	public boolean getClosable() {
-		return getBooleanProperty(FormConstants.CLOSABLE, true);
+		return true;
 	}
 	
 	public void removeAllPortlet(String javaClassName) {

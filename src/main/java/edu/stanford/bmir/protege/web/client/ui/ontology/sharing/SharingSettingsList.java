@@ -7,7 +7,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLTable;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
 import edu.stanford.bmir.protege.web.client.ui.library.button.DeleteButton;
@@ -30,9 +30,12 @@ public class SharingSettingsList extends FlowPanel {
 
     private final FlexTable flexTable;
 
-    private List<SharingSetting> displayedItems = new ArrayList<SharingSetting>();
+    private final List<SharingSetting> displayedItems = new ArrayList<SharingSetting>();
 
-    public SharingSettingsList() {
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    public SharingSettingsList(LoggedInUserProvider loggedInUserProvider) {
+        this.loggedInUserProvider = loggedInUserProvider;
         addStyleName(WEB_PROTEGE_SHARING_SETTINGS_LIST);
         flexTable = new FlexTable();
         flexTable.setWidth("100%");
@@ -60,7 +63,7 @@ public class SharingSettingsList extends FlowPanel {
     private void addData(final SharingSetting listItem) {
         final int rowCount = flexTable.getRowCount();
         String personId = listItem.getPersonId().getId();
-        UserId userId = Application.get().getUserId();
+        UserId userId = loggedInUserProvider.getCurrentUserId();
         if (personId.equals(userId.getUserName())) {
             personId += " (you)";
         }

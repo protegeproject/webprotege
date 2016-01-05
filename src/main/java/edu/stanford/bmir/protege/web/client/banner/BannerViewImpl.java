@@ -5,8 +5,11 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.actionbar.application.ApplicationActionBar;
+import edu.stanford.bmir.protege.web.client.actionbar.application.ApplicationActionBarImpl;
 import edu.stanford.bmir.protege.web.client.actionbar.project.ProjectActionBar;
+import edu.stanford.bmir.protege.web.client.actionbar.project.ProjectActionBarImpl;
 
 /**
  * Author: Matthew Horridge<br>
@@ -23,15 +26,17 @@ public class BannerViewImpl extends Composite implements BannerView {
     private static BannerViewImplUiBinder ourUiBinder = GWT.create(BannerViewImplUiBinder.class);
 
 
-    @UiField
-    protected ApplicationActionBar applicationActionBar;
+    @UiField(provided = true)
+    protected ApplicationActionBarImpl applicationActionBar;
 
-    @UiField
-    protected ProjectActionBar projectActionBar;
+    @UiField(provided = true)
+    protected ProjectActionBarImpl projectActionBar;
 
 
-
-    public BannerViewImpl() {
+    @Inject
+    public BannerViewImpl(ApplicationActionBarImpl applicationActionBar, ProjectActionBarImpl projectActionBar) {
+        this.applicationActionBar = applicationActionBar;
+        this.projectActionBar = projectActionBar;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

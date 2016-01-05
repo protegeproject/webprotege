@@ -2,14 +2,17 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,9 +26,10 @@ import java.util.List;
 public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermSynonymListEditor editor;
-    
-    public OBOTermSynonymsPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
-        super(selectionModel, eventBus, project);
+
+    @Inject
+    public OBOTermSynonymsPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
     }
 
     @Override

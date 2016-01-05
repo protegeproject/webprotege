@@ -2,8 +2,7 @@ package edu.stanford.bmir.protege.web.client.permissions;
 
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import edu.stanford.bmir.protege.web.client.Application;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
@@ -11,7 +10,6 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
@@ -20,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Matthew Horridge
  *
  */
-public class ProjectPermissionManager implements HasDispose {
+public class ProjectPermissionManager implements HasDispose, PermissionChecker {
 
     private final ProjectId projectId;
 
@@ -46,9 +45,13 @@ public class ProjectPermissionManager implements HasDispose {
 
     private HandlerRegistration loggedOutHandler;
 
-    public ProjectPermissionManager(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    @Inject
+    public ProjectPermissionManager(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.projectId = projectId;
         this.eventBus = eventBus;
+        this.loggedInUserProvider = loggedInUserProvider;
         this.dispatchServiceManager = dispatchServiceManager;
         loggedInHandler = eventBus.addHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
@@ -88,6 +91,16 @@ public class ProjectPermissionManager implements HasDispose {
         return set.contains(permission);
     }
 
+    @Override
+    public boolean hasWritePermissionForProject(UserId userId, ProjectId projectId) {
+        return hasPermission(userId, Permission.getWritePermission());
+    }
+
+    @Override
+    public boolean hasReadPermissionForProject(UserId userId, ProjectId projectId) {
+        return hasPermission(userId, Permission.getReadPermission());
+    }
+
     /**
      * Sets the permissions for a given user.
      * @param userId The user. Not {@code null}.
@@ -103,7 +116,7 @@ public class ProjectPermissionManager implements HasDispose {
 
 
     private void updateProjectPermissions() {
-        UserId signedInUser = Application.get().getUserId();
+        UserId signedInUser = loggedInUserProvider.getCurrentUserId();
         updatePermissionsForUserId(signedInUser);
         for(UserId userId : user2permissionMap.keySet()) {
             updatePermissionsForUserId(userId);

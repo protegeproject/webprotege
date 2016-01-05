@@ -10,6 +10,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -18,20 +20,15 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntityDataContext, LabelledFrame<NamedIndividualFrame>> {
 
-    private NamedIndividualFrameEditor editor;
+    private final NamedIndividualFrameEditor editor;
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    public NamedIndividualFrameEditorManager(DispatchServiceManager dispatchServiceManager) {
-        this.dispatchServiceManager = dispatchServiceManager;
+    @Inject
+    public NamedIndividualFrameEditorManager(NamedIndividualFrameEditor editor) {
+        this.editor = editor;
     }
 
     @Override
     public EditorView<LabelledFrame<NamedIndividualFrame>> getView(OWLEntityDataContext context) {
-        if (editor == null) {
-            ProjectId projectId = context.getProjectId();
-            editor = new NamedIndividualFrameEditor(projectId, dispatchServiceManager);
-        }
         return editor;
     }
 

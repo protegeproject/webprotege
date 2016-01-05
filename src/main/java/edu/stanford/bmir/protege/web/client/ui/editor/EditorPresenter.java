@@ -12,8 +12,11 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
@@ -21,7 +24,6 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
@@ -50,7 +52,11 @@ public class EditorPresenter implements HasDispose {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private EditorContextMapper editorContextMapper;
+    private final ActiveProjectManager activeProjectManager;
+
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
+    private final EditorContextMapper editorContextMapper;
 
 
 
@@ -75,12 +81,14 @@ public class EditorPresenter implements HasDispose {
         }
     };
 
-    private final Project project;
+//    private final Project project;
 
-    public EditorPresenter(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project, EditorContextMapper editorContextMapper) {
+    @Inject
+    public EditorPresenter(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager, EditorContextMapper editorContextMapper, LoggedInUserProjectPermissionChecker permissionChecker) {
         this.editorContextMapper = editorContextMapper;
-        this.project = project;
+        this.activeProjectManager = activeProjectManager;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.permissionChecker = permissionChecker;
         this.handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
         handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
@@ -214,7 +222,7 @@ public class EditorPresenter implements HasDispose {
                     final Widget editorWidget = editorView.asWidget();
 
                     if (editorWidget instanceof HasEnabled) {
-                        ((HasEnabled) editorWidget).setEnabled(project.hasWritePermission());
+                        ((HasEnabled) editorWidget).setEnabled(permissionChecker.hasReadPermission());
                     }
 
                     editorHolder.setWidget(editorWidget);
@@ -246,11 +254,11 @@ public class EditorPresenter implements HasDispose {
     }
 
     private boolean isEditingEnabled() {
-        final Optional<ProjectId> activeProjectId = Application.get().getActiveProject();
+        final Optional<ProjectId> activeProjectId = activeProjectManager.getActiveProjectId();
         if(!activeProjectId.isPresent()) {
             return false;
         }
-        return project.hasWritePermission();
+        return permissionChecker.hasWritePermission();
     }
 
 

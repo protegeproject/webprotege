@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.client.actionbar.application;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.Application;
 
+import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.auth.SignInPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -17,15 +18,19 @@ public class SignInRequestHandlerImpl implements SignInRequestHandler {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public SignInRequestHandlerImpl(DispatchServiceManager dispatchServiceManager) {
+    private final LoggedInUserManager loggedInUserManager;
+
+    @Inject
+    public SignInRequestHandlerImpl(DispatchServiceManager dispatchServiceManager, LoggedInUserManager loggedInUserManager) {
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserManager = loggedInUserManager;
     }
 
     @Override
     public void handleSignInRequest() {
-        UserId userId = Application.get().getUserId();
+        UserId userId = loggedInUserManager.getCurrentUserId();
         if (userId.isGuest()) {
-            SignInPresenter.get(dispatchServiceManager).showLoginDialog();
+            SignInPresenter.get(dispatchServiceManager, loggedInUserManager).showLoginDialog();
         }
         else {
             GWT.log("User is already signed in");

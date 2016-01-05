@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
@@ -78,13 +79,14 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public DataPropertyFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public DataPropertyFrameEditor(PropertyValueListEditor editor, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
-        annotations = new PropertyValueListEditor(projectId, dispatchServiceManager);
+        annotations = editor;
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        domains = new PrimitiveDataListEditor(PrimitiveType.CLASS);
-        ranges = new PrimitiveDataListEditor(PrimitiveType.DATA_TYPE);
+        domains = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
+        ranges = new PrimitiveDataListEditor(projectId, PrimitiveType.DATA_TYPE);
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

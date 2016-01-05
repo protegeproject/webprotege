@@ -1,11 +1,8 @@
 package edu.stanford.bmir.protege.web.server.bioportal;
 
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalOntologyId;
-import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalUserId;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
-import edu.stanford.bmir.protege.web.server.filedownload.DownloadFormat;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectDocumentStore;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.apache.http.HttpEntity;
@@ -90,7 +87,7 @@ public class BioPortalUploader {
         MultipartEntity reqEntity = new MultipartEntity();
         reqEntity.addPart("filePath", bin);
         
-        setParameter(BioPortalConstants.API_KEY_PROPERTY, BioPortalConstants.DEFAULT_API_KEY, reqEntity);
+//        setParameter(BioPortalConstants.API_KEY_PROPERTY, BioPortalConstants.DEFAULT_API_KEY, reqEntity);
 
         setParameter("displayLabel", publishInfo.getDisplayLabel(), reqEntity);
         setParameter("userId", publishInfo.getUserId().getIntValue(), reqEntity);

@@ -6,13 +6,10 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.google.web.bindery.event.shared.SimpleEventBus;
-import edu.stanford.bmir.protege.web.client.Application;
 import edu.stanford.bmir.protege.web.client.place.PlaceManager;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
-import edu.stanford.smi.protege.ui.ProjectView;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
@@ -171,20 +168,5 @@ public class SelectionModel {
 
     private void fireEvent(Optional<OWLEntityData> previousLastSelection) {
         eventBus.fireEvent(new EntityDataSelectionChangedEvent(previousLastSelection, selection));
-    }
-
-
-    public static SelectionModel create() {
-        EventBus selectionEventBus = new SimpleEventBus();
-        return new SelectionModel(
-                selectionEventBus,
-                Application.get().getPlaceManager(),
-                new SelectedEntityDataManager<OWLClassData>(),
-                new SelectedEntityDataManager<OWLObjectPropertyData>(),
-                new SelectedEntityDataManager<OWLDataPropertyData>(),
-                new SelectedEntityDataManager<OWLAnnotationPropertyData>(),
-                new SelectedEntityDataManager<OWLDatatypeData>(),
-                new SelectedEntityDataManager<OWLNamedIndividualData>()
-        );
     }
 }

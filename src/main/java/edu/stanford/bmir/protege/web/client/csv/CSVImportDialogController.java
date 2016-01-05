@@ -36,12 +36,12 @@ public class CSVImportDialogController extends WebProtegeOKCancelDialogControlle
 
     private OWLClass importRoot;
 
-    public CSVImportDialogController(ProjectId projId, DocumentId documentId, OWLClass importRootClass, DispatchServiceManager manager) {
+    public CSVImportDialogController(ProjectId projId, DocumentId documentId, OWLClass importRootClass, DispatchServiceManager manager, final CSVImportViewImpl csvImportView) {
         super("Import CSV File");
         this.projectId = projId;
         this.csvDocumentId = documentId;
         this.importRoot = importRootClass;
-        csvImportView = new CSVImportViewImpl();
+        this.csvImportView = csvImportView;
         this.dispatchServiceManager = manager;
 
         dispatchServiceManager.execute(new GetCSVGridAction(documentId, ROW_LIMIT), new DispatchServiceCallback<GetCSVGridResult>() {

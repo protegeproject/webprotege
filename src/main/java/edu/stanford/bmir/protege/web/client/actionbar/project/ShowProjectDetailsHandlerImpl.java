@@ -2,14 +2,13 @@ package edu.stanford.bmir.protege.web.client.actionbar.project;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsDialogController;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.projectsettings.ProjectSettingsViewImpl;
-import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -23,14 +22,18 @@ public class ShowProjectDetailsHandlerImpl implements ShowProjectDetailsHandler 
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public ShowProjectDetailsHandlerImpl(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+    private final ActiveProjectManager activeProjectManager;
+
+    @Inject
+    public ShowProjectDetailsHandlerImpl(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager) {
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.activeProjectManager = activeProjectManager;
     }
 
     @Override
     public void handleShowProjectDetails() {
-        Optional<ProjectId> projectId = Application.get().getActiveProject();
+        Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
         if(!projectId.isPresent()) {
             return;
         }

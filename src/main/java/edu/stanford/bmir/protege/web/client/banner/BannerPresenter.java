@@ -1,20 +1,20 @@
 package edu.stanford.bmir.protege.web.client.banner;
 
-import com.google.gwt.core.client.GWT;
+import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.*;
 import edu.stanford.bmir.protege.web.client.actionbar.application.*;
 import edu.stanford.bmir.protege.web.client.actionbar.project.*;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedEvent;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectChangedHandler;
+import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
-import edu.stanford.bmir.protege.web.shared.event.EventBusManager;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -24,51 +24,102 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class BannerPresenter {
 
-    private BannerView bannerView = new BannerViewImpl();
+    private final BannerView bannerView;
 
-    public BannerPresenter(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
-        Boolean accountCreationEnabled = Application.get().getClientApplicationProperty(
-                WebProtegePropertyName.USER_ACCOUNT_CREATION_ENABLED, true);
-        GWT.log("Account creation enabled: " + accountCreationEnabled);
+    private final HasClientApplicationProperties hasClientApplicationProperties;
 
+    private final ActiveProjectManager activeProjectManager;
 
-        final ProjectActionBar projectActionBar = bannerView.getProjectActionBar();
-        projectActionBar.setProjectId(Application.get().getActiveProject());
-        projectActionBar.setShowShareSettingsHandler(new ShareSettingsHandlerImpl(eventBus, dispatchServiceManager));
-        projectActionBar.setShowFreshEntitySettingsHandler(new ShowFreshEntitySettingsHandlerImpl(dispatchServiceManager));
-        projectActionBar.setShowProjectDetailsHandler(new ShowProjectDetailsHandlerImpl(eventBus, dispatchServiceManager));
-        projectActionBar.setUploadAndMergeHandler(new UploadAndMergeHandlerImpl(dispatchServiceManager));
+    private final ProjectManager projectManager;
+
+    private final LoggedInUserManager loggedInUserManager;
+
+    private final ProjectActionBar projectActionBar;
+
+    @Inject
+    public BannerPresenter(EventBus eventBus,
+                           BannerView view,
+                           HasClientApplicationProperties hasClientApplicationProperties,
+                           LoggedInUserManager loggedInUserManager,
+                           ProjectManager projectManager,
+                           ActiveProjectManager activeProjectManager,
+                           ShowShareSettingsHandler showShareSettingsHandler,
+                           ShowFreshEntitySettingsHandler showFreshEntitySettingsHandler,
+                           ShowProjectDetailsHandler showProjectDetailsHandler,
+                           UploadAndMergeHandler uploadAndMergeHandler,
+                           SignInRequestHandler signInRequestHandler,
+                           SignOutRequestHandler signOutRequestHandler,
+                           SignUpForAccountHandler signUpForAccountHandler,
+                           ChangePasswordHandler changePasswordHandler,
+                           ChangeEmailAddressHandler changeEmailAddressHandler,
+                           ShowAboutBoxHandler showAboutBoxHandler,
+                           ShowUserGuideHandler showUserGuideHandler
+                           ) {
+        this.bannerView = view;
+        this.activeProjectManager = activeProjectManager;
+        this.projectManager = projectManager;
+        this.loggedInUserManager = loggedInUserManager;
+        this.hasClientApplicationProperties = hasClientApplicationProperties;
+        projectActionBar = bannerView.getProjectActionBar();
+        projectActionBar.setShowShareSettingsHandler(showShareSettingsHandler);
+        projectActionBar.setShowFreshEntitySettingsHandler(showFreshEntitySettingsHandler);
+        projectActionBar.setShowProjectDetailsHandler(showProjectDetailsHandler);
+        projectActionBar.setUploadAndMergeHandler(uploadAndMergeHandler);
         final ApplicationActionBar w = bannerView.getApplicationActionBar();
-        w.setSignInRequestHandler(new SignInRequestHandlerImpl(dispatchServiceManager));
-        w.setSignOutRequestHandler(new SignOutRequestHandlerImpl());
-        w.setSignUpForAccountHandler(new SignUpForAccountHandlerImpl(dispatchServiceManager));
-        w.setChangePasswordHandler(new ChangePasswordHandlerImpl(dispatchServiceManager));
-        w.setChangeEmailAddressHandler(new ChangeEmailAddressHandlerImpl(dispatchServiceManager));
-        w.setShowAboutBoxHandler(new ShowAboutBoxHandlerImpl());
-        w.setShowUserGuideHandler(new ShowUserGuideHandlerImpl());
+        w.setSignInRequestHandler(signInRequestHandler);
+        w.setSignOutRequestHandler(signOutRequestHandler);
+        w.setSignUpForAccountHandler(signUpForAccountHandler);
+        w.setChangePasswordHandler(changePasswordHandler);
+        w.setChangeEmailAddressHandler(changeEmailAddressHandler);
+        w.setShowAboutBoxHandler(showAboutBoxHandler);
+        w.setShowUserGuideHandler(showUserGuideHandler);
 
-        updateSignedInUser(Application.get().getUserId());
+        updateSignedInUser(loggedInUserManager.getCurrentUserId());
+        updateProjectActionBar();
 
         eventBus.addHandler(ActiveProjectChangedEvent.TYPE, new ActiveProjectChangedHandler() {
             @Override
             public void handleActiveProjectChanged(ActiveProjectChangedEvent event) {
-                projectActionBar.setProjectId(event.getProjectId());
+                updateProjectActionBar();
             }
         });
         eventBus.addHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {
                 updateSignedInUser(event.getUserId());
-                projectActionBar.setProjectId(Application.get().getActiveProject());
+                updateProjectActionBar();
             }
         });
         eventBus.addHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
             @Override
             public void handleUserLoggedOut(UserLoggedOutEvent event) {
                 updateSignedInUser(UserId.getGuest());
-                projectActionBar.setProjectId(Application.get().getActiveProject());
+                updateProjectActionBar();
             }
         });
+    }
+
+    private void updateProjectActionBar() {
+        boolean visible = isLoggedInUserOwnerOfActiveProject();
+        projectActionBar.asWidget().setVisible(visible);
+    }
+
+    private boolean isLoggedInUserOwnerOfActiveProject() {
+        Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
+        if(!projectId.isPresent()) {
+            return false;
+        }
+        Optional<Project> project = projectManager.getProject(projectId.get());
+        if(!project.isPresent()) {
+            return false;
+        }
+        UserId loggedInUserId = loggedInUserManager.getLoggedInUserId();
+        if(loggedInUserId.isGuest()) {
+            return false;
+        }
+        Project theProject = project.get();
+        UserId projectOwnerUserId = theProject.getProjectDetails().getOwner();
+        return loggedInUserId.equals(projectOwnerUserId);
     }
 
     public BannerView getView() {
@@ -78,7 +129,7 @@ public class BannerPresenter {
     private void updateSignedInUser(UserId userId) {
         final ApplicationActionBar bar = bannerView.getApplicationActionBar();
         bar.setSignedInUser(userId);
-        Boolean accountCreationEnabled = Application.get().getClientApplicationProperty(
+        Boolean accountCreationEnabled = hasClientApplicationProperties.getClientApplicationProperty(
                 WebProtegePropertyName.USER_ACCOUNT_CREATION_ENABLED, true);
         if(accountCreationEnabled) {
             bar.setSignUpForAccountVisible(userId.isGuest());

@@ -34,7 +34,7 @@ public class NoteEditorDialogController extends WebProtegeOKCancelDialogControll
     }
 
 //    private void doPost(NoteContent content) {
-//        ProjectId projectId = Application.get().getActiveProject().get();
+//        ProjectId projectId = Application.get().getActiveProjectId().get();
 //        DispatchServiceManager.get().execute(new AddNoteToEntityAction(projectId, entity.get(), content), new AsyncCallback<AddNoteToEntityResult>() {
 //            @Override
 //            public void onFailure(Throwable caught) {
@@ -49,7 +49,7 @@ public class NoteEditorDialogController extends WebProtegeOKCancelDialogControll
 //    }
 //
 //    private void doReply(NoteContent content) {
-//        ProjectId projectId = Application.get().getActiveProject().get();
+//        ProjectId projectId = Application.get().getActiveProjectId().get();
 //        DispatchServiceManager.get().execute(new AddReplyToNoteAction(projectId, noteId, content), new AsyncCallback<AddReplyToNoteResult>() {
 //            @Override
 //            public void onFailure(Throwable caught) {

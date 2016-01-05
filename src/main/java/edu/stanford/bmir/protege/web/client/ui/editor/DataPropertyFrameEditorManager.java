@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.frame.DataPropertyFrameEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
@@ -18,22 +19,21 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityDataContext, LabelledFrame<DataPropertyFrame>> {
 
-    private DataPropertyFrameEditor editor;
+    private final DataPropertyFrameEditor editor;
 
-    private ProjectId projectId;
+    private final ProjectId projectId;
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    public DataPropertyFrameEditorManager(DispatchServiceManager dispatchServiceManager) {
+    @Inject
+    public DataPropertyFrameEditorManager(DataPropertyFrameEditor editor, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+        this.editor = editor;
+        this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
     }
 
     @Override
     public EditorView<LabelledFrame<DataPropertyFrame>> getView(OWLEntityDataContext editorContext) {
-        if (editor == null || !projectId.equals(editorContext.getProjectId())) {
-            projectId = editorContext.getProjectId();
-            editor = new DataPropertyFrameEditor(editorContext.getProjectId(), dispatchServiceManager);
-        }
         return editor;
     }
 

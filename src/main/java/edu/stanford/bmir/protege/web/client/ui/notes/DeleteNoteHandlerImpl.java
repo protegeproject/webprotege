@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteAction;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteResult;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+
+import javax.inject.Inject;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,23 +18,22 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class DeleteNoteHandlerImpl implements DeleteNoteHandler {
 
-
     private final DispatchServiceManager dispatchServiceManager;
 
-    private NoteId noteId;
+    private final ActiveProjectManager activeProjectManager;
 
-    public DeleteNoteHandlerImpl(DispatchServiceManager dispatchServiceManager, NoteId noteId) {
+    @Inject
+    public DeleteNoteHandlerImpl(DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager) {
         this.dispatchServiceManager = dispatchServiceManager;
-        this.noteId = noteId;
+        this.activeProjectManager = activeProjectManager;
     }
 
     @Override
-    public void handleDeleteNote() {
-        ProjectId projectId = Application.get().getActiveProject().get();
+    public void handleDeleteNote(NoteId noteId) {
+        ProjectId projectId = activeProjectManager.getActiveProjectId().get();
         dispatchServiceManager.execute(new DeleteNoteAction(projectId, noteId), new DispatchServiceCallback<DeleteNoteResult>() {
             @Override
             public void handleSuccess(DeleteNoteResult result) {
-
             }
         });
     }

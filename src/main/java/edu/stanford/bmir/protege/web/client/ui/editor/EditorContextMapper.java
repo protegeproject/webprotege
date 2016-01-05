@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import com.google.common.base.Optional;
+import com.google.inject.Inject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +16,11 @@ import java.util.List;
 public class EditorContextMapper {
 
     private List<EditorManagerSelector> selectors = new ArrayList<EditorManagerSelector>();
+
+    @Inject
+    public EditorContextMapper(EditorManagerSelector selector) {
+        registerSelector(selector);
+    }
 
     public <C extends EditorCtx, O extends Serializable> Optional<EditorManager<C, O>> getEditorManager(EditorCtx editorCtx) {
         for(EditorManagerSelector selector : selectors) {

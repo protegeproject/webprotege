@@ -31,11 +31,14 @@ import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter
 import com.gwtext.client.widgets.tree.event.MultiSelectionModelListener;
 import com.gwtext.client.widgets.tree.event.TreeNodeListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogController;
+import edu.stanford.bmir.protege.web.client.csv.CSVImportViewImpl;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
@@ -61,6 +64,7 @@ import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedE
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedHandler;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedHandler;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -69,6 +73,8 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.*;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
@@ -132,18 +138,34 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     */
     private static Set<EntityData> nodesWithNotesOpen = new HashSet<EntityData>();
 
-    public ClassTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, final Project project) {
-        this(selectionModel, eventBus, dispatchServiceManager, project, true, true, true, true, null);
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    private final Provider<DiscussionThreadDialog> discussionThreadDialogProvider;
+
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
+    @Inject
+    public ClassTreePortlet(SelectionModel selectionModel,
+                            EventBus eventBus,
+                            DispatchServiceManager dispatchServiceManager,
+                            final ProjectId projectId,
+                            LoggedInUserProvider loggedInUserProvider,
+                            Provider<DiscussionThreadDialog> discussionThreadDialogProvider,
+                            LoggedInUserProjectPermissionChecker permissionChecker) {
+        this(selectionModel, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, true, true, true, true, null, discussionThreadDialogProvider, permissionChecker);
     }
 
-    public ClassTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, final Project project, final boolean showToolbar, final boolean showTitle, final boolean showTools, final boolean allowsMultiSelection, final String topClass) {
-        super(selectionModel, eventBus, project, false);
+    public ClassTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final boolean showToolbar, final boolean showTitle, final boolean showTools, final boolean allowsMultiSelection, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.showToolbar = showToolbar;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
         this.showTitle = showTitle;
         this.showTools = showTools;
         this.allowsMultiSelection = allowsMultiSelection;
         this.topClass = topClass;
+        this.discussionThreadDialogProvider = discussionThreadDialogProvider;
+        this.permissionChecker = loggedInUserProjectPermissionChecker;
         registerEventHandlers();
         initialize();
     }
@@ -574,7 +596,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 onCreateCls(e.isShiftKey() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES);
             }
         });
-        createButton.setDisabled(!hasWritePermission());
+        createButton.setDisabled(!permissionChecker.hasWritePermission());
         return createButton;
     }
 
@@ -587,7 +609,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 onDeleteCls();
             }
         });
-        deleteButton.setDisabled(!getProject().hasWritePermission(Application.get().getUserId()));
+        deleteButton.setDisabled(!permissionChecker.hasWritePermission());
         deleteButton.setDisabled(!getDeleteEnabled());
         return deleteButton;
     }
@@ -721,7 +743,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         treePanel.addListener(new TreePanelListenerAdapter() {
             @Override
             public boolean doBeforeNodeDrop(final TreePanel treePanel, final TreeNode target, final DragData dragData, final String point, final DragDrop source, final TreeNode dropNode, final DropNodeCallback dropNodeCallback) {
-                if (hasWritePermission()) {
+                if (permissionChecker.hasWritePermission()) {
                     final boolean success = Window.confirm("Are you sure you want to move " + getNodeBrowserText(dropNode) + " from parent " + getNodeBrowserText(dropNode.getParentNode()) + " to parent " + getNodeBrowserText(target) + " ?");
                     if (success) {
                         moveClass((EntityData) dropNode.getUserObject(), (EntityData) dropNode.getParentNode().getUserObject(), (EntityData) target.getUserObject());
@@ -917,7 +939,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         UploadFileDialogController controller = new UploadFileDialogController("Upload CSV", new UploadFileResultHandler() {
             @Override
             public void handleFileUploaded(final DocumentId fileDocumentId) {
-                WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<CSVImportDescriptor>(new CSVImportDialogController(getProjectId(), fileDocumentId, selCls.get(), dispatchServiceManager));
+                WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<CSVImportDescriptor>(
+                        new CSVImportDialogController(getProjectId(), fileDocumentId, selCls.get(), dispatchServiceManager, new CSVImportViewImpl(getProjectId())));
                 csvImportDialog.setVisible(true);
 
             }
@@ -1144,7 +1167,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         if (oldParent.equals(newParent)) {
             return;
         }
-        OntologyServiceManager.getInstance().moveCls(getProjectId(), cls.getName(), oldParent.getName(), newParent.getName(), false, Application.get().getUserId(), getMoveClsOperationDescription(cls, oldParent, newParent), new MoveClassHandler(cls.getName()));
+        OntologyServiceManager.getInstance().moveCls(getProjectId(), cls.getName(), oldParent.getName(), newParent.getName(), false, loggedInUserProvider.getCurrentUserId(), getMoveClsOperationDescription(cls, oldParent, newParent), new MoveClassHandler(cls.getName()));
     }
 
     protected String getMoveClsOperationDescription(final EntityData cls, final EntityData oldParent, final EntityData newParent) {
@@ -1366,7 +1389,9 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         SubclassEntityData subClassData = (SubclassEntityData) node.getUserObject();
         String name = subClassData.getName();
         OWLClass cls = DataFactory.getOWLClass(name);
-        DiscussionThreadDialog.showDialog(getProjectId(), getEventBus(), dispatchServiceManager, cls);
+
+        DiscussionThreadDialog dlg = discussionThreadDialogProvider.get();
+        dlg.showDialog(cls);
     }
 
     private boolean hasChild(final TreeNode parentNode, final String childId) {
@@ -1454,7 +1479,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     public void updateButtonStates() {
-        if (hasWritePermission()) {
+        if (permissionChecker.hasWritePermission()) {
             if (createButton != null) {
                 createButton.enable();
             }
@@ -1474,7 +1499,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         if (watchButton != null) {
             // This used to disable the button.  However, the buttons seem to be laid out only when the containing
             // tab is selected and they appear over other components before this.
-            watchButton.setVisible(!Application.get().isGuestUser());
+            watchButton.setVisible(!loggedInUserProvider.getCurrentUserId().isGuest());
         }
     }
 

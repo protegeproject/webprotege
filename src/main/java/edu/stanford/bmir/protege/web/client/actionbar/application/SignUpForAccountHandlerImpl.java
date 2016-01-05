@@ -4,6 +4,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.signup.WebProtegeSignupDialogController;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -14,6 +16,7 @@ public class SignUpForAccountHandlerImpl implements SignUpForAccountHandler {
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Inject
     public SignUpForAccountHandlerImpl(DispatchServiceManager dispatchServiceManager) {
         this.dispatchServiceManager = dispatchServiceManager;
     }

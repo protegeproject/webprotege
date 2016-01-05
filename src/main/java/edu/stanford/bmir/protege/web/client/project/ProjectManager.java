@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackInvoker;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -33,10 +34,13 @@ public class ProjectManager {
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final LoggedInUserProvider loggedInUserProvider;
+
     @Inject
-    public ProjectManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
+    public ProjectManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
     }
 
     public void loadProject(ProjectId projectId, final DispatchServiceCallback<Project> projectLoadedCallback) {
@@ -79,7 +83,7 @@ public class ProjectManager {
             throw new RuntimeException("Double registration of project: " + projectId);
         }
 
-        final Project project = new Project(projectDetails, userPermissions, eventBus, dispatchServiceManager);
+        final Project project = new Project(projectDetails, userPermissions, eventBus, dispatchServiceManager, loggedInUserProvider);
         map.put(projectId, project);
         return project;
     }

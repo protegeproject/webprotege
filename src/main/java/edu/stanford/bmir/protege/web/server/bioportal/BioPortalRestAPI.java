@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.bioportal;
 
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.*;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.bmir.protege.web.client.ui.ontology.search.BioPortalConstants;
 import edu.stanford.bmir.protege.web.server.rest.BioPortalUserInfoRestCall;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public class BioPortalRestAPI {
 
-    private String bioportalRestAPIBase = BioPortalConstants.DEFAULT_BIOPORTAL_REST_BASE_URL;
+    private String bioportalRestAPIBase = "";
 
     public BioPortalRestAPI() {
     }
@@ -30,15 +29,15 @@ public class BioPortalRestAPI {
     
     
     public BioPortalUserInfo getUserInfo(String username, String userpassword) throws CannotValidateBioPortalCredentials {
-        try {
+//        try {
             BioPortalUserInfoRestCall call = new BioPortalUserInfoRestCall(bioportalRestAPIBase, username, userpassword);
-            BioPortalUserInfoBean bean = call.doCallForObject();
+            BioPortalUserInfoBean bean = null;//call.doCallForObject();
             return new BioPortalUserInfo(bean.getUserName(), bean.getFirstName(), bean.getLastName(), BioPortalUserId.createFromId(bean.getId()), bean.getEmail());
 
-        }
-        catch (IOException e) {
-            throw new CannotValidateBioPortalCredentials();
-        }
+//        }
+//        catch (IOException e) {
+//            throw new CannotValidateBioPortalCredentials();
+//        }
     }
 
     public void uploadOntologyToBioPortal(String projectDisplayName, ProjectId projectId, RevisionNumber revisionNumber, PublishToBioPortalInfo publishInfo) throws IOException {
@@ -59,21 +58,21 @@ public class BioPortalRestAPI {
     public List<BioPortalOntologyInfo> getOntologies() {
 
         List<BioPortalOntologyInfo> result = new ArrayList<BioPortalOntologyInfo>();
-        try {
-            BioPortalGetOntologiesRestCall call = new BioPortalGetOntologiesRestCall(bioportalRestAPIBase);
-            BioPortalOntologiesList list = call.doCallForObject();
-            for(BioPortalOntologyInfoBean bean : list.getOntologies()) {
-                List<BioPortalUserId> owners = new ArrayList<BioPortalUserId>();
-                for(Integer ownerIntId : bean.getOwners()) {
-                    owners.add(BioPortalUserId.createFromId(ownerIntId));
-                }
-                BioPortalOntologyInfo info = new BioPortalOntologyInfo(BioPortalOntologyId.getId(bean.getOntologyId()), bean.getDisplayLabel(), bean.getAbrreviation(), bean.getVersionNumber(), bean.getDescription(), owners);
-                result.add(info);
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            BioPortalGetOntologiesRestCall call = new BioPortalGetOntologiesRestCall(bioportalRestAPIBase);
+//            BioPortalOntologiesList list = call.doCallForObject();
+//            for(BioPortalOntologyInfoBean bean : list.getOntologies()) {
+//                List<BioPortalUserId> owners = new ArrayList<BioPortalUserId>();
+//                for(Integer ownerIntId : bean.getOwners()) {
+//                    owners.add(BioPortalUserId.createFromId(ownerIntId));
+//                }
+//                BioPortalOntologyInfo info = new BioPortalOntologyInfo(BioPortalOntologyId.getId(bean.getOntologyId()), bean.getDisplayLabel(), bean.getAbrreviation(), bean.getVersionNumber(), bean.getDescription(), owners);
+//                result.add(info);
+//            }
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
         return result;
     }
     

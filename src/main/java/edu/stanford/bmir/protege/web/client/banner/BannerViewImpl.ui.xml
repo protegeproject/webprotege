@@ -22,8 +22,8 @@
     <g:HTMLPanel addStyleNames="{style.main}" debugId="Banner">
         <g:Image resource="{res.webProtegeLogo}" addStyleNames="{style.sub-bar}"/>
         <g:HTMLPanel addStyleNames="{style.holder}">
-            <project:ProjectBarImpl ui:field="projectActionBar" addStyleNames="{style.sub-bar}" debugId="ProjectBar"/>
-            <application:ApplicationBarImpl ui:field="applicationActionBar" addStyleNames="{style.sub-bar}" debugId="ApplicationBar"/>
+            <project:ProjectActionBarImpl ui:field="projectActionBar" addStyleNames="{style.sub-bar}"/>
+            <application:ApplicationActionBarImpl ui:field="applicationActionBar" addStyleNames="{style.sub-bar}"/>
         </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

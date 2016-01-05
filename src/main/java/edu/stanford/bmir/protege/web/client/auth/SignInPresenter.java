@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.auth;
 
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
@@ -24,16 +24,15 @@ public class SignInPresenter {
 
     private final SignInSuccessfulHandler signInSuccessfulHandler;
 
-    private final DispatchServiceManager dispatchServiceManager;
 
-    public static SignInPresenter get(DispatchServiceManager dispatchServiceManager) {
+    public static SignInPresenter get(DispatchServiceManager dispatchServiceManager, final LoggedInUserManager loggedInUserManager) {
         return new SignInPresenter(
                 getAuthenticatedActionExecutor(dispatchServiceManager), new SignInDialogPresenter(new SignInDialogController(new SignInViewImpl(), dispatchServiceManager)),
                 new MessageBoxSignInMessageDisplay(),
                 new SignInSuccessfulHandler() {
                     @Override
                     public void handleLoginSuccessful(UserId userId) {
-                        Application.get().setCurrentUser(userId);
+                        loggedInUserManager.setLoggedInUser(userId);
                     }
                 }, dispatchServiceManager
         );
@@ -48,7 +47,6 @@ public class SignInPresenter {
         this.loginExecutor = loginExecutor;
         this.signInMessageDisplay = signInMessageDisplay;
         this.signInSuccessfulHandler = signInSuccessfulHandler;
-        this.dispatchServiceManager = dispatchServiceManager;
     }
 
     public void showLoginDialog() {

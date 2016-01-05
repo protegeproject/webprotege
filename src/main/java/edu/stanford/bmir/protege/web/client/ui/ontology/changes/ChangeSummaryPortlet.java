@@ -6,10 +6,12 @@ import com.gwtext.client.core.EventObject;
 import com.gwtext.client.widgets.Button;
 import com.gwtext.client.widgets.ToolbarButton;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.project.Project;
 
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
@@ -21,6 +23,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
+import javax.inject.Inject;
+
 public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
 
     public static final String REFRESH_TO_SEE_THE_LATEST_CHANGES = "Click to see the latest changes";
@@ -30,9 +34,13 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
 
     private ToolbarButton refreshButton;
 
-    public ChangeSummaryPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
-        super(selectionModel, eventBus, project);
+    private final PermissionChecker permissionChecker;
+
+    @Inject
+    public ChangeSummaryPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, PermissionChecker permissionChecker) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
+        this.permissionChecker = permissionChecker;
     }
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
@@ -83,7 +91,7 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
     @Override
     protected void onRefresh() {
         ProjectId projectId = getProjectId();
-        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager, hasWritePermission());
+        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager, permissionChecker.hasWritePermissionForProject(getUserId(), projectId));
         presenter.setChangesForProject(projectId);
         setTitle("Changes for project");
         refreshButton.setDisabled(true);

@@ -2,10 +2,13 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
+import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 
@@ -13,6 +16,7 @@ import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ImportsData;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.ArrayList;
@@ -25,8 +29,9 @@ public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 	protected TreePanel importsTree;
 	protected ArrayList<EntityData> currentSelection;
 
-	public ImportsTreePortlet(SelectionModel selectionModel,  EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
-		super(selectionModel, eventBus, project);
+	@Inject
+	public ImportsTreePortlet(SelectionModel selectionModel,  EventBus eventBus, LoggedInUserProvider loggedInUserProvider, ProjectId projectId) {
+		super(selectionModel, eventBus, projectId, loggedInUserProvider);
 	}
 
 	public void initialize() {
@@ -40,9 +45,9 @@ public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 		importsTree.setAutoScroll(true);
 
 		TreeNode root = new TreeNode();
-		root.setText(getProject().getDisplayName());
+		root.setText("Project");
 		root.setId(getProjectId().getId());
-		root.setUserObject(new EntityData(getProjectId().getId(), getProject().getDisplayName()));
+		root.setUserObject(new EntityData(getProjectId().getId(), "Project"));
 
 		importsTree.setRootNode(root);
 		importsTree.setRootVisible(true);

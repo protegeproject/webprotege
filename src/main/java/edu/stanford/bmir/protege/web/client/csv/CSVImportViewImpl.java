@@ -13,9 +13,12 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
+import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.csv.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.ArrayList;
@@ -59,7 +62,10 @@ public class CSVImportViewImpl extends Composite implements CSVImportView {
     @UiField
     protected FlexTable flexTableHeader;
 
-    public CSVImportViewImpl() {
+    private final ProjectId projectId;
+
+    public CSVImportViewImpl(ProjectId projectId) {
+        this.projectId = projectId;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         for(CSVRowImportType importType : CSVRowImportType.values()) {
@@ -164,7 +170,9 @@ public class CSVImportViewImpl extends Composite implements CSVImportView {
             flexTable.setWidget(i, 0, label);
             flexTable.getColumnFormatter().setWidth(0, COLUMN_NUMBER_COLUMN_WIDTH);
             flexTable.getRowFormatter().setVerticalAlign(i, HasVerticalAlignment.ALIGN_TOP);
-            final CSVColumnRelationEditorViewImpl widget = new CSVColumnRelationEditorViewImpl();
+            final CSVColumnRelationEditorViewImpl widget = new CSVColumnRelationEditorViewImpl(
+                    WebProtegeClientInjector.getPrimitiveDataEditor(projectId)
+            );
             widget.addFocusHandler(new ColumnHighligherFocusHandler(i));
             final int colIndex = i;
             widget.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {

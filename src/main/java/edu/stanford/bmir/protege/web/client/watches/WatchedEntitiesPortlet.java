@@ -2,15 +2,18 @@ package edu.stanford.bmir.protege.web.client.watches;
 
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import javax.inject.Inject;
 
 public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
@@ -18,9 +21,13 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
     private ChangeListView changeListView;
 
-    public WatchedEntitiesPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
-        super(selectionModel, eventBus, project);
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    @Inject
+    public WatchedEntitiesPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
     }
 
     @Override
@@ -53,6 +60,6 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
     }
 
     private String generateTitle() {
-        return "Watched Entities " + (Application.get().isGuestUser() ? " - Sign in to see the watched entities" : " for " + Application.get().getUserDisplayName());
+        return "Watched Entities " + (loggedInUserProvider.getCurrentUserId().isGuest() ? " - Sign in to see the watched entities" : " for " + loggedInUserProvider.getCurrentUserId().getUserName());
     }
 }

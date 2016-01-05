@@ -12,9 +12,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.library.sidebar.SideBar;
 import edu.stanford.bmir.protege.web.client.ui.library.sidebar.SideBarItem;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListView;
+import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -32,14 +34,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProjectManagerViewImpl extends Composite implements ProjectManagerView {
 
-    interface DashboardUiBinder extends UiBinder<HTMLPanel, ProjectManagerViewImpl> {
+    interface ProjectManagerViewImplBinder extends UiBinder<HTMLPanel, ProjectManagerViewImpl> {
 
     }
 
-    private static DashboardUiBinder ourUiBinder = GWT.create(DashboardUiBinder.class);
+    private static ProjectManagerViewImplBinder ourUiBinder = GWT.create(ProjectManagerViewImplBinder.class);
 
-    @UiField
-    protected ProjectListView projectListView;
+    @UiField(provided = true)
+    protected ProjectListViewImpl projectListView;
 
     @UiField
     protected SideBar<MySideBarItem> sideBar;
@@ -80,7 +82,9 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     };
 
 
-    public ProjectManagerViewImpl() {
+    @Inject
+    public ProjectManagerViewImpl(ProjectListViewImpl projectListView) {
+        this.projectListView = projectListView;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
 

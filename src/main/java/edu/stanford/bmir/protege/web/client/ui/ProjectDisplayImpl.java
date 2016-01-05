@@ -2,10 +2,9 @@ package edu.stanford.bmir.protege.web.client.ui;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
@@ -24,9 +23,11 @@ import com.gwtext.client.widgets.menu.Menu;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import com.gwtext.client.widgets.menu.event.CheckItemListenerAdapter;
 import com.gwtext.client.widgets.portal.Portlet;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.inject.ApplicationClientInjector;
+import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.place.PlaceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
@@ -42,6 +43,7 @@ import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.place.TabId;
 import edu.stanford.bmir.protege.web.shared.project.*;
@@ -49,6 +51,7 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -83,12 +86,20 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private final ProjectManager projectManager;
 
-    public ProjectDisplayImpl(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectManager projectManager) {
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    private final PlaceController placeController;
+
+
+    @Inject
+    public ProjectDisplayImpl(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectManager projectManager, LoggedInUserProvider loggedInUserProvider, PlaceController placeController, SelectionModel selectionModel) {
         this.projectId = checkNotNull(projectId);
         this.eventBus = eventBus;
         this.projectManager = projectManager;
-        this.selectionModel = SelectionModel.create();
+        this.selectionModel = selectionModel;
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
+        this.placeController = placeController;
         setTitle(getLabel());
         setTopToolbar(new Toolbar()); //TODO: make it configurable
         setEnableTabScroll(true);
@@ -187,7 +198,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private void createOntolgyForm() {
         Project project = projectManager.getProject(projectId).get();
-        List<AbstractTab> tabs = project.getLayoutManager().createTabs(selectionModel, project.getProjectLayoutConfiguration());
+        List<AbstractTab> tabs = project.getLayoutManager().createTabs(project.getProjectLayoutConfiguration());
         GWT.log("[ProjectDisplayImpl] Creating the ontology form from " + tabs.size() + " tabs");
         for (AbstractTab tab : tabs) {
             GWT.log("[ProjectDisplayImpl] Attempting to add tab " + tab.getLabel());
@@ -266,7 +277,9 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     protected void onPortletAdded(final String javaClassName) {
         AbstractTab activeTab = getActiveOntologyTab();
-        EntityPortlet portlet = UIFactory.createPortlet(activeTab.getSelectionModel(), eventBus, dispatchServiceManager, getProject(), javaClassName);
+        // TODO: Inject the UI Factory
+        UIFactory uiFactory = WebProtegeClientInjector.getUiFactory(projectId);
+        EntityPortlet portlet = uiFactory.createPortlet(javaClassName);
         if (portlet == null) {
             return;
         }
@@ -360,7 +373,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     protected void onTabAdded(String javaClassName) {
-        AbstractTab tab = getProject().getLayoutManager().addTab(selectionModel, javaClassName);
+        AbstractTab tab = getProject().getLayoutManager().addTab(javaClassName);
         if (tab == null) {
             return;
         }
@@ -383,7 +396,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     protected void saveProjectConfiguration() {
-        UserId userId = Application.get().getUserId();
+        UserId userId = loggedInUserProvider.getCurrentUserId();
         if (userId.isGuest()) {
             MessageBox.showAlert("You are not signed in", "To save the layout, you need to sign in first.");
             return;
@@ -514,12 +527,13 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
 
         public AbstractTab createTab() {
+            UIFactory uiFactory = WebProtegeClientInjector.getUiFactory(projectId);
+            AbstractTab tab = uiFactory.createTab(UserDefinedTab.class.getName());
             final Project project = getProject();
-            UserDefinedTab userDefinedTab = new UserDefinedTab(selectionModel, eventBus, dispatchServiceManager, project);
             TabConfiguration userDefinedTabConfiguration = getUserDefinedTabConfiguration();
-            project.getLayoutManager().setupTab(userDefinedTab, userDefinedTabConfiguration);
+            project.getLayoutManager().setupTab(tab, userDefinedTabConfiguration);
             project.getProjectLayoutConfiguration().addTab(userDefinedTabConfiguration);
-            return userDefinedTab;
+            return tab;
         }
 
         private TabConfiguration getUserDefinedTabConfiguration() {
@@ -547,8 +561,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     private void setInitialSelection() {
-        PlaceManager placeManager = Application.get().getPlaceManager();
-        Place place = placeManager.getCurrentPlace();
+        Place place = placeController.getWhere();
         displayPlace(place);
 
 //        final String ontologyName = com.google.gwt.user.client.Window.Location.getParameter("ontology");

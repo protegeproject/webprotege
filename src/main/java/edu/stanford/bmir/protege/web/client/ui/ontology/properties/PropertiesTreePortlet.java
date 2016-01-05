@@ -17,10 +17,11 @@ import com.gwtext.client.widgets.tree.TreePanel;
 import com.gwtext.client.widgets.tree.TreeSelectionModel;
 import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
-import edu.stanford.bmir.protege.web.client.Application;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
+import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
@@ -37,11 +38,13 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedHandler;
 import edu.stanford.bmir.protege.web.shared.hierarchy.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.*;
 
+import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,6 +61,8 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final LoggedInUserProvider loggedInUserProvider;
+
     protected TreePanel treePanel;
 
     private Button createButton;
@@ -66,9 +71,17 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     //    private TreeNode lastSelectedTreeNode;
 
-    public PropertiesTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, Project project) {
-        super(selectionModel, eventBus, project);
+    private final ProjectId projectId;
+
+    private final PermissionChecker permissionChecker;
+
+    @Inject
+    public PropertiesTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, ProjectId projectId, PermissionChecker permissionChecker) {
+        super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
+        this.loggedInUserProvider = loggedInUserProvider;
+        this.projectId = projectId;
+        this.permissionChecker = permissionChecker;
     }
 
     @Override
@@ -350,7 +363,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             }
         });
 
-        if (!getProject().hasWritePermission(Application.get().getUserId())) {
+        if (!permissionChecker.hasWritePermissionForProject(loggedInUserProvider.getCurrentUserId(), projectId)) {
             createButton.setDisabled(true);
         }
 
@@ -364,7 +377,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             }
         });
 
-        if (!getProject().hasWritePermission(Application.get().getUserId())) {
+        if (!permissionChecker.hasWritePermissionForProject(loggedInUserProvider.getCurrentUserId(), projectId)) {
             deleteButton.setDisabled(true);
         }
 
@@ -638,7 +651,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     public void updateButtonStates() {
-        if (getProject().hasWritePermission(Application.get().getUserId())) {
+        if (permissionChecker.hasWritePermissionForProject(loggedInUserProvider.getCurrentUserId(), projectId)) {
             createButton.enable();
             deleteButton.enable();
         }

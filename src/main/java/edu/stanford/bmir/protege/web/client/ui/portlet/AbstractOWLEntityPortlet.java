@@ -2,11 +2,13 @@ package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.*;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
@@ -22,12 +24,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 @SuppressWarnings("deprecated")
 public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
 
-    protected AbstractOWLEntityPortlet(SelectionModel selectionModel, EventBus eventBus, Project project) {
-        super(selectionModel, eventBus, project);
-    }
-
-    protected AbstractOWLEntityPortlet(SelectionModel selectionModel, EventBus eventBus, Project project, boolean initialize) {
-        super(selectionModel, eventBus, project, initialize);
+    protected AbstractOWLEntityPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
     }
 
     /**

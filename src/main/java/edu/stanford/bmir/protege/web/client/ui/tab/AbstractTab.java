@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
+import com.google.common.base.*;
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
 import com.gwtext.client.widgets.event.PanelListener;
@@ -11,15 +12,19 @@ import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.portal.Portal;
 import com.gwtext.client.widgets.portal.PortalColumn;
 import com.gwtext.client.widgets.portal.Portlet;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
+import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
+import edu.stanford.bmir.protege.web.client.ui.LayoutManager;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassesTab;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import java.util.*;
@@ -37,7 +42,6 @@ import java.util.*;
 // TODO: reordering of portlets in a column at drang-n-drop does not work yet
 public abstract class AbstractTab extends Portal {
 
-    protected Project project;
     protected Portal portal;
 
     private TabConfiguration tabConfiguration;
@@ -51,16 +55,14 @@ public abstract class AbstractTab extends Portal {
 
     private final SelectionModel selectionModel;
 
-    private final EventBus eventBus;
+    private final ProjectId projectId;
 
-    private final DispatchServiceManager dispatchServiceManager;
+    private final ProjectManager projectManager;
 
-
-    public AbstractTab(final SelectionModel selectionModel, final EventBus eventBus, final DispatchServiceManager dispatchServiceManager, final Project project) {
+    public AbstractTab(final SelectionModel selectionModel, ProjectId projectId, ProjectManager projectManager) {
         super();
-        this.eventBus = eventBus;
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.project = project;
+        this.projectId = projectId;
+        this.projectManager = projectManager;
         this.portal = new Portal();
         this.columnToPortletsMap = new LinkedHashMap<>();
         this.tabColumnConfigToColumn = new LinkedHashMap<>();
@@ -108,10 +110,6 @@ public abstract class AbstractTab extends Portal {
         return portletDestroyListener;
     }
 
-    private void onPermissionsChanged(final Collection<String> permissions) {
-
-    }
-
     public int getColumnCount() {
         return columnToPortletsMap.size();
     }
@@ -129,15 +127,25 @@ public abstract class AbstractTab extends Portal {
     }
 
     public void addPortlet(final EntityPortlet portlet, final int column) {
-        GWT.log("Adding portlet to tab: " + portlet.getClass().getName());
+        GWT.log("[AbstractTab] Adding portlet to tab: " + portlet.getClass().getName());
         final TabColumnConfiguration col = getTabColumnConfigurationAt(column);
         if (col == null) {
-            GWT.log("Column does not exist: " + column, null);
+            GWT.log("[AbstractTab] Column does not exist: " + column, null);
             return;
         }
         final PortletConfiguration portletConfiguration = ((AbstractEntityPortlet) portlet).getPortletConfiguration();
-        addPortletToColumn(portlet, col, portletConfiguration == null ? project.getLayoutManager().createPortletConfiguration(portlet) : portletConfiguration, true);
+
+        addPortletToColumn(portlet, col, portletConfiguration == null ? getLayoutManager().createPortletConfiguration(portlet) : portletConfiguration, true);
     }
+
+    private LayoutManager getLayoutManager() {
+        Optional<Project> project = projectManager.getProject(projectId);
+        if(!project.isPresent()) {
+            throw new RuntimeException("Unknown project: " + projectId);
+        }
+        return project.get().getLayoutManager();
+    }
+
 
     public void removePortlet(final EntityPortlet portlet) {
         for (final PortalColumn col : columnToPortletsMap.keySet()) {
@@ -194,25 +202,6 @@ public abstract class AbstractTab extends Portal {
         return null;
     }
 
-    public EntityPortlet getControllingPortlet() {
-        return null;
-    }
-
-    public void setControllingPortlet(final EntityPortlet newControllingPortlet) {
-//        if (controllingPortlet != null) {
-//            if (controllingPortlet.equals(newControllingPortlet)) {
-//                return;
-//            }
-//            controllingPortlet.removeSelectionListener(selectionControllingListener);
-//            ((AbstractEntityPortlet)controllingPortlet).updateIcon(false);
-//        }
-//        controllingPortlet = newControllingPortlet;
-//        if (controllingPortlet != null) {
-//            controllingPortlet.addSelectionListener(selectionControllingListener);
-//            ((AbstractEntityPortlet)controllingPortlet).updateIcon(true);
-//        }
-    }
-
     public TabConfiguration getTabConfiguration() {
         return tabConfiguration;
     }
@@ -234,8 +223,6 @@ public abstract class AbstractTab extends Portal {
         setClosable(tabConfiguration.getClosable());
         addColumns();
         addPorteltsToColumns();
-        setupControllingPortlet();
-
         add(portal);
     }
 
@@ -298,7 +285,7 @@ public abstract class AbstractTab extends Portal {
         return portletComparator;
     }
 
-    protected void addPortletToColumn(final TabColumnConfiguration tabColumnConfiguration,
+    private void addPortletToColumn(final TabColumnConfiguration tabColumnConfiguration,
                                       final PortletConfiguration portletConfiguration, final boolean updateColConfig) {
         // configuration
         final EntityPortlet portlet = createPortlet(portletConfiguration);
@@ -308,12 +295,15 @@ public abstract class AbstractTab extends Portal {
         addPortletToColumn(portlet, tabColumnConfiguration, portletConfiguration, updateColConfig);
     }
 
-    protected void addPortletToColumn(final EntityPortlet portlet, final TabColumnConfiguration tabColumnConfiguration,
-                                      final PortletConfiguration portletConfiguration, final boolean updateColConfig) {
+    protected void addPortletToColumn(final EntityPortlet portlet,
+                                      final TabColumnConfiguration tabColumnConfiguration,
+                                      final PortletConfiguration portletConfiguration,
+                                      final boolean updateColConfig) {
         ((AbstractEntityPortlet) portlet).setPortletConfiguration(portletConfiguration);
         final PortalColumn portalColumn = tabColumnConfigToColumn.get(tabColumnConfiguration);
         portalColumn.add((Portlet) portlet);
         columnToPortletsMap.get(portalColumn).add(portlet);
+        GWT.log("[AbstractTab] Added portlet to column: " + portlet);
 
         ((AbstractEntityPortlet) portlet).setTab(this);
 
@@ -332,10 +322,12 @@ public abstract class AbstractTab extends Portal {
         }
     }
 
-    protected EntityPortlet createPortlet(final PortletConfiguration portletConfiguration) {
+    private EntityPortlet createPortlet(final PortletConfiguration portletConfiguration) {
         final String portletClassName = portletConfiguration.getName();
-        final EntityPortlet portlet = UIFactory.createPortlet(selectionModel, eventBus, dispatchServiceManager, project, portletClassName);
+        final UIFactory uiFactory = WebProtegeClientInjector.getUiFactory(projectId);
+        final EntityPortlet portlet =  uiFactory.createPortlet(portletClassName);
         if (portlet == null) {
+            GWT.log("[AbstractTab] The UIFactory returned a null value when asked to create an instance of the portlet: " + portletClassName);
             return null;
         }
         final int height = portletConfiguration.getHeight();
@@ -353,15 +345,6 @@ public abstract class AbstractTab extends Portal {
         ((Portlet) portlet).addListener(getPortletDestroyListener());
 
         return portlet;
-    }
-
-    protected void setupControllingPortlet() {
-        final PortletConfiguration portletConfiguration = tabConfiguration.getControllingPortlet();
-        if (portletConfiguration == null) {
-            setControllingPortlet(getDefaultControllingPortlet());
-        } else {
-            setControllingPortlet(getPortletByClassName(portletConfiguration.getName()));
-        }
     }
 
     public EntityPortlet getPortletByClassName(final String javaClassName) {
