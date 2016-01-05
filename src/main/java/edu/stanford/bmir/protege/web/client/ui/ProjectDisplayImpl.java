@@ -153,7 +153,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
                     @Override
                     public void handleSuccess(GetUIConfigurationResult result) {
                         projectLayoutConfiguration = Optional.of(result.getConfiguration());
-                        createOntolgyForm();
+                        setupUserInterface();
                         displayCurrentPlace();
                     }
 
@@ -175,7 +175,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
 
-    private void createOntolgyForm() {
+    private void setupUserInterface() {
         if(!projectLayoutConfiguration.isPresent()) {
             throw new RuntimeException("ProjectLayoutConfiguration has not be loaded.");
         }
