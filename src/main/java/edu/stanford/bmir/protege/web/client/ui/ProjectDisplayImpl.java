@@ -257,18 +257,6 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         return addPortletButton;
     }
 
-    protected void onPortletRemoved(String javaClassName) {
-        AbstractTab activeTab = getActiveOntologyTab();
-        List<EntityPortlet> comps = activeTab.getPortlets();
-        for (EntityPortlet entityPortlet2 : comps) {
-            EntityPortlet entityPortlet = entityPortlet2;
-            if (entityPortlet.getClass().getName().equals(javaClassName)) {
-                ((Portlet) entityPortlet).setVisible(false);
-                ((Portlet) entityPortlet).destroy();
-            }
-        }
-    }
-
     protected void onPortletAdded(final String javaClassName) {
         AbstractTab activeTab = getActiveOntologyTab();
         // TODO: Inject the UI Factory
