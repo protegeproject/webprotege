@@ -63,10 +63,6 @@ public class Project implements HasProjectId, HasDispose {
         return projectDetails.getProjectId();
     }
 
-    //    public String getProjectName() {
-//        return projectDetails.getDisplayName();
-//    }
-
     public String getDisplayName() {
         return projectDetails.getDisplayName();
     }
@@ -74,11 +70,6 @@ public class Project implements HasProjectId, HasDispose {
     public ProjectDetails getProjectDetails() {
         return projectDetails;
     }
-
-    public void forceGetEvents() {
-//        eventPollingManager.pollForProjectEvents();
-    }
-
 
     public void setProjectLayoutConfiguration(ProjectLayoutConfiguration projectLayoutConfiguration) {
         this.projectLayoutConfiguration = projectLayoutConfiguration;
@@ -91,23 +82,7 @@ public class Project implements HasProjectId, HasDispose {
     public LayoutManager getLayoutManager() {
         return layoutManager;
     }
-
-//    public ProjectPermissionManager getProjectPermissionManager() {
-//        return permissionManager;
-//    }
-
-    public boolean hasWritePermission(UserId userId) {
-        return permissionManager.hasPermission(userId, Permission.getWritePermission());
-    }
-
-    public boolean hasWritePermission() {
-        return hasWritePermission(loggedInUserProvider.getCurrentUserId());
-    }
-
-    public boolean hasReadPermission(UserId userId) {
-        return permissionManager.hasPermission(userId, Permission.getReadPermission());
-    }
-
+    
     public void dispose() {
         // TODO: we might notify the session that project has been closed
         permissionManager.dispose();

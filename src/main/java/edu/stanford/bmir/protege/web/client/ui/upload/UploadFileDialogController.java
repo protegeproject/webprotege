@@ -9,6 +9,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
+import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
 
 
@@ -27,10 +28,10 @@ public class UploadFileDialogController extends WebProtegeOKCancelDialogControll
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<String>() {
             @Override
             public void handleHide(String data, final WebProtegeDialogCloser closer) {
-                UIUtil.showLoadProgessBar("Uploading", "Uploading file");
+                ProgressMonitor.get().showProgressMonitor("Uploading", "Uploading file");
                 form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
                     public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                        UIUtil.hideLoadProgessBar();
+                        ProgressMonitor.get().hideProgressMonitor();
                         GWT.log("Submittion of file is complete");
                         FileUploadResponse result = new FileUploadResponse(event.getResults());
                         if(result.wasUploadAccepted()) {

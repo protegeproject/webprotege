@@ -208,9 +208,10 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         if (tabs.size() > 0) {
             activate(0);
         }
-        if (UIUtil.getBooleanConfigurationProperty(project.getProjectLayoutConfiguration(), SHOW_ONTOLOGY_TOOLBAR, true)) {
+        // TODO: Fix this - inject
+//        if (UIUtil.getBooleanConfigurationProperty(project.getProjectLayoutConfiguration(), SHOW_ONTOLOGY_TOOLBAR, true)) {
             createToolbarButtons();
-        }
+//        }
         doLayout();
     }
 

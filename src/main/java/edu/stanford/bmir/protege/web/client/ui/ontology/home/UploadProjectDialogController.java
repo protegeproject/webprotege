@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEvent;
 import edu.stanford.bmir.protege.web.client.ui.upload.FileUploadResponse;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
@@ -49,10 +50,10 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
         }
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<UploadFileInfo>() {
             public void handleHide(final UploadFileInfo data, final WebProtegeDialogCloser closer) {
-                UIUtil.showLoadProgessBar(PROGRESS_DIALOG_TITLE, "Uploading file");
+                ProgressMonitor.get().showProgressMonitor(PROGRESS_DIALOG_TITLE, "Uploading file");
                 data.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
                     public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                        UIUtil.hideLoadProgessBar();
+                        ProgressMonitor.get().hideProgressMonitor();
                         handleSubmissionComplete(data, event);
                         closer.hide();
 
@@ -80,7 +81,7 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
     }
 
     private void createProjectFromUpload(UploadFileInfo data, FileUploadResponse result) {
-        UIUtil.showLoadProgessBar(PROGRESS_DIALOG_TITLE, "Creating project");
+        ProgressMonitor.get().showProgressMonitor(PROGRESS_DIALOG_TITLE, "Creating project");
         UserId userId = loggedInUserProvider.getCurrentUserId();
         DocumentId documentId = result.getDocumentId();
         String projectName = data.getProjectSettings().getProjectName();
