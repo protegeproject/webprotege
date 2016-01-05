@@ -46,6 +46,7 @@ import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
+import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.DiscussionThreadDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
@@ -289,48 +290,33 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     }
 
-    protected String getCreateClsDescription() {
-        return UIUtil.getStringConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.CREATE_ACTION_DESC_PROP, ClassTreePortletConstants.CREATE_ACTION_DESC_DEFAULT);
-    }
-
-    protected String getDeleteClsDescription() {
-        return UIUtil.getStringConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.DELETE_ACTION_DESC_PROP, ClassTreePortletConstants.DELETE_ACTION_DESC_DEFAULT);
-    }
-
-    protected String getRenameClsDescription() {
-        return UIUtil.getStringConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.RENAME_ACTION_DESC_PROP, ClassTreePortletConstants.RENAME_ACTION_DESC_DEFAULT);
-    }
-
     protected String getMoveClsDescription() {
-        return UIUtil.getStringConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.MOVE_ACTION_DESC_PROP, ClassTreePortletConstants.MOVE_ACTION_DESC_DEFAULT);
+        return "Move class";
     }
 
     protected String getCreateClsLabel() {
-        return UIUtil.getStringConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.CREATE_LABEL_PROP, ClassTreePortletConstants.CREATE_LABEL_DEFAULT);
+        return "Create";
     }
 
     protected String getDeleteClsLabel() {
-        return UIUtil.getStringConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.DELETE_LABEL_PROP, ClassTreePortletConstants.DELETE_LABEL_DEFAULT);
+        return "Delete";
     }
 
     protected boolean getDeleteEnabled() {
-        return UIUtil.getBooleanConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.DELETE_ENABLED_PROP, ClassTreePortletConstants.DELETE_ENABLED_DEFAULT);
+        // TODO: These should be injected
+        return true;
     }
 
     protected String getWatchClsLabel() {
-        return UIUtil.getStringConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.WATCH_LABEL_PROP, ClassTreePortletConstants.WATCH_LABEL_DEFAULT);
+        return "Watch class";
     }
 
     protected String getWatchBranchClsLabel() {
-        return UIUtil.getStringConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.WATCH_BRANCH_LABEL_PROP, ClassTreePortletConstants.WATCH_BRANCH_LABEL_DEFAULT);
+        return "Watch branch";
     }
 
     protected String getUnwatchClsLabel() {
-        return UIUtil.getStringConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.UNWATCH_LABEL_PROP, ClassTreePortletConstants.UNWATCH_LABEL_DEFAULT);
-    }
-
-    protected boolean getInheritMetaClasses() {
-        return UIUtil.getBooleanConfigurationProperty(getPortletConfiguration(), ClassTreePortletConstants.INHERIT_METACLASSES_PROP, ClassTreePortletConstants.INHERIT_METACLASSES_DEFAULT);
+        return "Remove watch";
     }
 
     @Override
@@ -947,7 +933,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
             @Override
             public void handleFileUploadFailed(String errorMessage) {
-                UIUtil.hideLoadProgessBar();
+                ProgressMonitor.get().hideProgressMonitor();
                 MessageBox.showAlert("Error uploading CSV file", errorMessage);
             }
         });
@@ -1171,11 +1157,27 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     protected String getMoveClsOperationDescription(final EntityData cls, final EntityData oldParent, final EntityData newParent) {
-        return getMoveClsDescription() + ": " + UIUtil.getDisplayText(cls) + ". Old parent: " + UIUtil.getDisplayText(oldParent) + ", New parent: " + UIUtil.getDisplayText(newParent);
+        return getMoveClsDescription() + ": " + getDisplayText(cls) + ". Old parent: " + getDisplayText(oldParent) + ", New parent: " + getDisplayText(newParent);
     }
 
     public void getPathToRoot(final OWLEntityData entity) {
         OntologyServiceManager.getInstance().getPathToRoot(getProjectId(), entity.getEntity().getIRI().toString(), new GetPathToRootHandler());
+    }
+
+    private static String getDisplayText(Object object) {
+        if (object == null) {
+            return "";
+        }
+        if (object instanceof EntityData) {
+            String browserText = ((EntityData) object).getBrowserText();
+            if (browserText == null) {
+                browserText = ((EntityData) object).getName();
+            }
+            return browserText == null ? "" : browserText;
+        }
+        else {
+            return object.toString();
+        }
     }
 
     /**
@@ -1319,7 +1321,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     protected TreeNode createTreeNode(final EntityData entityData) {
-        final TreeNode node = new TreeNode(UIUtil.getDisplayText(entityData));
+        final TreeNode node = new TreeNode(getDisplayText(entityData));
         node.setHref(null);
         node.setUserObject(entityData);
         node.setAllowDrag(true);
@@ -1361,12 +1363,12 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             final String idLocalAnnotationCnt = node.getId() + SUFFIX_ID_LOCAL_ANNOTATION_COUNT;
 
             // TODO: add a css for this
-            text = text + "<span style=\"padding-left: 2px;\"><img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + UIUtil.getNiceNoteCountText(localAnnotationsCount) + " on this category. \nClick on the icon to see and edit the notes\" /></span>" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"font-size:95%;color:#15428B;font-weight:bold;\">" + localAnnotationsCount + "</span>";
+            text = text + "<span style=\"padding-left: 2px;\"><img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(localAnnotationsCount) + " on this category. \nClick on the icon to see and edit the notes\" /></span>" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"font-size:95%;color:#15428B;font-weight:bold;\">" + localAnnotationsCount + "</span>";
         }
 
         final int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
         if (childrenAnnotationsCount > 0) {
-            text = text + " <span style=\"padding-left: 2px;\"><img src=\"" + BUNDLE.commentSmallIcon().getSafeUri().asString() + "\" title=\"" + UIUtil.getNiceNoteCountText(childrenAnnotationsCount) + " on the children of this category\" /></span>" + "<span style=\"font-size:90%;color:#999999;\">" + childrenAnnotationsCount + "</span>";
+            text = text + " <span style=\"padding-left: 2px;\"><img src=\"" + BUNDLE.commentSmallIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(childrenAnnotationsCount) + " on the children of this category\" /></span>" + "<span style=\"font-size:90%;color:#999999;\">" + childrenAnnotationsCount + "</span>";
         }
 
         return text;
@@ -1787,5 +1789,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
+    private static String getNiceNoteCountText(final int noteCount) {
+        return noteCount == 1 ? "There is 1 note" : "There are " + noteCount + " notes";
+    }
 
 }

@@ -9,6 +9,7 @@ import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalAPIService;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalAPIServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
+import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.util.UIUtil;
@@ -39,7 +40,7 @@ public class PublishToBioPortalDialogController extends WebProtegeOKCancelDialog
             public void handleHide(PublishToBioPortalInfo data, WebProtegeDialogCloser closer) {
                 try {
                     handleUpload(details, userDetails, data, closer);
-                    UIUtil.showLoadProgessBar("Publishing ontology to BioPortal", "Please wait");
+                    ProgressMonitor.get().showProgressMonitor("Publishing ontology to BioPortal", "Please wait");
                 }
                 catch (IOException e) {
                     e.printStackTrace();
@@ -57,12 +58,12 @@ public class PublishToBioPortalDialogController extends WebProtegeOKCancelDialog
         RevisionNumber revisionNumber = RevisionNumber.getHeadRevisionNumber();
         service.uploadProjectToBioPortal(details.getDisplayName(), details.getProjectId(), revisionNumber, publishInfo, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
-                UIUtil.hideLoadProgessBar();
+                ProgressMonitor.get().hideProgressMonitor();
                 MessageBox.alert("There was a problem publishing the ontology to BioPortal.  Error message: " + caught.getMessage());
             }
 
             public void onSuccess(Void result) {
-                UIUtil.hideLoadProgessBar();
+                ProgressMonitor.get().hideProgressMonitor();
                 MessageBox.alert("The ontology was successfully published to BioPortal");
                 closer.hide();
             }
