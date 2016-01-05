@@ -130,7 +130,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         addApplicationEventHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
             @Override
             public void onPlaceChange(PlaceChangeEvent event) {
-                GWT.log("DETECTED PLACE CHANGE: COMMITTING CHANGES!");
                 commitChanges();
             }
         });
