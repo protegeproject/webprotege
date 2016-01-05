@@ -26,9 +26,7 @@ import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.inject.ApplicationClientInjector;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
-import edu.stanford.bmir.protege.web.client.place.PlaceManager;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 
@@ -40,11 +38,10 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
+import edu.stanford.bmir.protege.web.client.ui.tab.TabId;
 import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
-import edu.stanford.bmir.protege.web.shared.place.TabId;
 import edu.stanford.bmir.protege.web.shared.project.*;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -146,7 +143,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     private void displayPlace(Place place) {
         if(place instanceof ProjectViewPlace) {
             ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
-            Optional<TabId> tabId = projectViewPlace.getTabId();
+            Optional<edu.stanford.bmir.protege.web.shared.place.TabId> tabId = projectViewPlace.getTabId();
             if(tabId.isPresent()) {
                 selectTabWithName(tabId.get().getTabName());
             }
@@ -297,8 +294,8 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
 
         Menu addTabMenu = new Menu();
-        for (String tabName : shortToLongTabNameMap.keySet()) {
-            CheckItem item = new CheckItem(tabName, enabledTabs.contains(shortToLongTabNameMap.get(tabName)));
+        for (TabId tabId : TabId.values()) {
+            CheckItem item = new CheckItem(tabId.getShortName(), enabledTabs.contains(shortToLongTabNameMap.get(tabId.getId())));
             addTabMenu.addItem(item);
             item.addListener(new CheckItemListenerAdapter() {
                 @Override
