@@ -1084,36 +1084,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         OntologyServiceManager.getInstance().getRootEntity(getProjectId(), new GetRootClassHandler());
     }
 
-    protected String getRootClsName() {
-        final PortletConfiguration portletConfiguration = getPortletConfiguration();
-        if (portletConfiguration == null) {
-            return topClass;
-        }
-        final Map<String, Object> props = portletConfiguration.getProperties();
-        if (props == null) {
-            return topClass;
-        }
-        // TODO: move from here
-        final String title = (String) props.get("label");
-        setTitle(title == null ? "Class Tree" : title);
-        hierarchyProperty = (String) props.get("hierarchyProperty");
-
-        //cache it so that we can set it
-        if (topClass == null) {
-            topClass = (String) props.get(ClassTreePortletConstants.TOP_CLASS_PROP);
-        }
-        return topClass;
-    }
-
-    /**
-     * To take effect, it has to be called before {@link #afterRender()}.
-     *
-     * @param topClass
-     */
-    public void setTopClass(final String topClass) {
-        this.topClass = topClass;
-    }
-
     protected void moveClass(final EntityData cls, final EntityData oldParent, final EntityData newParent) {
         if (oldParent.equals(newParent)) {
             return;
