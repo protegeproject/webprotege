@@ -125,8 +125,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     private String hierarchyProperty = null;
 
-    private String topClass = null;
-
     private TreeNodeListenerAdapter nodeListener;
 
     private boolean registeredEventHandlers = false;
@@ -163,7 +161,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         this.showTitle = showTitle;
         this.showTools = showTools;
         this.allowsMultiSelection = allowsMultiSelection;
-        this.topClass = topClass;
         this.discussionThreadDialogProvider = discussionThreadDialogProvider;
         this.permissionChecker = loggedInUserProjectPermissionChecker;
         registerEventHandlers();
@@ -1208,18 +1205,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     public void selectPathInTree(List<EntityData> path) {
-        int topIndex = -1;
-        if (topClass != null) { //adjust path
-            for (int i = 0; i < path.size() && topIndex == -1; i++) {
-                if (path.get(i).getName().equals(topClass)) {
-                    topIndex = i;
-                }
-            }
-            if (topIndex != -1) {
-                path = path.subList(topIndex, path.size());
-            }
-        }
-
         selectPathInTree(path, treePanel.getRootNode(), 0);
     }
 
