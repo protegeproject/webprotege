@@ -322,24 +322,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     /**
-     * Gets a paginated list of individuals.
-     * and then uses {@link PaginationServerUtil} to compute the pagination.
-     * @param projectName The name of the relevant project
-     * @param className The name of the class who's individuals are to be retrieved.  This should be an IRI, but this
-     * implementation will also tolerate browser text.
-     * @param start The start index of the pagination
-     * @param limit The end index of the pagination
-     * @param sort Whether to sort the pagination or not.
-     * @param dir The direction of the sort. (Oh dear - a string).  I've no idea where this magic string is defined.
-     * @return A {@link PaginationData} object conforming to the specified criteria.
-     */
-    public PaginationData<EntityData> getIndividuals(String projectName, String className, int start, int limit, String sort, String dir) {
-        GetIndividualsStrategy strategy = new GetIndividualsStrategy(getProject(projectName), getUserId(), className);
-        List<EntityData> result = strategy.execute();
-        return PaginationServerUtil.pagedRecords(result, start, limit, sort, dir);
-    }
-
-    /**
      * Gets the superclasses of a particular class.  This implementation uses the {@link AssertedClassHierarchyProvider}
      * to obtain this information.
      * @param projectName The relevant project which makes the assertions to be taken into consideration.
