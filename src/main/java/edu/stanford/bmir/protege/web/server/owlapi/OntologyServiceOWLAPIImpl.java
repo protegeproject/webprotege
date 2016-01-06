@@ -464,33 +464,13 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////
     ///////
-    ///////  Property Values
+    ///////  Search
     ///////
     ///////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void addPropertyValue(String projectName, String entityName, PropertyEntityData propertyEntity, EntityData value, String user, String operationDescription) {
-        AddPropertyValueChangeFactory cf = new AddPropertyValueChangeFactory(getProject(projectName), getUserId(), operationDescription, entityName, propertyEntity, value);
-        applyChanges(cf);
-    }
-
-    public void removePropertyValue(String projectName, String entityName, PropertyEntityData propertyEntity, EntityData value, String user, String operationDescription) {
-        RemovePropertyValueChangeFactory cf = new RemovePropertyValueChangeFactory(getProject(projectName), getUserId(), operationDescription, entityName, propertyEntity, value);
-        applyChanges(cf);
-    }
-
-    public void replacePropertyValue(String projectName, String entityName, PropertyEntityData propertyEntity, EntityData oldValue, EntityData newValue, String user, String operationDescription) {
-        ReplacePropertyValueChangeFactory cf = new ReplacePropertyValueChangeFactory(getProject(projectName), getUserId(), operationDescription, entityName, propertyEntity, oldValue, newValue);
-        applyChanges(cf);
-
-    }
-
-    public void setPropertyValues(String projectName, String entityName, PropertyEntityData propertyEntity, List<EntityData> values, String user, String operationDescription) {
-        throw new RuntimeException("Not implemented");
-    }
 
     public PaginationData<EntityData> search(String projectName, String searchString, ValueType valueType, int start, int limit, String sort, String dir) {
         List<EntityData> search = search(projectName, searchString);
