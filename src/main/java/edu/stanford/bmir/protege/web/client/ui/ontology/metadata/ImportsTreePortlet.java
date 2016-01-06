@@ -32,16 +32,13 @@ public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 	@Inject
 	public ImportsTreePortlet(SelectionModel selectionModel,  EventBus eventBus, LoggedInUserProvider loggedInUserProvider, ProjectId projectId) {
 		super(selectionModel, eventBus, projectId, loggedInUserProvider);
-	}
-
-	public void initialize() {
 		setLayout(new FitLayout());
 		setTitle("Imported Ontologies");
 
 		importsTree = new TreePanel();
 		importsTree.setHeight(400);
 		importsTree.setAnimate(true);
-		importsTree.setAutoWidth(true);		
+		importsTree.setAutoWidth(true);
 		importsTree.setAutoScroll(true);
 
 		TreeNode root = new TreeNode();
@@ -54,6 +51,7 @@ public class ImportsTreePortlet extends AbstractOWLEntityPortlet {
 
 		add(importsTree);
 	}
+
 
 	protected void afterRender() {
 		getImportedOntologies();

@@ -35,6 +35,8 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
     public OBOTermRelationshipPortlet(OBOTermRelationshipEditor editor, ProjectId projectId, EventBus eventBus, SelectionModel selectionModel, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.editor = editor;
+        this.editor.setEnabled(true);
+        add(this.editor.getWidget());
     }
 
 
@@ -92,9 +94,4 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
         return "Relationships";
     }
 
-    @Override
-    public void initialize() {
-        editor.setEnabled(true);
-        add(editor.getWidget());
-    }
 }

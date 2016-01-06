@@ -28,10 +28,6 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
-    }
-
-    @Override
-    public void initialize() {
         setHeight(200);
         changeListView = new ChangeListViewImpl();
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
@@ -40,7 +36,6 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
         add(scrollPanel);
         onRefresh();
     }
-
 
     @Override
     public void onLogin(UserId userId) {

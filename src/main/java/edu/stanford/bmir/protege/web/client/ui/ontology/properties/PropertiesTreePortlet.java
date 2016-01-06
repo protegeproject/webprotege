@@ -82,10 +82,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectId = projectId;
         this.permissionChecker = permissionChecker;
-    }
 
-    @Override
-    public void initialize() {
         setLayout(new FitLayout());
         setTitle("Properties Tree");
 
@@ -182,9 +179,9 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
                 }
             }
         });
-        DefaultSelectionModel selectionModel = new DefaultSelectionModel();
-        treePanel.setSelectionModel(selectionModel);
-        selectionModel.addSelectionModelListener(new DefaultSelectionModelListenerAdapter() {
+        DefaultSelectionModel selModel = new DefaultSelectionModel();
+        treePanel.setSelectionModel(selModel);
+        selModel.addSelectionModelListener(new DefaultSelectionModelListenerAdapter() {
             @Override
             public void onSelectionChange(DefaultSelectionModel defaultSelectionModel, TreeNode treeNode) {
                 if (treeNode != null) {
@@ -195,9 +192,8 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
                 }
             }
         });
-
-
     }
+
 
     private Optional<OWLEntityData> getSelectedTreeNodeEntityData() {
         TreeSelectionModel tsm = treePanel.getSelectionModel();

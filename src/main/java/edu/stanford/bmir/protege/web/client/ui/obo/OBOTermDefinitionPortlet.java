@@ -90,8 +90,4 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
         return "Definition";
     }
 
-    @Override
-    public void initialize() {
-
-    }
 }

@@ -28,17 +28,13 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
 	public ChangesPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
 		super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
-	}
 
-	private ChangeListView changeListView;
+        changeListView = new ChangeListViewImpl();
 
-	@Override
-	public void initialize() {
-		setHeight(200);
-		changeListView = new ChangeListViewImpl();
+        setHeight(200);
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
-		scrollPanel.setWidth("100%");
-		scrollPanel.setHeight("100%");
+        scrollPanel.setWidth("100%");
+        scrollPanel.setHeight("100%");
         add(scrollPanel);
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override
@@ -53,6 +49,8 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
             }
         });
 	}
+
+	private ChangeListView changeListView;
 
     private void handleProjectChanged(ProjectChangedEvent event) {
         if(lastRevisionNumber.equals(event.getRevisionNumber())) {

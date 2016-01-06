@@ -23,10 +23,6 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
     @Inject
     public ProjectFeedPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserManager) {
         super(selectionModel, eventBus, projectId, loggedInUserManager);
-    }
-
-    @Override
-    public void initialize() {
         basePanel = new ProjectFeedBasePanel(getProjectId(), this, getSelectionModel());
         setTitle("Project feed");
         setSize(300, 180);

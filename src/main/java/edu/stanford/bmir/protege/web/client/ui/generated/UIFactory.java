@@ -218,7 +218,6 @@ public class UIFactory {
                 GWT.log("[UIFactory] Portlet not found: " + portletJavaClassName);
             }
             if(entityPortlet != null) {
-                entityPortlet.initialize();
                 GWT.log("[UIFactory] Initialized portlet: " + portletJavaClassName);
             }
         } catch (Exception e) {

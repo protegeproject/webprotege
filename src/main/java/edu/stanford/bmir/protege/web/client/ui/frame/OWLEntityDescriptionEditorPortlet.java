@@ -22,10 +22,6 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractOWLEntityPortlet 
     public OWLEntityDescriptionEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, ManchesterSyntaxFrameEditorPresenter presenter) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.presenter = presenter;
-    }
-
-    @Override
-    public void initialize() {
         ManchesterSyntaxFrameEditorImpl editor = new ManchesterSyntaxFrameEditorImpl();
         presenter.attach(this);
         add(editor);

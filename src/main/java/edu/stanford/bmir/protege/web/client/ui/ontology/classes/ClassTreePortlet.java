@@ -167,7 +167,82 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         this.discussionThreadDialogProvider = discussionThreadDialogProvider;
         this.permissionChecker = loggedInUserProjectPermissionChecker;
         registerEventHandlers();
-        initialize();
+        BUNDLE.style().ensureInjected();
+
+        setLayout(new FitLayout());
+
+        setTools(getTools());
+
+        if (showTitle) {
+            setTitle("Classes");
+        }
+
+        if (showToolbar) {
+            addToolbarButtons();
+        }
+
+        final Panel bogusPanel = new Panel();
+        bogusPanel.setId(PLACE_HOLDER_PANEL);
+        bogusPanel.setHeight(560);
+        add(bogusPanel);
+
+        updateButtonStates();
+        if (nodeListener == null) {
+            //listener for click on the comment icon to display notes
+            nodeListener = new TreeNodeListenerAdapter() {
+
+                //TODO: this functionality is similar to that found in AbstractFieldWidget and
+                @Override
+                public boolean doBeforeClick(final Node node, final EventObject e) {
+
+                    if (!nodesWithNotesOpen.contains(node.getUserObject())) { //not the second click in a double click
+                        onCellClickOrDblClick(node, e);
+                    }
+                    return true;
+                }
+
+                private void onCellClickOrDblClick(Node node, EventObject e) {
+                    final Element target = e.getTarget();
+                    if (target != null) {
+                        final String targetId = target.getId();
+                        if (targetId.endsWith(SUFFIX_ID_LOCAL_ANNOTATION_IMG) || targetId.endsWith(SUFFIX_ID_LOCAL_ANNOTATION_COUNT)) {
+                            showClassNotes(node);
+                        }
+                    }
+                }
+
+                @Override
+                public void onContextMenu(final Node node, EventObject e) {
+                    treePanel.getSelectionModel().select((TreeNode) node);
+                    Menu contextMenu = new Menu();
+                    contextMenu.setWidth("140px");
+
+                    MenuItem menuShowInternalID = new MenuItem();
+                    menuShowInternalID.setText("Show internal ID");
+                    menuShowInternalID.addListener(new BaseItemListenerAdapter() {
+                        @Override
+                        public void onClick(BaseItem item, EventObject event) {
+                            super.onClick(item, event);
+                            showInternalID((EntityData) node.getUserObject());
+                        }
+                    });
+                    contextMenu.addItem(menuShowInternalID);
+
+                    MenuItem menuShowDirectLink = new MenuItem();
+                    menuShowDirectLink.setText("Show direct link");
+                    menuShowDirectLink.addListener(new BaseItemListenerAdapter() {
+                        @Override
+                        public void onClick(BaseItem item, EventObject event) {
+                            super.onClick(item, event);
+                            showDirectLink((EntityData) node.getUserObject());
+                        }
+                    });
+                    contextMenu.addItem(menuShowDirectLink);
+
+                    contextMenu.showAt(e.getXY()[0] + 5, e.getXY()[1] + 5);
+                }
+            };
+        }
     }
 
     private void registerEventHandlers() {
@@ -316,88 +391,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     protected String getUnwatchClsLabel() {
         return "Remove watch";
-    }
-
-    @Override
-    public void initialize() {
-        BUNDLE.style().ensureInjected();
-
-        setLayout(new FitLayout());
-
-        setTools(getTools());
-
-        if (showTitle) {
-            setTitle("Classes");
-        }
-
-        if (showToolbar) {
-            addToolbarButtons();
-        }
-
-        final Panel bogusPanel = new Panel();
-        bogusPanel.setId(PLACE_HOLDER_PANEL);
-        bogusPanel.setHeight(560);
-        add(bogusPanel);
-
-        updateButtonStates();
-        if (nodeListener == null) {
-            //listener for click on the comment icon to display notes
-            nodeListener = new TreeNodeListenerAdapter() {
-
-                //TODO: this functionality is similar to that found in AbstractFieldWidget and
-                @Override
-                public boolean doBeforeClick(final Node node, final EventObject e) {
-
-                    if (!nodesWithNotesOpen.contains(node.getUserObject())) { //not the second click in a double click
-                        onCellClickOrDblClick(node, e);
-                    }
-                    return true;
-                }
-
-                private void onCellClickOrDblClick(Node node, EventObject e) {
-                    final Element target = e.getTarget();
-                    if (target != null) {
-                        final String targetId = target.getId();
-                        if (targetId.endsWith(SUFFIX_ID_LOCAL_ANNOTATION_IMG) || targetId.endsWith(SUFFIX_ID_LOCAL_ANNOTATION_COUNT)) {
-                            showClassNotes(node);
-                        }
-                    }
-                }
-
-                @Override
-                public void onContextMenu(final Node node, EventObject e) {
-                    treePanel.getSelectionModel().select((TreeNode) node);
-                    Menu contextMenu = new Menu();
-                    contextMenu.setWidth("140px");
-
-                    MenuItem menuShowInternalID = new MenuItem();
-                    menuShowInternalID.setText("Show internal ID");
-                    menuShowInternalID.addListener(new BaseItemListenerAdapter() {
-                        @Override
-                        public void onClick(BaseItem item, EventObject event) {
-                            super.onClick(item, event);
-                            showInternalID((EntityData) node.getUserObject());
-                        }
-                    });
-                    contextMenu.addItem(menuShowInternalID);
-
-                    MenuItem menuShowDirectLink = new MenuItem();
-                    menuShowDirectLink.setText("Show direct link");
-                    menuShowDirectLink.addListener(new BaseItemListenerAdapter() {
-                        @Override
-                        public void onClick(BaseItem item, EventObject event) {
-                            super.onClick(item, event);
-                            showDirectLink((EntityData) node.getUserObject());
-                        }
-                    });
-                    contextMenu.addItem(menuShowDirectLink);
-
-                    contextMenu.showAt(e.getXY()[0] + 5, e.getXY()[1] + 5);
-                }
-            };
-        }
-
-
     }
 
     private void onNotesChanged(EntityNotesChangedEvent event) {

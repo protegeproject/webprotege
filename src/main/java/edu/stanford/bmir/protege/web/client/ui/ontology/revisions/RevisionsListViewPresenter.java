@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -40,6 +41,7 @@ public class RevisionsListViewPresenter implements HasDispose {
 
     private final EventBus eventBus;
 
+    @Inject
     public RevisionsListViewPresenter(ProjectId projectId, EventBus eventBus, RevisionsListView view, DispatchServiceManager dispatchServiceManager) {
         this.view = view;
         this.eventBus = eventBus;

@@ -23,13 +23,15 @@ import java.util.List;
  */
 public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
 
-    private XRefListEditor editor;
+    private final XRefListEditor editor;
     
 
     @Inject
     public OBOTermXRefsEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
-
+        editor = new XRefListEditor();
+        add(editor);
+        editor.setEnabled(true);
     }
 
     @Override
@@ -62,12 +64,5 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
     @Override
     protected String getTitlePrefix() {
         return "XRefs";
-    }
-
-    @Override
-    public void initialize() {
-        editor = new XRefListEditor();
-        add(editor);
-        editor.setEnabled(true);
     }
 }

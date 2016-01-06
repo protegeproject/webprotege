@@ -30,6 +30,9 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     @Inject
     public OBOTermSynonymsPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        editor = new OBOTermSynonymListEditor();
+        editor.setEnabled(true);
+        add(editor);
     }
 
     @Override
@@ -63,13 +66,6 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     @Override
     protected String getTitlePrefix() {
         return "Synonyms";
-    }
-
-    @Override
-    public void initialize() {
-        editor = new OBOTermSynonymListEditor();
-        editor.setEnabled(true);
-        add(editor);
     }
 
 }

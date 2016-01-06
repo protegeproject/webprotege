@@ -253,7 +253,6 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         }
         ((AbstractEntityPortlet) portlet).setTab(activeTab);
         activeTab.addPortletToColumn(portlet, activeTab.getColumnCount() - 1);
-        portlet.initialize();
         doLayout();
     }
 
