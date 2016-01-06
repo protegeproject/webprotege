@@ -249,7 +249,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         if (registeredEventHandlers) {
             return;
         }
-        GWT.log("Registering event handlers for ClassTreePortlet " + this);
         registeredEventHandlers = true;
         ///////////////////////////////////////////////////////////////////////////
         //
@@ -1468,7 +1467,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean result) {
-                GWT.log("[ClassTreePortlet] User has write permission: " + result);
                 createButton.setDisabled(!result);
                 deleteButton.setDisabled(!result);
             }
@@ -1631,8 +1629,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
         @Override
         public void handleSuccess(final DeleteEntityResult result) {
-            GWT.log("Delete successfully class ", null);
-
         }
     }
 
@@ -1646,7 +1642,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
         @Override
         public void onFailure(final Throwable caught) {
-            GWT.log("Error at moving class", caught);
             MessageBox.showErrorMessage("Class not moved", caught);
             // TODO: refresh oldParent and newParent
         }
@@ -1678,14 +1673,11 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
         @Override
         public void onFailure(final Throwable caught) {
-            GWT.log("Error at finding path to root", caught);
         }
 
         @Override
         public void onSuccess(final List<EntityData> result) {
-            GWT.log(result.toString(), null);
             if (result == null || result.size() == 0) {
-                GWT.log("Could not find path in the tree", null);
                 return;
             }
             String path = "";
