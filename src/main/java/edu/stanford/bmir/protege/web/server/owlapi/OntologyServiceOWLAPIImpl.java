@@ -105,17 +105,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         return projectManager.getProject(projectId);
     }
 
-    private RenderingManager getRenderingManager(String projectName) {
-        OWLAPIProject project = getProject(projectName);
-        return project.getRenderingManager();
-    }
-
-    private RenderingManager getRenderingManager(ProjectId projectId) {
-        OWLAPIProject project = getProject(projectId);
-        return project.getRenderingManager();
-    }
-
-
     /**
      * Gets the root ontology for a given project name.
      * @param projectName The name of the project.
@@ -403,7 +392,7 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         List<EntityData> search = searchManager.search(searchString);
         return PaginationServerUtil.pagedRecords(search, start, limit, sort, dir);
     }
-    
+
     public List<EntityData> getPathToRoot(String projectName, String entityName) {
         OWLAPIProject project = getProject(projectName);
         RenderingManager rm = project.getRenderingManager();
@@ -446,124 +435,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
                 }
             }
         }
-
-
         return result;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    // TODO: Copied from the old ontology service - needs tidying up!!!
-
-    public String getBioPortalSearchContent(String projectName, String entityName, BioPortalSearchData bpSearchData) {
-            return URLUtil.getURLContent(getBioPortalSearchUrl(entityName, bpSearchData));
-    }
-
-    public String getBioPortalSearchContentDetails(String projectName, BioPortalSearchData bpSearchData,
-                                                   BioPortalReferenceData bpRefData) {
-        BioportalConcept bpc = new BioportalConcept();
-        String encodedConceptId = bpRefData.getConceptId();
-        try {
-            encodedConceptId = URLEncoder.encode(bpRefData.getConceptId(), "UTF-8");
-        } catch (UnsupportedEncodingException e1) {
-            logger.info("Error at encoding BP search url", e1);
-        }
-        String urlString = bpSearchData.getBpRestBaseUrl() + BioPortalServerConstants.CONCEPTS_REST + "/"
-                + bpRefData.getOntologyVersionId() + "/?conceptid=" + encodedConceptId;
-        urlString = BioPortalUtil.addRestCallSuffixToUrl(urlString, bpSearchData.getBpRestCallSuffix());
-        URL url = null;
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            logger.info("Invalid BP search URL: " + urlString, e);
-        }
-        if (url == null) {
-            return "";
-        }
-
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("<html><body>");
-        buffer.append("<table width=\"100%\" class=\"servicesT\" style=\"border-collapse:collapse;border-width:0px;padding:5px\"><tr>");
-
-        buffer.append("<td class=\"servHd\" style=\"background-color:#8E798D;color:#FFFFFF;\">Property</td>");
-        buffer.append("<td class=\"servHd\" style=\"background-color:#8E798D;color:#FFFFFF;\">Value</td>");
-
-        String oddColor = "#F4F2F3";
-        String evenColor = "#E6E6E5";
-
-        ClassBean cb = bpc.getConceptProperties(url);
-        if (cb == null) {
-            return "<html><body><i>Details could not be retrieved.</i></body></html>";
-        }
-
-        Map<Object, Object> relationsMap = cb.getRelations();
-        int i = 0;
-        for (Object obj : relationsMap.keySet()) {
-            Object value = relationsMap.get(obj);
-            if (value != null) {
-                String text = HTMLUtil.replaceEOF(HTMLUtil.makeHTMLLinks(value.toString()));
-                if (text.startsWith("[")) {
-                    text = text.substring(1, text.length() - 1);
-                }
-                if (text.length() > 0) {
-                    String color = i % 2 == 0 ? evenColor : oddColor;
-                    buffer.append("<tr>");
-                    buffer.append("<td class=\"servBodL\" style=\"background-color:" + color + ";padding:7px;font-weight: bold;\" >");
-                    buffer.append(HTMLUtil.makeHTMLLinks(obj.toString()));
-                    buffer.append("</td>");
-                    buffer.append("<td class=\"servBodL\" style=\"background-color:" + color + ";padding:7px;\" >");
-                    buffer.append(text);
-                    buffer.append("</td>");
-                    buffer.append("</tr>");
-                    i++;
-                }
-            }
-        }
-        buffer.append("</table>");
-
-        String directLink = bpRefData.getBpUrl();
-        if (directLink != null && directLink.length() > 0) {
-            buffer.append("<div style=\"padding:5px;\"><br><b>Direct link in BioPortal:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-            buffer.append("<a href=\"");
-            buffer.append(directLink);
-            buffer.append("\" target=\"_blank\">");
-            buffer.append(directLink);
-            buffer.append("</a></div>");
-        }
-        buffer.append("</body></html>");
-
-        return buffer.toString();
-    }
-
-    private static String getBioPortalSearchUrl(String text, BioPortalSearchData bpSearchData) {
-        text = text.replaceAll(" ", "%20");
-        String urlString = bpSearchData.getBpRestBaseUrl() + BioPortalServerConstants.SEARCH_REST + "/" +
-                text + createSearchUrlQueryString(bpSearchData);
-        urlString = BioPortalUtil.addRestCallSuffixToUrl(urlString, bpSearchData.getBpRestCallSuffix());
-        return urlString;
-    }
-
-    private static String createSearchUrlQueryString(BioPortalSearchData bpSearchData) {
-        String res = "";
-        String ontIds = bpSearchData.getSearchOntologyIds();
-        String srchOpts = bpSearchData.getSearchOptions();
-        String pgOpt = bpSearchData.getSearchPageOption();
-        boolean firstSep = true;
-        if (ontIds != null) {
-            res += (firstSep ? "?" : "&") + "ontologyids=" + ontIds;
-            firstSep = false;
-        }
-        if (srchOpts != null) {
-            res += (firstSep ? "?" : "&") + srchOpts;
-            firstSep = false;
-        }
-        if (pgOpt != null) {
-            res += (firstSep ? "?" : "&") + pgOpt;
-            firstSep = false;
-        }
-        return res;
     }
 }
