@@ -86,7 +86,6 @@ public class RevisionsListViewPresenter implements HasDispose {
     private void addRevisionSummary(RevisionSummary revisionSummary) {
         List<RevisionSummary> data = dataProvider.getList();
         if(isNewRevision(revisionSummary, data)) {
-            GWT.log("Adding revision: " + revisionSummary);
             data.add(0, revisionSummary);
             dataProvider.flush();
         }

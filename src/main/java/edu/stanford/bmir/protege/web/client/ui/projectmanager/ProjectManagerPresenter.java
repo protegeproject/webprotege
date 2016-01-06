@@ -180,8 +180,6 @@ public class ProjectManagerPresenter {
     }
 
     private void reloadFromServer(final Optional<ProjectId> selectId) {
-        GWT.log("Reloading project view");
-
         GetAvailableProjectsAction action = new GetAvailableProjectsAction();
         dispatchServiceManager.execute(action, new DispatchServiceCallback<GetAvailableProjectsResult>() {
             @Override

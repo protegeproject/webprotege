@@ -103,7 +103,6 @@ public class ChangeListViewPresenter {
 
             ChangeDetailsView view = new ChangeDetailsViewImpl();
             if (subjectDisplay == SubjectDisplay.DISPLAY_SUBJECT) {
-                GWT.log(projectChange.getSubjects().toString());
                 List<OWLEntityData> subjects = new ArrayList<>(projectChange.getSubjects());
                 Collections.sort(subjects, new Comparator<OWLEntityData>() {
                     @Override

@@ -81,7 +81,6 @@ public class DiscussionThreadPresenter implements HasDispose {
         handlerRegistrationManager.registerHandlerToProject(projectId, NoteDeletedEvent.TYPE, new NoteDeletedHandler() {
             @Override
             public void handleNoteDeleted(NoteDeletedEvent event) {
-                GWT.log("Received delete");
                 reload();
             }
         });
@@ -118,7 +117,6 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     private void reload() {
-        GWT.log("Current target: " + currentTarget);
         if(currentTarget == null) {
             return;
         }
@@ -133,7 +131,6 @@ public class DiscussionThreadPresenter implements HasDispose {
     }
 
     private void refreshForNotePosted(NotePostedEvent event) {
-        GWT.log("Should refresh for posted note");
 //        if(event.getInReplyTo().isPresent()) {
 //            if(currentNoteIds.isEmpty() || currentNoteIds.contains(event.getInReplyTo().get())) {
                 reload();

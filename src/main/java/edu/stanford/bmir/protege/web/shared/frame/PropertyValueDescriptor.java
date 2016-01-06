@@ -70,9 +70,6 @@ public class PropertyValueDescriptor {
     }
 
     public Optional<PropertyValue> toPropertyValue() {
-        for(OWLAxiom ax : additionalAxioms) {
-            GWT.log("Additional axiom: " + ax);
-        }
             return property.accept(new OWLPrimitiveDataVisitorAdapter<Optional<PropertyValue>, RuntimeException>() {
                 @Override
                 protected Optional<PropertyValue> getDefaultReturnValue() {

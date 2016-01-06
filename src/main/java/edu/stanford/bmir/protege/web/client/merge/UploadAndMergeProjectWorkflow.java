@@ -28,7 +28,6 @@ public class UploadAndMergeProjectWorkflow {
         UploadFileDialogController uploadFileDialogController = new UploadFileDialogController("Upload ontologies", new UploadFileResultHandler() {
             @Override
             public void handleFileUploaded(DocumentId fileDocumentId) {
-                GWT.log("Uploaded ontologies: " + fileDocumentId);
                 startMergeWorkflow(projectId, fileDocumentId);
             }
 

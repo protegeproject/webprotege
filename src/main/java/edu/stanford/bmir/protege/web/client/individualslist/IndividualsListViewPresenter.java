@@ -89,12 +89,10 @@ public class IndividualsListViewPresenter {
                 dispatchServiceManager.execute(new CreateNamedIndividualsAction(projectId, currentType, browserTexts), new DispatchServiceCallback<CreateNamedIndividualsResult>() {
                     @Override
                     public void handleSuccess(CreateNamedIndividualsResult result) {
-                        GWT.log("Individuals successfully added: " + result.getIndividuals());
                         Set<OWLNamedIndividualData> individuals = result.getIndividuals();
                         view.addListData(individuals);
                         if (!individuals.isEmpty()) {
                             OWLNamedIndividualData next = individuals.iterator().next();
-                            GWT.log("Selecting new individual: " + next);
                             view.setSelectedIndividual(next);
                         }
                     }

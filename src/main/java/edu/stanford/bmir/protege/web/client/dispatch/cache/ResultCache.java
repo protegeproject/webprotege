@@ -31,7 +31,6 @@ public class ResultCache {
     private RemovalListener<Action<?>, Result> removalListener = new RemovalListener<Action<?>, Result>() {
         @Override
         public void onRemoval(RemovalNotification<Action<?>, Result> notification) {
-            GWT.log("Item removed from cache: " + notification);
             Action<?> key = notification.getKey();
             if (key != null) {
             }
