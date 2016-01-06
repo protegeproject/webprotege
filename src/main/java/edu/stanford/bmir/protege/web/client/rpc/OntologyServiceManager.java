@@ -66,27 +66,6 @@ public class OntologyServiceManager {
         proxy.getSubproperties(projectId.getId(), propertyName, cb);
     }
 
-    public void addPropertyValue(ProjectId projectId, String entityName, PropertyEntityData propertyEntity,
-            EntityData value, UserId userId, String operationDescription, AsyncCallback<Void> cb) {
-        proxy.addPropertyValue(projectId.getId(), entityName, propertyEntity, value, userId.getUserName(), operationDescription, cb);
-    }
-
-    public void removePropertyValue(ProjectId projectId, String entityName, PropertyEntityData propertyEntity,
-            EntityData value, UserId userId, String operationDescription, AsyncCallback<Void> cb) {
-        proxy.removePropertyValue(projectId.getId(), entityName, propertyEntity, value, userId.getUserName(), operationDescription, cb);
-    }
-
-    public void replacePropertyValue(ProjectId projectId, String entityName, PropertyEntityData propertyEntity,
-            EntityData oldValue, EntityData newValue, UserId userId, String operationDescription, AsyncCallback<Void> cb) {
-        proxy.replacePropertyValue(projectId.getId(), entityName, propertyEntity, oldValue, newValue, userId.getUserName(),
-                operationDescription, cb);
-    }
-
-    public void setPropertyValues(ProjectId projectId, String entityName,  PropertyEntityData propertyEntity,
-            List<EntityData> values, UserId userId, String operationDescription, AsyncCallback<Void> cb) {
-        proxy.setPropertyValues(projectId.getId(), entityName, propertyEntity, values, userId.getUserName(), operationDescription, cb);
-    }
-
     /*
      * Search
      */
