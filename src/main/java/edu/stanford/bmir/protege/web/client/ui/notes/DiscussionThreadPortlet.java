@@ -26,10 +26,6 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
     public DiscussionThreadPortlet(ProjectId projectId, EventBus eventBus, SelectionModel selectionModel, LoggedInUserProvider loggedInUserProvider, DiscussionThreadPresenter discussionThreadPresenter) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         presenter = discussionThreadPresenter;
-    }
-
-    @Override
-    public void initialize() {
         add(presenter.getWidget());
         setHeight(500);
     }

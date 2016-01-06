@@ -57,8 +57,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Deprecated
 public abstract class AbstractEntityPortlet extends Portlet implements EntityPortlet, HasEventHandlerManagement {
 
-//    private Project project;
-
     private AbstractTab tab;
 
     private PortletConfiguration portletConfiguration;
@@ -188,16 +186,12 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     }
 
-//    public Project getProject() {
-//        return project;
-//    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see edu.stanford.bmir.protege.web.client.ui.EntityPortlet#intialize()
+    /**
+     * @deprecated This method is no longer used.  Initialization code should be placed in the portlet constructor.
      */
-    public abstract void initialize();
+    @Deprecated
+    public final void initialize() {}
+
 
     /*
      * Tools methods
@@ -394,9 +388,14 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     }
 
     @Override
-    public void destroy() {
+    public final void destroy() {
         removeHandlers();
+        destroyPortlet();
         super.destroy();
+    }
+
+    protected void destroyPortlet() {
+
     }
 
     private void removeHandlers() {

@@ -33,10 +33,6 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         setAutoScroll(false);
         setHeight("auto");
-    }
-
-    @Override
-    public void initialize() {
         editor = new OBOTermIdEditorImpl();
         add(editor.asWidget());
         getService().getNamespaces(getProjectId(), new AsyncCallback<Set<OBONamespace>>() {
@@ -49,6 +45,7 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
             }
         });
     }
+
 
     @Override
     protected void clearDisplay() {

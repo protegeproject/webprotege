@@ -96,10 +96,6 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = permissionChecker;
-    }
-
-    @Override
-    public void initialize() {
         setLayout(new FitLayout());
         setTitle("Individuals");
         individualsList = new EntitiesListImpl<OWLNamedIndividualData>();
@@ -119,6 +115,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
         createHandler = new NullCreateHandler();
         presenter = new IndividualsListViewPresenter(getProjectId(), this, dispatchServiceManager);
     }
+
 
     @Override
     public void setPortletConfiguration(PortletConfiguration portletConfiguration) {

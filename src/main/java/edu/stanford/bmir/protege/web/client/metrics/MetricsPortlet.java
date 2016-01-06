@@ -26,10 +26,6 @@ public class MetricsPortlet extends AbstractOWLEntityPortlet {
     public MetricsPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
-    }
-
-    @Override
-    public void initialize() {
         view = new MetricsViewImpl();
         add(view.asWidget());
         metricsPresenter = new MetricsPresenter(getProjectId(), view, dispatchServiceManager);
@@ -37,6 +33,7 @@ public class MetricsPortlet extends AbstractOWLEntityPortlet {
         setHeight(500);
         updateDisplay();
     }
+
 
     private void updateDisplay() {
         if(metricsPresenter == null) {

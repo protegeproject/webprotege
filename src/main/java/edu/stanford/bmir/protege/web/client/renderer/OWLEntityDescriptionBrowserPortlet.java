@@ -32,25 +32,7 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
     public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
-    }
 
-    @Override
-    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
-        if(entityData.isPresent()) {
-            dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), entityData.get().getEntity()),
-                                                 new DispatchServiceCallback<GetEntityRenderingResult>() {
-                                                     @Override
-                                                     public void handleSuccess(GetEntityRenderingResult result) {
-                                                         html.setHTML(result.getRendering());
-                                                     }
-                                                 });
-
-            setTitle(entityData.get().getBrowserText());
-        }
-    }
-
-    @Override
-    public void initialize() {
         addStyleName("web-protege-laf");
         html = new HTML();
         add(new ScrollPanel(html));
@@ -93,6 +75,22 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
             }
         });
     }
+
+    @Override
+    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
+        if(entityData.isPresent()) {
+            dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), entityData.get().getEntity()),
+                                                 new DispatchServiceCallback<GetEntityRenderingResult>() {
+                                                     @Override
+                                                     public void handleSuccess(GetEntityRenderingResult result) {
+                                                         html.setHTML(result.getRendering());
+                                                     }
+                                                 });
+
+            setTitle(entityData.get().getBrowserText());
+        }
+    }
+
 
     private void handleEntityChange(OWLEntity entity) {
         if(Optional.of(entity).equals(getSelectedEntity())) {

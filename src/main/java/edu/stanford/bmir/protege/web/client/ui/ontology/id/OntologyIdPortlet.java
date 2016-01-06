@@ -29,10 +29,6 @@ public class OntologyIdPortlet extends AbstractOWLEntityPortlet {
     public OntologyIdPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserManager loggedInUserManager) {
         super(selectionModel, eventBus, projectId, loggedInUserManager);
         this.dispatchServiceManager = dispatchServiceManager;
-    }
-
-    @Override
-    public void initialize() {
         editor = new OntologyIdViewImpl();
         add(editor.asWidget());
         setTitle("Ontology Id");

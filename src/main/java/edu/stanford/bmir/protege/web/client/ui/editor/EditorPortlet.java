@@ -35,10 +35,6 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
             EditorPresenter editorPresenter) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.editorPresenter = editorPresenter;
-    }
-
-    @Override
-    public void initialize() {
         setTitle("Nothing selected");
         editorPresenter.addEditorContextChangedHandler(new EditorContextChangedHandler() {
             @Override

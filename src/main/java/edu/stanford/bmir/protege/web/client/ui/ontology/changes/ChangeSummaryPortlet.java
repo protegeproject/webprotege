@@ -41,15 +41,7 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
-    }
 
-    private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
-
-    private ChangeListView changeListView;
-
-    @Override
-    public void initialize() {
-        setHeight(200);
         changeListView = new ChangeListViewImpl();
         refreshButton = new ToolbarButton(REFRESH_TO_SEE_THE_LATEST_CHANGES);
         refreshButton.addListener(new ButtonListenerAdapter() {
@@ -59,7 +51,7 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
             }
         });
         setTopToolbar(refreshButton);
-
+        setHeight(200);
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
         scrollPanel.setWidth("100%");
         scrollPanel.setHeight("100%");
@@ -77,7 +69,13 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
             }
         });
         onRefresh();
+
     }
+
+    private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
+
+    private ChangeListView changeListView;
+
 
     private void handleProjectChanged(ProjectChangedEvent event) {
         if (lastRevisionNumber.equals(event.getRevisionNumber())) {

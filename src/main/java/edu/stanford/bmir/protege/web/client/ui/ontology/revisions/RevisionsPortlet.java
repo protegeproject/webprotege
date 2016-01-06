@@ -32,18 +32,15 @@ public class RevisionsPortlet extends AbstractOWLEntityPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserManager);
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
-    }
-
-    @Override
-    public void initialize() {
+        this.presenter = new RevisionsListViewPresenter(getProjectId(), eventBus,  new RevisionsListViewImpl(), dispatchServiceManager);
         setLayout(new FitLayout());
         setHeight(INITIAL_HEIGHT);
-        presenter = new RevisionsListViewPresenter(getProjectId(), eventBus,  new RevisionsListViewImpl(), dispatchServiceManager);
         presenter.reload();
         add(presenter.getWidget());
         setTitle("Revisions");
         presenter.reload();
     }
+
 
     @Override
     protected void onDestroy() {

@@ -41,10 +41,6 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserManager);
         setHeight(DEFAULT_HEIGHT);
         this.dispatchServiceManager = dispatchServiceManager;
-    }
-
-    @Override
-    public void initialize() {
         usageView = new UsageViewImpl();
         add(usageView.asWidget());
         usageView.addValueChangeHandler(new ValueChangeHandler<UsageFilter>() {
@@ -54,6 +50,7 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
             }
         });
     }
+
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
