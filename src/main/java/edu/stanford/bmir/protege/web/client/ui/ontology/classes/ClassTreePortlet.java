@@ -153,7 +153,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         this(selectionModel, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, true, true, true, true, null, discussionThreadDialogProvider, permissionChecker);
     }
 
-    public ClassTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final boolean showToolbar, final boolean showTitle, final boolean showTools, final boolean allowsMultiSelection, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
+    private ClassTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final boolean showToolbar, final boolean showTitle, final boolean showTools, final boolean allowsMultiSelection, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.showToolbar = showToolbar;
         this.dispatchServiceManager = dispatchServiceManager;
