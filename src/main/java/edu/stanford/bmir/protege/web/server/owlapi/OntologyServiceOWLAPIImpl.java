@@ -176,10 +176,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public Boolean hasWritePermission(String projectName, String userName) {
-        return true;
-    }
-
     /**
      * Gets the imports of the root ontology for the specified project.
      * @param projectName The name of the project for which the imports will be retrieved.

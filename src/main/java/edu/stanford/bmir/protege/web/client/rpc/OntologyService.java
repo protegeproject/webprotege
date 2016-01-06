@@ -21,8 +21,6 @@ public interface OntologyService extends RemoteService {
      * Project management methods
      */
 
-    public Boolean hasWritePermission(String projectName, String userName);
-
     public ImportsData getImportedOntologies(String projectName);
 
     public EntityData getRootEntity(String projectName);
