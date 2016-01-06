@@ -32,21 +32,6 @@ public class OntologyServiceManager {
         proxy.getImportedOntologies(projectId.getId(), cb);
     }
 
-    public void getEntityTriples(ProjectId projectId, List<String> entities, List<String> properties,
-            AsyncCallback<List<Triple>> cb) {
-        proxy.getEntityTriples(projectId.getId(), entities, properties, cb);
-    }
-
-    public void getEntityTriples(ProjectId projectId, List<String> entities, List<String> properties, List<String> reifiedProperties,
-            AsyncCallback<List<Triple>> cb) {
-        proxy.getEntityTriples(projectId.getId(), entities, properties, reifiedProperties, cb);
-    }
-
-    public void getEntityPropertyValues(ProjectId projectId, List<String> entities, List<String> properties, List<String> reifiedProps,
-            AsyncCallback<List<EntityPropertyValues>> cb) {
-        proxy.getEntityPropertyValues(projectId.getId(), entities, properties, reifiedProps, cb);
-    }
-
     public void getRootEntity(ProjectId projectId, AsyncCallback<EntityData> cb) {
         proxy.getRootEntity(projectId.getId(), cb);
     }
@@ -103,22 +88,6 @@ public class OntologyServiceManager {
     }
 
     /*
-     * Instance methods
-     */
-    public void createInstanceValue(ProjectId projectId, String instName, String typeName, String subjectEntity,
-            String propertyEntity, UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createInstanceValue(projectId.getId(), instName, typeName, subjectEntity, propertyEntity, userId.getUserName(),
-                operationDescription, cb);
-    }
-
-    public void createInstanceValueWithPropertyValue(ProjectId projectId, String instName, String typeName,
-            String subjectEntity, String propertyEntity, PropertyEntityData instancePropertyEntity,
-            EntityData valueEntityData, UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createInstanceValueWithPropertyValue(projectId.getId(), instName, typeName, subjectEntity, propertyEntity,
-                instancePropertyEntity, valueEntityData, userId.getUserName(), operationDescription, cb);
-    }
-
-    /*
      * Search
      */
 
@@ -137,30 +106,4 @@ public class OntologyServiceManager {
     public void getPathToRoot(ProjectId projectId, String entityName, AsyncCallback<List<EntityData>> cb) {
         proxy.getPathToRoot(projectId.getId(), entityName, cb);
     }
-
-    /*
-     * Util methods
-     */
-
-    public void getBioPortalSearchContent(ProjectId projectId, String entityName, BioPortalSearchData bpSearchData,
-            AsyncCallback<String> cb) {
-        proxy.getBioPortalSearchContent(projectId.getId(), entityName, bpSearchData, cb);
-    }
-
-    public void getBioPortalSearchContentDetails(ProjectId projectId, BioPortalSearchData bpSearchData,
-            BioPortalReferenceData bpRefData, AsyncCallback<String> cb) {
-        proxy.getBioPortalSearchContentDetails(projectId.getId(), bpSearchData, bpRefData, cb);
-    }
-
-    public void createExternalReference(ProjectId projectId, String entityName, BioPortalReferenceData bpRefData,
-            UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.createExternalReference(projectId.getId(), entityName, bpRefData, userId.getUserName(), operationDescription, cb);
-    }
-
-    public void replaceExternalReference(ProjectId projectId, String entityName, BioPortalReferenceData bpRefData, EntityData oldValueEntityData,
-            UserId userId, String operationDescription, AsyncCallback<EntityData> cb) {
-        proxy.replaceExternalReference(projectId.getId(), entityName, bpRefData, oldValueEntityData, userId.getUserName(), operationDescription, cb);
-    }
-
-
 }

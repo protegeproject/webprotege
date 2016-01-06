@@ -26,7 +26,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * Author: Matthew Horridge<br>
@@ -210,84 +209,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Gets the triples for the specified entity.  This basically returns annotations for the specified entity.  At one
-     * point I had this returning property assertion data and property/filler pairs for existential restrictions, but
-     * it's really unclear what values are acceptable to UI components.  The main grid that uses these triples either
-     * edits strings or allows instances to be specified (as far as I can tell).
-     * @param projectName The project which specifies the triples for the specified entity.
-     * @param entityName The name of the entity.  This should be an IRI but browser text should also work.  Some UI/client
-     * components send browser text. Pretty messy really - needs sorting!
-     * @return The list of triples for the specified entity.
-     */
-    public List<Triple> getEntityTriples(final String projectName, String entityName) {
-        final Set<Triple> result = new LinkedHashSet<Triple>();
-        TripleMapperSelector selector = new TripleMapperSelector(getProject(projectName), AnnotationsTreatment.INCLUDE_ANNOTATIONS, NonAnnotationTreatment.EXCLUDE_NON_ANNOTATIONS);
-        OWLAPIProject project = getProject(projectName);
-        Set<OWLEntity> entities = project.getRenderingManager().getEntities(entityName);
-        for (OWLEntity entity : entities) {
-            TripleMapper<?> mapper = selector.getMapper(entity);
-            if (mapper != null) {
-                result.addAll(mapper.getTriples());
-            }
-        }
-        return new ArrayList<Triple>(result);
-    }
-
-    public List<Triple> getEntityTriples(String projectName, List<String> entities, List<String> properties) {
-        List<Triple> result = new ArrayList<Triple>();
-        for (String entityName : entities) {
-            List<Triple> entityTriples = getEntityTriples(projectName, entityName);
-            for (Triple entityTriple : entityTriples) {
-                PropertyEntityData propertyEntityData = entityTriple.getProperty();
-                // Check name AND check the browser text - some consistency would be really nice!
-                if (properties.contains(propertyEntityData.getName()) || properties.contains(propertyEntityData.getBrowserText())) {
-                    result.add(entityTriple);
-                }
-            }
-        }
-        return result;
-    }
-
-    public List<Triple> getEntityTriples(String projectName, List<String> entities, List<String> properties, List<String> reifiedProps) {
-        // First get the direct values
-        List<Triple> directValues = getEntityTriples(projectName, entities, properties);
-        // Add in the reified stuff
-        List<Triple> reifiedValues = new ArrayList<Triple>();
-        for(Triple triple : directValues) {
-            EntityData entityData = triple.getValue();
-            if(entityData.getValueType() == ValueType.Instance || entityData.getValueType() == ValueType.Cls) {
-                reifiedValues.addAll(getEntityTriples(projectName, Arrays.asList(entityData.getName()), reifiedProps));
-            }
-        }
-        return reifiedValues;
-    }
-
-    public List<EntityPropertyValues> getEntityPropertyValues(String projectName, List<String> entities, List<String> properties, List<String> reifiedProps) {
-        // First get the direct values
-        List<Triple> directValues = getEntityTriples(projectName, entities, properties);
-        // Add in the reified stuff
-        List<EntityPropertyValues> result = new ArrayList<EntityPropertyValues>();
-        for(Triple triple : directValues) {
-            EntityData entityData = triple.getValue();
-            if(entityData.getValueType() == ValueType.Instance || entityData.getValueType() == ValueType.Cls) {
-                final List<Triple> reifiedTriples = getEntityTriples(projectName, Arrays.asList(entityData.getName()), reifiedProps);
-                if (!reifiedTriples.isEmpty()) {
-                    EntityPropertyValues reifiedSet = new EntityPropertyValues(entityData);
-                    for(Triple reifiedTriple : reifiedTriples) {
-                        reifiedSet.addPropertyValue(reifiedTriple.getProperty(), reifiedTriple.getValue());
-                    }
-                    result.add(reifiedSet);
-                }
-            }
-
-        }
-        return result;
-
-
-    }
-
 
     /**
      * Implemented as returning the entity data for owl:Thing
@@ -571,26 +492,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         throw new RuntimeException("Not implemented");
     }
 
-    public EntityData createInstanceValue(String projectName, String instName, String typeName, String subjectEntity, String propertyEntity, String user, String operationDescription) {
-        OWLAPIProject project = getProject(projectName);
-        UserId userId = getUserId(user);
-        if(instName == null) {
-            // Not surprisingly it can be
-            instName = "http://protege.stanford.edu/named-individuals/Individual-" + UUID.randomUUID().toString();
-        }
-        applyChanges(new CreateInstanceValueChangeFactory(project, userId, operationDescription, instName, typeName, subjectEntity, propertyEntity));
-        return getRenderingManager(projectName).getEntityData(instName, EntityType.NAMED_INDIVIDUAL);
-    }
-
-    public EntityData createInstanceValueWithPropertyValue(String projectName, String instName, String typeName, String subjectEntity, String propertyEntity, PropertyEntityData instancePropertyEntity, EntityData valueEntityData, String user, String operationDescription) {
-        throw new RuntimeException("Not implemented");
-    }
-
-    public List<EntityData> getDirectTypes(String projectName, String instanceName) {
-        GetDirectTypesStrategy strategy = new GetDirectTypesStrategy(getProject(projectName), getUserId(), instanceName);
-        return strategy.execute();
-    }
-
     public PaginationData<EntityData> search(String projectName, String searchString, ValueType valueType, int start, int limit, String sort, String dir) {
         List<EntityData> search = search(projectName, searchString);
         return PaginationServerUtil.pagedRecords(search, start, limit, sort, dir);
@@ -655,20 +556,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
 
         return result;
     }
-
-
-
-    public EntityData createExternalReference(String projectName, String entityName, BioPortalReferenceData bpRefData, String user, String operationDescription) {
-        OWLAPIProject project = getProject(projectName);
-        RenderingManager rm = project.getRenderingManager();
-        applyChanges(new AddExternalReferenceChangeFactory(project, entityName, bpRefData, UserId.getUserId(user), operationDescription));
-        return rm.getEntityData(bpRefData.getConceptId(), EntityType.CLASS);
-    }
-
-    public EntityData replaceExternalReference(String projectName, String entityName, BioPortalReferenceData bpRefData, EntityData oldValueEntityData, String user, String operationDescription) {
-        return null;
-    }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

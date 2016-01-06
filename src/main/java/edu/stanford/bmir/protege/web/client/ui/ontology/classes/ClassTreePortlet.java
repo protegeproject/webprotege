@@ -1057,13 +1057,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         if (hierarchyProperty == null) {
             invokeGetSubclassesRemoteCall(parentClsName, getSubclassesCallback(parentClsName, parentNode));
         }
-        else {
-            final List<String> subjects = new ArrayList<String>();
-            subjects.add(parentClsName);
-            final List<String> props = new ArrayList<String>();
-            props.add(hierarchyProperty);
-            OntologyServiceManager.getInstance().getEntityTriples(getProjectId(), subjects, props, new GetPropertyHierarchySubclassesOfClassHandler(parentClsName, parentNode));
-        }
     }
 
     protected void invokeGetSubclassesRemoteCall(final String parentClsName, AsyncCallback<List<SubclassEntityData>> callback) {
