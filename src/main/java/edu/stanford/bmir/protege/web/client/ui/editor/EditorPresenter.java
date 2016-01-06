@@ -53,8 +53,6 @@ public class EditorPresenter implements HasDispose {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private final ActiveProjectManager activeProjectManager;
-
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     private final EditorContextMapper editorContextMapper;
@@ -82,28 +80,12 @@ public class EditorPresenter implements HasDispose {
         }
     };
 
-//    private final Project project;
-
     @Inject
-    public EditorPresenter(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager, EditorContextMapper editorContextMapper, LoggedInUserProjectPermissionChecker permissionChecker) {
+    public EditorPresenter(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, EditorContextMapper editorContextMapper, LoggedInUserProjectPermissionChecker permissionChecker) {
         this.editorContextMapper = editorContextMapper;
-        this.activeProjectManager = activeProjectManager;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
         this.handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
-        handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
-            @Override
-            public void handleUserLoggedIn(UserLoggedInEvent event) {
-                updatePermissionBasedItems();
-            }
-        });
-
-        handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
-            @Override
-            public void handleUserLoggedOut(UserLoggedOutEvent event) {
-                updatePermissionBasedItems();
-            }
-        });
 
         handlerRegistrationManager.registerHandlerToProject(projectId, PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
             @Override
@@ -111,10 +93,15 @@ public class EditorPresenter implements HasDispose {
                 updatePermissionBasedItems();
             }
         });
-
-        handlerRegistrationManager.registerHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
+        handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
-            public void onPlaceChange(PlaceChangeEvent event) {
+            public void handleUserLoggedIn(UserLoggedInEvent event) {
+                updatePermissionBasedItems();
+            }
+        });
+        handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
+            @Override
+            public void handleUserLoggedOut(UserLoggedOutEvent event) {
                 updatePermissionBasedItems();
             }
         });
@@ -195,6 +182,7 @@ public class EditorPresenter implements HasDispose {
 //            editorHolder.setWidget(LOADING_INDICATOR_WIDGET);
             final EditorManager<C, O> editorManager = selectedMan.get();
             GetObjectAction<O> action = editorManager.createGetObjectAction(editorCtx);
+            updatePermissionBasedItems();
             dispatchServiceManager.execute(action, new DispatchServiceCallback<GetObjectResult<O>>() {
 
                 private int executionCounter = counter;
@@ -214,24 +202,10 @@ public class EditorPresenter implements HasDispose {
                     valueChangedReg = editorView.addValueChangeHandler(new ValueChangeHandler<Optional<O>>() {
                         @Override
                         public void onValueChange(ValueChangeEvent<Optional<O>> event) {
-//                            commitCurrentValue(editorState.get());
                             rescheduleCommit();
                         }
                     });
                     final Widget editorWidget = editorView.asWidget();
-
-//                    if (editorWidget instanceof HasEnabled) {
-//                        final HasEnabled hasEnabled = (HasEnabled) editorWidget;
-//                        hasEnabled.setEnabled(false);
-//                        permissionChecker.hasReadPermission(new DispatchServiceCallback<Boolean>() {
-//                            @Override
-//                            public void handleSuccess(Boolean hasPermission) {
-//                                hasEnabled.setEnabled(hasPermission);
-//                            }
-//                        });
-//
-//                    }
-
                     editorHolder.setWidget(editorWidget);
                     setEditorState(value, editorCtx, editorView, editorManager);
                 }
@@ -253,7 +227,7 @@ public class EditorPresenter implements HasDispose {
     }
 
 
-    private void updatePermissionBasedItems() {
+    public void updatePermissionBasedItems() {
         if(editorHolder.getWidget() instanceof HasEnabled) {
             final HasEnabled hasEnabled = (HasEnabled) editorHolder.getWidget();
             hasEnabled.setEnabled(false);
@@ -261,6 +235,11 @@ public class EditorPresenter implements HasDispose {
                 @Override
                 public void handleSuccess(Boolean result) {
                     hasEnabled.setEnabled(result);
+                }
+
+                @Override
+                public void handleErrorFinally(Throwable throwable) {
+                    GWT.log("[EditorPresenter] An error occurred updating the permission based items");
                 }
             });
         }
