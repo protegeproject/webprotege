@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.library.dlg;
 
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
@@ -93,7 +92,6 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
 
     private void attachAcceleratorKeyHandlers(Widget widget) {
-        GWT.log(widget.toString());
         if(widget instanceof HasAcceptKeyHandler) {
             ((HasAcceptKeyHandler) widget).setAcceptKeyHandler(new AcceptKeyHandler() {
                 @Override
