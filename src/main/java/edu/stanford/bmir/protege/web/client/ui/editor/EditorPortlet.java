@@ -50,6 +50,11 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
+    public void handleActivated() {
+        editorPresenter.updatePermissionBasedItems();
+    }
+
+    @Override
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
         if(!entityData.isPresent()) {
             // TODO: Show nothing selected
