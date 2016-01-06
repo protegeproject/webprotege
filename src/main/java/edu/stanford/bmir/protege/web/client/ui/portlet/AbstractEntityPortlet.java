@@ -151,10 +151,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         handlerRegistrations.add(handlerRegistration);
     }
 
-    public EventBus getEventBus() {
-        return eventBus;
-    }
-
     public SelectionModel getSelectionModel() {
         return selectionModel;
     }
