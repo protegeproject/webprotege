@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -45,11 +46,9 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private ProjectId projectId;
 
-    private Set<NoteId> currentNoteIds = new HashSet<NoteId>();
-
     private final HandlerRegistrationManager handlerRegistrationManager;
 
-    private final LoggedInUserProvider loggedInUserProvider;
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     private final ActiveProjectManager activeProjectManager;
 
@@ -59,14 +58,14 @@ public class DiscussionThreadPresenter implements HasDispose {
     public DiscussionThreadPresenter(ProjectId projectId,
                                      EventBus eventBus,
                                      DispatchServiceManager dispatchServiceManager,
-                                     LoggedInUserProvider loggedInUserProvider,
+                                     LoggedInUserProjectPermissionChecker permissionChecker,
                                      DiscussionThreadView view,
                                      ActiveProjectManager activeProjectManager,
                                      Provider<NoteContainerPresenter> noteContainerPresenterProvider) {
         this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
         this.noteContainerPresenterProvider = noteContainerPresenterProvider;
-        this.loggedInUserProvider = loggedInUserProvider;
+        this.permissionChecker = permissionChecker;
         handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
         this.projectId = checkNotNull(projectId);
         this.activeProjectManager = activeProjectManager;
@@ -110,9 +109,16 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     public void setTarget(OWLEntity target) {
         currentTarget = target;
-        UserId userId = loggedInUserProvider.getCurrentUserId();
-        view.setPostNewTopicEnabled(currentTarget != null && !userId.isGuest());
+        view.setPostNewTopicEnabled(false);
         view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget), dispatchServiceManager, activeProjectManager));
+        if(currentTarget != null) {
+            permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
+                @Override
+                public void handleSuccess(Boolean hasPermission) {
+                    view.setPostNewTopicEnabled(currentTarget != null && hasPermission);
+                }
+            });
+        }
         reload();
     }
 
@@ -156,8 +162,6 @@ public class DiscussionThreadPresenter implements HasDispose {
         for(Note rootNote : rootNotes) {
             appendNote(rootNote, 0, thread);
         }
-        currentNoteIds.clear();
-        currentNoteIds.addAll(thread.getNoteIds());
     }
 
 

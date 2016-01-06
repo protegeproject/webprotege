@@ -49,4 +49,15 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
         UserId userId = loggedInUserProvider.getCurrentUserId();
         permissionManager.hasReadPermissionForProject(userId, projectId.get(), callback);
     }
+
+    @Override
+    public void hasCommentPermission(DispatchServiceCallback<Boolean> callback) {
+        Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
+        if(!projectId.isPresent()) {
+            callback.onSuccess(false);
+            return;
+        }
+        UserId userId = loggedInUserProvider.getCurrentUserId();
+        permissionManager.hasCommentPermissionForProject(userId, projectId.get(), callback);
+    }
 }

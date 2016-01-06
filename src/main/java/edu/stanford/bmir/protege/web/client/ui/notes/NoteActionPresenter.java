@@ -2,6 +2,10 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -24,12 +28,16 @@ public class NoteActionPresenter {
 
     private final DeleteNoteHandler deleteNoteHandler;
 
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     @Inject
     public NoteActionPresenter(NoteActionView noteActionView,
+                               LoggedInUserProjectPermissionChecker permissionChecker,
                                ReplyToNoteHandler replyToNoteHandler,
                                DeleteNoteHandler deleteNoteHandler,
                                LoggedInUserProvider loggedInUserProvider) {
         this.view = noteActionView;
+        this.permissionChecker = permissionChecker;
         this.replyToNoteHandler = replyToNoteHandler;
         this.deleteNoteHandler = deleteNoteHandler;
         this.loggedInUserProvider = loggedInUserProvider;
@@ -39,9 +47,15 @@ public class NoteActionPresenter {
         UserId userId = loggedInUserProvider.getCurrentUserId();
         view.setNoteId(note.getNoteId());
         view.setReplyToNoteHandler(replyToNoteHandler);
-        view.setCanReply(!userId.isGuest());
+        view.setCanReply(false);
         view.setDeleteNoteHandler(deleteNoteHandler);
         view.setCanDelete(!context.hasReplies(note.getNoteId()) && note.getAuthor().equals(userId));
+        permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
+            @Override
+            public void handleSuccess(Boolean hasPermission) {
+                view.setCanReply(hasPermission);
+            }
+        });
     }
 
     public NoteActionView getView() {

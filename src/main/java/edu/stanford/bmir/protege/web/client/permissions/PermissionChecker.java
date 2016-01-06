@@ -13,4 +13,6 @@ public interface PermissionChecker {
     void hasWritePermissionForProject(UserId userId, ProjectId projectId, DispatchServiceCallback<Boolean> callback);
 
     void hasReadPermissionForProject(UserId userId, ProjectId projectId, DispatchServiceCallback<Boolean> callback);
+
+    void hasCommentPermissionForProject(UserId userId, ProjectId projectId, DispatchServiceCallback<Boolean> callback);
 }

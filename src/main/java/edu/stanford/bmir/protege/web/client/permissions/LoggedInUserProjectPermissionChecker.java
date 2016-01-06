@@ -13,4 +13,6 @@ public interface LoggedInUserProjectPermissionChecker {
     void hasWritePermission(DispatchServiceCallback<Boolean> callback);
 
     void hasReadPermission(DispatchServiceCallback<Boolean> callback);
+
+    void hasCommentPermission(DispatchServiceCallback<Boolean> callback);
 }
