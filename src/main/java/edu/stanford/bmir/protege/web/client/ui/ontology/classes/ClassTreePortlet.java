@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
@@ -72,6 +73,7 @@ import edu.stanford.bmir.protege.web.shared.watches.*;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -1078,7 +1080,17 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     public void getRootCls() {
-        OntologyServiceManager.getInstance().getRootEntity(getProjectId(), new GetRootClassHandler());
+        // This is spectacularly horrible.  This used to be a remote call.  It turns out that this only worked because
+        // of the delay in the remote call - I've no idea why, and as this is being replaced I'll leave it like this
+        // for now.
+        Timer t = new Timer() {
+            @Override
+            public void run() {
+                EntityData root = new EntityData(OWLRDFVocabulary.OWL_THING.getIRI().toString(), "owl:Thing");
+                createRoot(root);
+            }
+        };
+        t.schedule(500);
     }
 
     protected void moveClass(final EntityData cls, final EntityData oldParent, final EntityData newParent) {
@@ -1435,29 +1447,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     public void onPermissionsChanged() {
         updateButtonStates();
         onRefresh();
-    }
-
-    /*
-     * ************ Remote procedure calls *****************
-     */
-
-    class GetRootClassHandler implements AsyncCallback<EntityData> {
-
-        @Override
-        public void onFailure(final Throwable caught) {
-            if (getEl() != null) {
-                // getEl().unmask();
-            }
-            GWT.log("RPC error at getting classes root ", caught);
-        }
-
-        @Override
-        public void onSuccess(final EntityData rootEnitity) {
-            if (getEl() != null) {
-                //   getEl().unmask();
-            }
-            createRoot(rootEnitity);
-        }
     }
 
     class GetSubclassesOfClassHandler implements AsyncCallback<List<SubclassEntityData>> {

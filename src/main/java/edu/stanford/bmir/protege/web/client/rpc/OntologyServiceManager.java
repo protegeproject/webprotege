@@ -28,10 +28,6 @@ public class OntologyServiceManager {
         proxy.getImportedOntologies(projectId.getId(), cb);
     }
 
-    public void getRootEntity(ProjectId projectId, AsyncCallback<EntityData> cb) {
-        proxy.getRootEntity(projectId.getId(), cb);
-    }
-
     /*
      * Class methods
      */
