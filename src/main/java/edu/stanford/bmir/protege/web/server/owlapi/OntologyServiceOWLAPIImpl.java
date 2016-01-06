@@ -219,29 +219,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     }
 
     /**
-     * Implemented as getting the entity data for the entity corresponding to the specified name.
-     * @param projectName The name of the project
-     * @param entityName The name of the entity.  This should be an IRI, but this implementation also assumes it could
-     * be browser text.
-     * @return The entity data for the specified entity.  Web-Protege seems to assume that different types of entities
-     *         will not share the same name, and hence methods like this only return one value.  Since different types of
-     *         entities CAN share the same name in OWL (due to punning), this method is implemented as getting the first entity
-     *         in the set as returned by the {@link RenderingManager#selectEntity(java.util.Set)} method.  If there are no entities with the
-     *         specified name, then, as implemented here, this method returns <code>null</code> (I don't know whether this is
-     *         allowed or not).
-     */
-    public EntityData getEntity(String projectName, String entityName) {
-        RenderingManager rm = getRenderingManager(projectName);
-        Set<OWLEntity> entities = rm.getEntities(entityName);
-        if (entities.isEmpty()) {
-            // Everything else in this code base returns null, so I'm not going to bother about it here.
-            return null;
-        }
-        OWLEntity selectedEntity = RenderingManager.selectEntity(entities);
-        return rm.getEntityData(selectedEntity);
-    }
-
-    /**
      * Gets the subclasses of a given entity.  This implementation uses the {@link edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider} that
      * is used in Protege 4 to answer the request.
      * @param projectName The name of the relevant project.

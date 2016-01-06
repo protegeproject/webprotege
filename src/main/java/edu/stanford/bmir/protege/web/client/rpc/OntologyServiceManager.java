@@ -32,10 +32,6 @@ public class OntologyServiceManager {
         proxy.getRootEntity(projectId.getId(), cb);
     }
 
-    public void getEntity(ProjectId projectId, String entityName, AsyncCallback<EntityData> cb) {
-        proxy.getEntity(projectId.getId(), entityName, cb);
-    }
-
     /*
      * Class methods
      */

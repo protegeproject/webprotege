@@ -1081,13 +1081,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     public void getRootCls() {
-        final String rootClsName = getRootClsName();
-        if (rootClsName != null) {
-            OntologyServiceManager.getInstance().getEntity(getProjectId(), rootClsName, new GetRootClassHandler());
-        }
-        else {
-            OntologyServiceManager.getInstance().getRootEntity(getProjectId(), new GetRootClassHandler());
-        }
+        OntologyServiceManager.getInstance().getRootEntity(getProjectId(), new GetRootClassHandler());
     }
 
     protected String getRootClsName() {
