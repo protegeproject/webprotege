@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
-import edu.stanford.bmir.protege.web.server.URLUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
 import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
@@ -13,18 +12,9 @@ import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
-import org.ncbo.stanford.bean.concept.ClassBean;
-import org.ncbo.stanford.util.BioPortalServerConstants;
-import org.ncbo.stanford.util.BioPortalUtil;
-import org.ncbo.stanford.util.BioportalConcept;
-import org.ncbo.stanford.util.HTMLUtil;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.*;
 
 /**
