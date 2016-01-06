@@ -24,10 +24,6 @@ public class OntologyServiceManager {
         proxy = GWT.create(OntologyService.class);
     }
 
-    public void hasWritePermission(ProjectId projectId, UserId userId, AsyncCallback<Boolean> cb) {
-        proxy.hasWritePermission(projectId.getId(), userId.getUserName(), cb);
-    }
-
     public void getImportedOntologies(ProjectId projectId, AsyncCallback<ImportsData> cb) {
         proxy.getImportedOntologies(projectId.getId(), cb);
     }
