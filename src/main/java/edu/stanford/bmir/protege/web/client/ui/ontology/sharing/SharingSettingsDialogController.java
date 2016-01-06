@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -51,8 +52,9 @@ public class SharingSettingsDialogController extends WebProtegeOKCancelDialogCon
     private void updateSharingSettingsOnServer(final ProjectSharingSettings sharingSettings) {
         dispatchServiceManager.execute(new SetProjectSharingSettingsAction(sharingSettings), new DispatchServiceCallback<SetProjectSharingSettingsResult>() {
             @Override
-            public void handleSuccess(SetProjectSharingSettingsResult setProjectSharingSettingsResult) {
-                eventBus.fireEvent(new PermissionsChangedEvent(sharingSettings.getProjectId()));
+            public void handleSuccess(SetProjectSharingSettingsResult result) {
+                GWT.log("[SharingSettingsDialogController] Sharing settings have been updated.  Firing PermissionsChangedEvent.");
+                eventBus.fireEventFromSource(new PermissionsChangedEvent(sharingSettings.getProjectId()), sharingSettings.getProjectId());
             }
         });
     }

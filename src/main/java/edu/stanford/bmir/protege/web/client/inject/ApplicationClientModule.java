@@ -11,10 +11,12 @@ import edu.stanford.bmir.protege.web.client.actionbar.application.*;
 import edu.stanford.bmir.protege.web.client.actionbar.project.*;
 import edu.stanford.bmir.protege.web.client.banner.BannerView;
 import edu.stanford.bmir.protege.web.client.banner.BannerViewImpl;
+import edu.stanford.bmir.protege.web.client.change.ChangeListView;
+import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionCheckerImpl;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
-import edu.stanford.bmir.protege.web.client.permissions.ProjectPermissionManager;
+import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -60,7 +62,7 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(ProjectId.class).toProvider(ProjectIdProvider.class);
         bind(Project.class).toProvider(ProjectProvider.class);
         bind(ActiveProjectManager.class).to(ActiveProjectManagerImpl.class).asEagerSingleton();
-        bind(PermissionChecker.class).to(ProjectPermissionManager.class);
+        bind(PermissionChecker.class).to(PermissionManager.class).asEagerSingleton();
 
         bind(HasClientApplicationProperties.class).to(ClientApplicationProperties.class);
         bind(ClientApplicationProperties.class).toProvider(ClientApplicationPropertiesProvider.class).asEagerSingleton();
@@ -110,6 +112,8 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(LoggedInUserProjectPermissionChecker.class).to(LoggedInUserProjectPermissionCheckerImpl.class);
 
         bind(EditorManagerSelector.class).to(EntityDataContextSelector.class);
+
+        bind(ChangeListView.class).to(ChangeListViewImpl.class);
     }
 
 }

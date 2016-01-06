@@ -121,6 +121,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         addProjectEventHandler(PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
             @Override
             public void handlePersmissionsChanged(PermissionsChangedEvent event) {
+                GWT.log("[AbstractEntityPortlet] calling onPermissionsChanged");
                 onPermissionsChanged();
             }
         });

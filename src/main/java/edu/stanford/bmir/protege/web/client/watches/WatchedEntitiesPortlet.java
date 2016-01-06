@@ -17,19 +17,17 @@ import javax.inject.Inject;
 
 public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    private ChangeListView changeListView;
-
     private final LoggedInUserProvider loggedInUserProvider;
 
+    private final ChangeListViewPresenter presenter;
+
     @Inject
-    public WatchedEntitiesPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+    public WatchedEntitiesPortlet(ChangeListViewPresenter presenter, SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
-        this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
+        this.presenter = presenter;
         setHeight(200);
-        changeListView = new ChangeListViewImpl();
+        ChangeListView changeListView = presenter.getView();
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
         scrollPanel.setWidth("100%");
         scrollPanel.setHeight("100%");
@@ -49,7 +47,6 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     protected void onRefresh() {
-        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager, false);
         presenter.setChangesForWatches(getProjectId(), getUserId());
         setTitle(generateTitle());
     }

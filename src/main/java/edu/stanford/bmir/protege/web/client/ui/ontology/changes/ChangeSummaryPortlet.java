@@ -30,19 +30,15 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
     public static final String REFRESH_TO_SEE_THE_LATEST_CHANGES = "Click to see the latest changes";
     public static final String LATEST_CHANGES_VISIBLE = "Latest changes displayed";
 
-    private final DispatchServiceManager dispatchServiceManager;
-
     private ToolbarButton refreshButton;
 
-    private final PermissionChecker permissionChecker;
+    private final ChangeListViewPresenter presenter;
 
     @Inject
-    public ChangeSummaryPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, PermissionChecker permissionChecker) {
+    public ChangeSummaryPortlet(ChangeListViewPresenter presenter, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.permissionChecker = permissionChecker;
-
-        changeListView = new ChangeListViewImpl();
+        this.presenter = presenter;
+        ChangeListView changeListView = presenter.getView();
         refreshButton = new ToolbarButton(REFRESH_TO_SEE_THE_LATEST_CHANGES);
         refreshButton.addListener(new ButtonListenerAdapter() {
             @Override
@@ -74,9 +70,6 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
-    private ChangeListView changeListView;
-
-
     private void handleProjectChanged(ProjectChangedEvent event) {
         if (lastRevisionNumber.equals(event.getRevisionNumber())) {
             return;
@@ -89,7 +82,6 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
     @Override
     protected void onRefresh() {
         ProjectId projectId = getProjectId();
-        ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager, permissionChecker.hasWritePermissionForProject(getUserId(), projectId));
         presenter.setChangesForProject(projectId);
         setTitle("Changes for project");
         refreshButton.setDisabled(true);
