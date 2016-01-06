@@ -493,7 +493,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             public void onExpandNode(final TreeNode node) {
                 // if (!expandDisabled && !treePanel.getRootNode().equals(node)) {
                 if (!expandDisabled) {
-                    GWT.log("Expand node " + node.getUserObject(), null);
                     getSubclasses(((EntityData) node.getUserObject()).getName(), node);
                 }
             }
@@ -1249,8 +1248,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         if (!isRendered() || treePanel == null || treePanel.getRootNode() == null) {
             return;
         }
-
-        GWT.log("Select in class tree: " + selection);
         getPathToRoot(selection.get());
     }
 
@@ -1390,7 +1387,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     protected void createRoot(EntityData rootEnitity) {
         if (rootEnitity == null) {
-            GWT.log("Root entity is null", null);
             rootEnitity = new EntityData("Root", "Root node is not defined");
         }
         remove(PLACE_HOLDER_PANEL);
@@ -1436,7 +1432,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     @Override
     protected void onRefresh() {
-        GWT.log("Refreshing tree");
         if (treePanel == null) {
             return;
         }
@@ -1459,7 +1454,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         setSubclassesLoaded(root, false);
 
         Optional<OWLEntityData> selection = getSelectedEntityData();
-        GWT.log("Cleared root node.  Reloading to selection, which is " + selection);
         if(selection.isPresent() && !selection.get().getEntity().isTopEntity()) {
             setSelectionInTree(selection);
         }
@@ -1699,7 +1693,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 path = path + entity.getName() + " --> <br/>";
             }
             path = path.substring(0, path.length() - 10);
-            GWT.log("Selection path in tree: " + path, null);
             selectPathInTree(result);
         }
     }
