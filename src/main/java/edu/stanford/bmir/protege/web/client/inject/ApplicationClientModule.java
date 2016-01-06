@@ -62,7 +62,8 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(ProjectId.class).toProvider(ProjectIdProvider.class);
         bind(Project.class).toProvider(ProjectProvider.class);
         bind(ActiveProjectManager.class).to(ActiveProjectManagerImpl.class).asEagerSingleton();
-        bind(PermissionChecker.class).to(PermissionManager.class).asEagerSingleton();
+        bind(PermissionManager.class).asEagerSingleton();
+        bind(PermissionChecker.class).to(PermissionManager.class);
 
         bind(HasClientApplicationProperties.class).to(ClientApplicationProperties.class);
         bind(ClientApplicationProperties.class).toProvider(ClientApplicationPropertiesProvider.class).asEagerSingleton();

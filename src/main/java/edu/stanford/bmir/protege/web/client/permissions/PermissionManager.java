@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 /**
  * Manages the permissions for projects and users.
+ * @author Matthew Horridge
  */
 public class PermissionManager implements HasDispose, PermissionChecker {
 
@@ -41,13 +43,16 @@ public class PermissionManager implements HasDispose, PermissionChecker {
 
     private final ActiveProjectManager activeProjectManager;
 
-    private Map<UserIdProjectIdKey, PermissionsSet> cache = new HashMap<>();
+    private final LoggedInUserProvider loggedInUserProvider;
+
+    private final Map<UserIdProjectIdKey, PermissionsSet> cache = new HashMap<>();
 
     @Inject
-    public PermissionManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager) {
+    public PermissionManager(EventBus eventBus, DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager, LoggedInUserProvider loggedInUserProvider) {
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
         this.activeProjectManager = activeProjectManager;
+        this.loggedInUserProvider = loggedInUserProvider;
         loggedInHandler = eventBus.addHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {
@@ -61,33 +66,44 @@ public class PermissionManager implements HasDispose, PermissionChecker {
                 firePermissionsChanged();
             }
         });
-        eventBus.addHandler(PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
-            @Override
-            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
-                GWT.log("[PermissionManager] Permissions changed.  Clearing the cache.");
-                cache.clear();
-            }
-        });
     }
 
-    private void firePermissionsChanged() {
+    /**
+     * Fires a {@link edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent} for the
+     * current project on the event bus.
+     */
+    public void firePermissionsChanged() {
         cache.clear();
-        Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
-        if(projectId.isPresent()) {
-            eventBus.fireEventFromSource(new PermissionsChangedEvent(projectId.get()), projectId.get());
+        final UserId userId = loggedInUserProvider.getCurrentUserId();
+        final Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
+        if (!projectId.isPresent()) {
+            return;
         }
+        dispatchServiceManager.execute(new GetPermissionsAction(projectId.get(), userId), new DispatchServiceCallback<GetPermissionsResult>() {
+            @Override
+            public void handleSuccess(GetPermissionsResult getPermissionsResult) {
+                cache.put(new UserIdProjectIdKey(userId, projectId.get()), getPermissionsResult.getPermissionsSet());
+                GWT.log("[PermissionManager] Firing permissions changed for project: " + projectId);
+                eventBus.fireEventFromSource(new PermissionsChangedEvent(projectId.get()), projectId.get());
+            }
+        });
 
     }
 
     private void hasPermission(final UserId userId, final ProjectId projectId, final Permission permission, final DispatchServiceCallback<Boolean> callback) {
         final UserIdProjectIdKey key = new UserIdProjectIdKey(userId, projectId);
         PermissionsSet cachedPermissionSet = cache.get(key);
-//        if(cachedPermissionSet != null) {
-//            GWT.log("[PermissionManager] Using cached value for key: " + key);
-//            callback.onSuccess(cachedPermissionSet.contains(permission));
-//            return;
-//        }
+        if(cachedPermissionSet != null) {
+            GWT.log("[PermissionManager] Using cached value for key: " + key);
+            callback.onSuccess(cachedPermissionSet.contains(permission));
+            return;
+        }
         dispatchServiceManager.execute(new GetPermissionsAction(projectId, userId), new DispatchServiceCallback<GetPermissionsResult>() {
+            @Override
+            public void handleSubmittedForExecution() {
+                GWT.log("[PermissionManager] Retrieving permissions from the server for key: " + key);
+            }
+
             @Override
             public void handleSuccess(GetPermissionsResult result) {
                 cache.put(key, result.getPermissionsSet());
@@ -111,38 +127,6 @@ public class PermissionManager implements HasDispose, PermissionChecker {
     public void hasReadPermissionForProject(UserId userId, ProjectId projectId, DispatchServiceCallback<Boolean> callback) {
         hasPermission(userId, projectId, Permission.getReadPermission(), callback);
     }
-
-//    /**
-//     * Sets the permissions for a given user.
-//     * @param userId The user. Not {@code null}.
-//     * @param permissions The permissions.  Not {@code null}.
-//     * @throws NullPointerException if any parameters are {@code null}.
-//     */
-//    private void setUserPermissions(UserId userId, PermissionsSet permissions) {
-//        PermissionsSet old = user2permissionMap.put(checkNotNull(userId), checkNotNull(permissions));
-//        if(old == null || !old.equals(permissions)) {
-//            eventBus.fireEventFromSource(new PermissionsChangedEvent(projectId), projectId);
-//        }
-//    }
-
-
-//    private void updateProjectPermissions() {
-//        UserId signedInUser = loggedInUserProvider.getCurrentUserId();
-//        updatePermissionsForUserId(signedInUser);
-//        for(UserId userId : user2permissionMap.keySet()) {
-//            updatePermissionsForUserId(userId);
-//        }
-//    }
-
-//    private void updatePermissionsForUserId(final UserId userId) {
-//        dispatchServiceManager.execute(new GetPermissionsAction(projectId, userId), new DispatchServiceCallback<GetPermissionsResult>() {
-//            @Override
-//            public void handleSuccess(GetPermissionsResult result) {
-//                setUserPermissions(userId, result.getPermissionsSet());
-//            }
-//        });
-//    }
-
 
     public void dispose() {
         loggedInHandler.removeHandler();
