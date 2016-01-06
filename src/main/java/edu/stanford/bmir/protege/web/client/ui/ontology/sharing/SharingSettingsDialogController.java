@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
@@ -33,12 +34,12 @@ public class SharingSettingsDialogController extends WebProtegeOKCancelDialogCon
 
     private SharingSettingsPanel sharingSettingsPanel;
 
-    private final EventBus eventBus;
+    private PermissionManager permissionManager;
 
     @Inject
-    public SharingSettingsDialogController(EventBus eventBus, DispatchServiceManager dispatchServiceManager, SharingSettingsPanel sharingSettingsPanel) {
+    public SharingSettingsDialogController(PermissionManager permissionManager, DispatchServiceManager dispatchServiceManager, SharingSettingsPanel sharingSettingsPanel) {
         super(TITLE);
-        this.eventBus = eventBus;
+        this.permissionManager = permissionManager;
         this.dispatchServiceManager = dispatchServiceManager;
         this.sharingSettingsPanel = sharingSettingsPanel;
         setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<ProjectSharingSettings>() {
@@ -54,7 +55,7 @@ public class SharingSettingsDialogController extends WebProtegeOKCancelDialogCon
             @Override
             public void handleSuccess(SetProjectSharingSettingsResult result) {
                 GWT.log("[SharingSettingsDialogController] Sharing settings have been updated.  Firing PermissionsChangedEvent.");
-                eventBus.fireEventFromSource(new PermissionsChangedEvent(sharingSettings.getProjectId()), sharingSettings.getProjectId());
+                permissionManager.firePermissionsChanged();
             }
         });
     }
