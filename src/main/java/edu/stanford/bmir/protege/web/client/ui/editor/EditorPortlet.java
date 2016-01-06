@@ -51,7 +51,6 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
-        GWT.log("EditorPortlet: setEntity " + entityData);
         if(!entityData.isPresent()) {
             // TODO: Show nothing selected
             return;

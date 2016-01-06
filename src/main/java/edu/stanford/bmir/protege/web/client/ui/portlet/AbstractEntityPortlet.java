@@ -395,7 +395,6 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     }
 
     private void removeHandlers() {
-        GWT.log("Removing handlers for portlet " + this);
         for (HandlerRegistration reg : handlerRegistrations) {
             reg.removeHandler();
         }

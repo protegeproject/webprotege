@@ -101,7 +101,6 @@ public class RichTextEditorViewImpl extends Composite implements RichTextEditorV
     @Override
     public String getText() {
         String htmlString = removeEmptyElements();
-        GWT.log(htmlString);
         return htmlString;
     }
 

@@ -70,7 +70,6 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
         editor.addValueChangeHandler(new ValueChangeHandler<Optional<List<PropertyValueDescriptor>>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<List<PropertyValueDescriptor>>> event) {
-                GWT.log("Received ValueChangeEvent from The ValueListEditor.  Firing the event for the PropertyValueListEditor.");
                 ValueChangeEvent.fire(PropertyValueListEditor.this, getValue());
             }
         });
@@ -97,7 +96,6 @@ public class PropertyValueListEditor extends Composite implements ValueEditor<Pr
     }
 
     private void fillUp(PropertyValueList propertyValueList, HasEntityDataProvider provider) {
-        GWT.log("Filling the editor");
         List<PropertyValueDescriptor> vals = Lists.newArrayList();
         for (PropertyValue propertyValue : propertyValueList.getPropertyValues()) {
             if (propertyValue.getState() == PropertyValueState.ASSERTED) {

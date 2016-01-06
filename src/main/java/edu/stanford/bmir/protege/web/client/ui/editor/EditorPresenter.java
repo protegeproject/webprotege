@@ -176,7 +176,6 @@ public class EditorPresenter implements HasDispose {
         }
         final C editorCtx = editorState.getEditorContext();
         UpdateObjectAction<O> updateAction = editorState.getEditorManager().createUpdateObjectAction(pristineValue, editedValue, editorCtx);
-        GWT.log("Updating object");
         Optional<EditorManager<C, O>> editorManager = editorContextMapper.getEditorManager(editorCtx);
         if (editorManager.isPresent()) {
             setEditorState(editedValue, editorCtx, view, editorManager.get());
@@ -184,7 +183,6 @@ public class EditorPresenter implements HasDispose {
         dispatchServiceManager.execute(updateAction, new DispatchServiceCallback<Result>() {
             @Override
             public void handleSuccess(Result result) {
-                GWT.log("Object successfully updated");
             }
         });
     }

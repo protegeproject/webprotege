@@ -186,7 +186,6 @@ public class CSVImportViewImpl extends Composite implements CSVImportView {
                         csvGridView.clearHeaderText(colIndex);
                         csvGridView.removeColumnStyleName(colIndex, CSV_IMPORT_STYLE.importedColumn());
                     }
-                    GWT.log("Column relation changed...");
                     csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.classIcon());
                     csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.namedIndividualIcon());
                     csvGridView.removeTDStyleName(colIndex, CSV_IMPORT_STYLE.numberIcon());

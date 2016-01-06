@@ -36,9 +36,6 @@ public class MetricsPortlet extends AbstractOWLEntityPortlet {
 
 
     private void updateDisplay() {
-        if(metricsPresenter == null) {
-            GWT.log("MetricsPresenter is not initialized");
-        }
         setTitle("Metrics");
         metricsPresenter.reload();
     }
