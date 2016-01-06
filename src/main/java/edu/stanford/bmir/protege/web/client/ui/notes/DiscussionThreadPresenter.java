@@ -16,9 +16,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
-import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
-import edu.stanford.bmir.protege.web.shared.event.NotePostedHandler;
+import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.notes.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -87,14 +85,21 @@ public class DiscussionThreadPresenter implements HasDispose {
         handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
             public void handleUserLoggedIn(UserLoggedInEvent event) {
-
+                updateButtonState();
             }
         });
 
         handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
             @Override
             public void handleUserLoggedOut(UserLoggedOutEvent event) {
+                updateButtonState();
+            }
+        });
 
+        handlerRegistrationManager.registerHandlerToProject(projectId, PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
+            @Override
+            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
+                updateButtonState();
             }
         });
     }
@@ -111,15 +116,17 @@ public class DiscussionThreadPresenter implements HasDispose {
         currentTarget = target;
         view.setPostNewTopicEnabled(false);
         view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget), dispatchServiceManager, activeProjectManager));
-        if(currentTarget != null) {
-            permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
-                @Override
-                public void handleSuccess(Boolean hasPermission) {
-                    view.setPostNewTopicEnabled(currentTarget != null && hasPermission);
-                }
-            });
-        }
+        updateButtonState();
         reload();
+    }
+
+    private void updateButtonState() {
+        permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
+            @Override
+            public void handleSuccess(Boolean hasPermission) {
+                view.setPostNewTopicEnabled(currentTarget != null && hasPermission);
+            }
+        });
     }
 
     private void reload() {
