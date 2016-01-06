@@ -128,6 +128,11 @@ public class PermissionManager implements HasDispose, PermissionChecker {
         hasPermission(userId, projectId, Permission.getReadPermission(), callback);
     }
 
+    @Override
+    public void hasCommentPermissionForProject(UserId userId, ProjectId projectId, DispatchServiceCallback<Boolean> callback) {
+        hasPermission(userId, projectId, Permission.getCommentPermission(), callback);
+    }
+
     public void dispose() {
         loggedInHandler.removeHandler();
         loggedOutHandler.removeHandler();

@@ -95,7 +95,15 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
         }
         PermissionsSet.Builder builder = PermissionsSet.builder();
         for(Operation operation : metaProject.getPolicy().getAllowedOperations(user, pi)) {
-            builder.addPermission(Permission.getPermission(operation.getName()));
+            Permission permission = Permission.getPermission(operation.getName());
+            builder.addPermission(permission);
+            if(permission.isWritePermission()) {
+                // Users who can write can also comment
+                builder.addPermission(Permission.getCommentPermission());
+            }
+            else if(permission.isCommentPermission()) {
+                builder.addPermission(Permission.getReadPermission());
+            }
         }
         return builder.build();
     }
