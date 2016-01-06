@@ -28,7 +28,6 @@ public class NoteHeaderViewImpl extends Composite implements NoteHeaderView {
     private ResolveNoteHandler resolvedHandler = new ResolveNoteHandler() {
         @Override
         public void handleResolvePressed() {
-            GWT.log("ResolveNoteHandler not registered");
         }
     };
 

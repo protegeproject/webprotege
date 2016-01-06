@@ -53,7 +53,6 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
         dispatchServiceManager.execute(new AddReplyToNoteAction(projectId, noteId, content), new DispatchServiceCallback<AddReplyToNoteResult>() {
             @Override
             public void handleSuccess(AddReplyToNoteResult result) {
-                GWT.log("Replied o.k. " + result);
             }
         });
     }

@@ -29,14 +29,12 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
     private ReplyToNoteHandler replyToNoteHandler = new ReplyToNoteHandler() {
         @Override
         public void handleReplyToNote(NoteId noteId) {
-            GWT.log("No ReplyToNoteHandler registered");
         }
     };
 
     private DeleteNoteHandler deleteNoteHandler = new DeleteNoteHandler() {
         @Override
         public void handleDeleteNote(NoteId noteId) {
-            GWT.log("No DeleteNoteHandler registered");
         }
     };
 

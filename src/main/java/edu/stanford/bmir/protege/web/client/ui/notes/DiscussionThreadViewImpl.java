@@ -51,7 +51,6 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
     private PostNewTopicHandler postNewTopicHandler = new PostNewTopicHandler() {
         @Override
         public void handlePostNewTopic() {
-            GWT.log("Not PostNewTopicHandler registered");
         }
     };
 

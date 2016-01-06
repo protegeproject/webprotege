@@ -65,7 +65,6 @@ public class PostNewTopicHandlerImpl implements PostNewTopicHandler {
 
             @Override
             public void handleSuccess(AddNoteToEntityResult result) {
-                GWT.log("Posted o.k. " + result);
             }
         });
     }

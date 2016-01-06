@@ -84,7 +84,6 @@ public class NoteEditorPanel extends Composite implements HasActive {
         replyEditor.setVisible(false);
         replyEditor.getBody();
         replyEditor.clearValue();
-        GWT.log("EDITED VALUE: " + event.getValue());
     }
 
     @Override
