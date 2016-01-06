@@ -207,18 +207,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Implemented as returning the entity data for owl:Thing
-     * @param projectName The name of the project. Doesn't really matter - it's always owl:Thing
-     * @return The entity data for owl:Thing
-     */
-    public EntityData getRootEntity(String projectName) {
-        OWLAPIProject project = getProject(projectName);
-        RenderingManager renderingManager = project.getRenderingManager();
-        OWLClass owlThing = project.getRootOntology().getOWLOntologyManager().getOWLDataFactory().getOWLThing();
-        return renderingManager.getEntityData(owlThing);
-    }
-
-    /**
      * Gets the subclasses of a given entity.  This implementation uses the {@link edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider} that
      * is used in Protege 4 to answer the request.
      * @param projectName The name of the relevant project.

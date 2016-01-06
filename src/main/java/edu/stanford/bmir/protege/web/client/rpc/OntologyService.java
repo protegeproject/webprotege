@@ -23,8 +23,6 @@ public interface OntologyService extends RemoteService {
 
     public ImportsData getImportedOntologies(String projectName);
 
-    public EntityData getRootEntity(String projectName);
-
     public List<SubclassEntityData> getSubclasses(String projectName, String className);
 
     public List<EntityData> moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
