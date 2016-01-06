@@ -36,10 +36,6 @@ public interface OntologyService extends RemoteService {
 
     public PaginationData<EntityData> search(String projectName, String searchString, ValueType valueType, int start, int limit, String sort, String dir);
 
-    public List<EntityData> search(String projectName, String searchString);
-
-    public List<EntityData> search(String projectName, String searchString, ValueType valueType);
-
     public List<EntityData> getPathToRoot(String projectName, String entityName);
 
 }

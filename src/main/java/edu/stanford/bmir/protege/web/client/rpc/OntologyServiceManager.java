@@ -49,14 +49,6 @@ public class OntologyServiceManager {
      * Search
      */
 
-    public void search(ProjectId projectId, String searchString, AsyncCallback<List<EntityData>> cb) {
-        proxy.search(projectId.getId(), searchString, cb);
-    }
-
-    public void search(ProjectId projectId, String searchString, ValueType valueType, AsyncCallback<List<EntityData>> cb) {
-        proxy.search(projectId.getId(), searchString, valueType, cb);
-    }
-
     public void search(ProjectId projectId, String searchString, ValueType valueType, int start, int limit, String sort, String dir, AsyncCallback<PaginationData<EntityData>> cb) {
         proxy.search(projectId.getId(), searchString, valueType, start, limit, sort, dir, cb);
     }

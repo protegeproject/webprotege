@@ -398,23 +398,12 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public PaginationData<EntityData> search(String projectName, String searchString, ValueType valueType, int start, int limit, String sort, String dir) {
-        List<EntityData> search = search(projectName, searchString);
+        OWLAPIProject project = getProject(projectName);
+        OWLAPISearchManager searchManager = project.getSearchManager();
+        List<EntityData> search = searchManager.search(searchString);
         return PaginationServerUtil.pagedRecords(search, start, limit, sort, dir);
     }
-
-
-    public List<EntityData> search(String projectName, String searchString) {
-        OWLAPIProject project = getProject(projectName);
-        OWLAPISearchManager searchManager = project.getSearchManager();
-        return searchManager.search(searchString);
-    }
-
-    public List<EntityData> search(String projectName, String searchString, ValueType valueType) {
-        OWLAPIProject project = getProject(projectName);
-        OWLAPISearchManager searchManager = project.getSearchManager();
-        return searchManager.search(searchString);
-    }
-
+    
     public List<EntityData> getPathToRoot(String projectName, String entityName) {
         OWLAPIProject project = getProject(projectName);
         RenderingManager rm = project.getRenderingManager();
