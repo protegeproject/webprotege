@@ -49,10 +49,6 @@ public class OntologyServiceManager {
         proxy.moveCls(projectId.getId(), clsName, oldParentName, newParentName, checkForCycles, userId.getUserName(), operationDescription, cb);
     }
 
-    public void getParents(ProjectId projectId, String className, boolean direct, AsyncCallback<List<EntityData>> cb) {
-        proxy.getParents(projectId.getId(), className, direct, cb);
-    }
-
     public void getSubproperties(ProjectId projectId, String propertyName, AsyncCallback<List<EntityData>> cb) {
         proxy.getSubproperties(projectId.getId(), propertyName, cb);
     }
