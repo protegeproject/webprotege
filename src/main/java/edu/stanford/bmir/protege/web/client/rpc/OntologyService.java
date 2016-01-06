@@ -25,12 +25,6 @@ public interface OntologyService extends RemoteService {
 
     public ImportsData getImportedOntologies(String projectName);
 
-    public List<Triple> getEntityTriples(String projectName, List<String> entities, List<String> properties);
-
-    public List<Triple> getEntityTriples(String projectName, List<String> entities, List<String> properties, List<String> reifiedProps);
-
-    public List<EntityPropertyValues> getEntityPropertyValues(String projectName, List<String> entities, List<String> properties, List<String> reifiedProps);
-
     public EntityData getRootEntity(String projectName);
 
     public EntityData getEntity(String projectName, String entityName);
@@ -62,19 +56,6 @@ public interface OntologyService extends RemoteService {
     void setPropertyValues(String projectName, String entityName, PropertyEntityData propertyEntity,
             List<EntityData> values, String user, String operationDescription);
 
-    /*
-     * Instance methods
-     */
-    public EntityData createInstanceValue(String projectName, String instName, String typeName, String subjectEntity,
-            String propertyEntity, String user, String operationDescription);
-
-    public EntityData createInstanceValueWithPropertyValue(String projectName, String instName, String typeName, String subjectEntity,
-    		String propertyEntity, PropertyEntityData instancePropertyEntity, EntityData valueEntityData, String user, String operationDescription);
-
-    /*
-     * Search
-     */
-
     public PaginationData<EntityData> search(String projectName, String searchString, ValueType valueType, int start, int limit, String sort, String dir);
 
     public List<EntityData> search(String projectName, String searchString);
@@ -82,22 +63,5 @@ public interface OntologyService extends RemoteService {
     public List<EntityData> search(String projectName, String searchString, ValueType valueType);
 
     public List<EntityData> getPathToRoot(String projectName, String entityName);
-
-    /*
-     * Util methods
-     */
-
-    public String getBioPortalSearchContent(String projectName, String entityName, BioPortalSearchData bpSearchData);
-
-    public String getBioPortalSearchContentDetails(String projectName, BioPortalSearchData bpSearchData,
-            BioPortalReferenceData bpRefData);
-
-    public EntityData createExternalReference(String projectName, String entityName, BioPortalReferenceData bpRefData,
-            String user, String operationDescription);
-
-    public EntityData replaceExternalReference(String projectName, String entityName, BioPortalReferenceData bpRefData,
-                                        EntityData oldValueEntityData,
-                                        String user, String operationDescription);
-
 
 }
