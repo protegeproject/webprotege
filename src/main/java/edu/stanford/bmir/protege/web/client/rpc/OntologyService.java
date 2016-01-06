@@ -32,8 +32,6 @@ public interface OntologyService extends RemoteService {
     public List<EntityData> moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
             String user, String operationDescription);
 
-    public List<EntityData> getParents(String projectName, String className, boolean direct);
-
     /*
      * Properties methods
      */

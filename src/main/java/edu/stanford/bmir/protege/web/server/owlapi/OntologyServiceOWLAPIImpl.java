@@ -321,24 +321,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
         return null;
     }
 
-    /**
-     * Gets the superclasses of a particular class.  This implementation uses the {@link AssertedClassHierarchyProvider}
-     * to obtain this information.
-     * @param projectName The relevant project which makes the assertions to be taken into consideration.
-     * @param className The name of the class.  This should be an IRI, but this implementation will also tolerate
-     * browser text.
-     * @param direct Whether the direct or indirect superclases of A will be returned.  Specifying <code>true</code> causes
-     * {@link AssertedClassHierarchyProvider#getParents(org.semanticweb.owlapi.model.OWLObject)} to be called in order
-     * to compute the result.  Specifying <code>false</code> causes {@link AssertedClassHierarchyProvider#getAncestors(org.semanticweb.owlapi.model.OWLObject)}
-     * to be used in the calculation of the result.
-     * @return A list of entity data
-     */
-    public List<EntityData> getParents(String projectName, String className, final boolean direct) {
-        OWLAPIProject project = getProject(projectName);
-        GetParentsStrategy strategy = new GetParentsStrategy(project, getUserId(), className, direct);
-        return strategy.execute();
-    }
-
     public List<EntityData> getSubproperties(String projectName, String propertyName) {
         // NOTE:  ALTHOUGH THIS CAN RETURN A LIST OF ENTITY DATA, VARIOUS PLACES IN THE UI CODE PERFORM AN UNCHECKED CAST
         // TO PROPERTY ENTITY DATA!!!!!
