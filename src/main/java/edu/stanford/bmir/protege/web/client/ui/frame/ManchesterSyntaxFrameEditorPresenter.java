@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
@@ -58,7 +59,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
     private Set<OWLEntityData> freshEntities = new HashSet<OWLEntityData>();
 
-    private PermissionChecker permissionChecker;
+    private LoggedInUserProjectPermissionChecker permissionChecker;
 
     private CreateAsEntityTypeHandler createAsEntityTypeHandler = new CreateAsEntityTypeHandler() {
         @Override
@@ -84,7 +85,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
 
     @Inject
-    public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, PermissionChecker permissionChecker, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
+    public ManchesterSyntaxFrameEditorPresenter(ManchesterSyntaxFrameEditor editor, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.editor = editor;
         this.permissionChecker = permissionChecker;
         this.projectId = projectId;
@@ -171,8 +172,14 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
     private void updateState() {
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        boolean writePermission = permissionChecker.hasWritePermissionForProject(userId, projectId);
-        setEnabled(writePermission);
+        setEnabled(false);
+        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+            @Override
+            public void handleSuccess(Boolean hasWritePermission) {
+                setEnabled(hasWritePermission);
+            }
+        });
+
     }
 
 

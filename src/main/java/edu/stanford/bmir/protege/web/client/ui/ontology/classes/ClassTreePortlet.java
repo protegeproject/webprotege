@@ -101,9 +101,9 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     private TreePanel treePanel;
 
-    protected ToolbarButton createButton;
+    private final ToolbarButton createButton = new ToolbarButton("Create");
 
-    protected ToolbarButton deleteButton;
+    private final ToolbarButton deleteButton = new ToolbarButton("Delete");
 
     protected CycleButton watchButton;
 
@@ -541,15 +541,12 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         setTopToolbar(new Toolbar());
         final Toolbar toolbar = getTopToolbar();
 
-        createButton = createCreateButton();
-        if (createButton != null) {
-            toolbar.addButton(createButton);
-        }
+        setupCreateButton();
+        toolbar.addButton(createButton);
 
-        deleteButton = createDeleteButton();
-        if (deleteButton != null) {
-            toolbar.addButton(deleteButton);
-        }
+
+        setupDeleteButton();
+        toolbar.addButton(deleteButton);
 
         watchButton = createWatchButton();
         if (watchButton != null) {
@@ -565,8 +562,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    protected ToolbarButton createCreateButton() {
-        createButton = new ToolbarButton(getCreateClsLabel());
+    protected void setupCreateButton() {
         createButton.setCls("toolbar-button");
         createButton.addListener(new ButtonListenerAdapter() {
             @Override
@@ -574,12 +570,10 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 onCreateCls(e.isShiftKey() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES);
             }
         });
-        createButton.setDisabled(!permissionChecker.hasWritePermission());
-        return createButton;
+        createButton.setDisabled(true);
     }
 
-    protected ToolbarButton createDeleteButton() {
-        deleteButton = new ToolbarButton(getDeleteClsLabel());
+    protected void setupDeleteButton() {
         deleteButton.setCls("toolbar-button");
         deleteButton.addListener(new ButtonListenerAdapter() {
             @Override
@@ -587,9 +581,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 onDeleteCls();
             }
         });
-        deleteButton.setDisabled(!permissionChecker.hasWritePermission());
-        deleteButton.setDisabled(!getDeleteEnabled());
-        return deleteButton;
+        deleteButton.setDisabled(true);
     }
 
     protected CycleButton createWatchButton() {
@@ -721,7 +713,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         treePanel.addListener(new TreePanelListenerAdapter() {
             @Override
             public boolean doBeforeNodeDrop(final TreePanel treePanel, final TreeNode target, final DragData dragData, final String point, final DragDrop source, final TreeNode dropNode, final DropNodeCallback dropNodeCallback) {
-                if (permissionChecker.hasWritePermission()) {
                     final boolean success = Window.confirm("Are you sure you want to move " + getNodeBrowserText(dropNode) + " from parent " + getNodeBrowserText(dropNode.getParentNode()) + " to parent " + getNodeBrowserText(target) + " ?");
                     if (success) {
                         moveClass((EntityData) dropNode.getUserObject(), (EntityData) dropNode.getParentNode().getUserObject(), (EntityData) target.getUserObject());
@@ -730,10 +721,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                     else {
                         return false;
                     }
-                }
-                else {
-                    return false;
-                }
+
             }
         });
     }
@@ -1145,7 +1133,15 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         if (oldParent.equals(newParent)) {
             return;
         }
-        OntologyServiceManager.getInstance().moveCls(getProjectId(), cls.getName(), oldParent.getName(), newParent.getName(), false, loggedInUserProvider.getCurrentUserId(), getMoveClsOperationDescription(cls, oldParent, newParent), new MoveClassHandler(cls.getName()));
+        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+            @Override
+            public void handleSuccess(Boolean hasPermission) {
+                if(hasPermission) {
+                    OntologyServiceManager.getInstance().moveCls(getProjectId(), cls.getName(), oldParent.getName(), newParent.getName(), false, loggedInUserProvider.getCurrentUserId(), getMoveClsOperationDescription(cls, oldParent, newParent), new MoveClassHandler(cls.getName()));
+                }
+            }
+        });
+
     }
 
     protected String getMoveClsOperationDescription(final EntityData cls, final EntityData oldParent, final EntityData newParent) {
@@ -1473,22 +1469,16 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     public void updateButtonStates() {
-        if (permissionChecker.hasWritePermission()) {
-            if (createButton != null) {
-                createButton.enable();
+        createButton.setDisabled(true);
+        deleteButton.setDisabled(true);
+        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+            @Override
+            public void handleSuccess(Boolean result) {
+                GWT.log("[ClassTreePortlet] User has write permission: " + result);
+                createButton.setDisabled(!result);
+                deleteButton.setDisabled(!result);
             }
-            if (deleteButton != null && getDeleteEnabled()) {
-                deleteButton.enable();
-            }
-        }
-        else {
-            if (createButton != null) {
-                createButton.disable();
-            }
-            if (deleteButton != null) {
-                deleteButton.disable();
-            }
-        }
+        });
 
         if (watchButton != null) {
             // This used to disable the button.  However, the buttons seem to be laid out only when the containing

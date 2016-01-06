@@ -73,7 +73,7 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
     private void updateDisplayForSelectedEntity() {
         ProjectId projectId = getProjectId();
 		if (getSelectedEntity().isPresent()) {
-			ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager, false);
+			ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager);
 			presenter.setChangesForEntity(projectId, getSelectedEntity().get());
 		    setTitle("Changes for " + getSelectedEntityData().get().getBrowserText());
         }

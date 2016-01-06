@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.permissions;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -18,32 +19,34 @@ public class LoggedInUserProjectPermissionCheckerImpl implements LoggedInUserPro
 
     private final ActiveProjectManager activeProjectManager;
 
-    private final ProjectPermissionManager projectPermissionManager;
+    private final PermissionManager permissionManager;
 
     @Inject
-    public LoggedInUserProjectPermissionCheckerImpl(LoggedInUserProvider loggedInUserProvider, ActiveProjectManager activeProjectManager, ProjectPermissionManager projectPermissionManager) {
+    public LoggedInUserProjectPermissionCheckerImpl(LoggedInUserProvider loggedInUserProvider, ActiveProjectManager activeProjectManager, PermissionManager permissionManager) {
         this.loggedInUserProvider = loggedInUserProvider;
         this.activeProjectManager = activeProjectManager;
-        this.projectPermissionManager = projectPermissionManager;
+        this.permissionManager = permissionManager;
     }
 
     @Override
-    public boolean hasWritePermission() {
+    public void hasWritePermission(DispatchServiceCallback<Boolean> callback) {
         Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
         if(!projectId.isPresent()) {
-            return false;
+            callback.onSuccess(false);
+            return;
         }
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        return projectPermissionManager.hasWritePermissionForProject(userId, projectId.get());
+        permissionManager.hasWritePermissionForProject(userId, projectId.get(), callback);
     }
 
     @Override
-    public boolean hasReadPermission() {
+    public void hasReadPermission(DispatchServiceCallback<Boolean> callback) {
         Optional<ProjectId> projectId = activeProjectManager.getActiveProjectId();
         if(!projectId.isPresent()) {
-            return false;
+            callback.onSuccess(false);
+            return;
         }
         UserId userId = loggedInUserProvider.getCurrentUserId();
-        return projectPermissionManager.hasReadPermissionForProject(userId, projectId.get());
+        permissionManager.hasReadPermissionForProject(userId, projectId.get(), callback);
     }
 }

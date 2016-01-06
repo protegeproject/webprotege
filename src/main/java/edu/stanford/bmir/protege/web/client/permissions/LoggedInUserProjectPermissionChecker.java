@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -7,7 +10,7 @@ package edu.stanford.bmir.protege.web.client.permissions;
  */
 public interface LoggedInUserProjectPermissionChecker {
 
-    boolean hasWritePermission();
+    void hasWritePermission(DispatchServiceCallback<Boolean> callback);
 
-    boolean hasReadPermission();
+    void hasReadPermission(DispatchServiceCallback<Boolean> callback);
 }

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
@@ -8,7 +10,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public interface PermissionChecker {
 
-    boolean hasWritePermissionForProject(UserId userId, ProjectId projectId);
+    void hasWritePermissionForProject(UserId userId, ProjectId projectId, DispatchServiceCallback<Boolean> callback);
 
-    boolean hasReadPermissionForProject(UserId userId, ProjectId projectId);
+    void hasReadPermissionForProject(UserId userId, ProjectId projectId, DispatchServiceCallback<Boolean> callback);
 }

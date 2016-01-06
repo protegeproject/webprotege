@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.*;
@@ -73,10 +74,10 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     private final ProjectId projectId;
 
-    private final PermissionChecker permissionChecker;
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
-    public PropertiesTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, ProjectId projectId, PermissionChecker permissionChecker) {
+    public PropertiesTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
@@ -359,9 +360,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             }
         });
 
-        if (!permissionChecker.hasWritePermissionForProject(loggedInUserProvider.getCurrentUserId(), projectId)) {
-            createButton.setDisabled(true);
-        }
 
         deleteButton = new Button("Delete");
         // deleteButton.setIconCls("protege-class-delete-icon");
@@ -372,11 +370,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
                 onDeleteProperty();
             }
         });
-
-        if (!permissionChecker.hasWritePermissionForProject(loggedInUserProvider.getCurrentUserId(), projectId)) {
-            deleteButton.setDisabled(true);
-        }
-
         setTopToolbar(new Button[]{createButton, deleteButton});
     }
 
@@ -647,14 +640,15 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     public void updateButtonStates() {
-        if (permissionChecker.hasWritePermissionForProject(loggedInUserProvider.getCurrentUserId(), projectId)) {
-            createButton.enable();
-            deleteButton.enable();
-        }
-        else {
-            createButton.disable();
-            deleteButton.disable();
-        }
+        createButton.setDisabled(true);
+        deleteButton.setDisabled(true);
+        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+            @Override
+            public void handleSuccess(Boolean hasPermission) {
+                createButton.setDisabled(!hasPermission);
+                deleteButton.setDisabled(!hasPermission);
+            }
+        });
     }
 
     public TreePanel getTreePanel() {

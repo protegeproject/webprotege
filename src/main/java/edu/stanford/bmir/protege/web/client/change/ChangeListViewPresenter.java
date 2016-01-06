@@ -6,8 +6,10 @@ import com.google.common.collect.Ordering;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
@@ -29,55 +31,63 @@ import java.util.*;
  */
 public class ChangeListViewPresenter {
 
-    private ChangeListView changeListView;
+    private final ChangeListView view;
 
-    private DispatchServiceManager dispatchServiceManager;
+    private final DispatchServiceManager dispatchServiceManager;
 
     private boolean revertChangesVisible = false;
 
     private Optional<ProjectId> projectId = Optional.absent();
 
-    public ChangeListViewPresenter(ChangeListView changeListView, DispatchServiceManager dispatchServiceManager, boolean revertChangesVisible) {
-        this.changeListView = changeListView;
+    @Inject
+    public ChangeListViewPresenter(ChangeListView view, DispatchServiceManager dispatchServiceManager) {
+        this.view = view;
         this.dispatchServiceManager = dispatchServiceManager;
+    }
+
+    public void setRevertChangesVisible(boolean revertChangesVisible) {
         this.revertChangesVisible = revertChangesVisible;
+    }
+
+    public ChangeListView getView() {
+        return view;
     }
 
     public void setChangesForProject(ProjectId projectId) {
         this.projectId = Optional.of(projectId);
-        changeListView.clear();
+        view.clear();
         dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.<OWLEntity>absent()), new DispatchServiceCallback<GetProjectChangesResult>() {
             @Override
             public void handleSuccess(GetProjectChangesResult result) {
-                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT);
+                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT, revertChangesVisible);
             }
         });
     }
 
     public void setChangesForEntity(ProjectId projectId, OWLEntity entity) {
         this.projectId = Optional.of(projectId);
-        changeListView.clear();
+        view.clear();
         dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.of(entity)), new DispatchServiceCallback<GetProjectChangesResult>() {
             @Override
             public void handleSuccess(GetProjectChangesResult result) {
-                fillView(result.getChanges(), SubjectDisplay.DO_NOT_DISPLAY_SUBJECT);
+                fillView(result.getChanges(), SubjectDisplay.DO_NOT_DISPLAY_SUBJECT, revertChangesVisible);
             }
         });
     }
 
     public void setChangesForWatches(ProjectId projectId, UserId userId) {
         this.projectId = Optional.of(projectId);
-        changeListView.clear();
+        view.clear();
         dispatchServiceManager.execute(new GetWatchedEntityChangesAction(projectId, userId), new DispatchServiceCallback<GetWatchedEntityChangesResult>() {
             @Override
             public void handleSuccess(GetWatchedEntityChangesResult result) {
-                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT);
+                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT, revertChangesVisible);
             }
         });
     }
 
-    private void fillView(ImmutableList<ProjectChange> changes, SubjectDisplay subjectDisplay) {
-        changeListView.clear();
+    private void fillView(ImmutableList<ProjectChange> changes, SubjectDisplay subjectDisplay, boolean revertChangesVisible) {
+        view.clear();
         List<ProjectChange> projectChanges = new ArrayList<>(changes);
         Collections.sort(projectChanges, Ordering.compound(Arrays.asList(
 //                new ProjectChangeSubjectsComparator(),
@@ -88,7 +98,7 @@ public class ChangeListViewPresenter {
             if(!TimeUtil.isSameCalendarDay(previousTimeStamp, changeTimeStamp)) {
                 previousTimeStamp = changeTimeStamp;
                 Date date = new Date(changeTimeStamp);
-                changeListView.addSeparator("\u25C9   Changes on " + DateTimeFormat.getFormat("EEE, d MMM yyyy").format(date));
+                view.addSeparator("\u25C9   Changes on " + DateTimeFormat.getFormat("EEE, d MMM yyyy").format(date));
             }
 
             ChangeDetailsView view = new ChangeDetailsViewImpl();
@@ -120,7 +130,7 @@ public class ChangeListViewPresenter {
             }
             view.setChangeCount(projectChange.getChangeCount());
             view.setTimestamp(changeTimeStamp);
-            changeListView.addChangeDetailsView(view);
+            this.view.addChangeDetailsView(view);
         }
     }
 

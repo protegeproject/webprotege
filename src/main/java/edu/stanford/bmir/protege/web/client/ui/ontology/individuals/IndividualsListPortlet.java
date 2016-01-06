@@ -20,6 +20,7 @@ import edu.stanford.bmir.protege.web.client.action.CreateHandler;
 import edu.stanford.bmir.protege.web.client.action.DeleteHandler;
 import edu.stanford.bmir.protege.web.client.action.NullCreateHandler;
 import edu.stanford.bmir.protege.web.client.action.NullDeleteHandler;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesList;
 import edu.stanford.bmir.protege.web.client.entitieslist.EntitiesListImpl;
@@ -28,6 +29,7 @@ import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListViewP
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.project.Project;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
@@ -58,6 +60,11 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
 
     private static final String PRECONFIGURED_CLASS = "showOnlyClass";
 
+    @Override
+    public void handleActivated() {
+        super.handleActivated();
+        updateButtonStates();
+    }
 
     private DeleteHandler deleteHandler;
 
@@ -192,7 +199,6 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
                 createHandler.handleCreate();
             }
         });
-        createButton.setDisabled(!permissionChecker.hasWritePermission());
         toolbar.addButton(createButton);
         deleteButton = new ToolbarButton("Delete");
         deleteButton.setCls("toolbar-button");
@@ -202,7 +208,6 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
                 getDeleteHandler().handleDelete();
             }
         });
-        deleteButton.setDisabled(!permissionChecker.hasWritePermission());
         toolbar.addButton(deleteButton);
 
         Widget searchField = createSearchField();
@@ -254,13 +259,15 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
     }
 
     public void updateButtonStates() {
-        if (permissionChecker.hasWritePermission()) {
-            createButton.enable();
-            deleteButton.enable();
-        } else {
-            createButton.disable();
-            deleteButton.disable();
-        }
+        createButton.setDisabled(true);
+        deleteButton.setDisabled(true);
+        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+            @Override
+            public void handleSuccess(Boolean result) {
+                createButton.setDisabled(!result);
+                deleteButton.setDisabled(!result);
+            }
+        });
     }
 
     @Override

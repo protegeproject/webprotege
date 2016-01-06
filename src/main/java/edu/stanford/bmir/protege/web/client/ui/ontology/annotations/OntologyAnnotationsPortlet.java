@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotati
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.project.Project;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEventHandler;
@@ -85,7 +86,13 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
 
 
     private void updateState() {
-        annotationsView.setEnabled(permissionChecker.hasWritePermission());
+        annotationsView.setEnabled(false);
+        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+            @Override
+            public void handleSuccess(Boolean result) {
+                annotationsView.setEnabled(result);
+            }
+        });
     }
 
     @Override

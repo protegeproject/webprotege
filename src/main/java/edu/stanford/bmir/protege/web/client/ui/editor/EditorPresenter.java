@@ -24,6 +24,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.project.Project;
+import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
@@ -221,9 +222,17 @@ public class EditorPresenter implements HasDispose {
                     });
                     final Widget editorWidget = editorView.asWidget();
 
-                    if (editorWidget instanceof HasEnabled) {
-                        ((HasEnabled) editorWidget).setEnabled(permissionChecker.hasReadPermission());
-                    }
+//                    if (editorWidget instanceof HasEnabled) {
+//                        final HasEnabled hasEnabled = (HasEnabled) editorWidget;
+//                        hasEnabled.setEnabled(false);
+//                        permissionChecker.hasReadPermission(new DispatchServiceCallback<Boolean>() {
+//                            @Override
+//                            public void handleSuccess(Boolean hasPermission) {
+//                                hasEnabled.setEnabled(hasPermission);
+//                            }
+//                        });
+//
+//                    }
 
                     editorHolder.setWidget(editorWidget);
                     setEditorState(value, editorCtx, editorView, editorManager);
@@ -248,17 +257,15 @@ public class EditorPresenter implements HasDispose {
 
     private void updatePermissionBasedItems() {
         if(editorHolder.getWidget() instanceof HasEnabled) {
-            boolean enabled = isEditingEnabled();
-            ((HasEnabled) editorHolder.getWidget()).setEnabled(enabled);
+            final HasEnabled hasEnabled = (HasEnabled) editorHolder.getWidget();
+            hasEnabled.setEnabled(false);
+            permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+                @Override
+                public void handleSuccess(Boolean result) {
+                    hasEnabled.setEnabled(result);
+                }
+            });
         }
-    }
-
-    private boolean isEditingEnabled() {
-        final Optional<ProjectId> activeProjectId = activeProjectManager.getActiveProjectId();
-        if(!activeProjectId.isPresent()) {
-            return false;
-        }
-        return permissionChecker.hasWritePermission();
     }
 
 
