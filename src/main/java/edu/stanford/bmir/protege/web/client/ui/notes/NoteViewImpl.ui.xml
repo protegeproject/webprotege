@@ -33,8 +33,6 @@
         <g:Image resource="{wp.userIcon}"/>
         <g:InlineLabel addStyleNames="{style.author}" ui:field="authorField"/>
         <timelabel:ElapsedTimeLabel addStyleNames="{style.date}" ui:field="dateField"/>
-        <div class="note-content">
-            <g:HTML addStyleNames="{style.body}" ui:field="bodyField"/>
-        </div>
+        <g:HTML addStyleNames="{style.body}" ui:field="bodyField"/>
     </g:HTMLPanel>
 </ui:UiBinder>

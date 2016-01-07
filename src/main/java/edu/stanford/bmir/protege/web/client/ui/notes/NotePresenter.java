@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.Widget;
@@ -17,19 +18,12 @@ public class NotePresenter  {
 
     private NoteView noteView;
 
-    private Note note;
-
     @Inject
     public NotePresenter(NoteView noteView) {
         this.noteView = noteView;
     }
 
-    public Note getNote() {
-        return note;
-    }
-
     public void setNote(Note note) {
-        this.note = note;
         String author = note.getAuthor().getUserName();
         noteView.setAuthor(author);
         long timestamp = note.getTimestamp();
@@ -39,11 +33,7 @@ public class NotePresenter  {
         noteView.setBody(body);
     }
 
-    public NoteView getNoteView() {
+    public NoteView getView() {
         return noteView;
-    }
-
-    public Widget getWidget() {
-        return noteView.getWidget();
     }
 }

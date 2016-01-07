@@ -159,7 +159,7 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private void displayDiscussionThread(DiscussionThread thread) {
         view.removeAllNotes();
-        final List<Note> rootNotes = new ArrayList<Note>(thread.getRootNotes());
+        final List<Note> rootNotes = new ArrayList<>(thread.getRootNotes());
         Collections.sort(rootNotes, new Comparator<Note>() {
             @Override
             public int compare(Note o1, Note o2) {
