@@ -848,16 +848,6 @@ ul.x-menu-list
     margin: 0;
 }
 
-*.note-content * ul {
-    margin-left: 5px;
-    list-style: disc inside;
-}
-
-*.note-content * ol {
-    margin-left: 5px;
-    list-style: decimal inside;
-}
-
 select {
     border: 1px solid silver;
     box-shadow: 0 0 3px 1px #f0f0f0 inset;

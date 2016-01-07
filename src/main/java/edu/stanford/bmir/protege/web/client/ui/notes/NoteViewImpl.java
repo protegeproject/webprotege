@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import com.google.inject.Provides;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
 
@@ -28,6 +29,7 @@ public class NoteViewImpl extends Composite implements NoteView {
 
     private static NoteViewImplUiBinder ourUiBinder = GWT.create(NoteViewImplUiBinder.class);
 
+    @Inject
     public NoteViewImpl() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

@@ -28,11 +28,11 @@ public class NoteContainerViewImpl extends Composite implements NoteContainerVie
 
     private static NoteContainerViewImplUiBinder ourUiBinder = GWT.create(NoteContainerViewImplUiBinder.class);
 
-    @UiField
-    protected NoteView noteView;
+    @UiField(provided = true)
+    protected NoteViewImpl noteView;
 
-    @UiField
-    protected NoteActionView noteActionView;
+    @UiField(provided = true)
+    protected NoteActionViewImpl noteActionView;
 
 
     private NotePresenter notePresenter;
@@ -41,10 +41,13 @@ public class NoteContainerViewImpl extends Composite implements NoteContainerVie
 
     @Inject
     public NoteContainerViewImpl(NotePresenter notePresenter, NoteActionPresenter noteActionPresenter) {
-        HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
-        initWidget(rootElement);
+        this.noteView = (NoteViewImpl) notePresenter.getView();
+        this.noteActionView = (NoteActionViewImpl) noteActionPresenter.getView();
         this.notePresenter = notePresenter;
         this.noteActionPresenter = noteActionPresenter;
+        HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
+        initWidget(rootElement);
+
     }
 
 

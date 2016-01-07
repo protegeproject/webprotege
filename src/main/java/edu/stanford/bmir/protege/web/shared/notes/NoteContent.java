@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -56,6 +58,15 @@ public final class NoteContent implements Serializable {
         return noteStatus;
     }
 
+
+    @Override
+    public String toString() {
+        return toStringHelper("NoteContent")
+                .add("subject", subject)
+                .add("body", body)
+                .add("status", noteStatus)
+                .toString();
+    }
 
     public static Builder builder() {
         return new Builder();

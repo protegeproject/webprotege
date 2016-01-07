@@ -8,6 +8,7 @@ import javax.annotation.concurrent.Immutable;
 import java.io.Serializable;
 import java.util.Date;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -130,6 +131,15 @@ public final class Note implements IsSerializable {
         }
         Note other = (Note) obj;
         return this.header.equals(other.header) && this.content.equals(other.content);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("Note")
+                .addValue(header)
+                .addValue(content)
+                .toString();
     }
 
 
