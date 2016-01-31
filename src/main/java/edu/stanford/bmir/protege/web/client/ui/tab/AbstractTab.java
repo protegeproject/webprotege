@@ -79,8 +79,10 @@ public abstract class AbstractTab implements PortletContainer, IsWidget {
             return;
         }
         column2Portlets.removeAll(column);
-        ((Portlet) portlet).hide();
-        ((Portlet) portlet).destroy();
+        if (portlet instanceof Portlet) {
+            ((Portlet) portlet).hide();
+        }
+        portlet.dispose();
     }
 
     @Override
@@ -117,10 +119,12 @@ public abstract class AbstractTab implements PortletContainer, IsWidget {
     @Override
     public void addPortletToColumn(EntityPortlet entityPortlet, int columnIndex) {
         PortalColumn portalColumn = columns.get(columnIndex);
-        portalColumn.add((Portlet) entityPortlet);
+        portalColumn.add(entityPortlet.asWidget());
         column2Portlets.put(portalColumn, entityPortlet);
         portlet2Column.put(entityPortlet, portalColumn);
-        ((Portlet) entityPortlet).addListener(portletDestroyListener);
+        if (entityPortlet instanceof Portlet) {
+            ((Portlet) entityPortlet).addListener(portletDestroyListener);
+        }
     }
 
     public String getLabel() {

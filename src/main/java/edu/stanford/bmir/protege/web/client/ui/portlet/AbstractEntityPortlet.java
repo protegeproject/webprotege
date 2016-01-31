@@ -412,4 +412,9 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
                 .addValue(getClass().getName())
                 .toString();
     }
+
+    @Override
+    public void dispose() {
+        destroy();
+    }
 }

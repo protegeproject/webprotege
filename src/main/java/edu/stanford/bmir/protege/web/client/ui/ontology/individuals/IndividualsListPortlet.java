@@ -86,10 +86,6 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
 
     private EntitiesList<OWLNamedIndividualData> individualsList;
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    private final LoggedInUserProvider loggedInUserProvider;
-
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     @Inject
@@ -100,12 +96,10 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
                                   ProjectId projectId,
                                   LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = permissionChecker;
         setLayout(new FitLayout());
         setTitle("Individuals");
-        individualsList = new EntitiesListImpl<OWLNamedIndividualData>();
+        individualsList = new EntitiesListImpl<>();
         add(individualsList.asWidget());
         individualsList.addSelectionHandler(new SelectionHandler<OWLNamedIndividualData>() {
             @Override

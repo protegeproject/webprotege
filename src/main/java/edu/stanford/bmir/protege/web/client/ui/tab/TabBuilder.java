@@ -106,15 +106,15 @@ public class TabBuilder {
         }
         final int height = portletConfiguration.getHeight();
         if (height == 0) {
-            ((Portlet) portlet).setAutoHeight(true);
+            portlet.setAutoHeight(true);
         } else {
-            ((Portlet) portlet).setHeight(height);
+            portlet.setHeight(height);
         }
         final int width = portletConfiguration.getWidth();
         if (width == 0) {
-            ((Portlet) portlet).setAutoWidth(true);
+            portlet.setAutoWidth(true);
         } else {
-            ((Portlet) portlet).setWidth(width);
+            portlet.setWidth(width);
         }
         return portlet;
     }

@@ -1,22 +1,21 @@
 package edu.stanford.bmir.protege.web.client.ui.portlet;
 
+import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionEvent;
 import edu.stanford.bmir.protege.web.client.ui.selection.SelectionListener;
+import edu.stanford.bmir.protege.web.shared.HasDispose;
 
 import java.util.Collection;
 
-/**
- * Interface that should be implemented by all portlets available in user
- * interface of a tab.<br />
- * <br />
- * 
- * It is recommended that all portlets extend the {@link AbstractOWLEntityPortlet}
- * class.
- * 
- * @author Tania Tudorache <tudorache@stanford.edu>
- */
-public interface EntityPortlet {
+public interface EntityPortlet extends IsWidget, HasDispose {
 
+    void setWidth(int width);
+
+    void setHeight(int height);
+
+    void setAutoHeight(boolean b);
+
+    void setAutoWidth(boolean b);
 }
