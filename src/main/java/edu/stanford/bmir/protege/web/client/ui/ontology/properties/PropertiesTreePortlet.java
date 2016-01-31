@@ -8,7 +8,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
 import com.gwtext.client.widgets.Button;
-import com.gwtext.client.widgets.MessageBox;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.tree.DefaultSelectionModel;
@@ -22,13 +21,13 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
-import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
@@ -390,7 +389,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
         Optional<EntityType<?>> selectedEntityType = getSelectedEntityType();
         if (!selectedEntityType.isPresent()) {
-            MessageBox.alert("Please select a property in the tree first");
             return;
         }
         WebProtegeDialog.showDialog(new CreateEntityDialogController(selectedEntityType.get(), new CreateEntityDialogController.CreateEntityHandler() {
@@ -563,7 +561,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         Optional<OWLEntityData> selection = getSelectedEntityData();
 
         if (!selection.isPresent()) {
-            MessageBox.alert("Please select first a property to delete.");
             return;
         }
 
@@ -574,11 +571,15 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             return;
         }
 
-        MessageBox.confirm("Confirm", "Are you sure you want to delete property <br> " + selection.get().getBrowserText() + " ?", new MessageBox.ConfirmCallback() {
-            public void execute(String btnID) {
-                if ("yes".equals(btnID)) {
-                    deleteProperty((OWLPropertyData) entityData);
-                }
+        MessageBox.showYesNoConfirmBox("Delete " + entityData.getBrowserText(), "Are you sure you want to delete property <br> " + selection.get().getBrowserText() + " ?", new YesNoHandler() {
+            @Override
+            public void handleYes() {
+                deleteProperty((OWLPropertyData) entityData);
+            }
+
+            @Override
+            public void handleNo() {
+
             }
         });
     }
@@ -651,10 +652,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         });
     }
 
-    public TreePanel getTreePanel() {
-        return treePanel;
-    }
-
     @Override
     protected void afterRender() {
         getSubProperties(null, true);
@@ -681,19 +678,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     public void getSubProperties(final String propName, final boolean getSubpropertiesOfSubproperties) {
         OntologyServiceManager.getInstance().getSubproperties(getProjectId(), propName, new GetSubproperties(propName, getSubpropertiesOfSubproperties));
     }
-
-//    public List<EntityData> getSelection() {
-//        if (currentSelection == null) {
-//            return Collections.emptyList();
-//        }
-//        List<EntityData> result = new ArrayList<EntityData>();
-//        for (EntityData entityData : currentSelection) {
-//            if (!"Annotation properties".equals(entityData.getName())) {
-//                result.add(entityData);
-//            }
-//        }
-//        return result;
-//    }
 
     protected TreeNode createTreeNode(EntityData entityData) {
         TreeNode node = new TreeNode(entityData.getBrowserText());
@@ -795,26 +779,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
                 }
             }
             return false;
-        }
-    }
-
-    class CreatePropertyHandler implements AsyncCallback<EntityData> {
-
-        @Override
-        public void onFailure(Throwable caught) {
-            GWT.log("Error at creating class", caught);
-            MessageBox.alert("There were errors at creating the property.<br>" + " Message: " + caught.getMessage());
-        }
-
-        @Override
-        public void onSuccess(EntityData entityData) {
-            if (entityData != null) {
-                GWT.log("Created successfully property " + entityData.getName(), null);
-            }
-            else {
-                GWT.log("Problem at creating property", null);
-                MessageBox.alert("Property creation failed.");
-            }
         }
     }
 
