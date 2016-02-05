@@ -158,7 +158,7 @@ public class SelectionModel {
                 ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
                 ProjectViewPlace nextPlace = new ProjectViewPlace(projectViewPlace.getProjectId(), projectViewPlace.getTabId(), Optional.<OWLEntity>of(selection.get().getEntity()));
                 GWT.log("[SelectionModel] Next place: " + nextPlace);
-                placeManager.setCurrentPlace(nextPlace);
+//                placeManager.setCurrentPlace(nextPlace);
             }
             fireEvent(previousSelection);
 
