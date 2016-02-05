@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.notes.AddReplyToNoteResult;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>
@@ -35,12 +36,12 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
     }
 
     @Override
-    public void handleReplyToNote(final NoteId noteId) {
+    public void handleReplyToNote(final NoteId noteId, final OWLEntity targetEntity) {
         NoteEditorDialogController controller = new NoteEditorDialogController(new NoteContentEditorHandler() {
             @Override
             public void handleAccept(Optional<NoteContent> noteContent) {
                 if (noteContent.isPresent()) {
-                    doReply(noteId, noteContent.get());
+                    doReply(noteId, noteContent.get(), targetEntity);
                 }
             }
         });
@@ -48,9 +49,9 @@ public class ReplyToNoteHandlerImpl implements ReplyToNoteHandler {
         WebProtegeDialog.showDialog(controller);
     }
 
-    private void doReply(NoteId noteId, NoteContent content) {
+    private void doReply(NoteId noteId, NoteContent content, OWLEntity targetEntity) {
         ProjectId projectId = activeProjectManager.getActiveProjectId().get();
-        dispatchServiceManager.execute(new AddReplyToNoteAction(projectId, noteId, content), new DispatchServiceCallback<AddReplyToNoteResult>() {
+        dispatchServiceManager.execute(new AddReplyToNoteAction(projectId, targetEntity, noteId, content), new DispatchServiceCallback<AddReplyToNoteResult>() {
             @Override
             public void handleSuccess(AddReplyToNoteResult result) {
             }

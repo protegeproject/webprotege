@@ -9,7 +9,10 @@ import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>
@@ -28,7 +31,7 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
 
     private ReplyToNoteHandler replyToNoteHandler = new ReplyToNoteHandler() {
         @Override
-        public void handleReplyToNote(NoteId noteId) {
+        public void handleReplyToNote(NoteId noteId, OWLEntity targetEntity) {
         }
     };
 
@@ -46,7 +49,7 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
 
     @UiHandler("replyWidget")
     protected void handleReplyClicked(ClickEvent clickEvent) {
-        replyToNoteHandler.handleReplyToNote(noteId);
+        replyToNoteHandler.handleReplyToNote(noteId, selectionModel.getSelection().get().getEntity());
     }
 
     @UiHandler("deleteWidget")
@@ -56,9 +59,13 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
 
     private NoteId noteId;
 
-    public NoteActionViewImpl() {
+    private SelectionModel selectionModel;
+
+    @Inject
+    public NoteActionViewImpl(SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
+        this.selectionModel = selectionModel;
     }
 
     @Override

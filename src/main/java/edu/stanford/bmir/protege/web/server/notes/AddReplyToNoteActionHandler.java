@@ -38,7 +38,7 @@ public class AddReplyToNoteActionHandler extends AbstractHasProjectActionHandler
     protected AddReplyToNoteResult execute(AddReplyToNoteAction action, OWLAPIProject project, ExecutionContext executionContext) {
         EventTag startTag = project.getEventManager().getCurrentTag();
         OWLAPINotesManager notesManager = project.getNotesManager();
-        Note note = notesManager.addReplyToNote(action.getTargetNoteId(), action.getReplyContent(), executionContext.getUserId());
+        Note note = notesManager.addReplyToNote(action.getRootEntity(), action.getTargetNoteId(), action.getReplyContent(), executionContext.getUserId());
         return new AddReplyToNoteResult(note, project.getEventManager().getEventsFromTag(startTag));
     }
 

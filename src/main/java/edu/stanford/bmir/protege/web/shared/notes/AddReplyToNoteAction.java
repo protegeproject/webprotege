@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.notes;
 
 import edu.stanford.bmir.protege.web.client.dispatch.AbstractHasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -13,6 +14,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class AddReplyToNoteAction extends AbstractHasProjectAction<AddReplyToNoteResult> {
 
+    private OWLEntity rootEntity;
+
     private NoteId targetNoteId;
 
     private NoteContent replyContent;
@@ -20,10 +23,15 @@ public class AddReplyToNoteAction extends AbstractHasProjectAction<AddReplyToNot
     private AddReplyToNoteAction() {
     }
 
-    public AddReplyToNoteAction(ProjectId projectId, NoteId targetNoteId, NoteContent replyContent) {
+    public AddReplyToNoteAction(ProjectId projectId, OWLEntity rootEntity, NoteId targetNoteId, NoteContent replyContent) {
         super(projectId);
+        this.rootEntity = rootEntity;
         this.targetNoteId = checkNotNull(targetNoteId);
         this.replyContent = checkNotNull(replyContent);
+    }
+
+    public OWLEntity getRootEntity() {
+        return rootEntity;
     }
 
     public NoteId getTargetNoteId() {

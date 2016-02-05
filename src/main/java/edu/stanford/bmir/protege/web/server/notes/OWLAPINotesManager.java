@@ -26,9 +26,9 @@ public interface OWLAPINotesManager {
 
     void deleteNoteAndReplies(NoteId noteId);
 
-    Note addReplyToNote(NoteId inReplyToId, NoteContent replyContent, UserId author);
+    Note addReplyToNote(OWLEntity targetEntity, NoteId inReplyToId, NoteContent replyContent, UserId author);
 
-    Note addReplyToNote(NoteId inReplyToId, NoteContent replyContent, UserId author, long timestamp);
+    Note addReplyToNote(OWLEntity targetEntity, NoteId inReplyToId, NoteContent replyContent, UserId author, long timestamp);
 
     void setNoteStatus(NoteId noteId, NoteStatus noteStatus);
 

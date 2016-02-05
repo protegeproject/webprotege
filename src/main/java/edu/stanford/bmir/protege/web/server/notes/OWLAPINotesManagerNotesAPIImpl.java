@@ -238,16 +238,17 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
     }
 
     @Override
-    public Note addReplyToNote(NoteId inReplyToId, NoteContent replyContent, UserId author) {
-        return addReplyToNote(inReplyToId, replyContent, author, System.currentTimeMillis());
+    public Note addReplyToNote(OWLEntity targetEntity, NoteId inReplyToId, NoteContent replyContent, UserId author) {
+        return addReplyToNote(targetEntity, inReplyToId, replyContent, author, System.currentTimeMillis());
     }
 
     @Override
-    public Note addReplyToNote(NoteId inReplyToId, NoteContent replyContent, UserId author, long timestamp) {
+    public Note addReplyToNote(OWLEntity targetEntity, NoteId inReplyToId, NoteContent replyContent, UserId author, long timestamp) {
         try {
             AnnotatableThing target = getAnnotatableThingForObjectId(inReplyToId);
             Note note = addNoteToTarget(target, replyContent, author, timestamp);
-            eventManager.postEvent(new NotePostedEvent(projectId, new NoteDetails(note.getHeader(), replyContent), Optional.of(inReplyToId)));
+            OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity, browserTextProvider.getOWLEntityBrowserText(targetEntity).or("Entity"));
+            eventManager.postEvent(new NotePostedEvent(projectId, Optional.of(entityData), new NoteDetails(note.getHeader(), replyContent)));
             return note;
         }
         catch (NotesException e) {
