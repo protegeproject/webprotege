@@ -83,7 +83,7 @@ public class ProjectFeedPanel extends Composite {
             return;
         }
         noteIds.add(noteId);
-        final NotePostedEventPanel notePostedEventPanel = new NotePostedEventPanel();
+        final NotePostedEventPanel notePostedEventPanel = new NotePostedEventPanel(selectionModel);
         notePostedEventPanel.setValue(event);
         insertWidgetIntoFeed(notePostedEventPanel);
 

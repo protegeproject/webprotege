@@ -170,39 +170,39 @@ public class CHAO2NotesConverter {
 //        }
     }
 
-    public void convertToNotes(OWLAPINotesManager notesManager) {
-        for (OWLEntity entity : entity2OntologyClsIndividualMap.keySet()) {
-            OWLNamedIndividual representativeInd = entity2OntologyClsIndividualMap.get(entity);
-            final Collection<OWLNamedIndividual> namedIndividuals = notes2Replies.get(representativeInd);
-            if (!namedIndividuals.isEmpty()) {
-                for (OWLNamedIndividual noteInd : namedIndividuals) {
-                    CHAONoteData data = dumpNote(noteInd, 0);
-                    convertToNotes(notesManager, data, entity);
-                }
-            }
-        }
-    }
+//    public void convertToNotes(OWLAPINotesManager notesManager) {
+//        for (OWLEntity entity : entity2OntologyClsIndividualMap.keySet()) {
+//            OWLNamedIndividual representativeInd = entity2OntologyClsIndividualMap.get(entity);
+//            final Collection<OWLNamedIndividual> namedIndividuals = notes2Replies.get(representativeInd);
+//            if (!namedIndividuals.isEmpty()) {
+//                for (OWLNamedIndividual noteInd : namedIndividuals) {
+//                    CHAONoteData data = dumpNote(noteInd, 0);
+//                    convertToNotes(notesManager, data, entity);
+//                }
+//            }
+//        }
+//    }
 
 
-
-    private void convertToNotes(OWLAPINotesManager notesManager, CHAONoteData noteData, OWLEntity entity) {
-        NoteContent content = NoteContent.builder().setSubject(noteData.getSubject()).setBody(noteData.getBody()).setNoteType(NoteType.COMMENT).build();
-        final UserId author = UserId.getUserId(noteData.getAuthor());
-        Note note = notesManager.addNoteToEntity(entity, content, author, noteData.getTimestamp());
-        for(CHAONoteData reply : noteData.getReplies()) {
-            convertToNotes(notesManager, reply, note.getNoteId());
-        }
-
-    }
-
-    private void convertToNotes(OWLAPINotesManager notesManager, CHAONoteData noteData, NoteId replyTo) {
-        NoteContent content = NoteContent.builder().setSubject(noteData.getSubject()).setBody(noteData.getBody()).setNoteType(NoteType.COMMENT).build();
-        Note note = notesManager.addReplyToNote(replyTo, content, UserId.getUserId(noteData.getAuthor()), noteData.getTimestamp());
-        for(CHAONoteData reply : noteData.getReplies()) {
-            convertToNotes(notesManager, reply, note.getNoteId());
-        }
-
-    }
+//
+//    private void convertToNotes(OWLAPINotesManager notesManager, CHAONoteData noteData, OWLEntity entity) {
+//        NoteContent content = NoteContent.builder().setSubject(noteData.getSubject()).setBody(noteData.getBody()).setNoteType(NoteType.COMMENT).build();
+//        final UserId author = UserId.getUserId(noteData.getAuthor());
+//        Note note = notesManager.addNoteToEntity(entity, content, author, noteData.getTimestamp());
+//        for(CHAONoteData reply : noteData.getReplies()) {
+//            convertToNotes(notesManager, reply, note.getNoteId());
+//        }
+//
+//    }
+//
+//    private void convertToNotes(OWLAPINotesManager notesManager, CHAONoteData noteData, NoteId replyTo) {
+//        NoteContent content = NoteContent.builder().setSubject(noteData.getSubject()).setBody(noteData.getBody()).setNoteType(NoteType.COMMENT).build();
+//        Note note = notesManager.addReplyToNote(replyTo, content, UserId.getUserId(noteData.getAuthor()), noteData.getTimestamp());
+//        for(CHAONoteData reply : noteData.getReplies()) {
+//            convertToNotes(notesManager, reply, note.getNoteId());
+//        }
+//
+//    }
 
 //    public Multimap<OWLEntity, Note> convertToNotes() {
 //        Multimap<OWLEntity, Note> result = HashMultimap.create();
