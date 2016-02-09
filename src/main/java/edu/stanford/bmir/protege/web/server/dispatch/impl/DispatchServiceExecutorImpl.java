@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
 import javax.inject.Inject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Author: Matthew Horridge<br>
@@ -17,6 +19,8 @@ import javax.inject.Inject;
  * Date: 19/02/2013
  */
 public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
+
+    private static final Logger logger = Logger.getLogger(DispatchServiceExecutorImpl.class.getName());
 
     private final ActionHandlerRegistry handlerRegistry;
 
@@ -38,6 +42,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             R result = actionHandler.execute(action, executionContext);
             return new DispatchServiceResultContainer(result);
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "An error occurred whilst executing an action", e);
             throw new ActionExecutionException(e);
         }
     }
