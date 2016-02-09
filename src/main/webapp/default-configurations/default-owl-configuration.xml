@@ -38,13 +38,13 @@
                     <width>0.20</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
-                            <height>170</height>
+                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
+                            <height>390</height>
                             <width>0</width>
                         </portlet>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet</name>
-                            <height>390</height>
+                            <name>edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet</name>
+                            <height>170</height>
                             <width>0</width>
                         </portlet>
                     </portlets>
@@ -123,14 +123,14 @@
                     <width>0.25</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet</name>
-                            <height>240</height>
-                            <width>0</width>
-                        </portlet>
-                        <portlet>
                             <name>edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet</name>
                             <height>320</height>
                             <width>200</width>
+                        </portlet>
+                        <portlet>
+                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet</name>
+                            <height>240</height>
+                            <width>0</width>
                         </portlet>
                     </portlets>
                 </column>

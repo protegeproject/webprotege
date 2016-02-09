@@ -6,8 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 public class ProjectLayoutConfiguration extends GenericConfiguration implements Serializable {
-	private static final long serialVersionUID = -1637798442860308838L;
 
     private ProjectId projectId;
 
@@ -18,15 +19,15 @@ public class ProjectLayoutConfiguration extends GenericConfiguration implements 
 	private Boolean booleanField;
 
 	public ProjectLayoutConfiguration() {
-		tabs = new ArrayList<TabConfiguration>();
+		tabs = new ArrayList<>();
 	}
 
 	public List<TabConfiguration> getTabs() {
-		return tabs;
+		return new ArrayList<>(tabs);
 	}
 
 	public void setTabs(List<TabConfiguration> tabs) {
-		this.tabs = tabs;
+		this.tabs = new ArrayList<>(tabs);
 	}
 
 	public void removeTab(TabConfiguration tab) {
@@ -45,4 +46,12 @@ public class ProjectLayoutConfiguration extends GenericConfiguration implements 
 		this.projectId = projectId;
 	}
 
+
+	@Override
+	public String toString() {
+		return toStringHelper("ProjectLayoutConfiguration")
+				.addValue(projectId)
+				.addValue(tabs)
+				.toString();
+	}
 }

@@ -1,7 +1,11 @@
 package edu.stanford.bmir.protege.web.client.rpc.data.layout;
 
+import com.google.common.base.Optional;
+
 import java.io.Serializable;
 import java.util.List;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
 
 public class PortletConfiguration extends GenericConfiguration implements Serializable {
 
@@ -39,19 +43,19 @@ public class PortletConfiguration extends GenericConfiguration implements Serial
         return index;
     }
 
-	public int getIndexAsInt() {
+	public Optional<Integer> getIndexAsInt() {
 	    if (index == null) {
-	        return 0;
+	        return Optional.absent();
 	    }
 	    try {
-	       return Integer.valueOf(index);
+	       return Optional.of(Integer.valueOf(index));
 	    } catch (NumberFormatException e) {
-	        return 0;
+	        return Optional.absent();
 	    }
 	}
 
-	public void setIndex(String index) {
-        this.index = index;
+	public void setIndex(int index) {
+        this.index = String.valueOf(index);
     }
 
     public List<String> getWriteAccessGroups() {
@@ -83,4 +87,14 @@ public class PortletConfiguration extends GenericConfiguration implements Serial
 	    return name.hashCode() + (index != null ? index.hashCode() : 0);
 	}
 
+
+	@Override
+	public String toString() {
+		return toStringHelper("PortletConfiguration")
+				.add("name", name)
+				.add("height", height)
+				.add("width", width)
+				.add("index", index)
+				.toString();
+	}
 }

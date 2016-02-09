@@ -18,4 +18,6 @@ public interface EntityPortlet extends IsWidget, HasDispose {
     void setAutoHeight(boolean b);
 
     void setAutoWidth(boolean b);
+
+    int getHeight();
 }
