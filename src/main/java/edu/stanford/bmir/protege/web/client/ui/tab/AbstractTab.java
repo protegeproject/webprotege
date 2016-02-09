@@ -1,15 +1,15 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
-import com.google.gwt.user.client.ui.HasOneWidget;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtext.client.widgets.Component;
 import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.event.ContainerListenerAdapter;
 import com.gwtext.client.widgets.event.PanelListener;
 import com.gwtext.client.widgets.event.PanelListenerAdapter;
 import com.gwtext.client.widgets.layout.ColumnLayoutData;
+import com.gwtext.client.widgets.layout.ContainerLayout;
 import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.portal.Portal;
 import com.gwtext.client.widgets.portal.PortalColumn;
@@ -19,17 +19,16 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 
 import java.util.*;
 
+
 public abstract class AbstractTab implements PortletContainer, IsWidget {
 
     private final Portal baseContainer = new Portal();
 
     private final Portal portal = new Portal();
 
-    private final ListMultimap<PortalColumn, EntityPortlet> column2Portlets = ArrayListMultimap.create();
+    private final List<EntityPortlet> entityPortlets = new ArrayList<>();
 
-    private final Map<EntityPortlet, PortalColumn> portlet2Column = new HashMap<>();
-
-    private final List<PortalColumn> columns = new ArrayList<>();
+    private final List<ColumnInfo> columns = new ArrayList<>();
 
     private final PanelListener portletDestroyListener = new PanelListenerAdapter() {
         @Override
@@ -70,15 +69,11 @@ public abstract class AbstractTab implements PortletContainer, IsWidget {
 
     @Override
     public List<EntityPortlet> getPortlets() {
-        return new ArrayList<>(column2Portlets.values());
+        return new ArrayList<>(entityPortlets);
     }
 
     private void removePortlet(final EntityPortlet portlet) {
-        PortalColumn column = portlet2Column.remove(portlet);
-        if(column == null) {
-            return;
-        }
-        column2Portlets.removeAll(column);
+        entityPortlets.remove(portlet);
         if (portlet instanceof Portlet) {
             ((Portlet) portlet).hide();
         }
@@ -92,19 +87,53 @@ public abstract class AbstractTab implements PortletContainer, IsWidget {
 
     @Override
     public int getPortletCount(int columnIndex) {
-        PortalColumn column = columns.get(columnIndex);
-        return column2Portlets.get(column).size();
+        return getEntityPortlets(columnIndex).size();
+    }
+
+    private PortalColumn getColumnAt(int columnIndex) {
+        return columns.get(columnIndex).getColumn();
     }
 
     @Override
     public EntityPortlet getPortletAt(int columnIndex, int portletIndex) {
-        PortalColumn column = columns.get(columnIndex);
-        return column2Portlets.get(column).get(portletIndex);
+        List<EntityPortlet> portlets = getEntityPortlets(columnIndex);
+        EntityPortlet component = portlets.get(portletIndex);
+        GWT.log("[AbstractTab] Portlet At (" + columnIndex + ", " + portletIndex + "): " + component);
+        return component;
+    }
+
+    private List<EntityPortlet> getEntityPortlets(int columnIndex) {
+        PortalColumn column = getColumnAt(columnIndex);
+        List<EntityPortlet> portlets = new ArrayList<>();
+        for(Component c : column.getComponents()) {
+            EntityPortlet entityPortlet = (EntityPortlet) c;
+            if (entityPortlets.contains(entityPortlet)) {
+                portlets.add(entityPortlet);
+            }
+        }
+        Collections.sort(portlets, new Comparator<EntityPortlet>() {
+            @Override
+            public int compare(EntityPortlet o1, EntityPortlet o2) {
+                int y1 = o1.asWidget().getAbsoluteTop();
+                int y2 = o2.asWidget().getAbsoluteTop();
+                return y1 - y2;
+            }
+        });
+        return portlets;
     }
 
     @Override
     public double getColumnWidth(int columnIndex) {
-        return columns.get(columnIndex).getWidth();
+        double totalWidth = getSumOfColumnWidths();
+        return columns.get(columnIndex).getWidth() / totalWidth;
+    }
+
+    private double getSumOfColumnWidths() {
+        double totalWidth = 0;
+        for(ColumnInfo portalColumn : columns) {
+            totalWidth += portalColumn.getWidth();
+        }
+        return totalWidth;
     }
 
     @Override
@@ -112,19 +141,19 @@ public abstract class AbstractTab implements PortletContainer, IsWidget {
         final PortalColumn portalColumn = new PortalColumn();
         portalColumn.setPaddings(10, 10, 10, 10);
         portal.add(portalColumn, new ColumnLayoutData(width));
-        columns.add(portalColumn);
+        columns.add(new ColumnInfo(portalColumn, width));
     }
 
 
     @Override
-    public void addPortletToColumn(EntityPortlet entityPortlet, int columnIndex) {
-        PortalColumn portalColumn = columns.get(columnIndex);
-        portalColumn.add(entityPortlet.asWidget());
-        column2Portlets.put(portalColumn, entityPortlet);
-        portlet2Column.put(entityPortlet, portalColumn);
+    public void addPortletToColumn(final EntityPortlet entityPortlet, final int columnIndex) {
+        entityPortlets.add(entityPortlet);
+        final PortalColumn portalColumn = columns.get(columnIndex).getColumn();
+        portalColumn.add((Portlet) entityPortlet.asWidget());
         if (entityPortlet instanceof Portlet) {
             ((Portlet) entityPortlet).addListener(portletDestroyListener);
         }
+        GWT.log("[AbstractTab] Added portlet to column: " + entityPortlet);
     }
 
     public String getLabel() {
@@ -146,5 +175,26 @@ public abstract class AbstractTab implements PortletContainer, IsWidget {
     @Override
     public Widget asWidget() {
         return baseContainer;
+    }
+
+
+    private static class ColumnInfo {
+
+        private final PortalColumn column;
+
+        private final double width;
+
+        public ColumnInfo(PortalColumn column, double width) {
+            this.column = column;
+            this.width = width;
+        }
+
+        public PortalColumn getColumn() {
+            return column;
+        }
+
+        public double getWidth() {
+            return width;
+        }
     }
 }

@@ -417,4 +417,29 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     public void dispose() {
         destroy();
     }
+
+
+    private int assignedHeight = 0;
+
+    @Override
+    public void setHeight(int height) {
+        super.setHeight(height);
+        this.assignedHeight = height;
+    }
+
+    /**
+     * If the portlet hasn't been rendered then the call to super.getHeight can return funny values.  Just return
+     * the assigned height.
+     * @return The height
+     */
+    @Override
+    public int getHeight() {
+        int height = super.getHeight();
+        if(height <= 0) {
+            return assignedHeight;
+        }
+        else {
+            return height;
+        }
+    }
 }

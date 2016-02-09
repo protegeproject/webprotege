@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 
 import java.util.Comparator;
@@ -12,18 +13,12 @@ import java.util.Comparator;
 public class PortletConfigurationComparator implements Comparator<PortletConfiguration> {
 
     public int compare(PortletConfiguration pc1, PortletConfiguration pc2) {
-        String pc1is = pc1.getIndex();
-        String pc2is = pc2.getIndex();
+        Optional<Integer> pc1Index = pc1.getIndexAsInt();
+        Optional<Integer> pc2Index = pc2.getIndexAsInt();
 
-        if ((pc1is == null || pc1is.length() == 0) && (pc2is == null || pc2is.length() == 0)) {
-            return 0;
+        if(pc1Index.isPresent() && pc2Index.isPresent()) {
+            return pc1Index.get() - pc2Index.get();
         }
-        if (pc1is == null || pc1is.length() == 0) {
-            return 1;
-        }
-        if (pc2is == null || pc2is.length() == 0) {
-            return -1;
-        }
-        return pc2is.compareTo(pc1is); //we could do an int comparison here
+        return -1;
     }
 }

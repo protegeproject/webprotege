@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class TabConfiguration extends GenericConfiguration implements Serializable{
+import static com.google.common.base.MoreObjects.toStringHelper;
 
-	private static final long serialVersionUID = 9187571983105881720L;
+public class TabConfiguration extends GenericConfiguration implements Serializable{
 
 	private String name;
 
@@ -60,16 +60,14 @@ public class TabConfiguration extends GenericConfiguration implements Serializab
 	public boolean getClosable() {
 		return true;
 	}
-	
-	public void removeAllPortlet(String javaClassName) {
-		for (TabColumnConfiguration column : columns) {
-			List<PortletConfiguration> portlets = column.getPortlets();
-			for (Iterator<PortletConfiguration> iterator = portlets.iterator(); iterator.hasNext();) {
-				PortletConfiguration portlet = iterator.next();
-				if (portlet.getName().equals(javaClassName)) {
-					iterator.remove();					
-				}
-			}
-		}
+
+	@Override
+	public String toString() {
+		return toStringHelper("TabConfiguration")
+				.add("name", name)
+				.add("label", label)
+				.add("closeable", getClosable())
+				.add("columns", columns)
+				.toString();
 	}
 }

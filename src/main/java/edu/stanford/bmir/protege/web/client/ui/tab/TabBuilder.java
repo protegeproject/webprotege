@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.tab;
 
 import com.google.gwt.core.client.GWT;
-import com.gwtext.client.widgets.portal.PortalColumn;
-import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
@@ -12,8 +10,6 @@ import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -48,52 +44,34 @@ public class TabBuilder {
 
     private void addPortletsToColumn(TabColumnConfiguration tabColumnConfiguration, int columnIndex) {
         List<PortletConfiguration> portlets = tabColumnConfiguration.getPortlets();
-        portlets = getSortedPortlets(portlets);
-        tabColumnConfiguration.setPortlets(portlets);
-        for (final PortletConfiguration portletConfiguration : portlets) {
-            addPortletToColumn(tabColumnConfiguration, portletConfiguration, false, columnIndex);
+        for (int i = portlets.size() - 1; i > -1; i--) {
+            PortletConfiguration portletConfiguration = portlets.get(i);
+            insertPortletInColumn(portletConfiguration, columnIndex);
         }
     }
 
-    private List<PortletConfiguration> getSortedPortlets(List<PortletConfiguration> portlets) {
-        Collections.sort(portlets, new PortletConfigurationComparator());
-        return portlets;
-    }
-
-    private void addPortletToColumn(final TabColumnConfiguration tabColumnConfiguration,
-                                    final PortletConfiguration portletConfiguration, final boolean updateColConfig, int index) {
+    /**
+     * Inserts a portlet into a column.  Portlets are inserted into the top of the column.
+     * @param portletConfiguration The portlet to insert.
+     * @param columnIndex The column which should take the portlet.
+     */
+    private void insertPortletInColumn(final PortletConfiguration portletConfiguration, int columnIndex) {
         // configuration
         final EntityPortlet portlet = createPortlet(portletConfiguration);
         if (portlet == null) {
             return;
         }
-        addPortletToColumn(portlet, tabColumnConfiguration, portletConfiguration, index, updateColConfig);
+        addPortletToColumn(portlet, portletConfiguration, columnIndex);
     }
 
     private void addPortletToColumn(final EntityPortlet portlet,
-                                      final TabColumnConfiguration tabColumnConfiguration,
                                       final PortletConfiguration portletConfiguration,
-                                      final int columnIndex,
-                                      final boolean updateColConfig) {
+                                      final int columnIndex) {
 
 
         ((AbstractEntityPortlet) portlet).setPortletConfiguration(portletConfiguration);
         tab.addPortletToColumn(portlet, columnIndex);
         ((AbstractEntityPortlet) portlet).setTab(tab);
-
-        if (updateColConfig) {
-            tabColumnConfiguration.addPortelt(portletConfiguration);
-            adjustPortletsIndex(tabColumnConfiguration);
-        }
-    }
-
-    private void adjustPortletsIndex(TabColumnConfiguration tabColumnConfiguration){
-        List<PortletConfiguration> portlets = tabColumnConfiguration.getPortlets();
-        int portletsCount = portlets.size();
-        for (int i=0; i < portletsCount; i++)  {
-            PortletConfiguration pc = portlets.get(i);
-            pc.setIndex(String.valueOf(portletsCount - i - 1));
-        }
     }
 
     private EntityPortlet createPortlet(final PortletConfiguration portletConfiguration) {

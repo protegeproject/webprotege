@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.ui;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
@@ -15,6 +17,7 @@ import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.FormPanel;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
+import com.gwtext.client.widgets.grid.ColumnConfig;
 import com.gwtext.client.widgets.menu.BaseItem;
 import com.gwtext.client.widgets.menu.CheckItem;
 import com.gwtext.client.widgets.menu.Item;
@@ -29,6 +32,8 @@ import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 
+import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
+import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
@@ -47,10 +52,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -80,7 +82,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 
     private final PlaceController placeController;
 
-    private Optional<ProjectLayoutConfiguration> projectLayoutConfiguration = Optional.absent();
+//    private Optional<ProjectLayoutConfiguration> projectLayoutConfiguration = Optional.absent();
 
 
     @Inject
@@ -103,7 +105,21 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
 //                EventBusManager.getManager().postEvent(new PlaceCoordinateChangedEvent(ProjectDisplayImpl.this, getPlaceCoordinate()));
                 // TODO:  PLACE HAS CHANGED!!!
             }
+
+            @Override
+            public void onRemove(Container self, Component component) {
+                for(Iterator<AbstractTab> it = tabs.iterator(); it.hasNext(); ) {
+                    AbstractTab tab = it.next();
+                    if(tab.asWidget() == component) {
+                        it.remove();
+                        GWT.log("[ProjectDisplayImpl] Removed tab: " + tab.getLabel());
+                    }
+                }
+
+            }
         });
+
+
 
 
         eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
@@ -154,8 +170,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
                 new DispatchServiceCallbackWithProgressDisplay<GetUIConfigurationResult>() {
                     @Override
                     public void handleSuccess(GetUIConfigurationResult result) {
-                        projectLayoutConfiguration = Optional.of(result.getConfiguration());
-                        setupUserInterface();
+                        setupUserInterface(result.getConfiguration());
                         displayCurrentPlace();
                     }
 
@@ -177,12 +192,9 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
 
-    private void setupUserInterface() {
-        if(!projectLayoutConfiguration.isPresent()) {
-            throw new RuntimeException("ProjectLayoutConfiguration has not be loaded.");
-        }
+    private void setupUserInterface(ProjectLayoutConfiguration projectLayoutConfiguration) {
         List<AbstractTab> tabs = new ArrayList<>();
-        for(TabConfiguration tabConf : projectLayoutConfiguration.get().getTabs()) {
+        for(TabConfiguration tabConf : projectLayoutConfiguration.getTabs()) {
             AbstractTab tab = WebProtegeClientInjector.getUiFactory(projectId).createTab(new TabId(tabConf.getName()));
             TabBuilder tabBuilder = new TabBuilder(projectId, tab, tabConf);
             tabBuilder.build();
@@ -203,7 +215,7 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         doLayout();
     }
 
-    private void addTab(AbstractTab tab) {
+    private void addTab(final AbstractTab tab) {
         GWT.log("[ProjectDisplayImpl] Add Tab: " + tab.getLabel());
         if(tabs.contains(tab)) {
             throw new RuntimeException("Tab already present");
@@ -369,18 +381,15 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
     }
 
     private void saveProjectConfiguration() {
-        if(!projectLayoutConfiguration.isPresent()) {
-            throw new RuntimeException("Cannot save non-existant project configuration");
-        }
         UserId userId = loggedInUserProvider.getCurrentUserId();
         if (userId.isGuest()) {
             MessageBox.showAlert("You are not signed in", "To save the layout, you need to sign in first.");
             return;
         }
-        // TODO: Generate a fresh configuration!
-        ProjectLayoutConfiguration config = projectLayoutConfiguration.get();
-        config.setProjectId(projectId);
-        dispatchServiceManager.execute(new SetUIConfigurationAction(projectId, config),
+        ProjectLayoutConfigurationBuilder builder = new ProjectLayoutConfigurationBuilder(projectId, tabs);
+        ProjectLayoutConfiguration configuration = builder.build();
+        GWT.log("[ProjectDisplay] Saving ProjectLayoutConfiguration: " + configuration);
+        dispatchServiceManager.execute(new SetUIConfigurationAction(projectId, configuration),
                 new DispatchServiceCallbackWithProgressDisplay<SetUIConfigurationResult>() {
                     @Override
                     public void handleSuccess(SetUIConfigurationResult setUIConfigurationResult) {
@@ -405,25 +414,6 @@ public class ProjectDisplayImpl extends TabPanel implements ProjectDisplay {
         return projectManager.getProject(projectId).get().getProjectDetails().getDisplayName();
     }
 
-
-
-
-    /*
-     * Remote calls
-     */
-
-    class SaveConfigHandler implements AsyncCallback<Void> {
-        @Override
-        public void onFailure(Throwable caught) {
-            GWT.log("Error in saving configurations (UI Layout)", caught);
-            MessageBox.showAlert("Error saving project layout", "There were problems at saving the project layout. Please try again later.");
-        }
-
-        @Override
-        public void onSuccess(Void result) {
-            MessageBox.showAlert("Project layout saved", "Project layout saved successfully. This layout will be used the next time you log in.");
-        }
-    }
 
     /*
      * Internal class
