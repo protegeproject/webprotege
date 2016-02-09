@@ -265,7 +265,7 @@ public class DataFactory {
                         return DataFactory.getOWLLiteral(numberWithoutCommas, DataFactory.getXSDDecimal());
                     }
                 } catch (NumberFormatException e1) {
-                    return DataFactory.getOWLLiteral(trimmedContent, dataFactory.getRDFPlainLiteral());
+                    return DataFactory.getOWLLiteral(trimmedContent, DataFactory.getXSDString());
                 }
             }
 

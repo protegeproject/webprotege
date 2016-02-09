@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.collect.Sets;
+import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -8,8 +9,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestOrac
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 
 import java.util.ArrayList;
-
-import static org.mockito.Mockito.mock;
 
 /**
  * Matthew Horridge
@@ -78,7 +77,7 @@ public class GwtTest_PrimitiveDataSuggestOracle extends GWTTestCase {
     private static class EntitySuggestOracleStub extends EntitySuggestOracle {
 
         public EntitySuggestOracleStub() {
-            super(null, 10, mock(DispatchServiceManager.class));
+            super(null, 10, null);
         }
 
         @Override

@@ -8,10 +8,6 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 04/04/2014
  */
@@ -46,6 +42,13 @@ public class GwtTest_DataFactory extends GWTTestCase {
         OWLLiteral literal = DataFactory.parseLiteral("3", Optional.of("en"));
         assertEquals(literal.getLiteral(), "3");
         assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.RDF_PLAIN_LITERAL.getIRI());
+        finishTest();
+    }
+
+    public void test_shouldParseAtSymbolAsPartOfString() {
+        OWLLiteral literal = DataFactory.parseLiteral("m@m", Optional.<String>absent());
+        assertEquals(literal.getLiteral(), "m@m");
+        assertEquals(literal.getDatatype().getIRI(), OWL2Datatype.XSD_STRING.getIRI());
         finishTest();
     }
 
