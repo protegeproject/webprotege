@@ -1,13 +1,9 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.UmbrellaException;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Matthew Horridge
@@ -97,7 +93,6 @@ public abstract class DispatchServiceCallback<T> {
     }
 
     private void displayAndLogError(Throwable throwable) {
-        GWT.log("Encountered Error: " + throwable.getMessage(), throwable);
         errorMessageDisplay.displayGeneralErrorMessage(getErrorMessageTitle(), getErrorMessage(throwable));
     }
 
