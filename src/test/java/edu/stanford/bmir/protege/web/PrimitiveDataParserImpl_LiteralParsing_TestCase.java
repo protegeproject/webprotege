@@ -65,9 +65,9 @@ public class PrimitiveDataParserImpl_LiteralParsing_TestCase {
     }
 
     @Test
-    public void shouldParseStringWithoutLanguageTagAsRDFPlainLiteral() {
+    public void shouldParseStringWithoutLanguageTagAsXSDString() {
         parser.parsePrimitiveData("Hello World!", Optional.<String>absent(), primitiveTypes, primitiveDataParserCallback);
-        verifyResult("Hello World!", OWL2Datatype.RDF_PLAIN_LITERAL);
+        verifyResult("Hello World!", OWL2Datatype.XSD_STRING);
     }
 
     @Test
@@ -77,9 +77,9 @@ public class PrimitiveDataParserImpl_LiteralParsing_TestCase {
     }
 
     @Test
-    public void shouldParseStringIncludingLanguageTagAsRDFPlainLiteral() {
+    public void shouldParseStringIncludingLanguageTagAsXSDString() {
         parser.parsePrimitiveData("Hello World!@fr", Optional.<String>absent(), primitiveTypes, primitiveDataParserCallback);
-        verifyResult("Hello World!@fr", OWL2Datatype.RDF_PLAIN_LITERAL);
+        verifyResult("Hello World!@fr", OWL2Datatype.XSD_STRING);
     }
 
     @Test
