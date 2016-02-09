@@ -55,7 +55,7 @@ public class TabBuilder {
         }
     }
 
-    protected List<PortletConfiguration> getSortedPortlets(List<PortletConfiguration> portlets) {
+    private List<PortletConfiguration> getSortedPortlets(List<PortletConfiguration> portlets) {
         Collections.sort(portlets, new PortletConfigurationComparator());
         return portlets;
     }
@@ -70,7 +70,7 @@ public class TabBuilder {
         addPortletToColumn(portlet, tabColumnConfiguration, portletConfiguration, index, updateColConfig);
     }
 
-    protected void addPortletToColumn(final EntityPortlet portlet,
+    private void addPortletToColumn(final EntityPortlet portlet,
                                       final TabColumnConfiguration tabColumnConfiguration,
                                       final PortletConfiguration portletConfiguration,
                                       final int columnIndex,
@@ -101,21 +101,18 @@ public class TabBuilder {
         final UIFactory uiFactory = WebProtegeClientInjector.getUiFactory(projectId);
         final EntityPortlet portlet =  uiFactory.createPortlet(portletClassName);
         if (portlet == null) {
-            GWT.log("[AbstractTab] The UIFactory returned a null value when asked to create an instance of the portlet: " + portletClassName);
+            GWT.log("[TabBuilder] The UIFactory returned a null value when asked to create an instance of the portlet: " + portletClassName);
             return null;
         }
         final int height = portletConfiguration.getHeight();
+        GWT.log("[TabBuilder] Setting the " + portlet.getClass().getSimpleName() + " portlet height: " + height);
         if (height == 0) {
             portlet.setAutoHeight(true);
         } else {
             portlet.setHeight(height);
         }
-        final int width = portletConfiguration.getWidth();
-        if (width == 0) {
-            portlet.setAutoWidth(true);
-        } else {
-            portlet.setWidth(width);
-        }
+        // MH: I don't see any reason not always have auto-width
+        portlet.setAutoWidth(true);
         return portlet;
     }
 }
