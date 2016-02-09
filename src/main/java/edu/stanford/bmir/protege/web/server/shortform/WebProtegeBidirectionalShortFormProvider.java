@@ -161,11 +161,9 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
                 for (OWLEntity entity : entities) {
                     if (!processed.contains(entity)) {
                         processed.add(entity);
+                        delegate.remove(entity);
                         if (rootOntology.containsEntityInSignature(entity, true)) {
                             delegate.add(entity);
-                        }
-                        else {
-                            delegate.remove(entity);
                         }
                     }
                 }
