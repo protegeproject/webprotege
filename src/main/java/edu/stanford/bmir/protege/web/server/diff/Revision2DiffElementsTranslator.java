@@ -79,11 +79,22 @@ public class Revision2DiffElementsTranslator {
     }
 
     private DiffElement<String, OWLOntologyChangeRecord> toElement(OWLOntologyChangeRecord changeRecord) {
-        IRI ontologyIRI = changeRecord.getOntologyID().getOntologyIRI();
-        return new DiffElement<>(
-                getDiffOperation(changeRecord),
-                ontologyIRIShortFormProvider.getShortForm(ontologyIRI),
-                changeRecord);
+        if(changeRecord.getOntologyID().isAnonymous()) {
+            // This used to be possible, but isn't anymore.  Some projects may have anonymous ontologies, so we
+            // still need to support this.
+            return new DiffElement<>(
+                    getDiffOperation(changeRecord),
+                    "Root Ontology",
+                    changeRecord
+            );
+        }
+        else {
+            IRI ontologyIRI = changeRecord.getOntologyID().getOntologyIRI();
+            return new DiffElement<>(
+                    getDiffOperation(changeRecord),
+                    ontologyIRIShortFormProvider.getShortForm(ontologyIRI),
+                    changeRecord);
+        }
     }
 
     private DiffOperation getDiffOperation(OWLOntologyChangeRecord changeRecord) {

@@ -97,6 +97,7 @@ public abstract class DispatchServiceCallback<T> {
     }
 
     private void displayAndLogError(Throwable throwable) {
+        GWT.log("Encountered Error: " + throwable.getMessage(), throwable);
         errorMessageDisplay.displayGeneralErrorMessage(getErrorMessageTitle(), getErrorMessage(throwable));
     }
 
