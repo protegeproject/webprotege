@@ -42,7 +42,7 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
         setHeight(DEFAULT_HEIGHT);
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();
-        add(usageView.asWidget());
+        getContentHolder().setWidget(usageView.asWidget());
         usageView.addValueChangeHandler(new ValueChangeHandler<UsageFilter>() {
             @Override
             public void onValueChange(ValueChangeEvent<UsageFilter> event) {

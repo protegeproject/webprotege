@@ -44,9 +44,9 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
         });
 
         final Widget editorHolder = editorPresenter.getEditorHolder();
+        editorHolder.setSize("100%", "100%");
         ScrollPanel sp = new ScrollPanel(editorHolder);
-        sp.setSize("100%", "100%");
-        add(sp);
+        getContentHolder().setWidget(sp);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
         return Optional.<EditorCtx>of(new OWLEntityDataContext(getProjectId(), sel.get()));
     }
 
-    @Override
+//    @Override
     protected void onDestroy() {
         editorPresenter.dispose();
     }

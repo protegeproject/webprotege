@@ -82,12 +82,13 @@ public class LoggedInUserManager implements LoggedInUserProvider {
      * @param userId The user id of the logged in user.  Not {@code null}.
      * @throws NullPointerException if {@code userId} is {@code null}.
      */
-    public void setLoggedInUser(final UserId userId) {
+    public void setLoggedInUser(final UserId userId, AsyncCallback<UserDetails> callback) {
         checkNotNull(userId);
         if(userId.equals(this.userId)) {
+            callback.onSuccess(userDetails);
             return;
         }
-        restoreUserFromServerSideSession(Optional.<AsyncCallback<UserDetails>>absent());
+        restoreUserFromServerSideSession(Optional.of(callback));
     }
 
     /**

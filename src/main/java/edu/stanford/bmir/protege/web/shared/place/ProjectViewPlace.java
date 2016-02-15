@@ -1,16 +1,16 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceTokenizer;
-import com.google.gwt.place.shared.Prefix;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.entity.DeclarationParser;
+import edu.stanford.bmir.protege.web.client.place.Item;
+import edu.stanford.bmir.protege.web.client.place.ItemSelection;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
+import edu.stanford.bmir.protege.web.client.place.PlaceKey;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -20,107 +20,152 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  */
 public class ProjectViewPlace extends Place {
 
-    private ProjectId projectId;
+    private final ProjectId projectId;
 
-    private Optional<TabName> tabId;
+    private final PerspectiveId perspectiveId;
 
-    private Optional<OWLEntity> entity;
+    private final ItemSelection selection;
 
-    public ProjectViewPlace(ProjectId projectId, Optional<TabName> tabId, Optional<OWLEntity> entity) {
-        this.projectId = projectId;
-        this.tabId = tabId;
-        this.entity = entity;
+    public ProjectViewPlace(ProjectId projectId, PerspectiveId perspectiveId, ItemSelection selection) {
+        this.projectId = checkNotNull(projectId);
+        this.perspectiveId = checkNotNull(perspectiveId);
+        this.selection = checkNotNull(selection);
+    }
+
+    public static Builder builder(ProjectId projectId, PerspectiveId perspectiveId) {
+        return new Builder(projectId, perspectiveId);
     }
 
     public ProjectId getProjectId() {
         return projectId;
     }
 
-    public Optional<TabName> getTabId() {
-        return tabId;
+    public PerspectiveId getPerspectiveId() {
+        return perspectiveId;
     }
 
-    public Optional<OWLEntity> getEntity() {
-        return entity;
+    public ItemSelection getItemSelection() {
+        return selection;
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(projectId, entity);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj == this) {
-            return true;
-        }
-        if(!(obj instanceof ProjectViewPlace)) {
-            return false;
-        }
-        ProjectViewPlace other = (ProjectViewPlace) obj;
-        return this.projectId.equals(other.projectId) && entity.equals(other.entity);
-    }
-
 
     @Override
     public String toString() {
         return toStringHelper("ProjectViewPlace")
                 .addValue(projectId)
-                .addValue(tabId)
-                .addValue(entity)
-                .toString();
+                .addValue(perspectiveId)
+                .addValue(selection).toString();
     }
 
-    @Prefix("Edit")
-    public static class Tokenizer implements PlaceTokenizer<ProjectViewPlace> {
+    public PlaceKey getKey() {
+        return new Key(projectId, perspectiveId);
+    }
 
-        private static final String PROJECT_ID_VAR = "projectid=";
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(projectId, perspectiveId, selection);
+    }
 
-        private static final String TAB_VAR = "tab=";
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof ProjectViewPlace)) {
+            return false;
+        }
+        ProjectViewPlace other = (ProjectViewPlace) obj;
+        return this.projectId.equals(other.projectId)
+                && this.perspectiveId.equals(other.perspectiveId)
+                && this.selection.equals(other.selection);
+    }
 
-        private static final String ENTITY_VAR = "entity=";
+    public Builder builder() {
+        Builder builder = new Builder(projectId, perspectiveId);
+        builder.withSelectedItems(selection);
+        return builder;
+    }
 
-        @Override
-        public ProjectViewPlace getPlace(String token) {
-            String [] components = token.split("\\&");
-            Optional<ProjectId> projectId = Optional.absent();
-            Optional<TabName> tabId = Optional.absent();
-            Optional<OWLEntity> entity = Optional.absent();
-            for(String component : components) {
-                String lowerCaseComponent = component.toLowerCase();
-                if(lowerCaseComponent.startsWith(PROJECT_ID_VAR)) {
-                    projectId = Optional.of(ProjectId.get(component.substring(PROJECT_ID_VAR.length())));
-                }
-                else if(lowerCaseComponent.startsWith(TAB_VAR)) {
-                    tabId = Optional.of(new TabName(component.substring(TAB_VAR.length())));
-                }
-                else if(lowerCaseComponent.startsWith(ENTITY_VAR)) {
-                    entity = new DeclarationParser(DataFactory.get()).parseEntity(component.substring(ENTITY_VAR.length()));
-                }
+    public static class Builder {
+
+        private ProjectId projectId;
+
+        private PerspectiveId perspectiveId;
+
+        private ItemSelection.Builder itemSelectionBuilder;
+
+        public Builder(ProjectId projectId, PerspectiveId perspectiveId) {
+            this.projectId = checkNotNull(projectId);
+            this.perspectiveId = checkNotNull(perspectiveId);
+            this.itemSelectionBuilder = ItemSelection.builder();
+        }
+
+
+
+        public Builder withSelectedItem(Item<?> item) {
+            itemSelectionBuilder.addItem(item);
+            return this;
+        }
+
+        public Builder withSelectedItems(ItemSelection items) {
+            for(Item<?> item : items) {
+                itemSelectionBuilder.addItem(item);
             }
-            return new ProjectViewPlace(projectId.get(), tabId, entity);
+            return this;
+        }
+
+        public Builder withSelectedItemsFromPlace(Place place) {
+            if(!(place instanceof ProjectViewPlace)) {
+                return this;
+            }
+            withSelectedItems(((ProjectViewPlace) place).getItemSelection());
+            return this;
+        }
+
+        public Builder withPerspectiveId(PerspectiveId perspectiveId) {
+            this.perspectiveId = checkNotNull(perspectiveId);
+            return this;
+        }
+
+        public Builder clearSelection() {
+            itemSelectionBuilder.clear();
+            return this;
+        }
+
+        public ProjectViewPlace build() {
+            ItemSelection selection = itemSelectionBuilder.build();
+            return new ProjectViewPlace(projectId, perspectiveId, selection);
+        }
+    }
+
+
+    private static class Key implements PlaceKey {
+
+        private ProjectId projectId;
+
+        private PerspectiveId perspectiveId;
+
+        private Key(ProjectId projectId, PerspectiveId perspectiveId) {
+            this.projectId = projectId;
+            this.perspectiveId = perspectiveId;
         }
 
         @Override
-        public String getToken(ProjectViewPlace place) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(PROJECT_ID_VAR);
-            sb.append(place.getProjectId().getId());
-            Optional<TabName> tabId = place.getTabId();
-            if(tabId.isPresent()) {
-                sb.append("&");
-                sb.append(TAB_VAR);
-                sb.append(tabId.get().getTabName());
+        public int hashCode() {
+//            return "ProjectPerspectivePlace.Key".hashCode() + projectId.hashCode() + perspectiveId.hashCode();
+            return "ProjectPerspectivePlace.Key".hashCode() + perspectiveId.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if(o == this) {
+                return true;
             }
-            Optional<OWLEntity> entity = place.getEntity();
-            if(entity.isPresent()) {
-                sb.append("&");
-                sb.append(entity.get().getEntityType().getName());
-                sb.append("(<");
-                sb.append(entity.get().getIRI().toString());
-                sb.append(">)");
+            if(!(o instanceof Key)) {
+                return false;
             }
-            return sb.toString();
+            Key other = (Key) o;
+//            return this.projectId.equals(other.projectId) && this.perspectiveId.equals(other.perspectiveId);
+            return this.perspectiveId.equals(other.perspectiveId);
         }
     }
 

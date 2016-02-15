@@ -2,8 +2,12 @@ package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.Place;
+import com.google.gwt.place.shared.PlaceChangeEvent;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -21,24 +25,36 @@ public class ActiveProjectManagerImpl implements ActiveProjectManager {
 
     private final EventBus eventBus;
 
+    private final PlaceController placeController;
+
     private Optional<ProjectId> activeProject = Optional.absent();
 
     @Inject
-    public ActiveProjectManagerImpl(EventBus eventBus) {
+    public ActiveProjectManagerImpl(EventBus eventBus, PlaceController placeController) {
         this.eventBus = checkNotNull(eventBus);
+        this.placeController = placeController;
+        eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
+            @Override
+            public void onPlaceChange(PlaceChangeEvent event) {
+                handlePlaceChange();
+            }
+        });
     }
 
     @Override
     public Optional<ProjectId> getActiveProjectId() {
-        return activeProject;
+        Place place = placeController.getWhere();
+        if(!(place instanceof ProjectViewPlace)) {
+            return Optional.absent();
+        }
+        ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
+        return Optional.of(projectViewPlace.getProjectId());
     }
 
-    @Override
-    public void setActiveProject(Optional<ProjectId> project) {
-        checkNotNull(project);
-        if(!project.equals(activeProject)) {
-            GWT.log("[ActiveProjectManagerImpl] Active project changed to " + project);
-            activeProject = project;
+    private void handlePlaceChange() {
+        Optional<ProjectId> projectId = getActiveProjectId();
+        if(!projectId.equals(activeProject)) {
+            activeProject = projectId;
             eventBus.fireEvent(new ActiveProjectChangedEvent(activeProject));
         }
     }

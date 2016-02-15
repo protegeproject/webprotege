@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.individuals;
 import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -46,16 +47,6 @@ import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * Portlet for showing a list of individuals. The list is filled with the
- * instances of the class given as argument to <code>setEntity</code> method.
- * Normally, it is used together with the class tree portlet. The portlet can
- * also be configured in the configuration file to show always only the
- * instances of a certain class by setting a property of the portlet
- * <code>showOnlyClass</code> to point to a class.
- *
- * @author Tania Tudorache <tudorache@stanford.edu>
- */
 public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements IndividualsListView {
 
     private static final String PRECONFIGURED_CLASS = "showOnlyClass";
@@ -80,9 +71,9 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
      */
     protected Optional<OWLClass> preconfiguredClass = Optional.absent();
 
-    private ToolbarButton createButton;
-
-    private ToolbarButton deleteButton;
+//    private ToolbarButton createButton;
+//
+//    private ToolbarButton deleteButton;
 
     private EntitiesList<OWLNamedIndividualData> individualsList;
 
@@ -97,10 +88,11 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
                                   LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.permissionChecker = permissionChecker;
-        setLayout(new FitLayout());
+//        setLayout(new FitLayout());
         setTitle("Individuals");
         individualsList = new EntitiesListImpl<>();
-        add(individualsList.asWidget());
+        ScrollPanel sp = new ScrollPanel(individualsList.asWidget());
+        getContentHolder().setWidget(sp);
         individualsList.addSelectionHandler(new SelectionHandler<OWLNamedIndividualData>() {
             @Override
             public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<OWLNamedIndividualData> event) {
@@ -183,34 +175,34 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
     }
 
     protected void addToolbarButtons() {
-        setTopToolbar(new Toolbar());
-        Toolbar toolbar = getTopToolbar();
-        createButton = new ToolbarButton("Create");
-        createButton.setCls("toolbar-button");
-        createButton.addListener(new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                createHandler.handleCreate();
-            }
-        });
-        toolbar.addButton(createButton);
-        deleteButton = new ToolbarButton("Delete");
-        deleteButton.setCls("toolbar-button");
-        deleteButton.addListener(new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                getDeleteHandler().handleDelete();
-            }
-        });
-        toolbar.addButton(deleteButton);
-
-        Widget searchField = createSearchField();
-        if (searchField != null) {
-            toolbar.addFill();
-            toolbar.addSeparator();
-            toolbar.addText("&nbsp<i>Search</i>:&nbsp&nbsp");
-            toolbar.addElement(searchField.getElement());
-        }
+//        setTopToolbar(new Toolbar());
+//        Toolbar toolbar = getTopToolbar();
+//        createButton = new ToolbarButton("Create");
+//        createButton.setCls("toolbar-button");
+//        createButton.addListener(new ButtonListenerAdapter() {
+//            @Override
+//            public void onClick(Button button, EventObject e) {
+//                createHandler.handleCreate();
+//            }
+//        });
+//        toolbar.addButton(createButton);
+//        deleteButton = new ToolbarButton("Delete");
+//        deleteButton.setCls("toolbar-button");
+//        deleteButton.addListener(new ButtonListenerAdapter() {
+//            @Override
+//            public void onClick(Button button, EventObject e) {
+//                getDeleteHandler().handleDelete();
+//            }
+//        });
+//        toolbar.addButton(deleteButton);
+//
+//        Widget searchField = createSearchField();
+//        if (searchField != null) {
+//            toolbar.addFill();
+//            toolbar.addSeparator();
+//            toolbar.addText("&nbsp<i>Search</i>:&nbsp&nbsp");
+//            toolbar.addElement(searchField.getElement());
+//        }
     }
 
     protected Widget createSearchField() {
@@ -253,13 +245,13 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
     }
 
     public void updateButtonStates() {
-        createButton.setDisabled(true);
-        deleteButton.setDisabled(true);
+//        createButton.setDisabled(true);
+//        deleteButton.setDisabled(true);
         permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean result) {
-                createButton.setDisabled(!result);
-                deleteButton.setDisabled(!result);
+//                createButton.setDisabled(!result);
+//                deleteButton.setDisabled(!result);
             }
         });
     }

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.project.Project;
@@ -22,10 +23,8 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractOWLEntityPortlet 
     public OWLEntityDescriptionEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, ManchesterSyntaxFrameEditorPresenter presenter) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.presenter = presenter;
-        ManchesterSyntaxFrameEditorImpl editor = new ManchesterSyntaxFrameEditorImpl();
         presenter.attach(this);
-        add(editor);
-        setHeight(500);
+        getContentHolder().setWidget(presenter.getView());
     }
 
     @Override

@@ -16,6 +16,12 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("protege-logo.png")
     ImageResource webProtegeLogo();
 
+    @Source("protege-logo-large.png")
+    ImageResource webProtegeLogoLarge();
+
+    @Source("protege-blender.png")
+    ImageResource protegeBlender();
+
     @Source("about.html")
     TextResource aboutBoxText();
 
@@ -116,8 +122,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtege.css")
     WebProtegeCss style();
 
-
-
+    @Source("WebProtegeButtons.css")
+    WebProtegeButtons buttons();
 
     public static interface WebProtegeCss extends CssResource {
 
@@ -190,5 +196,52 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String dateTimeIcon();
 
         String dateTimeIconInset();
+
+        String portletToolbar();
+
+        String portletToolbarButton();
+    }
+
+    public static interface WebProtegeButtons extends CssResource {
+
+        @ClassName("btn-med")
+        String btnMed();
+
+        @ClassName("btn-small")
+        String btnSmall();
+
+        @ClassName("btn-icon")
+        String btnIcon();
+
+        @ClassName("btn-icon-alt")
+        String btnIconAlt();
+
+        @ClassName("web-protege-btn")
+        String webProtegeBtn();
+
+        String btn();
+
+        @ClassName("btn-xl")
+        String btnXl();
+
+        @ClassName("btn-a")
+        String btnA();
+
+        @ClassName("btn-b")
+        String btnB();
+
+        String pictogram();
+
+        @ClassName("btn-c")
+        String btnC();
+
+        @ClassName("btn-lg")
+        String btnLg();
+
+        @ClassName("btn-inline")
+        String btnInline();
+
+        @ClassName("btn-d")
+        String btnD();
     }
 }

@@ -1,12 +1,10 @@
 package edu.stanford.bmir.protege.web.client.actionbar.application;
 
-import com.google.gwt.core.client.GWT;
-
+import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.client.auth.SignInPresenter;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.bmir.protege.web.client.login.LoginPlace;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,24 +14,15 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class SignInRequestHandlerImpl implements SignInRequestHandler {
 
-    private final DispatchServiceManager dispatchServiceManager;
-
-    private final LoggedInUserManager loggedInUserManager;
+    private final PlaceController placeController;
 
     @Inject
-    public SignInRequestHandlerImpl(DispatchServiceManager dispatchServiceManager, LoggedInUserManager loggedInUserManager) {
-        this.dispatchServiceManager = dispatchServiceManager;
-        this.loggedInUserManager = loggedInUserManager;
+    public SignInRequestHandlerImpl(PlaceController placeController) {
+        this.placeController = checkNotNull(placeController);
     }
 
     @Override
     public void handleSignInRequest() {
-        UserId userId = loggedInUserManager.getCurrentUserId();
-        if (userId.isGuest()) {
-            SignInPresenter.get(dispatchServiceManager, loggedInUserManager).showLoginDialog();
-        }
-        else {
-            GWT.log("User is already signed in");
-        }
+        placeController.goTo(new LoginPlace());
     }
 }

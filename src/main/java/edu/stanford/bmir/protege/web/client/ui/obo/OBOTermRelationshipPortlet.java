@@ -36,7 +36,7 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.editor = editor;
         this.editor.setEnabled(true);
-        add(this.editor.getWidget());
+        getContentHolder().setWidget(this.editor.getWidget());
     }
 
 

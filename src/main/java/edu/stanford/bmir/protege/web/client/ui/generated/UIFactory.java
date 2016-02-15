@@ -12,7 +12,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.OntologyAnno
 import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet;
 import edu.stanford.bmir.protege.web.client.change.ChangesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.tab.TabId;
-import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTabFactory;
+import edu.stanford.bmir.protege.web.client.ui.tab.PerspectiveFactory;
 import edu.stanford.bmir.protege.web.client.watches.WatchedEntitiesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.id.OntologyIdPortlet;
@@ -22,8 +22,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.properties.PropertiesTre
 import edu.stanford.bmir.protege.web.client.ui.ontology.revisions.RevisionsPortlet;
 import edu.stanford.bmir.protege.web.client.ui.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet;
-import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
-import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
+import edu.stanford.bmir.protege.web.client.perspective.Perspective;
 import edu.stanford.bmir.protege.web.client.usage.UsagePortlet;
 
 import javax.inject.Inject;
@@ -57,8 +56,7 @@ public class UIFactory {
 
 
     @Inject
-    public UIFactory(UserDefinedTabFactory userDefinedTabFactory, Provider<ClassTreePortlet> classTreePortletProvider, Provider<ImportsTreePortlet> importsTreePortletProvider, Provider<IndividualsListPortlet> individualsListPortletProvider, Provider<MetricsPortlet> metricsPortletProvider, Provider<PropertiesTreePortlet> propertiesTreePortletProvider, Provider<ChangeSummaryPortlet> changeSummaryPortletProvider, Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider, Provider<ChangesPortlet> changesPortletProvider, Provider<OBOTermRelationshipPortlet> oboTermRelationshipPortletProvider, Provider<OBOTermDefinitionPortlet> oboTermDefinitionPortletProvider, Provider<OBOTermIdEditorPortlet> oboTermIdEditorPortletProvider, Provider<OBOTermSynonymsPortlet> oboTermSynonymsPortletProvider, Provider<OBOTermCrossProductPortlet> oboTermCrossProductPortletProvider, Provider<OBOTermXRefsEditorPortlet> oboTermXRefsEditorPortletProvider, Provider<RevisionsPortlet> revisionsPortletProvider, Provider<OntologyIdPortlet> ontologyIdPortletProvider, Provider<OntologyAnnotationsPortlet> ontologyAnnotationsPortletProvider, Provider<ProjectFeedPortlet> projectFeedPortletProvider, Provider<DiscussionThreadPortlet> discussionThreadPortletProvider, Provider<EditorPortlet> editorPortletProvider, Provider<UsagePortlet> usagePortletProvider, Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider, Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider) {
-        this.userDefinedTabFactory = userDefinedTabFactory;
+    public UIFactory(Provider<ClassTreePortlet> classTreePortletProvider, Provider<ImportsTreePortlet> importsTreePortletProvider, Provider<IndividualsListPortlet> individualsListPortletProvider, Provider<MetricsPortlet> metricsPortletProvider, Provider<PropertiesTreePortlet> propertiesTreePortletProvider, Provider<ChangeSummaryPortlet> changeSummaryPortletProvider, Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider, Provider<ChangesPortlet> changesPortletProvider, Provider<OBOTermRelationshipPortlet> oboTermRelationshipPortletProvider, Provider<OBOTermDefinitionPortlet> oboTermDefinitionPortletProvider, Provider<OBOTermIdEditorPortlet> oboTermIdEditorPortletProvider, Provider<OBOTermSynonymsPortlet> oboTermSynonymsPortletProvider, Provider<OBOTermCrossProductPortlet> oboTermCrossProductPortletProvider, Provider<OBOTermXRefsEditorPortlet> oboTermXRefsEditorPortletProvider, Provider<RevisionsPortlet> revisionsPortletProvider, Provider<OntologyIdPortlet> ontologyIdPortletProvider, Provider<OntologyAnnotationsPortlet> ontologyAnnotationsPortletProvider, Provider<ProjectFeedPortlet> projectFeedPortletProvider, Provider<DiscussionThreadPortlet> discussionThreadPortletProvider, Provider<EditorPortlet> editorPortletProvider, Provider<UsagePortlet> usagePortletProvider, Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider, Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider) {
         this.classTreePortletProvider = classTreePortletProvider;
         this.importsTreePortletProvider = importsTreePortletProvider;
         this.individualsListPortletProvider = individualsListPortletProvider;
@@ -84,11 +82,11 @@ public class UIFactory {
         this.entityDescriptionEditorPortletProvider = entityDescriptionEditorPortletProvider;
     }
 
-    private final UserDefinedTabFactory userDefinedTabFactory;
-
-    public AbstractTab createTab(TabId tabId) {
-        return userDefinedTabFactory.createUserDefinedTab(tabId);
-    }
+//    private final PerspectiveFactory perspectiveFactory;
+//
+//    public Perspective createTab(TabId tabId) {
+//        return perspectiveFactory.createUserDefinedTab(tabId);
+//    }
 
 
     private final Provider<ClassTreePortlet> classTreePortletProvider;

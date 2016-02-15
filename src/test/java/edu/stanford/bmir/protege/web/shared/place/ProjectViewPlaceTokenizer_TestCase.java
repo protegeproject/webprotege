@@ -22,26 +22,26 @@ public class ProjectViewPlaceTokenizer_TestCase {
 
     private final IRI entityIri = IRI.create("http://stuff.com#A");
 
-    @Test
-    public void shouldTokenizeProjectViewPlace() {
-        String token = "projectId="+projectId.getId()+"&tab="+ tabName.getTabName()+"&entity=Class("+entityIri.toQuotedString()+")";
-        ProjectViewPlace.Tokenizer tokenizer = new ProjectViewPlace.Tokenizer();
-        ProjectViewPlace place = tokenizer.getPlace(token);
-        assertThat(place.getProjectId(), is(projectId));
-        assertThat(place.getTabId(), is(Optional.of(tabName)));
-        assertThat(place.getEntity(), is(Optional.of(DataFactory.getOWLClass(entityIri))));
-    }
-
-
-    @Test
-    public void shouldTokenizeIgnoringVarNameCaseProjectViewPlace() {
-        String token = "ProjectId="+projectId.getId()+"&Tab="+ tabName.getTabName()+"&Entity=Class("+entityIri.toQuotedString()+")";
-        ProjectViewPlace.Tokenizer tokenizer = new ProjectViewPlace.Tokenizer();
-        ProjectViewPlace place = tokenizer.getPlace(token);
-        assertThat(place.getProjectId(), is(projectId));
-        assertThat(place.getTabId(), is(Optional.of(tabName)));
-        assertThat(place.getEntity(), is(Optional.of(DataFactory.getOWLClass(entityIri))));
-    }
+//    @Test
+//    public void shouldTokenizeProjectViewPlace() {
+//        String token = "projectId="+projectId.getId()+"&tab="+ tabName.getTabName()+"&entity=Class("+entityIri.toQuotedString()+")";
+//        ProjectViewPlace.Tokenizer tokenizer = new ProjectViewPlace.Tokenizer();
+//        ProjectViewPlace place = tokenizer.getPlace(token);
+//        assertThat(place.getProjectId(), is(projectId));
+//        assertThat(place.getTabId(), is(Optional.of(tabName)));
+//        assertThat(place.getEntity(), is(Optional.of(DataFactory.getOWLClass(entityIri))));
+//    }
+//
+//
+//    @Test
+//    public void shouldTokenizeIgnoringVarNameCaseProjectViewPlace() {
+//        String token = "ProjectId="+projectId.getId()+"&Tab="+ tabName.getTabName()+"&Entity=Class("+entityIri.toQuotedString()+")";
+//        ProjectViewPlace.Tokenizer tokenizer = new ProjectViewPlace.Tokenizer();
+//        ProjectViewPlace place = tokenizer.getPlace(token);
+//        assertThat(place.getProjectId(), is(projectId));
+//        assertThat(place.getTabId(), is(Optional.of(tabName)));
+//        assertThat(place.getEntity(), is(Optional.of(DataFactory.getOWLClass(entityIri))));
+//    }
 
 
 

@@ -1608,3 +1608,164 @@ td {
 .ms-nested-annotation {
     /*	border-top: 1px dotted #f4f4f4;*/
 }
+
+
+.gwt-TabBar {
+    margin-bottom: 5px;
+    /*background: #e0e0e0;*/
+    border-bottom: solid 1px #f1f1f1;
+}
+
+.gwt-TabBar .gwt-TabBarItem {
+    padding: 2px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #464646;
+    border-bottom: solid transparent 2px;
+}
+
+.gwt-TabBar .gwt-TabBarItem-selected {
+    border-bottom: solid 2px dodgerblue;
+    color: dodgerblue;
+}
+
+
+
+/** Add css rules here for your application. */
+
+.drop-glass {
+    background: gray;
+    opacity: 0.7;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    cursor: crosshair;
+}
+
+.drop-target-indicator {
+    border: #FFDC00 dashed 4px;
+    position: absolute;
+}
+
+.drop-side-indicator {
+    /*background: #ffb200;*/
+    background: #FFDC00;
+    opacity: 0.5;
+    position: absolute;
+}
+
+.drop-help-text {
+    color: #000000;
+    background: #ffeea0;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    font-size: 15px;
+    font-weight: normal;
+    opacity: 1.0;
+}
+
+.poly-split-panel {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.poly-split-panel-border {
+    border: 1px solid silver;
+}
+
+
+.poly-split-panel-fixed-splitter {
+
+}
+
+.poly-split-panel-movable-splitter:hover {
+    background: #e8e8e8;
+}
+
+.poly-split-panel-movable-splitter-move {
+    background: gray;
+}
+
+.poly-split-panel-movable-vertical-splitter {
+    cursor: row-resize;
+}
+
+.poly-split-panel-movable-horizontal-splitter {
+    cursor: col-resize;
+}
+
+.poly-split-panel-box-sizing {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.widget-holder {
+    border: solid #f0f0f0 1px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.widget-holder-header {
+    background: #6f6d6d;
+    border-bottom: none;
+    font-weight: normal;
+    text-align: left;
+    vertical-align: baseline;
+    padding-left: 2px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 12px;
+}
+
+.widget-holder-label {
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+
+}
+
+
+.animated{-webkit-animation-fill-mode:both;-moz-animation-fill-mode:both;-ms-animation-fill-mode:both;-o-animation-fill-mode:both;animation-fill-mode:both;-webkit-animation-duration:5s;-moz-animation-duration:5s;-ms-animation-duration:5s;-o-animation-duration:5s;animation-duration:5s;}.animated.hinge{-webkit-animation-duration:5s;-moz-animation-duration:5s;-ms-animation-duration:5s;-o-animation-duration:5s;animation-duration:5s;}@-webkit-keyframes pulse {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                     0% { -webkit-transform: scale(1); }	50% { -webkit-transform: scale(1.1); }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                     100% { -webkit-transform: scale(1); }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                 }
+@-moz-keyframes pulse {
+    0% { -moz-transform: scale(1); }
+    50% { -moz-transform: scale(1.1); }
+    100% { -moz-transform: scale(1); }
+}
+@-o-keyframes pulse {
+    0% { -o-transform: scale(1); }
+    50% { -o-transform: scale(1.1); }
+    100% { -o-transform: scale(1); }
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    -webkit-animation-name: pulse;
+    -moz-animation-name: pulse;
+    -o-animation-name: pulse;
+    animation-name: pulse;
+}
+
+

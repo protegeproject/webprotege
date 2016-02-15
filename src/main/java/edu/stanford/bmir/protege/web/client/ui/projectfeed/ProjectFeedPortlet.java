@@ -25,8 +25,7 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserManager);
         basePanel = new ProjectFeedBasePanel(getProjectId(), this, getSelectionModel());
         setTitle("Project feed");
-        setSize(300, 180);
-        add(basePanel);
+        getContentHolder().setWidget(basePanel);
     }
 
     @Override

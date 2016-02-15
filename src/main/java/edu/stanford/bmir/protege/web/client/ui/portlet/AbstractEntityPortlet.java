@@ -2,31 +2,29 @@ package edu.stanford.bmir.protege.web.client.ui.portlet;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.place.shared.PlaceChangeEvent;
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.*;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtext.client.core.EventObject;
-import com.gwtext.client.core.ExtElement;
 import com.gwtext.client.core.Function;
 import com.gwtext.client.core.Position;
 import com.gwtext.client.widgets.*;
+import com.gwtext.client.widgets.Button;
+import com.gwtext.client.widgets.Panel;
+import com.gwtext.client.widgets.TabPanel;
 import com.gwtext.client.widgets.event.ButtonListenerAdapter;
-import com.gwtext.client.widgets.event.ResizableListenerAdapter;
-import com.gwtext.client.widgets.form.Checkbox;
-import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
-import com.gwtext.client.widgets.portal.Portlet;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
-import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
-import edu.stanford.bmir.protege.web.client.ui.tab.AbstractTab;
+import edu.stanford.bmir.protege.web.client.perspective.Perspective;
 import edu.stanford.bmir.protege.web.client.ui.util.AbstractValidatableTab;
 import edu.stanford.bmir.protege.web.client.ui.util.ValidatableTab;
 import edu.stanford.bmir.protege.web.shared.entity.*;
@@ -38,6 +36,8 @@ import edu.stanford.bmir.protege.web.shared.selection.EntityDataSelectionChanged
 import edu.stanford.bmir.protege.web.shared.selection.EntityDataSelectionChangedHandler;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedEvent;
+import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedHandler;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -55,9 +55,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @deprecated Use {@link AbstractOWLEntityPortlet}.
  */
 @Deprecated
-public abstract class AbstractEntityPortlet extends Portlet implements EntityPortlet, HasEventHandlerManagement {
+public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHandlerManagement {
 
-    private AbstractTab tab;
+    private Perspective tab;
 
     private PortletConfiguration portletConfiguration;
 
@@ -70,6 +70,8 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     private List<HandlerRegistration> handlerRegistrations = new ArrayList<>();
 
     private final ProjectId projectId;
+
+    private final PortletUi portletUi = new PortletUiImpl();
 
     @Inject
     public AbstractEntityPortlet(SelectionModel selectionModel,
@@ -87,21 +89,21 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         this.projectId = projectId;
 
         setTitle(""); // very important
-        setLayout(new FitLayout());
+//        setLayout(new FitLayout());
 
         ResizableConfig config = new ResizableConfig();
         config.setHandles(Resizable.SOUTH_EAST);
 
-        final Resizable resizable = new Resizable(this, config);
-        resizable.addListener(new ResizableListenerAdapter() {
-            @Override
-            public void onResize(Resizable self, int width, int height) {
-                doOnResize(width, height);
-            }
-        });
+//        final Resizable resizable = new Resizable(this, config);
+//        resizable.addListener(new ResizableListenerAdapter() {
+//            @Override
+//            public void onResize(Resizable self, int width, int height) {
+//                doOnResize(width, height);
+//            }
+//        });
 
         if (initialize) {
-            setTools(getTools());
+//            setTools(getTools());
         }
 
         addApplicationEventHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
@@ -137,7 +139,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
             public void handleSelectionChanged(EntityDataSelectionChangedEvent event) {
                 boolean tabIsVisible = false;
                 if(tab != null) {
-                    tabIsVisible = tab.isVisible();
+                    tabIsVisible = tab.isAttached();
                     if (tabIsVisible) {
                         GWT.log("[" + tab.getLabel()+ ", " + AbstractEntityPortlet.this.getClass().getSimpleName() + "] Selection changed in selection model and tab is visible.  Updating portlet selection.");
                     }
@@ -149,6 +151,16 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
             }
         });
         handlerRegistrations.add(handlerRegistration);
+    }
+
+    @Override
+    public void setToolbarVisible(boolean visible) {
+        portletUi.setToolbarVisible(visible);
+    }
+
+    @Override
+    public AcceptsOneWidget getContentHolder() {
+        return portletUi.getContentHolder();
     }
 
     public SelectionModel getSelectionModel() {
@@ -169,9 +181,9 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
     }
 
     protected void doOnResize(int width, int height) {
-        setWidth(width);
-        setHeight(height);
-        doLayout();
+//        setWidth(width);
+//        setHeight(height);
+//        doLayout();
     }
 
     protected void handleBeforeSetEntity(Optional<OWLEntityData> existingEntity) {
@@ -318,8 +330,8 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     protected void onClose() {
         commitChanges();
-        this.hide();
-        this.destroy();
+//        this.hide();
+//        this.destroy();
     }
 
     protected void onLogin(UserId userId) {
@@ -344,11 +356,11 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         return portletConfiguration;
     }
 
-    public AbstractTab getTab() {
+    public Perspective getTab() {
         return tab;
     }
 
-    public void setTab(AbstractTab tab) {
+    public void setTab(Perspective tab) {
         this.tab = tab;
     }
 
@@ -383,12 +395,12 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
         return source instanceof ProjectId && source.equals(getProjectId());
     }
 
-    @Override
-    public final void destroy() {
-        removeHandlers();
-        destroyPortlet();
-        super.destroy();
-    }
+//    @Override
+//    public final void destroy() {
+//        removeHandlers();
+//        destroyPortlet();
+//        super.destroy();
+//    }
 
     protected void destroyPortlet() {
 
@@ -415,7 +427,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     @Override
     public void dispose() {
-        destroy();
+//        destroy();
     }
 
 
@@ -423,7 +435,7 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
 
     @Override
     public void setHeight(int height) {
-        super.setHeight(height);
+//        super.setHeight(height);
         this.assignedHeight = height;
     }
 
@@ -434,12 +446,47 @@ public abstract class AbstractEntityPortlet extends Portlet implements EntityPor
      */
     @Override
     public int getHeight() {
-        int height = super.getHeight();
-        if(height <= 0) {
-            return assignedHeight;
-        }
-        else {
-            return height;
-        }
+        return assignedHeight;
+//        int height = super.getHeight();
+//        if(height <= 0) {
+//            return assignedHeight;
+//        }
+//        else {
+//            return height;
+//        }
+    }
+
+    private String title = "";
+
+    private HandlerManager handlerManager = new HandlerManager(this);
+
+    public void setTitle(String title) {
+        this.title = title;
+        fireEvent(new ViewTitleChangedEvent(title));
+    }
+
+    @Override
+    public com.google.gwt.event.shared.HandlerRegistration addViewTitleChangedHandler(ViewTitleChangedHandler viewTitleChangedHandler) {
+        return handlerManager.addHandler(ViewTitleChangedEvent.getType(), viewTitleChangedHandler);
+    }
+
+    @Override
+    public String getViewTitle() {
+        return title;
+    }
+
+    @Override
+    public void addPortletAction(PortletAction portletAction) {
+        portletUi.addPortletAction(portletAction);
+    }
+
+    @Override
+    public void fireEvent(GwtEvent<?> gwtEvent) {
+        handlerManager.fireEvent(gwtEvent);
+    }
+
+    @Override
+    public Widget asWidget() {
+        return portletUi.asWidget();
     }
 }

@@ -42,7 +42,7 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    private ManchesterSyntaxFrameEditor editor;
+    private final ManchesterSyntaxFrameEditor editor;
 
     private ProjectId projectId;
 
@@ -91,6 +91,10 @@ public class ManchesterSyntaxFrameEditorPresenter implements HasSubject<OWLEntit
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
+    }
+
+    public ManchesterSyntaxFrameEditor getView() {
+        return editor;
     }
 
     public void attach(HasEventHandlerManagement management) {

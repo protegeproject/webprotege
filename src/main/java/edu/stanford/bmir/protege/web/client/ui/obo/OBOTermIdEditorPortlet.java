@@ -31,10 +31,9 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
     @Inject
     public OBOTermIdEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
-        setAutoScroll(false);
-        setHeight("auto");
+//        setAutoScroll(false);
         editor = new OBOTermIdEditorImpl();
-        add(editor.asWidget());
+        getContentHolder().setWidget(editor.asWidget());
         getService().getNamespaces(getProjectId(), new AsyncCallback<Set<OBONamespace>>() {
             public void onFailure(Throwable caught) {
                 MessageBox.alert(caught.getMessage());

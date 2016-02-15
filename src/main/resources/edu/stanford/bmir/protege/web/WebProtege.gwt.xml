@@ -35,11 +35,16 @@
     <inherits name="org.semanticweb.owlapi.gwt.owlapi"/>
 
 	<inherits name='com.gwtext.GwtExt' />
-	
+
+    <inherits name="edu.stanford.protege.widgetmap.widgetmap"/>
+    <inherits name="com.google.gwt.activity.Activity"/>
+
     <!--<generate-with class="edu.stanford.bmir.protege.web.server.generated.UIFactoryGenerator">-->
         <!--<when-type-assignable class="edu.stanford.bmir.protege.web.client.ui.generated.PluginFactory"/>-->
     <!--</generate-with>-->
 
 	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
+
+    <stylesheet src="widgetmap.css"/>
 
 </module>
