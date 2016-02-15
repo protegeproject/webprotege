@@ -6,8 +6,6 @@
 
     <ui:style>
         .main {
-            /** The background is necessary to hide GWT EXT junk that doesn't get laid out properly until tabs are selected **/
-            background: #ffffff;
         }
         .holder {
             position: absolute;
@@ -20,7 +18,7 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}" debugId="Banner">
-        <g:Image resource="{res.webProtegeLogo}" addStyleNames="{style.sub-bar}"/>
+        <!--<g:Image resource="{res.webProtegeLogo}" addStyleNames="{style.sub-bar}"/>-->
         <g:HTMLPanel addStyleNames="{style.holder}">
             <project:ProjectActionBarImpl ui:field="projectActionBar" addStyleNames="{style.sub-bar}"/>
             <application:ApplicationActionBarImpl ui:field="applicationActionBar" addStyleNames="{style.sub-bar}"/>

@@ -26,12 +26,9 @@ public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.loggedInUserProvider = loggedInUserProvider;
         this.presenter = presenter;
-        setHeight(200);
         ChangeListView changeListView = presenter.getView();
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
-        scrollPanel.setWidth("100%");
-        scrollPanel.setHeight("100%");
-        add(scrollPanel);
+        getContentHolder().setWidget(scrollPanel);
         onRefresh();
     }
 

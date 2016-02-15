@@ -30,7 +30,7 @@ public class OntologyIdPortlet extends AbstractOWLEntityPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserManager);
         this.dispatchServiceManager = dispatchServiceManager;
         editor = new OntologyIdViewImpl();
-        add(editor.asWidget());
+        getContentHolder().setWidget(editor.asWidget());
         setTitle("Ontology Id");
         editor.setEnabled(false);
         updateDisplay();

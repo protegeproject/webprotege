@@ -2,13 +2,18 @@ package edu.stanford.bmir.protege.web.client;
 
 
 import com.google.common.base.Optional;
+import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
-import edu.stanford.bmir.protege.web.client.workspace.WorkspaceView;
+import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
+import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
 
@@ -41,13 +46,27 @@ public class WebProtege implements EntryPoint {
     private void buildUI() {
 
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
-        WorkspaceView view = WebProtegeClientInjector.getWorkspaceView();
-        RootPanel.get().add(view);
+        WebProtegeClientBundle.BUNDLE.buttons().ensureInjected();
+
+        ApplicationPresenter applicationPresenter = WebProtegeClientInjector.getApplicationPresenter();
+        ApplicationView applicationView = applicationPresenter.getApplicationView();
+
+        RootLayoutPanel.get().add(applicationView);
+
+
         HasClientApplicationProperties properties = WebProtegeClientInjector.getClientApplicationProperties();
         final Optional<String> appName = properties.getClientApplicationProperty(WebProtegePropertyName.APPLICATION_NAME);
         if (appName.isPresent()) {
             Window.setTitle(appName.get());
         }
+
+
+        ActivityManager activityManager =  WebProtegeClientInjector.getActivityManager();
+        activityManager.setDisplay(applicationView);
+
+        PlaceHistoryHandler placeHistoryHandler = WebProtegeClientInjector.getPlaceHistoryHandler();
+        placeHistoryHandler.handleCurrentHistory();
+
 
     }
 

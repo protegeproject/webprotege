@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.chgpwd;
 
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
@@ -21,6 +22,7 @@ public class ResetPasswordPresenter {
 
     private ResetPasswordView view;
 
+    @Inject
     public ResetPasswordPresenter(
             DispatchServiceManager dispatchService, ResetPasswordView view) {
         this.dispatchService = dispatchService;

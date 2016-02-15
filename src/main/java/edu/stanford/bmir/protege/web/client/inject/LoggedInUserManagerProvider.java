@@ -18,6 +18,8 @@ public class LoggedInUserManagerProvider implements Provider<LoggedInUserManager
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    private LoggedInUserManager manager;
+
     @Inject
     public LoggedInUserManagerProvider(EventBus eventBus, DispatchServiceManager dispatchServiceManager) {
         this.eventBus = eventBus;
@@ -26,6 +28,9 @@ public class LoggedInUserManagerProvider implements Provider<LoggedInUserManager
 
     @Override
     public LoggedInUserManager get() {
-        return LoggedInUserManager.getAndRestoreFromServer(eventBus, dispatchServiceManager);
+        if(manager == null) {
+            manager = LoggedInUserManager.getAndRestoreFromServer(eventBus, dispatchServiceManager);
+        }
+        return manager;
     }
 }

@@ -65,9 +65,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     protected TreePanel treePanel;
 
-    private Button createButton;
-
-    private Button deleteButton;
 
     //    private TreeNode lastSelectedTreeNode;
 
@@ -83,7 +80,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         this.projectId = projectId;
         this.permissionChecker = permissionChecker;
 
-        setLayout(new FitLayout());
+//        setLayout(new FitLayout());
         setTitle("Properties Tree");
 
         treePanel = new TreePanel();
@@ -114,7 +111,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         treePanel.setRootVisible(false);
 
         addToolbarButtons();
-        add(treePanel);
+        getContentHolder().setWidget(treePanel.asWidget());
 
 
         addProjectEventHandler(ObjectPropertyHierarchyParentAddedEvent.TYPE, new ObjectPropertyHierarchyParentAddedHandler() {
@@ -350,26 +347,26 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     protected void addToolbarButtons() {
-        createButton = new Button("Create");
-        createButton.setCls("toolbar-button");
-        createButton.addListener(new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                onCreateProperty();
-            }
-        });
-
-
-        deleteButton = new Button("Delete");
-        // deleteButton.setIconCls("protege-class-delete-icon");
-        deleteButton.setCls("toolbar-button");
-        deleteButton.addListener(new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                onDeleteProperty();
-            }
-        });
-        setTopToolbar(new Button[]{createButton, deleteButton});
+//        createButton = new Button("Create");
+//        createButton.setCls("toolbar-button");
+//        createButton.addListener(new ButtonListenerAdapter() {
+//            @Override
+//            public void onClick(Button button, EventObject e) {
+//                onCreateProperty();
+//            }
+//        });
+//
+//
+//        deleteButton = new Button("Delete");
+//        // deleteButton.setIconCls("protege-class-delete-icon");
+//        deleteButton.setCls("toolbar-button");
+//        deleteButton.addListener(new ButtonListenerAdapter() {
+//            @Override
+//            public void onClick(Button button, EventObject e) {
+//                onDeleteProperty();
+//            }
+//        });
+//        setTopToolbar(new Button[]{createButton, deleteButton});
     }
 
     /**
@@ -641,22 +638,22 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     public void updateButtonStates() {
-        createButton.setDisabled(true);
-        deleteButton.setDisabled(true);
-        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
-            @Override
-            public void handleSuccess(Boolean hasPermission) {
-                createButton.setDisabled(!hasPermission);
-                deleteButton.setDisabled(!hasPermission);
-            }
-        });
+//        createButton.setDisabled(true);
+//        deleteButton.setDisabled(true);
+//        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+//            @Override
+//            public void handleSuccess(Boolean hasPermission) {
+//                createButton.setDisabled(!hasPermission);
+//                deleteButton.setDisabled(!hasPermission);
+//            }
+//        });
     }
 
-    @Override
-    protected void afterRender() {
-        getSubProperties(null, true);
-        super.afterRender();
-    }
+//    @Override
+//    protected void afterRender() {
+//        getSubProperties(null, true);
+//        super.afterRender();
+//    }
 
     public void setTreeNodeIcon(TreeNode node) {
         PropertyEntityData entityData = (PropertyEntityData) node.getUserObject();

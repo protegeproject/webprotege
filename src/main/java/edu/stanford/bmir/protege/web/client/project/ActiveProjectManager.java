@@ -12,6 +12,6 @@ public interface ActiveProjectManager {
 
     Optional<ProjectId> getActiveProjectId();
 
-    void setActiveProject(Optional<ProjectId> project);
+//    void setActiveProject(Optional<ProjectId> project);
 
 }

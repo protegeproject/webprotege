@@ -17,8 +17,6 @@ import javax.inject.Inject;
  */
 public class PlaceManager {
 
-    private static final ProjectListPlace DEFAULT_PLACE = ProjectListPlace.DEFAULT_PLACE;
-
     private PlaceController placeController;
 
     @Inject

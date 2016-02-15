@@ -1,0 +1,150 @@
+
+/* Various button styles */
+.btn, .btn-a, .btn-b, .btn-c, .btn-d {
+    background: #bc4d26;
+    border: none;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: .1em;
+    border-radius: 2px;
+    height: 38px;
+    line-height: 40px;
+    color: #fff;
+    padding: 0;
+    transition: background-color .15s ease-in-out;
+    -moz-transition: background-color .15s ease-in-out;
+    -webkit-transition: background-color .15s ease-in-out;
+    text-transform: uppercase;
+
+    display: block;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: small;
+}
+
+.btn {
+    background: #959ea7;
+}
+
+.btn:hover {
+    color: #fff;
+    background: #415161;
+}
+
+.btn-b {
+    background: #db5e33;
+}
+
+.btn-b:hover {
+    background: #bc4d26;
+}
+
+.btn-c {
+    background: rgb(0,0,0);
+    background: rgba(0,0,0,.2);
+    border: 2px solid #fff;
+    line-height: 46px !important;
+}
+
+.btn-c:hover {
+    background: rgb(0,0,0);
+    background: rgba(0,0,0,.5);
+}
+
+.btn-d {
+    background: #fff;
+    border: 2px solid #959ea7;
+    transition: all .15s ease-in-out;
+    -moz-transition: all .15s ease-in-out;
+    -webkit-transition: all .15s ease-in-out;
+}
+
+.btn-d:hover {
+    background: inherit;
+    border: 2px solid #2c3e50;
+    color: #db5e33;
+}
+
+/* Begin Button Sizes */
+.btn-small {
+    height: 36px;
+    line-height: 36px;
+}
+
+.btn-med {
+    height: 40px;
+    line-height: 38px;
+    padding: 0 20px;
+    color: #2c3e50;
+    margin-top: 20px;
+}
+
+.btn-lg {
+    height: 48px;
+    line-height: 50px;
+    font-size: 14px;
+}
+
+.btn-xl {
+    line-height: inherit;
+    height: auto;
+    padding: 15px 0 10px 25px;
+}
+
+.btn-inline {
+    padding: 0 20px;
+}
+
+.btn-icon, .btn-icon-alt {
+    text-align: left;
+    text-transform: none;
+    font-weight: 300;
+    letter-spacing: 0;
+    color: rgb(255,255,255);
+    color: rgba(255,255,255,.6);
+}
+
+.btn-icon:hover, .btn-icon-alt:hover {
+    color: rgb(255,255,255);
+    color: rgba(255,255,255,.6);
+}
+
+.btn-icon h4, .btn-icon-alt {
+    font-family: "Proxima Nova", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0;
+    margin: 0;
+    color: #fff;
+}
+
+/*.apple-icon, .windows-icon, .generic-download-icon {*/
+/*width: 24px;*/
+/*height: 28px;*/
+/*background: url(../../img/apple-icon.png) no-repeat 0 0;*/
+/*display: inline-block;*/
+/*position: relative;*/
+/*top: 5px;*/
+/*margin-right: 8px;*/
+/*}*/
+
+/*.windows-icon {*/
+/*width: 24px;*/
+/*height: 21px;*/
+/*background: url(../../img/windows-icon.png) no-repeat 0 0;*/
+/*top: 8px;*/
+/*}*/
+
+/*.generic-download-icon {*/
+/*background: url(../../img/generic-download-button-icon.png) no-repeat 0 0;*/
+/*top: 10px;*/
+/*}*/
+
+.web-protege-btn .pictogram {
+    top: -1px;
+}
+
+html[data-useragent*='MSIE 10.0'] .web-protege-btn .pictogram, html[data-useragent*='MSIE 9.0'] .web-protege-btn .pictogram {
+    top: -6px;
+}

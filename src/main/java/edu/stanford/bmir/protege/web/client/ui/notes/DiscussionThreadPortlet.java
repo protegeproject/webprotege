@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -26,8 +27,8 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
     public DiscussionThreadPortlet(ProjectId projectId, EventBus eventBus, SelectionModel selectionModel, LoggedInUserProvider loggedInUserProvider, DiscussionThreadPresenter discussionThreadPresenter) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         presenter = discussionThreadPresenter;
-        add(presenter.getWidget());
-        setHeight(500);
+        ScrollPanel sp = new ScrollPanel(presenter.getWidget());
+        getContentHolder().setWidget(sp);
     }
 
     @Override
@@ -42,9 +43,9 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    @Override
+//    @Override
     protected void onDestroy() {
         presenter.dispose();
-        super.onDestroy();
+//        super.onDestroy();
     }
 }

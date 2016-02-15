@@ -244,3 +244,35 @@
     height: auto;
     padding-left: 22px !important;
 }
+
+.portletToolbar {
+    background: #f1f1f1;
+}
+
+.portletToolbarButton {
+    border: solid transparent 1px;
+    color: #464646;
+    height: 20px;
+    margin: 1px;
+    background: transparent;
+    cursor: pointer;
+}
+
+.portletToolbarButton:hover {
+    border: solid 1px #464646;
+    background: #707070;
+    color: #ffffff;
+}
+
+.portletToolbarButton:active {
+    border: solid 1px #464646;
+    background: #424242;
+    color: #ffffff;
+
+}
+
+.portletToolbarButton:disabled {
+    color: #aaaaaa;
+    cursor: default;
+    border: solid transparent 1px;
+}

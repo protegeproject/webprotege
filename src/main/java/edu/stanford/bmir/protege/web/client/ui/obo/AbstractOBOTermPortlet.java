@@ -25,9 +25,8 @@ public abstract class AbstractOBOTermPortlet extends AbstractOWLEntityPortlet {
 
     protected AbstractOBOTermPortlet(SelectionModel selectionModel,  EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
-        addStyleName("web-protege-laf");
-        setHeight("300px");
-        setAutoScroll(true);
+        // TODO:
+//        addStyleName("web-protege-laf");
     }
 
     public OBOTextEditorServiceAsync getService() {

@@ -32,10 +32,10 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
     public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
-
-        addStyleName("web-protege-laf");
+        // TODO: STYLE NAME
+//        addStyleName("web-protege-laf");
         html = new HTML();
-        add(new ScrollPanel(html));
+        getContentHolder().setWidget(new ScrollPanel(html));
         addProjectEventHandler(ClassFrameChangedEvent.TYPE, new ClassFrameChangedEventHandler() {
             @Override
             public void classFrameChanged(ClassFrameChangedEvent event) {

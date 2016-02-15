@@ -31,11 +31,8 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
 
         changeListView = new ChangeListViewImpl();
 
-        setHeight(200);
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
-        scrollPanel.setWidth("100%");
-        scrollPanel.setHeight("100%");
-        add(scrollPanel);
+        getContentHolder().setWidget(scrollPanel);
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override
             public void handleProjectChanged(ProjectChangedEvent event) {

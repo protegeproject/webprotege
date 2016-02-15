@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
+import com.google.gwt.activity.shared.ActivityManager;
+import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
@@ -13,17 +17,31 @@ import edu.stanford.bmir.protege.web.client.banner.BannerView;
 import edu.stanford.bmir.protege.web.client.banner.BannerViewImpl;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
+import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
+import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
+import edu.stanford.bmir.protege.web.client.login.LoginPlace;
+import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
+import edu.stanford.bmir.protege.web.client.login.LoginView;
+import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
+import edu.stanford.bmir.protege.web.client.logout.LogoutView;
+import edu.stanford.bmir.protege.web.client.logout.LogoutViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionCheckerImpl;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
+import edu.stanford.bmir.protege.web.client.perspective.*;
+import edu.stanford.bmir.protege.web.client.place.*;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.place.PlaceManager;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManagerImpl;
 import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.project.ProjectManager;
+import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
+import edu.stanford.bmir.protege.web.client.project.ProjectPresenterFactory;
+import edu.stanford.bmir.protege.web.client.project.ProjectView;
+import edu.stanford.bmir.protege.web.client.project.ProjectViewImpl;
+import edu.stanford.bmir.protege.web.client.ui.CreateFreshPerspectiveRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.ui.editor.EntityDataContextSelector;
 import edu.stanford.bmir.protege.web.client.ui.frame.ManchesterSyntaxFrameEditor;
@@ -35,12 +53,15 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsV
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListView;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl;
-import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTab;
-import edu.stanford.bmir.protege.web.client.ui.tab.UserDefinedTabFactory;
-import edu.stanford.bmir.protege.web.client.workspace.WorkspaceView;
-import edu.stanford.bmir.protege.web.client.workspace.WorkspaceViewImpl;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectListPresenter;
+import edu.stanford.bmir.protege.web.client.ui.tab.PerspectiveFactory;
+import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
+import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
+import edu.stanford.bmir.protege.web.client.workspace.ApplicationViewImpl;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationPropertiesProvider;
+import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
+import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
@@ -56,8 +77,8 @@ public class ApplicationClientModule extends AbstractGinModule {
     protected void configure() {
 
         install(new GinFactoryModuleBuilder()
-                .implement(UserDefinedTab.class, UserDefinedTab.class)
-                .build(UserDefinedTabFactory.class));
+                .implement(Perspective.class, Perspective.class)
+                .build(PerspectiveFactory.class));
 
         bind(ProjectId.class).toProvider(ProjectIdProvider.class);
         bind(Project.class).toProvider(ProjectProvider.class);
@@ -73,7 +94,7 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(PlaceController.class).toProvider(PlaceControllerProvider.class).asEagerSingleton();
         bind(ProjectManager.class).asEagerSingleton();
         bind(DispatchServiceManager.class).asEagerSingleton();
-        bind(WorkspaceView.class).to(WorkspaceViewImpl.class);
+        bind(ApplicationView.class).to(ApplicationViewImpl.class);
 
         bind(LoggedInUserProvider.class).to(LoggedInUserManager.class).asEagerSingleton();
         bind(LoggedInUserManager.class).toProvider(LoggedInUserManagerProvider.class).asEagerSingleton();
@@ -112,9 +133,40 @@ public class ApplicationClientModule extends AbstractGinModule {
 
         bind(LoggedInUserProjectPermissionChecker.class).to(LoggedInUserProjectPermissionCheckerImpl.class);
 
+
         bind(EditorManagerSelector.class).to(EntityDataContextSelector.class);
 
         bind(ChangeListView.class).to(ChangeListViewImpl.class);
+
+        bind(ProjectView.class).to(ProjectViewImpl.class);
+
+        install(new GinFactoryModuleBuilder()
+                .implement(ProjectPresenter.class, ProjectPresenter.class)
+                .build(ProjectPresenterFactory.class));
+
+        bind(ApplicationPresenter.class).asEagerSingleton();
+        bind(LoginPresenter.class).asEagerSingleton();
+        bind(ProjectListPresenter.class).asEagerSingleton();
+
+        bind(LoginView.class).to(LoginViewImpl.class);
+        bind(LogoutView.class).to(LogoutViewImpl.class);
+        bind(ResetPasswordView.class).to(ResetPasswordViewImpl.class);
+
+        bind(MessageDigestAlgorithm.class).to(Md5MessageDigestAlgorithm.class);
+
+        bind(PlaceHistoryHandler.class).toProvider(PlaceHistoryHandlerProvider.class).asEagerSingleton();
+        bind(ActivityMapper.class).to(WebProtegeActivityMapper.class).asEagerSingleton();
+        bind(ActivityManager.class).to(WebProtegeActivityManager.class).asEagerSingleton();
+
+        bind(PerspectiveSwitcherView.class).to(PerspectiveSwitcherViewImpl.class);
+        bind(PerspectiveView.class).to(PerspectiveViewImpl.class);
+        bind(PerspectiveLinkManager.class).to(DummyPerspectiveLinkManager.class);
+        bind(CreateFreshPerspectiveRequestHandler.class).to(CreateFreshPerspectiveRequestHandlerImpl.class);
+
+        install(new GinFactoryModuleBuilder()
+                .implement(PerspectiveLink.class, PerspectiveLinkImpl.class)
+                .build(PerspectiveLinkFactory.class));
+
     }
 
 }

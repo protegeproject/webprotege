@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.tab;
 
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
+import edu.stanford.bmir.protege.web.client.perspective.Perspective;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabColumnConfiguration;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
@@ -21,11 +22,11 @@ public class TabBuilder {
 
     private ProjectId projectId;
 
-    private AbstractTab tab;
+    private Perspective tab;
 
     private TabConfiguration tabConfiguration;
 
-    public TabBuilder(ProjectId projectId, AbstractTab tab, TabConfiguration tabConfiguration) {
+    public TabBuilder(ProjectId projectId, Perspective tab, TabConfiguration tabConfiguration) {
         this.projectId = projectId;
         this.tab = tab;
         this.tabConfiguration = tabConfiguration;
@@ -84,13 +85,13 @@ public class TabBuilder {
         }
         final int height = portletConfiguration.getHeight();
         GWT.log("[TabBuilder] Setting the " + portlet.getClass().getSimpleName() + " portlet height: " + height);
-        if (height == 0) {
-            portlet.setAutoHeight(true);
-        } else {
+//        if (height == 0) {
+//            portlet.setAutoHeight(true);
+//        } else {
             portlet.setHeight(height);
-        }
+//        }
         // MH: I don't see any reason not always have auto-width
-        portlet.setAutoWidth(true);
+//        portlet.setAutoWidth(true);
         return portlet;
     }
 }

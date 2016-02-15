@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
+import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
+import com.google.gwt.place.shared.PlaceHistoryHandler;
 import edu.stanford.bmir.protege.web.client.WebProtegeInitializer;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
-import edu.stanford.bmir.protege.web.client.workspace.WorkspaceView;
+import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -18,8 +19,8 @@ public class WebProtegeClientInjector {
 
     private static ApplicationClientInjector injector = GWT.create(ApplicationClientInjector.class);
 
-    public static WorkspaceView getWorkspaceView() {
-        return injector.getWorkspaceView();
+    public static ApplicationPresenter getApplicationPresenter() {
+        return injector.getApplicationPresenter();
     }
 
     public static WebProtegeInitializer getWebProtegeInitializer() {
@@ -40,4 +41,11 @@ public class WebProtegeClientInjector {
         return injector.getClientApplicationProperties();
     }
 
+    public static ActivityManager getActivityManager() {
+        return injector.getActivityManager();
+    }
+
+    public static PlaceHistoryHandler getPlaceHistoryHandler() {
+        return injector.getPlaceHistoryHandler();
+    }
 }

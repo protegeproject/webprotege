@@ -52,7 +52,7 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
         setTitle("Ontology annotations");
-        add(new ScrollPanel(annotationsView.asWidget()));
+        getContentHolder().setWidget(new ScrollPanel(annotationsView.asWidget()));
         annotationsView.addValueChangeHandler(new ValueChangeHandler<Optional<Set<OWLAnnotation>>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<Set<OWLAnnotation>>> event) {

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.auth;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -13,6 +14,7 @@ public class ChapResponseDigestAlgorithm {
 
     private Provider<MessageDigestAlgorithm> digestAlgorithmProvider;
 
+    @Inject
     public ChapResponseDigestAlgorithm(Provider<MessageDigestAlgorithm> digestAlgorithmProvider) {
         this.digestAlgorithmProvider = checkNotNull(digestAlgorithmProvider);
     }
