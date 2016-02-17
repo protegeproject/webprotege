@@ -2,9 +2,12 @@ package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.help.HelpViewImpl;
 import edu.stanford.bmir.protege.web.client.logout.LogoutPresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivePresenter;
+import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
@@ -26,26 +29,24 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final ProjectView view;
 
+
+    private final TopBarPresenter topBarPresenter;
+
     private final PerspectiveSwitcherPresenter linkBarPresenter;
 
     private final PerspectivePresenter perspectivePresenter;
 
-    private final LogoutPresenter logoutPresenter;
-
-    private final EventBus eventBus;
 
     @Inject
     public ProjectPresenter(ProjectId projectId, ProjectView view,
-                            LogoutPresenter logoutPresenter,
+                            TopBarPresenter topBarPresenter,
                             PerspectiveSwitcherPresenter linkBarPresenter,
-                            PerspectivePresenter perspectivePresenter,
-                            EventBus eventBus) {
+                            PerspectivePresenter perspectivePresenter) {
         this.projectId = projectId;
         this.view = view;
-        this.logoutPresenter = logoutPresenter;
+        this.topBarPresenter = topBarPresenter;
         this.linkBarPresenter = linkBarPresenter;
         this.perspectivePresenter = perspectivePresenter;
-        this.eventBus = eventBus;
     }
 
     @Override
@@ -55,46 +56,14 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     @Override
     public void dispose() {
+        topBarPresenter.dispose();
         linkBarPresenter.dispose();
         perspectivePresenter.dispose();
     }
 
-    //    /**
-//     * Gets the project for this tab.
-//     *
-//     * @return The {@link edu.stanford.bmir.protege.web.client.project.Project}.  Not {@code null}.
-//     */
-//    public Project getProject() {
-//        Optional<Project> project = projectManager.getProject(projectId);
-//        if (!project.isPresent()) {
-//            throw new IllegalStateException("Unknown project: " + project);
-//        }
-//        return project.get();
-//    }
-
-//    public void displayPlace(Place place) {
-//        if(place instanceof ProjectViewPlace) {
-//            GWT.log("[ProjectPresenter] Displaying place: " + place);
-//            ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
-//            PerspectiveId perspectiveId = projectViewPlace.getPerspectiveId();
-//            Optional<Perspective> selectedTab = view.getSelectedTab();
-//            if (!selectedTab.isPresent() || !selectedTab.get().getLabel().equals(perspectiveId.getId())) {
-//                view.setSelectedTab(perspectiveId.getId());
-//            }
-////            Optional<Item<?>> firstSel = projectViewPlace.getItemSelection().getFirst();
-////            if(firstSel.isPresent()) {
-////                Item<?> item = firstSel.get();
-////            }
-////            Optional<OWLEntity> selection = projectViewPlace.getItemSelection();
-////            if(selection.isPresent()) {
-////                selectionModel.setSelection(DataFactory.getOWLEntityData(selection.get(), "Selection"));
-////            }
-//        }
-//    }
-
     public void start(AcceptsOneWidget container, ProjectViewPlace place) {
         container.setWidget(view);
-        view.getTopBarContainer().setWidget(logoutPresenter.getView());
+        topBarPresenter.start(view.getTopBarContainer());
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), place);
     }

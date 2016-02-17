@@ -1,7 +1,5 @@
-package edu.stanford.bmir.protege.web.client.actionbar.application;
+package edu.stanford.bmir.protege.web.client.user;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.mail.ChangeEmailAddressPresenter;

@@ -1,0 +1,31 @@
+.popup-menu {
+    background: white;
+    box-shadow: 0 4px 5px rgba(0, 0, 0, .2);
+    border: 1px solid #e0e0e0;
+    margin-top: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 3px;
+}
+
+.popup-menu-inner {
+    background: #ffffff;
+}
+
+.popup-menu-item {
+    background: none repeat scroll 0 0 #ffffff;
+    cursor: pointer;
+    font-family: Helvetica, Arial, Tahoma, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 5px 15px;
+    color: #555555;
+    vertical-align: middle;
+    line-height: 20px;
+    border-radius: 3px;
+}
+
+.popup-menu-item:hover {
+    background: dodgerblue;
+    color: #ffffff;
+}

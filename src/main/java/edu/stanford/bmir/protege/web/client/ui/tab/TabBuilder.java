@@ -70,7 +70,6 @@ public class TabBuilder {
                                       final int columnIndex) {
 
 
-        ((AbstractEntityPortlet) portlet).setPortletConfiguration(portletConfiguration);
         tab.addPortletToColumn(portlet, columnIndex);
         ((AbstractEntityPortlet) portlet).setTab(tab);
     }

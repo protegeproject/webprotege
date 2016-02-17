@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.UIObject;
 
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -17,12 +19,6 @@ import com.google.gwt.user.client.ui.UIObject;
  */
 public class PopupMenu {
 
-    public static final String POPUP_MENU_STYLE_NAME = "web-protege-popup-menu";
-
-    public static final String POPUP_MENU_INNER_STYLE_NAME = "web-protege-popup-menu-inner";
-
-    public static final String ITEM_STYLE_NAME = "web-protege-popup-menu-item";
-
     private final PopupPanel popupPanel;
 
     private final FlowPanel holder;
@@ -30,9 +26,9 @@ public class PopupMenu {
     public PopupMenu() {
         popupPanel = new PopupPanel();
         popupPanel.setAutoHideEnabled(true);
-        popupPanel.addStyleName(POPUP_MENU_STYLE_NAME);
+        popupPanel.addStyleName(BUNDLE.menu().popupMenu());
         holder = new FlowPanel();
-        holder.addStyleName(POPUP_MENU_INNER_STYLE_NAME);
+        holder.addStyleName(BUNDLE.menu().popupMenuInner());
         popupPanel.setWidget(holder);
     }
 
@@ -52,7 +48,7 @@ public class PopupMenu {
 
     public void addItem(final PopupMenuItem popupMenuItem) {
         HTML panel = new HTML(popupMenuItem.getHtml());
-        panel.addStyleName(ITEM_STYLE_NAME);
+        panel.addStyleName(BUNDLE.menu().popupMenuItem());
         holder.add(panel);
         panel.addClickHandler(new ClickHandler() {
             @Override
