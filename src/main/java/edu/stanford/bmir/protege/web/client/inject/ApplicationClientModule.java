@@ -5,7 +5,6 @@ import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
-import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
@@ -19,7 +18,7 @@ import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
-import edu.stanford.bmir.protege.web.client.login.LoginPlace;
+import edu.stanford.bmir.protege.web.client.help.*;
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.login.LoginView;
 import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
@@ -41,6 +40,10 @@ import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenterFactory;
 import edu.stanford.bmir.protege.web.client.project.ProjectView;
 import edu.stanford.bmir.protege.web.client.project.ProjectViewImpl;
+import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
+import edu.stanford.bmir.protege.web.client.topbar.GoToToHomeViewImpl;
+import edu.stanford.bmir.protege.web.client.topbar.TopBarView;
+import edu.stanford.bmir.protege.web.client.topbar.TopBarViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.CreateFreshPerspectiveRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.ui.editor.EntityDataContextSelector;
@@ -55,6 +58,7 @@ import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListView;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectListPresenter;
 import edu.stanford.bmir.protege.web.client.ui.tab.PerspectiveFactory;
+import edu.stanford.bmir.protege.web.client.user.*;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationViewImpl;
@@ -139,10 +143,11 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(ChangeListView.class).to(ChangeListViewImpl.class);
 
         bind(ProjectView.class).to(ProjectViewImpl.class);
-
         install(new GinFactoryModuleBuilder()
                 .implement(ProjectPresenter.class, ProjectPresenter.class)
                 .build(ProjectPresenterFactory.class));
+
+        bind(TopBarView.class).to(TopBarViewImpl.class);
 
         bind(ApplicationPresenter.class).asEagerSingleton();
         bind(LoginPresenter.class).asEagerSingleton();
@@ -151,6 +156,11 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(LoginView.class).to(LoginViewImpl.class);
         bind(LogoutView.class).to(LogoutViewImpl.class);
         bind(ResetPasswordView.class).to(ResetPasswordViewImpl.class);
+        bind(LoggedInUserView.class).to(LoggedInUserViewImpl.class);
+
+        bind(HelpView.class).to(HelpViewImpl.class);
+
+        bind(GoToHomeView.class).to(GoToToHomeViewImpl.class);
 
         bind(MessageDigestAlgorithm.class).to(Md5MessageDigestAlgorithm.class);
 

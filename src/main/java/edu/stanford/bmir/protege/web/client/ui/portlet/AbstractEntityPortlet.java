@@ -47,19 +47,14 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Abstract class that should be extended by all portlets that should be
- * available in the user interface of a tab. This class takes care of the common
- * initializations for portlet (e.g. resizing, dragging, etc.) and the life
- * cycle of a portlet.
- * @author Tania Tudorache <tudorache@stanford.edu>
  * @deprecated Use {@link AbstractOWLEntityPortlet}.
  */
 @Deprecated
 public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHandlerManagement {
 
-    private Perspective tab;
+    private Optional<Perspective> tab;
 
-    private PortletConfiguration portletConfiguration;
+//    private PortletConfiguration portletConfiguration;
 
     private final SelectionModel selectionModel;
 
@@ -78,33 +73,15 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
                                  EventBus eventBus,
                                  LoggedInUserProvider loggedInUserProvider,
                                  ProjectId projectId) {
-        this(selectionModel, eventBus, projectId, true, loggedInUserProvider);
+        this(selectionModel, eventBus, projectId, loggedInUserProvider);
     }
 
-    private AbstractEntityPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, boolean initialize, LoggedInUserProvider loggedInUserProvider) {
+    private AbstractEntityPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super();
         this.selectionModel = selectionModel;
         this.eventBus = eventBus;
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectId = projectId;
-
-        setTitle(""); // very important
-//        setLayout(new FitLayout());
-
-        ResizableConfig config = new ResizableConfig();
-        config.setHandles(Resizable.SOUTH_EAST);
-
-//        final Resizable resizable = new Resizable(this, config);
-//        resizable.addListener(new ResizableListenerAdapter() {
-//            @Override
-//            public void onResize(Resizable self, int width, int height) {
-//                doOnResize(width, height);
-//            }
-//        });
-
-        if (initialize) {
-//            setTools(getTools());
-        }
 
         addApplicationEventHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
             @Override
@@ -138,10 +115,10 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
             @Override
             public void handleSelectionChanged(EntityDataSelectionChangedEvent event) {
                 boolean tabIsVisible = false;
-                if(tab != null) {
-                    tabIsVisible = tab.isAttached();
+                if(tab.isPresent()) {
+                    tabIsVisible = tab.get().isAttached();
                     if (tabIsVisible) {
-                        GWT.log("[" + tab.getLabel()+ ", " + AbstractEntityPortlet.this.getClass().getSimpleName() + "] Selection changed in selection model and tab is visible.  Updating portlet selection.");
+                        GWT.log("[" + tab.get().getLabel()+ ", " + AbstractEntityPortlet.this.getClass().getSimpleName() + "] Selection changed in selection model and tab is visible.  Updating portlet selection.");
                     }
                 }
                 if (tabIsVisible) {
@@ -180,12 +157,6 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
         return loggedInUserProvider.getCurrentUserId();
     }
 
-    protected void doOnResize(int width, int height) {
-//        setWidth(width);
-//        setHeight(height);
-//        doLayout();
-    }
-
     protected void handleBeforeSetEntity(Optional<OWLEntityData> existingEntity) {
 
     }
@@ -193,13 +164,6 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
     protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
 
     }
-
-    /**
-     * @deprecated This method is no longer used.  Initialization code should be placed in the portlet constructor.
-     */
-    @Deprecated
-    public final void initialize() {}
-
 
     /*
      * Tools methods
@@ -343,25 +307,21 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
     public void onPermissionsChanged() {
     }
 
-    /**
-     * Does not do anything to the UI, only stores the new configuration in this
-     * portlet
-     * @param portletConfiguration
-     */
-    public void setPortletConfiguration(PortletConfiguration portletConfiguration) {
-        this.portletConfiguration = portletConfiguration;
-    }
-
-    public PortletConfiguration getPortletConfiguration() {
-        return portletConfiguration;
-    }
-
-    public Perspective getTab() {
-        return tab;
-    }
+//    /**
+//     * Does not do anything to the UI, only stores the new configuration in this
+//     * portlet
+//     * @param portletConfiguration
+//     */
+//    public void setPortletConfiguration(PortletConfiguration portletConfiguration) {
+//        this.portletConfiguration = portletConfiguration;
+//    }
+//
+//    public PortletConfiguration getPortletConfiguration() {
+//        return portletConfiguration;
+//    }
 
     public void setTab(Perspective tab) {
-        this.tab = tab;
+        this.tab = Optional.of(tab);
     }
 
 
@@ -395,22 +355,10 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
         return source instanceof ProjectId && source.equals(getProjectId());
     }
 
-//    @Override
-//    public final void destroy() {
-//        removeHandlers();
-//        destroyPortlet();
-//        super.destroy();
-//    }
-
-    protected void destroyPortlet() {
-
-    }
-
     private void removeHandlers() {
         for (HandlerRegistration reg : handlerRegistrations) {
             reg.removeHandler();
         }
-
     }
 
     public Optional<OWLEntityData> getSelectedEntityData() {
@@ -427,7 +375,8 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
 
     @Override
     public void dispose() {
-//        destroy();
+        removeHandlers();
+
     }
 
 

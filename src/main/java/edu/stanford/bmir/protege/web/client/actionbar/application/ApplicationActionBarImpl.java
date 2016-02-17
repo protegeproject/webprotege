@@ -11,8 +11,13 @@ import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.help.ShowAboutBoxHandler;
+import edu.stanford.bmir.protege.web.client.help.ShowUserGuideHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.client.user.ChangeEmailAddressHandler;
+import edu.stanford.bmir.protege.web.client.user.ChangePasswordHandler;
+import edu.stanford.bmir.protege.web.client.user.SignOutRequestHandler;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 

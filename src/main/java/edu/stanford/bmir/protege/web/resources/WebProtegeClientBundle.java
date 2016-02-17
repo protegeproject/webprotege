@@ -125,6 +125,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtegeButtons.css")
     WebProtegeButtons buttons();
 
+    @Source("WebProtegeMenus.css")
+    WebProtegeMenu menu();
+
     public static interface WebProtegeCss extends CssResource {
 
         String webProtegeLaf();
@@ -198,8 +201,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String dateTimeIconInset();
 
         String portletToolbar();
-
-        String portletToolbarButton();
     }
 
     public static interface WebProtegeButtons extends CssResource {
@@ -216,8 +217,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("btn-icon-alt")
         String btnIconAlt();
 
-        @ClassName("web-protege-btn")
-        String webProtegeBtn();
 
         String btn();
 
@@ -230,8 +229,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("btn-b")
         String btnB();
 
-        String pictogram();
-
         @ClassName("btn-c")
         String btnC();
 
@@ -243,5 +240,22 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("btn-d")
         String btnD();
+
+        String toolbarButton();
+
+        String circularButton();
+    }
+
+
+    public static interface WebProtegeMenu extends CssResource {
+
+        @ClassName("popup-menu-item")
+        String popupMenuItem();
+
+        @ClassName("popup-menu-inner")
+        String popupMenuInner();
+
+        @ClassName("popup-menu")
+        String popupMenu();
     }
 }

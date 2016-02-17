@@ -1,6 +1,11 @@
 package edu.stanford.bmir.protege.web.client.actionbar.application;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.help.ShowAboutBoxHandler;
+import edu.stanford.bmir.protege.web.client.help.ShowUserGuideHandler;
+import edu.stanford.bmir.protege.web.client.user.ChangeEmailAddressHandler;
+import edu.stanford.bmir.protege.web.client.user.ChangePasswordHandler;
+import edu.stanford.bmir.protege.web.client.user.SignOutRequestHandler;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**

@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.actionbar.application;
+package edu.stanford.bmir.protege.web.client.user;
 
 /**
  * Author: Matthew Horridge<br>

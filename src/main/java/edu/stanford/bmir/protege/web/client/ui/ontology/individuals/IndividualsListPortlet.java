@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.individuals;
 
 import com.google.common.base.Optional;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -35,6 +36,8 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
 import edu.stanford.bmir.protege.web.client.rpc.data.layout.PortletConfiguration;
 import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.ui.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
@@ -57,23 +60,34 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
         updateButtonStates();
     }
 
-    private DeleteHandler deleteHandler;
+    private DeleteHandler deleteHandler = new NullDeleteHandler();
 
-    private CreateHandler createHandler;
+    private CreateHandler createHandler = new NullCreateHandler();
 
 
-    private IndividualsListViewPresenter presenter;
+    private final PortletAction createAction = new PortletAction("Create", new PortletActionHandler() {
+        @Override
+        public void handleActionInvoked(PortletAction action, ClickEvent event) {
+            createHandler.handleCreate();
+        }
+    });
+
+    private final PortletAction deleteAction = new PortletAction("Delete", new PortletActionHandler() {
+        @Override
+        public void handleActionInvoked(PortletAction action, ClickEvent event) {
+            deleteHandler.handleDelete();
+        }
+    });
+
+    private final IndividualsListViewPresenter presenter;
 
     /*
      * Retrieved from the project configuration. If it is set,
      * then the individuals list will always display the instances
      * of the preconfigured class.
      */
-    protected Optional<OWLClass> preconfiguredClass = Optional.absent();
-
-//    private ToolbarButton createButton;
-//
-//    private ToolbarButton deleteButton;
+    // TODO: This needs fixing
+    private Optional<OWLClass> preconfiguredClass = Optional.absent();
 
     private EntitiesList<OWLNamedIndividualData> individualsList;
 
@@ -88,7 +102,6 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
                                   LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.permissionChecker = permissionChecker;
-//        setLayout(new FitLayout());
         setTitle("Individuals");
         individualsList = new EntitiesListImpl<>();
         ScrollPanel sp = new ScrollPanel(individualsList.asWidget());
@@ -99,42 +112,15 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
                 getSelectionModel().setSelection(event.getSelectedItem());
             }
         });
-        addToolbarButtons();
-        initConfiguration();
         if (preconfiguredClass != null && preconfiguredClass.isPresent()) {
-            presenter.setType(preconfiguredClass.get());
+            // TODO:
+//            presenter.setType(preconfiguredClass.get());
         }
         deleteHandler = new NullDeleteHandler();
         createHandler = new NullCreateHandler();
+        addPortletAction(createAction);
+        addPortletAction(deleteAction);
         presenter = new IndividualsListViewPresenter(getProjectId(), this, dispatchServiceManager);
-    }
-
-
-    @Override
-    public void setPortletConfiguration(PortletConfiguration portletConfiguration) {
-        super.setPortletConfiguration(portletConfiguration);
-        initConfiguration();
-        if (preconfiguredClass.isPresent()) {
-            presenter.setType(preconfiguredClass.get());
-        }
-    }
-
-    private void initConfiguration() {
-        PortletConfiguration config = getPortletConfiguration();
-        if (config == null) {
-            return;
-        }
-        Map<String, Object> properties = config.getProperties();
-        if (properties == null) {
-            return;
-        }
-        final String preconfiguredClassName = (String) properties.get(PRECONFIGURED_CLASS);
-        if (preconfiguredClassName != null) {
-            preconfiguredClass = Optional.of(DataFactory.getOWLClass(preconfiguredClassName));
-        }
-        else {
-            preconfiguredClass = Optional.absent();
-        }
     }
 
     @Override
@@ -174,84 +160,19 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
         }
     }
 
-    protected void addToolbarButtons() {
-//        setTopToolbar(new Toolbar());
-//        Toolbar toolbar = getTopToolbar();
-//        createButton = new ToolbarButton("Create");
-//        createButton.setCls("toolbar-button");
-//        createButton.addListener(new ButtonListenerAdapter() {
-//            @Override
-//            public void onClick(Button button, EventObject e) {
-//                createHandler.handleCreate();
-//            }
-//        });
-//        toolbar.addButton(createButton);
-//        deleteButton = new ToolbarButton("Delete");
-//        deleteButton.setCls("toolbar-button");
-//        deleteButton.addListener(new ButtonListenerAdapter() {
-//            @Override
-//            public void onClick(Button button, EventObject e) {
-//                getDeleteHandler().handleDelete();
-//            }
-//        });
-//        toolbar.addButton(deleteButton);
-//
-//        Widget searchField = createSearchField();
-//        if (searchField != null) {
-//            toolbar.addFill();
-//            toolbar.addSeparator();
-//            toolbar.addText("&nbsp<i>Search</i>:&nbsp&nbsp");
-//            toolbar.addElement(searchField.getElement());
-//        }
-    }
-
-    protected Widget createSearchField() {
-        final TextField searchField = new TextField("Search: ", "search");
-        searchField.setAutoWidth(true);
-        searchField.setEmptyText("Type search string");
-        searchField.addListener(new TextFieldListenerAdapter() {
-            @Override
-            public void onSpecialKey(Field field, EventObject e) {
-                if (e.getKey() == EventObject.ENTER) {
-                    // TODO: SELECTION
-//                    SearchUtil su = new SearchUtil(getProjectId(), IndividualsListPortlet.this);
-//                    su.setBusyComponent(getTopToolbar());
-//                    su.setSearchedValueType(ValueType.Instance);
-//                    su.search(searchField.getText());
-                }
-            }
-        });
-        return searchField;
-    }
-
-    public List<EntityData> getSelection() {
-        Optional<OWLNamedIndividualData> selection = individualsList.getSelectedEntity();
-        if(selection.isPresent()) {
-            List<EntityData> result = new ArrayList<EntityData>();
-            OWLNamedIndividual entity = selection.get().getEntity();
-            EntityData entityData = new EntityData(entity.getIRI().toString(), selection.get().getBrowserText());
-            entityData.setValueType(ValueType.Instance);
-            result.add(entityData);
-            return result;
-        }
-        else {
-            return Collections.emptyList();
-        }
-    }
-
     @Override
     public void onPermissionsChanged() {
         updateButtonStates();
     }
 
     public void updateButtonStates() {
-//        createButton.setDisabled(true);
-//        deleteButton.setDisabled(true);
+        createAction.setEnabled(false);
+        deleteAction.setEnabled(false);
         permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean result) {
-//                createButton.setDisabled(!result);
-//                deleteButton.setDisabled(!result);
+                createAction.setEnabled(true);
+                deleteAction.setEnabled(true);
             }
         });
     }
@@ -294,10 +215,6 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet implements 
     @Override
     public void setDeleteHandler(DeleteHandler handler) {
         this.deleteHandler = checkNotNull(handler);
-    }
-
-    public DeleteHandler getDeleteHandler() {
-        return deleteHandler;
     }
 
     @Override

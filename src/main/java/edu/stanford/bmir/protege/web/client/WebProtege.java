@@ -8,14 +8,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
+
+import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 
 /**
@@ -45,8 +44,9 @@ public class WebProtege implements EntryPoint {
 
     private void buildUI() {
 
-        WebProtegeClientBundle.BUNDLE.style().ensureInjected();
-        WebProtegeClientBundle.BUNDLE.buttons().ensureInjected();
+        BUNDLE.style().ensureInjected();
+        BUNDLE.buttons().ensureInjected();
+        BUNDLE.menu().ensureInjected();
 
         ApplicationPresenter applicationPresenter = WebProtegeClientInjector.getApplicationPresenter();
         ApplicationView applicationView = applicationPresenter.getApplicationView();
