@@ -94,17 +94,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     private TreePanel treePanel;
 
-    private CheckItem lastSelectedWatchType;
-
-    private CheckItem watchBranchItem;
-
-    private CheckItem unwatchBranchItem;
-
     private boolean expandDisabled = false;
-
-    private boolean showTools = true;
-
-    private boolean allowsMultiSelection = true;
 
     private String hierarchyProperty = null;
 
@@ -113,11 +103,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     private boolean registeredEventHandlers = false;
     
     private final DispatchServiceManager dispatchServiceManager;
-
-    /*
-    * Configuration constants and defaults
-    */
-    private static Set<EntityData> nodesWithNotesOpen = new HashSet<EntityData>();
 
     private final LoggedInUserProvider loggedInUserProvider;
 
@@ -139,6 +124,13 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     });
 
+    private final PortletAction watchClassAction = new PortletAction("Watch...", new PortletActionHandler() {
+        @Override
+        public void handleActionInvoked(PortletAction action, ClickEvent event) {
+
+        }
+    });
+
     @Inject
     public ClassTreePortlet(SelectionModel selectionModel,
                             EventBus eventBus,
@@ -147,38 +139,24 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                             LoggedInUserProvider loggedInUserProvider,
                             Provider<DiscussionThreadDialog> discussionThreadDialogProvider,
                             LoggedInUserProjectPermissionChecker permissionChecker) {
-        this(selectionModel, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, true, true, true, true, null, discussionThreadDialogProvider, permissionChecker);
+        this(selectionModel, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, null, discussionThreadDialogProvider, permissionChecker);
     }
 
-    private ClassTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final boolean showToolbar, final boolean showTitle, final boolean showTools, final boolean allowsMultiSelection, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
+    private ClassTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
-        this.showToolbar = showToolbar;
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
-        this.showTitle = showTitle;
-        this.showTools = showTools;
-        this.allowsMultiSelection = allowsMultiSelection;
         this.discussionThreadDialogProvider = discussionThreadDialogProvider;
         this.permissionChecker = loggedInUserProjectPermissionChecker;
+
+        addPortletAction(createClassAction);
+        addPortletAction(deleteClassAction);
+        addPortletAction(watchClassAction);
+
+        setTitle("Classes");
+
+
         registerEventHandlers();
-        BUNDLE.style().ensureInjected();
-
-//        setLayout(new FitLayout());
-//
-//        setTools(getTools());
-
-        if (showTitle) {
-            setTitle("Classes");
-        }
-
-        if (showToolbar) {
-            addToolbarButtons();
-        }
-
-//        final Panel bogusPanel = new Panel();
-//        bogusPanel.setId(PLACE_HOLDER_PANEL);
-//        bogusPanel.setHeight(560);
-//        add(bogusPanel);
 
         updateButtonStates();
         if (nodeListener == null) {
@@ -188,10 +166,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 //TODO: this functionality is similar to that found in AbstractFieldWidget and
                 @Override
                 public boolean doBeforeClick(final Node node, final EventObject e) {
-
-                    if (!nodesWithNotesOpen.contains(node.getUserObject())) { //not the second click in a double click
-                        onCellClickOrDblClick(node, e);
-                    }
+                    onCellClickOrDblClick(node, e);
                     return true;
                 }
 
@@ -244,7 +219,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 createRoot(root);
             }
         };
-        t.schedule(2000);
+        t.schedule(1000);
     }
 
     private void registerEventHandlers() {
@@ -365,36 +340,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     }
 
-    protected String getMoveClsDescription() {
-        return "Move class";
-    }
-
-    protected String getCreateClsLabel() {
-        return "Create";
-    }
-
-    protected String getDeleteClsLabel() {
-        return "Delete";
-    }
-
-    protected boolean getDeleteEnabled() {
-        // TODO: These should be injected
-        return true;
-    }
-
-    protected String getWatchClsLabel() {
-        return "Watch class";
-    }
-
-    protected String getWatchBranchClsLabel() {
-        return "Watch branch";
-    }
-
-    protected String getUnwatchClsLabel() {
-        return "Remove watch";
-    }
-
     private void onNotesChanged(EntityNotesChangedEvent event) {
+        GWT.log("[ClassTreePortlet] Notes Changed: " + event);
         String name = event.getEntity().getIRI().toString();
         TreeNode node = findTreeNode(name);
         if (node != null) {
@@ -454,10 +401,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         treePanel.setAnimate(true);
         treePanel.setEnableDD(true);
 
-        if (allowsMultiSelection) {
-            treePanel.setSelectionModel(new MultiSelectionModel());
-        }
-
         treePanel.addListener(new TreePanelListenerAdapter() {
             @Override
             public void onExpandNode(final TreeNode node) {
@@ -500,141 +443,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             GWT.log("Unknown tree selection model for class tree: " + selModel, null);
         }
     }
-
-    @Override
-    protected Tool[] getTools() {
-        return showTools ? super.getTools() : new Tool[]{};
-    }
-
-    protected void addToolbarButtons() {
-        setToolbarVisible(true);
-        addPortletAction(createClassAction);
-        addPortletAction(deleteClassAction);
-//        setTopToolbar(new Toolbar());
-//        final Toolbar toolbar = getTopToolbar();
-//
-//        setupCreateButton();
-//        toolbar.addButton(createButton);
-//
-//
-//        setupDeleteButton();
-//        toolbar.addButton(deleteButton);
-//
-//        watchButton = createWatchButton();
-//        if (watchButton != null) {
-//            toolbar.addElement(watchButton.getElement());
-//        }
-//
-//        final Component searchField = createSearchField();
-//        if (searchField != null) {
-//            toolbar.addSpacer();
-//            toolbar.addSeparator();
-//            toolbar.addText("&nbsp<i>Search</i>:&nbsp&nbsp");
-//            toolbar.addElement(searchField.getElement());
-//        }
-    }
-
-//    protected void setupCreateButton() {
-//        createButton.setCls("toolbar-button");
-//        createButton.addListener(new ButtonListenerAdapter() {
-//            @Override
-//            public void onClick(final Button button, final EventObject e) {
-//                onCreateCls(e.isShiftKey() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES);
-//            }
-//        });
-//        createButton.setDisabled(true);
-//    }
-
-//    protected void setupDeleteButton() {
-//        deleteButton.setCls("toolbar-button");
-//        deleteButton.addListener(new ButtonListenerAdapter() {
-//            @Override
-//            public void onClick(final Button button, final EventObject e) {
-//                onDeleteCls();
-//            }
-//        });
-//        deleteButton.setDisabled(true);
-//    }
-
-//    protected CycleButton createWatchButton() {
-//        watchButton = new CycleButton();
-//        watchButton.setShowText(true);
-//        watchButton.setCls("toolbar-button");
-//
-//        final CheckItem watchItem = new CheckItem();
-//        watchItem.setText(getWatchClsLabel());
-//        watchItem.setCls("toolbar-button");
-//        watchButton.addItem(watchItem);
-//
-//        watchBranchItem = new CheckItem();
-//        watchBranchItem.setText(getWatchBranchClsLabel());
-//        watchBranchItem.setCls("toolbar-button");
-//        watchBranchItem.setChecked(true);
-//        watchButton.addItem(watchBranchItem);
-//
-//        unwatchBranchItem = new CheckItem();
-//        unwatchBranchItem.setText(getUnwatchClsLabel());
-//        unwatchBranchItem.setCls("toolbar-button");
-//        watchButton.addItem(unwatchBranchItem);
-//
-//        //the listener is needed to override behavior of cycle button
-//        CheckItemListener checkItemListener = new CheckItemListenerAdapter() {
-//            @Override
-//            public boolean doBeforeCheckChange(CheckItem item, boolean checked) {
-//                return false;
-//            }
-//        };
-//
-//        BaseItemListener baseItemListener = new BaseItemListenerAdapter() {
-//            @Override
-//            public void onClick(BaseItem item, EventObject e) {
-//                CheckItem activeItem = (CheckItem) item;
-//                watchButton.setActiveItem(activeItem);
-//                if (activeItem != unwatchBranchItem) {
-//                    lastSelectedWatchType = activeItem;
-//                }
-//
-//                //this is optional, and can be removed if it is confusing to the user:
-//                //if a user clicks in the watch menu on an item, we perform the operation right away to avoid one more click.
-//                if (activeItem.equals(watchItem)) {
-//                    onWatchCls();
-//                }
-//                else if (activeItem.equals(watchBranchItem)) {
-//                    onWatchBranchCls();
-//                }
-//                else if (activeItem.equals(unwatchBranchItem)) {
-//                    onUnwatchCls();
-//                }
-//            }
-//        };
-//
-//        watchItem.addListener(baseItemListener);
-//        watchBranchItem.addListener(baseItemListener);
-//        unwatchBranchItem.addListener(baseItemListener);
-//
-//        watchItem.addListener(checkItemListener);
-//        watchBranchItem.addListener(checkItemListener);
-//        unwatchBranchItem.addListener(checkItemListener);
-//
-//        //listener for performing the specific watch action
-//        watchButton.addListener(new ButtonListenerAdapter() {
-//            @Override
-//            public void onClick(Button button, EventObject e) {
-//                CheckItem activeItem = watchButton.getActiveItem();
-//                if (activeItem.equals(watchItem)) {
-//                    onWatchCls();
-//                }
-//                else if (activeItem.equals(watchBranchItem)) {
-//                    onWatchBranchCls();
-//                }
-//                else if (activeItem.equals(unwatchBranchItem)) {
-//                    onUnwatchCls();
-//                }
-//            }
-//        });
-//
-//        return watchButton;
-//    }
 
     protected void updateWatchedMenuState() {
         List<EntityData> entities = getSelectedTreeNodeEntityData();
@@ -1077,7 +885,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     protected String getMoveClsOperationDescription(final EntityData cls, final EntityData oldParent, final EntityData newParent) {
-        return getMoveClsDescription() + ": " + getDisplayText(cls) + ". Old parent: " + getDisplayText(oldParent) + ", New parent: " + getDisplayText(newParent);
+        return "Move class: " + getDisplayText(cls) + ". Old parent: " + getDisplayText(oldParent) + ", New parent: " + getDisplayText(newParent);
     }
 
     public void getPathToRoot(final OWLEntity entity) {
@@ -1312,8 +1120,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         if (rootEnitity == null) {
             rootEnitity = new EntityData("Root", "Root node is not defined");
         }
-//        remove(PLACE_HOLDER_PANEL);
-
         treePanel = createTreePanel();
         final TreeNode root = createTreeNode(rootEnitity);
         treePanel.setRootNode(root);
@@ -1321,13 +1127,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         ScrollPanel sp = new ScrollPanel(treePanel);
         getContentHolder().setWidget(sp);
         createSelectionListener();
-
-        try {
-            // FIXME: could not figure out why it throws exceptions sometimes, not elegant but it works
-//            doLayout();
-        } catch (final Exception e) {
-            GWT.log("Error at doLayout in class tree", e);
-        }
 
         root.select();
         // MH: createTreeNode calls get subclasses, so it was being called twice
