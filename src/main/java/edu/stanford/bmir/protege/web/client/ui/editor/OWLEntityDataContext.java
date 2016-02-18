@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 
@@ -13,22 +13,22 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  */
 public class OWLEntityDataContext extends EditorCtx {
 
-    private OWLEntityData entityData;
+    private OWLEntity entity;
 
-    public OWLEntityDataContext(ProjectId projectId, OWLEntityData entityData) {
+    public OWLEntityDataContext(ProjectId projectId, OWLEntity entity) {
         super(projectId);
-        this.entityData = entityData;
+        this.entity = entity;
     }
 
-    public OWLEntityData getEntityData() {
-        return entityData;
+    public OWLEntity getEntity() {
+        return entity;
     }
 
 
     @Override
     public String toString() {
         return toStringHelper("OWLEntityDataContext")
-                .addValue(entityData)
+                .addValue(entity)
                 .toString();
     }
 }

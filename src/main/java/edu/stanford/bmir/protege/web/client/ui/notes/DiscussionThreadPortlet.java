@@ -4,12 +4,11 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 
@@ -27,25 +26,25 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
     public DiscussionThreadPortlet(ProjectId projectId, EventBus eventBus, SelectionModel selectionModel, LoggedInUserProvider loggedInUserProvider, DiscussionThreadPresenter discussionThreadPresenter) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         presenter = discussionThreadPresenter;
+        presenter.installActions(this);
         ScrollPanel sp = new ScrollPanel(presenter.getWidget());
         getContentHolder().setWidget(sp);
+        setTitle("Discussions");
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
-        if(entityData.isPresent()) {
-            presenter.setTarget(entityData.get().getEntity());
-            setTitle("Discussions for " + entityData.get().getBrowserText());
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+        if(entity.isPresent()) {
+            presenter.setTarget(entity.get());
         }
         else {
             presenter.clearTarget();
-            setTitle("Nothing selected");
         }
     }
 
-//    @Override
-    protected void onDestroy() {
+    @Override
+    public void dispose() {
+        super.dispose();
         presenter.dispose();
-//        super.onDestroy();
     }
 }

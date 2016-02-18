@@ -5,7 +5,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ProvidesResize;
 import com.google.gwt.user.client.ui.RequiresResize;
-import edu.stanford.bmir.protege.web.client.perspective.Perspective;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveImpl;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 
 /**
@@ -17,7 +17,7 @@ import edu.stanford.bmir.protege.web.shared.HasDispose;
  *     An interface to objects that provide the means to display a project.
  * </p>
  */
-public interface ProjectView extends IsWidget, HasDispose, RequiresResize, ProvidesResize, HasSelectionHandlers<Perspective> {
+public interface ProjectView extends IsWidget, HasDispose, RequiresResize, ProvidesResize, HasSelectionHandlers<PerspectiveImpl> {
 
     AcceptsOneWidget getTopBarContainer();
 

@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import edu.stanford.bmir.protege.web.client.ui.portlet.objecteditor.EditorContext;
+import edu.stanford.bmir.protege.web.client.portlet.objecteditor.EditorContext;
 
 /**
  * Author: Matthew Horridge<br>

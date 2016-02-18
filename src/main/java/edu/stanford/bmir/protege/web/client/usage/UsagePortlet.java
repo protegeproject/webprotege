@@ -5,11 +5,9 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -53,12 +51,12 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
 
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
+    protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
         updateDisplayForSelectedEntity();
     }
 
     private void updateDisplayForSelectedEntity() {
-        final Optional<OWLEntityData> sel = getSelectedEntityData();
+        final Optional<OWLEntity> sel = getSelectedEntity();
         if(sel.isPresent()) {
             showUsageForEntity(sel.get());
         }
@@ -68,8 +66,7 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-    private void showUsageForEntity(final OWLEntityData entityData) {
-        final OWLEntity entity = entityData.getEntity();
+    private void showUsageForEntity(final OWLEntity entity) {
         final GetUsageAction action = new GetUsageAction(entity, getProjectId(), Optional.of(usageView.getUsageFilter()));
         dispatchServiceManager.execute(action, new DispatchServiceCallback<GetUsageResult>() {
 
@@ -83,7 +80,7 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
                 final Collection<UsageReference> references = result.getUsageReferences();
                 final int visibleReferences = references.size();
                 final int totalReferences = result.getTotalUsageCount();
-                setTitle("Usage of " + entityData.getBrowserText() + " (definition and references) [showing " + visibleReferences + " references of " + totalReferences + "]");
+                setTitle("Usage (definition and references) [showing " + visibleReferences + " references of " + totalReferences + "]");
                 usageView.setData(entity, references);
             }
         });

@@ -7,9 +7,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
-import com.gwtext.client.widgets.Button;
-import com.gwtext.client.widgets.event.ButtonListenerAdapter;
-import com.gwtext.client.widgets.layout.FitLayout;
 import com.gwtext.client.widgets.tree.DefaultSelectionModel;
 import com.gwtext.client.widgets.tree.TreeNode;
 import com.gwtext.client.widgets.tree.TreePanel;
@@ -30,8 +27,8 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.portlet.LegacyCompatUtil;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.LegacyCompatUtil;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
@@ -184,7 +181,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
                 if (treeNode != null) {
                     Optional<OWLEntityData> sel = getEntityDataFromTreeNode(treeNode);
                     if (sel.isPresent()) {
-                        getSelectionModel().setSelection(sel.get());
+                        getSelectionModel().setSelection(sel.get().getEntity());
                     }
                 }
             }
@@ -223,7 +220,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 //        lastSelectedTreeNode = node;
         Optional<OWLEntityData> sel = getSelectedTreeNodeEntityData();
         if (sel.isPresent()) {
-            getSelectionModel().setSelection(sel.get());
+            getSelectionModel().setSelection(sel.get().getEntity());
         }
     }
 
@@ -555,23 +552,23 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     protected void onDeleteProperty() {
 
-        Optional<OWLEntityData> selection = getSelectedEntityData();
+        Optional<OWLEntity> selection = getSelectedEntity();
 
         if (!selection.isPresent()) {
             return;
         }
 
-        final OWLEntityData entityData = selection.get();
+        final OWLEntity entity = selection.get();
 
-        if (!(entityData instanceof OWLPropertyData)) {
+        if (!(entity instanceof OWLProperty)) {
             // Better safe than sorry
             return;
         }
 
-        MessageBox.showYesNoConfirmBox("Delete " + entityData.getBrowserText(), "Are you sure you want to delete property <br> " + selection.get().getBrowserText() + " ?", new YesNoHandler() {
+        MessageBox.showYesNoConfirmBox("Delete selected property?", "Are you sure you want to delete the selected property ?", new YesNoHandler() {
             @Override
             public void handleYes() {
-                deleteProperty((OWLPropertyData) entityData);
+                deleteProperty((OWLProperty) entity);
             }
 
             @Override
@@ -582,12 +579,12 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
 
-    protected void deleteProperty(OWLPropertyData propertyEntityData) {
-        GWT.log("Should delete property with name: " + propertyEntityData, null);
-        if (propertyEntityData == null) {
+    protected void deleteProperty(OWLProperty propertyEntity) {
+        GWT.log("Should delete property with name: " + propertyEntity, null);
+        if (propertyEntity == null) {
             return;
         }
-        dispatchServiceManager.execute(new DeleteEntityAction(propertyEntityData.getEntity(), getProjectId()), new DeletePropertyHandler());
+        dispatchServiceManager.execute(new DeleteEntityAction(propertyEntity, getProjectId()), new DeletePropertyHandler());
     }
 
     private TreeNode getDirectChild(TreeNode parentNode, String childId) {

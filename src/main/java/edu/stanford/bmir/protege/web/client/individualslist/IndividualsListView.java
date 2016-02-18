@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.individualslist;
 
 import com.google.common.base.Optional;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.action.HasCreateHandler;
 import edu.stanford.bmir.protege.web.client.action.HasDeleteHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
@@ -15,7 +16,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 12/09/2013
  */
-public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndividualData>, HasCreateHandler, HasDeleteHandler {
+public interface IndividualsListView extends HasSelectionHandlers<OWLNamedIndividualData>, IsWidget {
 
     void setListData(List<OWLNamedIndividualData> individuals);
 

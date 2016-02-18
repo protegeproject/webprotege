@@ -9,14 +9,14 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
-import edu.stanford.bmir.protege.web.client.perspective.Perspective;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveImpl;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 11/02/16
  */
-public class ProjectViewImpl extends Composite implements ProjectView, HasSelectionHandlers<Perspective> {
+public class ProjectViewImpl extends Composite implements ProjectView, HasSelectionHandlers<PerspectiveImpl> {
 
     interface ProjectViewImplUiBinder extends UiBinder<HTMLPanel, ProjectViewImpl> {
 
@@ -55,8 +55,8 @@ public class ProjectViewImpl extends Composite implements ProjectView, HasSelect
     }
 
     @Override
-    public HandlerRegistration addSelectionHandler(SelectionHandler<Perspective> handler) {
-        return addHandler(handler, SelectionEvent.<Perspective>getType());
+    public HandlerRegistration addSelectionHandler(SelectionHandler<PerspectiveImpl> handler) {
+        return addHandler(handler, SelectionEvent.<PerspectiveImpl>getType());
     }
 
     @Override

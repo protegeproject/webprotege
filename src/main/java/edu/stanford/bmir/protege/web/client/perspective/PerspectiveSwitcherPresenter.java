@@ -32,7 +32,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     private final CreateFreshPerspectiveRequestHandler createFreshPerspectiveRequestHandler;
 
     @Inject
-    public PerspectiveSwitcherPresenter(PerspectiveSwitcherView view, PerspectiveLinkManager perspectiveLinkManager, CreateFreshPerspectiveRequestHandler createFreshPerspectiveRequestHandler, PlaceController placeController, EventBus eventBus) {
+    public PerspectiveSwitcherPresenter(PerspectiveSwitcherView view, PerspectiveLinkManager perspectiveLinkManager, CreateFreshPerspectiveRequestHandler createFreshPerspectiveRequestHandler, PlaceController placeController, final EventBus eventBus) {
         this.view = view;
         this.createFreshPerspectiveRequestHandler = createFreshPerspectiveRequestHandler;
         this.perspectiveLinkManager = perspectiveLinkManager;
@@ -58,6 +58,12 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
         view.setAddPerspectiveLinkRequestHandler(new PerspectiveSwitcherView.AddPerspectiveLinkRequestHandler() {
             public void handleAddNewPerspectiveLinkRequest() {
                 handleCreateNewPerspective();
+            }
+        });
+        view.setResetPerspectiveToDefaultStateHandler(new PerspectiveSwitcherView.ResetPerspectiveToDefaultStateHandler() {
+            @Override
+            public void handleResetPerspectiveToDefaultState(PerspectiveId perspectiveId) {
+                eventBus.fireEvent(new ResetPerspectiveEvent(perspectiveId));
             }
         });
         perspectiveLinkManager.getLinkedPerspectives(new PerspectiveLinkManager.Callback() {

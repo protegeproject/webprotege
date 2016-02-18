@@ -30,6 +30,10 @@ public interface PerspectiveSwitcherView extends IsWidget {
         void handleRemovePerspectiveLinkRequest(PerspectiveId perspectiveId);
     }
 
+    public static interface ResetPerspectiveToDefaultStateHandler {
+        void handleResetPerspectiveToDefaultState(PerspectiveId perspectiveId);
+    }
+
     /**
      * Sets the selected perspective link.  This link will be visually distinguished from the other perspective
      * links in the view.
@@ -72,4 +76,6 @@ public interface PerspectiveSwitcherView extends IsWidget {
      * @param handler  The handler.  Not {@code null}.
      */
     void setRemovePerspectiveLinkHandler(RemovePerspectiveLinkRequestHandler handler);
+
+    void setResetPerspectiveToDefaultStateHandler(ResetPerspectiveToDefaultStateHandler handler);
 }

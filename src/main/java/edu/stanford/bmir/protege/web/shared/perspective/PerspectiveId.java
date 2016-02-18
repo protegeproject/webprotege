@@ -1,6 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
 import com.google.common.base.Objects;
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -9,9 +12,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
-public class PerspectiveId {
+public class PerspectiveId implements IsSerializable, Serializable {
 
     private String id;
+
+    /**
+     * For serialization only
+     */
+    private PerspectiveId() {
+    }
 
     public PerspectiveId(String id) {
         this.id = checkNotNull(id);

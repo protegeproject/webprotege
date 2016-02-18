@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.ui.frame.ObjectPropertyFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
@@ -8,7 +7,6 @@ import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateObjectPropertyFrameAction;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 
@@ -34,7 +32,7 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
 
     @Override
     public GetObjectAction<LabelledFrame<ObjectPropertyFrame>> createGetObjectAction(OWLEntityDataContext editorContext) {
-        return new GetObjectPropertyFrameAction(editorContext.getProjectId(), editorContext.getEntityData().getEntity().asOWLObjectProperty());
+        return new GetObjectPropertyFrameAction(editorContext.getProjectId(), editorContext.getEntity().asOWLObjectProperty());
     }
 
     @Override
@@ -44,6 +42,6 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
 
     @Override
     public String getDescription(OWLEntityDataContext editorContext) {
-        return "Object property description for " + editorContext.getEntityData().getBrowserText();
+        return "Object property description";
     }
 }

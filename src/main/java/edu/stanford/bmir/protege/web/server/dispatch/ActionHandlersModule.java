@@ -34,6 +34,7 @@ import edu.stanford.bmir.protege.web.server.notes.AddReplyToNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.DeleteNoteActionHandler;
 import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
 import edu.stanford.bmir.protege.web.server.permissions.GetPermissionsActionHandler;
+import edu.stanford.bmir.protege.web.server.perspective.GetPerspectiveLayoutActionHandler;
 import edu.stanford.bmir.protege.web.server.project.CreateNewProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.project.GetUIConfigurationActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
@@ -51,6 +52,7 @@ import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.project.SetUIConfigurationActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.*;
 import edu.stanford.bmir.protege.web.shared.frame.GetOntologyFramesAction;
+import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutAction;
 
 /**
  * Matthew Horridge
@@ -180,5 +182,7 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(GetPersonIdCompletionsActionHandler.class);
         multibinder.addBinding().to(GetUserIdCompletionsActionHandler.class);
         multibinder.addBinding().to(GetPersonIdItemsActionHandler.class);
+
+        multibinder.addBinding().to(GetPerspectiveLayoutActionHandler.class);
     }
 }

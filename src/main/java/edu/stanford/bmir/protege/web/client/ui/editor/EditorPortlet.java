@@ -1,18 +1,15 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 
@@ -55,16 +52,16 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
-        if(!entityData.isPresent()) {
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+        if(!entity.isPresent()) {
             // TODO: Show nothing selected
             return;
         }
-        final Optional<EditorCtx> editorContext = getEditorContext(entityData);
+        final Optional<EditorCtx> editorContext = getEditorContext(entity);
         editorPresenter.setEditorContext(editorContext);
     }
 
-    public Optional<EditorCtx> getEditorContext(Optional<OWLEntityData> sel) {
+    public Optional<EditorCtx> getEditorContext(Optional<OWLEntity> sel) {
         if(!sel.isPresent()) {
             return Optional.absent();
         }

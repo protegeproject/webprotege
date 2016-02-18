@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateClassFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.*;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -32,7 +30,7 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityDataConte
 
     @Override
     public GetObjectAction<LabelledFrame<ClassFrame>> createGetObjectAction(OWLEntityDataContext editorContext) {
-        return new GetClassFrameAction(editorContext.getEntityData().getEntity().asOWLClass(), editorContext.getProjectId());
+        return new GetClassFrameAction(editorContext.getEntity().asOWLClass(), editorContext.getProjectId());
     }
 
     @Override
@@ -42,6 +40,6 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityDataConte
 
     @Override
     public String getDescription(OWLEntityDataContext editorContext) {
-        return "Class description for " + editorContext.getEntityData().getBrowserText();
+        return "Class description";
     }
 }

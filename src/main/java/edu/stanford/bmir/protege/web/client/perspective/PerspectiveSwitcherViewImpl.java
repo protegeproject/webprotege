@@ -25,6 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PerspectiveSwitcherViewImpl extends Composite implements PerspectiveSwitcherView {
 
+
     interface PerspectiveSwitcherViewImplUiBinder extends UiBinder<HTMLPanel, PerspectiveSwitcherViewImpl> {
     }
 
@@ -56,6 +57,13 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     private RemovePerspectiveLinkRequestHandler removePerspectiveLinkRequestHandler = new RemovePerspectiveLinkRequestHandler() {
         public void handleRemovePerspectiveLinkRequest(PerspectiveId perspectiveId) {
+
+        }
+    };
+
+    private ResetPerspectiveToDefaultStateHandler resetPerspectiveToDefaultStateHandler = new ResetPerspectiveToDefaultStateHandler() {
+        @Override
+        public void handleResetPerspectiveToDefaultState(PerspectiveId perspectiveId) {
 
         }
     };
@@ -104,6 +112,13 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
                 linkActivatedHandler.handlePerspectiveLinkActivated(perspectiveId);
             }
         });
+
+        linkWidget.addActionHandler("Reset", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                resetPerspectiveToDefaultStateHandler.handleResetPerspectiveToDefaultState(perspectiveId);
+            }
+        });
         linkWidget.addActionHandler("Close", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -144,6 +159,11 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     public void setRemovePerspectiveLinkHandler(RemovePerspectiveLinkRequestHandler handler) {
         removePerspectiveLinkRequestHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setResetPerspectiveToDefaultStateHandler(ResetPerspectiveToDefaultStateHandler handler) {
+        resetPerspectiveToDefaultStateHandler = checkNotNull(handler);
     }
 
     public void setHighlightedPerspective(PerspectiveId perspectiveId) {

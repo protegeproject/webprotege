@@ -14,7 +14,7 @@ public class UIFactoryGenerator {
 //import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 //import com.google.gwt.user.rebind.SourceWriter;
 //import edu.stanford.bmir.protege.web.client.annotation.WebProtegePortlet;
-//import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractEntityPortlet;
+//import edu.stanford.bmir.protege.web.client.portlet.AbstractEntityPortlet;
 //
 //import java.io.PrintWriter;
 //import java.util.Date;

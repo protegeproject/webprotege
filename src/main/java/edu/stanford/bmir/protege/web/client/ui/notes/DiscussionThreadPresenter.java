@@ -2,9 +2,13 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -51,6 +55,14 @@ public class DiscussionThreadPresenter implements HasDispose {
     private final ActiveProjectManager activeProjectManager;
 
     private final Provider<NoteContainerPresenter> noteContainerPresenterProvider;
+
+    private PortletAction postNewTopicAction = new PortletAction("New topic",
+            new PortletActionHandler() {
+                @Override
+                public void handleActionInvoked(PortletAction action, ClickEvent event) {
+                    handlePostNewTopic();
+                }
+            });
 
     @Inject
     public DiscussionThreadPresenter(ProjectId projectId,
@@ -104,27 +116,36 @@ public class DiscussionThreadPresenter implements HasDispose {
         });
     }
 
+    public void installActions(HasPortletActions hasPortletActions) {
+        hasPortletActions.addPortletAction(postNewTopicAction);
+    }
+
+    private void handlePostNewTopic() {
+        PostNewTopicHandler handler = new PostNewTopicHandlerImpl(
+                Optional.fromNullable(currentTarget),
+                dispatchServiceManager, activeProjectManager);
+        handler.handlePostNewTopic();
+    }
+
 
     public void clearTarget() {
         view.removeAllNotes();
         currentTarget = null;
-        view.setPostNewTopicEnabled(false);
-        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget), dispatchServiceManager, activeProjectManager));
+        updateButtonState();
     }
 
     public void setTarget(OWLEntity target) {
         currentTarget = target;
-        view.setPostNewTopicEnabled(false);
-        view.setPostNewTopicHandler(new PostNewTopicHandlerImpl(Optional.fromNullable(currentTarget), dispatchServiceManager, activeProjectManager));
         updateButtonState();
         reload();
     }
 
     private void updateButtonState() {
+        postNewTopicAction.setEnabled(false);
         permissionChecker.hasCommentPermission(new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean hasPermission) {
-                view.setPostNewTopicEnabled(currentTarget != null && hasPermission);
+                postNewTopicAction.setEnabled(currentTarget != null && hasPermission);
             }
         });
     }

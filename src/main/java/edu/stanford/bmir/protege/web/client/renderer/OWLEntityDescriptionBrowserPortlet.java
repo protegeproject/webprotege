@@ -7,8 +7,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -24,7 +23,7 @@ import javax.inject.Inject;
  */
 public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet {
 
-    private HTML html;
+    private final HTML html;
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -77,24 +76,22 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
-        if(entityData.isPresent()) {
-            dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), entityData.get().getEntity()),
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+        if(entity.isPresent()) {
+            dispatchServiceManager.execute(new GetEntityRenderingAction(getProjectId(), entity.get()),
                                                  new DispatchServiceCallback<GetEntityRenderingResult>() {
                                                      @Override
                                                      public void handleSuccess(GetEntityRenderingResult result) {
                                                          html.setHTML(result.getRendering());
                                                      }
                                                  });
-
-            setTitle(entityData.get().getBrowserText());
         }
     }
 
 
     private void handleEntityChange(OWLEntity entity) {
         if(Optional.of(entity).equals(getSelectedEntity())) {
-            handleAfterSetEntity(getSelectedEntityData());
+            handleAfterSetEntity(getSelectedEntity());
         }
     }
 

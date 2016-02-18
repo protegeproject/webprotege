@@ -15,7 +15,6 @@ import com.gwtext.client.data.Node;
 import com.gwtext.client.dd.DragData;
 import com.gwtext.client.dd.DragDrop;
 import com.gwtext.client.widgets.*;
-import com.gwtext.client.widgets.event.ButtonListenerAdapter;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
@@ -23,10 +22,7 @@ import com.gwtext.client.widgets.menu.BaseItem;
 import com.gwtext.client.widgets.menu.CheckItem;
 import com.gwtext.client.widgets.menu.Menu;
 import com.gwtext.client.widgets.menu.MenuItem;
-import com.gwtext.client.widgets.menu.event.BaseItemListener;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
-import com.gwtext.client.widgets.menu.event.CheckItemListener;
-import com.gwtext.client.widgets.menu.event.CheckItemListenerAdapter;
 import com.gwtext.client.widgets.tree.*;
 import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter;
 import com.gwtext.client.widgets.tree.event.MultiSelectionModelListener;
@@ -48,9 +44,9 @@ import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.DiscussionThreadDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.client.ui.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.ui.portlet.PortletActionHandler;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileResultHandler;
@@ -105,10 +101,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     private CheckItem unwatchBranchItem;
 
     private boolean expandDisabled = false;
-
-    private boolean showToolbar = true;
-
-    private boolean showTitle = true;
 
     private boolean showTools = true;
 
@@ -488,7 +480,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 public void onSelectionChange(final DefaultSelectionModel sm, final TreeNode node) {
                     Optional<OWLClassData> selectedClassDataFromTree = getSelectedTreeNodeClassData();
                     if (selectedClassDataFromTree.isPresent()) {
-                        getSelectionModel().setSelection(selectedClassDataFromTree.get());
+                        getSelectionModel().setSelection(selectedClassDataFromTree.get().getEntity());
                     }
 
                 }
@@ -499,7 +491,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 public void onSelectionChange(final MultiSelectionModel sm, final TreeNode[] nodes) {
                     Optional<OWLClassData> selectedClassDataFromTree = getSelectedTreeNodeClassData();
                     if (selectedClassDataFromTree.isPresent()) {
-                        getSelectionModel().setSelection(selectedClassDataFromTree.get());
+                        getSelectionModel().setSelection(selectedClassDataFromTree.get().getEntity());
                     }
                 }
             });
@@ -1088,8 +1080,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         return getMoveClsDescription() + ": " + getDisplayText(cls) + ". Old parent: " + getDisplayText(oldParent) + ", New parent: " + getDisplayText(newParent);
     }
 
-    public void getPathToRoot(final OWLEntityData entity) {
-        OntologyServiceManager.getInstance().getPathToRoot(getProjectId(), entity.getEntity().getIRI().toString(), new GetPathToRootHandler());
+    public void getPathToRoot(final OWLEntity entity) {
+        OntologyServiceManager.getInstance().getPathToRoot(getProjectId(), entity.getIRI().toString(), new GetPathToRootHandler());
     }
 
     private static String getDisplayText(Object object) {
@@ -1181,7 +1173,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
 
-    private void setSelectionInTree(Optional<OWLEntityData> selection) {
+    private void setSelectionInTree(Optional<OWLEntity> selection) {
         if(!selection.isPresent()) {
             return;
         }
@@ -1341,15 +1333,15 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         // MH: createTreeNode calls get subclasses, so it was being called twice
 //        getSubclasses(rootEnitity.getName(), root);
         root.expand();
-        setSelectionInTree(getSelectedEntityData());
+        setSelectionInTree(getSelectedEntity());
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
-        if(getSelectedTreeNodeClassData().equals(entityData)) {
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+        if(getSelectedTreeNodeClass().equals(entity)) {
             return;
         }
-        setSelectionInTree(entityData);
+        setSelectionInTree(entity);
         updateWatchedMenuState();
     }
 
@@ -1386,8 +1378,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         treePanel.setVisible(true);
         setSubclassesLoaded(root, false);
 
-        Optional<OWLEntityData> selection = getSelectedEntityData();
-        if(selection.isPresent() && !selection.get().getEntity().isTopEntity()) {
+        Optional<OWLEntity> selection = getSelectedEntity();
+        if(selection.isPresent() && !selection.get().isTopEntity()) {
             setSelectionInTree(selection);
         }
         else {
@@ -1656,7 +1648,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                     OWLEntityData owlEntityData = DataFactory.getOWLEntityData(
                             DataFactory.getOWLClass(entityData.getName()),
                             entityData.getBrowserText());
-                    getSelectionModel().setSelection(owlEntityData);
+                    getSelectionModel().setSelection(owlEntityData.getEntity());
                 }
                 else {
                     selectPathInTree(path, pathTreeNode, index + 1);

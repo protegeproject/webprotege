@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.help.*;
+import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.login.LoginView;
 import edu.stanford.bmir.protege.web.client.login.LoginViewImpl;
@@ -49,6 +50,7 @@ import edu.stanford.bmir.protege.web.client.ui.editor.EditorManagerSelector;
 import edu.stanford.bmir.protege.web.client.ui.editor.EntityDataContextSelector;
 import edu.stanford.bmir.protege.web.client.ui.frame.ManchesterSyntaxFrameEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.ManchesterSyntaxFrameEditorImpl;
+import edu.stanford.bmir.protege.web.client.ui.individuals.IndividualsListViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.notes.*;
 import edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductEditor;
 import edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductEditorImpl;
@@ -57,7 +59,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsV
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListView;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectListPresenter;
-import edu.stanford.bmir.protege.web.client.ui.tab.PerspectiveFactory;
+import edu.stanford.bmir.protege.web.client.perspective.PerspectiveFactory;
 import edu.stanford.bmir.protege.web.client.user.*;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
@@ -81,7 +83,7 @@ public class ApplicationClientModule extends AbstractGinModule {
     protected void configure() {
 
         install(new GinFactoryModuleBuilder()
-                .implement(Perspective.class, Perspective.class)
+                .implement(Perspective.class, PerspectiveImpl.class)
                 .build(PerspectiveFactory.class));
 
         bind(ProjectId.class).toProvider(ProjectIdProvider.class);
@@ -176,6 +178,8 @@ public class ApplicationClientModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder()
                 .implement(PerspectiveLink.class, PerspectiveLinkImpl.class)
                 .build(PerspectiveLinkFactory.class));
+
+        bind(IndividualsListView.class).to(IndividualsListViewImpl.class);
 
     }
 

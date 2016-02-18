@@ -22,6 +22,7 @@ public class DummyPerspectiveLinkManager implements PerspectiveLinkManager {
         linkedPerspectives.add(new PerspectiveId("Classes"));
         linkedPerspectives.add(new PerspectiveId("Properties"));
         linkedPerspectives.add(new PerspectiveId("Individuals"));
+        linkedPerspectives.add(new PerspectiveId("Changes By Entity"));
     }
 
     public void getLinkedPerspectives(final Callback callback) {
@@ -35,7 +36,7 @@ public class DummyPerspectiveLinkManager implements PerspectiveLinkManager {
                 callback.handlePerspectives(Lists.newArrayList(linkedPerspectives));
             }
         };
-        t.schedule(1);
+        t.schedule(2000);
     }
 
     public void removeLinkedPerspective(PerspectiveId perspectiveId, Callback callback) {
