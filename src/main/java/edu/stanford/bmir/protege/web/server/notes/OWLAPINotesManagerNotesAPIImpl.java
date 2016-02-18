@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.event.EntityNotesChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.notes.*;
@@ -249,6 +250,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             Note note = addNoteToTarget(target, replyContent, author, timestamp);
             OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity, browserTextProvider.getOWLEntityBrowserText(targetEntity).or("Entity"));
             eventManager.postEvent(new NotePostedEvent(projectId, Optional.of(entityData), new NoteDetails(note.getHeader(), replyContent)));
+            eventManager.postEvent(new EntityNotesChangedEvent(projectId, targetEntity, getIndirectNotesCount(targetEntity)));
             return note;
         }
         catch (NotesException e) {
@@ -272,6 +274,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             OWLEntityData entityData = DataFactory.getOWLEntityData(targetEntity, browserTextProvider.getOWLEntityBrowserText(targetEntity).or(""));
             final NotePostedEvent evt = new NotePostedEvent(projectId, Optional.of(entityData), new NoteDetails(note.getHeader(), note.getContent()));
             eventManager.postEvent(evt);
+            eventManager.postEvent(new EntityNotesChangedEvent(projectId, targetEntity, getIndirectNotesCount(targetEntity)));
             return note;
         }
         catch (NotesException e) {
