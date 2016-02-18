@@ -128,7 +128,7 @@
                             <width>200</width>
                         </portlet>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.ui.ontology.individuals.IndividualsListPortlet</name>
+                            <name>edu.stanford.bmir.protege.web.client.ui.individuals.IndividualsListPortlet</name>
                             <height>240</height>
                             <width>0</width>
                         </portlet>

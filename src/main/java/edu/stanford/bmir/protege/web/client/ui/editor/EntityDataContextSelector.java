@@ -35,14 +35,14 @@ public class EntityDataContextSelector implements EditorManagerSelector {
         if(!(editorCtx instanceof OWLEntityDataContext)) {
             return false;
         }
-        EntityType<?> entityType = ((OWLEntityDataContext) editorCtx).getEntityData().getEntity().getEntityType();
+        EntityType<?> entityType = ((OWLEntityDataContext) editorCtx).getEntity().getEntityType();
         return map.containsKey(entityType);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <C extends EditorCtx, O extends Serializable> EditorManager<C, O> getEditorManager(EditorCtx editorContext) {
-        EntityType entityType = ((OWLEntityDataContext) editorContext).getEntityData().getEntity().getEntityType();
+        EntityType entityType = ((OWLEntityDataContext) editorContext).getEntity().getEntityType();
         return (EditorManager<C, O>) map.get(entityType);
     }
 }

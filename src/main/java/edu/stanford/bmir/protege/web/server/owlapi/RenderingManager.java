@@ -458,8 +458,8 @@ public class RenderingManager implements BrowserTextProvider, HasGetFrameRenderi
 //     * @param entityIRI The IRI of the entity for which the entity data will be returned.
 //     * @return The entity data of an entity which has the specified IRI.
 //     */
-//    public EntityData getEntityData(IRI entityIRI) {
-//        return getEntityData(entityIRI.toString());
+//    public EntityData getEntity(IRI entityIRI) {
+//        return getEntity(entityIRI.toString());
 //    }
 
     public PropertyEntityData getPropertyEntityData(OWLEntity entity) {

@@ -12,14 +12,10 @@ import com.gwtext.client.widgets.layout.AnchorLayoutData;
 import com.gwtext.client.widgets.layout.FitLayout;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.ValueType;
-import edu.stanford.bmir.protege.web.client.ui.portlet.LegacyCompatUtil;
-import edu.stanford.bmir.protege.web.client.ui.selection.Selectable;
+import edu.stanford.bmir.protege.web.client.portlet.LegacyCompatUtil;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -116,7 +112,7 @@ public class SearchUtil {
         }
         Optional<OWLEntityData> sel = LegacyCompatUtil.toOWLEntityData(selection);
         if(sel.isPresent()) {
-            selectionModel.setSelection(sel.get());
+            selectionModel.setSelection(sel.get().getEntity());
         }
 
     }

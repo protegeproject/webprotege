@@ -3,25 +3,20 @@ package edu.stanford.bmir.protege.web.client.perspective;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceChangeEvent;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.ProjectLayoutConfiguration;
-import edu.stanford.bmir.protege.web.client.rpc.data.layout.TabConfiguration;
-import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
-import edu.stanford.bmir.protege.web.client.ui.tab.PerspectiveFactory;
-import edu.stanford.bmir.protege.web.client.ui.tab.TabBuilder;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutAction;
+import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutResult;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
-import edu.stanford.bmir.protege.web.shared.project.GetUIConfigurationAction;
-import edu.stanford.bmir.protege.web.shared.project.GetUIConfigurationResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.protege.widgetmap.shared.node.Node;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +32,9 @@ public class PerspectivePresenter implements HasDispose {
 
     private final PerspectiveView perspectiveView;
 
-    private final Map<PerspectiveId, Perspective> tabMap = new HashMap<>();
+    private final Map<PerspectiveId, Perspective> perspectiveCache = new HashMap<>();
+
+    private final Map<PerspectiveId, Node> originalRootNodeMap = new HashMap<>();
 
     private final PerspectiveFactory perspectiveFactory;
 
@@ -59,33 +56,42 @@ public class PerspectivePresenter implements HasDispose {
                 }
             }
         });
+        eventBus.addHandler(ResetPerspectiveEvent.getType(), new ResetPerspectiveHandler() {
+            @Override
+            public void handleResetPerspective(ResetPerspectiveEvent event) {
+                resetPerspective(event.getPerspectiveId());
+            }
+        });
     }
-
-
 
     public void start(AcceptsOneWidget container, ProjectViewPlace place) {
         container.setWidget(perspectiveView);
         displayPerspective(place.getPerspectiveId());
     }
 
+    private void resetPerspective(PerspectiveId perspectiveId) {
+        GWT.log("[PerspectivePresenter] Reset Perspective: " + perspectiveId);
+
+        Perspective perspective = perspectiveCache.get(perspectiveId);
+        if(perspective == null) {
+            return;
+        }
+        Node originalRootNode = originalRootNodeMap.get(perspectiveId);
+        if(originalRootNode == null) {
+            // Shouldn't happen - if it does then something is broken.
+            return;
+        }
+        perspective.setRootNode(originalRootNode.duplicate());
+    }
 
     private void displayPerspective(final PerspectiveId perspectiveId) {
-        GWT.log("[PerspectivePresenter] displayPerspective: " + perspectiveId);
+        GWT.log("[PerspectivePresenter] Display Perspective: " + perspectiveId);
         currentPerspective = Optional.of(perspectiveId);
-        retrievePerspective(perspectiveId, new DispatchServiceCallback<Perspective>() {
-            @Override
-            public void handleSuccess(Perspective perspective) {
-                // Check still valid
-                perspectiveView.setWidget(perspective);
-            }
-        });
-
-
-
+        retrieveAndSetPerspective(perspectiveId);
     }
 
     public void removePerspective(PerspectiveId perspectiveId) {
-        Perspective perspective = tabMap.remove(perspectiveId);
+        Perspective perspective = perspectiveCache.remove(perspectiveId);
         if(perspective != null) {
             perspective.dispose();
             if(currentPerspective.equals(Optional.of(perspective))) {
@@ -94,70 +100,32 @@ public class PerspectivePresenter implements HasDispose {
         }
     }
 
-    private boolean loaded = false;
-
-
-    private void retrievePerspective(PerspectiveId perspectiveId, DispatchServiceCallback<Perspective> callback) {
-        loadProjectDisplay(perspectiveId, callback);
-    }
-
-    private void loadProjectDisplay(final PerspectiveId perspectiveId, final DispatchServiceCallback<Perspective> cb) {
-        if(loaded) {
-            Perspective p = tabMap.get(perspectiveId);
-            if (p == null) {
-                p = new Perspective(perspectiveId);
-                tabMap.put(perspectiveId, p);
-            }
-            cb.onSuccess(p);
+    private void retrieveAndSetPerspective(final  PerspectiveId perspectiveId) {
+        Perspective p = perspectiveCache.get(perspectiveId);
+        if(p != null) {
+            perspectiveView.setWidget(p);
             return;
         }
-        GWT.log("[PerspectivePresenter] Loading perspectives for project " + projectId);
-        dispatchServiceManager.execute(new GetUIConfigurationAction(projectId),
-                new DispatchServiceCallbackWithProgressDisplay<GetUIConfigurationResult>() {
+        perspectiveView.setWidget(new Label("Loading..."));
+        GWT.log("[PerspectivePresenter] Loading perspective for project " + projectId);
+        dispatchServiceManager.execute(new GetPerspectiveLayoutAction(projectId, UserId.getGuest(), perspectiveId),
+                new DispatchServiceCallback<GetPerspectiveLayoutResult>() {
                     @Override
-                    public void handleSuccess(GetUIConfigurationResult result) {
-                        setupUserInterface(result.getConfiguration());
-                        Perspective p = tabMap.get(perspectiveId);
-                        if (p == null) {
-                            p = new Perspective(perspectiveId);
-                            tabMap.put(perspectiveId, p);
-                        }
-                        cb.onSuccess(p);
-                        loaded = true;
-                    }
-
-                    @Override
-                    public String getProgressDisplayTitle() {
-                        return "Loading project";
-                    }
-
-                    @Override
-                    public String getProgressDisplayMessage() {
-                        return "Loading user interface configuration";
-                    }
-
-                    @Override
-                    protected String getErrorMessage(Throwable throwable) {
-                        return "There was an error loading the UI configuration";
+                    public void handleSuccess(GetPerspectiveLayoutResult result) {
+                        GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspectiveLayout());
+                        Perspective perspective = perspectiveFactory.createPerspective(perspectiveId);
+                        Node rootNode = result.getPerspectiveLayout().getRootNode();
+                        perspective.setRootNode(rootNode);
+                        perspectiveCache.put(perspectiveId, perspective);
+                        perspectiveView.setWidget(perspective);
+                        originalRootNodeMap.put(perspectiveId, rootNode.duplicate());
                     }
                 });
     }
 
-    private void setupUserInterface(ProjectLayoutConfiguration projectLayoutConfiguration) {
-        for(TabConfiguration tabConf : projectLayoutConfiguration.getTabs()) {
-            PerspectiveId perspectiveId = new PerspectiveId(tabConf.getLabel());
-            Perspective tab = perspectiveFactory.createPerspective(perspectiveId);
-            TabBuilder tabBuilder = new TabBuilder(projectId, tab, tabConf);
-            tabBuilder.build();
-            PerspectiveId key = new PerspectiveId(tab.getLabel());
-            GWT.log("[PerspectivePresenter] Creating perspective: " + key);
-            tabMap.put(key, tab);
-        }
-    }
-
     @Override
     public void dispose() {
-        for(Perspective tab : tabMap.values()) {
+        for(Perspective tab : perspectiveCache.values()) {
             tab.dispose();
         }
     }

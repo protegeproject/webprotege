@@ -9,4 +9,6 @@ package edu.stanford.bmir.protege.web.client.action;
 public interface HasCreateHandler {
 
     void setCreateHandler(CreateHandler createHandler);
+
+    void setCreateEnabled(boolean enabled);
 }

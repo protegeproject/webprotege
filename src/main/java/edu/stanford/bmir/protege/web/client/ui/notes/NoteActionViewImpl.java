@@ -49,7 +49,7 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
 
     @UiHandler("replyWidget")
     protected void handleReplyClicked(ClickEvent clickEvent) {
-        replyToNoteHandler.handleReplyToNote(noteId, selectionModel.getSelection().get().getEntity());
+        replyToNoteHandler.handleReplyToNote(noteId, selectionModel.getSelection().get());
     }
 
     @UiHandler("deleteWidget")

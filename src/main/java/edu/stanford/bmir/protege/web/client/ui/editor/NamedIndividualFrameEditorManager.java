@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
@@ -8,7 +7,6 @@ import edu.stanford.bmir.protege.web.client.ui.frame.NamedIndividualFrameEditor;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 
@@ -34,7 +32,7 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
 
     @Override
     public GetObjectAction<LabelledFrame<NamedIndividualFrame>> createGetObjectAction(OWLEntityDataContext editorContext) {
-        return new GetNamedIndividualFrameAction(editorContext.getEntityData().getEntity().asOWLNamedIndividual(), editorContext.getProjectId());
+        return new GetNamedIndividualFrameAction(editorContext.getEntity().asOWLNamedIndividual(), editorContext.getProjectId());
     }
 
     @Override
@@ -44,6 +42,6 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
 
     @Override
     public String getDescription(OWLEntityDataContext editorContext) {
-        return "Named individual description for " + editorContext.getEntityData().getBrowserText();
+        return "Named individual description";
     }
 }

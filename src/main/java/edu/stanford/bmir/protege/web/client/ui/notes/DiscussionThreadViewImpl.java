@@ -36,45 +36,17 @@ public class DiscussionThreadViewImpl extends Composite implements DiscussionThr
 
     private Set<NoteHeaderPresenter> currentPresenters = new HashSet<NoteHeaderPresenter>();
 
-    private final DispatchServiceManager dispatchServiceManager;
-
     private final Provider<NoteHeaderPresenter> noteHeaderPresenterProvider;
 
     @Inject
-    public DiscussionThreadViewImpl(Provider<NoteHeaderPresenter> noteHeaderPresenterProvider, DispatchServiceManager dispatchServiceManager) {
-        this.dispatchServiceManager = dispatchServiceManager;
+    public DiscussionThreadViewImpl(Provider<NoteHeaderPresenter> noteHeaderPresenterProvider) {
         this.noteHeaderPresenterProvider = noteHeaderPresenterProvider;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
 
-    private PostNewTopicHandler postNewTopicHandler = new PostNewTopicHandler() {
-        @Override
-        public void handlePostNewTopic() {
-        }
-    };
-
     @UiField
     protected FlexTable notesList;
-
-    @UiField
-    protected ButtonBase postNewTopicButton;
-
-
-    @UiHandler("postNewTopicButton")
-    void handlePostNewTopicClicked(ClickEvent clickEvent) {
-        postNewTopicHandler.handlePostNewTopic();
-    }
-
-    @Override
-    public void setPostNewTopicHandler(PostNewTopicHandler handler) {
-        this.postNewTopicHandler = handler;
-    }
-
-    @Override
-    public void setPostNewTopicEnabled(boolean enabled) {
-        postNewTopicButton.setEnabled(enabled);
-    }
 
     @Override
     public void removeAllNotes() {

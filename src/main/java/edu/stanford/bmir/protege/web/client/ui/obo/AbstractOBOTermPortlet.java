@@ -4,10 +4,9 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -34,16 +33,16 @@ public abstract class AbstractOBOTermPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    protected void handleBeforeSetEntity(Optional<OWLEntityData> existingEntity) {
+    protected void handleBeforeSetEntity(Optional<OWLEntity> existingEntity) {
         if(existingEntity.isPresent() && isDirty()) {
-            commitChangesForEntity(existingEntity.get().getEntity());
+            commitChangesForEntity(existingEntity.get());
         }
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
-        if(entityData.isPresent()) {
-            displayEntity(entityData.get().getEntity());
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
+        if(entity.isPresent()) {
+            displayEntity(entity.get());
         }
         else {
 //            clearDisplay();
@@ -82,14 +81,7 @@ public abstract class AbstractOBOTermPortlet extends AbstractOWLEntityPortlet {
      * method.
      */
     final protected void updateTitle() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getTitlePrefix());
-        Optional<OWLEntityData> currentEntity = getSelectedEntityData();
-        if(currentEntity.isPresent()) {
-            sb.append(" for ");
-            sb.append(currentEntity.get().getBrowserText());
-        }
-        setTitle(sb.toString());
+        setTitle(getTitlePrefix());
     }
 
 }

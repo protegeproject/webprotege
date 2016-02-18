@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.frame.AnnotationPropertyFrameEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
@@ -28,7 +27,7 @@ public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEn
 
     @Override
     public String getDescription(OWLEntityDataContext editorContext) {
-        return "Annotation property description for " + editorContext.getEntityData().getBrowserText();
+        return "Annotation property description";
     }
 
     @Override
@@ -38,7 +37,7 @@ public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEn
 
     @Override
     public GetObjectAction<LabelledFrame<AnnotationPropertyFrame>> createGetObjectAction(OWLEntityDataContext editorContext) {
-        return new GetAnnotationPropertyFrameAction(editorContext.getEntityData().getEntity().asOWLAnnotationProperty(), editorContext.getProjectId());
+        return new GetAnnotationPropertyFrameAction(editorContext.getEntity().asOWLAnnotationProperty(), editorContext.getProjectId());
     }
 
     @Override

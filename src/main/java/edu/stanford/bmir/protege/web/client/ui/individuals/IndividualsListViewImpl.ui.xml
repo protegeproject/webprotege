@@ -1,0 +1,7 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:entitieslist="urn:import:edu.stanford.bmir.protege.web.client.entitieslist">
+    <g:HTMLPanel>
+        <entitieslist:EntitiesListImpl ui:field="individualsList"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

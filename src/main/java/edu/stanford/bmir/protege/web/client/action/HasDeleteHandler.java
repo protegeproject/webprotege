@@ -9,4 +9,6 @@ package edu.stanford.bmir.protege.web.client.action;
 public interface HasDeleteHandler {
 
     void setDeleteHandler(DeleteHandler deleteHandler);
+
+    void setDeleteEnabled(boolean enabled);
 }

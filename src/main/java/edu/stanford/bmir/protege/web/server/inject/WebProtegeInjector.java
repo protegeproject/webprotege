@@ -37,7 +37,8 @@ public class WebProtegeInjector {
                 new AuthenticationModule(),
                 new LoggingModule(),
                 new DbModule(),
-                new RepositoryModule());
+                new RepositoryModule(),
+                new ApplicationModule());
     }
 
     public static synchronized WebProtegeInjector get() {

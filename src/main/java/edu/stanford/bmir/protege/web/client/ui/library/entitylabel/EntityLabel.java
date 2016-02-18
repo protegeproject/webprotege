@@ -64,7 +64,7 @@ public class EntityLabel extends Composite {
             @Override
             public void onClick(ClickEvent event) {
                 if (selectionModel != null) {
-                    selectionModel.setSelection(entityData);
+                    selectionModel.setSelection(entityData.getEntity());
                 }
             }
         });

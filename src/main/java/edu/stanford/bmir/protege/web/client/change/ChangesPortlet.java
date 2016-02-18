@@ -5,16 +5,16 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.bmir.protege.web.client.ui.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 
@@ -63,7 +63,7 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
     }
 
     @Override
-    protected void handleAfterSetEntity(Optional<OWLEntityData> entityData) {
+    protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
         updateDisplayForSelectedEntity();
     }
 
@@ -72,7 +72,7 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
 		if (getSelectedEntity().isPresent()) {
 			ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager);
 			presenter.setChangesForEntity(projectId, getSelectedEntity().get());
-		    setTitle("Changes for " + getSelectedEntityData().get().getBrowserText());
+		    setTitle("Changes");
         }
         else {
             setTitle("Noting selected");

@@ -39,7 +39,7 @@ public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityDa
 
     @Override
     public GetObjectAction<LabelledFrame<DataPropertyFrame>> createGetObjectAction(OWLEntityDataContext editorContext) {
-        return new GetDataPropertyFrameAction(editorContext.getProjectId(), editorContext.getEntityData().getEntity().asOWLDataProperty());
+        return new GetDataPropertyFrameAction(editorContext.getProjectId(), editorContext.getEntity().asOWLDataProperty());
     }
 
     @Override
@@ -49,6 +49,6 @@ public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityDa
 
     @Override
     public String getDescription(OWLEntityDataContext editorContext) {
-        return "Data property description for " + editorContext.getEntityData().getBrowserText();
+        return "Data property description";
     }
 }
