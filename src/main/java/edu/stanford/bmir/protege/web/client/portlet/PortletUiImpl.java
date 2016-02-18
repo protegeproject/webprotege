@@ -4,9 +4,14 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.MenuButton;
+import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenuItem;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.StateChangedHandler;
 
@@ -30,9 +35,15 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @UiField
     protected PortletContentHolder contentHolder;
 
+    @UiField
+    protected MenuButton menuButton;
+
+    private final PopupMenu popupMenu = new PopupMenu();
+
     public PortletUiImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         setToolbarVisible(false);
+        setMenuButtonVisible(false);
     }
 
     @Override
@@ -44,6 +55,16 @@ public class PortletUiImpl extends Composite implements PortletUi {
         else {
             contentHolder.getElement().getStyle().setTop(23, Style.Unit.PX);
         }
+    }
+
+    @Override
+    public void setMenuButtonVisible(boolean visible) {
+        menuButton.setVisible(visible);
+    }
+
+    @UiHandler("menuButton")
+    protected void handleMenuButtonClicked(ClickEvent event) {
+        popupMenu.showRelativeTo(menuButton);
     }
 
     @Override
@@ -61,6 +82,22 @@ public class PortletUiImpl extends Composite implements PortletUi {
             @Override
             public void handleStateChanged(PortletAction value) {
                 button.setEnabled(value.isEnabled());
+            }
+        });
+    }
+
+    @Override
+    public void addMenuAction(final PortletAction action) {
+        PopupMenuItem menuItem = new PopupMenuItem(new SafeHtmlBuilder().appendHtmlConstant(action.getName()).toSafeHtml()) {
+            @Override
+            public void handleClicked(ClickEvent clickEvent) {
+                action.getActionHandler().handleActionInvoked(action, clickEvent);
+            }
+        };
+        action.setStateChangedHandler(new StateChangedHandler<PortletAction>() {
+            @Override
+            public void handleStateChanged(PortletAction value) {
+
             }
         });
     }

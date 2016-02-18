@@ -151,37 +151,6 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
 
     }
 
-    /*
-     * Tools methods
-     */
-    protected Tool[] getTools() {
-        // create some shared tools
-        Tool refresh = new Tool(Tool.REFRESH, new Function() {
-            public void execute() {
-                onRefresh();
-            }
-        });
-        Tool gear = new Tool(Tool.GEAR, new Function() {
-            public void execute() {
-                onConfigure();
-            }
-        });
-
-        Tool close = new Tool(Tool.CLOSE, new Function() {
-            public void execute() {
-                onClose();
-            }
-        });
-
-        List<Tool> toolList = new ArrayList<Tool>();
-        if (hasRefreshButton()) {
-            toolList.add(refresh);
-        }
-        toolList.add(gear);
-        toolList.add(close);
-        return toolList.toArray(new Tool[toolList.size()]);
-    }
-
     protected boolean hasRefreshButton() {
         return true;
     }
@@ -191,92 +160,6 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
 
     public void commitChanges() {
     }
-
-    protected void onConfigure() {
-        final Window window = new Window();
-        window.setSize(550, 250);
-        window.setTitle("Configure");
-        window.setLayout(new FitLayout());
-        window.setClosable(true);
-        window.setPaddings(7);
-        window.setCloseAction(Window.CLOSE);
-        final TabPanel configPanel = getConfigurationPanel();
-        window.add(configPanel);
-        window.setButtonAlign(Position.CENTER);
-
-        window.addButton(new Button("OK", new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                if (isValidConfiguration(configPanel)) {
-                    saveConfiguration(configPanel);
-                    window.close();
-                }
-                else {
-                    MessageBox.alert("Invalid configuration", "The configuration is not valid. Please fix it, and try again");
-                }
-            }
-        }));
-
-        window.addButton(new Button("Cancel", new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                window.close();
-            }
-        }));
-
-        window.show();
-    }
-
-    protected boolean isValidConfiguration(TabPanel configPanel) {
-        Component[] tabs = configPanel.getComponents();
-        for (int i = 0; i < tabs.length; i++) {
-            Component comp = tabs[i];
-            if (comp instanceof ValidatableTab) {
-                ValidatableTab tab = (ValidatableTab) comp;
-                if (!tab.isValid()) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    protected void saveConfiguration(TabPanel configPanel) {
-        Component[] tabs = configPanel.getComponents();
-        for (int i = 0; i < tabs.length; i++) {
-            Component comp = tabs[i];
-            if (comp instanceof ValidatableTab) {
-                ValidatableTab tab = (ValidatableTab) comp;
-                tab.onSave();
-            }
-        }
-    }
-
-    protected TabPanel getConfigurationPanel() {
-        TabPanel tabPanel = new TabPanel();
-        tabPanel.add(createGeneralConfigPanel());
-        return tabPanel;
-    }
-
-    protected Panel createGeneralConfigPanel() {
-
-        Panel generalPanel = new AbstractValidatableTab() {
-            @Override
-            public void onSave() {
-            }
-
-            @Override
-            public boolean isValid() {
-                return true;
-            }
-        };
-
-        generalPanel.setTitle("General");
-        generalPanel.setPaddings(10);
-
-        return generalPanel;
-    }
-
 
     protected void onClose() {
         commitChanges();

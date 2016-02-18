@@ -12,7 +12,11 @@ public interface PortletUi extends IsWidget {
 
     void setToolbarVisible(boolean visible);
 
+    void setMenuButtonVisible(boolean visible);
+
     void addPortletAction(PortletAction action);
+
+    void addMenuAction(PortletAction action);
 
     AcceptsOneWidget getContentHolder();
 

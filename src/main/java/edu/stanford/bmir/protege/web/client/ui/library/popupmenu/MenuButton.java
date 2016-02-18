@@ -25,8 +25,6 @@ public class MenuButton extends Composite implements HasClickHandlers {
     public MenuButton() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
-        String color = getElement().getStyle().getColor();
-
     }
 
     public HandlerRegistration addClickHandler(ClickHandler handler) {
