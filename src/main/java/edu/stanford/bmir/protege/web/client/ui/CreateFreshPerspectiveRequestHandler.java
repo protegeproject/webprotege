@@ -7,6 +7,11 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 01/07/2014
  */
 public interface CreateFreshPerspectiveRequestHandler {
-    Optional<PerspectiveId> createFreshPerspective();
+
+    void createFreshPerspective(Callback callback);
+
+    public static interface Callback {
+        void createNewPerspective(PerspectiveId perspectiveId);
+    }
 }
 

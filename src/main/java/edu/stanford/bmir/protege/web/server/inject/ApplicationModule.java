@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.inject;
 import com.google.inject.AbstractModule;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutManager;
 import edu.stanford.bmir.protege.web.server.perspective.PerspectiveLayoutManagerImpl;
+import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManager;
+import edu.stanford.bmir.protege.web.server.perspective.PerspectivesManagerImpl;
 
 /**
  * Matthew Horridge
@@ -14,5 +16,6 @@ public class ApplicationModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(PerspectiveLayoutManager.class).to(PerspectiveLayoutManagerImpl.class).asEagerSingleton();
+        bind(PerspectivesManager.class).to(PerspectivesManagerImpl.class).asEagerSingleton();
     }
 }

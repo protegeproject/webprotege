@@ -167,11 +167,12 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     }
 
     private void handleCreateNewPerspective() {
-        final Optional<PerspectiveId> freshPerspective = createFreshPerspectiveRequestHandler.createFreshPerspective();
-        if(!freshPerspective.isPresent()) {
-            return;
-        }
-        addNewPerspective(freshPerspective.get());
+        createFreshPerspectiveRequestHandler.createFreshPerspective(new CreateFreshPerspectiveRequestHandler.Callback() {
+            @Override
+            public void createNewPerspective(PerspectiveId perspectiveId) {
+                addNewPerspective(perspectiveId);
+            }
+        });
     }
 
     private void addNewPerspective(final PerspectiveId perspectiveId) {

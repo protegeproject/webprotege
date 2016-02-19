@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.ui.CreateFreshPerspectiveRequestHandler;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 /**
@@ -11,11 +13,17 @@ import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
  */
 public class CreateFreshPerspectiveRequestHandlerImpl implements CreateFreshPerspectiveRequestHandler {
 
-    private static int counter;
-
     @Override
-    public Optional<PerspectiveId> createFreshPerspective() {
-        counter++;
-        return Optional.of(new PerspectiveId("Perspective-" + counter));
+    public void createFreshPerspective(final Callback callback) {
+        InputBox.showDialog("Enter name", new InputBoxHandler() {
+            @Override
+            public void handleAcceptInput(String input) {
+                String trimmedInput = input.trim();
+                if(trimmedInput.isEmpty()) {
+                    return;
+                }
+                callback.createNewPerspective(new PerspectiveId(trimmedInput));
+            }
+        });
     }
 }
