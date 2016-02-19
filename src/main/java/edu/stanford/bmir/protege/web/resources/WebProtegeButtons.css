@@ -1,10 +1,8 @@
 
 /* Various button styles */
 .btn, .btn-a, .btn-b, .btn-c, .btn-d {
-    background: #bc4d26;
     border: none;
     font-weight: 700;
-    font-size: 14px;
     letter-spacing: .1em;
     border-radius: 2px;
     height: 38px;
@@ -15,12 +13,11 @@
     -moz-transition: background-color .15s ease-in-out;
     -webkit-transition: background-color .15s ease-in-out;
     text-transform: uppercase;
-
     display: block;
-    width: 100%;
-    padding-left: 0;
-    padding-right: 0;
     font-size: small;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer;
 }
 
 .btn {
@@ -38,6 +35,14 @@
 
 .btn-b:hover {
     background: #bc4d26;
+}
+
+.btn-e {
+    background: #6c1a91;
+}
+
+.btn-e:hover {
+    background: #501c70;
 }
 
 .btn-c {

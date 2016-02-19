@@ -4,6 +4,9 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
+        .main {
+        }
+
         .center {
             margin-top: 50px;
             margin-left: auto;
@@ -13,7 +16,6 @@
             overflow: auto;
             bottom: 0;
             top: 0;
-            position: absolute;
             color: #606060;
         }
 
@@ -71,33 +73,46 @@
             left: 80px;
 
         }
+        .signup {
+            float: right;
+            margin: 3px;
+            padding-right: 20px;
+            padding-left: 20px;
+        }
+        .signin {
+            width: 100%;
+        }
     </ui:style>
 
 
-        <g:HTMLPanel addStyleNames="{style.center}">
-            <g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo}"/>
-            <g:HTMLPanel addStyleNames="{style.message}">
-                Please sign in to continue
+        <g:HTMLPanel addStyleNames="{style.main}">
+            <g:Button text="Sign Up For Account" addStyleNames="{style.signup} {wp.buttons.btn} {wp.buttons.btnE}"/>
+            <g:HTMLPanel addStyleNames="{style.center}">
+                <g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo}"/>
+                <g:HTMLPanel addStyleNames="{style.message}">
+                    Please sign in to continue
+                </g:HTMLPanel>
+
+                <g:HTMLPanel addStyleNames="{style.centerPanel}">
+                    <g:HTMLPanel addStyleNames="{style.group}">
+                        <g:Label text="Username" addStyleNames="{style.label}"/>
+                        <g:TextBox ui:field="userNameField" visibleLength="30" addStyleNames="{style.textBox}"/>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{style.group}">
+                        <g:Label text="Password" addStyleNames="{style.label}"/>
+                        <g:PasswordTextBox ui:field="passwordField" visibleLength="30" addStyleNames="{style.textBox}"/>
+                    </g:HTMLPanel>
+                    <g:HTMLPanel addStyleNames="{style.group}">
+                        <g:Button ui:field="signInButton" text="Sign In"
+                                  addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {style.signin}"/>
+                    </g:HTMLPanel>
+                    <div class="{wp.style.formGroup}">
+                        <g:Anchor text="Forgot user name or password" ui:field="forgotPasswordButton"
+                                  addStyleNames="{style.forgotPasswordButton}"/>
+                    </div>
+                </g:HTMLPanel>
             </g:HTMLPanel>
 
-            <g:HTMLPanel addStyleNames="{style.centerPanel}">
-                <g:HTMLPanel addStyleNames="{style.group}">
-                    <g:Label text="Username" addStyleNames="{style.label}"/>
-                    <g:TextBox ui:field="userNameField" visibleLength="30" addStyleNames="{style.textBox}"/>
-                </g:HTMLPanel>
-                <g:HTMLPanel addStyleNames="{style.group}">
-                    <g:Label text="Password" addStyleNames="{style.label}"/>
-                    <g:PasswordTextBox ui:field="passwordField" visibleLength="30" addStyleNames="{style.textBox}"/>
-                </g:HTMLPanel>
-                <g:HTMLPanel addStyleNames="{style.group}">
-                    <g:Button ui:field="signInButton" text="Sign In"
-                              addStyleNames="{wp.buttons.btnB} {wp.buttons.btn}"/>
-                </g:HTMLPanel>
-                <div class="{wp.style.formGroup}">
-                    <g:Anchor text="Forgot user name or password" ui:field="forgotPasswordButton"
-                              addStyleNames="{style.forgotPasswordButton}"/>
-                </div>
-            </g:HTMLPanel>
 
         </g:HTMLPanel>
 
