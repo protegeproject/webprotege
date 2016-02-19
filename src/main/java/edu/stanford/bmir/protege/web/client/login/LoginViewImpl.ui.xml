@@ -5,6 +5,7 @@
 
     <ui:style>
         .main {
+            overflow: auto;
         }
 
         .center {
@@ -50,50 +51,88 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         .logo {
             width: 200px;
             height: auto;
             position: relative;
             left: -20px;
         }
+
         .signup {
             float: right;
             margin: 3px;
             padding-right: 20px;
             padding-left: 20px;
         }
+
         .signin {
             width: 100%;
+        }
+
+        .info {
+            margin-top: 50px;
+            width: 800px;
+            margin-right: auto;
+            margin-left: auto;
+            color: #c0c0c0;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .info a {
+            color: #a0a0a0;
         }
     </ui:style>
 
 
-        <g:HTMLPanel addStyleNames="{style.main}">
-            <g:Button text="Sign Up For Account" ui:field="signUpForAccountButton" addStyleNames="{style.signup} {wp.buttons.btn} {wp.buttons.btnE}"/>
-            <g:HTMLPanel addStyleNames="{style.center}">
-                <g:HTMLPanel addStyleNames="{style.logoContainer}">
-                    <g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo}"/>
-                </g:HTMLPanel>
-                <g:HTMLPanel addStyleNames="{style.message}">
-                    Please sign in to continue
-                </g:HTMLPanel>
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Button text="Sign Up For Account" ui:field="signUpForAccountButton"
+                  addStyleNames="{style.signup} {wp.buttons.btn} {wp.buttons.btnE}"/>
+        <g:HTMLPanel addStyleNames="{style.center}">
+            <g:HTMLPanel addStyleNames="{style.logoContainer}">
+                <g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo}"/>
+            </g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{style.message}">
+                Please sign in to continue
+            </g:HTMLPanel>
 
-                <g:HTMLPanel addStyleNames="{wp.dialog.dialog} {style.centerPanel}">
-                        <g:Label text="Username"/>
-                        <g:TextBox ui:field="userNameField" visibleLength="30"/>
-                        <g:Label text="Password"/>
-                        <g:PasswordTextBox ui:field="passwordField" visibleLength="30"/>
-                        <div style="height: 20px;"/>
-                        <g:Button ui:field="signInButton" text="Sign In"
-                                  addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {style.signin}"/>
-                    <g:HTMLPanel addStyleNames="{style.bottomBar}">
-                        <g:Anchor text="Forgot user name or password" ui:field="forgotPasswordButton"
-                                  addStyleNames="{style.forgotPasswordButton}"/>
-                    </g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{wp.dialog.dialog} {style.centerPanel}">
+                <g:Label text="Username"/>
+                <g:TextBox ui:field="userNameField" visibleLength="30"/>
+                <g:Label text="Password"/>
+                <g:PasswordTextBox ui:field="passwordField" visibleLength="30"/>
+                <div style="height: 20px;"/>
+                <g:Button ui:field="signInButton" text="Sign In"
+                          addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {style.signin}"/>
+                <g:HTMLPanel addStyleNames="{style.bottomBar}">
+                    <g:Anchor text="Forgot user name or password" ui:field="forgotPasswordButton"
+                              addStyleNames="{style.forgotPasswordButton}"/>
                 </g:HTMLPanel>
             </g:HTMLPanel>
+        </g:HTMLPanel>
+
+        <g:HTMLPanel addStyleNames="{style.info}">
+            <p>WebProtege is developed by the Protege team in the
+                Biomedical Informatics
+                Research Group (BMIR)
+                at Stanford University, California, USA.
+            </p>
+
+
+            <p>The work is supported by Grant GM103316 from the National Institute
+                of General Medical Sciences
+                at the United States National Institutes of Health.
+            </p>
+            <p>
+                <a href="html/privacy.html" target="_blank">
+                    Privacy Policy</a>.<a href="html/termsofuse.html" target="_blank">Terms of Use</a>
+            </p>
 
 
         </g:HTMLPanel>
+
+
+    </g:HTMLPanel>
 
 </ui:UiBinder>

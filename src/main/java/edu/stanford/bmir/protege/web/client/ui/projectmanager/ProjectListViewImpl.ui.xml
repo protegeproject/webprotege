@@ -3,6 +3,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:projectlist="urn:import:edu.stanford.bmir.protege.web.client.ui.projectlist"
              xmlns:sidebar="urn:import:edu.stanford.bmir.protege.web.client.ui.library.sidebar">
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
         .button-bar {
@@ -100,28 +101,14 @@
 
         </g:FlowPanel>
         <g:FlowPanel addStyleNames="{style.top-button-bar-position}">
-            <g:Button ui:field="createProjectButton" text="&#x2600; Create Project ..." enabled="false" addStyleNames="button-style"/>
-            <g:Button ui:field="uploadProjectButton" text="&#x21ea; Upload Project ..." addStyleNames="button-style"/>
+            <g:Button ui:field="createProjectButton" text="&#x2600; Create Project ..." enabled="false" addStyleNames="{wp.buttons.btn} {wp.buttons.btnInline}"/>
+            <g:Button ui:field="uploadProjectButton" text="&#x21ea; Upload Project ..." addStyleNames="{wp.buttons.btn} {wp.buttons.btnInline}"/>
         </g:FlowPanel>
 
 
         <g:FlowPanel addStyleNames="{style.project-list-position}">
             <projectlist:ProjectListViewImpl ui:field="projectListView" width="100%" height="100%"/>
         </g:FlowPanel>
-
-        <g:HTMLPanel addStyleNames="{style.footer}">
-            <div style="padding-top: 3px;">
-                WebProt&eacute;g&eacute; is developed by the Prot&eacute;g&eacute; team in the
-                <a href="http://bmir.stanford.edu">Biomedical Informatics
-                    Research Group (BMIR)
-                </a>
-                at Stanford University, California, USA.
-                The work is supported by Grant GM103316 from the National Institute
-                of General Medical Sciences
-                at the United States National Institute of Health.  <a href="html/privacy.html" target="_blank">Privacy Policy</a>. <a href="html/termsofuse.html" target="_blank">Terms of Use</a>.
-            </div>
-
-        </g:HTMLPanel>
 
     </g:HTMLPanel>
 </ui:UiBinder>
