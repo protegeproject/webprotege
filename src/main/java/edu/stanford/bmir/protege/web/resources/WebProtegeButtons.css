@@ -27,6 +27,10 @@
     background: #415161;
 }
 
+.btn-inline {
+    display: inline-block;
+}
+
 .btn-b {
     background: #db5e33;
 }
