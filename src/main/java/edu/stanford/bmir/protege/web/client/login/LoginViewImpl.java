@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.actionbar.application.SignInRequestHandler;
+import edu.stanford.bmir.protege.web.client.actionbar.application.SignUpForAccountHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -39,6 +40,9 @@ public class LoginViewImpl extends Composite implements LoginView {
     @UiField
     protected HasClickHandlers forgotPasswordButton;
 
+    @UiField
+    protected Button signUpForAccountButton;
+
 
     private SignInRequestHandler signInRequestHandler = new SignInRequestHandler() {
         @Override
@@ -54,20 +58,32 @@ public class LoginViewImpl extends Composite implements LoginView {
         }
     };
 
+
+    private SignUpForAccountHandler signUpForAccountHandler = new SignUpForAccountHandler() {
+        @Override
+        public void handleSignUpForAccount() {
+
+        }
+    };
+
     @Inject
     public LoginViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
-        signInButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                signInRequestHandler.handleSignInRequest();
-            }
-        });
+    }
+
+    @UiHandler("signInButton")
+    protected void handleSignInButtonClicked(ClickEvent event) {
+        signInRequestHandler.handleSignInRequest();
     }
 
     @UiHandler("forgotPasswordButton")
     protected void handleForgotPasswordButtonClicked(ClickEvent event) {
         forgotPasswordHandler.handleForgotPassword();
+    }
+
+    @UiHandler("signUpForAccountButton")
+    protected void handleSignUpForAccountButtonClicked(ClickEvent event) {
+        signUpForAccountHandler.handleSignUpForAccount();
     }
 
     @Override
@@ -125,6 +141,11 @@ public class LoginViewImpl extends Composite implements LoginView {
     @Override
     public void setForgotPasswordHandler(ForgotPasswordHandler handler) {
         this.forgotPasswordHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setSignUpForAccountHandler(SignUpForAccountHandler handler) {
+        this.signUpForAccountHandler = handler;
     }
 
     @Override

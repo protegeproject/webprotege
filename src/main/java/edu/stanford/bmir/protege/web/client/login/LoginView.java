@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ProvidesResize;
 import com.google.gwt.user.client.ui.RequiresResize;
 import edu.stanford.bmir.protege.web.client.actionbar.application.SignInRequestHandler;
+import edu.stanford.bmir.protege.web.client.actionbar.application.SignUpForAccountHandler;
 
 /**
  * Matthew Horridge
@@ -33,5 +34,8 @@ public interface LoginView extends IsWidget, RequiresResize, ProvidesResize {
     void hideErrorMessages();
 
     void setForgotPasswordHandler(ForgotPasswordHandler handler);
+
+    void setSignUpForAccountHandler(SignUpForAccountHandler handler);
+
 
 }

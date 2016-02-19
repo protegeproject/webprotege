@@ -14,6 +14,7 @@ import edu.stanford.bmir.protege.web.client.login.LoginPlace;
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenterFactory;
+import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectListPresenter;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -27,11 +28,13 @@ import javax.inject.Provider;
  */
 public class WebProtegeActivityMapper implements ActivityMapper {
 
-    private ProjectPresenterFactory projectPresenterFactory;
+    private final ProjectPresenterFactory projectPresenterFactory;
 
-    private Provider<ProjectListPresenter> projectListPresenterProvider;
+    private final Provider<ProjectListPresenter> projectListPresenterProvider;
 
-    private Provider<LoginPresenter> loginPresenterProvider;
+    private final Provider<LoginPresenter> loginPresenterProvider;
+
+    private final Provider<SignUpPresenter> signUpPresenterProvider;
 
     private final LoggedInUserProvider loggedInUserProvider;
 
@@ -42,10 +45,12 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                                     ProjectPresenterFactory projectPresenterFactory,
                                     Provider<ProjectListPresenter> projectListPresenterProvider,
                                     Provider<LoginPresenter> loginPresenterProvider,
+                                    Provider<SignUpPresenter> signUpPresenterProvider,
                                     PlaceController placeController) {
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectPresenterFactory = projectPresenterFactory;
         this.projectListPresenterProvider = projectListPresenterProvider;
+        this.signUpPresenterProvider = signUpPresenterProvider;
         this.loginPresenterProvider = loginPresenterProvider;
         this.placeController = placeController;
     }
@@ -72,7 +77,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         //     for this particular type of place the presenter is now different.  The FilteringActivityMapper does
         //     something similar.
 
-        if(!(place instanceof LoginPlace) && loggedInUserProvider.getCurrentUserId().isGuest()) {
+        if(!(place instanceof LoginPlace) && !(place instanceof SignUpPlace) && loggedInUserProvider.getCurrentUserId().isGuest()) {
             GWT.log("[WebProtegeActivityMapper] User is not logged in.  Redirecting to login.");
             LoginPresenter presenter = loginPresenterProvider.get();
             presenter.setNextPlace(place);
@@ -95,6 +100,16 @@ public class WebProtegeActivityMapper implements ActivityMapper {
                 presenter.setNextPlace(new ProjectListPlace());
             }
             return new LoginActivity(presenter);
+        }
+
+        if(place instanceof SignUpPlace) {
+            SignUpPresenter signUpPresenter = signUpPresenterProvider.get();
+            SignUpPlace signUpPlace = (SignUpPlace) place;
+            Optional<Place> continueTo = signUpPlace.getContinueTo();
+            if(continueTo.isPresent()) {
+                signUpPresenter.setContinueTo(continueTo.get());
+            }
+            return new SignUpActivity(signUpPresenter);
         }
 
         if(place instanceof ProjectListPlace) {
