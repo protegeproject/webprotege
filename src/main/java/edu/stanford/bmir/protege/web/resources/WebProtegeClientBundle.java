@@ -241,6 +241,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
         @ClassName("btn-d")
         String btnD();
 
+        @ClassName("btn-e")
+        String btnE();
+
         String toolbarButton();
 
         String circularButton();
