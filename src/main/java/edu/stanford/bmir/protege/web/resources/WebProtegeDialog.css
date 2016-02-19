@@ -1,0 +1,82 @@
+@external .gwt-TextBox;
+@external .gwt-PasswordTextBox;
+@external .gwt-Label;
+
+.dialog {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    background: #f0f0f0;
+    border: 1px solid silver;
+    border-radius: 3px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}
+
+.dialog .gwt-TextBox {
+    border: 1px solid #e0e0e0;
+    line-height: 20px;
+    background: #ffffff;
+    padding: 2px;
+    font-size: 12px;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.dialog .gwt-PasswordTextBox {
+    border: 1px solid #e0e0e0;
+    line-height: 20px;
+    background: #ffffff;
+    padding: 2px;
+    font-size: 12px;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.dialog .gwt-Label {
+    color: #606060;
+    padding-bottom: 4px;
+    padding-top: 10px;
+}
+
+.buttonBar {
+    padding-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.cancelButton {
+    flex-grow: 0;
+}
+
+.acceptButton {
+    background: #6c1a91;
+    flex-grow: 0;
+}
+
+.acceptButton:hover {
+    background: #501c70;
+}
+
+.dialog .title {
+    font-size: 16px;
+    padding-bottom: 30px;
+    padding-top: 0;
+}
+
+.group {
+    padding-bottom: 10px;
+}
+
+.dialog .errorLabel {
+    color: #af0002;
+    display: none;
+    padding: 0;
+}

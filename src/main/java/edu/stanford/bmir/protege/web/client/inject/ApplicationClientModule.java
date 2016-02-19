@@ -41,6 +41,8 @@ import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenterFactory;
 import edu.stanford.bmir.protege.web.client.project.ProjectView;
 import edu.stanford.bmir.protege.web.client.project.ProjectViewImpl;
+import edu.stanford.bmir.protege.web.client.signup.SignUpView;
+import edu.stanford.bmir.protege.web.client.signup.SignUpViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
 import edu.stanford.bmir.protege.web.client.topbar.GoToToHomeViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarView;
@@ -125,6 +127,9 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(SignInRequestHandler.class).to(SignInRequestHandlerImpl.class);
         bind(SignOutRequestHandler.class).to(SignOutRequestHandlerImpl.class);
         bind(SignUpForAccountHandler.class).to(SignUpForAccountHandlerImpl.class);
+
+        bind(SignUpView.class).to(SignUpViewImpl.class);
+
         bind(ChangeEmailAddressHandler.class).to(ChangeEmailAddressHandlerImpl.class);
         bind(ShowUserGuideHandler.class).to(ShowUserGuideHandlerImpl.class);
 

@@ -128,6 +128,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtegeMenus.css")
     WebProtegeMenu menu();
 
+    @Source("WebProtegeDialog.css")
+    WebProtegeDialog dialog();
+
     public static interface WebProtegeCss extends CssResource {
 
         String webProtegeLaf();
@@ -249,6 +252,23 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String circularButton();
     }
 
+    public static interface WebProtegeDialog extends CssResource {
+
+        String dialog();
+
+        String title();
+
+        String group();
+
+        String buttonBar();
+
+        String cancelButton();
+
+        String acceptButton();
+
+        String errorLabel();
+
+    }
 
     public static interface WebProtegeMenu extends CssResource {
 

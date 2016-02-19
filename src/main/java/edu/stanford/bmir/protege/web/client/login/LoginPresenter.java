@@ -7,9 +7,11 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.actionbar.application.SignInRequestHandler;
+import edu.stanford.bmir.protege.web.client.actionbar.application.SignUpForAccountHandler;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.place.SignUpPlace;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -41,7 +43,7 @@ public class LoginPresenter {
     public LoginPresenter(LoginView view,
                           AuthenticatedActionExecutor loginExecutor,
                           LoggedInUserManager loggedInUserManager,
-                          PlaceController placeController,
+                          final PlaceController placeController,
                           ResetPasswordPresenter resetPasswordPresenter) {
         this.view = view;
         this.loginExecutor = loginExecutor;
@@ -58,6 +60,12 @@ public class LoginPresenter {
             @Override
             public void handleForgotPassword() {
                 handleResetPassword();
+            }
+        });
+        view.setSignUpForAccountHandler(new SignUpForAccountHandler() {
+            @Override
+            public void handleSignUpForAccount() {
+                placeController.goTo(new SignUpPlace());
             }
         });
     }

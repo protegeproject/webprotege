@@ -1,0 +1,59 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            padding-top: 50px;
+        }
+
+        .message {
+            width: 180px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 20px;
+            padding-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .verticalPadding {
+            height: 10px;
+        }
+
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main} ">
+        <g:HTMLPanel addStyleNames="{wp.dialog.dialog}">
+            <g:Label text="Sign Up for Account" addStyleNames="{wp.dialog.title}"/>
+
+            <g:Label text="User name"/>
+            <text:PlaceholderTextBox ui:field="userNameField" placeholder="e.g. Harry Potter"/>
+            <g:Label ui:field="userNameErrorLabel" text="Please specify a user name" addStyleNames="{wp.dialog.errorLabel}"/>
+
+            <g:Label text="Email address"/>
+            <g:TextBox ui:field="emailAddressField"/>
+            <g:Label ui:field="emailAddressErrorLabel" text="Please enter a valid email address" addStyleNames="{wp.dialog.errorLabel}"/>
+
+            <g:HTMLPanel addStyleNames="{wp.dialog.group}">
+
+                <g:Label text="Password"/>
+                <g:PasswordTextBox ui:field="passwordField"/>
+                <g:Label ui:field="passwordErrorLabel" text="Please enter a password" addStyleNames="{wp.dialog.errorLabel}"/>
+
+                <g:Label text="Confirm Password"/>
+                <g:PasswordTextBox ui:field="confirmPasswordField"/>
+                <g:Label ui:field="confirmPasswordErrorLabel" text="Passwords do not match" addStyleNames="{wp.dialog.errorLabel}"/>
+
+            </g:HTMLPanel>
+            <g:HTMLPanel addStyleNames="{wp.dialog.group} {wp.dialog.buttonBar}">
+                <g:Button ui:field="cancelButton" text="Cancel"
+                          addStyleNames="{wp.dialog.cancelButton} {wp.buttons.btn}"/>
+                <g:Button ui:field="signInButton" text="Sign Up"
+                          addStyleNames="{wp.dialog.acceptButton} {wp.buttons.btn}"/>
+            </g:HTMLPanel>
+        </g:HTMLPanel>
+
+
+    </g:HTMLPanel>
+</ui:UiBinder>
