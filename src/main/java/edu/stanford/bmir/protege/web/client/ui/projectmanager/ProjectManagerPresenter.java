@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
+import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.UploadProjectDialogController;
@@ -165,6 +166,7 @@ public class ProjectManagerPresenter {
         loggedInUserPresenter.start(projectManagerView.getLoggedInUserButton());
 
     }
+
 
 //    public void setLoadProjectRequestHandler(LoadProjectRequestHandler loadProjectRequestHandler) {
 //        projectListView.setLoadProjectRequestHandler(loadProjectRequestHandler);
