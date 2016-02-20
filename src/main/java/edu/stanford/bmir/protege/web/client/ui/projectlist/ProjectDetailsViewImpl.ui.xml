@@ -1,0 +1,43 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:popupmenu="urn:import:edu.stanford.bmir.protege.web.client.ui.library.popupmenu">
+
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+
+    <ui:style>
+        .main {
+            display: flex;
+            flex-direction: row;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 5px;
+            cursor: pointer;
+            color: #606060;
+        }
+        .main:hover {
+            background: #f0f0f0;
+        }
+        .displayNameCol {
+            width: 400px;
+            flex-grow: 0;
+            padding: 5px;
+        }
+        .ownerCol {
+            width: 200px;
+            flex-grow: 0;
+            padding: 5px;
+        }
+        .menuButtonCol {
+            flex-grow: 0;
+            padding-top: 3px;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+    </ui:style>
+
+    <g:HTMLPanel addStyleNames="{style.main}">
+        <g:Label ui:field="displayNameField" addStyleNames="{style.displayNameCol}"/>
+        <!--<g:Label ui:field="descriptionField" addStyleNames="{style.descriptionCol}"/>-->
+        <g:Label ui:field="ownerField" addStyleNames="{style.ownerCol}"/>
+        <popupmenu:MenuButton ui:field="menuButton" addStyleNames="{style.menuButtonCol}"/>
+    </g:HTMLPanel>
+</ui:UiBinder>

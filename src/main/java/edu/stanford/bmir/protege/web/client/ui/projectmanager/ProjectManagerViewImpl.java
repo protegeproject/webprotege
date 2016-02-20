@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 import edu.stanford.bmir.protege.web.client.ui.library.sidebar.SideBar;
 import edu.stanford.bmir.protege.web.client.ui.library.sidebar.SideBarItem;
+import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -37,7 +38,7 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     private static ProjectListViewImplBinder ourUiBinder = GWT.create(ProjectListViewImplBinder.class);
 
     @UiField(provided = true)
-    protected edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl projectListView;
+    protected ProjectListViewImpl projectListView;
 
 //    @UiField
 //    protected SideBar<MySideBarItem> sideBar;
@@ -70,7 +71,7 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
     };
 
     @Inject
-    public ProjectManagerViewImpl(edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl projectListView) {
+    public ProjectManagerViewImpl(ProjectListViewImpl projectListView) {
         this.projectListView = projectListView;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
@@ -80,7 +81,6 @@ public class ProjectManagerViewImpl extends Composite implements ProjectManagerV
 
     @Override
     public void onResize() {
-        LayoutUtil.setBounds(projectListView, 0, 0, 0, 0);
     }
 
     @Override

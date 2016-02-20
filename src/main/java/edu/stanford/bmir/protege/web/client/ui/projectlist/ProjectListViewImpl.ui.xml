@@ -4,41 +4,57 @@
     <ui:style>
 
         .main {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 0;
+            padding-bottom: 10px;
+            display: flex;
+            flex-direction: column;
 
-        .grid-holder {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 40px;
-            right: 0;
-            border-bottom: solid 1px #808080;
 
         }
 
-        .grid-style {
-            width: 100%;
-            height: 100%;
+        .header {
+            display: flex;
+            flex-direction: row;
+            color: #606060;
+            font-weight: bold;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #f0f0f0;
+            flex-grow: 0;
+            flex-shrink: 0;
         }
 
-        .pager-style {
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 40px;
-            bottom: 0;
-            color: #6982AB;
+        .displayNameCol {
+            width: 400px;
+            flex-grow: 0;
+            padding: 5px;
         }
+        .ownerCol {
+            width: 200px;
+            flex-grow: 0;
+            padding: 5px;
+        }
+        .menuButtonCol {
+            flex-grow: 0;
+            padding-top: 3px;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+
+        .projectList {
+            overflow-y: auto;
+        }
+
 
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:HTMLPanel addStyleNames="{style.grid-holder}">
-            <cellview:DataGrid ui:field="projectTable" addStyleNames="{style.grid-style}"/>
+        <g:HTMLPanel addStyleNames="{style.header}">
+            <g:Label addStyleNames="{style.displayNameCol}" text="Project name"/>
+            <g:Label addStyleNames="{style.ownerCol}" text="Owner"/>
+            <g:Label addStyleNames="{style.menuButtonCol}"/>
         </g:HTMLPanel>
-        <cellview:AbstractPager ui:field="projectTablePager" addStyleNames="{style.pager-style}"/>
+        <g:FlowPanel ui:field="itemContainer" addStyleNames="{style.projectList}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

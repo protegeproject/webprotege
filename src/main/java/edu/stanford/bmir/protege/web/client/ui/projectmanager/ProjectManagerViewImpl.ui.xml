@@ -11,20 +11,40 @@
             margin: 5px;
         }
 
-        .buttonBar {
+        .topBar {
             flex-grow: 0;
             border-bottom: 1px solid #f0f0f0;
             padding-bottom: 5px;
             margin-bottom: 5px;
+            padding-left: 10px;
         }
 
         .projectList {
+            display: flex;
             flex-grow: 100;
+            flex-direction: row;
+        }
+
+        .sideBar {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            width: 200px;
+            flex-grow: 0;
+            flex-shrink: 0;
         }
 
         .loggedInUserView {
             float: right;
         }
+
+        .listView {
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
 
     </ui:style>
 
@@ -32,15 +52,20 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
 
-        <g:HTMLPanel addStyleNames="{style.buttonBar}">
-            <g:Button ui:field="createProjectButton" text="&#x2600; Create Project ..." enabled="false" addStyleNames="{wp.buttons.btn} {wp.buttons.btnInline}"/>
-            <g:Button ui:field="uploadProjectButton" text="&#x21ea; Upload Project ..." addStyleNames="{wp.buttons.btn} {wp.buttons.btnInline}"/>
+        <g:HTMLPanel addStyleNames="{style.topBar}">
             <g:SimplePanel ui:field="loggedInUserButton" addStyleNames="{style.loggedInUserView}"/>
+            <h1>
+                Projects
+            </h1>
         </g:HTMLPanel>
-        <g:SimpleLayoutPanel addStyleNames="{style.projectList}">
-            <projectlist:ProjectListViewImpl ui:field="projectListView"/>
-        </g:SimpleLayoutPanel>
-
+        <g:HTMLPanel addStyleNames="{style.projectList}">
+            <g:HTMLPanel addStyleNames="{style.sideBar}">
+                <g:Button ui:field="createProjectButton" text="&#x2600; Create Project" enabled="false" addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {wp.buttons.btnInline}"/>
+                <div style="height: 10px;"/>
+                <g:Button ui:field="uploadProjectButton" text="&#x21ea; Upload Project" addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {wp.buttons.btnInline}"/>
+            </g:HTMLPanel>
+            <projectlist:ProjectListViewImpl ui:field="projectListView" addStyleNames="{style.listView}"/>
+        </g:HTMLPanel>
 
     </g:HTMLPanel>
 </ui:UiBinder>

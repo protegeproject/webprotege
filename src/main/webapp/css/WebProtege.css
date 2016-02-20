@@ -3,6 +3,14 @@ body
     font-family:tahoma, sans-serif;
 }
 
+h1 {
+    font-size: 18px;
+    color: #606060;
+    font-weight: normal;
+    line-height: 30px;
+    padding-bottom: 10px;
+}
+
 .centeredImage
 {
     margin-bottom:0;
