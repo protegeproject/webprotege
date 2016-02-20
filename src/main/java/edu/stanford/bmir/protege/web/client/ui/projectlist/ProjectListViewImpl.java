@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -32,6 +33,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ProjectListViewImpl extends Composite implements ProjectListView {
 
     private final LoggedInUserProvider loggedInUserProvider;
+
+    private final List<ProjectDetailsPresenter> entries = new ArrayList<>();
 
     interface ProjectListViewUIImplUiBinder extends UiBinder<HTMLPanel, ProjectListViewImpl> {
 
@@ -108,42 +111,24 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
     @Override
     public void setListData(List<ProjectDetails> projectDetails) {
         itemContainer.clear();
-//        List<ProjectDetailsItemPresenter> entries = new ArrayList<>();
+        entries.clear();
         for(final ProjectDetails details : projectDetails) {
-            ProjectDetailsPresenter itemPresenter = new ProjectDetailsPresenter(details, new ProjectDetailsViewImpl());
+            ProjectDetailsPresenter itemPresenter = getProjectDetailsPresenter(details);
+            entries.add(itemPresenter);
             itemContainer.add(itemPresenter.getView());
-            String label;
-            if(details.isInTrash()) {
-                label = "Remove from trash";
-            }
-            else {
-                label = "Move to trash";
-            }
-            itemPresenter.addAction(new AbstractUiAction(label) {
-                @Override
-                public void execute() {
-                    if(details.isInTrash()) {
-                        trashManagerRequestHandler.handleRemoveProjectFromTrash(details.getProjectId());
-                    }
-                    else {
-                        trashManagerRequestHandler.handleMoveProjectToTrash(details.getProjectId());
-                    }
-                }
-            });
-            itemPresenter.addAction(new AbstractUiAction("Open in new window") {
-                @Override
-                public void execute() {
-
-                }
-            });
         }
+    }
+
+    private ProjectDetailsPresenter getProjectDetailsPresenter(ProjectDetails details) {
+        return new ProjectDetailsPresenter(
+                        details, new ProjectDetailsViewImpl(), trashManagerRequestHandler, loadProjectRequestHandler, downloadProjectRequestHandler);
     }
 
     @Override
     public void addListData(ProjectDetails details) {
-        ProjectDetailsPresenter itemPresenter = new ProjectDetailsPresenter(details, new ProjectDetailsViewImpl());
+        ProjectDetailsPresenter itemPresenter = getProjectDetailsPresenter(details);
         itemContainer.insert(itemPresenter.getView(), 0);
+        entries.add(0, itemPresenter);
     }
-
 
 }
