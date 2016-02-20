@@ -15,7 +15,7 @@ import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenterFactory;
 import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
-import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectListPresenter;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -30,7 +30,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final ProjectPresenterFactory projectPresenterFactory;
 
-    private final Provider<ProjectListPresenter> projectListPresenterProvider;
+    private final Provider<ProjectManagerPresenter> projectListPresenterProvider;
 
     private final Provider<LoginPresenter> loginPresenterProvider;
 
@@ -43,7 +43,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
     @Inject
     public WebProtegeActivityMapper(LoggedInUserProvider loggedInUserProvider,
                                     ProjectPresenterFactory projectPresenterFactory,
-                                    Provider<ProjectListPresenter> projectListPresenterProvider,
+                                    Provider<ProjectManagerPresenter> projectListPresenterProvider,
                                     Provider<LoginPresenter> loginPresenterProvider,
                                     Provider<SignUpPresenter> signUpPresenterProvider,
                                     PlaceController placeController) {

@@ -60,7 +60,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsV
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListView;
 import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl;
-import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectListPresenter;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveFactory;
 import edu.stanford.bmir.protege.web.client.user.*;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
@@ -158,7 +158,7 @@ public class ApplicationClientModule extends AbstractGinModule {
 
         bind(ApplicationPresenter.class).asEagerSingleton();
         bind(LoginPresenter.class).asEagerSingleton();
-        bind(ProjectListPresenter.class).asEagerSingleton();
+        bind(ProjectManagerPresenter.class).asEagerSingleton();
 
         bind(LoginView.class).to(LoginViewImpl.class);
         bind(LogoutView.class).to(LogoutViewImpl.class);
