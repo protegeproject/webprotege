@@ -4,7 +4,7 @@ import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectListPresenter;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
 
 /**
  * Matthew Horridge
@@ -13,10 +13,10 @@ import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectListPresent
  */
 public class ProjectListActivity extends AbstractActivity {
 
-    private ProjectListPresenter presenter;
+    private ProjectManagerPresenter presenter;
 
     @Inject
-    public ProjectListActivity(ProjectListPresenter presenter) {
+    public ProjectListActivity(ProjectManagerPresenter presenter) {
         this.presenter = presenter;
     }
 

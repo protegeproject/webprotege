@@ -8,11 +8,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 import edu.stanford.bmir.protege.web.client.ui.library.sidebar.SideBar;
 import edu.stanford.bmir.protege.web.client.ui.library.sidebar.SideBarItem;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -30,9 +28,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 01/04/2013
  */
-public class ProjectListViewImpl extends Composite implements ProjectListView {
+public class ProjectManagerViewImpl extends Composite implements ProjectManagerView, RequiresResize, ProvidesResize {
 
-    interface ProjectListViewImplBinder extends UiBinder<HTMLPanel, ProjectListViewImpl> {
+    interface ProjectListViewImplBinder extends UiBinder<HTMLPanel, ProjectManagerViewImpl> {
 
     }
 
@@ -41,8 +39,8 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
     @UiField(provided = true)
     protected edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl projectListView;
 
-    @UiField
-    protected SideBar<MySideBarItem> sideBar;
+//    @UiField
+//    protected SideBar<MySideBarItem> sideBar;
 
     @UiField
     protected Button createProjectButton;
@@ -50,9 +48,8 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
     @UiField
     protected Button uploadProjectButton;
 
-    @UiField HTMLPanel noticesPanel;
-
-    @UiField Button closeNotices;
+    @UiField
+    SimplePanel loggedInUserButton;
 
 
     private Set<ProjectManagerViewCategory> viewCategories = new HashSet<ProjectManagerViewCategory>();
@@ -72,30 +69,19 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
         }
     };
 
-    private ViewCategoryChangedHandler viewCategoryChangedHandler = new ViewCategoryChangedHandler() {
-        @Override
-        public void handleViewCategoryChanged(ProjectManagerViewCategory selectedCategory) {
-            GWT.log("No ViewCategoryChangedHandler registered");
-        }
-    };
-
-
     @Inject
-    public ProjectListViewImpl(edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl projectListView) {
+    public ProjectManagerViewImpl(edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl projectListView) {
         this.projectListView = projectListView;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
-
-        sideBar.addSelectionHandler(new SelectionHandler<MySideBarItem>() {
-            @Override
-            public void onSelection(SelectionEvent<MySideBarItem> event) {
-                handleSideBarSelection(event);
-            }
-        });
         setCreateProjectEnabled(false);
         setUploadProjectEnabled(false);
     }
 
+    @Override
+    public void onResize() {
+        LayoutUtil.setBounds(projectListView, 0, 0, 0, 0);
+    }
 
     @Override
     public void setSelectedProject(ProjectId projectId) {
@@ -105,10 +91,6 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
     @Override
     public HandlerRegistration addSelectionHandler(SelectionHandler<ProjectId> handler) {
         return projectListView.addSelectionHandler(handler);
-    }
-
-    protected void handleSideBarSelection(SelectionEvent<MySideBarItem> event) {
-        viewCategoryChangedHandler.handleViewCategoryChanged(new ProjectManagerViewCategory(event.getSelectedItem().getLabel()));
     }
 
     @Override
@@ -127,11 +109,6 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
         if(this.viewCategories.equals(new HashSet<ProjectManagerViewCategory>(viewCategories))) {
             return;
         }
-        sideBar.clearItems();
-        for(ProjectManagerViewCategory viewCategory : viewCategories) {
-            sideBar.addItem(new MySideBarItem(viewCategory));
-        }
-        sideBar.setSelectedItem(0);
     }
 
     @UiHandler("createProjectButton")
@@ -143,13 +120,6 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
     protected void handleUploadProject(ClickEvent clickEvent) {
         uploadProjectRequestHandler.handleUploadProjectRequest();
     }
-
-    @UiHandler("closeNotices")
-    protected void handleCloseNoticesClicked(ClickEvent event) {
-        noticesPanel.setVisible(false);
-    }
-
-
 
     @Override
     public void setLoadProjectRequestHandler(LoadProjectRequestHandler handler) {
@@ -188,7 +158,6 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
 
     @Override
     public void setViewCategoryChangedHandler(ViewCategoryChangedHandler handler) {
-        this.viewCategoryChangedHandler = handler;
     }
 
     @Override
@@ -196,46 +165,9 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
         return this;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private class MySideBarItem implements SideBarItem {
-
-        private ProjectManagerViewCategory viewCategory;
-
-
-        private MySideBarItem(ProjectManagerViewCategory viewCategory) {
-            this.viewCategory = viewCategory;
-        }
-
-        @Override
-        public String getLabel() {
-            return viewCategory.getLabel();
-        }
-
-        @Override
-        public int hashCode() {
-            return "Dashboard$MySideBarItem".hashCode() + viewCategory.hashCode();
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof MySideBarItem)) {
-                return false;
-            }
-            MySideBarItem other = (MySideBarItem) obj;
-            return this.viewCategory.equals(other.viewCategory);
-        }
-
+    @Override
+    public AcceptsOneWidget getLoggedInUserButton() {
+        return loggedInUserButton;
     }
+
 }

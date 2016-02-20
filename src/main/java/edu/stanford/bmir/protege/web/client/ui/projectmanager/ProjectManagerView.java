@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -14,9 +15,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/04/2013
  */
-public interface ProjectListView extends HasLoadProjectRequestHandler, HasCreateProjectRequestHandler, HasUploadProjectRequestHandler, HasDownloadProjectRequestHandler, HasTrashManagerRequestHandler, HasSelectionHandlers<ProjectId>, HasViewCategoryChangedHandler, IsWidget {
-
-    Widget getWidget();
+public interface ProjectManagerView extends HasLoadProjectRequestHandler, HasCreateProjectRequestHandler, HasUploadProjectRequestHandler, HasDownloadProjectRequestHandler, HasTrashManagerRequestHandler, HasSelectionHandlers<ProjectId>, HasViewCategoryChangedHandler, IsWidget {
 
     void setSelectedProject(ProjectId projectId);
 
@@ -29,4 +28,6 @@ public interface ProjectListView extends HasLoadProjectRequestHandler, HasCreate
     void setUploadProjectEnabled(boolean enabled);
 
     void setViewCategories(List<ProjectManagerViewCategory> viewCategories);
+
+    AcceptsOneWidget getLoggedInUserButton();
 }

@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
+import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.UploadProjectDialogController;
 import edu.stanford.bmir.protege.web.shared.event.*;
@@ -33,13 +34,13 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/04/2013
  */
-public class ProjectListPresenter {
+public class ProjectManagerPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    private ProjectListView projectListView;
+    private ProjectManagerView projectManagerView;
 
     private Map<ProjectManagerViewCategory, ProjectListFilter> viewCat2Filter = new HashMap<ProjectManagerViewCategory, ProjectListFilter>();
 
@@ -51,18 +52,12 @@ public class ProjectListPresenter {
 
     private ProjectDetailsCache projectDetailsCache = new ProjectDetailsCache();
 
-    private final EventBus eventBus;
-
-    private final PlaceController placeController;
-
     @Inject
-    public ProjectListPresenter(final EventBus eventBus, final DispatchServiceManager dispatchServiceManager, final LoggedInUserProvider loggedInUserProvider, final PlaceController placeController) {
-        this.projectListView = new ProjectListViewImpl(new edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl(loggedInUserProvider));
-        this.eventBus = eventBus;
+    public ProjectManagerPresenter(final EventBus eventBus, final DispatchServiceManager dispatchServiceManager, final LoggedInUserProvider loggedInUserProvider, final LoggedInUserPresenter loggedInUserPresenter, final PlaceController placeController) {
+        this.projectManagerView = new ProjectManagerViewImpl(new edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl(loggedInUserProvider));
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
-        this.placeController = placeController;
-        projectListView.setLoadProjectRequestHandler(new LoadProjectRequestHandler() {
+        projectManagerView.setLoadProjectRequestHandler(new LoadProjectRequestHandler() {
             @Override
             public void handleProjectLoadRequest(ProjectId projectId) {
                 placeController.goTo(ProjectViewPlace.builder(projectId, new PerspectiveId("Classes")).build());
@@ -93,19 +88,21 @@ public class ProjectListPresenter {
         });
 
 
+
+
         selectedFilter = includeAllFilter;
 
-        projectListView.setCreateProjectRequestHandler(new CreateProjectRequestHandlerImpl(eventBus, dispatchServiceManager, loggedInUserProvider));
-        projectListView.setUploadProjectRequestHandler(new UploadProjectRequestHandlerImpl(new Provider<UploadProjectDialogController>() {
+        projectManagerView.setCreateProjectRequestHandler(new CreateProjectRequestHandlerImpl(eventBus, dispatchServiceManager, loggedInUserProvider));
+        projectManagerView.setUploadProjectRequestHandler(new UploadProjectRequestHandlerImpl(new Provider<UploadProjectDialogController>() {
             @Override
             public UploadProjectDialogController get() {
                 return new UploadProjectDialogController(eventBus, dispatchServiceManager, loggedInUserProvider);
             }
         }));
-        projectListView.setDownloadProjectRequestHandler(new DownloadProjectRequestHandlerImpl());
-        projectListView.setTrashManagerRequestHandler(new TrashManagerRequestHandlerImpl(dispatchServiceManager));
+        projectManagerView.setDownloadProjectRequestHandler(new DownloadProjectRequestHandlerImpl());
+        projectManagerView.setTrashManagerRequestHandler(new TrashManagerRequestHandlerImpl(dispatchServiceManager));
 
-        projectListView.setViewCategoryChangedHandler(new ViewCategoryChangedHandler() {
+        projectManagerView.setViewCategoryChangedHandler(new ViewCategoryChangedHandler() {
             @Override
             public void handleViewCategoryChanged(ProjectManagerViewCategory selectedCategory) {
                 setSelectedViewCategory(selectedCategory);
@@ -116,8 +113,8 @@ public class ProjectListPresenter {
             @Override
             public void handleProjectCreated(ProjectCreatedEvent event) {
                 projectDetailsCache.add(event.getProjectDetails());
-                projectListView.addProjectData(event.getProjectDetails());
-                projectListView.setSelectedProject(event.getProjectId());
+                projectManagerView.addProjectData(event.getProjectDetails());
+                projectManagerView.setSelectedProject(event.getProjectId());
             }
         });
 
@@ -165,6 +162,7 @@ public class ProjectListPresenter {
         handleUserChange();
         reloadFromServer();
 
+        loggedInUserPresenter.start(projectManagerView.getLoggedInUserButton());
 
     }
 
@@ -185,8 +183,8 @@ public class ProjectListPresenter {
         reloadFromClientCache();
     }
 
-    public ProjectListView getView() {
-        return projectListView;
+    public ProjectManagerView getView() {
+        return projectManagerView;
     }
 
 
@@ -202,7 +200,7 @@ public class ProjectListPresenter {
                 projectDetailsCache.setProjectDetails(result.getDetails());
                 displayProjectDetails();
                 if (selectId.isPresent()) {
-                    projectListView.setSelectedProject(selectId.get());
+                    projectManagerView.setSelectedProject(selectId.get());
                 }
             }
         });
@@ -219,23 +217,23 @@ public class ProjectListPresenter {
                 entries.add(pd);
             }
         }
-        projectListView.setProjectListData(entries);
+        projectManagerView.setProjectListData(entries);
     }
 
     private void handleUserChange() {
         final boolean guest = loggedInUserProvider.getCurrentUserId().isGuest();
-        projectListView.setCreateProjectEnabled(!guest);
-        projectListView.setUploadProjectEnabled(!guest);
+        projectManagerView.setCreateProjectEnabled(!guest);
+        projectManagerView.setUploadProjectEnabled(!guest);
         if (guest) {
-            projectListView.setViewCategories(Arrays.asList(ProjectManagerViewCategory.HOME));
+            projectManagerView.setViewCategories(Arrays.asList(ProjectManagerViewCategory.HOME));
         }
         else {
-            projectListView.setViewCategories(Arrays.asList(ProjectManagerViewCategory.HOME, ProjectManagerViewCategory.OWNED_BY_ME, ProjectManagerViewCategory.TRASH));
+            projectManagerView.setViewCategories(Arrays.asList(ProjectManagerViewCategory.HOME, ProjectManagerViewCategory.OWNED_BY_ME, ProjectManagerViewCategory.TRASH));
         }
     }
 
 
     public void start(AcceptsOneWidget container) {
-        container.setWidget(projectListView);
+        container.setWidget(projectManagerView);
     }
 }
