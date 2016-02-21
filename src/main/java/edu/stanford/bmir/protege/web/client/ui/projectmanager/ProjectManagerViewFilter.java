@@ -8,18 +8,20 @@ import edu.stanford.bmir.protege.web.client.ui.library.common.HasLabel;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/04/2013
  */
-public class ProjectManagerViewCategory implements HasLabel {
+public class ProjectManagerViewFilter implements HasLabel {
 
 
-    public static final ProjectManagerViewCategory HOME = new ProjectManagerViewCategory("Home");
+    public static final ProjectManagerViewFilter OWNED_BY_ME = new ProjectManagerViewFilter("Owned by me");
 
-    public static final ProjectManagerViewCategory OWNED_BY_ME = new ProjectManagerViewCategory("Owned By Me");
+    public static final ProjectManagerViewFilter SHARED_WITH_ME = new ProjectManagerViewFilter("Shared with me");
 
-    public static final ProjectManagerViewCategory TRASH = new ProjectManagerViewCategory("Trash");
+    public static final ProjectManagerViewFilter TRASH = new ProjectManagerViewFilter("Trash");
+
+
 
     private String label;
 
-    public ProjectManagerViewCategory(String label) {
+    public ProjectManagerViewFilter(String label) {
         this.label = label;
     }
 
@@ -37,10 +39,10 @@ public class ProjectManagerViewCategory implements HasLabel {
         if(obj == this) {
             return true;
         }
-        if(!(obj instanceof ProjectManagerViewCategory)) {
+        if(!(obj instanceof ProjectManagerViewFilter)) {
             return false;
         }
-        ProjectManagerViewCategory other = (ProjectManagerViewCategory) obj;
+        ProjectManagerViewFilter other = (ProjectManagerViewFilter) obj;
         return this.label.equals(other.label);
     }
 

@@ -7,9 +7,13 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.ui.UIAction;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.MenuButton;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.ArrayList;
@@ -34,12 +38,17 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
     @UiField
     Label ownerField;
 
-//    @UiField
-//    Label descriptionField;
-//
     @UiField
     MenuButton menuButton;
 
+    private ProjectId projectId;
+
+    private LoadProjectRequestHandler loadProjectRequestHandler = new LoadProjectRequestHandler() {
+        @Override
+        public void handleProjectLoadRequest(ProjectId projectId) {
+
+        }
+    };
 
     private final List<UIAction> actions = new ArrayList<>();
 
@@ -62,7 +71,18 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
     }
 
     @Override
-    public void setProjectName(String projectName) {
+    public void setLoadProjectRequestHandler(LoadProjectRequestHandler loadProjectRequestHandler) {
+        this.loadProjectRequestHandler = loadProjectRequestHandler;
+    }
+
+    @UiHandler("displayNameField")
+    protected void handleDisplayNameFieldClicked(ClickEvent event) {
+        loadProjectRequestHandler.handleProjectLoadRequest(projectId);
+    }
+
+    @Override
+    public void setProject(ProjectId projectId, String projectName) {
+        this.projectId = projectId;
         displayNameField.setText(projectName);
     }
 
@@ -79,5 +99,15 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
     @Override
     public void addAction(UIAction uiAction) {
         actions.add(uiAction);
+    }
+
+    @Override
+    public void setInTrash(boolean inTrash) {
+        if(inTrash) {
+            addStyleName(WebProtegeClientBundle.BUNDLE.style().inTrash());
+        }
+        else {
+            removeStyleName(WebProtegeClientBundle.BUNDLE.style().inTrash());
+        }
     }
 }

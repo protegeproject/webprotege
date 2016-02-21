@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 import com.google.gwt.event.logical.shared.HasSelectionHandlers;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -27,7 +26,9 @@ public interface ProjectManagerView extends HasLoadProjectRequestHandler, HasCre
 
     void setUploadProjectEnabled(boolean enabled);
 
-    void setViewCategories(List<ProjectManagerViewCategory> viewCategories);
+    void setViewFilters(List<ProjectManagerViewFilter> viewFilters);
+
+    List<ProjectManagerViewFilter> getViewFilters();
 
     AcceptsOneWidget getLoggedInUserButton();
 }

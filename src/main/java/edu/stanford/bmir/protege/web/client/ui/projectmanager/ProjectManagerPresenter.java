@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
-import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.client.ui.ontology.home.UploadProjectDialogController;
@@ -43,13 +42,10 @@ public class ProjectManagerPresenter {
 
     private ProjectManagerView projectManagerView;
 
-    private Map<ProjectManagerViewCategory, ProjectListFilter> viewCat2Filter = new HashMap<ProjectManagerViewCategory, ProjectListFilter>();
+    private Map<ProjectManagerViewFilter, ProjectDetailsFilter> viewCat2Filter = new HashMap<ProjectManagerViewFilter, ProjectDetailsFilter>();
 
-    private ProjectListFilter selectedFilter;
-
-    private final ProjectListFilter includeAllFilter;
-
-    private ProjectManagerViewCategory currentViewCategory = ProjectManagerViewCategory.HOME;
+    private ProjectDetailsFilter currentFilter = new ProjectDetailsOrFilter(
+            Collections.<ProjectDetailsFilter>emptyList());
 
     private ProjectDetailsCache projectDetailsCache = new ProjectDetailsCache();
 
@@ -65,33 +61,26 @@ public class ProjectManagerPresenter {
             }
         });
 
-        includeAllFilter = new ProjectListFilter() {
-            @Override
-            public boolean isIncluded(ProjectDetails projectDetails) {
-                return !projectDetails.isInTrash();
-            }
-        };
-
-        viewCat2Filter.put(ProjectManagerViewCategory.HOME, includeAllFilter);
-
-        viewCat2Filter.put(ProjectManagerViewCategory.OWNED_BY_ME, new ProjectListFilter() {
+        viewCat2Filter.put(ProjectManagerViewFilter.OWNED_BY_ME, new ProjectDetailsFilter() {
             @Override
             public boolean isIncluded(ProjectDetails projectDetails) {
                 return !projectDetails.isInTrash() && projectDetails.getOwner().equals(loggedInUserProvider.getCurrentUserId());
             }
         });
 
-        viewCat2Filter.put(ProjectManagerViewCategory.TRASH, new ProjectListFilter() {
+        viewCat2Filter.put(ProjectManagerViewFilter.SHARED_WITH_ME, new ProjectDetailsFilter() {
+            @Override
+            public boolean isIncluded(ProjectDetails projectDetails) {
+                return !projectDetails.isInTrash() && !projectDetails.getOwner().equals(loggedInUserProvider.getCurrentUserId());
+            }
+        });
+
+        viewCat2Filter.put(ProjectManagerViewFilter.TRASH, new ProjectDetailsFilter() {
             @Override
             public boolean isIncluded(ProjectDetails projectDetails) {
                 return projectDetails.isInTrash() && projectDetails.getOwner().equals(loggedInUserProvider.getCurrentUserId());
             }
         });
-
-
-
-
-        selectedFilter = includeAllFilter;
 
         projectManagerView.setCreateProjectRequestHandler(new CreateProjectRequestHandlerImpl(eventBus, dispatchServiceManager, loggedInUserProvider));
         projectManagerView.setUploadProjectRequestHandler(new UploadProjectRequestHandlerImpl(new Provider<UploadProjectDialogController>() {
@@ -103,10 +92,10 @@ public class ProjectManagerPresenter {
         projectManagerView.setDownloadProjectRequestHandler(new DownloadProjectRequestHandlerImpl());
         projectManagerView.setTrashManagerRequestHandler(new TrashManagerRequestHandlerImpl(dispatchServiceManager));
 
-        projectManagerView.setViewCategoryChangedHandler(new ViewCategoryChangedHandler() {
+        projectManagerView.setViewFilterChangedHandler(new ViewFilterChangedHandler() {
             @Override
-            public void handleViewCategoryChanged(ProjectManagerViewCategory selectedCategory) {
-                setSelectedViewCategory(selectedCategory);
+            public void handleViewFilterChanged() {
+                applyFilters();
             }
         });
 
@@ -160,6 +149,10 @@ public class ProjectManagerPresenter {
             }
         });
 
+        projectManagerView.setViewFilters(
+                Arrays.asList(ProjectManagerViewFilter.OWNED_BY_ME, ProjectManagerViewFilter.SHARED_WITH_ME)
+        );
+
         handleUserChange();
         reloadFromServer();
 
@@ -173,15 +166,14 @@ public class ProjectManagerPresenter {
 //    }
 
 
-    private void setSelectedViewCategory(ProjectManagerViewCategory selectedCategory) {
-        if(currentViewCategory.equals(selectedCategory)) {
-            return;
+    private void applyFilters() {
+        List<ProjectManagerViewFilter> selectedFilters = projectManagerView.getViewFilters();
+        List<ProjectDetailsFilter> filterList = new ArrayList<>();
+        for(ProjectManagerViewFilter filter : selectedFilters) {
+            ProjectDetailsFilter detailsFilter = viewCat2Filter.get(filter);
+            filterList.add(detailsFilter);
         }
-        currentViewCategory = selectedCategory;
-        selectedFilter = viewCat2Filter.get(selectedCategory);
-        if(selectedFilter == null) {
-            selectedFilter = includeAllFilter;
-        }
+        currentFilter = new ProjectDetailsOrFilter(filterList);
         reloadFromClientCache();
     }
 
@@ -200,7 +192,7 @@ public class ProjectManagerPresenter {
             @Override
             public void handleSuccess(GetAvailableProjectsResult result) {
                 projectDetailsCache.setProjectDetails(result.getDetails());
-                displayProjectDetails();
+                applyFilters();
                 if (selectId.isPresent()) {
                     projectManagerView.setSelectedProject(selectId.get());
                 }
@@ -215,7 +207,7 @@ public class ProjectManagerPresenter {
     private void displayProjectDetails() {
         List<ProjectDetails> entries = Lists.newArrayList();
         for(ProjectDetails pd : projectDetailsCache.getProjectDetailsList()) {
-            if (selectedFilter.isIncluded(pd)) {
+            if (currentFilter.isIncluded(pd)) {
                 entries.add(pd);
             }
         }
@@ -226,12 +218,7 @@ public class ProjectManagerPresenter {
         final boolean guest = loggedInUserProvider.getCurrentUserId().isGuest();
         projectManagerView.setCreateProjectEnabled(!guest);
         projectManagerView.setUploadProjectEnabled(!guest);
-        if (guest) {
-            projectManagerView.setViewCategories(Arrays.asList(ProjectManagerViewCategory.HOME));
-        }
-        else {
-            projectManagerView.setViewCategories(Arrays.asList(ProjectManagerViewCategory.HOME, ProjectManagerViewCategory.OWNED_BY_ME, ProjectManagerViewCategory.TRASH));
-        }
+        reloadFromServer();
     }
 
 

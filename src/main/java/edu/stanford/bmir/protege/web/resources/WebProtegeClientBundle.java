@@ -204,6 +204,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String dateTimeIconInset();
 
         String portletToolbar();
+
+        String inTrash();
     }
 
     public static interface WebProtegeButtons extends CssResource {
