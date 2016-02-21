@@ -104,10 +104,12 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
     @Override
     public void setInTrash(boolean inTrash) {
         if(inTrash) {
-            addStyleName(WebProtegeClientBundle.BUNDLE.style().inTrash());
+            displayNameField.addStyleName(WebProtegeClientBundle.BUNDLE.style().inTrash());
+            ownerField.addStyleName(WebProtegeClientBundle.BUNDLE.style().inTrash());
         }
         else {
-            removeStyleName(WebProtegeClientBundle.BUNDLE.style().inTrash());
+            displayNameField.removeStyleName(WebProtegeClientBundle.BUNDLE.style().inTrash());
+            ownerField.removeStyleName(WebProtegeClientBundle.BUNDLE.style().inTrash());
         }
     }
 }
