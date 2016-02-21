@@ -9,6 +9,7 @@
             display: flex;
             flex-direction: column;
             margin: 5px;
+            color: #606060;
         }
 
         .topBar {
@@ -45,6 +46,32 @@
             box-sizing: border-box;
         }
 
+        .filterPanel {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            padding-top: 50px;
+        }
+
+        .checkBoxHolder {
+            padding: 10px;
+        }
+
+        .checkBox {
+            display: block;
+            padding-bottom: 5px;
+            color: #525252;
+
+        }
+
+        .checkBox input {
+
+        }
+
+        .checkBox label {
+            padding-left: 6px;
+        }
+
 
     </ui:style>
 
@@ -63,6 +90,21 @@
                 <g:Button ui:field="createProjectButton" text="&#x2600; Create Project" enabled="false" addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {wp.buttons.btnInline}"/>
                 <div style="height: 10px;"/>
                 <g:Button ui:field="uploadProjectButton" text="&#x21ea; Upload Project" addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {wp.buttons.btnInline}"/>
+                <g:HTMLPanel addStyleNames="{style.filterPanel}">
+                    <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
+                        <g:CheckBox ui:field="ownedByMeCheckBox" text="Owned by me" addStyleNames="{style.checkBox}"/>
+                    </g:HTMLPanel>
+
+                    <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
+                        <g:CheckBox ui:field="sharedWithMeCheckBox" text="Shared with me" addStyleNames="{style.checkBox}"/>
+                    </g:HTMLPanel>
+
+                    <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
+                        <g:CheckBox ui:field="inTrashCheckBox" text="Trash" addStyleNames="{style.checkBox}"/>
+                    </g:HTMLPanel>
+
+                </g:HTMLPanel>
+
             </g:HTMLPanel>
             <projectlist:ProjectListViewImpl ui:field="projectListView" addStyleNames="{style.listView}"/>
         </g:HTMLPanel>

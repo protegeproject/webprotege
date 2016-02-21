@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.projectlist;
 
 import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
-import edu.stanford.bmir.protege.web.client.ui.UIAction;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.DownloadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.TrashManagerRequestHandler;
@@ -38,9 +37,11 @@ public class ProjectDetailsPresenter {
         this.trashManagerRequestHandler = trashManagerRequestHandler;
         this.loadProjectRequestHandler = loadProjectRequestHandler;
         this.downloadProjectRequestHandler = downloadProjectRequestHandler;
-        view.setProjectName(details.getDisplayName());
+        view.setProject(details.getProjectId(), details.getDisplayName());
         view.setProjectOwner(details.getOwner());
         view.setDescription(details.getDescription());
+        view.setInTrash(details.isInTrash());
+        view.setLoadProjectRequestHandler(loadProjectRequestHandler);
         addActions();
     }
 

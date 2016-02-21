@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
  * Bio-Medical Informatics Research Group<br>
  * Date: 02/04/2013
  */
-public interface ProjectListFilter {
+public interface ProjectDetailsFilter {
 
     boolean isIncluded(ProjectDetails projectDetails);
 }

@@ -7,7 +7,7 @@ package edu.stanford.bmir.protege.web.client.ui.projectmanager;
  * Bio-Medical Informatics Research Group<br>
  * Date: 09/04/2013
  */
-public interface ViewCategoryChangedHandler {
+public interface ViewFilterChangedHandler {
 
-    void handleViewCategoryChanged(ProjectManagerViewCategory selectedCategory);
+    void handleViewFilterChanged();
 }

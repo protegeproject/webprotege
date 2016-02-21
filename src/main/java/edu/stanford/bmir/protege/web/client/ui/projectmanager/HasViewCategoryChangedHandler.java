@@ -8,5 +8,5 @@ package edu.stanford.bmir.protege.web.client.ui.projectmanager;
  */
 public interface HasViewCategoryChangedHandler {
 
-    void setViewCategoryChangedHandler(ViewCategoryChangedHandler handler);
+    void setViewFilterChangedHandler(ViewFilterChangedHandler handler);
 }
