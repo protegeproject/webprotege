@@ -34,7 +34,7 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:Label ui:field="displayNameField" addStyleNames="{style.displayNameCol}"/>
+        <g:Label ui:field="displayNameField" addStyleNames="{style.displayNameCol}" title="Click to open"/>
         <!--<g:Label ui:field="descriptionField" addStyleNames="{style.descriptionCol}"/>-->
         <g:Label ui:field="ownerField" addStyleNames="{style.ownerCol}"/>
         <popupmenu:MenuButton ui:field="menuButton" addStyleNames="{style.menuButtonCol}"/>
