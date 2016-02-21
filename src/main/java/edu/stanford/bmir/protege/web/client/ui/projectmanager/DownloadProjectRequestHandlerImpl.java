@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.download.DownloadFormatExtensionHandler;
 import edu.stanford.bmir.protege.web.client.download.DownloadSettingsDialog;
 import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
@@ -16,6 +17,10 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Date: 03/04/2013
  */
 public class DownloadProjectRequestHandlerImpl implements DownloadProjectRequestHandler {
+
+    @Inject
+    public DownloadProjectRequestHandlerImpl() {
+    }
 
     @Override
     public void handleProjectDownloadRequest(final ProjectId projectId) {

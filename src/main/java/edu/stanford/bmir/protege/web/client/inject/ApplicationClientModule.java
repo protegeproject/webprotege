@@ -58,9 +58,8 @@ import edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductEditor;
 import edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsView;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsViewImpl;
-import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListView;
-import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl;
-import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
+import edu.stanford.bmir.protege.web.client.ui.projectlist.*;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.*;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveFactory;
 import edu.stanford.bmir.protege.web.client.user.*;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
@@ -70,6 +69,7 @@ import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationPropertiesProvider;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
@@ -140,7 +140,7 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(BannerView.class).to(BannerViewImpl.class);
         bind(ApplicationActionBar.class).to(ApplicationActionBarImpl.class);
         bind(ProjectActionBar.class).to(ProjectActionBarImpl.class);
-        bind(ProjectListView.class).to(ProjectListViewImpl.class);
+//        bind(ProjectListView.class).to(ProjectListViewImpl.class);
 
         bind(LoggedInUserProjectPermissionChecker.class).to(LoggedInUserProjectPermissionCheckerImpl.class);
 
@@ -159,6 +159,13 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(ApplicationPresenter.class).asEagerSingleton();
         bind(LoginPresenter.class).asEagerSingleton();
         bind(ProjectManagerPresenter.class).asEagerSingleton();
+        bind(ProjectManagerView.class).to(ProjectManagerViewImpl.class);
+        bind(ProjectDetailsView.class).to(ProjectDetailsViewImpl.class);
+        bind(LoadProjectRequestHandler.class).to(LoadProjectRequestHandlerImpl.class);
+        bind(LoadProjectInNewWindowRequestHandler.class).to(LoadProjectInNewWindowRequestHandlerImpl.class);
+        bind(DownloadProjectRequestHandler.class).to(DownloadProjectRequestHandlerImpl.class);
+        bind(TrashManagerRequestHandler.class).to(TrashManagerRequestHandlerImpl.class);
+
 
         bind(LoginView.class).to(LoginViewImpl.class);
         bind(LogoutView.class).to(LogoutViewImpl.class);
@@ -185,6 +192,10 @@ public class ApplicationClientModule extends AbstractGinModule {
                 .build(PerspectiveLinkFactory.class));
 
         bind(IndividualsListView.class).to(IndividualsListViewImpl.class);
+
+        install(new GinFactoryModuleBuilder()
+                .implement(ProjectDetailsPresenter.class, ProjectDetailsPresenter.class)
+                .build(ProjectDetailPresenterFactory.class));
 
     }
 

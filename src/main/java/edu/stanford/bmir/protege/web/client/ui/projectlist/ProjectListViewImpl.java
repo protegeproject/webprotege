@@ -32,8 +32,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProjectListViewImpl extends Composite implements ProjectListView {
 
-    private final LoggedInUserProvider loggedInUserProvider;
-
     private final List<ProjectDetailsPresenter> entries = new ArrayList<>();
 
     interface ProjectListViewUIImplUiBinder extends UiBinder<HTMLPanel, ProjectListViewImpl> {
@@ -42,6 +40,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
 
     private static ProjectListViewUIImplUiBinder ourUiBinder = GWT.create(ProjectListViewUIImplUiBinder.class);
 
+    private final ProjectDetailPresenterFactory presenterFactory;
 
 
     @UiField
@@ -78,10 +77,10 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
 
 
     @Inject
-    public ProjectListViewImpl(LoggedInUserProvider loggedInUserProvider) {
-        this.loggedInUserProvider = loggedInUserProvider;
+    public ProjectListViewImpl(ProjectDetailPresenterFactory presenterFactory) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
+        this.presenterFactory = presenterFactory;
     }
 
     @Override
@@ -120,8 +119,7 @@ public class ProjectListViewImpl extends Composite implements ProjectListView {
     }
 
     private ProjectDetailsPresenter getProjectDetailsPresenter(ProjectDetails details) {
-        return new ProjectDetailsPresenter(
-                        details, new ProjectDetailsViewImpl(), trashManagerRequestHandler, loadProjectRequestHandler, downloadProjectRequestHandler);
+        return presenterFactory.createPresenter(details);
     }
 
     @Override
