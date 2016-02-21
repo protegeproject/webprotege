@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.EmptySuccessWebProtegeCallback;
 import edu.stanford.bmir.protege.web.shared.project.*;
 
+import javax.inject.Inject;
 import java.util.Collections;
 
 /**
@@ -16,6 +17,7 @@ public class TrashManagerRequestHandlerImpl implements TrashManagerRequestHandle
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    @Inject
     public TrashManagerRequestHandlerImpl(DispatchServiceManager dispatchServiceManager) {
         this.dispatchServiceManager = dispatchServiceManager;
     }

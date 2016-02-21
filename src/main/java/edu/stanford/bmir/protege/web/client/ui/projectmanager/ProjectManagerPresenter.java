@@ -50,16 +50,16 @@ public class ProjectManagerPresenter {
     private ProjectDetailsCache projectDetailsCache = new ProjectDetailsCache();
 
     @Inject
-    public ProjectManagerPresenter(final EventBus eventBus, final DispatchServiceManager dispatchServiceManager, final LoggedInUserProvider loggedInUserProvider, final LoggedInUserPresenter loggedInUserPresenter, final PlaceController placeController) {
-        this.projectManagerView = new ProjectManagerViewImpl(new edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListViewImpl(loggedInUserProvider));
+    public ProjectManagerPresenter(final EventBus eventBus,
+                                   final ProjectManagerView projectManagerView,
+                                   final DispatchServiceManager dispatchServiceManager,
+                                   final LoggedInUserProvider loggedInUserProvider,
+                                   final LoggedInUserPresenter loggedInUserPresenter,
+                                   final LoadProjectRequestHandler loadProjectRequestHandler) {
+        this.projectManagerView = projectManagerView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
-        projectManagerView.setLoadProjectRequestHandler(new LoadProjectRequestHandler() {
-            @Override
-            public void handleProjectLoadRequest(ProjectId projectId) {
-                placeController.goTo(ProjectViewPlace.builder(projectId, new PerspectiveId("Classes")).build());
-            }
-        });
+        projectManagerView.setLoadProjectRequestHandler(loadProjectRequestHandler);
 
         viewCat2Filter.put(ProjectManagerViewFilter.OWNED_BY_ME, new ProjectDetailsFilter() {
             @Override

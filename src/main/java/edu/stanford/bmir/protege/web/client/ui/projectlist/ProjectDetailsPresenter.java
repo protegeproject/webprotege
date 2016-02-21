@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.projectlist;
 import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.DownloadProjectRequestHandler;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectInNewWindowRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.LoadProjectRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.TrashManagerRequestHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -28,12 +29,13 @@ public class ProjectDetailsPresenter {
 
     private final DownloadProjectRequestHandler downloadProjectRequestHandler;
 
-
+    private LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler;
 
     @Inject
-    public ProjectDetailsPresenter(@Assisted ProjectDetails details, ProjectDetailsView view, TrashManagerRequestHandler trashManagerRequestHandler, LoadProjectRequestHandler loadProjectRequestHandler, DownloadProjectRequestHandler downloadProjectRequestHandler) {
+    public ProjectDetailsPresenter(@Assisted ProjectDetails details, ProjectDetailsView view, LoadProjectInNewWindowRequestHandler loadProjectInNewWindowRequestHandler, TrashManagerRequestHandler trashManagerRequestHandler, LoadProjectRequestHandler loadProjectRequestHandler, DownloadProjectRequestHandler downloadProjectRequestHandler) {
         this.view = view;
         this.details = details;
+        this.loadProjectInNewWindowRequestHandler = loadProjectInNewWindowRequestHandler;
         this.trashManagerRequestHandler = trashManagerRequestHandler;
         this.loadProjectRequestHandler = loadProjectRequestHandler;
         this.downloadProjectRequestHandler = downloadProjectRequestHandler;
@@ -77,7 +79,7 @@ public class ProjectDetailsPresenter {
         view.addAction(new AbstractUiAction("Open in new window") {
             @Override
             public void execute() {
-
+                loadProjectInNewWindowRequestHandler.handleLoadProjectInNewWindow(details.getProjectId());
             }
         });
     }
