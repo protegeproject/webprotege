@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.workspace;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -36,13 +37,12 @@ public class ApplicationViewImpl extends Composite implements ApplicationView, R
     @Override
     public void setWidget(IsWidget widget) {
         mainView.setWidget(widget);
-            Timer timer = new Timer() {
-                @Override
-                public void run() {
-                    onResize();
-                }
-            };
-            timer.schedule(100);
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                onResize();
+            }
+        });
     }
 
     @Override
