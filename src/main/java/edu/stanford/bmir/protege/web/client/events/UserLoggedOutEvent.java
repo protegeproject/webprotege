@@ -15,6 +15,9 @@ public class UserLoggedOutEvent extends WebProtegeEvent<UserLoggedOutHandler> {
 
     private UserId userId;
 
+    private UserLoggedOutEvent() {
+    }
+
     public UserLoggedOutEvent(UserId userId) {
         this.userId = userId;
     }
