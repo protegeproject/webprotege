@@ -15,7 +15,7 @@ public class ConfigurationTasksModule extends AbstractModule {
         Multibinder<ConfigurationTask> multibinder = Multibinder.newSetBinder(binder(), ConfigurationTask.class);
         multibinder.addBinding().to(CheckWebProtegeDataDirectoryExists.class);
         multibinder.addBinding().to(CheckDataDirectoryIsReadableAndWritable.class);
-        multibinder.addBinding().to(CheckUIConfigurationDataExists.class);
+        multibinder.addBinding().to(CheckPerspectivesDataExists.class);
         multibinder.addBinding().to(CheckMongoDBConnectionTask.class);
         multibinder.addBinding().to(WarmUpMetaProjectTask.class);
     }

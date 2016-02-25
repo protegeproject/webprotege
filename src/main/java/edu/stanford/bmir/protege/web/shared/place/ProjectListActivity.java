@@ -1,26 +1,26 @@
-package edu.stanford.bmir.protege.web.client.place;
+package edu.stanford.bmir.protege.web.shared.place;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
+import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 12/02/16
  */
-public class LoginActivity extends AbstractActivity {
+public class ProjectListActivity extends AbstractActivity {
 
-    private LoginPresenter presenter;
+    private ProjectManagerPresenter presenter;
 
     @Inject
-    public LoginActivity(LoginPresenter presenter) {
+    public ProjectListActivity(ProjectManagerPresenter presenter) {
         this.presenter = presenter;
     }
 
     public void start(AcceptsOneWidget panel, EventBus eventBus) {
-        panel.setWidget(presenter.getView());
+        presenter.start(panel);
     }
 }

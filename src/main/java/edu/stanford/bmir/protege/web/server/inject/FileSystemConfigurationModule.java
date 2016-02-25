@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.server.inject;
 import com.google.inject.AbstractModule;
 import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentFileMatcher;
 import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentMatcherImpl;
+import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectory;
+import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.project.DefaultUIConfigurationFileManager;
 import edu.stanford.bmir.protege.web.server.project.DefaultUIConfigurationFileManagerImpl;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
@@ -26,6 +28,9 @@ public class FileSystemConfigurationModule extends AbstractModule {
         bind(File.class).annotatedWith(DataDirectory.class).toProvider(DataDirectoryProvider.class);
 
         bind(File.class).annotatedWith(UploadsDirectory.class).toProvider(UploadsDirectoryProvider.class);
+
+        bind(File.class).annotatedWith(DefaultPerspectiveDataDirectory.class)
+                .toProvider(DefaultPerspectiveDataDirectoryProvider.class);
 
         bind(File.class).annotatedWith(DefaultUiConfigurationDirectory.class)
                 .toProvider(DefaultUiConfigurationDirectoryProvider.class);

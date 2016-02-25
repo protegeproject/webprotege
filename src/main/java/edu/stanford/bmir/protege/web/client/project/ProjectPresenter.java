@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.project;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.help.HelpViewImpl;
@@ -16,6 +17,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -66,5 +68,13 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         topBarPresenter.start(view.getTopBarContainer());
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), place);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("ProjectPresenter")
+                .addValue(projectId)
+                .toString();
     }
 }

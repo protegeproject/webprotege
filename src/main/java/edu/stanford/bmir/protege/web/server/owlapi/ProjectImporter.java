@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.server.inject.DataDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.inject.project.ChangeHistoryFileProvider;
+import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFactory;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryProvider;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntologyDocumentProvider;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
@@ -50,7 +51,7 @@ public class ProjectImporter {
         WebProtegeProperties properties = WebProtegeInjector.get().getInstance(WebProtegeProperties.class);
         DataDirectoryProvider dataDirectoryProvider = new DataDirectoryProvider(properties);
         this.uploadsDirectory = new UploadsDirectoryProvider(dataDirectoryProvider.get()).get();
-        File projectDirectory = new ProjectDirectoryProvider(dataDirectoryProvider.get(), projectId).get();
+        File projectDirectory = new ProjectDirectoryProvider(new ProjectDirectoryFactory(dataDirectoryProvider.get()), projectId).get();
         rootOntologyDocument = new RootOntologyDocumentProvider(projectDirectory).get();
         WebProtegeLogger logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         this.revisionStore = new RevisionStoreImpl(projectId,

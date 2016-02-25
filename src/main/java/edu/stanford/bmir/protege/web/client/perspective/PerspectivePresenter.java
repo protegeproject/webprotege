@@ -65,6 +65,7 @@ public class PerspectivePresenter implements HasDispose {
     }
 
     public void start(AcceptsOneWidget container, ProjectViewPlace place) {
+        GWT.log("[PerspectivePresenter] Starting at place " + place);
         container.setWidget(perspectiveView);
         displayPerspective(place.getPerspectiveId());
     }
@@ -85,6 +86,9 @@ public class PerspectivePresenter implements HasDispose {
     }
 
     private void displayPerspective(final PerspectiveId perspectiveId) {
+        if(currentPerspective.equals(Optional.of(perspectiveId))) {
+            return;
+        }
         GWT.log("[PerspectivePresenter] Display Perspective: " + perspectiveId);
         currentPerspective = Optional.of(perspectiveId);
         retrieveAndSetPerspective(perspectiveId);
@@ -101,8 +105,10 @@ public class PerspectivePresenter implements HasDispose {
     }
 
     private void retrieveAndSetPerspective(final  PerspectiveId perspectiveId) {
+        GWT.log("[PerspectivePresenter] Retrive and set perspective for " + perspectiveId);
         Perspective p = perspectiveCache.get(perspectiveId);
         if(p != null) {
+            GWT.log("[PerspectivePresenter] Using cached perspective for " + perspectiveId);
             perspectiveView.setWidget(p);
             return;
         }

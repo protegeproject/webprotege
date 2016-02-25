@@ -4,6 +4,7 @@ import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import edu.stanford.bmir.protege.web.client.WebProtegeInitializer;
+import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
@@ -41,7 +42,7 @@ public class WebProtegeClientInjector {
         return injector.getClientApplicationProperties();
     }
 
-    public static ActivityManager getActivityManager() {
+    public static WebProtegeActivityManager getActivityManager() {
         return injector.getActivityManager();
     }
 

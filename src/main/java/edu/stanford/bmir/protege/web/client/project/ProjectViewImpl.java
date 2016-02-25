@@ -31,8 +31,14 @@ public class ProjectViewImpl extends Composite implements ProjectView, HasSelect
     @UiField
     protected SimpleLayoutPanel perspectiveLinkBarViewContainer;
 
-    @UiField
-    protected SimpleLayoutPanel perspectiveViewContainer;
+    @UiField(provided = true)
+    protected SimpleLayoutPanel perspectiveViewContainer = new SimpleLayoutPanel() {
+        @Override
+        public void setWidget(Widget w) {
+            GWT.log("[ProjectViewImpl] setWidget: " + w.hashCode());
+            super.setWidget(w);
+        }
+    };
 
 
     public ProjectViewImpl() {
@@ -72,6 +78,5 @@ public class ProjectViewImpl extends Composite implements ProjectView, HasSelect
         topBar.onResize();
         perspectiveLinkBarViewContainer.onResize();
         perspectiveViewContainer.onResize();
-
     }
 }

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.inject.project;
 
-import edu.stanford.bmir.protege.web.server.inject.DataDirectory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
@@ -14,26 +13,18 @@ import java.io.File;
  */
 public class ProjectDirectoryProvider implements Provider<File> {
 
-    private File dataDirectory;
+    private ProjectDirectoryFactory projectDirectoryFactory;
 
     private ProjectId projectId;
 
     @Inject
-    public ProjectDirectoryProvider(@DataDirectory File dataDirectory, ProjectId projectId) {
-        this.dataDirectory = dataDirectory;
+    public ProjectDirectoryProvider(ProjectDirectoryFactory projectDirectoryFactory, ProjectId projectId) {
+        this.projectDirectoryFactory = projectDirectoryFactory;
         this.projectId = projectId;
     }
 
     @Override
     public File get() {
-        return new File(getProjectDataDirectory(), projectId.getId());
-    }
-
-    private File getProjectDataDirectory() {
-        return new File(getDataStoreDirectory(), "project-data");
-    }
-
-    private File getDataStoreDirectory() {
-        return new File(dataDirectory, "data-store");
+        return projectDirectoryFactory.getProjectDirectory(projectId);
     }
 }
