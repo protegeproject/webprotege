@@ -174,6 +174,7 @@ public class SelectionModel {
                 .clearSelection()
                 .withSelectedItem(item)
                 .build();
+
         placeController.goTo(nextPlace);
 
 //

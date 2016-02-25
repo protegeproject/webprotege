@@ -1,0 +1,51 @@
+{
+  "direction": "ROW",
+  "children": [
+    {
+      "weight": 0.3,
+      "node": {
+        "direction": "COLUMN",
+        "children": [
+          {
+            "weight": 0.5,
+            "node": {
+              "portlet": "edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet"
+            }
+          },
+          {
+            "weight": 0.5,
+            "node": {
+              "portlet": "edu.stanford.bmir.protege.web.client.ui.individuals.IndividualsListPortlet"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "weight": 0.5,
+      "node": {
+        "portlet": "edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet"
+      }
+    },
+    {
+      "weight": 0.2,
+      "node": {
+        "direction": "COLUMN",
+        "children": [
+          {
+            "weight": 0.6,
+            "node": {
+              "portlet": "edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet"
+            }
+          },
+          {
+            "weight": 0.4,
+            "node": {
+              "portlet": "edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

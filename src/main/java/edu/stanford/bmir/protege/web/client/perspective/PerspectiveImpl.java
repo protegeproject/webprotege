@@ -31,18 +31,12 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
     public PerspectiveImpl(@Assisted final PerspectiveId perspectiveId, PortletWidgetMapper widgetMapper) {
         super();
         this.perspectiveId = perspectiveId;
-        addAttachHandler(new AttachEvent.Handler() {
-            @Override
-            public void onAttachOrDetach(AttachEvent event) {
-                panelManager.setRootNode(rootNode);
-            }
-        });
         WidgetMapRootWidget rootWidget = new WidgetMapRootWidget();
         panelManager = new WidgetMapPanelManager(rootWidget, widgetMapper);
         widgetMapPanel = new WidgetMapPanel(rootWidget, panelManager);
         initWidget(widgetMapPanel);
 
-        rootNode = new ParentNode(Direction.HORIZONTAL);
+        rootNode = new ParentNode(Direction.ROW);
 
         widgetMapPanel.setRootNode(rootNode);
 
@@ -57,17 +51,6 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
     @Override
     public PerspectiveId getPerspectiveId() {
         return perspectiveId;
-    }
-
-    @Override
-    protected void onLoad() {
-        super.onLoad();
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                widgetMapPanel.onResize();
-            }
-        });
     }
 
     private void removePortlet(final EntityPortlet portlet) {

@@ -37,18 +37,18 @@ public class PortletWidgetMapper implements WidgetMapper {
 
     @Override
     public IsWidget getWidget(TerminalNode terminalNode) {
-        GWT.log("[Perspective] Getting widget for TerminalNode: " + terminalNode);
+        GWT.log("[PortletWidgetMapper] Getting widget for TerminalNode: " + terminalNode);
         ViewHolder cachedViewHolder = nodeId2ViewHolderMap.get(terminalNode.getNodeId());
         if(cachedViewHolder != null) {
-            GWT.log("[Perspective] Using cached view: " + terminalNode);
+            GWT.log("[PortletWidgetMapper] Using cached view: " + terminalNode);
             return cachedViewHolder;
         }
         String portletClass = terminalNode.getNodeProperties().getPropertyValue("portlet", null);
-        GWT.log("[Perspective] Instantiate portlet: " + portletClass);
+        GWT.log("[PortletWidgetMapper] Instantiate portlet: " + portletClass);
         ViewHolder viewHolder;
         if(portletClass != null) {
             final EntityPortlet entityPortlet = uiFactory.createPortlet(portletClass);
-            GWT.log("[Perspective] Created portlet: " + entityPortlet.getClass().getName());
+            GWT.log("[PortletWidgetMapper] Created portlet: " + entityPortlet.getClass().getName());
             viewHolder = createViewHolder(terminalNode.getNodeId(), entityPortlet);
         }
         else {

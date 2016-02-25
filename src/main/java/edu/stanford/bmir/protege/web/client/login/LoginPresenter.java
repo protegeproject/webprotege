@@ -18,6 +18,8 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -138,5 +140,12 @@ public class LoginPresenter {
         else {
             view.showLoginFailedErrorMessage();
         }
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("LoginPresenter")
+                .toString();
     }
 }

@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * Stanford Center for Biomedical Informatics Research
  * 17/02/16
  */
-public interface PerspectiveLayoutManager {
+public interface PerspectiveLayoutStore {
 
     PerspectiveLayout getPerspectiveLayout(ProjectId projectId, UserId userId, PerspectiveId perspectiveId);
 

@@ -106,4 +106,5 @@ public class PortletUiImpl extends Composite implements PortletUi {
     public AcceptsOneWidget getContentHolder() {
         return contentHolder;
     }
+
 }

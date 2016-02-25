@@ -1116,7 +1116,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         return getDirectChild(parentNode, childId) != null;
     }
 
-    protected void createRoot(EntityData rootEnitity) {
+    private void createRoot(EntityData rootEnitity) {
         if (rootEnitity == null) {
             rootEnitity = new EntityData("Root", "Root node is not defined");
         }

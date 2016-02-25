@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.perspective;
 
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutAction;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutResult;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -19,11 +18,11 @@ import javax.inject.Inject;
  */
 public class GetPerspectiveLayoutActionHandler implements ActionHandler<GetPerspectiveLayoutAction, GetPerspectiveLayoutResult> {
 
-    private PerspectiveLayoutManager perspectiveLayoutManager;
+    private PerspectiveLayoutStore perspectiveLayoutStore;
 
     @Inject
-    public GetPerspectiveLayoutActionHandler(PerspectiveLayoutManager perspectiveLayoutManager) {
-        this.perspectiveLayoutManager = perspectiveLayoutManager;
+    public GetPerspectiveLayoutActionHandler(PerspectiveLayoutStore perspectiveLayoutStore) {
+        this.perspectiveLayoutStore = perspectiveLayoutStore;
     }
 
     @Override
@@ -41,7 +40,7 @@ public class GetPerspectiveLayoutActionHandler implements ActionHandler<GetPersp
         PerspectiveId perspectiveId = action.getPerspectiveId();
         ProjectId projectId = action.getProjectId();
         UserId userId = action.getUserId();
-        PerspectiveLayout perspectiveLayout = perspectiveLayoutManager.getPerspectiveLayout(projectId, userId, perspectiveId);
+        PerspectiveLayout perspectiveLayout = perspectiveLayoutStore.getPerspectiveLayout(projectId, userId, perspectiveId);
         return new GetPerspectiveLayoutResult(perspectiveLayout);
     }
 }

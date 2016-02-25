@@ -132,6 +132,5 @@ public class ProjectFeedPanel extends Composite {
     @Override
     protected void onUnload() {
         elapsedTimesUpdateTimer.cancel();
-        super.onUnload();
     }
 }

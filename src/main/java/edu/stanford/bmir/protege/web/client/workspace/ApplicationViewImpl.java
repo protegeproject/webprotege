@@ -51,5 +51,4 @@ public class ApplicationViewImpl extends Composite implements ApplicationView, R
         mainView.onResize();
     }
 
-
 }

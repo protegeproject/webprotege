@@ -32,6 +32,7 @@ public class PerspectiveViewImpl extends Composite implements PerspectiveView {
 
     @Override
     public void setWidget(IsWidget w) {
+        GWT.log("[PerspectiveViewImpl] setWidget: " + w.hashCode());
         mainPanel.setWidget(w);
     }
 

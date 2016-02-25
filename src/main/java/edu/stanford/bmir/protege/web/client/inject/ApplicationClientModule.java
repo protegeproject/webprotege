@@ -102,7 +102,7 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(PlaceController.class).toProvider(PlaceControllerProvider.class).asEagerSingleton();
         bind(ProjectManager.class).asEagerSingleton();
         bind(DispatchServiceManager.class).asEagerSingleton();
-        bind(ApplicationView.class).to(ApplicationViewImpl.class);
+        bind(ApplicationView.class).to(ApplicationViewImpl.class).asEagerSingleton();
 
         bind(LoggedInUserProvider.class).to(LoggedInUserManager.class).asEagerSingleton();
         bind(LoggedInUserManager.class).toProvider(LoggedInUserManagerProvider.class).asEagerSingleton();
