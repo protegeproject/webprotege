@@ -27,7 +27,7 @@ public class EntityLabel extends Composite {
     protected InlineLabel typeLabel;
 
     @UiField
-    protected InlineHyperlink browserTextLabel;
+    protected InlineLabel browserTextLabel;
 
     @UiField
     protected InlineLabel iriLabel;

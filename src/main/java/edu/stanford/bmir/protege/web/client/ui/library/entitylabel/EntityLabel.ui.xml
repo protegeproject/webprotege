@@ -5,10 +5,13 @@
         .type-style {
             color: #464646;
         }
+
         .browser-text-style {
-            color: #464646;
-            font-weight: bold;
+            color: #0000ff;
+            text-decoration: underline;
+            cursor: pointer;
         }
+
         .iri-style {
             padding-left: 10px;
             color: #a9a9a9;
@@ -16,7 +19,7 @@
     </ui:style>
 
     <g:HTMLPanel>
-        <g:InlineLabel ui:field="typeLabel" addStyleNames="{style.type-style}"/><g:InlineHyperlink ui:field="browserTextLabel" addStyleNames="{style.browser-text-style}"/>
+        <g:InlineLabel ui:field="typeLabel" addStyleNames="{style.type-style}"/><g:InlineLabel ui:field="browserTextLabel" addStyleNames="{style.browser-text-style}"/>
         <g:InlineLabel ui:field="iriLabel" addStyleNames="{style.iri-style}" visible="false"/>
     </g:HTMLPanel>
 </ui:UiBinder>

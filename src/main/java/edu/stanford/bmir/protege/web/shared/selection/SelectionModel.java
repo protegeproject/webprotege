@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.selection;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
@@ -132,7 +133,9 @@ public class SelectionModel {
     }
 
     public void setSelection(OWLEntity entity) {
+        GWT.log("[SelectionModel] Set selection to: " + entity);
         Place place = placeController.getWhere();
+        GWT.log("[SelectionModel]     Current place: " + place);
         if(!(place instanceof ProjectViewPlace)) {
             return;
         }
@@ -168,12 +171,16 @@ public class SelectionModel {
                         return new OWLAnnotationPropertyItem(property);
                     }
                 });
+        ItemSelection nextSelection = ItemSelection.builder().addItem(item).build();
+        if(nextSelection.equals(selection)) {
+            return;
+        }
         ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
         ProjectViewPlace nextPlace = projectViewPlace.builder()
                 .clearSelection()
                 .withSelectedItem(item)
                 .build();
-
+        GWT.log("[SelectionModel]     Redirecting to place: " + nextPlace);
         placeController.goTo(nextPlace);
     }
 
