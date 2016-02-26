@@ -11,11 +11,11 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class OWLEntityDataContext extends EditorCtx {
+public class OWLEntityContext extends EditorCtx {
 
     private OWLEntity entity;
 
-    public OWLEntityDataContext(ProjectId projectId, OWLEntity entity) {
+    public OWLEntityContext(ProjectId projectId, OWLEntity entity) {
         super(projectId);
         this.entity = entity;
     }
@@ -27,7 +27,7 @@ public class OWLEntityDataContext extends EditorCtx {
 
     @Override
     public String toString() {
-        return toStringHelper("OWLEntityDataContext")
+        return toStringHelper("OWLEntityContext")
                 .addValue(entity)
                 .toString();
     }

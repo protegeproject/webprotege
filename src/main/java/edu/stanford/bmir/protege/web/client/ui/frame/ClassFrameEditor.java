@@ -49,8 +49,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     @UiField(provided = true)
     protected final PropertyValueListEditor properties;
 
-    private final ProjectId projectId;
-
     private LabelledFrame<ClassFrame> lastClassFrame;
 
     private OWLClass currentSubject;
@@ -70,8 +68,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     private static ClassFrameEditor2UiBinder ourUiBinder = GWT.create(ClassFrameEditor2UiBinder.class);
 
     @Inject
-    public ClassFrameEditor(ProjectId projectId, PropertyValueListEditor annotations, PropertyValueListEditor properties) {
-        this.projectId = projectId;
+    public ClassFrameEditor(PropertyValueListEditor annotations, PropertyValueListEditor properties) {
         this.annotations = annotations;
         this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
         this.properties = properties;
@@ -83,6 +80,9 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     }
 
     public void setValue(final LabelledFrame<ClassFrame> lcf) {
+        GWT.log("[EditorView] setValue: " + lcf);
+
+        setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
         lastClassFrame = lcf;
         currentSubject = lcf.getFrame().getSubject();
 //        currentClasses.clear();
@@ -94,9 +94,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
         iriField.setValue(lcf.getFrame().getSubject().getIRI().toString());
         annotations.setValue(new PropertyValueList(new ArrayList<PropertyValue>(lcf.getFrame().getAnnotationPropertyValues())));
         properties.setValue(new PropertyValueList(new ArrayList<PropertyValue>(lcf.getFrame().getLogicalPropertyValues())));
-
-        setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
-
         updatePropertiesEnabled();
 
     }
@@ -193,6 +190,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 //            }
             ClassFrame cf = builder.build();
             LabelledFrame<ClassFrame> labelledClassFrame = new LabelledFrame<ClassFrame>(getDisplayName(), cf);
+            GWT.log("[EditorView] getValue: " + labelledClassFrame);
             return Optional.of(labelledClassFrame);
         }
     }

@@ -17,7 +17,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityDataContext, LabelledFrame<DataPropertyFrame>> {
+public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<DataPropertyFrame>> {
 
     private final DataPropertyFrameEditor editor;
 
@@ -33,22 +33,22 @@ public class DataPropertyFrameEditorManager implements EditorManager<OWLEntityDa
     }
 
     @Override
-    public EditorView<LabelledFrame<DataPropertyFrame>> getView(OWLEntityDataContext editorContext) {
+    public EditorView<LabelledFrame<DataPropertyFrame>> getView(OWLEntityContext editorContext) {
         return editor;
     }
 
     @Override
-    public GetObjectAction<LabelledFrame<DataPropertyFrame>> createGetObjectAction(OWLEntityDataContext editorContext) {
+    public GetObjectAction<LabelledFrame<DataPropertyFrame>> createGetObjectAction(OWLEntityContext editorContext) {
         return new GetDataPropertyFrameAction(editorContext.getProjectId(), editorContext.getEntity().asOWLDataProperty());
     }
 
     @Override
-    public UpdateObjectAction<LabelledFrame<DataPropertyFrame>> createUpdateObjectAction(LabelledFrame<DataPropertyFrame> pristineObject, LabelledFrame<DataPropertyFrame> editedObject, OWLEntityDataContext editorContext) {
+    public UpdateObjectAction<LabelledFrame<DataPropertyFrame>> createUpdateObjectAction(LabelledFrame<DataPropertyFrame> pristineObject, LabelledFrame<DataPropertyFrame> editedObject, OWLEntityContext editorContext) {
         return new UpdateDataPropertyFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
     }
 
     @Override
-    public String getDescription(OWLEntityDataContext editorContext) {
+    public String getDescription(OWLEntityContext editorContext) {
         return "Data property description";
     }
 }

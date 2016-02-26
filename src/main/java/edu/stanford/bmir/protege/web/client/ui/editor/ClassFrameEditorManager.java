@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class ClassFrameEditorManager implements EditorManager<OWLEntityDataContext, LabelledFrame<ClassFrame>> {
+public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<ClassFrame>> {
 
     private ClassFrameEditor editor;
 
@@ -24,22 +24,22 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityDataConte
     }
 
     @Override
-    public EditorView<LabelledFrame<ClassFrame>> getView(OWLEntityDataContext context) {
+    public EditorView<LabelledFrame<ClassFrame>> getView(OWLEntityContext context) {
         return editor;
     }
 
     @Override
-    public GetObjectAction<LabelledFrame<ClassFrame>> createGetObjectAction(OWLEntityDataContext editorContext) {
+    public GetObjectAction<LabelledFrame<ClassFrame>> createGetObjectAction(OWLEntityContext editorContext) {
         return new GetClassFrameAction(editorContext.getEntity().asOWLClass(), editorContext.getProjectId());
     }
 
     @Override
-    public UpdateObjectAction<LabelledFrame<ClassFrame>> createUpdateObjectAction(LabelledFrame<ClassFrame> pristineObject, LabelledFrame<ClassFrame> editedObject, OWLEntityDataContext editorContext) {
+    public UpdateObjectAction<LabelledFrame<ClassFrame>> createUpdateObjectAction(LabelledFrame<ClassFrame> pristineObject, LabelledFrame<ClassFrame> editedObject, OWLEntityContext editorContext) {
         return new UpdateClassFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
     }
 
     @Override
-    public String getDescription(OWLEntityDataContext editorContext) {
+    public String getDescription(OWLEntityContext editorContext) {
         return "Class description";
     }
 }

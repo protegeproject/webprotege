@@ -16,7 +16,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntityDataContext, LabelledFrame<ObjectPropertyFrame>> {
+public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<ObjectPropertyFrame>> {
 
     private final ObjectPropertyFrameEditor editor;
 
@@ -26,22 +26,22 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
     }
 
     @Override
-    public EditorView<LabelledFrame<ObjectPropertyFrame>> getView(OWLEntityDataContext editorContext) {
+    public EditorView<LabelledFrame<ObjectPropertyFrame>> getView(OWLEntityContext editorContext) {
         return editor;
     }
 
     @Override
-    public GetObjectAction<LabelledFrame<ObjectPropertyFrame>> createGetObjectAction(OWLEntityDataContext editorContext) {
+    public GetObjectAction<LabelledFrame<ObjectPropertyFrame>> createGetObjectAction(OWLEntityContext editorContext) {
         return new GetObjectPropertyFrameAction(editorContext.getProjectId(), editorContext.getEntity().asOWLObjectProperty());
     }
 
     @Override
-    public UpdateObjectAction<LabelledFrame<ObjectPropertyFrame>> createUpdateObjectAction(LabelledFrame<ObjectPropertyFrame> pristineObject, LabelledFrame<ObjectPropertyFrame> editedObject, OWLEntityDataContext editorContext) {
+    public UpdateObjectAction<LabelledFrame<ObjectPropertyFrame>> createUpdateObjectAction(LabelledFrame<ObjectPropertyFrame> pristineObject, LabelledFrame<ObjectPropertyFrame> editedObject, OWLEntityContext editorContext) {
         return new UpdateObjectPropertyFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
     }
 
     @Override
-    public String getDescription(OWLEntityDataContext editorContext) {
+    public String getDescription(OWLEntityContext editorContext) {
         return "Object property description";
     }
 }

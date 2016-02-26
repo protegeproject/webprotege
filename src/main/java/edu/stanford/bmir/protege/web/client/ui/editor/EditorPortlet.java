@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -40,7 +39,7 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
             }
         });
 
-        final Widget editorHolder = editorPresenter.getEditorHolder();
+        final Widget editorHolder = editorPresenter.getView();
         editorHolder.setSize("100%", "100%");
         ScrollPanel sp = new ScrollPanel(editorHolder);
         getContentHolder().setWidget(sp);
@@ -57,15 +56,15 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
             // TODO: Show nothing selected
             return;
         }
-        final Optional<EditorCtx> editorContext = getEditorContext(entity);
+        final Optional<EditorCtx> editorContext = getEditorContext(entity, getProjectId());
         editorPresenter.setEditorContext(editorContext);
     }
 
-    public Optional<EditorCtx> getEditorContext(Optional<OWLEntity> sel) {
+    public static Optional<EditorCtx> getEditorContext(Optional<OWLEntity> sel, ProjectId projectId) {
         if(!sel.isPresent()) {
             return Optional.absent();
         }
-        return Optional.<EditorCtx>of(new OWLEntityDataContext(getProjectId(), sel.get()));
+        return Optional.<EditorCtx>of(new OWLEntityContext(projectId, sel.get()));
     }
 
 //    @Override

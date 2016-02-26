@@ -13,12 +13,12 @@ import java.util.Map;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class EntityDataContextSelector implements EditorManagerSelector {
+public class EntityManagerSelectorImpl implements EditorManagerSelector {
 
-    private Map<EntityType<?>, EditorManager<?, ?>> map = new HashMap<>();
+    private final Map<EntityType<?>, EditorManager<?, ?>> map = new HashMap<>();
 
     @Inject
-    public EntityDataContextSelector(ClassFrameEditorManager classFrameEditorManager,
+    public EntityManagerSelectorImpl(ClassFrameEditorManager classFrameEditorManager,
                                      ObjectPropertyFrameEditorManager objectPropertyFrameEditorManager,
                                      DataPropertyFrameEditorManager dataPropertyFrameEditorManager,
                                      AnnotationPropertyFrameEditorManager annotationPropertyFrameEditorManager,
@@ -32,17 +32,17 @@ public class EntityDataContextSelector implements EditorManagerSelector {
 
     @Override
     public boolean canEditContext(EditorCtx editorCtx) {
-        if(!(editorCtx instanceof OWLEntityDataContext)) {
+        if(!(editorCtx instanceof OWLEntityContext)) {
             return false;
         }
-        EntityType<?> entityType = ((OWLEntityDataContext) editorCtx).getEntity().getEntityType();
+        EntityType<?> entityType = ((OWLEntityContext) editorCtx).getEntity().getEntityType();
         return map.containsKey(entityType);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <C extends EditorCtx, O extends Serializable> EditorManager<C, O> getEditorManager(EditorCtx editorContext) {
-        EntityType entityType = ((OWLEntityDataContext) editorContext).getEntity().getEntityType();
+        EntityType entityType = ((OWLEntityContext) editorContext).getEntity().getEntityType();
         return (EditorManager<C, O>) map.get(entityType);
     }
 }

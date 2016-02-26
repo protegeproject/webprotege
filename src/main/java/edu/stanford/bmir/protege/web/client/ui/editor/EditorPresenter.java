@@ -6,7 +6,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Label;
@@ -15,16 +14,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
-import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
@@ -49,19 +44,18 @@ public class EditorPresenter implements HasDispose {
 
     private static final Label LOADING_INDICATOR_WIDGET = new Label("Loading...");
 
-    private static final int VALUE_CHANGED_COMMIT_DELAY_MS = 1000;
+    private static final int VALUE_CHANGED_COMMIT_DELAY_MS = 2000;
 
     private final DispatchServiceManager dispatchServiceManager;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
-    private final EditorContextMapper editorContextMapper;
+    private final ContextMapper contextMapper;
 
 
+    private final SimplePanel editorHolder = new SimplePanel();
 
-    private SimplePanel editorHolder = new SimplePanel();
-
-    private Optional<EditorState<?, ?>> editorState = Optional.absent();
+    private Optional<EditorState<?, ?>> lastEditorState = Optional.absent();
 
     private HandlerRegistration valueChangedReg;
 
@@ -76,13 +70,13 @@ public class EditorPresenter implements HasDispose {
     private Timer commitOnValueChangedTimer = new Timer() {
         @Override
         public void run() {
-            commitCurrentValue(editorState.get());
+            commitCurrentValue(lastEditorState.get());
         }
     };
 
     @Inject
-    public EditorPresenter(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, EditorContextMapper editorContextMapper, LoggedInUserProjectPermissionChecker permissionChecker) {
-        this.editorContextMapper = editorContextMapper;
+    public EditorPresenter(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ContextMapper contextMapper, LoggedInUserProjectPermissionChecker permissionChecker) {
+        this.contextMapper = contextMapper;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
         this.handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
@@ -111,75 +105,73 @@ public class EditorPresenter implements HasDispose {
         return handlerManager.addHandler(EditorContextChangedEvent.TYPE, handler);
     }
 
-    public Widget getEditorHolder() {
+    public Widget getView() {
         return editorHolder;
     }
 
-    public <C extends EditorCtx, O extends Serializable> void setEditorContext(final Optional<C> editorCtx) {
-        if (editorState.isPresent()) {
-            unbindPrevious(editorState.get());
-        }
 
-        if (editorCtx.isPresent()) {
-            bindNext(editorCtx.get());
+    public <C extends EditorCtx> void setEditorContext(final Optional<C> editorContext) {
+        if (lastEditorState.isPresent()) {
+            unbindPrevious(lastEditorState.get());
+        }
+        if (editorContext.isPresent()) {
+            bindNext(editorContext.get());
         }
         else {
             editorHolder.setWidget(NOTHING_SELECTED_WIDGET);
         }
     }
 
-
-
-
-
     private void clearEditorState() {
-        editorState = Optional.absent();
+        lastEditorState = Optional.absent();
     }
 
-    private <C extends EditorCtx, O extends Serializable> void setEditorState(O pristineObject, C editorContext, EditorView<O> view, EditorManager<C, O> editorManager) {
-        editorState = Optional.<EditorState<?,?>>of(new EditorState<C, O>(pristineObject, editorContext, view, editorManager));
+    private <C extends EditorCtx, O extends Serializable> void setEditorState(O pristineObject, C editorContext, EditorManager<C, O> editorManager) {
+        lastEditorState = Optional.<EditorState<?, ?>>of(new EditorState<C, O>(pristineObject, editorContext, editorManager));
         handlerManager.fireEvent(new EditorContextChangedEvent(editorContext, editorManager.getDescription(editorContext)));
     }
 
 
-
-    private <C extends EditorCtx, O extends Serializable> void unbindPrevious(final EditorState<C, O> editorState) {
+    private <C extends EditorCtx, O extends Serializable> void unbindPrevious(EditorState<C, O> editorState) {
         valueChangedReg.removeHandler();
         commitOnValueChangedTimer.cancel();
-        commitCurrentValue(editorState);
+        if (lastEditorState.isPresent()) {
+            commitCurrentValue(editorState);
+        }
         clearEditorState();
     }
 
+    /**
+     * Commit the current value
+     *
+     * @param editorState The state to be committed
+     */
     private <C extends EditorCtx, O extends Serializable> void commitCurrentValue(final EditorState<C, O> editorState) {
-        final EditorView<O> view = editorState.getEditorView();
-        final Optional<O> value = view.getValue();
-        if(!value.isPresent()) {
+        if (!editorState.getEditorManager().getView(editorState.getEditorContext()).isDirty()) {
+            return;
+        }
+        final Optional<O> value = editorState.getEditedValue();
+        if (!value.isPresent()) {
             return;
         }
         final O pristineValue = editorState.getPristineObject();
         final O editedValue = value.get();
-        if(pristineValue.equals(editedValue)) {
+        if (pristineValue.equals(editedValue)) {
             return;
         }
         final C editorCtx = editorState.getEditorContext();
-        UpdateObjectAction<O> updateAction = editorState.getEditorManager().createUpdateObjectAction(pristineValue, editedValue, editorCtx);
-        Optional<EditorManager<C, O>> editorManager = editorContextMapper.getEditorManager(editorCtx);
-        if (editorManager.isPresent()) {
-            setEditorState(editedValue, editorCtx, view, editorManager.get());
-        }
+        EditorManager<C, O> editorManager = editorState.getEditorManager();
+        UpdateObjectAction<O> updateAction = editorManager.createUpdateObjectAction(pristineValue, editedValue, editorCtx);
+        setEditorState(editedValue, editorCtx, editorManager);
         dispatchServiceManager.execute(updateAction, new DispatchServiceCallback<Result>() {
-            @Override
-            public void handleSuccess(Result result) {
-            }
         });
     }
 
 
     private <C extends EditorCtx, O extends Serializable> void bindNext(final C editorCtx) {
         counter++;
-        final Optional<EditorManager<C, O>> selectedMan = editorContextMapper.getEditorManager(editorCtx);
-        if(selectedMan.isPresent()) {
-//            editorHolder.setWidget(LOADING_INDICATOR_WIDGET);
+        final Optional<EditorManager<C, O>> selectedMan = contextMapper.getEditorManager(editorCtx);
+        if (selectedMan.isPresent()) {
             final EditorManager<C, O> editorManager = selectedMan.get();
             GetObjectAction<O> action = editorManager.createGetObjectAction(editorCtx);
             updatePermissionBasedItems();
@@ -207,7 +199,7 @@ public class EditorPresenter implements HasDispose {
                     });
                     final Widget editorWidget = editorView.asWidget();
                     editorHolder.setWidget(editorWidget);
-                    setEditorState(value, editorCtx, editorView, editorManager);
+                    setEditorState(value, editorCtx, editorManager);
                 }
             });
         }
@@ -228,7 +220,7 @@ public class EditorPresenter implements HasDispose {
 
 
     public void updatePermissionBasedItems() {
-        if(editorHolder.getWidget() instanceof HasEnabled) {
+        if (editorHolder.getWidget() instanceof HasEnabled) {
             final HasEnabled hasEnabled = (HasEnabled) editorHolder.getWidget();
             hasEnabled.setEnabled(false);
             permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
@@ -248,23 +240,16 @@ public class EditorPresenter implements HasDispose {
 
     private static class EditorState<C extends EditorCtx, O extends Serializable> {
 
-        private O pristineObject;
+        private final O pristineObject;
 
-        private C editorCtx;
+        private final C editorContext;
 
-        private EditorManager<C, O> editorManager;
+        private final EditorManager<C, O> editorManager;
 
-        private EditorView<O> editorView;
-
-        private EditorState(O pristineObject, C editorCtx, EditorView<O> editorView, EditorManager<C, O> editorManager) {
+        private EditorState(O pristineObject, C editorContext, EditorManager<C, O> editorManager) {
             this.pristineObject = pristineObject;
-            this.editorCtx = editorCtx;
+            this.editorContext = editorContext;
             this.editorManager = editorManager;
-            this.editorView = editorView;
-        }
-
-        public EditorView<O> getEditorView() {
-            return editorView;
         }
 
         public O getPristineObject() {
@@ -272,15 +257,17 @@ public class EditorPresenter implements HasDispose {
         }
 
         public C getEditorContext() {
-            return editorCtx;
+            return editorContext;
         }
 
         public EditorManager<C, O> getEditorManager() {
             return editorManager;
         }
+
+        public Optional<O> getEditedValue() {
+            return editorManager.getView(editorContext).getValue();
+        }
     }
-
-
 
 
 }

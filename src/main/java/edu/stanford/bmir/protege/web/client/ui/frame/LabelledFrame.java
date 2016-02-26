@@ -7,6 +7,8 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import java.io.Serializable;
 import java.util.Set;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -59,5 +61,14 @@ public class LabelledFrame<F extends Frame<?>> implements Serializable, HasSigna
     @Override
     public Set<OWLEntity> getSignature() {
         return frame.getSignature();
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("LabelledFrame")
+                .addValue(displayName)
+                .addValue(frame)
+                .toString();
     }
 }

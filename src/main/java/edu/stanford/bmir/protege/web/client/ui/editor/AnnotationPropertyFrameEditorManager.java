@@ -16,7 +16,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEntityDataContext, LabelledFrame<AnnotationPropertyFrame>> {
+public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<AnnotationPropertyFrame>> {
 
     private final AnnotationPropertyFrameEditor editor;
 
@@ -26,22 +26,22 @@ public class AnnotationPropertyFrameEditorManager implements EditorManager<OWLEn
     }
 
     @Override
-    public String getDescription(OWLEntityDataContext editorContext) {
+    public String getDescription(OWLEntityContext editorContext) {
         return "Annotation property description";
     }
 
     @Override
-    public EditorView<LabelledFrame<AnnotationPropertyFrame>> getView(OWLEntityDataContext editorContext) {
+    public EditorView<LabelledFrame<AnnotationPropertyFrame>> getView(OWLEntityContext editorContext) {
         return editor;
     }
 
     @Override
-    public GetObjectAction<LabelledFrame<AnnotationPropertyFrame>> createGetObjectAction(OWLEntityDataContext editorContext) {
+    public GetObjectAction<LabelledFrame<AnnotationPropertyFrame>> createGetObjectAction(OWLEntityContext editorContext) {
         return new GetAnnotationPropertyFrameAction(editorContext.getEntity().asOWLAnnotationProperty(), editorContext.getProjectId());
     }
 
     @Override
-    public UpdateObjectAction<LabelledFrame<AnnotationPropertyFrame>> createUpdateObjectAction(LabelledFrame<AnnotationPropertyFrame> pristineObject, LabelledFrame<AnnotationPropertyFrame> editedObject, OWLEntityDataContext editorContext) {
+    public UpdateObjectAction<LabelledFrame<AnnotationPropertyFrame>> createUpdateObjectAction(LabelledFrame<AnnotationPropertyFrame> pristineObject, LabelledFrame<AnnotationPropertyFrame> editedObject, OWLEntityContext editorContext) {
         return new UpdateAnnotationPropertyFrameAction(editorContext.getProjectId(), pristineObject, editedObject);
     }
 }
