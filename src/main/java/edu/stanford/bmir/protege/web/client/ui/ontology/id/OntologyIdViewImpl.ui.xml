@@ -19,7 +19,7 @@
                 </td>
             </tr>
             <tr>
-                <td valign="top">
+                <td align="right">
                     <g:Label text="Version IRI" addStyleNames="web-protege-form-label web-protege-form-layout-editor-input"/>
                 </td>
                 <td valign="top">
