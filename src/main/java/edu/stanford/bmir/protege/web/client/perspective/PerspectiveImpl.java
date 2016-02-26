@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.client.perspective;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.assistedinject.Assisted;
@@ -45,6 +47,11 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
                 GWT.log("[PerspectiveContent] Root node changed");
             }
         });
+    }
+
+    @Override
+    public void setEmptyPerspectiveWidget(IsWidget widget) {
+        widgetMapPanel.setEmptyWidget(widget);
     }
 
     @Override

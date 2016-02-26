@@ -39,16 +39,19 @@ public class PerspectivePresenter implements HasDispose {
 
     private final PerspectiveFactory perspectiveFactory;
 
+    private final EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory;
+
     private Optional<PerspectiveId> currentPerspective = Optional.absent();
 
 
 
     @Inject
-    public PerspectivePresenter(final PerspectiveView perspectiveView, ProjectId projectId, DispatchServiceManager dispatchServiceManager, PerspectiveFactory perspectiveFactory, EventBus eventBus) {
+    public PerspectivePresenter(final PerspectiveView perspectiveView, ProjectId projectId, DispatchServiceManager dispatchServiceManager, PerspectiveFactory perspectiveFactory, EventBus eventBus, EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory) {
         this.perspectiveView = perspectiveView;
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         this.perspectiveFactory = perspectiveFactory;
+        this.emptyPerspectivePresenterFactory = emptyPerspectivePresenterFactory;
         eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
             @Override
             public void onPlaceChange(PlaceChangeEvent event) {
@@ -136,6 +139,8 @@ public class PerspectivePresenter implements HasDispose {
                     public void handleSuccess(GetPerspectiveLayoutResult result) {
                         GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspectiveLayout());
                         Perspective perspective = perspectiveFactory.createPerspective(perspectiveId);
+                        EmptyPerspectivePresenter emptyPerspectivePresenter = emptyPerspectivePresenterFactory.createEmptyPerspectivePresenter(perspectiveId);
+                        perspective.setEmptyPerspectiveWidget(emptyPerspectivePresenter.getView());
                         Optional<Node> rootNode = result.getPerspectiveLayout().getRootNode();
                         perspective.setRootNode(rootNode);
                         perspectiveCache.put(perspectiveId, perspective);
