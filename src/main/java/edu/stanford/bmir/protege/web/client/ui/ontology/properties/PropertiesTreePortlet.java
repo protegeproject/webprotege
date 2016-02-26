@@ -218,6 +218,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     private void selectNode(TreeNode node) {
 //        lastSelectedTreeNode = node;
+        treePanel.getSelectionModel().select(node);
         Optional<OWLEntityData> sel = getSelectedTreeNodeEntityData();
         if (sel.isPresent()) {
             getSelectionModel().setSelection(sel.get().getEntity());
