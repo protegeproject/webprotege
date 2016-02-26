@@ -10,7 +10,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
-public interface OntologyIdEditor extends ValueEditor<OWLOntologyID>, HasEnabled {
+public interface OntologyIdView extends ValueEditor<OWLOntologyID>, HasEnabled {
 
 
 }

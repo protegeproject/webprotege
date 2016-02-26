@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -23,7 +24,7 @@ import org.semanticweb.owlapi.model.OWLOntologyID;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
-public class OntologyIdViewImpl extends Composite implements OntologyIdEditor {
+public class OntologyIdViewImpl extends Composite implements OntologyIdView, HasFixedPrimaryAxisSize {
 
     interface OntologyIdViewImplUiBinder extends UiBinder<HTMLPanel, OntologyIdViewImpl> {
 
@@ -132,5 +133,10 @@ public class OntologyIdViewImpl extends Composite implements OntologyIdEditor {
     @Override
     public boolean isWellFormed() {
         return true;
+    }
+
+    @Override
+    public int getFixedPrimaryAxisSize() {
+        return 100;
     }
 }
