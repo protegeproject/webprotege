@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.properties;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
@@ -18,6 +19,8 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
@@ -60,12 +63,21 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    private final PortletAction createAction = new PortletAction("Create", new PortletActionHandler() {
+        @Override
+        public void handleActionInvoked(PortletAction action, ClickEvent event) {
+            onCreateProperty();
+        }
+    });
+
+    private final PortletAction deleteAction = new PortletAction("Delete", new PortletActionHandler() {
+        @Override
+        public void handleActionInvoked(PortletAction action, ClickEvent event) {
+            onDeleteProperty();
+        }
+    });
+
     protected TreePanel treePanel;
-
-
-    //    private TreeNode lastSelectedTreeNode;
-
-    private final ProjectId projectId;
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
@@ -74,10 +86,8 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
-        this.projectId = projectId;
         this.permissionChecker = permissionChecker;
 
-//        setLayout(new FitLayout());
         setTitle("Properties Tree");
 
         treePanel = new TreePanel();
@@ -108,6 +118,8 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         treePanel.setRootVisible(false);
 
         addToolbarButtons();
+        addPortletAction(createAction);
+        addPortletAction(deleteAction);
         getContentHolder().setWidget(treePanel.asWidget());
 
 
@@ -380,8 +392,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         return super.getSelectedEntityType();
     }
 
-    protected void onCreateProperty() {
-
+    private void onCreateProperty() {
         Optional<EntityType<?>> selectedEntityType = getSelectedEntityType();
         if (!selectedEntityType.isPresent()) {
             return;
@@ -636,23 +647,17 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     public void updateButtonStates() {
-//        createButton.setDisabled(true);
-//        deleteButton.setDisabled(true);
-//        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
-//            @Override
-//            public void handleSuccess(Boolean hasPermission) {
-//                createButton.setDisabled(!hasPermission);
-//                deleteButton.setDisabled(!hasPermission);
-//            }
-//        });
+        createAction.setEnabled(false);
+        deleteAction.setEnabled(false);
+        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+            @Override
+            public void handleSuccess(Boolean hasPermission) {
+                createAction.setEnabled(hasPermission);
+                deleteAction.setEnabled(hasPermission);
+            }
+        });
     }
-
-//    @Override
-//    protected void afterRender() {
-//        getSubProperties(null, true);
-//        super.afterRender();
-//    }
-
+    
     public void setTreeNodeIcon(TreeNode node) {
         PropertyEntityData entityData = (PropertyEntityData) node.getUserObject();
         PropertyType type = entityData.getPropertyType();
