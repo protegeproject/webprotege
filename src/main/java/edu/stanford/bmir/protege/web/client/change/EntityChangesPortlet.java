@@ -22,17 +22,19 @@ public class EntityChangesPortlet extends AbstractOWLEntityPortlet {
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
-    private final DispatchServiceManager dispatchServiceManager;
+    private final ChangeListViewPresenter presenter;
 
     @Inject
-	public EntityChangesPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+	public EntityChangesPortlet(SelectionModel selectionModel,
+                                EventBus eventBus,
+                                ProjectId projectId,
+                                LoggedInUserProvider loggedInUserProvider,
+                                ChangeListViewPresenter presenter) {
 		super(selectionModel, eventBus, projectId, loggedInUserProvider);
-        this.dispatchServiceManager = dispatchServiceManager;
-
-        changeListView = new ChangeListViewImpl();
-
-        ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
+        this.presenter = presenter;
+        ScrollPanel scrollPanel = new ScrollPanel(presenter.getView().asWidget());
         getContentHolder().setWidget(scrollPanel);
+
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override
             public void handleProjectChanged(ProjectChangedEvent event) {
@@ -45,9 +47,8 @@ public class EntityChangesPortlet extends AbstractOWLEntityPortlet {
                 updateDisplayForSelectedEntity();
             }
         });
+        setTitle("Changes");
 	}
-
-	private ChangeListView changeListView;
 
     private void handleProjectChanged(ProjectChangedEvent event) {
         if(lastRevisionNumber.equals(event.getRevisionNumber())) {
@@ -70,12 +71,8 @@ public class EntityChangesPortlet extends AbstractOWLEntityPortlet {
     private void updateDisplayForSelectedEntity() {
         ProjectId projectId = getProjectId();
 		if (getSelectedEntity().isPresent()) {
-			ChangeListViewPresenter presenter = new ChangeListViewPresenter(changeListView, dispatchServiceManager);
 			presenter.setChangesForEntity(projectId, getSelectedEntity().get());
-		    setTitle("Changes");
-        }
-        else {
-            setTitle("Noting selected");
+
         }
 	}
 
