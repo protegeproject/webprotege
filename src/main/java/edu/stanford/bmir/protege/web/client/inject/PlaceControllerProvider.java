@@ -13,15 +13,15 @@ import javax.inject.Provider;
  */
 public class PlaceControllerProvider implements Provider<PlaceController> {
 
-    private EventBus eventBus;
+    private PlaceController placeController;
 
     @Inject
     public PlaceControllerProvider(EventBus eventBus) {
-        this.eventBus = eventBus;
+        placeController = new PlaceController(eventBus);
     }
 
     @Override
     public PlaceController get() {
-        return new PlaceController(eventBus);
+        return placeController;
     }
 }
