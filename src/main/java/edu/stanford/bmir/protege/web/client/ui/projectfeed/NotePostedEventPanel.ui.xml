@@ -7,7 +7,7 @@
 
     <ui:style>
         .change-event-panel {
-            border-bottom: solid 1px silver;
+            border-bottom: solid 1px #f1f1f1;
         }
 
         .user-name {
