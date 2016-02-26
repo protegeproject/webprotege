@@ -10,7 +10,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
+import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import edu.stanford.protege.widgetmap.client.WidgetMapper;
+import edu.stanford.protege.widgetmap.client.view.FixedSizeViewHolder;
 import edu.stanford.protege.widgetmap.client.view.ViewHolder;
 import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
 import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
@@ -62,7 +64,13 @@ public class PortletWidgetMapper implements WidgetMapper {
 
 
     private ViewHolder createViewHolder(final TerminalNodeId nodeId, final EntityPortlet entityPortlet) {
-        ViewHolder viewHolder = new ViewHolder(entityPortlet, NodeProperties.emptyNodeProperties());
+        ViewHolder viewHolder;
+        if(entityPortlet instanceof HasFixedPrimaryAxisSize) {
+            viewHolder = new FixedSizeViewHolder(entityPortlet.asWidget(), NodeProperties.emptyNodeProperties(), ((HasFixedPrimaryAxisSize) entityPortlet).getFixedPrimaryAxisSize());
+        }
+        else {
+            viewHolder = new ViewHolder(entityPortlet, NodeProperties.emptyNodeProperties());
+        }
         entityPortlet.asWidget().setSize("100%", "100%");
         viewHolder.addStyleName("drop-zone");
         viewHolder.addCloseHandler(new CloseHandler<Widget>() {
