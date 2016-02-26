@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
+import com.google.common.base.Optional;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -32,18 +33,17 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
     public PerspectiveLayout getPerspectiveLayout(ProjectId projectId, UserId userId, PerspectiveId perspectiveId) {
         File layoutFile = getPerspectiveFile(projectId, userId, perspectiveId);
         try {
-            Node node;
             if(layoutFile.exists()) {
                 String s = Files.toString(layoutFile, Charset.forName("utf-8"));
-                node = new JsonNodeSerializer().deserialize(s);
-                return new PerspectiveLayout(perspectiveId, node);
+                Node node = new JsonNodeSerializer().deserialize(s);
+                return new PerspectiveLayout(perspectiveId, Optional.of(node));
             }
             else {
-                node = new ParentNode();
+                return new PerspectiveLayout(perspectiveId, Optional.absent());
             }
-            return new PerspectiveLayout(perspectiveId, node);
+
         } catch (IOException e) {
-            return new PerspectiveLayout(perspectiveId, new ParentNode());
+            return new PerspectiveLayout(perspectiveId, Optional.absent());
         }
     }
 

@@ -66,6 +66,12 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                 eventBus.fireEvent(new ResetPerspectiveEvent(perspectiveId));
             }
         });
+        view.setAddViewHandler(new PerspectiveSwitcherView.AddViewHandler() {
+            @Override
+            public void handleAddViewToPerspective(PerspectiveId perspectiveId) {
+                eventBus.fireEvent(new AddViewToPerspectiveEvent(perspectiveId));
+            }
+        });
         perspectiveLinkManager.getLinkedPerspectives(new PerspectiveLinkManager.Callback() {
             public void handlePerspectives(List<PerspectiveId> perspectiveIds) {
                 if (!perspectiveIds.isEmpty()) {

@@ -657,7 +657,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             }
         });
     }
-    
+
     public void setTreeNodeIcon(TreeNode node) {
         PropertyEntityData entityData = (PropertyEntityData) node.getUserObject();
         PropertyType type = entityData.getPropertyType();

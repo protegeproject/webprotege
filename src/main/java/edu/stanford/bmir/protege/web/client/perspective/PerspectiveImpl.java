@@ -23,22 +23,21 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
 
     private final WidgetMapPanel widgetMapPanel;
 
-    private final WidgetMapPanelManager panelManager;
+    private final PortletWidgetMapper widgetMapper;
 
-    private Node rootNode;
+    private Optional<Node> rootNode;
 
     @Inject
     public PerspectiveImpl(@Assisted final PerspectiveId perspectiveId, PortletWidgetMapper widgetMapper) {
         super();
         this.perspectiveId = perspectiveId;
+        this.widgetMapper = widgetMapper;
         WidgetMapRootWidget rootWidget = new WidgetMapRootWidget();
-        panelManager = new WidgetMapPanelManager(rootWidget, widgetMapper);
+        WidgetMapPanelManager panelManager = new WidgetMapPanelManager(rootWidget, widgetMapper);
         widgetMapPanel = new WidgetMapPanel(rootWidget, panelManager);
         initWidget(widgetMapPanel);
 
-        rootNode = new ParentNode(Direction.ROW);
-
-        widgetMapPanel.setRootNode(rootNode);
+        rootNode = Optional.absent();
 
         widgetMapPanel.addRootNodeChangedHandler(new RootNodeChangedHandler() {
             @Override
@@ -74,21 +73,27 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
         return this;
     }
 
-    public void dropPortlet(EntityPortlet portlet) {
-        TerminalNodeId key = new TerminalNodeId();
-//        portletMap.put(key, createViewHolder(key, portlet));
-        widgetMapPanel.doDrop(new TerminalNode(key));
+    public void dropView(String className) {
+        NodeProperties nodeProperties = NodeProperties.builder().setValue("portlet", className).build();
+        TerminalNode terminalNode = new TerminalNode(new TerminalNodeId(), nodeProperties);
+        widgetMapPanel.doDrop(terminalNode);
     }
 
     @Override
     public Optional<Node> getRootNode() {
-        return Optional.<Node>of(rootNode);
+        return rootNode;
     }
 
-    public void setRootNode(Node rootNode) {
+    @Override
+    public void setRootNode(Optional<Node> rootNode) {
         GWT.log("[Perspective] Root node set: " + rootNode);
         this.rootNode = rootNode;
-        widgetMapPanel.setRootNode(rootNode);
+        if (rootNode.isPresent()) {
+            widgetMapPanel.setRootNode(rootNode.get());
+        }
+        else {
+            // TODO:
+        }
     }
 
     @Override

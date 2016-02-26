@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.perspective;
 
 import com.google.common.base.Objects;
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 
@@ -16,7 +17,7 @@ public class PerspectiveLayout implements IsSerializable, HasPerspectiveId {
 
     private PerspectiveId perspectiveId;
 
-    private Node rootNode;
+    private Optional<Node> rootNode;
 
 
     /**
@@ -25,9 +26,18 @@ public class PerspectiveLayout implements IsSerializable, HasPerspectiveId {
     private PerspectiveLayout() {
     }
 
-    public PerspectiveLayout(PerspectiveId perspectiveId, Node rootNode) {
+    public PerspectiveLayout(PerspectiveId perspectiveId, Optional<Node> rootNode) {
         this.perspectiveId = checkNotNull(perspectiveId);
-        this.rootNode = checkNotNull(rootNode).duplicate();
+        this.rootNode = duplicate(checkNotNull(rootNode));
+    }
+
+    private static Optional<Node> duplicate(Optional<Node> node) {
+        if(!node.isPresent()) {
+            return Optional.absent();
+        }
+        else {
+            return Optional.of(node.get().duplicate());
+        }
     }
 
     @Override
@@ -40,8 +50,13 @@ public class PerspectiveLayout implements IsSerializable, HasPerspectiveId {
      * @return The root node.  Not {@code null}.  Note that this is a copy.  Modifying the returned node will not
      * alter the underlying node for this layout.
      */
-    public Node getRootNode() {
-        return rootNode.duplicate();
+    public Optional<Node> getRootNode() {
+        if(rootNode == null) {
+            return Optional.absent();
+        }
+        else {
+            return duplicate(rootNode);
+        }
     }
 
     @Override

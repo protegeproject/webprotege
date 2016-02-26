@@ -48,7 +48,7 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
 
     @Override
     public HandlerRegistration addClickHandler(ClickHandler handler) {
-        return label.addClickHandler(handler);
+        return addDomHandler(handler, ClickEvent.getType());
     }
 
     @UiHandler("menuButton")
