@@ -31,6 +31,8 @@ import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
 import edu.stanford.bmir.protege.web.client.perspective.*;
 import edu.stanford.bmir.protege.web.client.place.*;
+import edu.stanford.bmir.protege.web.client.portlet.PortletChooserView;
+import edu.stanford.bmir.protege.web.client.portlet.PortletChooserViewImpl;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
@@ -200,6 +202,8 @@ public class ApplicationClientModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder()
                 .implement(ProjectDetailsPresenter.class, ProjectDetailsPresenter.class)
                 .build(ProjectDetailPresenterFactory.class));
+
+        bind(PortletChooserView.class).to(PortletChooserViewImpl.class);
 
     }
 

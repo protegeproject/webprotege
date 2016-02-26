@@ -9,8 +9,10 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
+import edu.stanford.bmir.protege.web.shared.PortletId;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutAction;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutResult;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -41,17 +43,26 @@ public class PerspectivePresenter implements HasDispose {
 
     private final EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory;
 
+    private final PortletChooserPresenter portletChooserPresenter;
+
     private Optional<PerspectiveId> currentPerspective = Optional.absent();
 
 
 
     @Inject
-    public PerspectivePresenter(final PerspectiveView perspectiveView, ProjectId projectId, DispatchServiceManager dispatchServiceManager, PerspectiveFactory perspectiveFactory, EventBus eventBus, EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory) {
+    public PerspectivePresenter(final PerspectiveView perspectiveView,
+                                ProjectId projectId,
+                                DispatchServiceManager dispatchServiceManager,
+                                PerspectiveFactory perspectiveFactory,
+                                EventBus eventBus,
+                                EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory,
+                                PortletChooserPresenter portletChooserPresenter) {
         this.perspectiveView = perspectiveView;
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         this.perspectiveFactory = perspectiveFactory;
         this.emptyPerspectivePresenterFactory = emptyPerspectivePresenterFactory;
+        this.portletChooserPresenter = portletChooserPresenter;
         eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
             @Override
             public void onPlaceChange(PlaceChangeEvent event) {
@@ -97,11 +108,16 @@ public class PerspectivePresenter implements HasDispose {
     }
 
     private void addViewToPerspective(final PerspectiveId perspectiveId) {
-        Perspective perspective = perspectiveCache.get(perspectiveId);
+        final Perspective perspective = perspectiveCache.get(perspectiveId);
         if(perspective == null) {
             return;
         }
-        perspective.dropView(ClassTreePortlet.class.getName());
+        portletChooserPresenter.show(new PortletChooserPresenter.PortletSelectedHandler() {
+            @Override
+            public void handlePortletSelected(PortletId portletId) {
+                perspective.dropView(portletId.getPortletId());
+            }
+        });
     }
 
     private void displayPerspective(final PerspectiveId perspectiveId) {

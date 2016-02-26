@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.generated;
 import com.google.common.collect.ImmutableMap;
 import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.metrics.MetricsPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletDescriptor;
 import edu.stanford.bmir.protege.web.client.renderer.OWLEntityDescriptionBrowserPortlet;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet;
 import edu.stanford.bmir.protege.web.client.ui.frame.OWLEntityDescriptionEditorPortlet;
@@ -21,6 +22,7 @@ import edu.stanford.bmir.protege.web.client.ui.ontology.revisions.RevisionsPortl
 import edu.stanford.bmir.protege.web.client.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet;
 import edu.stanford.bmir.protege.web.client.usage.UsagePortlet;
+import edu.stanford.bmir.protege.web.shared.PortletId;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -50,6 +52,8 @@ public class UIFactory {
             .put("edu.stanford.bmir.protege.web.client.ui.ontology.changes.WatchedEntitiesPortlet",
                     "edu.stanford.bmir.protege.web.client.watches.WatchedEntitiesPortlet")
             .build();
+
+    private static List<PortletDescriptor> availablePortlets;
 
 
     @Inject
@@ -131,6 +135,16 @@ public class UIFactory {
     private final Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider;
 
     private final Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider;
+
+    public static List<PortletDescriptor> getAvailablePortlets() {
+        Map<String, String> map = UIFactory.getAvailablePortletNameMap();
+        List<PortletDescriptor> portletDescriptorList = new ArrayList<>();
+        for(String key : map.keySet()) {
+            String value = map.get(key);
+            portletDescriptorList.add(new PortletDescriptor(new PortletId(value), key));
+        }
+        return portletDescriptorList;
+    }
 
 
     public EntityPortlet createPortlet(String portletJavaClassName) {
