@@ -49,7 +49,7 @@ import edu.stanford.bmir.protege.web.client.topbar.TopBarView;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.CreateFreshPerspectiveRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorManagerSelector;
-import edu.stanford.bmir.protege.web.client.ui.editor.EntityDataContextSelector;
+import edu.stanford.bmir.protege.web.client.ui.editor.EntityManagerSelectorImpl;
 import edu.stanford.bmir.protege.web.client.ui.frame.ManchesterSyntaxFrameEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.ManchesterSyntaxFrameEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.individuals.IndividualsListViewImpl;
@@ -69,7 +69,6 @@ import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationPropertiesProvider;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
-import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
@@ -145,7 +144,7 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(LoggedInUserProjectPermissionChecker.class).to(LoggedInUserProjectPermissionCheckerImpl.class);
 
 
-        bind(EditorManagerSelector.class).to(EntityDataContextSelector.class);
+        bind(EditorManagerSelector.class).to(EntityManagerSelectorImpl.class);
 
         bind(ChangeListView.class).to(ChangeListViewImpl.class);
 

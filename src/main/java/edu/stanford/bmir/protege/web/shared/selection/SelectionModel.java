@@ -80,7 +80,6 @@ public class SelectionModel {
         }
     }
 
-
     public HandlerRegistration addSelectionChangedHandler(EntitySelectionChangedHandler handler) {
         return eventBus.addHandler(EntitySelectionChangedEvent.getType(), handler);
     }
@@ -176,61 +175,6 @@ public class SelectionModel {
                 .build();
 
         placeController.goTo(nextPlace);
-
-//
-//
-//        GWT.log("[SelectionModel] Request to set selection in selection model to: " + entityData);
-//        Optional<OWLEntityData> previousSelection = selection;
-//        selection = Optional.<OWLEntityData>of(entityData);
-//        entityData.accept(new OWLEntityDataVisitorEx<Void>() {
-//            @Override
-//            public Void visit(OWLClassData data) {
-//                selectedClassManager.setSelection(data);
-//                return VOID;
-//            }
-//
-//            @Override
-//            public Void visit(OWLObjectPropertyData data) {
-//                selectedObjectPropertyManager.setSelection(data);
-//                return VOID;
-//            }
-//
-//            @Override
-//            public Void visit(OWLDataPropertyData data) {
-//                selectedDataPropertyManager.setSelection(data);
-//                return VOID;
-//            }
-//
-//            @Override
-//            public Void visit(OWLAnnotationPropertyData data) {
-//                selectedAnnotationPropertyManager.setSelection(data);
-//                return VOID;
-//            }
-//
-//            @Override
-//            public Void visit(OWLNamedIndividualData data) {
-//                selectedIndividualManager.setSelection(data);
-//                return VOID;
-//            }
-//
-//            @Override
-//            public Void visit(OWLDatatypeData data) {
-//                selectedDatatypeManager.setSelection(data);
-//                return VOID;
-//            }
-//        });
-//        if (!previousSelection.equals(selection)) {
-//            Place place = placeManager.getCurrentPlace();
-//            GWT.log("[SelectionModel] Current place: " + place);
-//            if(place instanceof ProjectViewPlace) {
-//                ProjectViewPlace projectViewPlace = (ProjectViewPlace) place;
-////                ProjectViewPlace nextPlace = ProjectViewPlace.builder(projectViewPlace.getProjectId(), projectViewPlace.getId()), Optional.<OWLEntity>of(selection.get().getEntity()));
-////                GWT.log("[SelectionModel] Next place: " + nextPlace);
-////                placeManager.setCurrentPlace(nextPlace);
-//            }
-//            fireEvent(previousSelection);
-//
-//        }
     }
 
 
