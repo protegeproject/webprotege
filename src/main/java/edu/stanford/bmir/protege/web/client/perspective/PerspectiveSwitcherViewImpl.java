@@ -26,6 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class PerspectiveSwitcherViewImpl extends Composite implements PerspectiveSwitcherView {
 
 
+
     interface PerspectiveSwitcherViewImplUiBinder extends UiBinder<HTMLPanel, PerspectiveSwitcherViewImpl> {
     }
 
@@ -64,6 +65,13 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     private ResetPerspectiveToDefaultStateHandler resetPerspectiveToDefaultStateHandler = new ResetPerspectiveToDefaultStateHandler() {
         @Override
         public void handleResetPerspectiveToDefaultState(PerspectiveId perspectiveId) {
+
+        }
+    };
+
+    private AddViewHandler addViewHandler = new AddViewHandler() {
+        @Override
+        public void handleAddViewToPerspective(PerspectiveId perspectiveId) {
 
         }
     };
@@ -112,7 +120,12 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
                 linkActivatedHandler.handlePerspectiveLinkActivated(perspectiveId);
             }
         });
-
+        linkWidget.addActionHandler("Add view", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                addViewHandler.handleAddViewToPerspective(perspectiveId);
+            }
+        });
         linkWidget.addActionHandler("Reset", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -164,6 +177,11 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     @Override
     public void setResetPerspectiveToDefaultStateHandler(ResetPerspectiveToDefaultStateHandler handler) {
         resetPerspectiveToDefaultStateHandler = checkNotNull(handler);
+    }
+
+    @Override
+    public void setAddViewHandler(AddViewHandler handler) {
+        addViewHandler = checkNotNull(handler);
     }
 
     public void setHighlightedPerspective(PerspectiveId perspectiveId) {

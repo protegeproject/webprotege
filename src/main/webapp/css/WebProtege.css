@@ -1622,6 +1622,7 @@ td {
     bottom: 0;
     position: absolute;
     cursor: crosshair;
+    overflow: hidden;
 }
 
 .drop-target-indicator {

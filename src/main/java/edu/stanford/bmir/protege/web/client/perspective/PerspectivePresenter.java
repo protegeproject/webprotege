@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutAction;
 import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutResult;
@@ -43,7 +44,7 @@ public class PerspectivePresenter implements HasDispose {
 
 
     @Inject
-    public PerspectivePresenter(PerspectiveView perspectiveView, ProjectId projectId, DispatchServiceManager dispatchServiceManager, PerspectiveFactory perspectiveFactory, EventBus eventBus) {
+    public PerspectivePresenter(final PerspectiveView perspectiveView, ProjectId projectId, DispatchServiceManager dispatchServiceManager, PerspectiveFactory perspectiveFactory, EventBus eventBus) {
         this.perspectiveView = perspectiveView;
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
@@ -60,6 +61,12 @@ public class PerspectivePresenter implements HasDispose {
             @Override
             public void handleResetPerspective(ResetPerspectiveEvent event) {
                 resetPerspective(event.getPerspectiveId());
+            }
+        });
+        eventBus.addHandler(AddViewToPerspectiveEvent.getType(), new AddViewToPerspectiveHandler() {
+            @Override
+            public void handleAddViewToPerspective(PerspectiveId perspectiveId) {
+                addViewToPerspective(perspectiveId);
             }
         });
     }
@@ -79,10 +86,19 @@ public class PerspectivePresenter implements HasDispose {
         }
         Node originalRootNode = originalRootNodeMap.get(perspectiveId);
         if(originalRootNode == null) {
-            // Shouldn't happen - if it does then something is broken.
+            perspective.setRootNode(Optional.<Node>absent());
+        }
+        else {
+            perspective.setRootNode(Optional.<Node>of(originalRootNode.duplicate()));
+        }
+    }
+
+    private void addViewToPerspective(final PerspectiveId perspectiveId) {
+        Perspective perspective = perspectiveCache.get(perspectiveId);
+        if(perspective == null) {
             return;
         }
-        perspective.setRootNode(originalRootNode.duplicate());
+        perspective.dropView(ClassTreePortlet.class.getName());
     }
 
     private void displayPerspective(final PerspectiveId perspectiveId) {
@@ -98,7 +114,7 @@ public class PerspectivePresenter implements HasDispose {
         Perspective perspective = perspectiveCache.remove(perspectiveId);
         if(perspective != null) {
             perspective.dispose();
-            if(currentPerspective.equals(Optional.of(perspective))) {
+            if(currentPerspective.equals(Optional.of(perspective.getPerspectiveId()))) {
                 perspectiveView.setWidget(new Label("Nothing Here"));
             }
         }
@@ -120,11 +136,13 @@ public class PerspectivePresenter implements HasDispose {
                     public void handleSuccess(GetPerspectiveLayoutResult result) {
                         GWT.log("[PerspectivePresenter] Retrieved layout: " + result.getPerspectiveLayout());
                         Perspective perspective = perspectiveFactory.createPerspective(perspectiveId);
-                        Node rootNode = result.getPerspectiveLayout().getRootNode();
+                        Optional<Node> rootNode = result.getPerspectiveLayout().getRootNode();
                         perspective.setRootNode(rootNode);
                         perspectiveCache.put(perspectiveId, perspective);
                         perspectiveView.setWidget(perspective);
-                        originalRootNodeMap.put(perspectiveId, rootNode.duplicate());
+                        if (rootNode.isPresent()) {
+                            originalRootNodeMap.put(perspectiveId, rootNode.get().duplicate());
+                        }
                     }
                 });
     }
@@ -135,5 +153,4 @@ public class PerspectivePresenter implements HasDispose {
             tab.dispose();
         }
     }
-
 }

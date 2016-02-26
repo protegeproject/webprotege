@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.shared.perspective;
 
+import com.google.common.base.Optional;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -32,12 +33,12 @@ public class PerspectiveLayout_TestCase {
     @Before
     public void setUp() {
         when(rootNode.duplicate()).thenReturn(rootNode);
-        perspectiveLayout = new PerspectiveLayout(perspectiveId, rootNode);
+        perspectiveLayout = new PerspectiveLayout(perspectiveId, Optional.<Node>of(rootNode));
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_perspectiveId_IsNull() {
-        new PerspectiveLayout(null, rootNode);
+        new PerspectiveLayout(null, Optional.of(rootNode));
     }
 
     @Test
@@ -52,7 +53,7 @@ public class PerspectiveLayout_TestCase {
 
     @Test
     public void shouldReturnSupplied_rootNode() {
-        assertThat(perspectiveLayout.getRootNode(), is(this.rootNode));
+        assertThat(perspectiveLayout.getRootNode(), is(Optional.of(this.rootNode)));
     }
 
     @Test
@@ -67,22 +68,24 @@ public class PerspectiveLayout_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(perspectiveLayout, is(new PerspectiveLayout(perspectiveId, rootNode)));
+        assertThat(perspectiveLayout, is(new PerspectiveLayout(perspectiveId, Optional.of(rootNode))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_perspectiveId() {
-        assertThat(perspectiveLayout, is(not(new PerspectiveLayout(Mockito.mock(PerspectiveId.class), rootNode))));
+        assertThat(perspectiveLayout, is(not(new PerspectiveLayout(Mockito.mock(PerspectiveId.class), Optional.of(rootNode)))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_rootNode() {
-        assertThat(perspectiveLayout, is(not(new PerspectiveLayout(perspectiveId, Mockito.mock(Node.class)))));
+        Node otherNode = Mockito.mock(Node.class);
+        when(otherNode.duplicate()).thenReturn(otherNode);
+        assertThat(perspectiveLayout, is(not(new PerspectiveLayout(perspectiveId, Optional.of(otherNode)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(perspectiveLayout.hashCode(), is(new PerspectiveLayout(perspectiveId, rootNode).hashCode()));
+        assertThat(perspectiveLayout.hashCode(), is(new PerspectiveLayout(perspectiveId, Optional.of(rootNode)).hashCode()));
     }
 
     @Test
