@@ -18,14 +18,14 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 
-public class ChangesPortlet extends AbstractOWLEntityPortlet {
+public class EntityChangesPortlet extends AbstractOWLEntityPortlet {
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
     private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-	public ChangesPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+	public EntityChangesPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
 		super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
 
@@ -36,7 +36,7 @@ public class ChangesPortlet extends AbstractOWLEntityPortlet {
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override
             public void handleProjectChanged(ProjectChangedEvent event) {
-                ChangesPortlet.this.handleProjectChanged(event);
+                EntityChangesPortlet.this.handleProjectChanged(event);
             }
         });
         addApplicationEventHandler(PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {

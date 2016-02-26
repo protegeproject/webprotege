@@ -229,7 +229,7 @@
                     <width>0.7</width>
                     <portlets>
                         <portlet>
-                            <name>edu.stanford.bmir.protege.web.client.change.ChangesPortlet</name>
+                            <name>edu.stanford.bmir.protege.web.client.change.EntityChangesPortlet</name>
                             <height>570</height>
                             <width>450</width>
                         </portlet>
