@@ -185,6 +185,11 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(PerspectiveView.class).to(PerspectiveViewImpl.class);
         bind(PerspectiveLinkManager.class).to(PerspectiveLinkManagerImpl.class);
         bind(CreateFreshPerspectiveRequestHandler.class).to(CreateFreshPerspectiveRequestHandlerImpl.class);
+        bind(EmptyPerspectiveView.class).to(EmptyPerspectiveViewImpl.class);
+
+        install(new GinFactoryModuleBuilder()
+                .implement(EmptyPerspectivePresenter.class, EmptyPerspectivePresenter.class)
+                .build(EmptyPerspectivePresenterFactory.class));
 
         install(new GinFactoryModuleBuilder()
                 .implement(PerspectiveLink.class, PerspectiveLinkImpl.class)

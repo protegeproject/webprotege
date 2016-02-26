@@ -19,4 +19,6 @@ public interface Perspective extends IsWidget, HasRootNode, RequiresResize, HasD
 
     void dropView(String className);
 
+    void setEmptyPerspectiveWidget(IsWidget widget);
+
 }
