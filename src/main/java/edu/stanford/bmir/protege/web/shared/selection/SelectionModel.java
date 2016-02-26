@@ -143,6 +143,7 @@ public class SelectionModel {
                 .accept(new OWLEntityVisitorExAdapter<Item<?>>() {
                     @Override
                     public Item<?> visit(OWLClass desc) {
+                        selectedClassManager.setSelection(desc);
                         return new OWLClassItem(desc);
                     }
 
@@ -153,21 +154,25 @@ public class SelectionModel {
 
                     @Override
                     public Item<?> visit(OWLDataProperty property) {
+                        selectedDataPropertyManager.setSelection(property);
                         return new OWLDataPropertyItem(property);
                     }
 
                     @Override
                     public Item<?> visit(OWLObjectProperty property) {
+                        selectedObjectPropertyManager.setSelection(property);
                         return new OWLObjectPropertyItem(property);
                     }
 
                     @Override
                     public Item<?> visit(OWLNamedIndividual individual) {
+                        selectedIndividualManager.setSelection(individual);
                         return new OWLNamedIndividualItem(individual);
                     }
 
                     @Override
                     public Item<?> visit(OWLAnnotationProperty property) {
+                        selectedAnnotationPropertyManager.setSelection(property);
                         return new OWLAnnotationPropertyItem(property);
                     }
                 });
