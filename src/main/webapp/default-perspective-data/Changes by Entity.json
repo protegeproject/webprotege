@@ -10,7 +10,7 @@
     {
       "weight": 0.7,
       "node": {
-        "portlet": "edu.stanford.bmir.protege.web.client.change.ChangesPortlet"
+        "portlet": "edu.stanford.bmir.protege.web.client.change.EntityChangesPortlet"
       }
     }
   ]
