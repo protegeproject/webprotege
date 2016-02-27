@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.client.ui.frame.OWLEntityDescriptionEditorP
 import edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet;
 import edu.stanford.bmir.protege.web.client.ui.obo.*;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.OntologyAnnotationsPortlet;
-import edu.stanford.bmir.protege.web.client.ui.ontology.changes.ChangeSummaryPortlet;
+import edu.stanford.bmir.protege.web.client.change.ProjectHistoryPortlet;
 import edu.stanford.bmir.protege.web.client.change.EntityChangesPortlet;
 import edu.stanford.bmir.protege.web.client.watches.WatchedEntitiesPortlet;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.*;
@@ -57,7 +57,7 @@ public class UIFactory {
 
 
     @Inject
-    public UIFactory(Provider<ClassTreePortlet> classTreePortletProvider, Provider<ImportsTreePortlet> importsTreePortletProvider, Provider<IndividualsListPortlet> individualsListPortletProvider, Provider<MetricsPortlet> metricsPortletProvider, Provider<PropertiesTreePortlet> propertiesTreePortletProvider, Provider<ChangeSummaryPortlet> changeSummaryPortletProvider, Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider, Provider<EntityChangesPortlet> changesPortletProvider, Provider<OBOTermRelationshipPortlet> oboTermRelationshipPortletProvider, Provider<OBOTermDefinitionPortlet> oboTermDefinitionPortletProvider, Provider<OBOTermIdEditorPortlet> oboTermIdEditorPortletProvider, Provider<OBOTermSynonymsPortlet> oboTermSynonymsPortletProvider, Provider<OBOTermCrossProductPortlet> oboTermCrossProductPortletProvider, Provider<OBOTermXRefsEditorPortlet> oboTermXRefsEditorPortletProvider, Provider<RevisionsPortlet> revisionsPortletProvider, Provider<OntologyIdPortlet> ontologyIdPortletProvider, Provider<OntologyAnnotationsPortlet> ontologyAnnotationsPortletProvider, Provider<ProjectFeedPortlet> projectFeedPortletProvider, Provider<DiscussionThreadPortlet> discussionThreadPortletProvider, Provider<EditorPortlet> editorPortletProvider, Provider<UsagePortlet> usagePortletProvider, Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider, Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider) {
+    public UIFactory(Provider<ClassTreePortlet> classTreePortletProvider, Provider<ImportsTreePortlet> importsTreePortletProvider, Provider<IndividualsListPortlet> individualsListPortletProvider, Provider<MetricsPortlet> metricsPortletProvider, Provider<PropertiesTreePortlet> propertiesTreePortletProvider, Provider<ProjectHistoryPortlet> changeSummaryPortletProvider, Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider, Provider<EntityChangesPortlet> changesPortletProvider, Provider<OBOTermRelationshipPortlet> oboTermRelationshipPortletProvider, Provider<OBOTermDefinitionPortlet> oboTermDefinitionPortletProvider, Provider<OBOTermIdEditorPortlet> oboTermIdEditorPortletProvider, Provider<OBOTermSynonymsPortlet> oboTermSynonymsPortletProvider, Provider<OBOTermCrossProductPortlet> oboTermCrossProductPortletProvider, Provider<OBOTermXRefsEditorPortlet> oboTermXRefsEditorPortletProvider, Provider<RevisionsPortlet> revisionsPortletProvider, Provider<OntologyIdPortlet> ontologyIdPortletProvider, Provider<OntologyAnnotationsPortlet> ontologyAnnotationsPortletProvider, Provider<ProjectFeedPortlet> projectFeedPortletProvider, Provider<DiscussionThreadPortlet> discussionThreadPortletProvider, Provider<EditorPortlet> editorPortletProvider, Provider<UsagePortlet> usagePortletProvider, Provider<OWLEntityDescriptionBrowserPortlet> entityDescriptionBrowserPortletProvider, Provider<OWLEntityDescriptionEditorPortlet> entityDescriptionEditorPortletProvider) {
         this.classTreePortletProvider = classTreePortletProvider;
         this.importsTreePortletProvider = importsTreePortletProvider;
         this.individualsListPortletProvider = individualsListPortletProvider;
@@ -100,7 +100,7 @@ public class UIFactory {
 
     private final Provider<PropertiesTreePortlet> propertiesTreePortletProvider;
 
-    private final Provider<ChangeSummaryPortlet> changeSummaryPortletProvider;
+    private final Provider<ProjectHistoryPortlet> changeSummaryPortletProvider;
 
     private final Provider<WatchedEntitiesPortlet> watchedEntitiesPortletProvider;
 
@@ -170,7 +170,7 @@ public class UIFactory {
             else if (portletJavaClassName.equals(PropertiesTreePortlet.class.getName())) {
                 entityPortlet = propertiesTreePortletProvider.get();
             }
-            else if (portletJavaClassName.equals(ChangeSummaryPortlet.class.getName())) {
+            else if (portletJavaClassName.equals(ProjectHistoryPortlet.class.getName())) {
                 entityPortlet = changeSummaryPortletProvider.get();
             }
             else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
@@ -245,7 +245,7 @@ public class UIFactory {
         String[] portlets = {OWLEntityDescriptionEditorPortlet.class.getName(), OWLEntityDescriptionBrowserPortlet
                 .class.getName(), UsagePortlet.class.getName(), OntologyIdPortlet.class.getName(),
                 OntologyAnnotationsPortlet.class.getName(), EditorPortlet.class.getName(),
-                DiscussionThreadPortlet.class.getName(), ChangeSummaryPortlet.class.getName(),
+                DiscussionThreadPortlet.class.getName(), ProjectHistoryPortlet.class.getName(),
                 ProjectFeedPortlet.class.getName(),
                 ClassTreePortlet.class.getName(), ImportsTreePortlet.class.getName(),
                 IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(),
