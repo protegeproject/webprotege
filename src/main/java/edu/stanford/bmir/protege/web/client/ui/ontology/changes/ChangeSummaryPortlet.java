@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.changes;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
@@ -11,6 +12,8 @@ import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 
 import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
@@ -26,23 +29,21 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
     public static final String REFRESH_TO_SEE_THE_LATEST_CHANGES = "Click to see the latest changes";
     public static final String LATEST_CHANGES_VISIBLE = "Latest changes displayed";
 
-    private ToolbarButton refreshButton;
-
     private final ChangeListViewPresenter presenter;
+
+    private final PortletAction refreshAction = new PortletAction("Refresh", new PortletActionHandler() {
+        @Override
+        public void handleActionInvoked(PortletAction action, ClickEvent event) {
+            onRefresh();
+        }
+    });
 
     @Inject
     public ChangeSummaryPortlet(ChangeListViewPresenter presenter, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.presenter = presenter;
         ChangeListView changeListView = presenter.getView();
-        refreshButton = new ToolbarButton(REFRESH_TO_SEE_THE_LATEST_CHANGES);
-        refreshButton.addListener(new ButtonListenerAdapter() {
-            @Override
-            public void onClick(Button button, EventObject e) {
-                onRefresh();
-            }
-        });
-//        setTopToolbar(refreshButton);
+        addPortletAction(refreshAction);
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
         getContentHolder().setWidget(scrollPanel);
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
@@ -58,7 +59,7 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
             }
         });
         onRefresh();
-
+        setTitle("Changes for project");
     }
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
@@ -67,8 +68,7 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
         if (lastRevisionNumber.equals(event.getRevisionNumber())) {
             return;
         }
-        refreshButton.setDisabled(false);
-        refreshButton.setText("Current revision is " + event.getRevisionNumber().getValue() + ". " + REFRESH_TO_SEE_THE_LATEST_CHANGES);
+        refreshAction.setEnabled(true);
         lastRevisionNumber = event.getRevisionNumber();
     }
 
@@ -76,8 +76,6 @@ public class ChangeSummaryPortlet extends AbstractOWLEntityPortlet {
     protected void onRefresh() {
         ProjectId projectId = getProjectId();
         presenter.setChangesForProject(projectId);
-        setTitle("Changes for project");
-        refreshButton.setDisabled(true);
-        refreshButton.setText(LATEST_CHANGES_VISIBLE);
+        refreshAction.setEnabled(false);
     }
 }
