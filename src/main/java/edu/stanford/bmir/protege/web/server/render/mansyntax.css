@@ -1,5 +1,11 @@
 body {
     font-family: verdana, arial, helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+}
+
+input {
+    font-family: verdana, arial, helvetica, sans-serif;
     font-size: 12px;
 }
 

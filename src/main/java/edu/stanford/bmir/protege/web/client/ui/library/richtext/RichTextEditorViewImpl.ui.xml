@@ -4,7 +4,6 @@
         .rich-text-area html body {
             margin: 0;
             font-size: 12px;
-            font-family: tahoma,sans-serif;
         }
     </ui:style>
     <g:HTMLPanel>

@@ -31,8 +31,6 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
     public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
-        // TODO: STYLE NAME
-//        addStyleName("web-protege-laf");
         html = new HTML();
         getContentHolder().setWidget(new ScrollPanel(html));
         addProjectEventHandler(ClassFrameChangedEvent.TYPE, new ClassFrameChangedEventHandler() {
@@ -73,6 +71,7 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
                 handleEntityChange(event.getEntity());
             }
         });
+        setTitle("OWL description");
     }
 
     @Override
@@ -85,6 +84,7 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractOWLEntityPortlet
                                                          html.setHTML(result.getRendering());
                                                      }
                                                  });
+            setTitle("OWL " + entity.get().getEntityType().getPrintName() + " description");
         }
     }
 

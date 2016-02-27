@@ -67,7 +67,7 @@ public class RichTextEditorViewImpl extends Composite implements RichTextEditorV
                     BodyElement body = document.getBody();
                     HeadElement head = HeadElement.as(Element.as(body.getPreviousSibling()));
                     StyleElement style = document.createStyleElement();
-                    style.setInnerText("body{ font-size: 12px; font-family: tahoma,sans-serif;} ul {margin-left: 20px; margin-top: 0; margin-bottom: 0; list-style: disc, inside;} ol {margin-left: 20px; margin-top: 0; margin-bottom: 0; list-style: decimal, inside;}");
+                    style.setInnerText("body{ font-size: 12px; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;} ul {margin-left: 20px; margin-top: 0; margin-bottom: 0; list-style: disc, inside;} ol {margin-left: 20px; margin-top: 0; margin-bottom: 0; list-style: decimal, inside;}");
                     head.appendChild(style);
                 }
                 catch (Exception e) {
