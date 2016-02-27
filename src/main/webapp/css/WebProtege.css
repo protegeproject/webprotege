@@ -1,11 +1,13 @@
-body
+body, input, textarea, keygen, select, button, isindex, .x-tree-node, .x-tree
 {
-    font-family:tahoma, sans-serif;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    color: #505050;
 }
+
 
 h1 {
     font-size: 18px;
-    color: #606060;
     font-weight: normal;
     line-height: 30px;
     padding-bottom: 10px;
@@ -233,7 +235,6 @@ ul.x-tab-strip-top
 .restriction_table
 {
     background-color:#FFF;
-    font-family:arial, tahoma, helvetica, sans-serif;
 }
 
 .x-grid3-header-offset
@@ -243,7 +244,6 @@ ul.x-tab-strip-top
 
 .gwt-ListBox
 {
-    font-family:tahoma, sans-serif;
 }
 
 ul.disc
@@ -258,7 +258,6 @@ ul.disc
     color:#1542bb;
     display:block;
     float:left;
-    font-family:tahoma, sans-serif;
     font-size:11px;
     font-size-adjust:none;
     font-style:normal;
@@ -283,7 +282,6 @@ ul.disc
 
 .form_html_panel
 {
-    font-family:tahoma, sans-serif;
     font-size:12px;
     height:150px;
 }
@@ -356,7 +354,6 @@ ul.disc
     color:#1542BB;
     display:block;
     float:left;
-    font-family:tahoma, sans-serif;
     font-size:11px;
     font-size-adjust:none;
     font-style:normal;
@@ -373,7 +370,6 @@ ul.disc
 .parent-column-right
 {
     background-color:#FFF;
-    font-family:tahoma, sans-serif;
     text-align:right;
 }
 
@@ -511,7 +507,7 @@ ul.disc
 
 .html-editor
 {
-    font:11px tahoma, sans-serif;
+    /*font:11px tahoma, sans-serif;*/
 }
 
 .x-grid3-cell-inner
@@ -547,7 +543,6 @@ ul.x-menu-list
 .x-grid3-td-topic b
 {
     display:block;
-    font-family:tahoma, verdana,serif;
 }
 
 .x-grid3-td-topic b i
@@ -613,7 +608,6 @@ ul.x-menu-list
 
 .web-protege-laf {
     font-size: 12px;
-    font-family: tahoma, sans-serif;
 }
 
 .web-protege-100-percent-width {
@@ -623,7 +617,6 @@ ul.x-menu-list
 *.web-protege-laf * .gwt-TextArea, .gwt-TextArea-readonly {
     border: 1px solid rgb(198, 198, 198);
     font-size: 12px;
-    font-family: tahoma, sans-serif;
     padding: 2px;
     /*box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;*/
     line-height: 15px;
@@ -633,7 +626,6 @@ ul.x-menu-list
 *.web-protege-laf .gwt-TextBox, .gwt-TextBox-readonly, .gwt-PasswordTextBox {
     border: 1px solid #F0F0F0;
     font-size: 12px;
-    font-family: tahoma, sans-serif;
     padding: 2px;
     /*box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;*/
     line-height: 15px;
@@ -643,7 +635,6 @@ ul.x-menu-list
     border: 1px solid silver;
     font-size: 12px;
     padding: 2px;
-    font-family: tahoma, sans-serif;
     box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
     height: 100%
 }
@@ -662,7 +653,6 @@ ul.x-menu-list
     font-weight: bold;
     font-size: 12px;
     padding-bottom: 2px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .web-protege-form-horizontal-padding {
@@ -703,14 +693,12 @@ ul.x-menu-list
     padding: 2px;
     /*box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;*/
     line-height: 16px;
-    font-family: tahoma, sans-serif;
     color: #000000;
     background: #ffffff;
 }
 
 .gwt-SuggestBoxPopup {
     font-size: 12px;
-    font-family: tahoma, sans-serif;
     background: white;
     box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
     border: 1px solid #acacac;
@@ -721,27 +709,23 @@ ul.x-menu-list
 .gwt-SuggestBoxPopup .item {
     background: white;
     color: #000000;
-    font-family: tahoma, sans-serif;
 }
 
 .gwt-SuggestBoxPopup .item-selected {
     color: #ffffff;
     background: #4779be;
-    font-family: tahoma, sans-serif;
 }
 
 .gwt-SuggestBoxPopup .item .new-keyword {
     color: #0669eb;
     background: #ffffff;
     font-weight: bold;
-    font-family: tahoma, sans-serif;
 }
 
 .gwt-SuggestBoxPopup .item-selected .new-keyword {
     color: white;
     background: #4779be;
     font-weight: bold;
-    font-family: tahoma, sans-serif;
 }
 
 .web-protege-entity-match-substring {
@@ -797,7 +781,6 @@ ul.x-menu-list
     border-right: solid 1px #ff0000;
     border-bottom: solid 1px #ff0000;
     padding: 2px;
-    font-family: tahoma, sans-serif;
 }
 
 * .web-protege-error-label > * a:link {
@@ -848,7 +831,6 @@ ul.x-menu-list
 *.web-protege-laf * .gwt-RichTextArea, .gwt-RichTextArea-readonly {
     border: 1px solid silver;
     font-size: 12px;
-    font-family: tahoma, sans-serif;
     padding: 2px;
     box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
     line-height: 15px;
@@ -862,7 +844,6 @@ select {
     font-size: 12px;
     line-height: 16px;
     padding: 1px;
-    font-family: tahoma, arial, sans-serif;
 }
 
 .web-protege-highlighted-table-column {
@@ -911,7 +892,6 @@ select {
     border-radius: 3px 3px 3px 3px;
     color: #555555;
     cursor: pointer;
-    font-family: "Helvetica Neue", Helvetica, Arial, Tahoma, sans-serif;
     font-size: 13px;
     font-weight: 700;
     margin: 1px;
@@ -950,7 +930,6 @@ select {
     border-radius: 3px 3px 3px 3px;
     color: #ffffff;
     cursor: pointer;
-    font-family: "Helvetica Neue", Helvetica, Arial, Tahoma, sans-serif;
     font-size: 13px;
     font-weight: 700;
     margin: 1px;
@@ -1010,7 +989,6 @@ select {
 .postit {
     background: #fefcde;
     padding: 15px;
-    font-family: tahoma, sans-serif;
     font-size: 12px;
     color: #000000;
     width: 170px;
@@ -1325,20 +1303,17 @@ select {
 
 .cm-s-manchester-syntax span.cm-quantifier {
     color: #c528eb;
-    font-family: verdana,arial,helvetica,sans-serif;
     font-weight: bold;
     font-size: 12px;
 }
 
 .cm-s-manchester-syntax span.cm-boolean-connective {
     color: #0669eb;
-    font-family: verdana,arial,helvetica,sans-serif;
     font-weight: bold;
     font-size: 12px;
 }
 
 .cm-s-manchester-syntax span.cm-string {
-    font-family: verdana,arial,helvetica,sans-serif;
     font-size: 12px;
 }
 
@@ -1411,12 +1386,10 @@ select {
 
 
 body {
-    font-family: verdana, arial, helvetica, sans-serif;
     font-size: 12px;
 }
 
 td {
-    font-family: verdana, arial, helvetica, sans-serif;
     font-size: 12px;
     vertical-align: top;
 }
@@ -1702,7 +1675,7 @@ td {
 .widget-holder-header {
     background: #6f6d6d;
     border-bottom: none;
-    font-weight: normal;
+    /*font-weight: normal;*/
     text-align: left;
     vertical-align: baseline;
     padding-left: 2px;
