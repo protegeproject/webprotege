@@ -53,7 +53,7 @@ public class ProjectHistoryPortlet extends AbstractOWLEntityPortlet {
             }
         });
         onRefresh();
-        setTitle("History for project");
+        setTitle("Project History");
     }
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
