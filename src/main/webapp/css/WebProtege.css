@@ -3,8 +3,8 @@ body, input, textarea, keygen, select, button, isindex, .x-tree-node, .x-tree
     font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
     font-weight: 300;
     color: #505050;
+    font-size: 12px;
 }
-
 
 h1 {
     font-size: 18px;
@@ -1381,12 +1381,6 @@ select {
 .exp-block {
     display: inline-block;
     vertical-align: top;
-}
-
-
-
-body {
-    font-size: 12px;
 }
 
 td {
