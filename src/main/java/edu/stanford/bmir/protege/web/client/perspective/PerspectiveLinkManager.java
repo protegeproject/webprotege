@@ -25,5 +25,7 @@ public interface PerspectiveLinkManager {
     void removeLinkedPerspective(PerspectiveId perspectiveId, Callback callback);
 
     void addLinkedPerspective(PerspectiveId perspectiveId, Callback callback);
+
+    void getBookmarkedPerspectives(Callback callback);
 }
 

@@ -23,6 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PerspectiveSwitcherPresenter implements HasDispose {
 
+
     private final PerspectiveSwitcherView view;
 
     private final PerspectiveLinkManager perspectiveLinkManager;
@@ -64,6 +65,12 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                 handleCreateNewPerspective();
             }
         });
+        view.setAddBookMarkedPerspectiveLinkHandler(new PerspectiveSwitcherView.AddBookmarkedPerspectiveLinkHandler() {
+            @Override
+            public void handleAddBookmarkedPerspective(PerspectiveId perspectiveId) {
+                addNewPerspective(perspectiveId);
+            }
+        });
         view.setResetPerspectiveToDefaultStateHandler(new PerspectiveSwitcherView.ResetPerspectiveToDefaultStateHandler() {
             @Override
             public void handleResetPerspectiveToDefaultState(PerspectiveId perspectiveId) {
@@ -81,6 +88,12 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                 if (!perspectiveIds.isEmpty()) {
                     setLinkedPerspectives(perspectiveIds);
                 }
+            }
+        });
+        perspectiveLinkManager.getBookmarkedPerspectives(new PerspectiveLinkManager.Callback() {
+            @Override
+            public void handlePerspectives(List<PerspectiveId> perspectiveIds) {
+                PerspectiveSwitcherPresenter.this.view.setBookmarkedPerspectives(perspectiveIds);
             }
         });
     }

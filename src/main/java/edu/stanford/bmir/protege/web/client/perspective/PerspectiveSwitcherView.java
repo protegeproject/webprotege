@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
@@ -24,6 +23,10 @@ public interface PerspectiveSwitcherView extends IsWidget {
      */
     public static interface AddPerspectiveLinkRequestHandler {
         void handleAddNewPerspectiveLinkRequest();
+    }
+
+    public static interface AddBookmarkedPerspectiveLinkHandler {
+        void handleAddBookmarkedPerspective(PerspectiveId perspectiveId);
     }
 
     public static interface RemovePerspectiveLinkRequestHandler {
@@ -75,6 +78,8 @@ public interface PerspectiveSwitcherView extends IsWidget {
      */
     void setAddPerspectiveLinkRequestHandler(AddPerspectiveLinkRequestHandler handler);
 
+    void setAddBookMarkedPerspectiveLinkHandler(AddBookmarkedPerspectiveLinkHandler handler);
+
     /**
      * Sets the handler that will be called when a request to remove a perspective link is made by the user.
      * @param handler  The handler.  Not {@code null}.
@@ -84,4 +89,6 @@ public interface PerspectiveSwitcherView extends IsWidget {
     void setResetPerspectiveToDefaultStateHandler(ResetPerspectiveToDefaultStateHandler handler);
 
     void setAddViewHandler(AddViewHandler handler);
+
+    void setBookmarkedPerspectives(List<PerspectiveId> perspectives);
 }

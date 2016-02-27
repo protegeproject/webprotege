@@ -24,7 +24,7 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
                 new PerspectiveId("Classes"),
                 new PerspectiveId("Properties"),
                 new PerspectiveId("Individuals"),
-                new PerspectiveId("Notes and Discussions"),
+                new PerspectiveId("Notes Discussions"),
                 new PerspectiveId("Changes by Entity")
         ));
     }
