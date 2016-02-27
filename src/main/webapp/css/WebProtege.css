@@ -1613,7 +1613,6 @@ td {
     right: 0;
     top: 0;
     font-size: 15px;
-    font-weight: normal;
     opacity: 1.0;
 }
 
@@ -1669,7 +1668,6 @@ td {
 .widget-holder-header {
     background: #6f6d6d;
     border-bottom: none;
-    /*font-weight: normal;*/
     text-align: left;
     vertical-align: baseline;
     padding-left: 2px;
