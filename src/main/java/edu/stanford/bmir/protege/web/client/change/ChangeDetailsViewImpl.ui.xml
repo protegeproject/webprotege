@@ -45,7 +45,7 @@
         }
 
         .revertButton:hover {
-            background: #a0a0a0;
+            background: #ababab;
             color: #ffffff;
         }
 
