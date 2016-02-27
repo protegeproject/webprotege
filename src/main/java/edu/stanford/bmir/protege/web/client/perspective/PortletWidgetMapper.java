@@ -5,9 +5,11 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.portlet.CouldNotFindPortletWidget;
 import edu.stanford.bmir.protege.web.client.portlet.EntityPortlet;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
@@ -56,7 +58,7 @@ public class PortletWidgetMapper implements WidgetMapper {
                 viewHolder = createViewHolder(terminalNode.getNodeId(), entityPortlet);
             }
             else {
-                viewHolder = new ViewHolder(new Label("Could not create view: " + portletClass), NodeProperties.emptyNodeProperties());
+                viewHolder = new ViewHolder(new CouldNotFindPortletWidget(), NodeProperties.emptyNodeProperties());
             }
         }
         else {
