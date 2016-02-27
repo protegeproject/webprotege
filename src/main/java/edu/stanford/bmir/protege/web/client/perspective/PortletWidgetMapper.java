@@ -51,8 +51,13 @@ public class PortletWidgetMapper implements WidgetMapper {
         ViewHolder viewHolder;
         if(portletClass != null) {
             final EntityPortlet entityPortlet = uiFactory.createPortlet(portletClass);
-            GWT.log("[PortletWidgetMapper] Created portlet: " + entityPortlet.getClass().getName());
-            viewHolder = createViewHolder(terminalNode.getNodeId(), entityPortlet);
+            if (entityPortlet != null) {
+                GWT.log("[PortletWidgetMapper] Created portlet: " + entityPortlet.getClass().getName());
+                viewHolder = createViewHolder(terminalNode.getNodeId(), entityPortlet);
+            }
+            else {
+                viewHolder = new ViewHolder(new Label("Could not create view: " + portletClass), NodeProperties.emptyNodeProperties());
+            }
         }
         else {
             viewHolder = new ViewHolder(new Label("No view class specified"), NodeProperties.emptyNodeProperties());
