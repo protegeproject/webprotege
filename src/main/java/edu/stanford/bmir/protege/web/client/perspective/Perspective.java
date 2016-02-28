@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.RequiresResize;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.perspective.HasPerspectiveId;
 import edu.stanford.protege.widgetmap.client.HasRootNode;
+import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 
 /**
@@ -16,6 +17,8 @@ import edu.stanford.protege.widgetmap.shared.node.Node;
 public interface Perspective extends IsWidget, HasRootNode, RequiresResize, HasDispose, HasPerspectiveId {
 
     void setRootNode(Optional<Node> rootNode);
+
+    void setRootNodeChangedHandler(RootNodeChangedHandler handler);
 
     void dropView(String className);
 

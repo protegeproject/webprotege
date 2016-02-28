@@ -40,13 +40,11 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
         initWidget(widgetMapPanel);
 
         rootNode = Optional.absent();
+    }
 
-        widgetMapPanel.addRootNodeChangedHandler(new RootNodeChangedHandler() {
-            @Override
-            public void handleRootNodeChanged(RootNodeChangedEvent rootNodeChangedEvent) {
-                GWT.log("[PerspectiveContent] Root node changed");
-            }
-        });
+    @Override
+    public void setRootNodeChangedHandler(RootNodeChangedHandler handler) {
+        widgetMapPanel.addRootNodeChangedHandler(handler);
     }
 
     @Override
@@ -88,7 +86,7 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
 
     @Override
     public Optional<Node> getRootNode() {
-        return rootNode;
+        return widgetMapPanel.getRootNode();
     }
 
     @Override

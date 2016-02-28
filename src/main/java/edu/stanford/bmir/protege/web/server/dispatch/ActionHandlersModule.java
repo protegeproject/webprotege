@@ -36,6 +36,7 @@ import edu.stanford.bmir.protege.web.server.notes.SetNoteStatusActionHandler;
 import edu.stanford.bmir.protege.web.server.permissions.GetPermissionsActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.GetPerspectiveLayoutActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.GetPerspectivesActionHandler;
+import edu.stanford.bmir.protege.web.server.perspective.SetPerspectiveLayoutActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.SetPerspectivesActionHandler;
 import edu.stanford.bmir.protege.web.server.project.CreateNewProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.project.GetUIConfigurationActionHandler;
@@ -187,6 +188,7 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(GetPersonIdItemsActionHandler.class);
 
         multibinder.addBinding().to(GetPerspectiveLayoutActionHandler.class);
+        multibinder.addBinding().to(SetPerspectiveLayoutActionHandler.class);
         multibinder.addBinding().to(GetPerspectivesActionHandler.class);
         multibinder.addBinding().to(SetPerspectivesActionHandler.class);
     }

@@ -3,22 +3,24 @@ package edu.stanford.bmir.protege.web.client.perspective;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceChangeEvent;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserPresenter;
 import edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.PortletId;
-import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutAction;
-import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutResult;
-import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
+import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.protege.widgetmap.client.RootNodeChangedEvent;
+import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 
 import java.util.HashMap;
@@ -33,11 +35,15 @@ public class PerspectivePresenter implements HasDispose {
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final LoggedInUserProvider loggedInUserProvider;
+
     private final PerspectiveView perspectiveView;
 
     private final Map<PerspectiveId, Perspective> perspectiveCache = new HashMap<>();
 
     private final Map<PerspectiveId, Node> originalRootNodeMap = new HashMap<>();
+
+    private final Map<PerspectiveId, Node> previousRootNodeMap = new HashMap<>();
 
     private final PerspectiveFactory perspectiveFactory;
 
@@ -48,9 +54,9 @@ public class PerspectivePresenter implements HasDispose {
     private Optional<PerspectiveId> currentPerspective = Optional.absent();
 
 
-
     @Inject
     public PerspectivePresenter(final PerspectiveView perspectiveView,
+                                final LoggedInUserProvider loggedInUserProvider,
                                 ProjectId projectId,
                                 DispatchServiceManager dispatchServiceManager,
                                 PerspectiveFactory perspectiveFactory,
@@ -58,6 +64,7 @@ public class PerspectivePresenter implements HasDispose {
                                 EmptyPerspectivePresenterFactory emptyPerspectivePresenterFactory,
                                 PortletChooserPresenter portletChooserPresenter) {
         this.perspectiveView = perspectiveView;
+        this.loggedInUserProvider = loggedInUserProvider;
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         this.perspectiveFactory = perspectiveFactory;
@@ -149,7 +156,8 @@ public class PerspectivePresenter implements HasDispose {
         }
         perspectiveView.setWidget(new Label("Loading..."));
         GWT.log("[PerspectivePresenter] Loading perspective for project " + projectId);
-        dispatchServiceManager.execute(new GetPerspectiveLayoutAction(projectId, UserId.getGuest(), perspectiveId),
+        UserId userId = loggedInUserProvider.getCurrentUserId();
+        dispatchServiceManager.execute(new GetPerspectiveLayoutAction(projectId, userId, perspectiveId),
                 new DispatchServiceCallback<GetPerspectiveLayoutResult>() {
                     @Override
                     public void handleSuccess(GetPerspectiveLayoutResult result) {
@@ -159,6 +167,12 @@ public class PerspectivePresenter implements HasDispose {
                         perspective.setEmptyPerspectiveWidget(emptyPerspectivePresenter.getView());
                         Optional<Node> rootNode = result.getPerspectiveLayout().getRootNode();
                         perspective.setRootNode(rootNode);
+                        perspective.setRootNodeChangedHandler(new RootNodeChangedHandler() {
+                            @Override
+                            public void handleRootNodeChanged(RootNodeChangedEvent rootNodeChangedEvent) {
+                                savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
+                            }
+                        });
                         perspectiveCache.put(perspectiveId, perspective);
                         perspectiveView.setWidget(perspective);
                         if (rootNode.isPresent()) {
@@ -167,6 +181,18 @@ public class PerspectivePresenter implements HasDispose {
                     }
                 });
     }
+
+    private void savePerspectiveLayout(PerspectiveId perspectiveId, Optional<Node> node) {
+        GWT.log("Saving perspective: " + perspectiveId);
+        UserId currentUserId = loggedInUserProvider.getCurrentUserId();
+        if(currentUserId.isGuest()) {
+            return;
+        }
+        PerspectiveLayout layout = new PerspectiveLayout(perspectiveId, node);
+        dispatchServiceManager.execute(new SetPerspectiveLayoutAction(projectId, currentUserId, layout), new DispatchServiceCallback<SetPerspectiveLayoutResult>() {
+        });
+    }
+
 
     @Override
     public void dispose() {
