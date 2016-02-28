@@ -1557,7 +1557,6 @@ td {
 
 .gwt-TabBar {
     margin-bottom: 5px;
-    /*background: #e0e0e0;*/
     border-bottom: solid 1px #f1f1f1;
 }
 
@@ -1569,11 +1568,15 @@ td {
     margin-right: 10px;
     color: #464646;
     border-bottom: solid transparent 2px;
+    outline-style: none;
+    outline-width: 0;
 }
 
 .gwt-TabBar .gwt-TabBarItem-selected {
     border-bottom: solid 2px dodgerblue;
     color: dodgerblue;
+    outline-style: none;
+    outline-width: 0;
 }
 
 
