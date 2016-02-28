@@ -31,8 +31,6 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
 
     private final ProjectId projectId;
 
-    private final List<PerspectiveId> perspectives = new ArrayList<>();
-
     @Inject
     public PerspectiveLinkManagerImpl(DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, ProjectId projectId) {
         this.dispatchServiceManager = dispatchServiceManager;
@@ -41,12 +39,10 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
     }
 
     public void getLinkedPerspectives(final Callback callback) {
-        UserId userId = loggedInUserProvider.getCurrentUserId();
+        final UserId userId = loggedInUserProvider.getCurrentUserId();
         dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), new DispatchServiceCallback<GetPerspectivesResult>() {
             @Override
             public void handleSuccess(GetPerspectivesResult result) {
-                perspectives.clear();
-                perspectives.addAll(result.getPerspectives());
                 callback.handlePerspectives(result.getPerspectives());
             }
         });
@@ -67,27 +63,38 @@ public class PerspectiveLinkManagerImpl implements PerspectiveLinkManager {
         );
     }
 
-    public void removeLinkedPerspective(PerspectiveId perspectiveId, Callback callback) {
-        perspectives.remove(perspectiveId);
-        setPerspectives();
-        callback.handlePerspectives(new ArrayList<>(perspectives));
-    }
-
-    public void addLinkedPerspective(PerspectiveId perspectiveId, Callback callback) {
-        perspectives.add(perspectiveId);
-        setPerspectives();
-        callback.handlePerspectives(new ArrayList<>(perspectives));
-    }
-
-    private void setPerspectives() {
-        GWT.log("[PerspectiveLinkManager] setPerspectives: " + perspectives);
-        UserId userId = loggedInUserProvider.getCurrentUserId();
-        dispatchServiceManager.execute(new SetPerspectivesAction(projectId, userId, ImmutableList.copyOf(perspectives)),
-                new DispatchServiceCallback<SetPerspectivesResult>() {
+    public void removeLinkedPerspective(final PerspectiveId perspectiveId, final Callback callback) {
+        final UserId userId = loggedInUserProvider.getCurrentUserId();
+        dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), new DispatchServiceCallback<GetPerspectivesResult>() {
+            @Override
+            public void handleSuccess(GetPerspectivesResult result) {
+                final List<PerspectiveId> ids = new ArrayList<>(result.getPerspectives());
+                ids.remove(perspectiveId);
+                dispatchServiceManager.execute(new SetPerspectivesAction(projectId, userId, ImmutableList.copyOf(ids)), new DispatchServiceCallback<SetPerspectivesResult>() {
                     @Override
                     public void handleSuccess(SetPerspectivesResult setPerspectivesResult) {
-
+                        callback.handlePerspectives(ids);
                     }
                 });
+            }
+        });
+    }
+
+    public void addLinkedPerspective(final PerspectiveId perspectiveId, final Callback callback) {
+        final UserId userId = loggedInUserProvider.getCurrentUserId();
+        dispatchServiceManager.execute(new GetPerspectivesAction(projectId, userId), new DispatchServiceCallback<GetPerspectivesResult>() {
+            @Override
+            public void handleSuccess(GetPerspectivesResult result) {
+                List<PerspectiveId> ids = new ArrayList<>(result.getPerspectives());
+                ids.add(perspectiveId);
+                final ImmutableList<PerspectiveId> perspectiveIds = ImmutableList.copyOf(ids);
+                dispatchServiceManager.execute(new SetPerspectivesAction(projectId, userId, perspectiveIds), new DispatchServiceCallback<SetPerspectivesResult>() {
+                    @Override
+                    public void handleSuccess(SetPerspectivesResult setPerspectivesResult) {
+                        callback.handlePerspectives(perspectiveIds);
+                    }
+                });
+            }
+        });
     }
 }

@@ -67,7 +67,7 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
 
     @Override
     public void setPerspectiveLayout(ProjectId projectId, UserId userId, PerspectiveLayout layout) {
-        File file = getPerspectiveFile(projectId, userId, layout.getPerspectiveId());
+        File file = perspectiveFileManager.getPerspectiveLayoutForUser(projectId, layout.getPerspectiveId(), userId);
         if(layout.getRootNode().isPresent()) {
             try {
                 file.getParentFile().mkdirs();

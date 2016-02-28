@@ -83,19 +83,6 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
                 eventBus.fireEvent(new AddViewToPerspectiveEvent(perspectiveId));
             }
         });
-        perspectiveLinkManager.getLinkedPerspectives(new PerspectiveLinkManager.Callback() {
-            public void handlePerspectives(List<PerspectiveId> perspectiveIds) {
-                if (!perspectiveIds.isEmpty()) {
-                    setLinkedPerspectives(perspectiveIds);
-                }
-            }
-        });
-        perspectiveLinkManager.getBookmarkedPerspectives(new PerspectiveLinkManager.Callback() {
-            @Override
-            public void handlePerspectives(List<PerspectiveId> perspectiveIds) {
-                PerspectiveSwitcherPresenter.this.view.setBookmarkedPerspectives(perspectiveIds);
-            }
-        });
     }
 
     public void start(AcceptsOneWidget container, final ProjectViewPlace place) {
@@ -103,7 +90,19 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
         checkNotNull(container);
         checkNotNull(place);
         container.setWidget(view);
-        displayPlace(place);
+        perspectiveLinkManager.getLinkedPerspectives(new PerspectiveLinkManager.Callback() {
+            public void handlePerspectives(List<PerspectiveId> perspectiveIds) {
+                setLinkedPerspectives(perspectiveIds);
+                displayPlace(place);
+            }
+        });
+        perspectiveLinkManager.getBookmarkedPerspectives(new PerspectiveLinkManager.Callback() {
+            @Override
+            public void handlePerspectives(List<PerspectiveId> perspectiveIds) {
+                view.setBookmarkedPerspectives(perspectiveIds);
+            }
+        });
+
     }
 
     /**
@@ -141,6 +140,7 @@ public class PerspectiveSwitcherPresenter implements HasDispose {
     private void ensurePerspectiveLinkExists(PerspectiveId perspectiveId) {
         List<PerspectiveId> currentLinks = view.getPerspectiveLinks();
         if(!currentLinks.contains(perspectiveId)) {
+            GWT.log("[PerspectiveSwitcherPresenter] Adding perspective link for " + perspectiveId + " because it is not present");
             addNewPerspective(perspectiveId);
         }
     }
