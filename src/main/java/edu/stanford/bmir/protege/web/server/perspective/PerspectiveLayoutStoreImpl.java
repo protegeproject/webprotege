@@ -11,8 +11,6 @@ import edu.stanford.protege.widgetmap.server.node.JsonNodeSerializer;
 import edu.stanford.protege.widgetmap.shared.node.*;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.Charset;
 
 /**
@@ -48,15 +46,15 @@ public class PerspectiveLayoutStoreImpl implements PerspectiveLayoutStore {
     }
 
     private File getPerspectiveFile(ProjectId projectId, UserId userId, PerspectiveId perspectiveId) {
-        File userFile = perspectiveFileManager.getPerspectiveFileForUser(projectId, perspectiveId, userId);
+        File userFile = perspectiveFileManager.getPerspectiveLayoutForUser(projectId, perspectiveId, userId);
         if(userFile.exists()) {
             return userFile;
         }
-        File projectFile = perspectiveFileManager.getDefaultPerspectiveFileForProject(projectId, perspectiveId);
+        File projectFile = perspectiveFileManager.getDefaultPerspectiveLayoutForProject(projectId, perspectiveId);
         if(projectFile.exists()) {
             return projectFile;
         }
-        return perspectiveFileManager.getDefaultPerspectiveFile(perspectiveId);
+        return perspectiveFileManager.getDefaultPerspectiveLayout(perspectiveId);
     }
 
     @Override

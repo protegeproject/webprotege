@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.perspective;
 
-import edu.stanford.bmir.protege.web.server.filemanager.CustomizationDirectoryManager;
 import edu.stanford.bmir.protege.web.server.inject.project.ProjectDirectoryFactory;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
@@ -66,19 +65,19 @@ public class PerspectiveFileManager_TestCase {
 
     @Test
     public void shouldReturnDefaultFile() {
-        File defaultDirectory = fileManager.getDefaultPerspectiveFile(perspectiveId);
+        File defaultDirectory = fileManager.getDefaultPerspectiveLayout(perspectiveId);
         assertThat(defaultDirectory, is(new File("DEFAULT_DIRECTORY/DIGEST.json")));
     }
 
     @Test
     public void shouldReturnDefaultProjectFile() {
-        File defaultDirectory = fileManager.getDefaultPerspectiveFileForProject(projectId, perspectiveId);
+        File defaultDirectory = fileManager.getDefaultPerspectiveLayoutForProject(projectId, perspectiveId);
         assertThat(defaultDirectory, is(new File("PROJECT_DIRECTORY/perspective-data/default/DIGEST.json")));
     }
 
     @Test
     public void shouldReturnUserFile() {
-        File defaultDirectory = fileManager.getPerspectiveFileForUser(projectId, perspectiveId, userId);
+        File defaultDirectory = fileManager.getPerspectiveLayoutForUser(projectId, perspectiveId, userId);
         assertThat(defaultDirectory, is(new File("PROJECT_DIRECTORY/perspective-data/DIGEST/DIGEST.json")));
     }
 

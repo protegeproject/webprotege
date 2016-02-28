@@ -21,6 +21,8 @@ public class PerspectiveFileManager {
 
     public static final String PERSPECTIVE_DATA_DIRECTORY_NAME = "perspective-data";
 
+    public static final String PERSPECTIVE_LIST_FILE_NAME = "perspective.list.json";
+
     private final File defaultPerspectivesDirectory;
 
     private final Provider<Md5MessageDigestAlgorithm> algorithmProvider;
@@ -36,22 +38,42 @@ public class PerspectiveFileManager {
         this.algorithmProvider = algorithmProvider;
     }
 
-    public File getDefaultPerspectiveFile(PerspectiveId perspectiveId) {
+    public File getDefaultPerspectiveLayout(PerspectiveId perspectiveId) {
         // Location: default-perspectives/{{PerspectiveIdDigest}}.json
         return new File(defaultPerspectivesDirectory, getPerspectiveIdFileName(perspectiveId));
     }
 
-    public File getDefaultPerspectiveFileForProject(ProjectId projectId, PerspectiveId perspectiveId) {
+    public File getDefaultPerspectiveLayoutForProject(ProjectId projectId, PerspectiveId perspectiveId) {
         //  Location:  {{ProjectId}}/perspective-data/default/{{PerspectiveIdDigest}}.json
         File defaultDirectory = new File(getPerspectiveDataDirectory(projectId), "default");
         return new File(defaultDirectory, getPerspectiveIdFileName(perspectiveId));
     }
 
-    public File getPerspectiveFileForUser(ProjectId projectId, PerspectiveId perspectiveId, UserId userId) {
+    public File getPerspectiveLayoutForUser(ProjectId projectId, PerspectiveId perspectiveId, UserId userId) {
         //  Location:  {{ProjectId}}/perspective-data/{{UserIdDigest}}/{{PerspectiveIdDigest}}.json
-        String userIdDigest = getUserIdDigest(userId);
-        File userDirectory = new File(getPerspectiveDataDirectory(projectId), userIdDigest);
+        File userDirectory = getUserDirectory(projectId, userId);
         return new File(userDirectory, getPerspectiveIdFileName(perspectiveId));
+    }
+
+    public File getDefaultPerspectiveList() {
+        return new File(defaultPerspectivesDirectory, PERSPECTIVE_LIST_FILE_NAME);
+    }
+
+    public File getDefaultPerspectiveListForProject(ProjectId projectId) {
+        return new File(getPerspectiveDataDirectory(projectId), PERSPECTIVE_LIST_FILE_NAME);
+    }
+
+    public File getPerspectiveListForUser(ProjectId projectId, UserId userId) {
+        File userDirectory = getUserDirectory(projectId, userId);
+        return new File(userDirectory, PERSPECTIVE_LIST_FILE_NAME);
+    }
+
+
+
+
+    private File getUserDirectory(ProjectId projectId, UserId userId) {
+        String userIdDigest = getUserIdDigest(userId);
+        return new File(getPerspectiveDataDirectory(projectId), userIdDigest);
     }
 
     private File getPerspectiveDataDirectory(ProjectId projectId) {
@@ -77,4 +99,5 @@ public class PerspectiveFileManager {
         algorithm.updateWithBytesFromUtf8String(value);
         return algorithm.computeDigestAsBase16Encoding();
     }
+
 }
