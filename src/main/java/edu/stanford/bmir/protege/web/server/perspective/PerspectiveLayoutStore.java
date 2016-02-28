@@ -16,6 +16,6 @@ public interface PerspectiveLayoutStore {
 
     void setPerspectiveLayout(ProjectId projectId, UserId userId, PerspectiveLayout layout);
 
-    void clearPerspectiveLayout(ProjectId projectId, UserId userId);
+    void clearPerspectiveLayout(ProjectId projectId, UserId userId, PerspectiveId perspectiveId);
 
 }
