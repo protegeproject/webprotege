@@ -19,5 +19,5 @@ public interface PerspectivesManager {
 
     void setPerspectives(ProjectId projectId, UserId userId, List<PerspectiveId> perspectives);
 
-    void setDefaultPerspectives(Project projectId);
+    void setDefaultPerspectives(Project projectId, List<PerspectiveId> perspectives);
 }

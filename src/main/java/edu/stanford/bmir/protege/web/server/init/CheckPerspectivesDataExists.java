@@ -42,7 +42,7 @@ public class CheckPerspectivesDataExists implements ConfigurationTask {
             if (perspectiveFiles != null) {
                 for(File file : perspectiveFiles) {
                     String fileName = file.getName();
-                    if(fileName.endsWith(".json") && !fileName.equals("perspectives.list.json")) {
+                    if(fileName.endsWith(".json") && !fileName.equals("perspective.list.json")) {
                         String strippedFileName = fileName.substring(0, fileName.length() - 5);
                         file.renameTo(new File(defaultConfigurationDirectory, computeMD5(strippedFileName) + ".json"));
                     }
