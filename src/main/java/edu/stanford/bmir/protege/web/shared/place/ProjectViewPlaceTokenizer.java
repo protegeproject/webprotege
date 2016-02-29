@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.place;
+package edu.stanford.bmir.protege.web.shared.place;
 
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
@@ -6,6 +6,7 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import edu.stanford.bmir.protege.web.client.place.*;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

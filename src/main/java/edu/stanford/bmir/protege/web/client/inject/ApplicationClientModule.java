@@ -64,6 +64,8 @@ import edu.stanford.bmir.protege.web.client.ui.projectlist.*;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.*;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveFactory;
 import edu.stanford.bmir.protege.web.client.user.*;
+import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorView;
+import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorViewImpl;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationViewImpl;
@@ -204,6 +206,8 @@ public class ApplicationClientModule extends AbstractGinModule {
                 .build(ProjectDetailPresenterFactory.class));
 
         bind(PortletChooserView.class).to(PortletChooserViewImpl.class);
+
+        bind(WatchTypeSelectorView.class).to(WatchTypeSelectorViewImpl.class);
 
     }
 

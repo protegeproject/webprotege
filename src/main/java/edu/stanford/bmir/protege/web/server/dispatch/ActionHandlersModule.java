@@ -51,12 +51,11 @@ import edu.stanford.bmir.protege.web.server.user.CreateUserAccountActionHandler;
 import edu.stanford.bmir.protege.web.server.user.GetUserIdsActionHandler;
 import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
+import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.project.SetUIConfigurationActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.*;
-import edu.stanford.bmir.protege.web.shared.frame.GetOntologyFramesAction;
-import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectiveLayoutAction;
-import edu.stanford.bmir.protege.web.shared.perspective.GetPerspectivesAction;
+import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
 
 /**
  * Matthew Horridge
@@ -119,6 +118,8 @@ public class ActionHandlersModule extends AbstractModule {
 
         multibinder.addBinding().to(AddWatchActionHandler.class);
         multibinder.addBinding().to(RemoveWatchActionHandler.class);
+        multibinder.addBinding().to(SetEntityWatchesActionHandler.class);
+        multibinder.addBinding().to(GetWatchesActionHandler.class);
 
         multibinder.addBinding().to(GetCurrentUserInSessionActionHandler.class);
         multibinder.addBinding().to(SetEmailAddressActionHandler.class);

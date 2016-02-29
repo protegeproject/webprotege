@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class GetWatchesResult implements Result {
 
-    private Set<Watch<?>> watches;
+    private Set<EntityBasedWatch> watches;
 
     /**
      * For serialization purposes only
@@ -22,11 +22,11 @@ public class GetWatchesResult implements Result {
     private GetWatchesResult() {
     }
 
-    public GetWatchesResult(Set<Watch<?>> watches) {
-        this.watches = new HashSet<Watch<?>>(watches);
+    public GetWatchesResult(Set<EntityBasedWatch> watches) {
+        this.watches = new HashSet<EntityBasedWatch>(watches);
     }
 
-    public Set<Watch<?>> getWatches() {
+    public Set<EntityBasedWatch> getWatches() {
         return Collections.unmodifiableSet(watches);
     }
 }
