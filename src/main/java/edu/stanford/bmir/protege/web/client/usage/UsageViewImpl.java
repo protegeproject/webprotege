@@ -65,9 +65,6 @@ public class UsageViewImpl extends Composite implements UsageView {
     private OWLEntity currentSubject;
 
     @UiField
-    protected ButtonBase filterButton;
-
-    @UiField
     protected Label filterMessage;
 
     public UsageViewImpl() {
@@ -171,9 +168,9 @@ public class UsageViewImpl extends Composite implements UsageView {
         initWidget(rootElement);
     }
 
-    @UiHandler("filterButton")
-    protected void handleFilterClicked(ClickEvent event) {
-        usageEditorViewPopupPanel.setPopupPosition(filterButton.getAbsoluteLeft(), filterButton.getAbsoluteTop() + filterButton.getOffsetHeight());
+    @Override
+    public void showFilter() {
+        usageEditorViewPopupPanel.setPopupPosition(5, 5);
         usageEditorViewPopupPanel.show();
     }
 
@@ -202,7 +199,14 @@ public class UsageViewImpl extends Composite implements UsageView {
     }
 
     private void handleUsageFilterChanged() {
-        filterMessage.setVisible(getUsageFilter().isFiltering());
+        Style.Display display;
+        if(getUsageFilter().isFiltering()) {
+            display = Style.Display.BLOCK;
+        }
+        else {
+            display = Style.Display.NONE;
+        }
+        filterMessage.getElement().getStyle().setDisplay(display);
         ValueChangeEvent.fire(this, getUsageFilter());
     }
 

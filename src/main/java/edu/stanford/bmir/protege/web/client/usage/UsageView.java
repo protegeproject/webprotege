@@ -18,6 +18,8 @@ public interface UsageView extends IsWidget, HasValueChangeHandlers<UsageFilter>
 
     UsageFilter getUsageFilter();
 
+    void showFilter();
+
     void setData(OWLEntity subject, Collection<UsageReference> references);
 
     void clearData();
