@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.usage;
 
 import com.google.common.base.Optional;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.web.bindery.event.shared.EventBus;
@@ -8,6 +9,8 @@ import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -28,8 +31,6 @@ import java.util.Collection;
  */
 public class UsagePortlet extends AbstractOWLEntityPortlet {
 
-    private static final int DEFAULT_HEIGHT = 250;
-
     private UsageView usageView;
 
     private final DispatchServiceManager dispatchServiceManager;
@@ -37,7 +38,6 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
     @Inject
     public UsagePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserManager loggedInUserManager) {
         super(selectionModel, eventBus, projectId, loggedInUserManager);
-        setHeight(DEFAULT_HEIGHT);
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();
         getContentHolder().setWidget(usageView.asWidget());
@@ -47,6 +47,12 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
                 updateDisplayForSelectedEntity();
             }
         });
+        addPortletAction(new PortletAction("Filter", new PortletActionHandler() {
+            @Override
+            public void handleActionInvoked(PortletAction action, ClickEvent event) {
+                usageView.showFilter();
+            }
+        }));
     }
 
 
