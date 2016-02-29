@@ -2,9 +2,14 @@ package edu.stanford.bmir.protege.web.server.watches;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import edu.stanford.bmir.protege.web.client.place.ItemSelection;
+import edu.stanford.bmir.protege.web.client.place.OWLClassItem;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
 import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
+import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
+import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlaceTokenizer;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -39,7 +44,11 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
 
 
     @Inject
-    public WatchTriggeredHandlerImpl(ProjectId projectId, BrowserTextProvider browserTextProvider, String applicationHost, SendMail mailManager, UserDetailsManager userDetailsManager) {
+    public WatchTriggeredHandlerImpl(ProjectId projectId,
+                                     BrowserTextProvider browserTextProvider,
+                                     String applicationHost,
+                                     SendMail mailManager,
+                                     UserDetailsManager userDetailsManager) {
         this.projectId = projectId;
         this.browserTextProvider = browserTextProvider;
         this.applicationHost = applicationHost;
@@ -65,13 +74,15 @@ public class WatchTriggeredHandlerImpl implements WatchTriggeredHandler {
                 StringBuilder directLinkBuilder = new StringBuilder();
                 directLinkBuilder.append("http://");
                 directLinkBuilder.append(applicationHost);
-                directLinkBuilder.append("#Edit:projectId=");
-                directLinkBuilder.append(projectId.getId());
-                directLinkBuilder.append(";tab=ClassesTab&id=");
-                directLinkBuilder.append(URLEncoder.encode(entity.getIRI().toString()));
+                ItemSelection selection = ItemSelection.builder().addEntity(entity).build();
+                ProjectViewPlace place = new ProjectViewPlace(projectId, new PerspectiveId("Classes"), selection);
+                ProjectViewPlaceTokenizer tokenizer = new ProjectViewPlaceTokenizer();
+                String placeToken = tokenizer.getToken(place);
+                directLinkBuilder.append("#ProjectViewPlace:");
+                directLinkBuilder.append(placeToken);
                 message += "\n" + directLinkBuilder.toString();
                 mailManager.sendMail(userDetails.getEmailAddress().or("Not specified"), emailSubject, message);
-
+                System.out.println(message);
             }
         });
     }

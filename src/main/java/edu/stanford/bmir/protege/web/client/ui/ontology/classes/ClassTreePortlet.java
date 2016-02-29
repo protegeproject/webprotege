@@ -19,7 +19,6 @@ import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
 import com.gwtext.client.widgets.menu.BaseItem;
-import com.gwtext.client.widgets.menu.CheckItem;
 import com.gwtext.client.widgets.menu.Menu;
 import com.gwtext.client.widgets.menu.MenuItem;
 import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
@@ -50,6 +49,7 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileResultHandler;
+import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.ObjectPath;
 import edu.stanford.bmir.protege.web.shared.csv.CSVImportDescriptor;
@@ -110,6 +110,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
+    private final WatchPresenter watchPresenter;
+
     private final PortletAction createClassAction = new PortletAction("Create", new PortletActionHandler() {
         @Override
         public void handleActionInvoked(PortletAction action, ClickEvent event) {
@@ -124,31 +126,32 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     });
 
-    private final PortletAction watchClassAction = new PortletAction("Watch...", new PortletActionHandler() {
+    private final PortletAction watchClassAction = new PortletAction("Watch", new PortletActionHandler() {
         @Override
         public void handleActionInvoked(PortletAction action, ClickEvent event) {
-
+            editWatches();
         }
     });
 
     @Inject
     public ClassTreePortlet(SelectionModel selectionModel,
+                            WatchPresenter watchPresenter,
                             EventBus eventBus,
                             DispatchServiceManager dispatchServiceManager,
                             final ProjectId projectId,
                             LoggedInUserProvider loggedInUserProvider,
                             Provider<DiscussionThreadDialog> discussionThreadDialogProvider,
                             LoggedInUserProjectPermissionChecker permissionChecker) {
-        this(selectionModel, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, null, discussionThreadDialogProvider, permissionChecker);
+        this(selectionModel, watchPresenter, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, null, discussionThreadDialogProvider, permissionChecker);
     }
 
-    private ClassTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
+    private ClassTreePortlet(SelectionModel selectionModel, WatchPresenter watchPresenter, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.discussionThreadDialogProvider = discussionThreadDialogProvider;
         this.permissionChecker = loggedInUserProjectPermissionChecker;
-
+        this.watchPresenter = watchPresenter;
         addPortletAction(createClassAction);
         addPortletAction(deleteClassAction);
         addPortletAction(watchClassAction);
@@ -264,7 +267,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             @Override
             public void handleWatchRemoved(WatchRemovedEvent event) {
                 if (isEventForThisProject(event)) {
-                    onWatchRemoved(event);
+                    ClassTreePortlet.this.handleWatchRemoved(event);
                 }
             }
         });
@@ -375,7 +378,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         updateTreeNodeIcon(tn);
     }
 
-    private void onWatchRemoved(WatchRemovedEvent event) {
+    private void handleWatchRemoved(WatchRemovedEvent event) {
         if (!event.getUserId().equals(getUserId())) {
             return;
         }
@@ -442,21 +445,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         else {
             GWT.log("Unknown tree selection model for class tree: " + selModel, null);
         }
-    }
-
-    protected void updateWatchedMenuState() {
-        List<EntityData> entities = getSelectedTreeNodeEntityData();
-        if (entities == null || entities.size() == 0) {
-            return;
-        }
-        EntityData entityData = entities.iterator().next();
-        Set<Watch<?>> watches = entityData.getWatches();
-//        if (!watches.isEmpty()) {
-//            watchButton.setActiveItem(unwatchBranchItem);
-//        }
-//        else {
-//            watchButton.setActiveItem(lastSelectedWatchType == null ? watchBranchItem : lastSelectedWatchType);
-//        }
     }
 
     protected Component createSearchField() {
@@ -763,56 +751,13 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         dispatchServiceManager.execute(new DeleteEntityAction(cls, getProjectId()), new DeleteClassHandler());
     }
 
-    protected void onWatchCls() {
+    protected void editWatches() {
         final Optional<OWLClass> sel = getSelectedTreeNodeClass();
         if (!sel.isPresent()) {
             return;
         }
-        EntityFrameWatch entityWatch = new EntityFrameWatch(sel.get());
-        dispatchServiceManager.execute(new AddWatchAction(entityWatch, getProjectId(), getUserId()), new DispatchServiceCallback<AddWatchResult>() {
-            @Override
-            public void handleSuccess(AddWatchResult result) {
-
-            }
-        });
+        watchPresenter.showDialog(sel.get());
     }
-
-    protected void onWatchBranchCls() {
-        final Optional<OWLClass> sel = getSelectedTreeNodeClass();
-        if (!sel.isPresent()) {
-            return;
-        }
-        Watch<?> watch = new HierarchyBranchWatch(sel.get());
-        dispatchServiceManager.execute(new AddWatchAction(watch, getProjectId(), getUserId()), new DispatchServiceCallback<AddWatchResult>() {
-
-            @Override
-            public void handleSuccess(AddWatchResult result) {
-
-            }
-        });
-    }
-
-
-    protected void onUnwatchCls() {
-        for (TreeNode selTreeNode : getSelectedTreeNodes()) {
-            Object userObject = selTreeNode.getUserObject();
-            if (userObject instanceof EntityData) {
-                Set<Watch<?>> watches = ((EntityData) userObject).getWatches();
-                dispatchServiceManager.execute(new RemoveWatchesAction(watches, getProjectId(), getUserId()), new DispatchServiceCallback<RemoveWatchesResult>() {
-
-                    @Override
-                    public void handleSuccess(RemoveWatchesResult result) {
-                    }
-                });
-            }
-        }
-
-    }
-
-//    @Override
-//    protected void afterRender() {
-//        getRootCls();
-//    }
 
     private void updateTreeNodeIcon(TreeNode treeNode) {
         setTreeNodeIcon(treeNode, (EntityData) treeNode.getUserObject());
@@ -1128,7 +1073,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         getContentHolder().setWidget(sp);
         createSelectionListener();
 
-        root.select();
         // MH: createTreeNode calls get subclasses, so it was being called twice
 //        getSubclasses(rootEnitity.getName(), root);
         root.expand();
@@ -1141,7 +1085,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return;
         }
         setSelectionInTree(entity);
-        updateWatchedMenuState();
     }
 
     protected TreeNode getDirectChild(final TreeNode parentNode, final String childId) {

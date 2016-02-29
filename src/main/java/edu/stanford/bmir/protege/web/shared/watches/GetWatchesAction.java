@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,15 +20,19 @@ public class GetWatchesAction implements HasProjectAction<GetWatchesResult>, Has
 
     private UserId userId;
 
+    private OWLEntity entity;
+
     /**
-     * Creates a {@link GetWatchesAction} object for the specified project and user.
+     * Creates a {@link GetWatchesAction} object for the specified project and user and entity.
      * @param projectId The {@link ProjectId} of the project whose watches are to be retrieved.
      * @param userId The {@link UserId} of the user whose watches are to be retrieved in the specified project.
+     * @param entity The entity.
      * @throws NullPointerException if any parameters are {@code null}.
      */
-    public GetWatchesAction(ProjectId projectId, UserId userId) {
+    public GetWatchesAction(ProjectId projectId, UserId userId, OWLEntity entity) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
+        this.entity = entity;
     }
 
     /**
@@ -52,5 +57,9 @@ public class GetWatchesAction implements HasProjectAction<GetWatchesResult>, Has
     @Override
     public UserId getUserId() {
         return userId;
+    }
+
+    public OWLEntity getEntity() {
+        return entity;
     }
 }

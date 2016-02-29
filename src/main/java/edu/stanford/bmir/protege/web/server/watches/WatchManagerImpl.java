@@ -10,6 +10,9 @@ import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -34,6 +37,9 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     private final EventManager<ProjectEvent<?>> eventManager;
 
+    private boolean populatedIndex = false;
+
+
     @Inject
     public WatchManagerImpl(ProjectId projectId,
                             WatchStore watchStore,
@@ -51,12 +57,12 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     @Override
     public Set<Watch<?>> getWatches(UserId userId) {
-        return watchIndex.getWatchesForUser(userId);
+        return getWatchIndex().getWatchesForUser(userId);
     }
 
     @Override
     public void addWatch(Watch<?> watch, UserId userId) {
-        if (watchIndex.addWatch(watch, userId)) {
+        if (getWatchIndex().addWatch(watch, userId)) {
             watchStore.addWatch(new UserWatch<>(userId, watch));
             eventManager.postEvent(new WatchAddedEvent(projectId, watch, userId));
         }
@@ -64,7 +70,7 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     @Override
     public void removeWatch(Watch<?> watch, UserId userId) {
-        if (watchIndex.removeWatch(watch, userId)) {
+        if (getWatchIndex().removeWatch(watch, userId)) {
             watchStore.removeWatch(new UserWatch<>(userId, watch));
             eventManager.postEvent(new WatchRemovedEvent(projectId, watch, userId));
         }
@@ -73,8 +79,8 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
     @Override
     public Set<Watch<?>> getDirectWatches(OWLEntity watchedObject, UserId userId) {
         Set<Watch<?>> result = new HashSet<>();
-        for(Watch<?> watch : watchIndex.getWatchesOnEntity(watchedObject)) {
-            if(watchIndex.getUsersForWatch(watch).contains(userId)) {
+        for(Watch<?> watch : getWatchIndex().getWatchesOnEntity(watchedObject)) {
+            if(getWatchIndex().getUsersForWatch(watch).contains(userId)) {
                 result.add(watch);
             }
         }
@@ -83,12 +89,12 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
 
     public void handleEntityFrameChanged(OWLEntity entity) {
         List<Watch<?>> watches = new ArrayList<>();
-        watches.addAll(watchIndex.getWatchesOnEntity(entity));
+        watches.addAll(getWatchIndex().getWatchesOnEntity(entity));
         for (OWLEntity anc : watchedEntitiesFinder.getRelatedWatchedEntities(entity)) {
-            watches.addAll(watchIndex.getWatchesOnEntity(anc));
+            watches.addAll(getWatchIndex().getWatchesOnEntity(anc));
         }
         for (Watch<?> watch : watches) {
-            for (UserId userId : watchIndex.getUsersForWatch(watch)) {
+            for (UserId userId : getWatchIndex().getUsersForWatch(watch)) {
                 fireWatch(watch, userId, entity);
             }
         }
@@ -107,4 +113,18 @@ public class WatchManagerImpl implements WatchManager, HasDispose {
     }
 
 
+    private WatchIndex getWatchIndex() {
+        populateIndex();
+        return watchIndex;
+    }
+
+    private void populateIndex() {
+        if(populatedIndex) {
+            return;
+        }
+        populatedIndex = true;
+        for (UserWatch<?> userWatch : watchStore.getWatches()) {
+            getWatchIndex().addWatch(userWatch.getWatch(), userWatch.getUserId());
+        }
+    }
 }

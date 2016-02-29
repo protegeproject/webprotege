@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -106,6 +107,41 @@ public class ItemSelection implements Iterable<Item<?>> {
 
         public Builder addItem(Item<?> item) {
             items.add(item);
+            return this;
+        }
+
+        public Builder addEntity(OWLEntity entity) {
+            entity.accept(new OWLEntityVisitor() {
+                @Override
+                public void visit(OWLClass cls) {
+                    items.add(new OWLClassItem(cls));
+                }
+
+                @Override
+                public void visit(OWLObjectProperty property) {
+                    items.add(new OWLObjectPropertyItem(property));
+                }
+
+                @Override
+                public void visit(OWLDataProperty property) {
+                    items.add(new OWLDataPropertyItem(property));
+                }
+
+                @Override
+                public void visit(OWLNamedIndividual individual) {
+                    items.add(new OWLNamedIndividualItem(individual));
+                }
+
+                @Override
+                public void visit(OWLDatatype datatype) {
+
+                }
+
+                @Override
+                public void visit(OWLAnnotationProperty property) {
+                    items.add(new OWLAnnotationPropertyItem(property));
+                }
+            });
             return this;
         }
 
