@@ -11,4 +11,6 @@ public interface EntityPortlet extends IsWidget, HasDispose, HasViewTitleChanged
     AcceptsOneWidget getContentHolder();
 
     void setToolbarVisible(boolean visible);
+
+    void setTitle(String title);
 }
