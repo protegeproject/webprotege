@@ -551,31 +551,31 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
-//    protected void onSubclassRemoved(final EntityData entity, final Collection<EntityData> subclasses) {
-//        if (subclasses == null || subclasses.size() == 0) {
-//            return;
-//        }
-//
-//        final EntityData subclass = ((List<EntityData>) subclasses).get(0);
-//        final TreeNode parentNode = findTreeNode(entity.getName());
-//
-//        if (parentNode == null) {
-//            return;
-//        }
-//
-//        // final TreeNode subclassNode = findTreeNode(parentNode, subclass.getName(), new ArrayList<TreeNode>());
-//        final TreeNode subclassNode = getDirectChild(parentNode, subclass.getName());
-//        if (subclassNode == null) {
-//            return;
-//        }
-//
-//        //if (subclassNode.getParentNode().equals(parentNode)) {
-//        parentNode.removeChild(subclassNode);
-//        if (parentNode.getChildNodes().length < 1) {
-//            parentNode.setExpandable(false);
-//        }
-//        //}
-//    }
+    protected void onSubclassRemoved(final EntityData entity, final Collection<EntityData> subclasses) {
+        if (subclasses == null || subclasses.size() == 0) {
+            return;
+        }
+
+        final EntityData subclass = ((List<EntityData>) subclasses).get(0);
+        final TreeNode parentNode = findTreeNode(entity.getName());
+
+        if (parentNode == null) {
+            return;
+        }
+
+        // final TreeNode subclassNode = findTreeNode(parentNode, subclass.getName(), new ArrayList<TreeNode>());
+        final TreeNode subclassNode = getDirectChild(parentNode, subclass.getName());
+        if (subclassNode == null) {
+            return;
+        }
+
+        //if (subclassNode.getParentNode().equals(parentNode)) {
+        parentNode.removeChild(subclassNode);
+        if (parentNode.getChildNodes().length < 1) {
+            parentNode.setExpandable(false);
+        }
+        //}
+    }
 
     /**
      * Called to update the browser text in the tree
@@ -1266,6 +1266,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     class DeleteClassHandler extends DispatchServiceCallback<DeleteEntityResult> {
+
+
 
         @Override
         public void handleSuccess(final DeleteEntityResult result) {
