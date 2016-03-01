@@ -98,13 +98,6 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
             }
         });
 
-        addApplicationEventHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
-            @Override
-            public void onPlaceChange(PlaceChangeEvent event) {
-                commitChanges();
-            }
-        });
-
         HandlerRegistration handlerRegistration = selectionModel.addSelectionChangedHandler(new EntitySelectionChangedHandler() {
             @Override
             public void handleSelectionChanged(EntitySelectionChangedEvent event) {
