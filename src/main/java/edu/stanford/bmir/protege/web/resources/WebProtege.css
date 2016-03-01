@@ -7,6 +7,7 @@
 .formMain {
     padding: 20px;
     padding-top: 13px;
+    box-sizing: border-box;
 }
 
 .formMain [disabled] {
