@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.validators;
 
+import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
@@ -16,6 +17,9 @@ public class UserHasProjectCommentPermissionValidator<A extends HasProjectAction
 
     @Override
     public RequestValidationResult validateAction(A action, RequestContext requestContext) {
+        if(requestContext.getUserId().isGuest()) {
+           return RequestValidationResult.getInvalid(new NotSignedInException());
+        }
         return RequestValidationResult.getValid();
     }
 }
