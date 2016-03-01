@@ -1,11 +1,13 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
+import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
 import javax.inject.Inject;
@@ -35,7 +37,7 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
         RequestValidator<A> validator = actionHandler.getRequestValidator(action, requestContext);
         RequestValidationResult validationResult = validator.validateAction(action, requestContext);
         if(!validationResult.isValid()) {
-            throw new PermissionDeniedException(validationResult.getInvalidMessage());
+            throw  getPermissionDeniedException(validationResult);
         }
 
         try {
@@ -45,5 +47,15 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
             logger.log(Level.SEVERE, "An error occurred whilst executing an action", e);
             throw new ActionExecutionException(e);
         }
+    }
+
+    private static PermissionDeniedException getPermissionDeniedException(RequestValidationResult validationResult) {
+        if(validationResult.getInvalidException().isPresent()) {
+            Exception validationException = validationResult.getInvalidException().get();
+            if(validationException instanceof PermissionDeniedException) {
+                return  ((PermissionDeniedException) validationException);
+            }
+        }
+        throw new PermissionDeniedException(validationResult.getInvalidMessage());
     }
 }
