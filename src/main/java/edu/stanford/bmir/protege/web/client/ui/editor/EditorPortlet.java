@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import com.google.common.base.Optional;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -48,6 +49,7 @@ public class EditorPortlet extends AbstractOWLEntityPortlet {
     @Override
     public void handleActivated() {
         editorPresenter.updatePermissionBasedItems();
+        handleAfterSetEntity(getSelectedEntity());
     }
 
     @Override

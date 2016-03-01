@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.common.base.Optional;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.place.shared.PlaceChangeEvent;
@@ -114,6 +115,12 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
             }
         });
         handlerRegistrations.add(handlerRegistration);
+        asWidget().addAttachHandler(new AttachEvent.Handler() {
+            @Override
+            public void onAttachOrDetach(AttachEvent event) {
+                handleActivated();
+            }
+        });
     }
 
     @Override
