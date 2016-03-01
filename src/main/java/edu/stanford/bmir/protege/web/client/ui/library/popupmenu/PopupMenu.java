@@ -63,6 +63,11 @@ public class PopupMenu {
         popupPanel.show();
     }
 
+    public void show(int x, int y) {
+        popupPanel.setPopupPosition(x, y);
+        popupPanel.show();
+    }
+
     public void hide() {
         popupPanel.hide();
     }
