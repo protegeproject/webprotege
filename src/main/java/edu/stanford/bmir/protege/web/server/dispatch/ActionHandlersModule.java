@@ -39,7 +39,6 @@ import edu.stanford.bmir.protege.web.server.perspective.GetPerspectivesActionHan
 import edu.stanford.bmir.protege.web.server.perspective.SetPerspectiveLayoutActionHandler;
 import edu.stanford.bmir.protege.web.server.perspective.SetPerspectivesActionHandler;
 import edu.stanford.bmir.protege.web.server.project.CreateNewProjectActionHandler;
-import edu.stanford.bmir.protege.web.server.project.GetUIConfigurationActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.GetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.projectsettings.SetProjectSettingsActionHandler;
 import edu.stanford.bmir.protege.web.server.render.GetEntityRenderingActionHandler;
@@ -53,7 +52,6 @@ import edu.stanford.bmir.protege.web.server.user.LogOutUserActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.AddWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
-import edu.stanford.bmir.protege.web.server.project.SetUIConfigurationActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.*;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
 
@@ -79,9 +77,6 @@ public class ActionHandlersModule extends AbstractModule {
 
         multibinder.addBinding().to(GetProjectSettingsActionHandler.class);
         multibinder.addBinding().to(SetProjectSettingsActionHandler.class);
-
-        multibinder.addBinding().to(GetUIConfigurationActionHandler.class);
-        multibinder.addBinding().to(SetUIConfigurationActionHandler.class);
 
         multibinder.addBinding().to(GetClassFrameActionHandler.class);
         multibinder.addBinding().to(UpdateClassFrameActionHandler.class);

@@ -5,8 +5,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentFileMatch
 import edu.stanford.bmir.protege.web.server.owlapi.RootOntologyDocumentMatcherImpl;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectory;
 import edu.stanford.bmir.protege.web.server.perspective.DefaultPerspectiveDataDirectoryProvider;
-import edu.stanford.bmir.protege.web.server.project.DefaultUIConfigurationFileManager;
-import edu.stanford.bmir.protege.web.server.project.DefaultUIConfigurationFileManagerImpl;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 
@@ -31,11 +29,6 @@ public class FileSystemConfigurationModule extends AbstractModule {
 
         bind(File.class).annotatedWith(DefaultPerspectiveDataDirectory.class)
                 .toProvider(DefaultPerspectiveDataDirectoryProvider.class);
-
-        bind(File.class).annotatedWith(DefaultUiConfigurationDirectory.class)
-                .toProvider(DefaultUiConfigurationDirectoryProvider.class);
-
-        bind(DefaultUIConfigurationFileManager.class).to(DefaultUIConfigurationFileManagerImpl.class);
 
         bind(RootOntologyDocumentFileMatcher.class)
                 .to(RootOntologyDocumentMatcherImpl.class);
