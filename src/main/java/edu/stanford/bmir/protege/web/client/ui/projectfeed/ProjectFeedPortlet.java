@@ -25,10 +25,4 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
         setTitle("Project feed");
         getContentHolder().setWidget(basePanel);
     }
-
-    @Override
-    protected boolean hasRefreshButton() {
-        return false;
-    }
-
 }

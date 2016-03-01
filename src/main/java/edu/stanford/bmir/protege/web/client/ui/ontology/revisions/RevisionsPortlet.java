@@ -31,8 +31,6 @@ public class RevisionsPortlet extends AbstractOWLEntityPortlet {
         this.eventBus = eventBus;
         this.dispatchServiceManager = dispatchServiceManager;
         this.presenter = new RevisionsListViewPresenter(getProjectId(), eventBus,  new RevisionsListViewImpl(), dispatchServiceManager);
-//        setLayout(new FitLayout());
-        setHeight(INITIAL_HEIGHT);
         presenter.reload();
         getContentHolder().setWidget(presenter.getWidget());
         setTitle("Revisions");
