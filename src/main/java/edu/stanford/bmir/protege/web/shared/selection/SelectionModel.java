@@ -77,6 +77,38 @@ public class SelectionModel {
         if(!itemSelection.equals(selection)) {
             Optional<OWLEntity> previousSelection = extractEntityFromItem(selection);
             selection = itemSelection;
+            itemSelection.visitItems(OWLClassItem.getType(), new Item.Handler<OWLClass>() {
+                @Override
+                public void handleItemObject(Item<OWLClass> object) {
+                    selectedClassManager.setSelection(object.getItem());
+                }
+            });
+            itemSelection.visitItems(OWLObjectPropertyItem.getType(), new Item.Handler<OWLObjectProperty>() {
+                @Override
+                public void handleItemObject(Item<OWLObjectProperty> object) {
+                    selectedObjectPropertyManager.setSelection(object.getItem());
+                }
+            });
+            itemSelection.visitItems(OWLDataPropertyItem.getType(), new Item.Handler<OWLDataProperty>() {
+                @Override
+                public void handleItemObject(Item<OWLDataProperty> object) {
+                    selectedDataPropertyManager.setSelection(object.getItem());
+                }
+            });
+            itemSelection.visitItems(OWLAnnotationPropertyItem.getType(), new Item.Handler<OWLAnnotationProperty>() {
+                @Override
+                public void handleItemObject(Item<OWLAnnotationProperty> object) {
+                    selectedAnnotationPropertyManager.setSelection(object.getItem());
+                }
+            });
+            
+            itemSelection.visitItems(OWLNamedIndividualItem.getType(), new Item.Handler<OWLNamedIndividual>() {
+                @Override
+                public void handleItemObject(Item<OWLNamedIndividual> object) {
+                    selectedIndividualManager.setSelection(object.getItem());
+                }
+            });
+            
             fireEvent(previousSelection);
         }
     }
@@ -133,9 +165,7 @@ public class SelectionModel {
     }
 
     public void setSelection(OWLEntity entity) {
-        GWT.log("[SelectionModel] Set selection to: " + entity);
         Place place = placeController.getWhere();
-        GWT.log("[SelectionModel]     Current place: " + place);
         if(!(place instanceof ProjectViewPlace)) {
             return;
         }
@@ -185,7 +215,6 @@ public class SelectionModel {
                 .clearSelection()
                 .withSelectedItem(item)
                 .build();
-        GWT.log("[SelectionModel]     Redirecting to place: " + nextPlace);
         placeController.goTo(nextPlace);
     }
 
