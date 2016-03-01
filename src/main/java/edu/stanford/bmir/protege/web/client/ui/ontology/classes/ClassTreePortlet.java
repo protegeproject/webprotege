@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -18,10 +20,6 @@ import com.gwtext.client.widgets.*;
 import com.gwtext.client.widgets.form.Field;
 import com.gwtext.client.widgets.form.TextField;
 import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
-import com.gwtext.client.widgets.menu.BaseItem;
-import com.gwtext.client.widgets.menu.Menu;
-import com.gwtext.client.widgets.menu.MenuItem;
-import com.gwtext.client.widgets.menu.event.BaseItemListenerAdapter;
 import com.gwtext.client.widgets.tree.*;
 import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter;
 import com.gwtext.client.widgets.tree.event.MultiSelectionModelListener;
@@ -34,11 +32,13 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceHistoryMapper;
 import edu.stanford.bmir.protege.web.client.rpc.*;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
+import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.DiscussionThreadDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
@@ -135,6 +135,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     @Inject
     public ClassTreePortlet(SelectionModel selectionModel,
+                            WebProtegePlaceHistoryMapper placeHistoryMapper,
                             WatchPresenter watchPresenter,
                             EventBus eventBus,
                             DispatchServiceManager dispatchServiceManager,
@@ -145,7 +146,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         this(selectionModel, watchPresenter, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, null, discussionThreadDialogProvider, permissionChecker);
     }
 
-    private ClassTreePortlet(SelectionModel selectionModel, WatchPresenter watchPresenter, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
+    private ClassTreePortlet(SelectionModel selectionModel,
+                             WatchPresenter watchPresenter, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
@@ -186,31 +188,28 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 @Override
                 public void onContextMenu(final Node node, EventObject e) {
                     treePanel.getSelectionModel().select((TreeNode) node);
-                    Menu contextMenu = new Menu();
-                    contextMenu.setWidth("140px");
-
-                    MenuItem menuShowInternalID = new MenuItem();
-                    menuShowInternalID.setText("Show internal ID");
-                    menuShowInternalID.addListener(new BaseItemListenerAdapter() {
+                    PopupMenu contextMenu = new PopupMenu();
+                    contextMenu.addItem("Show IRI", new ClickHandler() {
                         @Override
-                        public void onClick(BaseItem item, EventObject event) {
-                            super.onClick(item, event);
-                            showInternalID((EntityData) node.getUserObject());
+                        public void onClick(ClickEvent event) {
+                            Optional<OWLEntity> selectedEntity = getSelectedEntity();
+                            if (selectedEntity.isPresent()) {
+                                SafeHtmlBuilder builder = new SafeHtmlBuilder();
+                                builder.appendEscaped(selectedEntity.get().getIRI().toQuotedString());
+                                MessageBox.showMessage("IRI", builder.toSafeHtml().asString());
+                            }
                         }
                     });
-                    contextMenu.addItem(menuShowInternalID);
-
-                    MenuItem menuShowDirectLink = new MenuItem();
-                    menuShowDirectLink.setText("Show direct link");
-                    menuShowDirectLink.addListener(new BaseItemListenerAdapter() {
+                    contextMenu.addItem("Show direct link", new ClickHandler() {
                         @Override
-                        public void onClick(BaseItem item, EventObject event) {
-                            super.onClick(item, event);
+                        public void onClick(ClickEvent event) {
+                            String location = Window.Location.getHref();
+                            SafeHtmlBuilder builder = new SafeHtmlBuilder();
+                            builder.appendEscaped(location);
+                            MessageBox.showMessage("Direct link", builder.toSafeHtml().asString());
                         }
                     });
-                    contextMenu.addItem(menuShowDirectLink);
-
-                    contextMenu.showAt(e.getXY()[0] + 5, e.getXY()[1] + 5);
+                    contextMenu.show(e.getXY()[0], e.getXY()[1] + 5);
                 }
             };
         }
@@ -392,11 +391,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 updateTreeNodeRendering(tn);
             }
         }
-    }
-
-    private void showInternalID(EntityData entity) {
-        String className = entity.getName();
-        MessageBox.showMessage(entity.getBrowserText() + " Internal Id", className);
     }
 
     private TreePanel createTreePanel() {
