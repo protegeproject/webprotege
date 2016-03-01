@@ -56,7 +56,6 @@ public class OntologyAnnotationsPortlet extends AbstractOWLEntityPortlet {
                 handleOntologyAnnotationsChanged();
             }
         });
-        setHeight(DEFAULT_HEIGHT);
         addProjectEventHandler(OntologyFrameChangedEvent.TYPE, new OntologyFrameChangedEventHandler() {
             @Override
             public void ontologyFrameChanged(OntologyFrameChangedEvent event) {

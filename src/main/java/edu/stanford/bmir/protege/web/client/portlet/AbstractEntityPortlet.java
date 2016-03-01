@@ -158,20 +158,10 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
 
     }
 
-    protected boolean hasRefreshButton() {
-        return true;
-    }
-
     protected void onRefresh() {
     }
 
     public void commitChanges() {
-    }
-
-    protected void onClose() {
-        commitChanges();
-//        this.hide();
-//        this.destroy();
     }
 
     protected void onLogin(UserId userId) {
@@ -182,19 +172,6 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
 
     public void onPermissionsChanged() {
     }
-
-//    /**
-//     * Does not do anything to the UI, only stores the new configuration in this
-//     * portlet
-//     * @param portletConfiguration
-//     */
-//    public void setPortletConfiguration(PortletConfiguration portletConfiguration) {
-//        this.portletConfiguration = portletConfiguration;
-//    }
-//
-//    public PortletConfiguration getPortletConfiguration() {
-//        return portletConfiguration;
-//    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -248,32 +225,6 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
     public void dispose() {
         removeHandlers();
 
-    }
-
-
-    private int assignedHeight = 0;
-
-    @Override
-    public void setHeight(int height) {
-//        super.setHeight(height);
-        this.assignedHeight = height;
-    }
-
-    /**
-     * If the portlet hasn't been rendered then the call to super.getHeight can return funny values.  Just return
-     * the assigned height.
-     * @return The height
-     */
-    @Override
-    public int getHeight() {
-        return assignedHeight;
-//        int height = super.getHeight();
-//        if(height <= 0) {
-//            return assignedHeight;
-//        }
-//        else {
-//            return height;
-//        }
     }
 
     private String title = "";

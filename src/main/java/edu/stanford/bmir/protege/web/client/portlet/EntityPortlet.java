@@ -8,10 +8,6 @@ import edu.stanford.protege.widgetmap.client.view.HasViewTitleChangedHandlers;
 
 public interface EntityPortlet extends IsWidget, HasDispose, HasViewTitleChangedHandlers, HasViewTitle, HasPortletActions {
 
-    void setHeight(int height);
-
-    int getHeight();
-
     AcceptsOneWidget getContentHolder();
 
     void setToolbarVisible(boolean visible);
