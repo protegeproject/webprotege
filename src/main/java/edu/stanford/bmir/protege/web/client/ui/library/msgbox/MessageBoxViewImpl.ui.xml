@@ -6,7 +6,9 @@
     <ui:style>
         .main-panel-style {
             width: 450px;
+            max-width: 450px;
             box-sizing: border-box;
+            overflow: hidden;
         }
         .main-panel-style * p {
             padding-bottom: 10px;
@@ -20,10 +22,12 @@
             font-weight: bold;
             font-size: 14px;
             padding-bottom: 5px;
+            word-break: break-all;
         }
         .sub-message-style {
             font-size: 12px;
             padding-top: 5px;
+            word-break: break-all;
         }
     </ui:style>
 
