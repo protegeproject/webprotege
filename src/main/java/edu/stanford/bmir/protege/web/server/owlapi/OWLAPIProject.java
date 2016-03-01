@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.owlapi.change.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
-import edu.stanford.bmir.protege.web.server.project.UIConfigurationManager;
 import edu.stanford.bmir.protege.web.server.shortform.*;
 import edu.stanford.bmir.protege.web.server.metrics.DefaultMetricsCalculators;
 import edu.stanford.bmir.protege.web.server.render.DeprecatedEntityCheckerImpl;
@@ -126,8 +125,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     private final Provider<EventTranslatorManager> eventTranslatorManagerProvider;
 
-    private final UIConfigurationManager uiConfigurationManager;
-
     private final Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider;
 
 
@@ -140,7 +137,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     private final Lock changeProcesssingLock = new ReentrantLock();
 
     @Inject
-    public OWLAPIProject(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, ProjectAccessManager projectAccessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, UIConfigurationManager uiConfigurationManager, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider) {
+    public OWLAPIProject(OWLAPIProjectDocumentStore documentStore, ProjectId projectId, OWLDataFactory dataFactory, ProjectAccessManager projectAccessManager, RenderingManager renderingManager, EventManager<ProjectEvent<?>> projectEventManager, @RootOntology OWLOntology ontology, AssertedClassHierarchyProvider classHierarchyProvider, OWLObjectPropertyHierarchyProvider objectPropertyHierarchyProvider, OWLDataPropertyHierarchyProvider dataPropertyHierarchyProvider, OWLAnnotationPropertyHierarchyProvider annotationPropertyHierarchyProvider, OWLAPISearchManager searchManager, OWLAPINotesManager notesManager, RevisionManager changeManager, ProjectChangesManager projectChangesManager, WatchedChangesManager watchedChangesManager, OWLAPIProjectMetricsManager metricsManager, WatchManager watchManager, ProjectEntityCrudKitHandlerCache entityCrudKitHandlerCache, ProjectEntityCrudKitSettingsRepository entityCrudKitSettingsRepository, Provider<EventTranslatorManager> eventTranslatorManagerProvider, Provider<ManchesterSyntaxFrameParser> manchesterSyntaxFrameParserProvider) {
         this.documentStore = documentStore;
         this.projectId = projectId;
         this.dataFactory = dataFactory;
@@ -162,7 +159,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
         this.entityCrudKitHandlerCache = entityCrudKitHandlerCache;
         this.entityCrudKitSettingsRepository = entityCrudKitSettingsRepository;
         this.eventTranslatorManagerProvider = eventTranslatorManagerProvider;
-        this.uiConfigurationManager = uiConfigurationManager;
         this.manchesterSyntaxFrameParserProvider = manchesterSyntaxFrameParserProvider;
     }
 
@@ -198,10 +194,6 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
     @Override
     public Optional<RevisionSummary> getRevisionSummary(RevisionNumber revisionNumber) {
         return changeManager.getRevisionSummary(revisionNumber);
-    }
-
-    public UIConfigurationManager getUiConfigurationManager() {
-        return uiConfigurationManager;
     }
 
     public EventManager<ProjectEvent<?>> getEventManager() {
