@@ -18,6 +18,8 @@ import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
+import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandler;
+import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandlerImpl;
 import edu.stanford.bmir.protege.web.client.help.*;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
@@ -130,8 +132,8 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(SignInRequestHandler.class).to(SignInRequestHandlerImpl.class);
         bind(SignOutRequestHandler.class).to(SignOutRequestHandlerImpl.class);
         bind(SignUpForAccountHandler.class).to(SignUpForAccountHandlerImpl.class);
-
         bind(SignUpView.class).to(SignUpViewImpl.class);
+        bind(SignInRequiredHandler.class).to(SignInRequiredHandlerImpl.class);
 
         bind(ChangeEmailAddressHandler.class).to(ChangeEmailAddressHandlerImpl.class);
         bind(ShowUserGuideHandler.class).to(ShowUserGuideHandlerImpl.class);

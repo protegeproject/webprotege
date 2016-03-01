@@ -59,6 +59,10 @@ public class RequestValidationResult {
         return new RequestValidationResult(message);
     }
 
+    public Optional<Exception> getInvalidException() {
+        return exception;
+    }
+
     public String getInvalidMessage() {
         if(exception.isPresent()) {
             String message = exception.get().getMessage();
