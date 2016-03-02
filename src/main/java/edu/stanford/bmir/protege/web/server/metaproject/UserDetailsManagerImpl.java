@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -35,14 +36,10 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
 
     @Override
     public Collection<UserId> getUserIds() {
-        List<UserId> userIds = new ArrayList<>();
-        for(User user : getMetaProject().getUsers()) {
-            String userName = user.getName();
-            if(userName != null) {
-                userIds.add(UserId.getUserId(userName));
-            }
-        }
-        return userIds;
+        return getMetaProject().getUsers().stream()
+                .filter(u -> u.getName() != null)
+                .map(u -> UserId.getUserId(u.getName()))
+                .collect(toList());
     }
 
     @Override

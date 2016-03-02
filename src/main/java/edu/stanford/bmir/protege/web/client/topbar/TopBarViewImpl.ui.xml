@@ -16,6 +16,7 @@
             <g:SimplePanel ui:field="homeContainer"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.rightPanel}">
+            <g:SimplePanel ui:field="sharingSettingsContainer" addStyleNames="{style.inline}"/>
             <g:SimplePanel ui:field="loggedInUserContainer" addStyleNames="{style.inline}"/>
             <g:SimplePanel ui:field="helpContainer" addStyleNames="{style.inline}"/>
         </g:HTMLPanel>

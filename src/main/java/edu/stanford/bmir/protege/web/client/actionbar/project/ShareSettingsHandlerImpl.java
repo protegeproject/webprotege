@@ -1,15 +1,11 @@
 package edu.stanford.bmir.protege.web.client.actionbar.project;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.inject.Inject;
-import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
-import edu.stanford.bmir.protege.web.client.ui.ontology.sharing.SharingSettingsDialogController;
+import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsDialogController;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Provider;
