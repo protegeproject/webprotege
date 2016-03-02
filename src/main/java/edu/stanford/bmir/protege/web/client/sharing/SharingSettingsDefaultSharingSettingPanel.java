@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
+package edu.stanford.bmir.protege.web.client.sharing;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;

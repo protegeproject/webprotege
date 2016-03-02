@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
+package edu.stanford.bmir.protege.web.client.sharing;
 
 import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
 import edu.stanford.bmir.protege.web.client.ui.library.dropdown.DropDown;

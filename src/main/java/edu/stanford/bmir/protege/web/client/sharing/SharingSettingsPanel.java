@@ -1,20 +1,16 @@
-package edu.stanford.bmir.protege.web.client.ui.ontology.sharing;
+package edu.stanford.bmir.protege.web.client.sharing;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.itemlist.ItemListSuggestBox;
-import edu.stanford.bmir.protege.web.client.itemlist.ItemListSuggestOracle;
 import edu.stanford.bmir.protege.web.client.itemlist.PersonIdItemListSuggestionOracle;
-import edu.stanford.bmir.protege.web.client.itemlist.ValueBoxCursorPositionProvider;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.itemlist.*;
 import edu.stanford.bmir.protege.web.shared.sharing.*;

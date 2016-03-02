@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdCompletionsResul
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.apache.commons.lang.StringUtils;
 
 import javax.inject.Inject;
 
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -47,14 +49,12 @@ public class GetPersonIdCompletionsActionHandler implements ActionHandler<GetPer
 
     @Override
     public GetPersonIdCompletionsResult execute(GetPersonIdCompletionsAction action, ExecutionContext executionContext) {
-        List<PersonId> personIdList = new ArrayList<>();
-        for(UserId userId : userDetailsManager.getUserIds()) {
-            String lowerCaseCompletionString = action.getCompletionText().toLowerCase();
-            if(userId.getUserName().toLowerCase().contains(lowerCaseCompletionString)) {
-                personIdList.add(new PersonId(userId.getUserName()));
-            }
-        }
-        Collections.sort(personIdList);
-        return new GetPersonIdCompletionsResult(personIdList);
+        List<PersonId> matches = userDetailsManager.getUserIds().stream()
+                .filter(u -> StringUtils.containsIgnoreCase(u.getUserName(), action.getCompletionText()))
+                .sorted()
+                .limit(7)
+                .map(u -> new PersonId(u.getUserName()))
+                .collect(toList());
+        return new GetPersonIdCompletionsResult(matches);
     }
 }

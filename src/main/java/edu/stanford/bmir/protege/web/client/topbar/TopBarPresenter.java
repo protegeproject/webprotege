@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.topbar;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.sharing.*;
 import edu.stanford.bmir.protege.web.client.help.HelpPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
@@ -19,15 +20,19 @@ public class TopBarPresenter implements HasDispose {
 
     private final LoggedInUserPresenter loggedInUserPresenter;
 
+    private final SharingSettingsPresenter sharingSettingsPresenter;
+
     private final HelpPresenter helpPresenter;
 
     @Inject
     public TopBarPresenter(TopBarView view,
                            GoToHomePresenter goToHomePresenter,
+                           SharingSettingsPresenter sharingSettingsPresenter,
                            LoggedInUserPresenter loggedInUserPresenter,
                            HelpPresenter helpPresenter) {
         this.view = view;
         this.goToHomePresenter = goToHomePresenter;
+        this.sharingSettingsPresenter = sharingSettingsPresenter;
         this.loggedInUserPresenter = loggedInUserPresenter;
         this.helpPresenter = helpPresenter;
     }
@@ -37,6 +42,8 @@ public class TopBarPresenter implements HasDispose {
         goToHomePresenter.start(view.getGoToHomeWidgetContainer());
         loggedInUserPresenter.start(view.getLoggedInUserWidgetContainer());
         helpPresenter.start(view.getHelpWidgetContainer());
+        sharingSettingsPresenter.start(view.getSharingSettingsContainer());
+
     }
 
     @Override
