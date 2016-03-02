@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .main {
             position: absolute;
@@ -33,10 +34,11 @@
             position: absolute;
             right: 0;
             top: 0;
+            margin-right: 5px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:TabBar ui:field="tabBar" addStyleNames="{style.linkTabBar}"/>
-        <g:Button ui:field="newTabButton" text="Add new tab" addStyleNames="{style.newTabButton}"/>
+        <g:Button ui:field="newTabButton" text="Add new tab" addStyleNames="{style.newTabButton} {wp.buttons.btn} {wp.buttons.topBarButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

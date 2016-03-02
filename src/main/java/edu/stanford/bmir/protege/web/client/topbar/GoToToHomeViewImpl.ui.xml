@@ -10,6 +10,6 @@
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <g:Button ui:field="goToHomeButton" addStyleNames="{wp.buttons.toolbarButton} {style.main}" text="Home"/>
+        <g:Button ui:field="goToHomeButton" addStyleNames="{wp.buttons.btn} {wp.buttons.topBarButton} {style.main}" text="Home"/>
     </g:HTMLPanel>
 </ui:UiBinder>
