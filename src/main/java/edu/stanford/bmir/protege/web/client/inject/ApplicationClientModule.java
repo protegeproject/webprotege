@@ -35,16 +35,9 @@ import edu.stanford.bmir.protege.web.client.perspective.*;
 import edu.stanford.bmir.protege.web.client.place.*;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserView;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserViewImpl;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
+import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManagerImpl;
-import edu.stanford.bmir.protege.web.client.project.Project;
-import edu.stanford.bmir.protege.web.client.project.ProjectManager;
-import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
-import edu.stanford.bmir.protege.web.client.project.ProjectPresenterFactory;
-import edu.stanford.bmir.protege.web.client.project.ProjectView;
-import edu.stanford.bmir.protege.web.client.project.ProjectViewImpl;
 import edu.stanford.bmir.protege.web.client.signup.SignUpView;
 import edu.stanford.bmir.protege.web.client.signup.SignUpViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
@@ -210,6 +203,8 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(PortletChooserView.class).to(PortletChooserViewImpl.class);
 
         bind(WatchTypeSelectorView.class).to(WatchTypeSelectorViewImpl.class);
+
+        bind(ProjectMenuView.class).to(ProjectMenuViewImpl.class);
 
     }
 
