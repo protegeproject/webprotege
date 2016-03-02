@@ -2,6 +2,11 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
 
     <ui:style>
+        .main {
+            padding-top: 1px;
+            background: #f0f0f0;
+            height: 24px;
+        }
         .rightPanel {
             float: right;
         }
@@ -11,7 +16,7 @@
         }
     </ui:style>
 
-    <g:HTMLPanel>
+    <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.inline}">
             <g:SimplePanel ui:field="homeContainer"/>
         </g:HTMLPanel>

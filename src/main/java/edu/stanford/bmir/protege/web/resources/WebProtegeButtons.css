@@ -75,8 +75,11 @@
 
 /* Begin Button Sizes */
 .btn-small {
-    height: 36px;
-    line-height: 36px;
+    height: 22px;
+    line-height: 22px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
 }
 
 .btn-med {
@@ -160,4 +163,16 @@
     width: 20px;
     height: 20px;
     border: solid 2px #686868;
+}
+
+.topBarButton {
+    height: 22px;
+    line-height: 22px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    text-transform: none;
+    letter-spacing: normal;
+    background: none;
+    color: #505050;
 }

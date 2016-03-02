@@ -6,10 +6,14 @@
     margin-left: 2px;
     margin-right: 2px;
     border-radius: 3px;
+    box-sizing: border-box;
+    min-width: 150px;
+    outline: thick;
 }
 
 .popup-menu-inner {
     background: #ffffff;
+    box-sizing: border-box;
 }
 
 .popup-menu-item {
@@ -21,9 +25,15 @@
     vertical-align: middle;
     line-height: 20px;
     border-radius: 3px;
+    box-sizing: border-box;
 }
 
 .popup-menu-item:hover {
     background: dodgerblue;
     color: #ffffff;
+}
+
+.separator {
+    width: 100%;
+    border-bottom: 1px solid #e9e9e9;
 }

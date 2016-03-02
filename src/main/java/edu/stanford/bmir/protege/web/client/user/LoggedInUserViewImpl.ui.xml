@@ -2,6 +2,6 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <g:HTMLPanel>
-        <g:Button ui:field="loggedInUserButton" addStyleNames="{wp.buttons.toolbarButton}"/>
+        <g:Button ui:field="loggedInUserButton" addStyleNames="{wp.buttons.btn} {wp.buttons.topBarButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

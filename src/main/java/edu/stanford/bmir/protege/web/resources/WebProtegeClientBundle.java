@@ -252,6 +252,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String toolbarButton();
 
         String circularButton();
+
+        String topBarButton();
     }
 
     public static interface WebProtegeDialog extends CssResource {
@@ -282,5 +284,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         @ClassName("popup-menu")
         String popupMenu();
+
+        String separator();
     }
 }

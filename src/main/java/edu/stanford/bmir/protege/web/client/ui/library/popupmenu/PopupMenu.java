@@ -4,10 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
@@ -57,6 +55,12 @@ public class PopupMenu {
                 popupMenuItem.handleClicked(event);
             }
         });
+    }
+
+    public void addSeparator() {
+        SimplePanel sep = new SimplePanel();
+        sep.addStyleName(WebProtegeClientBundle.BUNDLE.menu().separator());
+        holder.add(sep);
     }
 
     public void show() {

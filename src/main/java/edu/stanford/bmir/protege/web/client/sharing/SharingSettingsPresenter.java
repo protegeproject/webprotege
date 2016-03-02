@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 
 import javax.inject.Inject;
@@ -24,6 +25,8 @@ public class SharingSettingsPresenter {
     public SharingSettingsPresenter(SharingSettingsDialogController controller) {
         this.controller = controller;
         view = new Button("Share");
+        view.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().btn());
+        view.addStyleName(WebProtegeClientBundle.BUNDLE.buttons().topBarButton());
         view.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
