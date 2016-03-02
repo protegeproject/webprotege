@@ -29,6 +29,9 @@ public class TopBarViewImpl extends Composite implements TopBarView {
     protected AcceptsOneWidget homeContainer;
 
     @UiField
+    protected AcceptsOneWidget projectMenuContainer;
+
+    @UiField
     protected AcceptsOneWidget sharingSettingsContainer;
 
     @UiField
@@ -55,6 +58,10 @@ public class TopBarViewImpl extends Composite implements TopBarView {
     @Override
     public void addToRight(IsWidget widget) {
 
+    }
+
+    public AcceptsOneWidget getProjectMenuContainer() {
+        return projectMenuContainer;
     }
 
     @Override

@@ -18,6 +18,8 @@ public interface TopBarView extends IsWidget {
 
     void addToRight(IsWidget widget);
 
+    AcceptsOneWidget getProjectMenuContainer();
+
     AcceptsOneWidget getSharingSettingsContainer();
 
     AcceptsOneWidget getLoggedInUserWidgetContainer();

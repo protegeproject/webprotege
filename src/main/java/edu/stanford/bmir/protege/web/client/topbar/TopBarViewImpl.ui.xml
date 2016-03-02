@@ -27,6 +27,7 @@
         <g:HTMLPanel addStyleNames="{style.inline}">
             <g:Image resource="{wp.protegeBlender}" addStyleNames="{style.logo} {style.inline}"/>
             <g:SimplePanel ui:field="homeContainer" addStyleNames="{style.inline}"/>
+            <g:SimplePanel ui:field="projectMenuContainer" addStyleNames="{style.inline}"/>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.rightPanel}">
             <g:SimplePanel ui:field="sharingSettingsContainer" addStyleNames="{style.inline}"/>
