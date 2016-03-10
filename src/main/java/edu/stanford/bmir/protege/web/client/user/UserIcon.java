@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.shared.auth.Md5DigestAlgorithmProvider;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.bmir.protege.web.shared.user.UserIdInitialsExtractor;
 
 import java.math.BigInteger;
 
@@ -18,7 +19,7 @@ public class UserIcon {
     }
 
     public static IsWidget get(UserId userId) {
-        String text = getText(userId);
+        String text = UserIdInitialsExtractor.getInitials(userId);
         String color = getColor(userId);
         UserIconView icon = new UserIconView();
         icon.setText(text);
@@ -26,33 +27,7 @@ public class UserIcon {
         return icon;
     }
 
-    private static String getText(UserId userId) {
-        String result;
-        String [] initials = userId.getUserName().split("\\s|\\.");
-        if(initials.length == 1) {
-            result = getCharacter(initials[0]);
-        }
-        else {
-            result = getCharacter(initials[0]) + getCharacter(initials[initials.length - 1]);
-        }
-        return result.toUpperCase();
-    }
 
-    private static String getCharacter(String s) {
-        for(int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
-            if(Character.isLetter(ch)) {
-                return String.valueOf(ch);
-            }
-        }
-        for(int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
-            if(Character.isDigit(ch)) {
-                return String.valueOf(ch);
-            }
-        }
-        return s.substring(0, 1);
-    }
 
     private static String getColor(UserId userId) {
         float hue = getHue(userId.getUserName());
