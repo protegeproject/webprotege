@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public class DiscussionThreadViewImpl extends Composite implements DiscussionThreadView {
 
-    private static final int REPLY_INDENT_PX = 10;
+    private static final int REPLY_INDENT_PX = 30;
 
     interface DiscussionThreadViewImplUiBinder extends UiBinder<HTMLPanel, DiscussionThreadViewImpl> {
 
