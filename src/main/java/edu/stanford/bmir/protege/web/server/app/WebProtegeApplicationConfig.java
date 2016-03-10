@@ -85,6 +85,10 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
         converters.add(new UserIdWriteConverter());
         converters.add(new EmailAddressReadConverter());
         converters.add(new EmailAddressWriteConverter());
+        converters.add(new SaltReadConverter());
+        converters.add(new SaltWriteConverter());
+        converters.add(new SaltedPasswordDigestReadConverter());
+        converters.add(new SaltedPasswordDigestWriteConverter());
 
         mappingMongoConverter.setCustomConversions(new CustomConversions(converters));
         return mappingMongoConverter;
