@@ -12,8 +12,8 @@
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="web-protege-laf">
-        <text:PlaceholderTextBox ui:field="topicField" width="60em" addStyleNames="{style.topic-field}" placeholder="Topic"/>
+        <text:PlaceholderTextBox ui:field="topicField" tabIndex="1" width="60em" addStyleNames="{style.topic-field}" placeholder="Topic"/>
         <richtext:RichTextToolbarImpl ui:field="toolbar" styleName="{style.bar-padding}"/>
-        <richtext:RichTextEditorViewImpl ui:field="bodyArea" width="60em"/>
+        <richtext:RichTextEditorViewImpl ui:field="bodyArea" tabIndex="2" width="60em"/>
     </g:HTMLPanel>
 </ui:UiBinder>
