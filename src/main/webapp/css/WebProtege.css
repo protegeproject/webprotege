@@ -618,7 +618,6 @@ ul.x-menu-list
     border: 1px solid rgb(198, 198, 198);
     font-size: 12px;
     padding: 2px;
-    /*box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;*/
     line-height: 15px;
     color: #000000;
 }
@@ -627,7 +626,6 @@ ul.x-menu-list
     border: 1px solid #F0F0F0;
     font-size: 12px;
     padding: 2px;
-    /*box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;*/
     line-height: 15px;
 }
 
@@ -691,7 +689,6 @@ ul.x-menu-list
     border: 1px solid rgb(198, 198, 198);
     font-size: 12px;
     padding: 2px;
-    /*box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;*/
     line-height: 16px;
     color: #000000;
     background: #ffffff;
@@ -829,14 +826,15 @@ ul.x-menu-list
 }
 
 *.web-protege-laf * .gwt-RichTextArea, .gwt-RichTextArea-readonly {
-    border: 1px solid silver;
+    border: 1px solid #f0f0f0;
     font-size: 12px;
     padding: 2px;
-    box-shadow: 0 0 3px 1px rgba(240, 240, 240, 1.0) inset;
     line-height: 15px;
     color: #000000;
     margin: 0;
 }
+
+
 
 select {
     border: 1px solid silver;
