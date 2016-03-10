@@ -24,17 +24,23 @@ public class UserIdInitialsExtractor {
 
     private static String getCleanUserName(UserId userId) {
         String withoutQuotes = userId.getUserName().replaceAll("\"", "");
-        String userName = getConvertedUserName(withoutQuotes);
+        String withoutAtSymbol = extractFromAtSymbol(withoutQuotes);
+        return getConvertedUserName(withoutAtSymbol);
+    }
+
+    private static String extractFromAtSymbol(String userName) {
         int atIndex = userName.indexOf('@');
-        if(atIndex == -1) {
-            return userName;
-        }
         // Check it's not like a twitter @matthew type thing
+        if(atIndex == 0) {
+            return userName.substring(1);
+        }
+        // Email address
         if(atIndex > 0) {
             return userName.substring(0, atIndex);
         }
         return userName;
     }
+
 
     private static String getConvertedUserName(String userName) {
         String convertedName = CaseFormat.UPPER_CAMEL.converterTo(CaseFormat.LOWER_UNDERSCORE).convert(userName);
