@@ -253,3 +253,8 @@
 .inTrash {
     color: #c0c0c0;
 }
+
+.userName {
+    font-weight: 300;
+    color: #989898;
+}

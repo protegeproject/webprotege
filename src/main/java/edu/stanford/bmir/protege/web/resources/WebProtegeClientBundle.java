@@ -206,6 +206,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String portletToolbar();
 
         String inTrash();
+
+        String userName();
     }
 
     public static interface WebProtegeButtons extends CssResource {
