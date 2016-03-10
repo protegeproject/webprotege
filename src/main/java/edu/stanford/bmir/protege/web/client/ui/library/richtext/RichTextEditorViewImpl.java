@@ -66,9 +66,17 @@ public class RichTextEditorViewImpl extends Composite implements RichTextEditorV
                     Document document = iFrameElement.getContentDocument();
                     BodyElement body = document.getBody();
                     HeadElement head = HeadElement.as(Element.as(body.getPreviousSibling()));
-                    StyleElement style = document.createStyleElement();
-                    style.setInnerText("body{ font-size: 12px; font-family: Helvetica Neue, Helvetica, Arial, sans-serif;} ul {margin-left: 20px; margin-top: 0; margin-bottom: 0; list-style: disc, inside;} ol {margin-left: 20px; margin-top: 0; margin-bottom: 0; list-style: decimal, inside;}");
-                    head.appendChild(style);
+                    StyleElement editorStyle = document.createStyleElement();
+                    Style outerStyle = RichTextEditorViewImpl.this.getElement().getStyle();
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("body {");
+                    sb.append("font-size: 12px;");
+                    sb.append("font-family: Helvetica Neue, Helvetica, Arial, sans-serif;");
+                    sb.append("font-weight: 300;");
+                    sb.append("}");
+                    sb.append("ul {margin-left: 20px; margin-top: 0; margin-bottom: 0; list-style: disc, inside;} ol {margin-left: 20px; margin-top: 0; margin-bottom: 0; list-style: decimal, inside;}");
+                    editorStyle.setInnerText(sb.toString());
+                    head.appendChild(editorStyle);
                 }
                 catch (Exception e) {
                     GWT.log("Problem setting up rich text area", e);
