@@ -57,7 +57,7 @@ public class UserIdInitialsExtractor_TestCase {
 
     @Test
     public void shouldExtractTwitterName() {
-        extractInitials("@First", "F");
+        extractInitials("@FirstLast", "FL");
     }
 
     @Test
@@ -99,7 +99,6 @@ public class UserIdInitialsExtractor_TestCase {
         when(userId.getUserName()).thenReturn(name);
         String initials = UserIdInitialsExtractor.getInitials(userId);
         assertThat(initials, is(expectedInitials));
-        System.out.println(name + " ---> " + initials);
     }
 
 }

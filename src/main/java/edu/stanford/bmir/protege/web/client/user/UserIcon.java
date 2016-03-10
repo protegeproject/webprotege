@@ -31,7 +31,7 @@ public class UserIcon {
 
     private static String getColor(UserId userId) {
         float hue = getHue(userId.getUserName());
-        float sat = 0.4f;
+        float sat = 0.5f;
         float brt = 0.9f;
         return hsvToRgb(hue, sat, brt);
     }
