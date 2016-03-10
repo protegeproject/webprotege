@@ -16,7 +16,7 @@
             font-size: 12px;
             color: darkgray;
             padding-bottom: 2px;
-            padding-left: 20px;
+            padding-left: 24px;
         }
 
         .revisionField {
@@ -76,33 +76,48 @@
         .timestampField {
             display: inline;
         }
+
         .tooManyChangesMessage {
             font-size: 12px;
             color: darkgray;
-            background-color : rgb(255, 250, 230);
+            background-color: rgb(255, 250, 230);
             padding: 4px;
+        }
+
+        .userIcon {
+            display: inline-block;
+            padding-right: 2px;
+            padding-left: 2px;
         }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <div>
+        <div style="display: inline-block;">
             <div>
                 <g:InlineLabel ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
                 <g:InlineLabel ui:field="revisionField" addStyleNames="{style.revisionField}"/>
             </div>
+            <div class="{style.author}">
+                <g:SimplePanel ui:field="authorUserIcon" addStyleNames="{style.userIcon}"/>
+                <g:InlineLabel ui:field="authorField"/>
+                authored
+                <g:InlineLabel ui:field="changeCountField"/>
+                changes
+                <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
+                <g:Button ui:field="revertButton" title="Revert changes in this revision"
+                          addStyleNames="{style.revertButton}">
+                    <span class="glyphicon glyphicon-backward"/>
+                </g:Button>
+            </div>
+            <div class="{style.subjectsField}">
+                <g:InlineHTML ui:field="subjectsField"/>
+            </div>
 
-        </div>
-        <div class="{style.author}">
-            <g:InlineLabel ui:field="authorField"/> authored <g:InlineLabel ui:field="changeCountField"/> changes <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
-            <g:Button ui:field="revertButton" title="Revert changes in this revision" addStyleNames="{style.revertButton}">
-                <span class="glyphicon glyphicon-backward"/>
-            </g:Button>
-        </div>
-        <div class="{style.subjectsField}">
-            <g:InlineHTML ui:field="subjectsField"/>
+            <diff:DiffViewImpl ui:field="diffView" addStyleNames="{style.diffView}"/>
+            <g:Label
+                    text="There are too many changes to show here.  If you would like to view them, please download this revision."
+                    ui:field="tooManyChangesMessage" addStyleNames="{style.tooManyChangesMessage}"/>
         </div>
 
-        <diff:DiffViewImpl ui:field="diffView" addStyleNames="{style.diffView}"/>
-        <g:Label text="There are too many changes to show here.  If you would like to view them, please download this revision." ui:field="tooManyChangesMessage" addStyleNames="{style.tooManyChangesMessage}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

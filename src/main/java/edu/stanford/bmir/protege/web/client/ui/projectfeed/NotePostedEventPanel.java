@@ -5,13 +5,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.library.entitylabel.EntityLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
+import edu.stanford.bmir.protege.web.client.user.UserIcon;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
@@ -32,6 +30,8 @@ public class NotePostedEventPanel extends Composite implements ProjectFeedItemDi
 
     private static NotePostedEventPanelUiBinder ourUiBinder = GWT.create(NotePostedEventPanelUiBinder.class);
 
+    @UiField
+    protected SimplePanel userIconHolder;
 
     @UiField
     protected InlineLabel userNameLabel;
@@ -45,13 +45,10 @@ public class NotePostedEventPanel extends Composite implements ProjectFeedItemDi
     @UiField
     protected HTML bodyLabel;
 
-    private SelectionModel selectionModel;
-
     @Inject
     public NotePostedEventPanel(SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
-        this.selectionModel = selectionModel;
         entityLabel.setSelectionModel(selectionModel);
     }
 
@@ -59,6 +56,7 @@ public class NotePostedEventPanel extends Composite implements ProjectFeedItemDi
     public void setValue(NotePostedEvent event) {
         final NoteHeader noteHeader = event.getNoteDetails().getNoteHeader();
         userNameLabel.setText(noteHeader.getAuthor().getUserName());
+        userIconHolder.setWidget(UserIcon.get(noteHeader.getAuthor()));
         final Optional<OWLEntityData> targetAsEntityData = event.getTargetAsEntityData();
         if(targetAsEntityData.isPresent()) {
             entityLabel.setEntity(targetAsEntityData.get());

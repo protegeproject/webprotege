@@ -8,12 +8,11 @@
             border-bottom: solid 1px #f1f1f1;
         }
 
-        .user-name {
-            font-weight: bold;
-            color: #648dbe;
-        }
         .time {
             color: #757575;
+        }
+        .icon {
+            padding-right: 2px;
         }
     </ui:style>
 
@@ -21,13 +20,14 @@
         <table>
             <tr>
                 <td valign="top">
-                    <g:Image resource="{wp.editIcon}"/>
+                    <g:SimplePanel ui:field="userIconHolder" addStyleNames="{style.icon}"/>
+                    <!--<g:Image resource="{wp.editIcon}"/>-->
                 </td>
                 <td valign="top">
                     <div>
                         <div>
                             <div>
-                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{style.user-name}"/>
+                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{wp.style.userName}"/>
                                 <g:InlineLabel ui:field="descriptionField"/>
                             </div>
 

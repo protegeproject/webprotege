@@ -3,14 +3,13 @@ package edu.stanford.bmir.protege.web.client.ui.projectfeed;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.ui.library.entitylabel.EntityLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
+import edu.stanford.bmir.protege.web.client.user.UserIcon;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.Set;
 
@@ -22,6 +21,8 @@ import java.util.Set;
  */
 public class ProjectChangeEventPanel extends Composite implements ProjectFeedItemDisplay {
 
+    @UiField
+    protected SimplePanel userIconHolder;
 
     @UiField
     protected InlineLabel userNameLabel;
@@ -51,6 +52,7 @@ public class ProjectChangeEventPanel extends Composite implements ProjectFeedIte
     }
 
     public void setUserName(String userName) {
+        userIconHolder.setWidget(UserIcon.get(UserId.getUserId(userName)));
         userNameLabel.setText(userName);
     }
 
