@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.client.diff.DiffLineElementRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffSourceDocumentRenderer;
 import edu.stanford.bmir.protege.web.client.diff.DiffView;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
+import edu.stanford.bmir.protege.web.client.user.UserIcon;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -41,6 +42,9 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
         revisionField.setVisible(false);
         tooManyChangesMessage.setVisible(true);
     }
+
+    @UiField
+    protected SimplePanel authorUserIcon;
 
     @UiField
     protected HTML subjectsField;
@@ -104,6 +108,7 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
 
     @Override
     public void setAuthor(UserId author) {
+        authorUserIcon.setWidget(UserIcon.get(author));
         authorField.setText(checkNotNull(author).getUserName());
     }
 

@@ -7,13 +7,11 @@ import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
-import com.google.inject.Provides;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
+import edu.stanford.bmir.protege.web.client.user.UserIcon;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -36,6 +34,9 @@ public class NoteViewImpl extends Composite implements NoteView {
     }
 
     @UiField
+    protected AcceptsOneWidget iconHolder;
+
+    @UiField
     protected HasText authorField;
 
     @UiField
@@ -47,6 +48,8 @@ public class NoteViewImpl extends Composite implements NoteView {
     @Override
     public void setAuthor(String authorName) {
         authorField.setText(authorName);
+        IsWidget widget = UserIcon.get(UserId.getUserId(authorName));
+        iconHolder.setWidget(widget);
     }
 
     @Override

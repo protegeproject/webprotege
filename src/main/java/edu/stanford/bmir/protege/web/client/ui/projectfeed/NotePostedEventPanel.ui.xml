@@ -9,16 +9,14 @@
         .change-event-panel {
             border-bottom: solid 1px #f1f1f1;
         }
-
-        .user-name {
-            font-weight: bold;
-            color: #648dbe;
-        }
         .time {
             color: #757575;
         }
         .note-body {
             color: #757575
+        }
+        .userIcon {
+            padding-right: 2px;
         }
     </ui:style>
 
@@ -26,13 +24,14 @@
         <table>
             <tr>
                 <td valign="top">
-                    <g:Image resource="{wp.commentIcon}"/>
+                    <g:SimplePanel ui:field="userIconHolder" addStyleNames="{style.userIcon}"/>
+                    <!--<g:Image resource="{wp.commentIcon}"/>-->
                 </td>
                 <td valign="top">
                     <div>
                         <div>
                             <div>
-                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{style.user-name}"/>
+                                <g:InlineLabel ui:field="userNameLabel" addStyleNames="{wp.style.userName}"/>
                                 posted a note
                             </div>
                             <div>

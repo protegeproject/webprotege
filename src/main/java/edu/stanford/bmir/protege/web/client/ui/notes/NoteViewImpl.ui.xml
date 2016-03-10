@@ -8,7 +8,6 @@
 
         .author {
             padding-bottom: 2px;
-            color: #989898;
         }
 
         .date {
@@ -21,17 +20,25 @@
         .body {
             color: #676767;
             border: none;
+            padding-left: 28px;
+            padding-top: 1px;
         }
 
         .links:hover {
             color: #648dbe !important;
         }
+
+        .iconHolder {
+            display: inline-block;
+            padding-right: 1px;
+        }
     </ui:style>
 
 
     <g:HTMLPanel>
-        <g:Image resource="{wp.userIcon}"/>
-        <g:InlineLabel addStyleNames="{style.author}" ui:field="authorField"/>
+        <!--<g:Image resource="{wp.userIcon}"/>-->
+        <g:SimplePanel ui:field="iconHolder" addStyleNames="{style.iconHolder}"/>
+        <g:InlineLabel addStyleNames="{style.author} {wp.style.userName}" ui:field="authorField"/>
         <timelabel:ElapsedTimeLabel addStyleNames="{style.date}" ui:field="dateField"/>
         <g:HTML addStyleNames="{style.body}" ui:field="bodyField"/>
     </g:HTMLPanel>
