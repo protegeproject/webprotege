@@ -9,6 +9,6 @@ import org.springframework.data.repository.CrudRepository;
  * Stanford Center for Biomedical Informatics Research
  * 09/03/16
  */
-public interface UserRecordRepository extends CrudRepository<UserDetails, UserId> {
+public interface UserRecordRepository extends CrudRepository<UserRecord, UserId> {
 
 }
