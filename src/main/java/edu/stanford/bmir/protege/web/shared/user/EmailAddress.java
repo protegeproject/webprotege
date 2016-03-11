@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.user;
 
 import java.io.Serializable;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -48,13 +50,11 @@ public class EmailAddress implements Serializable {
         return emailAddress.equals(other.emailAddress);
     }
 
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("EmailAddress");
-        sb.append("(");
-        sb.append(emailAddress);
-        sb.append(")");
-        return sb.toString();
+        return toStringHelper("EmailAddress")
+                .addValue(emailAddress)
+                .toString();
     }
 }
