@@ -2,6 +2,7 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
@@ -36,23 +37,25 @@ public class UserDetailsManagerImpl_TestCase {
 
     private String email = "THE EMAIL";
 
+    private UserRecordRepository userRecordRepository;
+
     @Before
     public void setUp()
         throws Exception
     {
-        userDetailsManagerImpl = new UserDetailsManagerImpl(metaProject, metaProjectStore);
+        userDetailsManagerImpl = new UserDetailsManagerImpl(metaProject, metaProjectStore, userRecordRepository);
         when(user.getName()).thenReturn(userName);
         when(user.getEmail()).thenReturn(email);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_metaProject_IsNull() {
-        new UserDetailsManagerImpl(null, metaProjectStore);
+        new UserDetailsManagerImpl(null, metaProjectStore, userRecordRepository);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_metaProjectStore_IsNull() {
-        new UserDetailsManagerImpl(metaProject, null);
+        new UserDetailsManagerImpl(metaProject, null, userRecordRepository);
     }
 
 
