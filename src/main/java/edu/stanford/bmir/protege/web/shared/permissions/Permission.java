@@ -101,6 +101,10 @@ public class Permission implements Serializable {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public String getPermissionName() {
+        return permissionName;
+    }
+
     /**
      * Determines if this permission is equal to the read permission.
      * @return {@code true} if this permission is equal to the read permission (the name of the permission is
