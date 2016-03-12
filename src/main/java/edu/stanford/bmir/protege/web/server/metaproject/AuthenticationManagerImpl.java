@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
 import com.google.common.io.BaseEncoding;
+import edu.stanford.bmir.protege.web.server.user.UserRecord;
+import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.*;
@@ -19,14 +21,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class AuthenticationManagerImpl implements AuthenticationManager {
 
-    private final MetaProject metaProject;
-
-    private final MetaProjectStore metaProjectStore;
+    private final UserRecordRepository repository;
 
     @Inject
-    public AuthenticationManagerImpl(MetaProject metaProject, MetaProjectStore metaProjectStore) {
-        this.metaProject = metaProject;
-        this.metaProjectStore = metaProjectStore;
+    public AuthenticationManagerImpl(UserRecordRepository repository) {
+        this.repository = repository;
     }
 
     @Override
@@ -35,22 +34,23 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         checkNotNull(email);
         checkNotNull(password);
         checkNotNull(salt);
-        User existingUser = metaProject.getUser(userId.getUserName());
-        if (existingUser != null) {
+        UserRecord existingRecord = repository.findOne(userId);
+        if(existingRecord != null) {
             throw new UserNameAlreadyExistsException(userId.getUserName());
         }
-        for (User user : metaProject.getUsers()) {
-            if (email.getEmailAddress().equals(user.getEmail())) {
-                throw new UserEmailAlreadyExistsException(email.getEmailAddress());
-            }
+        UserRecord existingRecordByEmail = repository.findOneByEmailAddress(email.getEmailAddress());
+        if(existingRecordByEmail != null) {
+            throw new UserEmailAlreadyExistsException(email.getEmailAddress());
         }
-        User newUser = metaProject.createUser(userId.getUserName(), "");
-        newUser.setName(userId.getUserName());
-        String encodedPassword = BaseEncoding.base16().lowerCase().encode(password.getBytes());
-        String encodedSalt = BaseEncoding.base16().lowerCase().encode(salt.getBytes());
-        newUser.setDigestedPassword(encodedPassword, encodedSalt);
-        newUser.setEmail(email.getEmailAddress());
-        metaProjectStore.saveMetaProject(metaProject);
+        UserRecord newUserRecord = new UserRecord(
+                userId,
+                userId.getUserName(),
+                email.getEmailAddress(),
+                "",
+                salt,
+                password
+        );
+        repository.save(newUserRecord);
         return UserDetails.getUserDetails(userId, userId.getUserName(), email.getEmailAddress());
     }
 
@@ -59,35 +59,43 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         if (userId.isGuest()) {
             return;
         }
-        User user = metaProject.getUser(userId.getUserName());
-        if (user == null) {
+        UserRecord record = repository.findOne(userId);
+        if (record == null) {
             return;
         }
-        String encodedDigest = BaseEncoding.base16().lowerCase().encode(saltedPasswordDigest.getBytes());
-        user.setDigestedPassword(encodedDigest, BaseEncoding.base16().lowerCase().encode(salt.getBytes()));
-        metaProjectStore.saveMetaProject(metaProject);
+        UserRecord replacementRecord = new UserRecord(
+                record.getUserId(),
+                record.getRealName(),
+                record.getEmailAddress(),
+                record.getAvatarUrl(),
+                salt,
+                saltedPasswordDigest
+        );
+        repository.save(replacementRecord);
     }
 
     @Override
     public Optional<Salt> getSalt(UserId userId) {
-        User user = metaProject.getUser(userId.getUserName());
-        if (user == null) {
+        if(userId.isGuest()) {
             return Optional.absent();
         }
-        String salt = user.getSalt();
-        byte[] saltBytes = BaseEncoding.base16().lowerCase().decode(salt);
-        return Optional.fromNullable(new Salt(saltBytes));
+        UserRecord record = repository.findOne(userId);
+        if(record == null) {
+            return Optional.absent();
+        }
+        return Optional.of(record.getSalt());
     }
 
     @Override
     public Optional<SaltedPasswordDigest> getSaltedPasswordDigest(UserId userId) {
-        User user = metaProject.getUser(userId.getUserName());
-        if (user == null) {
+        if(userId.isGuest()) {
             return Optional.absent();
         }
-        String pwd = user.getDigestedPassword();
-        byte[] pwdBytes = BaseEncoding.base16().lowerCase().decode(pwd);
-        return Optional.of(new SaltedPasswordDigest(pwdBytes));
+        UserRecord record = repository.findOne(userId);
+        if(record == null) {
+            return Optional.absent();
+        }
+        return Optional.of(record.getSaltedPasswordDigest());
     }
 
 }

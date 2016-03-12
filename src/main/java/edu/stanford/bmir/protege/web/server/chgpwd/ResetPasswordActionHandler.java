@@ -25,16 +25,12 @@ public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAc
 
     private final WebProtegeLogger logger;
 
-
-    private final HasGetUserByUserIdOrEmail userDetailsManager;
-
     private final ResetPasswordMailer mailer;
 
     @Inject
     public ResetPasswordActionHandler(
-            HasGetUserByUserIdOrEmail userDetailsManager, ResetPasswordMailer mailer,
+            ResetPasswordMailer mailer,
             WebProtegeLogger logger) {
-        this.userDetailsManager = userDetailsManager;
         this.mailer = mailer;
         this.logger = logger;
     }
@@ -53,33 +49,34 @@ public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAc
     @Override
     public ResetPasswordResult execute(
             ResetPasswordAction action, ExecutionContext executionContext) {
-        final String emailAddress = action.getResetPasswordData().getEmailAddress();
-        try {
-            Optional<User> user = userDetailsManager.getUserByUserIdOrEmail(emailAddress);
-            if(!user.isPresent()) {
-                return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
-            }
-            if(user.get().getEmail() == null) {
-                return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
-            }
-            if(user.get().getEmail().compareToIgnoreCase(emailAddress) != 0) {
-                return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
-            }
-            String pwd = IdUtil.getBase62UUID();
-            user.get().setPassword(pwd);
-            mailer.sendEmail(executionContext.getUserId(), emailAddress, pwd);
-            logger.info("The password for %s has been reset.  " +
-                            "An email has been sent to %s that contains the new password.",
-                    executionContext.getUserId().getUserName(),
-                    emailAddress
-            );
-            return new ResetPasswordResult(SUCCESS);
-        } catch (Exception e) {
-            logger.info("Could not reset the user password " +
-                                "associated with the email " +
-                                "address %s.  The following " +
-                                "error occurred: %s.", emailAddress, e.getMessage());
-            return new ResetPasswordResult(INTERNAL_ERROR);
-        }
+//        final String emailAddress = action.getResetPasswordData().getEmailAddress();
+//        try {
+//            Optional<User> user = userDetailsManager.getUserByUserIdOrEmail(emailAddress);
+//            if(!user.isPresent()) {
+//                return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
+//            }
+//            if(user.get().getEmail() == null) {
+//                return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
+//            }
+//            if(user.get().getEmail().compareToIgnoreCase(emailAddress) != 0) {
+//                return new ResetPasswordResult(INVALID_EMAIL_ADDRESS);
+//            }
+//            String pwd = IdUtil.getBase62UUID();
+//            user.get().setPassword(pwd);
+//            mailer.sendEmail(executionContext.getUserId(), emailAddress, pwd);
+//            logger.info("The password for %s has been reset.  " +
+//                            "An email has been sent to %s that contains the new password.",
+//                    executionContext.getUserId().getUserName(),
+//                    emailAddress
+//            );
+//            return new ResetPasswordResult(SUCCESS);
+//        } catch (Exception e) {
+//            logger.info("Could not reset the user password " +
+//                                "associated with the email " +
+//                                "address %s.  The following " +
+//                                "error occurred: %s.", emailAddress, e.getMessage());
+//            return new ResetPasswordResult(INTERNAL_ERROR);
+//        }
+        throw new RuntimeException();
     }
 }

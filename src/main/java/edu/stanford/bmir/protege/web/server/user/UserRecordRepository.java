@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.user;
 
-import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.springframework.data.repository.CrudRepository;
 
@@ -11,4 +10,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface UserRecordRepository extends CrudRepository<UserRecord, UserId> {
 
+    UserRecord findOneByEmailAddress(String emailAddress);
 }
