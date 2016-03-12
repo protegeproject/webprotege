@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.user.UserRecord;
+import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
+import edu.stanford.bmir.protege.web.shared.auth.Salt;
+import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -9,6 +13,7 @@ import edu.stanford.smi.protege.server.metaproject.User;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
@@ -20,59 +25,30 @@ import static java.util.stream.Collectors.toList;
  */
 public class UserDetailsManagerImpl implements UserDetailsManager {
 
-    private final MetaProject metaProject;
-
-    private final MetaProjectStore metaProjectStore;
+    private final UserRecordRepository repository;
 
     @Inject
-    public UserDetailsManagerImpl(MetaProject metaProject, MetaProjectStore metaProjectStore) {
-        this.metaProject = checkNotNull(metaProject);
-        this.metaProjectStore = checkNotNull(metaProjectStore);
-    }
-
-    public MetaProject getMetaProject() {
-        return metaProject;
+    public UserDetailsManagerImpl(UserRecordRepository userRecordRepository) {
+        this.repository = userRecordRepository;
     }
 
     @Override
     public Collection<UserId> getUserIds() {
-        return getMetaProject().getUsers().stream()
-                .filter(u -> u.getName() != null)
-                .map(u -> UserId.getUserId(u.getName()))
+        return StreamSupport.stream(repository.findAll().spliterator(), false)
+                .map(UserRecord::getUserId)
                 .collect(toList());
     }
 
     @Override
-    public Optional<User> getUserByUserIdOrEmail(String userNameOrEmail) {
-        // Here for silly legacy reasons
-        if (userNameOrEmail == null) {
+    public Optional<UserId> getUserIdByEmailAddress(EmailAddress emailAddress) {
+        if(emailAddress.getEmailAddress().isEmpty()) {
             return Optional.absent();
         }
-
-        // By user Id first
-        final User userById = getMetaProject().getUser(userNameOrEmail);
-        if (userById != null) {
-            return Optional.of(userById);
+        UserRecord record = repository.findOneByEmailAddress(emailAddress.getEmailAddress());
+        if(record == null) {
+            return Optional.absent();
         }
-
-        // Not found.  There's no index to email so we have to search through the lot of them.
-        for(User user : getMetaProject().getUsers()) {
-            if(userNameOrEmail.equals(user.getEmail())) {
-                return Optional.of(user);
-            }
-        }
-        return Optional.absent();
-    }
-
-    @Override
-    public Optional<UserId> getUserIdByEmailAddress(EmailAddress emailAddress) {
-        checkNotNull(emailAddress);
-        for(User user : getMetaProject().getUsers()) {
-            if(emailAddress.getEmailAddress().equalsIgnoreCase(user.getEmail())) {
-                return Optional.of(UserId.getUserId(user.getName()));
-            }
-        }
-        return Optional.absent();
+        return Optional.of(record.getUserId());
     }
 
     @Override
@@ -80,12 +56,11 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(userId.isGuest()) {
             return Optional.of(UserDetails.getGuestUserDetails());
         }
-        final MetaProject metaProject = getMetaProject();
-        User user = metaProject.getUser(userId.getUserName());
-        if(user == null) {
+        UserRecord record = repository.findOne(userId);
+        if(record == null) {
             return Optional.absent();
         }
-        return Optional.of(UserDetails.getUserDetails(userId, userId.getUserName(), Optional.fromNullable(user.getEmail())));
+        return Optional.of(UserDetails.getUserDetails(userId, userId.getUserName(), Optional.fromNullable(record.getEmailAddress())));
     }
 
     @Override
@@ -93,11 +68,15 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(userId.isGuest()) {
             return Optional.absent();
         }
-        Optional<User> user = getUserByUserIdOrEmail(userId.getUserName());
-        if(user.isPresent()) {
-            return Optional.fromNullable(user.get().getEmail());
+        UserRecord record = repository.findOne(userId);
+        if(record == null) {
+            return Optional.absent();
         }
-        return Optional.absent();
+        String emailAddress = record.getEmailAddress();
+        if(emailAddress.isEmpty()) {
+            return Optional.absent();
+        }
+        return Optional.of(emailAddress);
     }
 
     @Override
@@ -107,10 +86,13 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(userId.isGuest()) {
             return;
         }
-        Optional<User> user = getUserByUserIdOrEmail(userId.getUserName());
-        if(user.isPresent()) {
-            user.get().setEmail(email);
+        UserRecord record = repository.findOne(userId);
+        if(record == null) {
+            return;
         }
-        metaProjectStore.saveMetaProject(metaProject);
+        // TODO: Check that the email isn't used already
+        UserRecord replacement = new UserRecord(record.getUserId(), record.getRealName(), record.getEmailAddress(), record.getAvatarUrl(), record.getSalt(), record.getSaltedPasswordDigest());
+        repository.delete(record);
+        repository.save(replacement);
     }
 }
