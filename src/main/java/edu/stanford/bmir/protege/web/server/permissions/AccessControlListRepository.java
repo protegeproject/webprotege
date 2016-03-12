@@ -12,4 +12,5 @@ public interface AccessControlListRepository extends CrudRepository<AccessContro
 
     Iterable<AccessControlListEntry> findByProjectId(ProjectId projectId);
 
+    void deleteByProjectId(ProjectId projectId);
 }

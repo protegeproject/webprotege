@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.permissions.AccessControlListEntry;
 import edu.stanford.bmir.protege.web.server.user.UserRecord;
 import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
@@ -94,5 +95,18 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         UserRecord replacement = new UserRecord(record.getUserId(), record.getRealName(), record.getEmailAddress(), record.getAvatarUrl(), record.getSalt(), record.getSaltedPasswordDigest());
         repository.delete(record);
         repository.save(replacement);
+    }
+
+    @Override
+    public Optional<UserId> getUserByUserIdOrEmail(String userNameOrEmail) {
+        UserRecord byUserId = repository.findOne(UserId.getUserId(userNameOrEmail));
+        if(byUserId != null) {
+            return Optional.of(byUserId.getUserId());
+        }
+        UserRecord byEmail = repository.findOneByEmailAddress(userNameOrEmail);
+        if(byEmail != null) {
+            return Optional.of(byEmail.getUserId());
+        }
+        return Optional.absent();
     }
 }
