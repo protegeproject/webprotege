@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.inject;
 import com.google.inject.AbstractModule;
 import edu.stanford.bmir.protege.web.server.app.WebProtegeApplicationConfig;
 import edu.stanford.bmir.protege.web.server.crud.persistence.ProjectEntityCrudKitSettingsRepository;
+import edu.stanford.bmir.protege.web.server.permissions.AccessControlListRepository;
 import edu.stanford.bmir.protege.web.server.project.ProjectRecordRepository;
 import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 import org.springframework.context.ApplicationContext;
@@ -32,5 +33,8 @@ public class RepositoryModule extends AbstractModule {
 
         bind(ProjectRecordRepository.class)
                 .toInstance(applicationContext.getBean(ProjectRecordRepository.class));
+
+        bind(AccessControlListRepository.class)
+                .toInstance(applicationContext.getBean(AccessControlListRepository.class));
     }
 }
