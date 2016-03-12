@@ -109,12 +109,6 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     }
 
     @Override
-    public boolean hasValidCredentials(String userName, String password) {
-        User user = metaProject.getUser(userName);
-        return user != null && user.verifyPassword(password);
-    }
-
-    @Override
     public List<ProjectDetails> getListableReadableProjects(UserId userId) {
         User user = metaProject.getUser(userId.getUserName());
         final Collection<Group> userGroups;

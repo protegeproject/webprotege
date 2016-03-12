@@ -22,8 +22,6 @@ public interface ProjectPermissionsManager {
 
     Set<GroupId> getUserGroups(UserId userId);
 
-    boolean hasValidCredentials(String userName, String password);
-
     List<ProjectDetails> getListableReadableProjects(UserId userId);
 
     Collection<Operation> getAllowedOperations(String project, String userName);
