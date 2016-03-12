@@ -55,16 +55,6 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
     }
 
     @Override
-    public void changePassword(String userName, String password) {
-        User user = metaProject.getUser(userName);
-        if (user == null) {
-            throw new IllegalArgumentException("Invalid user name: " + userName);
-        }
-        user.setPassword(password);
-        metaProjectStore.saveMetaProject(metaProject);
-    }
-
-    @Override
     public void setDigestedPassword(UserId userId, SaltedPasswordDigest saltedPasswordDigest, Salt salt) {
         if (userId.isGuest()) {
             return;
