@@ -36,27 +36,22 @@ public class ProjectSettingsTestCase {
 
     @Before
     public void setUp() throws Exception {
-        data = new ProjectSettings(projectId, projectType, projectDisplayName, projectDescription);
+        data = new ProjectSettings(projectId, projectDisplayName, projectDescription);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfProjectIdIsNull() {
-        new ProjectSettings(null, projectType, projectDisplayName, projectDescription);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIfProjectTypeIsNull() {
-        new ProjectSettings(projectId, null, projectDisplayName, projectDescription);
+        new ProjectSettings(null, projectDisplayName, projectDescription);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfProjectDisplayNameIsNull() {
-        new ProjectSettings(projectId, projectType, null, projectDescription);
+        new ProjectSettings(projectId, null, projectDescription);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIfProjectDescriptionIsNull() {
-        new ProjectSettings(projectId, projectType, projectDisplayName, null);
+        new ProjectSettings(projectId, projectDisplayName, null);
     }
 
     @Test
@@ -71,13 +66,13 @@ public class ProjectSettingsTestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        ProjectSettings other = new ProjectSettings(projectId, projectType, projectDisplayName, projectDescription);
+        ProjectSettings other = new ProjectSettings(projectId, projectDisplayName, projectDescription);
         assertThat(data, is(equalTo(other)));
     }
 
     @Test
     public void shouldHaveSameHashCode() {
-        ProjectSettings other = new ProjectSettings(projectId, projectType, projectDisplayName, projectDescription);
+        ProjectSettings other = new ProjectSettings(projectId, projectDisplayName, projectDescription);
         assertThat(data.hashCode(), is(other.hashCode()));
     }
 
@@ -85,11 +80,6 @@ public class ProjectSettingsTestCase {
     @Test
     public void shouldReturnSuppliedProjectId() {
         assertThat(data.getProjectId(), is(projectId));
-    }
-
-    @Test
-    public void shouldReturnSuppliedProjectType() {
-        assertThat(data.getProjectType(), is(projectType));
     }
 
     @Test

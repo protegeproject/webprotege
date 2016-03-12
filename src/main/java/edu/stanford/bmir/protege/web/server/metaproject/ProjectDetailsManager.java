@@ -32,10 +32,6 @@ public interface ProjectDetailsManager {
 
     void setInTrash(ProjectId projectId, boolean b);
 
-    OWLAPIProjectType getType(ProjectId projectId);
-
-    void setType(ProjectId projectId, OWLAPIProjectType projectType);
-
     ProjectSettings getProjectSettings(ProjectId projectId);
 
     void setProjectSettings(ProjectSettings projectSettings);

@@ -71,7 +71,7 @@ public class ProjectSettingsViewImpl extends Composite implements ProjectSetting
     public Optional<ProjectSettings> getValue() {
         if(pristineValue.isPresent()) {
             ProjectSettings oldValue = pristineValue.get();
-            return Optional.of(new ProjectSettings(oldValue.getProjectId(), oldValue.getProjectType(), getDisplayName(), getDescription()));
+            return Optional.of(new ProjectSettings(oldValue.getProjectId(), getDisplayName(), getDescription()));
         }
         else {
             return Optional.absent();
