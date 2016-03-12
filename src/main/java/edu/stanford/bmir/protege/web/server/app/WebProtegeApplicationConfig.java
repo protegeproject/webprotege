@@ -4,6 +4,8 @@ import com.mongodb.Mongo;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteConcern;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
+import edu.stanford.bmir.protege.web.server.permissions.PermissionReadConverter;
+import edu.stanford.bmir.protege.web.server.permissions.PermissionWriteConverter;
 import edu.stanford.bmir.protege.web.server.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -89,6 +91,8 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
         converters.add(new SaltWriteConverter());
         converters.add(new SaltedPasswordDigestReadConverter());
         converters.add(new SaltedPasswordDigestWriteConverter());
+        converters.add(new PermissionReadConverter());
+        converters.add(new PermissionWriteConverter());
 
         mappingMongoConverter.setCustomConversions(new CustomConversions(converters));
         return mappingMongoConverter;
