@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -174,11 +173,6 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         }
     }
 
-    @Override
-    public void setType(ProjectId projectId, OWLAPIProjectType projectType) {
-        setPropertyValue(projectId, PROJECT_TYPE_PROPERTY_NAME, projectType.getProjectTypeName());
-    }
-
     private void setPropertyValue(ProjectId projectId, String propertyName, String propertyValue) {
         ProjectInstance pi = getProjectInstance(projectId);
         PropertyValue pv = metaProject.createPropertyValue(propertyName, propertyValue);
@@ -207,8 +201,6 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
     @Override
     public void setProjectSettings(ProjectSettings projectSettings) {
             ProjectId projectId = projectSettings.getProjectId();
-            setType(projectId, new OWLAPIProjectType(projectSettings.getProjectType().getName()));
-
             setDescription(projectId, projectSettings.getProjectDescription());
             setDisplayName(projectId, projectSettings.getProjectDisplayName());
     }
@@ -222,7 +214,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
     public ProjectSettings getProjectSettings(ProjectId projectId) throws UnknownProjectException{
         ProjectDetails projectDetails = getProjectDetails(projectId);
             return new ProjectSettings(projectId,
-                    new ProjectType(getType(projectId).getProjectTypeName()), projectDetails.getDisplayName(),
+                    projectDetails.getDisplayName(),
                     projectDetails.getDescription());
     }
 

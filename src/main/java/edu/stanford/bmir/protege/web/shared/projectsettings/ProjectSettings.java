@@ -20,8 +20,6 @@ public class ProjectSettings implements Serializable {
 
     private String projectDisplayName;
     
-    private ProjectType projectType;
-    
     private String projectDescription;
 
 
@@ -33,14 +31,12 @@ public class ProjectSettings implements Serializable {
     /**
      * Constructs a ProjectSettingsData object.
      * @param projectId The projectId.  Not {@code null}.
-     * @param projectType The ProjectType.  Not {@code null}.
      * @param projectDescription The project description. Not {@code null}.
      * @throws java.lang.NullPointerException if any parameters are {@code null}.
      */
-    public ProjectSettings(ProjectId projectId, ProjectType projectType, String projectDisplayName, String projectDescription) {
+    public ProjectSettings(ProjectId projectId, String projectDisplayName, String projectDescription) {
         this.projectId = checkNotNull(projectId);
         this.projectDisplayName = checkNotNull(projectDisplayName);
-        this.projectType = checkNotNull(projectType);
         this.projectDescription = checkNotNull(projectDescription);
     }
 
@@ -68,18 +64,9 @@ public class ProjectSettings implements Serializable {
         return projectDescription;
     }
 
-    /**
-     * Gets the project type.
-     * @return The project type.  Not {@code null}.
-     */
-    public ProjectType getProjectType() {
-        return projectType;
-    }
-
-
     @Override
     public int hashCode() {
-        return Objects.hashCode(projectId, projectType, projectDisplayName, projectDescription);
+        return Objects.hashCode(projectId, projectDisplayName, projectDescription);
     }
 
     @Override
@@ -91,8 +78,7 @@ public class ProjectSettings implements Serializable {
             return false;
         }
         ProjectSettings other = (ProjectSettings) obj;
-        return this.projectType.equals(other.projectType)
-                && this.projectDisplayName.equals(other.projectDisplayName)
+        return this.projectDisplayName.equals(other.projectDisplayName)
                 && this.projectDescription.equals(other.projectDescription)
                 && this.projectId.equals(other.projectId);
     }
@@ -102,7 +88,6 @@ public class ProjectSettings implements Serializable {
     public String toString() {
         return Objects.toStringHelper("ProjectSettings")
                 .addValue(projectId)
-                .addValue(projectType)
                 .add("displayName", projectDisplayName)
                 .add("description", projectDescription)
                 .toString();
