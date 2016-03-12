@@ -97,5 +97,57 @@ public class ProjectRecord {
                 .toString();
     }
 
+    public Builder builder() {
+        return new Builder(projectId, owner, displayName, description, inTrash);
+    }
+
+    public static class Builder {
+
+        private final ProjectId projectId;
+
+        private UserId owner;
+
+        private String displayName;
+
+        private String description;
+
+        private boolean inTrash;
+
+        private Builder(ProjectId projectId, UserId owner, String displayName, String description, boolean inTrash) {
+            this.projectId = projectId;
+            this.owner = owner;
+            this.displayName = displayName;
+            this.description = description;
+            this.inTrash = inTrash;
+        }
+
+        public UserId getOwner() {
+            return owner;
+        }
+
+        public Builder setOwner(UserId owner) {
+            this.owner = owner;
+            return this;
+        }
+
+        public Builder setDisplayName(String displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder setInTrash(boolean inTrash) {
+            this.inTrash = inTrash;
+            return this;
+        }
+
+        public ProjectRecord build() {
+            return new ProjectRecord(projectId, owner, displayName, description, inTrash);
+        }
+    }
 
 }

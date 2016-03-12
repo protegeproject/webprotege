@@ -26,7 +26,6 @@ public class WarmUpMetaProjectTask implements ConfigurationTask {
 
     @Override
     public void run(ServletContext servletContext) throws WebProtegeConfigurationException {
-        int projectInstanceCount = projectDetailsManager.getProjectCount();
-        logger.info("Loaded meta-project.  There are %d project instances.", projectInstanceCount);
+        logger.info("Loaded meta-project.");
     }
 }

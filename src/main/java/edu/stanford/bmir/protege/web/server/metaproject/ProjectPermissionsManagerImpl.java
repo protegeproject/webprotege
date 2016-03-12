@@ -120,18 +120,18 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
         }
         // Get groups is an expensive operation it seems!
         List<ProjectDetails> result = new ArrayList<>();
-        for (ProjectInstance projectInstance : metaProject.getProjects()) {
-            final String name = projectInstance.getName();
-            if (name != null && ProjectId.isWelFormedProjectId(name)) {
-                final ProjectId projectId = ProjectId.get(name);
-                if (isAuthorisedToReadAndList(user, projectInstance, userGroups)) {
-                    if (projectExistsFilter.isProjectPresent(projectId)) {
-                        ProjectDetails projectDetails = projectDetailsManager.getProjectDetails(projectId);
-                        result.add(projectDetails);
-                    }
-                }
-            }
-        }
+//        for (ProjectInstance projectInstance : metaProject.getProjects()) {
+//            final String name = projectInstance.getName();
+//            if (name != null && ProjectId.isWelFormedProjectId(name)) {
+//                final ProjectId projectId = ProjectId.get(name);
+//                if (isAuthorisedToReadAndList(user, projectInstance, userGroups)) {
+//                    if (projectExistsFilter.isProjectPresent(projectId)) {
+//                        ProjectDetails projectDetails = projectDetailsManager.getProjectDetails(projectId);
+//                        result.add(projectDetails);
+//                    }
+//                }
+//            }
+//        }
         return result;
     }
 

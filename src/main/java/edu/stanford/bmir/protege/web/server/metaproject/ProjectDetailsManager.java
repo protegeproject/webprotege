@@ -22,13 +22,9 @@ public interface ProjectDetailsManager {
 
     ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException;
 
-    int getProjectCount();
-
     boolean isExistingProject(ProjectId projectId);
 
     boolean isProjectOwner(UserId userId, ProjectId projectId);
-
-    boolean isInTrash(ProjectId projectId);
 
     void setInTrash(ProjectId projectId, boolean b);
 
