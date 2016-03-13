@@ -58,22 +58,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         return new ProjectSharingSettings(projectId, SharingPermission.NONE, new ArrayList<>(sharingSettings));
     }
 
-    private SharingPermission getSharingPermission(Permission permission) {
-        if(permission.isReadPermission()) {
-            return SharingPermission.VIEW;
-        }
-        else if(permission.isCommentPermission()) {
-            return SharingPermission.COMMENT;
-        }
-        else if(permission.isWritePermission()) {
-            return SharingPermission.EDIT;
-        }
-        else {
-            return SharingPermission.NONE;
-        }
-    }
-
-
+    
     @Override
     public void setProjectSharingSettings(ProjectSharingSettings projectSharingSettings) {
         ProjectId projectId = projectSharingSettings.getProjectId();
