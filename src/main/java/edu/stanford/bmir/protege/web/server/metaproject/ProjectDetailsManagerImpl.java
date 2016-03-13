@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
-import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
 import edu.stanford.bmir.protege.web.server.project.ProjectRecord;
 import edu.stanford.bmir.protege.web.server.project.ProjectRecordRepository;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
@@ -13,7 +11,10 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 
+import java.util.Optional;
+
 import static com.google.common.base.Preconditions.checkNotNull;
+import static edu.stanford.bmir.protege.web.server.project.ProjectRecordTranslator.translateToProjectDetails;
 
 /**
  * Matthew Horridge
@@ -42,11 +43,11 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
     @Override
     public ProjectDetails getProjectDetails(ProjectId projectId) throws UnknownProjectException {
-        ProjectRecord record = repository.findOne(projectId);
-        if(record == null) {
+        Optional<ProjectRecord> record = repository.findOne(projectId);
+        if(!record.isPresent()) {
             throw new UnknownProjectException(projectId);
         }
-        return createProjectDetails(record);
+        return translateToProjectDetails(record.get());
     }
 
     @Override
@@ -59,36 +60,29 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
         if (userId.isGuest()) {
             return false;
         }
-        ProjectRecord record = repository.findOne(projectId);
-        return record != null && userId.equals(record.getOwner());
+        Optional<ProjectRecord> record = repository.findOne(projectId);
+        return record.isPresent() && userId.equals(record.get().getOwner());
     }
 
-    private static ProjectDetails createProjectDetails(ProjectRecord record) {
-        final ProjectId projectId = record.getProjectId();
-        final String displayName = record.getDisplayName();
-        final String description = record.getDescription();
-        final UserId ownerId = record.getOwner();
-        final boolean inTrash = record.isInTrash();
-        return new ProjectDetails(projectId, displayName, description, ownerId, inTrash);
-    }
+
 
     @Override
     public void setInTrash(ProjectId projectId, boolean b) {
-        ProjectRecord record = repository.findOne(projectId);
-        if(record == null) {
+        Optional<ProjectRecord> record = repository.findOne(projectId);
+        if(!record.isPresent()) {
             return;
         }
-        ProjectRecord replacementRecord = record.builder().setInTrash(b).build();
+        ProjectRecord replacementRecord = record.get().builder().setInTrash(b).build();
         repository.save(replacementRecord);
     }
 
     @Override
     public void setProjectSettings(ProjectSettings projectSettings) {
-        ProjectRecord record = repository.findOne(projectSettings.getProjectId());
-        if(record == null) {
+        Optional<ProjectRecord> record = repository.findOne(projectSettings.getProjectId());
+        if(!record.isPresent()) {
             return;
         }
-        ProjectRecord updatedRecord = record.builder()
+        ProjectRecord updatedRecord = record.get().builder()
                 .setDisplayName(projectSettings.getProjectDisplayName())
                 .setDescription(projectSettings.getProjectDescription())
                 .build();

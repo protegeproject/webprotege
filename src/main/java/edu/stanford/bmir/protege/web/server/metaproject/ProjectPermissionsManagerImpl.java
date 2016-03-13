@@ -14,6 +14,9 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import javax.inject.Inject;
 import java.util.*;
 
+import static edu.stanford.bmir.protege.web.server.project.ProjectRecordTranslator.translateToProjectDetails;
+import static java.util.stream.Collectors.toList;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -53,9 +56,9 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
                 builder.addPermission(Permission.getReadPermission());
             }
         }
-        ProjectRecord record = projectRecordRepository.findOne(projectId);
-        if(record != null) {
-            if(record.getOwner().equals(userId)) {
+        Optional<ProjectRecord> record = projectRecordRepository.findOne(projectId);
+        if(record.isPresent()) {
+            if(record.get().getOwner().equals(userId)) {
                 builder.addPermission(Permission.getWritePermission());
                 builder.addPermission(Permission.getCommentPermission());
                 builder.addPermission(Permission.getReadPermission());
@@ -68,12 +71,13 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     public List<ProjectDetails> getListableReadableProjects(UserId userId) {
         Set<ProjectDetails> result = new HashSet<>();
         for(AccessControlListEntry e : accessControlListRepository.findByUserId(userId)) {
-            ProjectRecord projectRecord = projectRecordRepository.findOne(e.getProjectId());
-            result.add(ProjectRecordTranslator.translateToProjectDetails(projectRecord));
+            Optional<ProjectRecord> record = projectRecordRepository.findOne(e.getProjectId());
+            result.add(translateToProjectDetails(record.get()));
         }
-        for(ProjectRecord projectRecord : projectRecordRepository.findByOwner(userId)) {
-            result.add(ProjectRecordTranslator.translateToProjectDetails(projectRecord));
-        }
+        projectRecordRepository.findByOwner(userId)
+                .map(ProjectRecordTranslator::translateToProjectDetails)
+                .forEach(result::add);
+
         return new ArrayList<>(result);
     }
 }

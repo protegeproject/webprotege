@@ -19,7 +19,7 @@ public interface UserRecordRepository extends Repository<UserRecord, UserId> {
     Optional<UserRecord> findOne(UserId userId);
 
     Optional<UserRecord> findOneByEmailAddress(String emailAddress);
-    
+
     void save(UserRecord userRecord);
 
     void delete(UserRecord userRecord);
