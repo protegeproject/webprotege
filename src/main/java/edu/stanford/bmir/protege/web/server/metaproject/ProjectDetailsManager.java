@@ -15,8 +15,8 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public interface ProjectDetailsManager {
     /**
-     * Creates a new project description inside the meta project (with the default access policy etc.)
-     * @param newProjectSettings The {@link edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings} that describes the new project.  Not <code>null</code>.
+     * Creates a new project.
+     * @param newProjectSettings The {@link NewProjectSettings} that describes the new project.  Not <code>null</code>.
      */
     void registerProject(ProjectId projectId, NewProjectSettings newProjectSettings);
 
