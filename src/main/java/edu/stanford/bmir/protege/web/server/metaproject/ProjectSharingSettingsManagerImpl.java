@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.permissions.AccessControlListEntry;
 import edu.stanford.bmir.protege.web.server.permissions.AccessControlListRepository;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
@@ -37,12 +39,23 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
 
     @Override
     public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
-        List<SharingSetting> sharingSettings = new ArrayList<>();
-        for(AccessControlListEntry e : repository.findByProjectId(projectId)) {
-            SharingSetting sharingSetting = new SharingSetting(new PersonId(e.getProjectId().getId()), getSharingPermission(e.getPermission()));
-            sharingSettings.add(sharingSetting);
+        Multimap<UserId, Permission> userPermissions = HashMultimap.create();
+        repository.findByProjectId(projectId)
+                .forEach(e -> userPermissions.put(e.getUserId(), e.getPermission()));
+        Set<SharingSetting> sharingSettings = new HashSet<>();
+        for(UserId userId : userPermissions.keys()) {
+            Collection<Permission> permissions = userPermissions.get(userId);
+            if(permissions.contains(Permission.getWritePermission())) {
+                sharingSettings.add(new SharingSetting(new PersonId(userId.getUserName()), SharingPermission.EDIT));
+            }
+            else if(permissions.contains(Permission.getCommentPermission())) {
+                sharingSettings.add(new SharingSetting(new PersonId(userId.getUserName()), SharingPermission.COMMENT));
+            }
+            else if(permissions.contains(Permission.getReadPermission())) {
+                sharingSettings.add(new SharingSetting(new PersonId(userId.getUserName()), SharingPermission.VIEW));
+            }
         }
-        return new ProjectSharingSettings(projectId, SharingPermission.VIEW, sharingSettings);
+        return new ProjectSharingSettings(projectId, SharingPermission.NONE, new ArrayList<>(sharingSettings));
     }
 
     private SharingPermission getSharingPermission(Permission permission) {

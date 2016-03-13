@@ -44,18 +44,19 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     @Override
     public PermissionsSet getPermissionsSet(ProjectId projectId, UserId userId) {
         PermissionsSet.Builder builder = PermissionsSet.builder();
-        for(AccessControlListEntry e : accessControlListRepository.findByProjectIdAndUserId(projectId, userId)) {
-            Permission permission = e.getPermission();
-            builder.addPermission(permission);
-            // TODO: Should this be done here?
-            if(permission.isWritePermission()) {
-                // Users who can write can also comment
-                builder.addPermission(Permission.getCommentPermission());
-            }
-            else if(permission.isCommentPermission()) {
-                builder.addPermission(Permission.getReadPermission());
-            }
-        }
+        accessControlListRepository.findByProjectIdAndUserId(projectId, userId)
+                .forEach(r -> {
+                    Permission permission = r.getPermission();
+                    builder.addPermission(permission);
+                    if(permission.isWritePermission()) {
+                        // Users who can write can also comment
+                        builder.addPermission(Permission.getCommentPermission());
+                    }
+                    else if(permission.isCommentPermission()) {
+                        // Users who can comment can also read
+                        builder.addPermission(Permission.getReadPermission());
+                    }
+                });
         Optional<ProjectRecord> record = projectRecordRepository.findOne(projectId);
         if(record.isPresent()) {
             if(record.get().getOwner().equals(userId)) {
@@ -70,13 +71,14 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     @Override
     public List<ProjectDetails> getListableReadableProjects(UserId userId) {
         Set<ProjectDetails> result = new HashSet<>();
-        for(AccessControlListEntry e : accessControlListRepository.findByUserId(userId)) {
-            Optional<ProjectRecord> record = projectRecordRepository.findOne(e.getProjectId());
-            result.add(translateToProjectDetails(record.get()));
-        }
+        accessControlListRepository.findByUserId(userId)
+                .forEach(r -> {
+                    Optional<ProjectRecord> record = projectRecordRepository.findOne(r.getProjectId());
+                    result.add(translateToProjectDetails(record.get()));
+                });
         projectRecordRepository.findByOwner(userId)
-                .map(ProjectRecordTranslator::translateToProjectDetails)
-                .forEach(result::add);
+                .map(r -> translateToProjectDetails(r))
+                .forEach(d -> result.add(d));
 
         return new ArrayList<>(result);
     }

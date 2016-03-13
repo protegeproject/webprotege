@@ -7,15 +7,16 @@ import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 import edu.stanford.smi.protege.server.metaproject.User;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import java.lang.NullPointerException;
 import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
@@ -37,49 +38,27 @@ public class UserDetailsManagerImpl_TestCase {
 
     private String email = "THE EMAIL";
 
+    @Mock
     private UserRecordRepository userRecordRepository;
 
     @Before
     public void setUp()
-        throws Exception
     {
-        userDetailsManagerImpl = new UserDetailsManagerImpl(metaProject, metaProjectStore, userRecordRepository);
+        userDetailsManagerImpl = new UserDetailsManagerImpl(userRecordRepository);
         when(user.getName()).thenReturn(userName);
         when(user.getEmail()).thenReturn(email);
     }
 
-    @Test(expected = java.lang.NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_metaProject_IsNull() {
-        new UserDetailsManagerImpl(null, metaProjectStore, userRecordRepository);
-    }
-
-    @Test(expected = java.lang.NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIf_metaProjectStore_IsNull() {
-        new UserDetailsManagerImpl(metaProject, null, userRecordRepository);
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowNullPointerExceptionIf_Repository_IsNull() {
+        new UserDetailsManagerImpl(userRecordRepository);
     }
 
 
     @Test
     public void should_getUserIds() {
         when(metaProject.getUsers()).thenReturn(Collections.singleton(user));
-        assertThat(userDetailsManagerImpl.getUserIds(), Matchers.hasItem(UserId.getUserId(userName)));
-    }
-
-    @Test
-    public void should_getUserByUserId() {
-        when(metaProject.getUser(userName)).thenReturn(user);
-        assertThat(userDetailsManagerImpl.getUserByUserIdOrEmail(userName), is(Optional.of(user)));
-    }
-
-    @Test
-    public void should_getUserDetailsByEmail() {
-        when(metaProject.getUser(email)).thenReturn(user);
-        assertThat(userDetailsManagerImpl.getUserByUserIdOrEmail(email), is(Optional.of(user)));
-    }
-
-    @Test
-    public void should_returnAbsent() {
-        assertThat(userDetailsManagerImpl.getUserByUserIdOrEmail(userName), is(Optional.<User>absent()));
+        assertThat(userDetailsManagerImpl.getUserIds(), hasItem(UserId.getUserId(userName)));
     }
 
     @Test
