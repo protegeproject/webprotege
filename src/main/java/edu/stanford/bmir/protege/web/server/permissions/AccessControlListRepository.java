@@ -1,16 +1,29 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.Repository;
+
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 11/03/16
  */
-public interface AccessControlListRepository extends CrudRepository<AccessControlListEntry, Long> {
+public interface AccessControlListRepository extends Repository<AccessControlListEntry, Long> {
 
-    Iterable<AccessControlListEntry> findByProjectId(ProjectId projectId);
+    Stream<AccessControlListEntry> findByProjectId(ProjectId projectId);
+
+    Stream<AccessControlListEntry> findByUserId(UserId userId);
+
+    Stream<AccessControlListEntry> findByProjectIdAndUserId(ProjectId projectId, UserId userId);
 
     void deleteByProjectId(ProjectId projectId);
+
+    void save(AccessControlListEntry entry);
+
+    void save(Iterable<AccessControlListEntry> entries);
 }
