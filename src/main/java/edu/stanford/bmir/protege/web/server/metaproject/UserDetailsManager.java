@@ -12,7 +12,7 @@ import java.util.Collection;
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public interface UserDetailsManager extends HasUserIds, HasGetUserByUserIdOrEmail, HasGetUserIdByEmailAddress {
+public interface UserDetailsManager extends HasUserIds, HasGetUserIdByEmailAddress, HasGetUserIdByUserIdOrEmail {
 
     @Override
     Collection<UserId> getUserIds();
