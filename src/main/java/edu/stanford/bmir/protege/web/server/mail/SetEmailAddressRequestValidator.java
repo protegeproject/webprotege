@@ -17,29 +17,17 @@ import javax.inject.Inject;
  */
 public class SetEmailAddressRequestValidator implements RequestValidator<SetEmailAddressAction> {
 
-    private final ProjectPermissionsManager projectPermissionsManager;
-
     @Inject
-    public SetEmailAddressRequestValidator(ProjectPermissionsManager projectPermissionsManager) {
-        this.projectPermissionsManager = projectPermissionsManager;
+    public SetEmailAddressRequestValidator() {
     }
 
     @Override
     public RequestValidationResult validateAction(SetEmailAddressAction action, RequestContext requestContext) {
-        if(action.getUserId().equals(requestContext.getUserId()) || isUserAdmin(requestContext.getUserId())) {
+        if(action.getUserId().equals(requestContext.getUserId())) {
             return RequestValidationResult.getValid();
         }
         else {
             return RequestValidationResult.getInvalid("Users can only change their own email addresses");
         }
-    }
-
-    /**
-     * Determines if the signed in user is an admin.
-     * @return <code>true</code> if there is a user signed in AND the signed in user corresponds to a user which exists
-     * where that user is an admin, otherwise <code>false</code>
-     */
-    protected boolean isUserAdmin(UserId userId) {
-        return projectPermissionsManager.isUserAdmin(userId);
     }
 }

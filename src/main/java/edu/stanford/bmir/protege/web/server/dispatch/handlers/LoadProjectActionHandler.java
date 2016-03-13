@@ -67,11 +67,7 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
 
         ProjectDetails projectDetails = projectDetailsManager.getProjectDetails(projectId);
 
-        Collection<Operation> ops = projectPermissionsManager.getAllowedOperations(projectId.getId(), executionContext.getUserId().getUserName());
-        PermissionsSet.Builder builder = PermissionsSet.builder();
-        for (Operation op : ops) {
-            builder.addPermission(Permission.getPermission(op.getName()));
-        }
-        return new LoadProjectResult(action.getProjectId(), executionContext.getUserId(), builder.build(), projectDetails);
+        PermissionsSet permissions = projectPermissionsManager.getPermissionsSet(projectId, executionContext.getUserId());
+        return new LoadProjectResult(action.getProjectId(), executionContext.getUserId(), permissions, projectDetails);
     }
 }

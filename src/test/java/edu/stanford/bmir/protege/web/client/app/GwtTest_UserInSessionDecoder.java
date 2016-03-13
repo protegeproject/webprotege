@@ -25,19 +25,11 @@ public class GwtTest_UserInSessionDecoder extends GWTTestCase {
 
     public static final String EXPECTED_EMAIL_ADDRESS = "john.smith@gmail.com";
 
-    public static final ImmutableList<GroupId> EXPECTED_GROUPS =
-            ImmutableList.of(
-                    GroupId.get("X"),
-                    GroupId.get("Y"),
-                    GroupId.get("Z")
-            );
-
     public static final UserInSession EXPECTED_SESSION_DATA = new UserInSession(
             UserDetails.getUserDetails(
                     EXPECTED_USER_ID,
                     EXPECTED_DISPLAY_NAME,
-                    Optional.of(EXPECTED_EMAIL_ADDRESS)),
-            EXPECTED_GROUPS
+                    Optional.of(EXPECTED_EMAIL_ADDRESS))
     );
     private String userInSessionJson;
 
