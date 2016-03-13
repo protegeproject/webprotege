@@ -34,12 +34,12 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         checkNotNull(email);
         checkNotNull(password);
         checkNotNull(salt);
-        UserRecord existingRecord = repository.findOne(userId);
-        if(existingRecord != null) {
+        java.util.Optional<UserRecord> existingRecord = repository.findOne(userId);
+        if(existingRecord.isPresent()) {
             throw new UserNameAlreadyExistsException(userId.getUserName());
         }
-        UserRecord existingRecordByEmail = repository.findOneByEmailAddress(email.getEmailAddress());
-        if(existingRecordByEmail != null) {
+        java.util.Optional<UserRecord> existingRecordByEmail = repository.findOneByEmailAddress(email.getEmailAddress());
+        if(existingRecordByEmail.isPresent()) {
             throw new UserEmailAlreadyExistsException(email.getEmailAddress());
         }
         UserRecord newUserRecord = new UserRecord(
@@ -59,15 +59,15 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         if (userId.isGuest()) {
             return;
         }
-        UserRecord record = repository.findOne(userId);
-        if (record == null) {
+        java.util.Optional<UserRecord> record = repository.findOne(userId);
+        if (!record.isPresent()) {
             return;
         }
         UserRecord replacementRecord = new UserRecord(
-                record.getUserId(),
-                record.getRealName(),
-                record.getEmailAddress(),
-                record.getAvatarUrl(),
+                record.get().getUserId(),
+                record.get().getRealName(),
+                record.get().getEmailAddress(),
+                record.get().getAvatarUrl(),
                 salt,
                 saltedPasswordDigest
         );
@@ -79,11 +79,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         if(userId.isGuest()) {
             return Optional.absent();
         }
-        UserRecord record = repository.findOne(userId);
-        if(record == null) {
+        java.util.Optional<UserRecord> record = repository.findOne(userId);
+        if(!record.isPresent()) {
             return Optional.absent();
         }
-        return Optional.of(record.getSalt());
+        return Optional.of(record.get().getSalt());
     }
 
     @Override
@@ -91,11 +91,11 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         if(userId.isGuest()) {
             return Optional.absent();
         }
-        UserRecord record = repository.findOne(userId);
+        java.util.Optional<UserRecord> record = repository.findOne(userId);
         if(record == null) {
             return Optional.absent();
         }
-        return Optional.of(record.getSaltedPasswordDigest());
+        return Optional.of(record.get().getSaltedPasswordDigest());
     }
 
 }
