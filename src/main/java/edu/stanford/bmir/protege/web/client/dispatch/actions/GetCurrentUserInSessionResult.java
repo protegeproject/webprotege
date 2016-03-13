@@ -18,24 +18,18 @@ public class GetCurrentUserInSessionResult implements Result {
 
     private UserDetails userDetails;
 
-    private Set<GroupId> userGroupIds;
-
     /**
      * For serialization only
      */
     private GetCurrentUserInSessionResult() {
     }
 
-    public GetCurrentUserInSessionResult(UserDetails userDetails, Set<GroupId> userGroupIds) {
+    public GetCurrentUserInSessionResult(UserDetails userDetails) {
         this.userDetails = checkNotNull(userDetails);
-        this.userGroupIds = checkNotNull(userGroupIds);
     }
 
     public UserDetails getUserDetails() {
         return userDetails;
     }
 
-    public Set<GroupId> getUserGroupIds() {
-        return userGroupIds;
-    }
 }

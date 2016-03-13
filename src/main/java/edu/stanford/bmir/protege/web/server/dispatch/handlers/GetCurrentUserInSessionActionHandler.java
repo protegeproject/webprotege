@@ -55,11 +55,10 @@ public class GetCurrentUserInSessionActionHandler implements ActionHandler<GetCu
         UserId userId = executionContext.getUserId();
         Optional<UserDetails> userDetails = userDetailsManager.getUserDetails(userId);
         if (userDetails.isPresent()) {
-            Set<GroupId> userGroups = projectPermissionsManager.getUserGroups(userId);
-            return new GetCurrentUserInSessionResult(userDetails.get(), userGroups);
+            return new GetCurrentUserInSessionResult(userDetails.get());
         }
         else {
-            return new GetCurrentUserInSessionResult(UserDetails.getGuestUserDetails(), Collections.<GroupId>emptySet());
+            return new GetCurrentUserInSessionResult(UserDetails.getGuestUserDetails());
         }
     }
 }

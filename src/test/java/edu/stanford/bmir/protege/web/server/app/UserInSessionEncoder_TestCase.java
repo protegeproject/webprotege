@@ -51,18 +51,11 @@ public class UserInSessionEncoder_TestCase {
     @Before
     public void setUp() throws Exception {
         encoder = new UserInSessionEncoder();
-        ImmutableList<GroupId> groups = ImmutableList.of(
-                GroupId.get("X"),
-                GroupId.get("Y"),
-                GroupId.get("Z")
-        );
-
         when(userInSession.getUserDetails()).thenReturn(userDetails);
         when(userDetails.getUserId()).thenReturn(userId);
         when(userId.getUserName()).thenReturn("JohnSmith");
         when(userDetails.getDisplayName()).thenReturn("John Smith");
         when(userDetails.getEmailAddress()).thenReturn(Optional.of("john.smith@gmail.com"));
-        when(userInSession.getGroups()).thenReturn(groups);
     }
 
 

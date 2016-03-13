@@ -5,15 +5,12 @@
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserId" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.app.UserInSessionEncoder" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.user.UserDetails" %>
-<%@ page import="edu.stanford.bmir.protege.web.shared.permissions.GroupId" %>
 <%@ page import="edu.stanford.bmir.protege.web.shared.app.UserInSession" %>
-<%@ page import="com.google.common.collect.ImmutableList" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSession" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector" %>
 <%@ page import="java.io.IOException" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -80,22 +77,15 @@
         WebProtegeSession webProtegeSession = new WebProtegeSessionImpl(session);
         UserId userId = webProtegeSession.getUserInSession();
         final UserInSession userInSession;
-        final ImmutableList.Builder<GroupId> builder = ImmutableList.builder();
         if(userId.isGuest()) {
             userInSession = new UserInSession(
-                UserDetails.getGuestUserDetails(),
-                ImmutableList.<GroupId>of()
+                UserDetails.getGuestUserDetails()
             );
         }
         else {
-            ProjectPermissionsManager projectPermissionsManager = WebProtegeInjector.get().getInstance(ProjectPermissionsManager.class);
-            for(GroupId groupId : projectPermissionsManager.getUserGroups(userId)) {
-                builder.add(groupId);
-            }
             UserDetailsManager userDetailsManager = WebProtegeInjector.get().getInstance(UserDetailsManager.class);
             userInSession = new UserInSession(
-                UserDetails.getUserDetails(userId, userId.getUserName(), userDetailsManager.getEmail(userId)),
-                builder.build()
+                UserDetails.getUserDetails(userId, userId.getUserName(), userDetailsManager.getEmail(userId))
             );
         }
         ClientObjectWriter.get("userInSession", new UserInSessionEncoder())

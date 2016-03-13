@@ -31,23 +31,15 @@ public class UserInSession_TestCase {
     @Mock
     private UserDetails userDetails;
 
-    @Mock
-    private ImmutableList<GroupId> groups;
-
     @Before
     public void setUp() throws Exception {
-        userInSession = new UserInSession(userDetails, groups);
-        otherUserInSession = new UserInSession(userDetails, groups);
+        userInSession = new UserInSession(userDetails);
+        otherUserInSession = new UserInSession(userDetails);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIsUserDetailsIsNull() {
-        new UserInSession(null, groups);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void shouldThrowNullPointerExceptionIfGroupsIsNull() {
-        new UserInSession(userDetails, null);
+        new UserInSession(null);
     }
 
     @Test
@@ -80,9 +72,5 @@ public class UserInSession_TestCase {
         assertThat(userInSession.getUserDetails(), is(userDetails));
     }
 
-    @Test
-    public void shouldReturnSuppliedGroups() {
-        assertThat(userInSession.getGroups(), is(groups));
-    }
 
 }

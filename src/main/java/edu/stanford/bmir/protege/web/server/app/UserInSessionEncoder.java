@@ -18,16 +18,10 @@ public class UserInSessionEncoder implements ClientObjectEncoder<UserInSession> 
     @Override
     public JsonObject encode(UserInSession object) {
         UserDetails userDetails = object.getUserDetails();
-        JsonArrayBuilder groupsBuilder = Json.createArrayBuilder();
-        for (GroupId groupId : object.getGroups()) {
-            groupsBuilder.add(groupId.getGroupName());
-        }
-
         return Json.createObjectBuilder()
                 .add("userName", userDetails.getUserId().getUserName())
                 .add("displayName", userDetails.getDisplayName())
                 .add("userEmail", userDetails.getEmailAddress().or(""))
-                .add("groups", groupsBuilder.build())
                 .build();
     }
 }

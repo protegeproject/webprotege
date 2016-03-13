@@ -38,8 +38,6 @@ public class LoggedInUserManager implements LoggedInUserProvider {
 
     private UserDetails userDetails = UserDetails.getGuestUserDetails();
 
-    private Set<GroupId> groups = new HashSet<GroupId>();
-
     private Map<String, String> currentUserProperties = new HashMap<String, String>();
 
     private EventBus eventBus;
@@ -102,7 +100,7 @@ public class LoggedInUserManager implements LoggedInUserProvider {
         dispatchServiceManager.execute(new LogOutUserAction(), new DispatchServiceCallback<LogOutUserResult>() {
             @Override
             public void handleSuccess(LogOutUserResult logOutUserResult) {
-                replaceUserAndBroadcastChanges(UserDetails.getGuestUserDetails(), Collections.<GroupId>emptySet());
+                replaceUserAndBroadcastChanges(UserDetails.getGuestUserDetails());
             }
         });
     }
@@ -118,7 +116,7 @@ public class LoggedInUserManager implements LoggedInUserProvider {
 
             @Override
             public void handleSuccess(GetCurrentUserInSessionResult result) {
-                replaceUserAndBroadcastChanges(result.getUserDetails(), result.getUserGroupIds());
+                replaceUserAndBroadcastChanges(result.getUserDetails());
                 if (callback.isPresent()) {
                     callback.get().onSuccess(result.getUserDetails());
                 }
@@ -132,54 +130,17 @@ public class LoggedInUserManager implements LoggedInUserProvider {
         UserInSession userInSession  = ClientObjectReader.create("userInSession", decoder).read();
         UserDetails userDetails = userInSession.getUserDetails();
         GWT.log("Decoded user in session: " + userDetails);
-        replaceUserAndBroadcastChanges(userDetails, new HashSet<GroupId>(userInSession.getGroups()));
+        replaceUserAndBroadcastChanges(userDetails);
     }
-
-    public String getLoggedInUserDisplayName() {
-        return userDetails.getDisplayName();
-    }
-
-    public Optional<String> getLoggedInUserEmailAddress() {
-        return userDetails.getEmailAddress();
-    }
-
-    public Set<GroupId> getLoggedInUserGroups() {
-        return new HashSet<GroupId>(groups);
-    }
-
 
     // TODO:  A temp hack - I'd like to make this type safe or get rid of it.
 
-
-
-    public Optional<String> getSessionProperty(String prop) {
-        String value = currentUserProperties.get(prop);
-        if(value == null) {
-            return Optional.absent();
-        }
-        else {
-            return Optional.of(value);
-        }
-    }
-
-    public void setSessionProperty(String prop, String value) {
-        currentUserProperties.put(checkNotNull(prop), checkNotNull(value));
-    }
-
-    public void clearSessionProperty(String propertyName) {
-        currentUserProperties.remove(checkNotNull(propertyName));
-    }
-
-
-
-    private void replaceUserAndBroadcastChanges(UserDetails newUserDetails, Set<GroupId> newUserGroups) {
-        groups.clear();
+    private void replaceUserAndBroadcastChanges(UserDetails newUserDetails) {
         currentUserProperties.clear();
 
         UserId previousUserId = this.userId;
         this.userId = newUserDetails.getUserId();
         this.userDetails = newUserDetails;
-        this.groups.addAll(newUserGroups);
         if(userId.isGuest()) {
             eventBus.fireEvent(new UserLoggedOutEvent(previousUserId));
         }

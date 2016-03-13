@@ -20,30 +20,23 @@ public class UserInSession implements IsSerializable {
 
     private UserDetails userDetails;
 
-    private ImmutableList<GroupId> groups;
-
     /**
      * For serialization
      */
     private UserInSession() {
     }
 
-    public UserInSession(UserDetails userDetails, ImmutableList<GroupId> groups) {
+    public UserInSession(UserDetails userDetails) {
         this.userDetails = checkNotNull(userDetails);
-        this.groups = checkNotNull(groups);
     }
 
     public UserDetails getUserDetails() {
         return userDetails;
     }
 
-    public ImmutableList<GroupId> getGroups() {
-        return groups;
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hashCode(userDetails, groups);
+        return Objects.hashCode(userDetails);
     }
 
     @Override
@@ -55,7 +48,7 @@ public class UserInSession implements IsSerializable {
             return false;
         }
         UserInSession other = (UserInSession) obj;
-        return userDetails.equals(other.userDetails) && this.groups.equals(other.groups);
+        return userDetails.equals(other.userDetails);
     }
 
 
@@ -63,7 +56,6 @@ public class UserInSession implements IsSerializable {
     public String toString() {
         return toStringHelper("UserInSession")
                 .addValue(userDetails)
-                .addValue(groups)
                 .toString();
     }
 }

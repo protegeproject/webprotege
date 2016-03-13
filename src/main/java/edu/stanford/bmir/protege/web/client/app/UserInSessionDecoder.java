@@ -35,13 +35,6 @@ public class UserInSessionDecoder implements ClientObjectDecoder<UserInSession> 
         String displayName = object.get("displayName").isString().stringValue();
         String userEmail = object.get("userEmail").isString().stringValue();
 
-        JSONArray groupsArray = object.get("groups").isArray();
-        ImmutableList.Builder<GroupId> groupIdBuilder = ImmutableList.builder();
-        for(int i = 0; i < groupsArray.size(); i++) {
-            JSONValue value = groupsArray.get(i);
-            String groupId = value.isString().stringValue();
-            groupIdBuilder.add(GroupId.get(groupId));
-        }
         UserId userId = UserId.getUserId(userNameStringValue.stringValue());
         UserDetails userDetails;
         if(userId.isGuest()) {
@@ -51,8 +44,7 @@ public class UserInSessionDecoder implements ClientObjectDecoder<UserInSession> 
             userDetails = UserDetails.getUserDetails(userId, displayName, userEmail);
         }
         return new UserInSession(
-                userDetails,
-                groupIdBuilder.build()
+                userDetails
         );
     }
 }
