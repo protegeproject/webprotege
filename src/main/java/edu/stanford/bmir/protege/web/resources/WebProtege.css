@@ -258,3 +258,7 @@
     font-weight: 300;
     color: #989898;
 }
+
+.sharingDropDown {
+    text-transform: lowercase;
+}

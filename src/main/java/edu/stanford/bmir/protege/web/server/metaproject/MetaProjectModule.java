@@ -2,6 +2,10 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
+import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
+import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
+import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
 import edu.stanford.bmir.protege.web.server.user.HasUserIds;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 

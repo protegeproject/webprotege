@@ -1,19 +1,22 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
+import java.util.List;
+
 /**
- * Author: Matthew Horridge<br>
- * Stanford University<br>
- * Bio-Medical Informatics Research Group<br>
- * Date: 22/02/2013
+ * Matthew Horridge
+ * Stanford Center for Biomedical Informatics Research
+ * 06/02/15
  */
 public interface ProjectPermissionsManager {
 
-    boolean hasReadAccess(UserId userId);
+    boolean isUserAdmin(UserId userId);
 
-    boolean hasWriteAccess(UserId userId);
+    List<ProjectDetails> getListableReadableProjects(UserId userId);
 
-    boolean hasCommentAccess(UserId userId);
+    PermissionsSet getPermissionsSet(ProjectId projectId, UserId userId);
 }

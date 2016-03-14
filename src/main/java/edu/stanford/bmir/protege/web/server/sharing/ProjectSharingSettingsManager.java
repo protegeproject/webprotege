@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.metaproject;
+package edu.stanford.bmir.protege.web.server.sharing;
 
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.base.Stopwatch;
-import edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager;
+import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
@@ -13,14 +13,11 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectRe
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.smi.protege.server.metaproject.Operation;
 
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 /**

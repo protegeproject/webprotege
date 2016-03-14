@@ -1,7 +1,5 @@
-package edu.stanford.bmir.protege.web.server.metaproject;
+package edu.stanford.bmir.protege.web.server.permissions;
 
-import edu.stanford.bmir.protege.web.server.permissions.AccessControlListEntry;
-import edu.stanford.bmir.protege.web.server.permissions.AccessControlListRepository;
 import edu.stanford.bmir.protege.web.server.project.ProjectRecord;
 import edu.stanford.bmir.protege.web.server.project.ProjectRecordRepository;
 import edu.stanford.bmir.protege.web.server.project.ProjectRecordTranslator;
@@ -13,9 +11,9 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.server.project.ProjectRecordTranslator.translateToProjectDetails;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -26,12 +24,14 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     private final AccessControlListRepository accessControlListRepository;
 
+    private final WorldProjectPermissionRecordRepository worldProjectPermissionRecordRepository;
+
     private final ProjectRecordRepository projectRecordRepository;
 
-
     @Inject
-    public ProjectPermissionsManagerImpl(AccessControlListRepository accessControlListRepository, ProjectRecordRepository projectRecordRepository) {
+    public ProjectPermissionsManagerImpl(AccessControlListRepository accessControlListRepository, WorldProjectPermissionRecordRepository worldProjectPermissionRecordRepository, ProjectRecordRepository projectRecordRepository) {
         this.accessControlListRepository = accessControlListRepository;
+        this.worldProjectPermissionRecordRepository = worldProjectPermissionRecordRepository;
         this.projectRecordRepository = projectRecordRepository;
     }
 
@@ -57,6 +57,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
                         builder.addPermission(Permission.getReadPermission());
                     }
                 });
+        // Users can always write, comment and read the projects they own
         Optional<ProjectRecord> record = projectRecordRepository.findOne(projectId);
         if(record.isPresent()) {
             if(record.get().getOwner().equals(userId)) {
@@ -65,6 +66,9 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
                 builder.addPermission(Permission.getReadPermission());
             }
         }
+        // World permissions
+        worldProjectPermissionRecordRepository.findAllByProjectId(projectId)
+                .forEach(r -> builder.addPermission(r.getPermission()));
         return builder.build();
     }
 
@@ -77,9 +81,10 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
                     result.add(translateToProjectDetails(record.get()));
                 });
         projectRecordRepository.findByOwner(userId)
-                .map(r -> translateToProjectDetails(r))
-                .forEach(d -> result.add(d));
+                .map(ProjectRecordTranslator::translateToProjectDetails)
+                .forEach(result::add);
 
+        // We don't show projects for which the user can access due to world permissions
         return new ArrayList<>(result);
     }
 }

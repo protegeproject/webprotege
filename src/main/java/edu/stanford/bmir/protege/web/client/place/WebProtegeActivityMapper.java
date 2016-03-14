@@ -14,10 +14,14 @@ import edu.stanford.bmir.protege.web.client.login.LoginPlace;
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenter;
 import edu.stanford.bmir.protege.web.client.project.ProjectPresenterFactory;
+import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenterFactory;
 import edu.stanford.bmir.protege.web.client.signup.SignUpPresenter;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerPresenter;
 import edu.stanford.bmir.protege.web.shared.place.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsActivity;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSettingsPlace;
 
 import javax.inject.Provider;
 
@@ -40,12 +44,15 @@ public class WebProtegeActivityMapper implements ActivityMapper {
 
     private final PlaceController placeController;
 
+    private final SharingSettingsPresenterFactory sharingSettingsPresenterFactory;
+
     @Inject
     public WebProtegeActivityMapper(LoggedInUserProvider loggedInUserProvider,
                                     ProjectPresenterFactory projectPresenterFactory,
                                     Provider<ProjectManagerPresenter> projectListPresenterProvider,
                                     Provider<LoginPresenter> loginPresenterProvider,
                                     Provider<SignUpPresenter> signUpPresenterProvider,
+                                    SharingSettingsPresenterFactory sharingSettingsPresenterFactory,
                                     PlaceController placeController) {
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectPresenterFactory = projectPresenterFactory;
@@ -53,6 +60,7 @@ public class WebProtegeActivityMapper implements ActivityMapper {
         this.signUpPresenterProvider = signUpPresenterProvider;
         this.loginPresenterProvider = loginPresenterProvider;
         this.placeController = placeController;
+        this.sharingSettingsPresenterFactory = sharingSettingsPresenterFactory;
     }
 
     private Optional<ProjectPresenter> lastProjectPresenter = Optional.absent();
@@ -103,6 +111,13 @@ public class WebProtegeActivityMapper implements ActivityMapper {
             ProjectPresenter presenter = getProjectPresenter(projectViewPlace);
             lastProjectPresenter = Optional.of(presenter);
             return new ProjectViewActivity(presenter, projectViewPlace);
+        }
+
+        if(place instanceof SharingSettingsPlace) {
+            SharingSettingsPlace sharingSettingsPlace = (SharingSettingsPlace) place;
+            ProjectId projectId = sharingSettingsPlace.getProjectId();
+            SharingSettingsPresenter presenter = sharingSettingsPresenterFactory.getPresenter(projectId);
+            return new SharingSettingsActivity(presenter, sharingSettingsPlace);
         }
 
         return null;

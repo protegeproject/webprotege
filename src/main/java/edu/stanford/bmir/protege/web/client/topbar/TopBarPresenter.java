@@ -21,23 +21,23 @@ public class TopBarPresenter implements HasDispose {
 
     private final LoggedInUserPresenter loggedInUserPresenter;
 
-    private final SharingSettingsPresenter sharingSettingsPresenter;
-
     private final ProjectMenuPresenter projectMenuPresenter;
 
     private final HelpPresenter helpPresenter;
+
+    private final SharingButtonPresenter sharingButtonPresenter;
 
     @Inject
     public TopBarPresenter(TopBarView view,
                            GoToHomePresenter goToHomePresenter,
                            ProjectMenuPresenter projectMenuPresenter,
-                           SharingSettingsPresenter sharingSettingsPresenter,
+                           SharingButtonPresenter sharingButtonPresenter,
                            LoggedInUserPresenter loggedInUserPresenter,
                            HelpPresenter helpPresenter) {
         this.view = view;
         this.projectMenuPresenter = projectMenuPresenter;
         this.goToHomePresenter = goToHomePresenter;
-        this.sharingSettingsPresenter = sharingSettingsPresenter;
+        this.sharingButtonPresenter = sharingButtonPresenter;
         this.loggedInUserPresenter = loggedInUserPresenter;
         this.helpPresenter = helpPresenter;
     }
@@ -48,7 +48,7 @@ public class TopBarPresenter implements HasDispose {
         projectMenuPresenter.start(view.getProjectMenuContainer());
         loggedInUserPresenter.start(view.getLoggedInUserWidgetContainer());
         helpPresenter.start(view.getHelpWidgetContainer());
-        sharingSettingsPresenter.start(view.getSharingSettingsContainer());
+        sharingButtonPresenter.start(view.getSharingSettingsContainer());
 
     }
 

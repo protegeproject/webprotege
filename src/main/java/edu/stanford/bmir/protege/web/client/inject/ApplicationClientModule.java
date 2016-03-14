@@ -38,6 +38,10 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletChooserViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
+import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenterFactory;
+import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
+import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsViewImpl;
 import edu.stanford.bmir.protege.web.client.signup.SignUpView;
 import edu.stanford.bmir.protege.web.client.signup.SignUpViewImpl;
 import edu.stanford.bmir.protege.web.client.topbar.GoToHomeView;
@@ -193,6 +197,12 @@ public class ApplicationClientModule extends AbstractGinModule {
         install(new GinFactoryModuleBuilder()
                 .implement(PerspectiveLink.class, PerspectiveLinkImpl.class)
                 .build(PerspectiveLinkFactory.class));
+
+        install(new GinFactoryModuleBuilder()
+                .implement(SharingSettingsPresenter.class, SharingSettingsPresenter.class)
+                .build(SharingSettingsPresenterFactory.class));
+
+        bind(SharingSettingsView.class).to(SharingSettingsViewImpl.class);
 
         bind(IndividualsListView.class).to(IndividualsListViewImpl.class);
 
