@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.init;
 
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
