@@ -23,7 +23,7 @@ public interface AccessControlListRepository extends Repository<AccessControlLis
 
     void deleteByProjectId(ProjectId projectId);
 
-    void save(AccessControlListEntry entry);
+    AccessControlListEntry save(AccessControlListEntry entry);
 
-    void save(Iterable<AccessControlListEntry> entries);
+    Iterable<AccessControlListEntry> save(Iterable<AccessControlListEntry> iterable);
 }

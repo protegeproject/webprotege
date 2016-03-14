@@ -23,12 +23,7 @@ public enum SharingPermission implements Serializable {
     /**
      * A user can edit a project.
      */
-    EDIT,
-
-    /**
-     * A user doesn't have any sharing rights for a project.
-     */
-    NONE;
+    EDIT;
 
 
     /**

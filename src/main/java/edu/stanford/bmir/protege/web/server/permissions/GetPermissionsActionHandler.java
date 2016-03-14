@@ -19,10 +19,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetPermissionsActionHandler implements ActionHandler<GetPermissionsAction, GetPermissionsResult> {
 
-    private edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager permissionsManager;
+    private ProjectPermissionsManager permissionsManager;
 
     @Inject
-    public GetPermissionsActionHandler(edu.stanford.bmir.protege.web.server.metaproject.ProjectPermissionsManager permissionsManager) {
+    public GetPermissionsActionHandler(ProjectPermissionsManager permissionsManager) {
         this.permissionsManager = checkNotNull(permissionsManager);
     }
 

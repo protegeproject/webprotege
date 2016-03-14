@@ -208,6 +208,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String inTrash();
 
         String userName();
+
+        String sharingDropDown();
     }
 
     public static interface WebProtegeButtons extends CssResource {
