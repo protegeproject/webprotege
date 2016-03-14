@@ -14,7 +14,15 @@ import java.util.List;
  */
 public interface ProjectPermissionsManager {
 
-    List<ProjectDetails> getListableReadableProjects(UserId userId);
+    /**
+     * Gets a list of the projects that the specified user can read.  Note that these are the projects
+     * for which the user has explicit read permission (i.e. projects that have essentially been shared
+     * with the user).  The list does not include projects that are
+     * world readable.
+     * @param userId The userId.  Not {@code null}.
+     * @return The (possibly empty) list of projects.
+     */
+    List<ProjectDetails> getReadableProjects(UserId userId);
 
     PermissionsSet getPermissionsSet(ProjectId projectId, UserId userId);
 }

@@ -43,7 +43,7 @@ public class GetAvailableProjectsHandler implements ActionHandler<GetAvailablePr
     @Override
     public GetAvailableProjectsResult execute(GetAvailableProjectsAction action, ExecutionContext executionContext) {
         UserId userId = executionContext.getUserId();
-        List<ProjectDetails> details = projectPermissionsManager.getListableReadableProjects(userId);
+        List<ProjectDetails> details = projectPermissionsManager.getReadableProjects(userId);
         Collections.sort(details);
         return new GetAvailableProjectsResult(details);
     }

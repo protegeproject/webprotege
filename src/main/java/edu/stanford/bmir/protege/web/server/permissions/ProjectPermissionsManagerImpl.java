@@ -67,7 +67,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     }
 
     @Override
-    public List<ProjectDetails> getListableReadableProjects(UserId userId) {
+    public List<ProjectDetails> getReadableProjects(UserId userId) {
         Set<ProjectDetails> result = new HashSet<>();
         accessControlListRepository.findByUserId(userId)
                 .forEach(r -> {
