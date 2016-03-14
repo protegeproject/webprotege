@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.server.user;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.metaproject.HasGetUserIdByEmailAddress;
-import edu.stanford.bmir.protege.web.server.metaproject.HasGetUserIdByUserIdOrEmail;
-import edu.stanford.bmir.protege.web.server.user.HasUserIds;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
