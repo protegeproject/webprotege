@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.metaproject;
+package edu.stanford.bmir.protege.web.server.auth;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
