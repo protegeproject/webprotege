@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
+import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
