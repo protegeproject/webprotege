@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.server.project.ProjectExistsFilterImpl;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManager;
 import edu.stanford.bmir.protege.web.server.sharing.ProjectSharingSettingsManagerImpl;
 import edu.stanford.bmir.protege.web.server.user.HasUserIds;
+import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
+import edu.stanford.bmir.protege.web.server.user.UserDetailsManagerImpl;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
 
 import java.io.File;

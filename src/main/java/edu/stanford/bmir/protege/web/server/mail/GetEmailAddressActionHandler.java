@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.mail;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
+import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressResult;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;

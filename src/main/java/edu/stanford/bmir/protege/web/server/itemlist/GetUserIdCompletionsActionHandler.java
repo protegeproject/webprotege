@@ -5,7 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
+import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPossibleItemCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsAction;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsResult;

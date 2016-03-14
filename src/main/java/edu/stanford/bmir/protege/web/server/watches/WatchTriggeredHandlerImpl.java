@@ -3,9 +3,8 @@ package edu.stanford.bmir.protege.web.server.watches;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import edu.stanford.bmir.protege.web.client.place.ItemSelection;
-import edu.stanford.bmir.protege.web.client.place.OWLClassItem;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
-import edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager;
+import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
@@ -17,7 +16,6 @@ import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

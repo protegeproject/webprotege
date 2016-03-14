@@ -10,7 +10,7 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.session.WebProtegeSessionImpl" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector" %>
 <%@ page import="java.io.IOException" %>
-<%@ page import="edu.stanford.bmir.protege.web.server.metaproject.UserDetailsManager" %>
+<%@ page import="edu.stanford.bmir.protege.web.server.user.UserDetailsManager" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
