@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.metaproject;
+package edu.stanford.bmir.protege.web.server.project;
 
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectFileStore;

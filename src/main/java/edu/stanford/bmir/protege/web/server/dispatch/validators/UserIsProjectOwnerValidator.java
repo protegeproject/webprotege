@@ -4,7 +4,7 @@ package edu.stanford.bmir.protege.web.server.dispatch.validators;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.metaproject.ProjectDetailsManager;
+import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.dispatch.HasProjectAction;
 
 import javax.inject.Inject;
