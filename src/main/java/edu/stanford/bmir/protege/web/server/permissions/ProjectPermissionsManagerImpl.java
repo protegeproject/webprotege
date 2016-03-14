@@ -36,12 +36,6 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     }
 
     @Override
-    public boolean isUserAdmin(UserId userId) {
-        return false;
-    }
-
-
-    @Override
     public PermissionsSet getPermissionsSet(ProjectId projectId, UserId userId) {
         PermissionsSet.Builder builder = PermissionsSet.builder();
         accessControlListRepository.findByProjectIdAndUserId(projectId, userId)

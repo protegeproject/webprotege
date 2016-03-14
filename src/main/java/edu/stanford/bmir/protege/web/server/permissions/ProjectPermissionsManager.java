@@ -14,8 +14,6 @@ import java.util.List;
  */
 public interface ProjectPermissionsManager {
 
-    boolean isUserAdmin(UserId userId);
-
     List<ProjectDetails> getListableReadableProjects(UserId userId);
 
     PermissionsSet getPermissionsSet(ProjectId projectId, UserId userId);
