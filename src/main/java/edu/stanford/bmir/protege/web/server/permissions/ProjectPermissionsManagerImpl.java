@@ -81,4 +81,14 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
         // We don't show projects for which the user can access due to world permissions
         return new ArrayList<>(result);
     }
+
+    @Override
+    public boolean hasPermission(ProjectId projectId, UserId userId, Permission permission) {
+        int count = accessControlListRepository.countByProjectIdAndUserIdAndPermission(projectId, userId, permission);
+        if(count > 0) {
+            return true;
+        }
+        int worldCount = worldProjectPermissionRecordRepository.countByProjectIdAndPermission(projectId, permission);
+        return worldCount > 0;
+    }
 }
