@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.sharing;
 import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import edu.stanford.bmir.protege.web.server.metaproject.HasGetUserIdByUserIdOrEmail;
+import edu.stanford.bmir.protege.web.server.user.HasGetUserIdByUserIdOrEmail;
 import edu.stanford.bmir.protege.web.server.permissions.AccessControlListEntry;
 import edu.stanford.bmir.protege.web.server.permissions.AccessControlListRepository;
 import edu.stanford.bmir.protege.web.server.permissions.WorldProjectPermissionRecordRepository;

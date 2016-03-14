@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.server.metaproject;
+package edu.stanford.bmir.protege.web.server.user;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
