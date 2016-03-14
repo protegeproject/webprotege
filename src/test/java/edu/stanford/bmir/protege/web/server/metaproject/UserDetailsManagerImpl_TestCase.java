@@ -2,6 +2,7 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.server.user.UserDetailsManagerImpl;
 import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;

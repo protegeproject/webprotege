@@ -1,15 +1,12 @@
-package edu.stanford.bmir.protege.web.server.metaproject;
+package edu.stanford.bmir.protege.web.server.user;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.server.user.UserRecord;
-import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import java.util.*;
-import java.util.stream.StreamSupport;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
