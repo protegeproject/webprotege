@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.springframework.data.repository.CrudRepository;
@@ -26,4 +27,6 @@ public interface AccessControlListRepository extends Repository<AccessControlLis
     AccessControlListEntry save(AccessControlListEntry entry);
 
     Iterable<AccessControlListEntry> save(Iterable<AccessControlListEntry> iterable);
+
+    int countByProjectIdAndUserIdAndPermission(ProjectId projectId, UserId userId, Permission permission);
 }

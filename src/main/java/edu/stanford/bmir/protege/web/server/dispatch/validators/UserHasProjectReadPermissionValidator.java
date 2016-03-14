@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.server.dispatch.validators;
 
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
+import edu.stanford.bmir.protege.web.server.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
-import java.util.Collection;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,23 +18,24 @@ import java.util.Collection;
  */
 public class UserHasProjectReadPermissionValidator<A extends Action<?> & HasProjectId> implements RequestValidator<A> {
 
+    private final PermissionChecker permissionChecker;
+
+    @Inject
+    public UserHasProjectReadPermissionValidator(PermissionChecker permissionChecker) {
+        this.permissionChecker = permissionChecker;
+    }
+
     public static <A extends Action<?> & HasProjectId> UserHasProjectReadPermissionValidator<A> get() {
         return new UserHasProjectReadPermissionValidator<A>();
     }
 
     @Override
     public RequestValidationResult validateAction(A action, RequestContext requestContext) {
-        // TODO: NEEDS FIXING
-        return RequestValidationResult.getValid();
-//        ProjectId projectId = action.getProjectId();
-//        ProjectPermissionsManager mpm = MetaProjectManager.getManager();
-//        Collection<Operation> ops = mpm.getAllowedOperations(projectId.getId(), requestContext.getUserId().getUserName());
-//        for(Operation op : ops) {
-//            if(op.getName().equals(OntologyShareAccessConstants.PROJECT_READ_ONLY_ACCESS_OPERATION)) {
-//                return RequestValidationResult.getValid();
-//            }
-//        }
-//        return RequestValidationResult.getInvalid("Required read permission of project");
-
+        if(permissionChecker.hasReadPermission(action.getProjectId(), requestContext.getUserId())) {
+            return RequestValidationResult.getValid();
+        }
+        else {
+            return RequestValidationResult.getInvalid(new PermissionDeniedException());
+        }
     }
 }

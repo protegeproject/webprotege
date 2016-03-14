@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionsSet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -12,7 +13,7 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public interface ProjectPermissionsManager {
+public interface ProjectPermissionsManager extends PermissionChecker {
 
     /**
      * Gets a list of the projects that the specified user can read.  Note that these are the projects
