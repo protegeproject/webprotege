@@ -36,10 +36,10 @@ public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasP
     }
 
     @Override
-    final public RequestValidator<A> getRequestValidator(A action, RequestContext requestContext) {
-        final RequestValidator<A> additionalRequestValidator = getAdditionalRequestValidator(action, requestContext);
-        final ProjectExistsValidator<A> projectExistsValidator = ProjectExistsValidator.get();
-        List<RequestValidator<A>> validators = new ArrayList<RequestValidator<A>>();
+    final public RequestValidator getRequestValidator(A action, RequestContext requestContext) {
+        final RequestValidator additionalRequestValidator = getAdditionalRequestValidator(action, requestContext);
+        final ProjectExistsValidator projectExistsValidator = new ProjectExistsValidator(action.getProjectId());
+        List<RequestValidator> validators = new ArrayList<>();
         validators.add(additionalRequestValidator);
         validators.add(projectExistsValidator);
         return CompositeRequestValidator.get(validators);
@@ -54,7 +54,7 @@ public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasP
      * @param requestContext The {@link RequestContext} that describes the context for the request.
      * @return A {@link RequestValidator} for this handler.  Not {@code null}.
      */
-    protected abstract RequestValidator<A> getAdditionalRequestValidator(A action, RequestContext requestContext);
+    protected abstract RequestValidator getAdditionalRequestValidator(A action, RequestContext requestContext);
 
     @Override
     final public R execute(A action, ExecutionContext executionContext) {

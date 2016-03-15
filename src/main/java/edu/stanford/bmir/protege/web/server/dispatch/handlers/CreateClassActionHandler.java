@@ -7,7 +7,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
@@ -32,10 +34,13 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
 
     private final WebProtegeLogger logger;
 
+    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
+
     @Inject
-    public CreateClassActionHandler(OWLAPIProjectManager projectManager, WebProtegeLogger logger) {
+    public CreateClassActionHandler(OWLAPIProjectManager projectManager, WebProtegeLogger logger, ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
         this.logger = logger;
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -44,8 +49,8 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
     }
 
     @Override
-    protected RequestValidator<CreateClassAction> getAdditionalRequestValidator(CreateClassAction action, RequestContext requestContext) {
-        return UserHasProjectWritePermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(CreateClassAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
 

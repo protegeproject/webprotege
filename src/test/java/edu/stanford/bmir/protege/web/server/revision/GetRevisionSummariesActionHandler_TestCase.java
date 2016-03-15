@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.change.RevisionManager;
@@ -50,13 +52,16 @@ public class GetRevisionSummariesActionHandler_TestCase {
     @Mock
     private OWLAPIProjectManager projectManager;
 
+    @Mock
+    private ValidatorFactory<ReadPermissionValidator> validatorFactory;
+
     @Before
     public void setUp() throws Exception {
         revisionSummaries = new ArrayList<>();
         revisionSummaries.add(summaryA);
         revisionSummaries.add(summaryB);
         revisionSummaries.add(summaryC);
-        handler = new GetRevisionSummariesActionHandler(projectManager);
+        handler = new GetRevisionSummariesActionHandler(projectManager, validatorFactory);
         when(project.getChangeManager()).thenReturn(changeManager);
         when(changeManager.getRevisionSummaries()).thenReturn(revisionSummaries);
     }

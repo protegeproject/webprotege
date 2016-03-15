@@ -34,7 +34,7 @@ public class AddWatchActionHandler extends AbstractHasProjectActionHandler<AddWa
     }
 
     @Override
-    protected RequestValidator<AddWatchAction> getAdditionalRequestValidator(AddWatchAction action, RequestContext requestContext) {
+    protected RequestValidator getAdditionalRequestValidator(AddWatchAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

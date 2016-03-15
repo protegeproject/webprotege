@@ -32,7 +32,7 @@ public class GetPermissionsActionHandler implements ActionHandler<GetPermissions
     }
 
     @Override
-    public RequestValidator<GetPermissionsAction> getRequestValidator(GetPermissionsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetPermissionsAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

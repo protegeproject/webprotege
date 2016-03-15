@@ -1,11 +1,12 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
+import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.sharing.GetProjectSharingSettingsAction;
@@ -22,17 +23,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetProjectSharingSettingsActionHandler extends AbstractHasProjectActionHandler<GetProjectSharingSettingsAction, GetProjectSharingSettingsResult> {
 
-    private ProjectSharingSettingsManager sharingSettingsManager;
+    private final ProjectSharingSettingsManager sharingSettingsManager;
+
+    private final ValidatorFactory<AdminPermissionValidator> validatorFactory;
 
     @Inject
-    public GetProjectSharingSettingsActionHandler(ProjectSharingSettingsManager sharingSettingsManager, OWLAPIProjectManager projectManager) {
+    public GetProjectSharingSettingsActionHandler(OWLAPIProjectManager projectManager, ProjectSharingSettingsManager sharingSettingsManager, ValidatorFactory<AdminPermissionValidator> validatorFactory) {
         super(projectManager);
-        this.sharingSettingsManager = checkNotNull(sharingSettingsManager);
+        this.sharingSettingsManager = sharingSettingsManager;
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<GetProjectSharingSettingsAction> getAdditionalRequestValidator(GetProjectSharingSettingsAction action, RequestContext requestContext) {
-        return NullValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(GetProjectSharingSettingsAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

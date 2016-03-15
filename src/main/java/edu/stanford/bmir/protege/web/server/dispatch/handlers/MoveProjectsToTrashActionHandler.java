@@ -38,17 +38,17 @@ public class MoveProjectsToTrashActionHandler implements ActionHandler<MoveProje
     }
 
     @Override
-    public RequestValidator<MoveProjectsToTrashAction> getRequestValidator(MoveProjectsToTrashAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(MoveProjectsToTrashAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 
     @Override
     public MoveProjectsToTrashResult execute(MoveProjectsToTrashAction action, ExecutionContext executionContext) {
         List<ProjectMovedToTrashEvent> events = new ArrayList<ProjectMovedToTrashEvent>();
-        for(ProjectId projectId : action.getProjectIds()) {
+        ProjectId projectId = action.getProjectId();
             projectDetailsManager.setInTrash(projectId, true);
             events.add(new ProjectMovedToTrashEvent(projectId));
-        }
+
         return new MoveProjectsToTrashResult(new EventList<ProjectMovedToTrashEvent>(EventTag.getFirst(), events, EventTag.getFirst()));
     }
 }

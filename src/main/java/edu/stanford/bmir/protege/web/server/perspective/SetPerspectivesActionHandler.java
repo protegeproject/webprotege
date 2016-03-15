@@ -29,7 +29,7 @@ public class SetPerspectivesActionHandler implements ActionHandler<SetPerspectiv
     }
 
     @Override
-    public RequestValidator<SetPerspectivesAction> getRequestValidator(SetPerspectivesAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(SetPerspectivesAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

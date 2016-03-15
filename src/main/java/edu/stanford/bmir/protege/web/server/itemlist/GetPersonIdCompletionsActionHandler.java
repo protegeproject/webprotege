@@ -40,7 +40,7 @@ public class GetPersonIdCompletionsActionHandler implements ActionHandler<GetPer
     }
 
     @Override
-    public RequestValidator<GetPersonIdCompletionsAction> getRequestValidator(GetPersonIdCompletionsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetPersonIdCompletionsAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

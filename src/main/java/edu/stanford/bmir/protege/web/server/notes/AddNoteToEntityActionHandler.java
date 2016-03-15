@@ -4,7 +4,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectCommentPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
@@ -22,14 +24,17 @@ import javax.inject.Inject;
  */
 public class AddNoteToEntityActionHandler extends AbstractHasProjectActionHandler<AddNoteToEntityAction, AddNoteToEntityResult> {
 
+    private final ValidatorFactory<CommentPermissionValidator> validatorFactory;
+
     @Inject
-    public AddNoteToEntityActionHandler(OWLAPIProjectManager projectManager) {
+    public AddNoteToEntityActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<CommentPermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<AddNoteToEntityAction> getAdditionalRequestValidator(AddNoteToEntityAction action, RequestContext requestContext) {
-        return new UserHasProjectCommentPermissionValidator<AddNoteToEntityAction, AddNoteToEntityResult>();
+    protected RequestValidator getAdditionalRequestValidator(AddNoteToEntityAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

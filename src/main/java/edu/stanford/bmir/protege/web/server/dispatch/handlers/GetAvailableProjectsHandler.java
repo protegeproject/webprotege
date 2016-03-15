@@ -36,7 +36,7 @@ public class GetAvailableProjectsHandler implements ActionHandler<GetAvailablePr
     }
 
     @Override
-    public RequestValidator<GetAvailableProjectsAction> getRequestValidator(GetAvailableProjectsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetAvailableProjectsAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

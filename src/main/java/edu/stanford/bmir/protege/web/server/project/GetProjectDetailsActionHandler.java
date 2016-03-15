@@ -33,7 +33,7 @@ public class GetProjectDetailsActionHandler implements ActionHandler<GetProjectD
     }
 
     @Override
-    public RequestValidator<GetProjectDetailsAction> getRequestValidator(GetProjectDetailsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetProjectDetailsAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

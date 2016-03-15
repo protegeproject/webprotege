@@ -22,7 +22,7 @@ public class LogOutUserActionHandler implements ActionHandler<LogOutUserAction, 
     }
 
     @Override
-    public RequestValidator<LogOutUserAction> getRequestValidator(LogOutUserAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(LogOutUserAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

@@ -28,7 +28,7 @@ public interface ActionHandler<A extends Action<R>, R extends Result> {
      */
     Class<A> getActionClass();
 
-    RequestValidator<A> getRequestValidator(A action, RequestContext requestContext);
+    RequestValidator getRequestValidator(A action, RequestContext requestContext);
 
     R execute(A action, ExecutionContext executionContext);
 

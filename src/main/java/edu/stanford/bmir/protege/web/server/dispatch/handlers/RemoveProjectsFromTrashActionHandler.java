@@ -4,13 +4,14 @@ import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsProjectOwnerValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectMovedFromTrashEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.project.RemoveProjectsFromTrashAction;
+import edu.stanford.bmir.protege.web.shared.project.RemoveProjectFromTrashAction;
 import edu.stanford.bmir.protege.web.shared.project.RemoveProjectsFromTrashResult;
 
 import javax.inject.Inject;
@@ -23,32 +24,34 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/04/2013
  */
-public class RemoveProjectsFromTrashActionHandler implements ActionHandler<RemoveProjectsFromTrashAction, RemoveProjectsFromTrashResult> {
+public class RemoveProjectsFromTrashActionHandler implements ActionHandler<RemoveProjectFromTrashAction, RemoveProjectsFromTrashResult> {
 
-    private ProjectDetailsManager projectDetailsManager;
+    private final ProjectDetailsManager projectDetailsManager;
+
+    private final ValidatorFactory<UserIsProjectOwnerValidator> validatorFactory;
 
     @Inject
-    public RemoveProjectsFromTrashActionHandler(ProjectDetailsManager projectDetailsManager) {
+    public RemoveProjectsFromTrashActionHandler(ProjectDetailsManager projectDetailsManager, ValidatorFactory<UserIsProjectOwnerValidator> validatorFactory) {
         this.projectDetailsManager = projectDetailsManager;
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    public Class<RemoveProjectsFromTrashAction> getActionClass() {
-        return RemoveProjectsFromTrashAction.class;
+    public Class<RemoveProjectFromTrashAction> getActionClass() {
+        return RemoveProjectFromTrashAction.class;
     }
 
     @Override
-    public RequestValidator<RemoveProjectsFromTrashAction> getRequestValidator(RemoveProjectsFromTrashAction action, RequestContext requestContext) {
-        return NullValidator.get();
+    public RequestValidator getRequestValidator(RemoveProjectFromTrashAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override
-    public RemoveProjectsFromTrashResult execute(RemoveProjectsFromTrashAction action, ExecutionContext executionContext) {
-        List<ProjectMovedFromTrashEvent> events = new ArrayList<ProjectMovedFromTrashEvent>();
-        for(ProjectId projectId : action.getProjectIds()) {
-            projectDetailsManager.setInTrash(projectId, false);
-            events.add(new ProjectMovedFromTrashEvent(projectId));
-        }
-        return new RemoveProjectsFromTrashResult(new EventList<ProjectMovedFromTrashEvent>(EventTag.getFirst(), events, EventTag.getFirst()));
+    public RemoveProjectsFromTrashResult execute(RemoveProjectFromTrashAction action, ExecutionContext executionContext) {
+        List<ProjectMovedFromTrashEvent> events = new ArrayList<>();
+        ProjectId projectId = action.getProjectId();
+        projectDetailsManager.setInTrash(projectId, false);
+        events.add(new ProjectMovedFromTrashEvent(projectId));
+        return new RemoveProjectsFromTrashResult(new EventList<>(EventTag.getFirst(), events, EventTag.getFirst()));
     }
 }

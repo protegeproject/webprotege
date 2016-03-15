@@ -45,8 +45,8 @@ public class GetProjectEventsActionHandler implements ActionHandler<GetProjectEv
     }
 
     @Override
-    public RequestValidator<GetProjectEventsAction> getRequestValidator(GetProjectEventsAction action, RequestContext requestContext) {
-        return new NullValidator<GetProjectEventsAction, GetProjectEventsResult>();
+    public RequestValidator getRequestValidator(GetProjectEventsAction action, RequestContext requestContext) {
+        return NullValidator.get();
     }
 
     @Override

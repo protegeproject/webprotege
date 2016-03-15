@@ -12,13 +12,13 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.util.ZipInputStreamChecker;
-import edu.stanford.bmir.protege.web.shared.merge.Diff;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectAction;
 import edu.stanford.bmir.protege.web.shared.merge.MergeUploadedProjectResult;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
@@ -42,15 +42,18 @@ public class MergeUploadedProjectActionHandler extends AbstractHasProjectActionH
 
     private final File uploadsDirectory;
 
+    private final ValidatorFactory<AdminPermissionValidator> validatorFactory;
+
     @Inject
-    public MergeUploadedProjectActionHandler(@UploadsDirectory File uploadsDirectory, OWLAPIProjectManager projectManager) {
+    public MergeUploadedProjectActionHandler(OWLAPIProjectManager projectManager, @UploadsDirectory File uploadsDirectory, ValidatorFactory<AdminPermissionValidator> validatorFactory) {
         super(projectManager);
-        this.uploadsDirectory = checkNotNull(uploadsDirectory);
+        this.uploadsDirectory = uploadsDirectory;
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<MergeUploadedProjectAction> getAdditionalRequestValidator(MergeUploadedProjectAction action, RequestContext requestContext) {
-        return UserHasProjectWritePermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(MergeUploadedProjectAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

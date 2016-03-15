@@ -2,8 +2,10 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManager;
 import edu.stanford.bmir.protege.web.server.auth.AuthenticationManagerImpl;
+import edu.stanford.bmir.protege.web.server.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManagerImpl;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
@@ -37,9 +39,11 @@ public class MetaProjectModule extends AbstractModule {
         bind(AuthenticationManager.class).to(AuthenticationManagerImpl.class).asEagerSingleton();
         bind(ProjectDetailsManager.class).to(ProjectDetailsManagerImpl.class).asEagerSingleton();
         bind(ProjectPermissionsManager.class).to(ProjectPermissionsManagerImpl.class).asEagerSingleton();
+        bind(PermissionChecker.class).to(ProjectPermissionsManager.class);
         bind(ProjectSharingSettingsManager.class).to(ProjectSharingSettingsManagerImpl.class).asEagerSingleton();
         bind(UserDetailsManager.class).to(UserDetailsManagerImpl.class).asEagerSingleton();
-        bind(HasGetUserIdByUserIdOrEmail.class).to(new TypeLiteral<UserDetailsManager>(){});
+        bind(HasGetUserIdByUserIdOrEmail.class).to(new TypeLiteral<UserDetailsManager>() {
+        });
         bind(HasUserIds.class).to(UserDetailsManagerImpl.class).asEagerSingleton();
         bind(MetaProjectStore.class).asEagerSingleton();
     }

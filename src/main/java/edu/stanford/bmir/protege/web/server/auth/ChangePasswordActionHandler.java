@@ -4,6 +4,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsSignedInValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.shared.auth.*;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -17,13 +20,13 @@ import javax.inject.Inject;
  */
 public class ChangePasswordActionHandler extends AuthenticatedActionHandler<ChangePasswordAction, ChangePasswordResult> {
 
+    private final AuthenticationManager authenticationManager;
 
-    private AuthenticationManager authenticationManager;
 
     @Inject
-    public ChangePasswordActionHandler(ChapSessionManager chapSessionManager, AuthenticationManager authenticationManager, ChapResponseChecker chapResponseChecker, WebProtegeLogger logger) {
-        super(chapSessionManager, authenticationManager, chapResponseChecker, logger);
-        this.authenticationManager = authenticationManager;
+    public ChangePasswordActionHandler(ChapSessionManager chapSessionManager, AuthenticationManager authMan, ChapResponseChecker chapResponseChecker, WebProtegeLogger logger) {
+        super(chapSessionManager, authMan, chapResponseChecker, logger);
+        this.authenticationManager = authMan;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class ChangePasswordActionHandler extends AuthenticatedActionHandler<Chan
     }
 
     @Override
-    public RequestValidator<ChangePasswordAction> getRequestValidator(ChangePasswordAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(ChangePasswordAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

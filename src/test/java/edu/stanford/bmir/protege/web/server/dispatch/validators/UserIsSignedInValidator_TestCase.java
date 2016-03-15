@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class UserIsSignedInValidator_TestCase<A extends Action<?>> {
 
-    private UserIsSignedInValidator<A> validator;
+    private UserIsSignedInValidator validator;
 
     @Mock
     private A action;
@@ -35,21 +35,21 @@ public class UserIsSignedInValidator_TestCase<A extends Action<?>> {
 
     @Before
     public void setUp() throws Exception {
-        validator = new UserIsSignedInValidator<>();
+        validator = new UserIsSignedInValidator(userId);
         when(requestContext.getUserId()).thenReturn(userId);
     }
 
     @Test
     public void shouldValidateUserThatIsNotGuest() {
         when(userId.isGuest()).thenReturn(false);
-        RequestValidationResult result = validator.validateAction(action, requestContext);
+        RequestValidationResult result = validator.validateAction();
         assertThat(result.isValid(), is(true));
     }
 
     @Test
     public void shouldNoValidateUserThatIsGuest() {
         when(userId.isGuest()).thenReturn(true);
-        RequestValidationResult result = validator.validateAction(action, requestContext);
+        RequestValidationResult result = validator.validateAction();
         assertThat(result.isValid(), is(false));
     }
 }

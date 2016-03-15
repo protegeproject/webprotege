@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.validators;
 
 import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
@@ -8,6 +9,8 @@ import edu.stanford.bmir.protege.web.server.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 
 /**
@@ -16,22 +19,24 @@ import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedExceptio
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class UserHasProjectReadPermissionValidator<A extends Action<?> & HasProjectId> implements RequestValidator<A> {
+public class ReadPermissionValidator implements RequestValidator {
+
+    private final ProjectId projectId;
+
+    private final UserId userId;
 
     private final PermissionChecker permissionChecker;
 
     @Inject
-    public UserHasProjectReadPermissionValidator(PermissionChecker permissionChecker) {
+    public ReadPermissionValidator(@Assisted ProjectId projectId, @Assisted UserId userId, PermissionChecker permissionChecker) {
+        this.projectId = projectId;
+        this.userId = userId;
         this.permissionChecker = permissionChecker;
     }
 
-    public static <A extends Action<?> & HasProjectId> UserHasProjectReadPermissionValidator<A> get() {
-        return new UserHasProjectReadPermissionValidator<A>();
-    }
-
     @Override
-    public RequestValidationResult validateAction(A action, RequestContext requestContext) {
-        if(permissionChecker.hasReadPermission(action.getProjectId(), requestContext.getUserId())) {
+    public RequestValidationResult validateAction() {
+        if(permissionChecker.hasReadPermission(projectId, userId)) {
             return RequestValidationResult.getValid();
         }
         else {

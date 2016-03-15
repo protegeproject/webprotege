@@ -20,12 +20,9 @@ public class SetEmailAddressActionHandler implements ActionHandler<SetEmailAddre
 
     private final UserDetailsManager userDetailsManager;
 
-    private final SetEmailAddressRequestValidator validator;
-
     @Inject
-    public SetEmailAddressActionHandler(UserDetailsManager userDetailsManager, SetEmailAddressRequestValidator validator) {
+    public SetEmailAddressActionHandler(UserDetailsManager userDetailsManager) {
         this.userDetailsManager = userDetailsManager;
-        this.validator = validator;
     }
 
     @Override
@@ -34,8 +31,8 @@ public class SetEmailAddressActionHandler implements ActionHandler<SetEmailAddre
     }
 
     @Override
-    public RequestValidator<SetEmailAddressAction> getRequestValidator(SetEmailAddressAction action, RequestContext requestContext) {
-        return validator;
+    public RequestValidator getRequestValidator(SetEmailAddressAction action, RequestContext requestContext) {
+        return new SetEmailAddressRequestValidator(action.getUserId(), requestContext.getUserId());
     }
 
     @Override

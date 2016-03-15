@@ -11,7 +11,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -29,11 +31,12 @@ import javax.inject.Inject;
  */
 public class DeleteEntityActionHandler extends AbstractProjectChangeHandler<OWLEntity, DeleteEntityAction, DeleteEntityResult> {
 
-    private static final UserHasProjectWritePermissionValidator<DeleteEntityAction> VALIDATOR = new UserHasProjectWritePermissionValidator<DeleteEntityAction>();
+    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
 
     @Inject
-    public DeleteEntityActionHandler(OWLAPIProjectManager projectManager) {
+    public DeleteEntityActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -42,8 +45,8 @@ public class DeleteEntityActionHandler extends AbstractProjectChangeHandler<OWLE
     }
 
     @Override
-    protected RequestValidator<DeleteEntityAction> getAdditionalRequestValidator(DeleteEntityAction action, RequestContext requestContext) {
-        return VALIDATOR;
+    protected RequestValidator getAdditionalRequestValidator(DeleteEntityAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

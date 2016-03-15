@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserIsProjectOwnerValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.sharing.SetProjectSharingSettingsAction;
@@ -22,20 +23,18 @@ public class SetProjectSharingSettingsActionHandler extends AbstractHasProjectAc
 
     private final ProjectSharingSettingsManager sharingSettingsManager;
 
-    private final UserIsProjectOwnerValidator<SetProjectSharingSettingsAction> validator;
+    private final ValidatorFactory<UserIsProjectOwnerValidator> validator;
 
     @Inject
-    public SetProjectSharingSettingsActionHandler(ProjectSharingSettingsManager sharingSettingsManager,
-                                                  UserIsProjectOwnerValidator<SetProjectSharingSettingsAction> validator,
-                                                  OWLAPIProjectManager projectManager) {
+    public SetProjectSharingSettingsActionHandler(OWLAPIProjectManager projectManager, ProjectSharingSettingsManager sharingSettingsManager, ValidatorFactory<UserIsProjectOwnerValidator> validator) {
         super(projectManager);
         this.sharingSettingsManager = sharingSettingsManager;
         this.validator = validator;
     }
 
     @Override
-    protected RequestValidator<SetProjectSharingSettingsAction> getAdditionalRequestValidator(SetProjectSharingSettingsAction action, RequestContext requestContext) {
-        return validator;
+    protected RequestValidator getAdditionalRequestValidator(SetProjectSharingSettingsAction action, RequestContext requestContext) {
+        return validator.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

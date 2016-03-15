@@ -11,14 +11,14 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 19/04/2013
  */
-public class MoveProjectsToTrashAction implements Action<MoveProjectsToTrashResult> {
+public class RemoveProjectFromTrashAction implements Action<RemoveProjectsFromTrashResult> {
 
     private ProjectId projectId;
 
-    private MoveProjectsToTrashAction() {
+    private RemoveProjectFromTrashAction() {
     }
 
-    public MoveProjectsToTrashAction(ProjectId projectId) {
+    public RemoveProjectFromTrashAction(ProjectId projectId) {
         this.projectId = projectId;
     }
 

@@ -8,7 +8,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -34,10 +36,13 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
 
     private final File uploadsDirectory;
 
+    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
+
     @Inject
-    public ImportCSVFileActionHandler(@UploadsDirectory File uploadsDirectory, OWLAPIProjectManager projectManager) {
+    public ImportCSVFileActionHandler(@UploadsDirectory File uploadsDirectory, OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
         this.uploadsDirectory = checkNotNull(uploadsDirectory);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -76,7 +81,7 @@ public class ImportCSVFileActionHandler extends AbstractProjectChangeHandler<Int
     }
 
     @Override
-    protected RequestValidator<ImportCSVFileAction> getAdditionalRequestValidator(ImportCSVFileAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<>();
+    protected RequestValidator getAdditionalRequestValidator(ImportCSVFileAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 }

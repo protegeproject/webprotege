@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.change.RevertRevisionAction;
@@ -21,14 +23,16 @@ import javax.inject.Provider;
  */
 public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<OWLEntity, RevertRevisionAction, RevertRevisionResult> {
 
-    private Provider<OWLOntologyChangeDataReverter> reverterProvider;
+    private final Provider<OWLOntologyChangeDataReverter> reverterProvider;
+
+    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
 
     @Inject
-    public RevertRevisionActionHandler(OWLAPIProjectManager projectManager, Provider<OWLOntologyChangeDataReverter> reverterProvider) {
+    public RevertRevisionActionHandler(OWLAPIProjectManager projectManager, Provider<OWLOntologyChangeDataReverter> reverterProvider, ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
         this.reverterProvider = reverterProvider;
+        this.validatorFactory = validatorFactory;
     }
-
 
     @Override
     public Class<RevertRevisionAction> getActionClass() {
@@ -47,8 +51,8 @@ public class RevertRevisionActionHandler extends AbstractProjectChangeHandler<OW
     }
 
     @Override
-    protected RequestValidator<RevertRevisionAction> getAdditionalRequestValidator(RevertRevisionAction action, RequestContext requestContext) {
-        return UserHasProjectWritePermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(RevertRevisionAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

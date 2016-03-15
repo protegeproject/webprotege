@@ -28,7 +28,7 @@ public class RemoveWatchActionHandler extends AbstractHasProjectActionHandler<Re
     }
 
     @Override
-    protected RequestValidator<RemoveWatchesAction> getAdditionalRequestValidator(RemoveWatchesAction action, RequestContext requestContext) {
+    protected RequestValidator getAdditionalRequestValidator(RemoveWatchesAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

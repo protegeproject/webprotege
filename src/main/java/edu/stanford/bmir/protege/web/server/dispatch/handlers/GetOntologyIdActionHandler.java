@@ -31,7 +31,7 @@ public class GetOntologyIdActionHandler extends AbstractHasProjectActionHandler<
     }
 
     @Override
-    protected RequestValidator<GetOntologyIdAction> getAdditionalRequestValidator(GetOntologyIdAction action, RequestContext requestContext) {
+    protected RequestValidator getAdditionalRequestValidator(GetOntologyIdAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 
