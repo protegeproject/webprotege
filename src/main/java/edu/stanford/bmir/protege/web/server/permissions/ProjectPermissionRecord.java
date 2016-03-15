@@ -6,6 +6,8 @@ import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Collection;
@@ -21,6 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Document(collection = "ProjectPermissionRecords")
 @TypeAlias("ProjectPermissionRecord")
+@CompoundIndex(unique = true, def = "{'projectId': 1, 'userId': 1}")
 public class ProjectPermissionRecord {
 
     private final ProjectId projectId;
