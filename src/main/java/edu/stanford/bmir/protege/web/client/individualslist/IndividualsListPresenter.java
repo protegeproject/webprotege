@@ -95,6 +95,7 @@ public class IndividualsListPresenter {
     public void installActions(HasPortletActions hasPortletActions) {
         hasPortletActions.addPortletAction(createAction);
         hasPortletActions.addPortletAction(deleteAction);
+        updateButtonStates();
     }
 
     public void clearType() {
