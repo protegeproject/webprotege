@@ -5,10 +5,13 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.assistedinject.Assisted;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.sharing.*;
 
@@ -29,24 +32,46 @@ public class SharingSettingsPresenter {
 
     private final DispatchServiceManager dispatchServiceManager;
 
+    private final LoggedInUserProvider loggedInUserProvider;
+
     private final PermissionManager permissionManager;
+
+    private final PermissionScreener permissionScreener;
 
     private Optional<Place> nextPlace = Optional.absent();
 
+
+
     @Inject
-    public SharingSettingsPresenter(@Assisted ProjectId projectId, SharingSettingsView view, PlaceController placeController, DispatchServiceManager dispatchServiceManager, PermissionManager permissionManager) {
+    public SharingSettingsPresenter(@Assisted ProjectId projectId, SharingSettingsView view, PlaceController placeController, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, PermissionManager permissionManager, PermissionScreener permissionScreener) {
         this.projectId = projectId;
         this.view = view;
         this.placeController = placeController;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionManager = permissionManager;
+        this.loggedInUserProvider = loggedInUserProvider;
+        this.permissionScreener = permissionScreener;
     }
 
     public Optional<Place> getNextPlace() {
         return nextPlace;
     }
 
-    public void start(AcceptsOneWidget container) {
+    public void start(final AcceptsOneWidget container) {
+        permissionScreener.checkPermission(
+                projectId,
+                Permission.getAdminPermission(),
+                container, new PermissionScreener.Callback() {
+            @Override
+            public void onPermissionGranted() {
+                displaySharingSettings(container);
+            }
+        });
+    }
+
+
+
+    private void displaySharingSettings(AcceptsOneWidget container) {
         view.setApplyChangesHandler(new SharingSettingsView.ApplyChangesHandler() {
             @Override
             public void handleApplyChanges() {

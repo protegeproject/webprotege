@@ -1,21 +1,26 @@
 package edu.stanford.bmir.protege.web.client.project;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.help.HelpViewImpl;
-import edu.stanford.bmir.protege.web.client.logout.LogoutPresenter;
+import com.google.gwt.user.client.ui.Label;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
+import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivePresenter;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
+import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
+import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -31,6 +36,9 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final ProjectView view;
 
+    private final DispatchServiceManager dispatchServiceManager;
+
+    private final LoggedInUserProvider loggedInUserProvider;
 
     private final TopBarPresenter topBarPresenter;
 
@@ -38,17 +46,24 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final PerspectivePresenter perspectivePresenter;
 
+    private final PermissionScreener permissionScreener;
 
     @Inject
     public ProjectPresenter(ProjectId projectId, ProjectView view,
+                            DispatchServiceManager dispatchServiceManager,
+                            LoggedInUserProvider loggedInUserProvider,
                             TopBarPresenter topBarPresenter,
                             PerspectiveSwitcherPresenter linkBarPresenter,
-                            PerspectivePresenter perspectivePresenter) {
+                            PerspectivePresenter perspectivePresenter,
+                            PermissionScreener permissionScreener) {
         this.projectId = projectId;
         this.view = view;
+        this.dispatchServiceManager = dispatchServiceManager;
+        this.permissionScreener = permissionScreener;
         this.topBarPresenter = topBarPresenter;
         this.linkBarPresenter = linkBarPresenter;
         this.perspectivePresenter = perspectivePresenter;
+        this.loggedInUserProvider = loggedInUserProvider;
     }
 
     @Override
@@ -63,13 +78,21 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         perspectivePresenter.dispose();
     }
 
-    public void start(AcceptsOneWidget container, ProjectViewPlace place) {
+    public void start(final AcceptsOneWidget container, final ProjectViewPlace place) {
+        permissionScreener.checkPermission(projectId, Permission.getReadPermission(), container, new PermissionScreener.Callback() {
+            @Override
+            public void onPermissionGranted() {
+                displayProject(container, place);
+            }
+        });
+    }
+
+    private void displayProject(AcceptsOneWidget container, ProjectViewPlace place) {
         container.setWidget(view);
         topBarPresenter.start(view.getTopBarContainer());
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), place);
     }
-
 
     @Override
     public String toString() {

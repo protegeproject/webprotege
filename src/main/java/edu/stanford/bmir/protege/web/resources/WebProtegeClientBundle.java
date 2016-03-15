@@ -22,6 +22,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("protege-blender.png")
     ImageResource protegeBlender();
 
+    @Source("protege-blender-monochrome.png")
+    ImageResource protegeBlenderGrayScale();
+
     @Source("about.html")
     TextResource aboutBoxText();
 
@@ -130,6 +133,7 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     @Source("WebProtegeDialog.css")
     WebProtegeDialog dialog();
+
 
     public static interface WebProtegeCss extends CssResource {
 

@@ -17,6 +17,8 @@ public enum PermissionName {
 
     WRITE("Write"),
 
+    ADMIN("Admin"),
+
     DISPLAY_IN_PROJECT_LIST("DisplayInProjectList"),
 
     CREATE_USERS("CreateUsers");
