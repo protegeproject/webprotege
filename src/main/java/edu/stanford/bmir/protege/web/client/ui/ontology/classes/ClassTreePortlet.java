@@ -1126,7 +1126,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     public void updateButtonStates() {
         createClassAction.setEnabled(false);
         deleteClassAction.setEnabled(false);
-
         permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean result) {
@@ -1134,12 +1133,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 deleteClassAction.setEnabled(result);
             }
         });
-
-//        if (watchButton != null) {
-            // This used to disable the button.  However, the buttons seem to be laid out only when the containing
-            // tab is selected and they appear over other components before this.
-//            watchButton.setVisible(!loggedInUserProvider.getCurrentUserId().isGuest());
-//        }
+        watchClassAction.setEnabled(!loggedInUserProvider.getCurrentUserId().isGuest());
     }
 
     public String getNodeClsName(final Node node) {
