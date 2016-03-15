@@ -62,8 +62,10 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
             }
         }
         // World permissions
-        worldProjectPermissionRecordRepository.findAllByProjectId(projectId)
-                .forEach(r -> builder.addPermission(r.getPermission()));
+        Optional<WorldProjectPermissionRecord> worldRecord = worldProjectPermissionRecordRepository.findOneByProjectId(projectId);
+        if(worldRecord.isPresent()) {
+            worldRecord.get().getPermissions().forEach(builder::addPermission);
+        }
         return builder.build();
     }
 
@@ -89,7 +91,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
         if(count > 0) {
             return true;
         }
-        int worldCount = worldProjectPermissionRecordRepository.countByProjectIdAndPermission(projectId, permission);
+        int worldCount = worldProjectPermissionRecordRepository.countByProjectIdAndPermissions(projectId, permission);
         return worldCount > 0;
     }
 }
