@@ -6,9 +6,15 @@ import edu.stanford.bmir.protege.web.client.actionbar.project.ShowFreshEntitySet
 import edu.stanford.bmir.protege.web.client.actionbar.project.ShowNotificationSettingsHandler;
 import edu.stanford.bmir.protege.web.client.actionbar.project.ShowProjectDetailsHandler;
 import edu.stanford.bmir.protege.web.client.actionbar.project.UploadAndMergeHandler;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectManagerView;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
+import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
+import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
+import edu.stanford.bmir.protege.web.shared.permissions.Permission;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
 
@@ -18,6 +24,10 @@ import javax.inject.Inject;
  * 01/03/16
  */
 public class ProjectMenuPresenter {
+
+    private final ProjectId projectId;
+
+    private final DispatchServiceManager dispatchServiceManager;
 
     private final ProjectMenuView view;
 
@@ -30,16 +40,29 @@ public class ProjectMenuPresenter {
     private final LoggedInUserProvider loggedInUserProvider;
 
     @Inject
-    public ProjectMenuPresenter(ProjectMenuView view, LoggedInUserProvider loggedInUserProvider, ShowProjectDetailsHandler showProjectDetailsHandler, ShowFreshEntitySettingsHandler showFreshEntitySettingsHandler, UploadAndMergeHandler uploadAndMergeHandler) {
+    public ProjectMenuPresenter(ProjectId projectId, DispatchServiceManager dispatchServiceManager, ProjectMenuView view, ShowProjectDetailsHandler showProjectDetailsHandler, ShowFreshEntitySettingsHandler showFreshEntitySettingsHandler, UploadAndMergeHandler uploadAndMergeHandler, LoggedInUserProvider loggedInUserProvider) {
+        this.projectId = projectId;
+        this.dispatchServiceManager = dispatchServiceManager;
         this.view = view;
-        this.loggedInUserProvider = loggedInUserProvider;
         this.showProjectDetailsHandler = showProjectDetailsHandler;
         this.showFreshEntitySettingsHandler = showFreshEntitySettingsHandler;
         this.uploadAndMergeHandler = uploadAndMergeHandler;
+        this.loggedInUserProvider = loggedInUserProvider;
         setupActions();
     }
 
-    public void start(AcceptsOneWidget container) {
+    public void start(final AcceptsOneWidget container) {
+        dispatchServiceManager.execute(new GetPermissionsAction(projectId, loggedInUserProvider.getCurrentUserId()), new DispatchServiceCallback<GetPermissionsResult>() {
+            @Override
+            public void handleSuccess(GetPermissionsResult result) {
+                if(result.getPermissionsSet().contains(Permission.getAdminPermission())) {
+                    displayButton(container);
+                }
+            }
+        });
+    }
+
+    private void displayButton(AcceptsOneWidget container) {
         container.setWidget(view);
     }
 
