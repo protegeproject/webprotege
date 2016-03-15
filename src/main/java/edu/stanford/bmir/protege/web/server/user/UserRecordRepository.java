@@ -16,6 +16,8 @@ public interface UserRecordRepository extends Repository<UserRecord, UserId> {
 
     Stream<UserRecord> findAll();
 
+    Stream<UserRecord> findByUserIdContainingIgnoreCase(String userId);
+
     Optional<UserRecord> findOne(UserId userId);
 
     Optional<UserRecord> findOneByEmailAddress(String emailAddress);

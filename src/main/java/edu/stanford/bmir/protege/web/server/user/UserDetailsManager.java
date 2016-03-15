@@ -5,6 +5,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Matthew Horridge
@@ -12,6 +13,8 @@ import java.util.Collection;
  * 06/02/15
  */
 public interface UserDetailsManager extends HasUserIds, HasGetUserIdByEmailAddress, HasGetUserIdByUserIdOrEmail {
+
+    List<UserId> getUserIdsContainingIgnoreCase(String userName, long limit);
 
     @Override
     Collection<UserId> getUserIds();

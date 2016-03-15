@@ -8,6 +8,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
@@ -64,11 +66,12 @@ public class SharingSettingsViewImpl extends Composite implements SharingSetting
         }
     };
 
-    public SharingSettingsViewImpl() {
+    @Inject
+    public SharingSettingsViewImpl(final DispatchServiceManager dispatchServiceManager) {
         sharingSettingsListEditor = new ValueListEditorImpl<>(new ValueEditorFactory<SharingSetting>() {
             @Override
             public ValueEditor<SharingSetting> createEditor() {
-                return new SharingSettingEditorImpl();
+                return new SharingSettingEditorImpl(dispatchServiceManager);
             }
         });
         initWidget(ourUiBinder.createAndBindUi(this));

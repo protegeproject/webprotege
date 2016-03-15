@@ -12,7 +12,6 @@ import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,12 +43,8 @@ public class GetUserIdCompletionsActionHandler implements ActionHandler<GetUserI
 
     @Override
     public GetPossibleItemCompletionsResult<UserId> execute(GetUserIdCompletionsAction action, ExecutionContext executionContext) {
-        List<UserId> result = new ArrayList<>();
-        for(UserId userId : userDetailsManager.getUserIds()) {
-            if(userId.getUserName().toLowerCase().contains(action.getCompletionText().toLowerCase())) {
-                result.add(userId);
-            }
-        }
+        String completionText = action.getCompletionText();
+        List<UserId> result = userDetailsManager.getUserIdsContainingIgnoreCase(completionText, 10);
         Collections.sort(result);
         return new GetUserIdCompletionsResult(result);
     }
