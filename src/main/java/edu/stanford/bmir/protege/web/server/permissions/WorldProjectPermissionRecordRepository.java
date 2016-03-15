@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.springframework.data.repository.Repository;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -15,9 +16,9 @@ public interface WorldProjectPermissionRecordRepository extends Repository<World
 
     WorldProjectPermissionRecord save(WorldProjectPermissionRecord s);
 
-    Stream<WorldProjectPermissionRecord> findAllByProjectId(ProjectId projectId);
+    Optional<WorldProjectPermissionRecord> findOneByProjectId(ProjectId projectId);
 
     void deleteAllByProjectId(ProjectId projectId);
 
-    int countByProjectIdAndPermission(ProjectId projectId, Permission permission);
+    int countByProjectIdAndPermissions(ProjectId projectId, Permission permissions);
 }

@@ -63,10 +63,15 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
                 sharingSettings.add(new SharingSetting(new PersonId(userId.getUserName()), sharingPermission.get()));
             }
         }
-        Set<Permission> worldPermissions = worldRepository.findAllByProjectId(projectId)
-                .map(WorldProjectPermissionRecord::getPermission)
-                .collect(toSet());
-        final Optional<SharingPermission> worldPermission = PermissionMapper.mapToSharingPermission(worldPermissions);
+        java.util.Optional<WorldProjectPermissionRecord> worldRecord = worldRepository.findOneByProjectId(projectId);
+        final Optional<SharingPermission> worldPermission;
+        if(worldRecord.isPresent()) {
+            Set<Permission> worldPermissions = worldRecord.get().getPermissions();
+            worldPermission = PermissionMapper.mapToSharingPermission(worldPermissions);
+        }
+        else {
+            worldPermission = Optional.absent();
+        }
         return new ProjectSharingSettings(projectId, worldPermission, new ArrayList<>(sharingSettings));
     }
 
@@ -98,9 +103,8 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         }
         worldRepository.deleteAllByProjectId(projectId);
         if(settings.getLinkSharingPermission().isPresent()) {
-            for(Permission permission : getPermission(settings.getLinkSharingPermission().get())) {
-                worldRepository.save(new WorldProjectPermissionRecord(projectId, permission));
-            }
+            ImmutableSet<Permission> permissions = getPermission(settings.getLinkSharingPermission().get());
+             worldRepository.save(new WorldProjectPermissionRecord(projectId, permissions));
         }
     }
 

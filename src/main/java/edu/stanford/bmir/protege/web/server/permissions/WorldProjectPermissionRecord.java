@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,29 +18,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 13/03/16
  */
 @Document(collection = "WorldProjectPermissionRecords")
+@TypeAlias("WorldProjectPermissionRecord")
 public class WorldProjectPermissionRecord {
 
-    @Indexed
+    @Indexed(unique = true)
     private final ProjectId projectId;
 
-    private final Permission permission;
+    private final ImmutableSet<Permission> permissions;
 
-    public WorldProjectPermissionRecord(ProjectId projectId, Permission permission) {
+    public WorldProjectPermissionRecord(ProjectId projectId, ImmutableSet<Permission> permissions) {
         this.projectId = checkNotNull(projectId);
-        this.permission = checkNotNull(permission);
+        this.permissions = checkNotNull(permissions);
     }
 
     public ProjectId getProjectId() {
         return projectId;
     }
 
-    public Permission getPermission() {
-        return permission;
+    public ImmutableSet<Permission> getPermissions() {
+        return permissions;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(projectId, permission);
+        return Objects.hashCode(projectId, permissions);
     }
 
     @Override
@@ -51,7 +54,7 @@ public class WorldProjectPermissionRecord {
         }
         WorldProjectPermissionRecord other = (WorldProjectPermissionRecord) obj;
         return this.projectId.equals(other.projectId)
-                && this.permission.equals(other.permission);
+                && this.permissions.equals(other.permissions);
     }
 
 
@@ -59,7 +62,7 @@ public class WorldProjectPermissionRecord {
     public String toString() {
         return toStringHelper("WorldProjectPermissionRecord")
                 .addValue(projectId)
-                .addValue(permission)
+                .addValue(permissions)
                 .toString();
     }
 }

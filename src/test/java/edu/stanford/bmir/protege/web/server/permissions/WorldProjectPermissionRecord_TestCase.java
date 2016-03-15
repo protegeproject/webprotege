@@ -1,6 +1,7 @@
 
 package edu.stanford.bmir.protege.web.server.permissions;
 
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.hamcrest.Matchers;
@@ -26,17 +27,17 @@ public class WorldProjectPermissionRecord_TestCase {
     private ProjectId projectId;
 
     @Mock
-    private Permission permission;
+    private ImmutableSet<Permission> permissions;
 
     @Before
     public void setUp()
     {
-        worldProjectPermissionRecord = new WorldProjectPermissionRecord(projectId, permission);
+        worldProjectPermissionRecord = new WorldProjectPermissionRecord(projectId, permissions);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new WorldProjectPermissionRecord(null, permission);
+        new WorldProjectPermissionRecord(null, permissions);
     }
 
     @Test
@@ -51,7 +52,7 @@ public class WorldProjectPermissionRecord_TestCase {
 
     @Test
     public void shouldReturnSupplied_permission() {
-        assertThat(worldProjectPermissionRecord.getPermission(), is(this.permission));
+        assertThat(worldProjectPermissionRecord.getPermissions(), is(this.permissions));
     }
 
     @Test
@@ -66,22 +67,22 @@ public class WorldProjectPermissionRecord_TestCase {
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(worldProjectPermissionRecord, is(new WorldProjectPermissionRecord(projectId, permission)));
+        assertThat(worldProjectPermissionRecord, is(new WorldProjectPermissionRecord(projectId, permissions)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(worldProjectPermissionRecord, is(not(new WorldProjectPermissionRecord(mock(ProjectId.class), permission))));
+        assertThat(worldProjectPermissionRecord, is(not(new WorldProjectPermissionRecord(mock(ProjectId.class), permissions))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_permission() {
-        assertThat(worldProjectPermissionRecord, is(not(new WorldProjectPermissionRecord(projectId, mock(Permission.class)))));
+        assertThat(worldProjectPermissionRecord, is(not(new WorldProjectPermissionRecord(projectId, mock(ImmutableSet.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(worldProjectPermissionRecord.hashCode(), is(new WorldProjectPermissionRecord(projectId, permission).hashCode()));
+        assertThat(worldProjectPermissionRecord.hashCode(), is(new WorldProjectPermissionRecord(projectId, permissions).hashCode()));
     }
 
     @Test
