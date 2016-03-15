@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.sharing;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.user.HasGetUserIdByUserIdOrEmail;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecord;
@@ -51,7 +52,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
         Multimap<UserId, Permission> userPermissions = HashMultimap.create();
         repository.findByProjectId(projectId)
-                .forEach(e -> userPermissions.put(e.getUserId(), e.getPermission()));
+                .forEach(e -> userPermissions.putAll(e.getUserId(), e.getPermissions()));
 
 
         Set<SharingSetting> sharingSettings = new HashSet<>();
@@ -78,14 +79,12 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
             PersonId personId = setting.getPersonId();
             Optional<UserId> userId = userLookup.getUserByUserIdOrEmail(personId.getId());
             if(userId.isPresent()) {
-                Collection<Permission> permissions = getPermission(setting.getSharingPermission());
-                for(Permission permission : permissions) {
-                    ProjectPermissionRecord e = new ProjectPermissionRecord(
-                            projectId,
-                            userId.get(),
-                            permission);
-                    entries.add(e);
-                }
+                ImmutableSet<Permission> permissions = getPermission(setting.getSharingPermission());
+                ProjectPermissionRecord e = new ProjectPermissionRecord(
+                        projectId,
+                        userId.get(),
+                        permissions);
+                entries.add(e);
             }
             else {
                 logger.info(projectId, "User in sharing setting not found.  An email invitation needs to be sent");
@@ -120,8 +119,8 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         setProjectSharingSettings(sharingSettings);
     }
 
-    private Collection<Permission> getPermission(SharingPermission sharingPermission) {
-        List<Permission> permissions = new ArrayList<>();
+    private ImmutableSet<Permission> getPermission(SharingPermission sharingPermission) {
+        ImmutableSet.Builder<Permission> permissions = new ImmutableSet.Builder<Permission>();
         switch (sharingPermission) {
             case EDIT:
                 permissions.add(Permission.getWritePermission());
@@ -135,6 +134,6 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
             case VIEW:
                 permissions.add(Permission.getReadPermission());
         }
-        return permissions;
+        return permissions.build();
     }
 }

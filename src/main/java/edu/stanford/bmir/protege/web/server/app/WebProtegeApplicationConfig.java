@@ -93,6 +93,7 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
         converters.add(new SaltedPasswordDigestWriteConverter());
         converters.add(new PermissionReadConverter());
         converters.add(new PermissionWriteConverter());
+        converters.add(new PermissionSetReadConverter());
 
         mappingMongoConverter.setCustomConversions(new CustomConversions(converters));
         return mappingMongoConverter;
