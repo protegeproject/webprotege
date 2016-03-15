@@ -4,7 +4,10 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -23,14 +26,17 @@ import javax.inject.Inject;
  */
 public class SetNoteStatusActionHandler extends AbstractHasProjectActionHandler<SetNoteStatusAction, SetNoteStatusResult> {
 
+    private final ValidatorFactory<CommentPermissionValidator> validatorFactory;
+
     @Inject
-    public SetNoteStatusActionHandler(OWLAPIProjectManager projectManager) {
+    public SetNoteStatusActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<CommentPermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<SetNoteStatusAction> getAdditionalRequestValidator(SetNoteStatusAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<SetNoteStatusAction>();
+    protected RequestValidator getAdditionalRequestValidator(SetNoteStatusAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

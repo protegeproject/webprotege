@@ -4,7 +4,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectAdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.crud.GetEntityCrudKitSettingsAction;
@@ -20,9 +21,12 @@ import javax.inject.Inject;
  */
 public class GetEntityCrudKitSettingsActionHandler extends AbstractHasProjectActionHandler<GetEntityCrudKitSettingsAction, GetEntityCrudKitSettingsResult> {
 
+    private final ValidatorFactory<AdminPermissionValidator> validatorFactory;
+
     @Inject
-    public GetEntityCrudKitSettingsActionHandler(OWLAPIProjectManager projectManager) {
+    public GetEntityCrudKitSettingsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<AdminPermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -31,8 +35,8 @@ public class GetEntityCrudKitSettingsActionHandler extends AbstractHasProjectAct
     }
 
     @Override
-    protected RequestValidator<GetEntityCrudKitSettingsAction> getAdditionalRequestValidator(GetEntityCrudKitSettingsAction action, RequestContext requestContext) {
-        return UserHasProjectAdminPermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(GetEntityCrudKitSettingsAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

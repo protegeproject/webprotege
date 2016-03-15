@@ -6,7 +6,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
@@ -26,9 +27,12 @@ import java.util.Set;
  */
 public class GetEntityAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetEntityAnnotationsAction, RenderableGetObjectResult<Set<OWLAnnotation>>> {
 
+    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
+
     @Inject
-    public GetEntityAnnotationsActionHandler(OWLAPIProjectManager projectManager) {
+    public GetEntityAnnotationsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -37,8 +41,8 @@ public class GetEntityAnnotationsActionHandler extends AbstractHasProjectActionH
     }
 
     @Override
-    protected RequestValidator<GetEntityAnnotationsAction> getAdditionalRequestValidator(GetEntityAnnotationsAction action, RequestContext requestContext) {
-        return UserHasProjectReadPermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(GetEntityAnnotationsAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
 import com.google.common.base.Stopwatch;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionsManager;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.LoadProjectResult;
@@ -9,7 +10,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -34,11 +35,14 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
 
     private final OWLAPIProjectManager projectManager;
 
+    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
+
     @Inject
-    public LoadProjectActionHandler(ProjectDetailsManager projectDetailsManager, ProjectPermissionsManager projectPermissionsManager, OWLAPIProjectManager projectManager) {
+    public LoadProjectActionHandler(ProjectDetailsManager projectDetailsManager, ProjectPermissionsManager projectPermissionsManager, OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
         this.projectDetailsManager = projectDetailsManager;
         this.projectPermissionsManager = projectPermissionsManager;
         this.projectManager = projectManager;
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -47,8 +51,8 @@ public class LoadProjectActionHandler implements ActionHandler<LoadProjectAction
     }
 
     @Override
-    public RequestValidator<LoadProjectAction> getRequestValidator(LoadProjectAction action, RequestContext requestContext) {
-        return UserHasProjectReadPermissionValidator.get();
+    public RequestValidator getRequestValidator(LoadProjectAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

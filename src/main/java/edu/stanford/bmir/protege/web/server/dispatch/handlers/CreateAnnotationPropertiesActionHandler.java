@@ -7,7 +7,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractProjectChangeHandle
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -27,9 +29,12 @@ import java.util.Set;
  */
 public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChangeHandler<Set<OWLAnnotationProperty>, CreateAnnotationPropertiesAction, CreateAnnotationPropertiesResult> {
 
+    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
+
     @Inject
-    public CreateAnnotationPropertiesActionHandler(OWLAPIProjectManager projectManager) {
+    public CreateAnnotationPropertiesActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -52,8 +57,8 @@ public class CreateAnnotationPropertiesActionHandler extends AbstractProjectChan
     }
 
     @Override
-    protected RequestValidator<CreateAnnotationPropertiesAction> getAdditionalRequestValidator(CreateAnnotationPropertiesAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<CreateAnnotationPropertiesAction>();
+    protected RequestValidator getAdditionalRequestValidator(CreateAnnotationPropertiesAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

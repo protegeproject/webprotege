@@ -68,8 +68,8 @@ public class GetPermissionsActionHandler_TestCase {
     public void shouldAllowAnyOneToRetrievePermissions() {
         RequestContext requestContext = mock(RequestContext.class);
         when(requestContext.getUserId()).thenReturn(UserId.getGuest());
-        RequestValidator<GetPermissionsAction> validator = handler.getRequestValidator(action, requestContext);
-        assertThat(validator.validateAction(action, requestContext).isValid(), is(true));
+        RequestValidator validator = handler.getRequestValidator(action, requestContext);
+        assertThat(validator.validateAction().isValid(), is(true));
 
     }
 }

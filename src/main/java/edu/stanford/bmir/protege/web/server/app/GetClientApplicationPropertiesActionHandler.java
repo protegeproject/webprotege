@@ -32,7 +32,7 @@ public class GetClientApplicationPropertiesActionHandler implements ActionHandle
     }
 
     @Override
-    public RequestValidator<GetClientApplicationPropertiesAction> getRequestValidator(GetClientApplicationPropertiesAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetClientApplicationPropertiesAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

@@ -98,8 +98,8 @@ public class CreateNewProjectActionHandler_TestCase {
     public void shouldNotAllowGuestsToCreateProjects() {
         when(userId.isGuest()).thenReturn(true);
         CreateNewProjectAction action = new CreateNewProjectAction(newProjectSettings);
-        RequestValidator<CreateNewProjectAction> validator = handler.getRequestValidator(action, requestContext);
-        RequestValidationResult validationResult = validator.validateAction(action, requestContext);
+        RequestValidator validator = handler.getRequestValidator(action, requestContext);
+        RequestValidationResult validationResult = validator.validateAction();
         assertThat(validationResult.isValid(), is(false));
     }
 }

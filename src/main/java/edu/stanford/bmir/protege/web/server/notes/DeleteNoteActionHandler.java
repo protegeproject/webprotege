@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.server.notes;
 
-import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
-import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
-import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.*;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
@@ -21,14 +20,17 @@ import javax.inject.Inject;
  */
 public class DeleteNoteActionHandler extends AbstractHasProjectActionHandler<DeleteNoteAction, DeleteNoteResult> {
 
+    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
+
     @Inject
-    public DeleteNoteActionHandler(OWLAPIProjectManager projectManager) {
+    public DeleteNoteActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<DeleteNoteAction> getAdditionalRequestValidator(DeleteNoteAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator<DeleteNoteAction>();
+    protected RequestValidator getAdditionalRequestValidator(final DeleteNoteAction action, final RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

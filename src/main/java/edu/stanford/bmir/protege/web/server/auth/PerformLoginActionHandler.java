@@ -28,7 +28,7 @@ public class PerformLoginActionHandler extends AuthenticatedActionHandler<Perfor
     }
 
     @Override
-    public RequestValidator<PerformLoginAction> getRequestValidator(PerformLoginAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(PerformLoginAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

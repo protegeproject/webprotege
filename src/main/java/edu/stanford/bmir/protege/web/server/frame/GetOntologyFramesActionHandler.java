@@ -6,13 +6,14 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.shortform.WebProtegeOntologyIRIShortFormProvider;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -25,14 +26,18 @@ import java.util.stream.Collectors;
  */
 public class GetOntologyFramesActionHandler extends AbstractHasProjectActionHandler<GetOntologyFramesAction, GetOntologyFramesResult> {
 
+
+    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
+
     @Inject
-    public GetOntologyFramesActionHandler(OWLAPIProjectManager projectManager) {
+    public GetOntologyFramesActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<GetOntologyFramesAction> getAdditionalRequestValidator(GetOntologyFramesAction action, RequestContext requestContext) {
-        return UserHasProjectReadPermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(GetOntologyFramesAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

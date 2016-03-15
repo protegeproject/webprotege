@@ -1,13 +1,10 @@
 package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
-import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 
 import javax.inject.Inject;
@@ -34,8 +31,8 @@ public class DispatchServiceExecutorImpl implements DispatchServiceExecutor {
     @Override
     public <A extends Action<R>, R extends Result> DispatchServiceResultContainer execute(A action, RequestContext requestContext, ExecutionContext executionContext) throws ActionExecutionException, PermissionDeniedException {
         ActionHandler<A, R> actionHandler = handlerRegistry.getActionHandler(action);
-        RequestValidator<A> validator = actionHandler.getRequestValidator(action, requestContext);
-        RequestValidationResult validationResult = validator.validateAction(action, requestContext);
+        RequestValidator validator = actionHandler.getRequestValidator(action, requestContext);
+        RequestValidationResult validationResult = validator.validateAction();
         if(!validationResult.isValid()) {
             throw  getPermissionDeniedException(validationResult);
         }

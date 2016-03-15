@@ -4,7 +4,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -23,12 +24,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHandler<GetProjectSettingsAction, GetProjectSettingsResult> {
 
-    private ProjectDetailsManager projectDetailsManager;
+    private final ProjectDetailsManager projectDetailsManager;
+
+    private final ValidatorFactory<AdminPermissionValidator> validatorFactory;
 
     @Inject
-    public GetProjectSettingsActionHandler(OWLAPIProjectManager projectManager, ProjectDetailsManager projectDetailsManager) {
+    public GetProjectSettingsActionHandler(OWLAPIProjectManager projectManager, ProjectDetailsManager projectDetailsManager, ValidatorFactory<AdminPermissionValidator> validatorFactory) {
         super(projectManager);
         this.projectDetailsManager = projectDetailsManager;
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -37,8 +41,8 @@ public class GetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     }
 
     @Override
-    protected RequestValidator<GetProjectSettingsAction> getAdditionalRequestValidator(GetProjectSettingsAction action, RequestContext requestContext) {
-        return UserHasProjectReadPermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(GetProjectSettingsAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

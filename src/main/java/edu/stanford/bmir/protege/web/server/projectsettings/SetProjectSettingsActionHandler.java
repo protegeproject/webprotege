@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.projectsettings;
 
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectAdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -17,13 +18,15 @@ import javax.inject.Inject;
  */
 public class SetProjectSettingsActionHandler extends AbstractHasProjectActionHandler<SetProjectSettingsAction, SetProjectSettingsResult> {
 
+    private final ProjectDetailsManager projectDetailsManager;
 
-    private ProjectDetailsManager projectDetailsManager;
+    private final ValidatorFactory<AdminPermissionValidator> validatorFactory;
 
     @Inject
-    public SetProjectSettingsActionHandler(ProjectDetailsManager projectDetailsManager, OWLAPIProjectManager projectManager) {
+    public SetProjectSettingsActionHandler(OWLAPIProjectManager projectManager, ProjectDetailsManager projectDetailsManager, ValidatorFactory<AdminPermissionValidator> validatorFactory) {
         super(projectManager);
         this.projectDetailsManager = projectDetailsManager;
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -32,8 +35,8 @@ public class SetProjectSettingsActionHandler extends AbstractHasProjectActionHan
     }
 
     @Override
-    protected RequestValidator<SetProjectSettingsAction> getAdditionalRequestValidator(SetProjectSettingsAction action, RequestContext requestContext) {
-        return UserHasProjectAdminPermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(SetProjectSettingsAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

@@ -37,7 +37,7 @@ public class GetUserIdsActionHandler implements ActionHandler<GetUserIdsAction, 
     }
 
     @Override
-    public RequestValidator<GetUserIdsAction> getRequestValidator(GetUserIdsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetUserIdsAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

@@ -8,7 +8,9 @@ import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.crud.EntityShortForm;
@@ -30,9 +32,12 @@ import javax.inject.Inject;
  */
 public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, S>, F extends EntityFrame<S>,  S extends OWLEntity> extends AbstractHasProjectActionHandler<A, Result> implements ActionHandler<A, Result> {
 
+    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
+
     @Inject
-    public AbstractUpdateFrameHandler(OWLAPIProjectManager projectManager) {
+    public AbstractUpdateFrameHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     /**
@@ -48,8 +53,8 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
      *         null}.
      */
     @Override
-    protected RequestValidator<A> getAdditionalRequestValidator(A action, RequestContext requestContext) {
-        return UserHasProjectWritePermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(A action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     /**

@@ -44,8 +44,8 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
     }
 
     @Override
-    public RequestValidator<CreateNewProjectAction> getRequestValidator(CreateNewProjectAction action, RequestContext requestContext) {
-        return UserIsSignedInValidator.get();
+    public RequestValidator getRequestValidator(CreateNewProjectAction action, RequestContext requestContext) {
+        return new UserIsSignedInValidator(requestContext.getUserId());
     }
 
     @Override

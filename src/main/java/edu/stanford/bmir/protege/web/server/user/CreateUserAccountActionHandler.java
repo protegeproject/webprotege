@@ -31,7 +31,7 @@ public class CreateUserAccountActionHandler implements ActionHandler<CreateUserA
     }
 
     @Override
-    public RequestValidator<CreateUserAccountAction> getRequestValidator(CreateUserAccountAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(CreateUserAccountAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

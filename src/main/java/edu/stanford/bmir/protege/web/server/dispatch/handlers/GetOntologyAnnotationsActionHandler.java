@@ -7,7 +7,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
@@ -24,9 +25,12 @@ import java.util.*;
  */
 public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetOntologyAnnotationsAction, RenderableGetObjectResult<Set<OWLAnnotation>>> {
 
+    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
+
     @Inject
-    public GetOntologyAnnotationsActionHandler(OWLAPIProjectManager projectManager) {
+    public GetOntologyAnnotationsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -36,7 +40,7 @@ public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActio
 
     @Override
     protected RequestValidator getAdditionalRequestValidator(GetOntologyAnnotationsAction action, RequestContext requestContext) {
-        return new UserHasProjectReadPermissionValidator();
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

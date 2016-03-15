@@ -15,17 +15,17 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
  *     A request validator that always validates a request as valid.
  * </p>
  */
-public class NullValidator<A extends Action<R>, R extends Result> implements RequestValidator<A> {
+public class NullValidator implements RequestValidator {
 
-    private static final NullValidator<?, ?> instance = new NullValidator();
+    private static final NullValidator instance = new NullValidator();
 
     @Override
-    public RequestValidationResult validateAction(A action, RequestContext requestContext) {
+    public RequestValidationResult validateAction() {
         return RequestValidationResult.getValid();
     }
 
     @SuppressWarnings("unchecked")
-    public static <A extends Action<?>> RequestValidator<A> get() {
-        return (NullValidator<A, ?>) instance;
+    public static <A extends Action<?>> RequestValidator get() {
+        return instance;
     }
 }

@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
+import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
@@ -48,9 +50,12 @@ public class GetProjectSharingSettingsActionHandler_TestCase {
     @Mock
     private OWLAPIProjectManager projectManager;
 
+    @Mock
+    private ValidatorFactory<AdminPermissionValidator> validatorFactory;
+
     @Before
     public void setUp() throws Exception {
-        handler = new GetProjectSharingSettingsActionHandler(settingsManager, projectManager);
+        handler = new GetProjectSharingSettingsActionHandler(projectManager, settingsManager, validatorFactory);
         when(settingsManager.getProjectSharingSettings(projectId)).thenReturn(projectSharingSettings);
         when(action.getProjectId()).thenReturn(projectId);
     }

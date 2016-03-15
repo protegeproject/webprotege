@@ -8,7 +8,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.entity.OWLNamedIndividualData;
@@ -26,14 +28,18 @@ import java.util.Set;
  */
 public class CreateNamedIndividualsActionHandler extends AbstractHasProjectActionHandler<CreateNamedIndividualsAction, CreateNamedIndividualsResult> {
 
+    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
+
+
     @Inject
-    public CreateNamedIndividualsActionHandler(OWLAPIProjectManager projectManager) {
+    public CreateNamedIndividualsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<CreateNamedIndividualsAction> getAdditionalRequestValidator(CreateNamedIndividualsAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator();
+    protected RequestValidator getAdditionalRequestValidator(CreateNamedIndividualsAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

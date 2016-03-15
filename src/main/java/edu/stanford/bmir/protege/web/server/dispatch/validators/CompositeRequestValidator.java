@@ -21,27 +21,27 @@ import java.util.List;
  *     the request.  (i.e. conjunction rather than disjunction).
  * </p>
  */
-public class CompositeRequestValidator<A extends Action<?>> implements RequestValidator<A> {
+public class CompositeRequestValidator implements RequestValidator {
 
-    private List<RequestValidator<A>> requestValidators = new ArrayList<RequestValidator<A>>();
+    private final List<RequestValidator> requestValidators = new ArrayList<RequestValidator>();
 
 
-    public static <A extends Action<?>> CompositeRequestValidator<A> get(List<RequestValidator<A>> requestValidators) {
-        return new CompositeRequestValidator<A>(requestValidators);
+    public static <A extends Action<?>> CompositeRequestValidator get(List<RequestValidator> requestValidators) {
+        return new CompositeRequestValidator(requestValidators);
     }
 
-    public CompositeRequestValidator(RequestValidator<A> ... requestValidators) {
+    public CompositeRequestValidator(RequestValidator ... requestValidators) {
         this(Arrays.asList(requestValidators));
     }
 
-    public CompositeRequestValidator(List<RequestValidator<A>> requestValidators) {
-        this.requestValidators = new ArrayList<RequestValidator<A>>(requestValidators);
+    public CompositeRequestValidator(List<RequestValidator> requestValidators) {
+        this.requestValidators.addAll(requestValidators);
     }
 
     @Override
-    public RequestValidationResult validateAction(A action, RequestContext requestContext) {
-        for(RequestValidator<A> requestValidator : requestValidators) {
-            RequestValidationResult result = requestValidator.validateAction(action, requestContext);
+    public RequestValidationResult validateAction() {
+        for(RequestValidator requestValidator : requestValidators) {
+            RequestValidationResult result = requestValidator.validateAction();
             if(result.getValidationResult() == ValidationResult.INVALID) {
                 return result;
             }

@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.server.dispatch.impl;
 
 import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
-import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
@@ -39,7 +37,7 @@ public class DispatchServiceExecutorImpl_TestCase<A extends Action<R>, R extends
     private ExecutionContext executionContext;
 
     @Mock
-    private RequestValidator<A> requestValidator;
+    private RequestValidator requestValidator;
 
     private DispatchServiceExecutorImpl executor;
 
@@ -48,7 +46,7 @@ public class DispatchServiceExecutorImpl_TestCase<A extends Action<R>, R extends
         executor = new DispatchServiceExecutorImpl(registry);
         when(registry.getActionHandler(action)).thenReturn(actionHandler);
         when(actionHandler.getRequestValidator(action, requestContext)).thenReturn(requestValidator);
-        when(requestValidator.validateAction(action, requestContext)).thenReturn(RequestValidationResult.getValid());
+        when(requestValidator.validateAction()).thenReturn(RequestValidationResult.getValid());
     }
 
     @Test(expected = ActionExecutionException.class)
@@ -66,7 +64,7 @@ public class DispatchServiceExecutorImpl_TestCase<A extends Action<R>, R extends
 
     @Test(expected = PermissionDeniedException.class)
     public void shouldThrowPermissionDeniedException() {
-        when(requestValidator.validateAction(action, requestContext)).thenReturn(RequestValidationResult.getInvalid("Denied"));
+        when(requestValidator.validateAction()).thenReturn(RequestValidationResult.getInvalid("Denied"));
         executor.execute(action, requestContext, executionContext);
     }
 

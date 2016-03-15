@@ -5,7 +5,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.metrics.GetMetricsAction;
@@ -20,14 +21,17 @@ import java.util.List;
  */
 public class GetMetricsActionHandler extends AbstractHasProjectActionHandler<GetMetricsAction, GetMetricsResult> {
 
+    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
+
     @Inject
-    public GetMetricsActionHandler(OWLAPIProjectManager projectManager) {
+    public GetMetricsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<GetMetricsAction> getAdditionalRequestValidator(GetMetricsAction action, RequestContext requestContext) {
-        return UserHasProjectReadPermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(GetMetricsAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

@@ -33,7 +33,7 @@ public class GetPerspectivesActionHandler implements ActionHandler<GetPerspectiv
     }
 
     @Override
-    public RequestValidator<GetPerspectivesAction> getRequestValidator(GetPerspectivesAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetPerspectivesAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

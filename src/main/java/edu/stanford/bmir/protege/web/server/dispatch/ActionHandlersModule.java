@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.dispatch;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import edu.stanford.bmir.protege.web.server.app.GetClientApplicationPropertiesActionHandler;
 import edu.stanford.bmir.protege.web.server.auth.ChangePasswordActionHandler;
@@ -16,6 +18,7 @@ import edu.stanford.bmir.protege.web.server.crud.SetEntityCrudKitSettingsActionH
 import edu.stanford.bmir.protege.web.server.csv.GetCSVGridActionHandler;
 import edu.stanford.bmir.protege.web.server.csv.ImportCSVFileActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.*;
 import edu.stanford.bmir.protege.web.server.entities.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
 import edu.stanford.bmir.protege.web.server.frame.*;
@@ -55,7 +58,6 @@ import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.*;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
-import edu.stanford.bmir.protege.web.shared.project.GetProjectDetailsAction;
 
 /**
  * Matthew Horridge
@@ -66,6 +68,31 @@ public class ActionHandlersModule extends AbstractModule {
 
     @Override
     protected void configure() {
+
+        install(new FactoryModuleBuilder()
+                .implement(ReadPermissionValidator.class, ReadPermissionValidator.class)
+                .build(new TypeLiteral<ValidatorFactory<ReadPermissionValidator>>(){}));
+
+        install(new FactoryModuleBuilder()
+                .implement(CommentPermissionValidator.class, CommentPermissionValidator.class)
+                .build(new TypeLiteral<ValidatorFactory<CommentPermissionValidator>>(){}));
+
+        install(new FactoryModuleBuilder()
+                .implement(WritePermissionValidator.class, WritePermissionValidator.class)
+                .build(new TypeLiteral<ValidatorFactory<WritePermissionValidator>>(){}));
+
+        install(new FactoryModuleBuilder()
+                .implement(UserIsProjectOwnerValidator.class, UserIsProjectOwnerValidator.class)
+                .build(new TypeLiteral<ValidatorFactory<UserIsProjectOwnerValidator>>(){}));
+
+        install(new FactoryModuleBuilder()
+                .implement(AdminPermissionValidator.class, AdminPermissionValidator.class)
+                .build(new TypeLiteral<ValidatorFactory<AdminPermissionValidator>>(){}));
+
+
+
+
+
         Multibinder<ActionHandler> multibinder = Multibinder.newSetBinder(binder(), ActionHandler.class);
         multibinder.addBinding().to(GetClientApplicationPropertiesActionHandler.class);
         multibinder.addBinding().to(GetUserIdsActionHandler.class);

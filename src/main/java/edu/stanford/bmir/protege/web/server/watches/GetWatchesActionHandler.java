@@ -34,7 +34,7 @@ public class GetWatchesActionHandler extends AbstractHasProjectActionHandler<Get
     }
 
     @Override
-    protected RequestValidator<GetWatchesAction> getAdditionalRequestValidator(GetWatchesAction action, RequestContext requestContext) {
+    protected RequestValidator getAdditionalRequestValidator(GetWatchesAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

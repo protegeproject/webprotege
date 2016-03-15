@@ -35,7 +35,7 @@ public class GetUsageActionHandler extends AbstractHasProjectActionHandler<GetUs
     }
 
     @Override
-    protected RequestValidator<GetUsageAction> getAdditionalRequestValidator(GetUsageAction action, RequestContext requestContext) {
+    protected RequestValidator getAdditionalRequestValidator(GetUsageAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

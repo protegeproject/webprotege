@@ -37,7 +37,7 @@ public class GetCSVGridActionHandler implements ActionHandler<GetCSVGridAction, 
     }
 
     @Override
-    public RequestValidator<GetCSVGridAction> getRequestValidator(GetCSVGridAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetCSVGridAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

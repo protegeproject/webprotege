@@ -1,10 +1,11 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.mansyntax.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
@@ -23,14 +24,18 @@ import java.util.List;
  */
 public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChangeHandler<Void, SetManchesterSyntaxFrameAction, SetManchesterSyntaxFrameResult> {
 
+
+    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
+
     @Inject
-    public SetManchesterSyntaxFrameActionHandler(OWLAPIProjectManager projectManager) {
+    public SetManchesterSyntaxFrameActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<SetManchesterSyntaxFrameAction> getAdditionalRequestValidator(SetManchesterSyntaxFrameAction action, RequestContext requestContext) {
-        return UserHasProjectWritePermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(SetManchesterSyntaxFrameAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

@@ -42,7 +42,7 @@ public class GetChapSessionActionHandler implements ActionHandler<GetChapSession
     }
 
     @Override
-    public RequestValidator<GetChapSessionAction> getRequestValidator(GetChapSessionAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetChapSessionAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.projectsettings;
 
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.project.ProjectDetailsManager;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -43,13 +45,16 @@ public class SetProjectSettingsActionHandler_TestCase {
     @Mock
     private OWLAPIProjectManager projectManager;
 
+    @Mock
+    private ValidatorFactory<AdminPermissionValidator> validatorFactory;
+
     @Before
     public void setUp() throws Exception {
         when(psm.getProjectSettings(projectId)).thenReturn(projectSettings);
         when(projectSettings.getProjectId()).thenReturn(projectId);
         when(action.getProjectId()).thenReturn(projectId);
         when(action.getProjectSettings()).thenReturn(projectSettings);
-        handler = new SetProjectSettingsActionHandler(psm, projectManager);
+        handler = new SetProjectSettingsActionHandler(projectManager, psm, validatorFactory);
     }
 
     @Test

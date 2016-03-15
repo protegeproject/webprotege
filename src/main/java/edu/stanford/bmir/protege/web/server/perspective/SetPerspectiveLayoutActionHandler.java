@@ -30,7 +30,7 @@ public class SetPerspectiveLayoutActionHandler implements ActionHandler<SetPersp
     }
 
     @Override
-    public RequestValidator<SetPerspectiveLayoutAction> getRequestValidator(SetPerspectiveLayoutAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(SetPerspectiveLayoutAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

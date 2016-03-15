@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.dispatch.validators;
 
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidationResult;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
@@ -15,14 +16,17 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class ProjectExistsValidator<A extends Action<?> & HasProjectId> implements RequestValidator<A> {
+public class ProjectExistsValidator implements RequestValidator {
 
-    public static <A extends Action<?> & HasProjectId> ProjectExistsValidator<A> get() {
-        return new ProjectExistsValidator<A>();
+    private final ProjectId projectId;
+
+    @Inject
+    public ProjectExistsValidator(ProjectId projectId) {
+        this.projectId = projectId;
     }
 
     @Override
-    public RequestValidationResult validateAction(A action, RequestContext requestContext) {
+    public RequestValidationResult validateAction() {
         return RequestValidationResult.getValid();
 //        ProjectId projectId = action.getProjectId();
 //        OWLAPIProjectDocumentStore ds = OWLAPIProjectDocumentStore.getProjectDocumentStore(projectId);

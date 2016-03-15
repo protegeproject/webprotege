@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.server.revision;
 
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.revision.GetHeadRevisionNumberAction;
@@ -41,9 +43,12 @@ public class GetHeadRevisionNumberActionHandler_TestCase {
     @Mock
     private OWLAPIProjectManager projectManager;
 
+    @Mock
+    private ValidatorFactory<ReadPermissionValidator> validatorFactory;
+
     @Before
     public void setUp() throws Exception {
-        handler = new GetHeadRevisionNumberActionHandler(projectManager);
+        handler = new GetHeadRevisionNumberActionHandler(projectManager, validatorFactory);
         when(project.getRevisionNumber()).thenReturn(revisionNumber);
     }
 

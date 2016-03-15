@@ -6,7 +6,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.CommentPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -22,9 +24,13 @@ import javax.inject.Inject;
  */
 public class GetRootOntologyIdActionHandler extends AbstractHasProjectActionHandler<GetRootOntologyIdAction, GetRootOntologyIdResult> {
 
+
+    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
+
     @Inject
-    public GetRootOntologyIdActionHandler(OWLAPIProjectManager projectManager) {
+    public GetRootOntologyIdActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     /**
@@ -41,7 +47,7 @@ public class GetRootOntologyIdActionHandler extends AbstractHasProjectActionHand
      */
     @Override
     protected RequestValidator getAdditionalRequestValidator(GetRootOntologyIdAction action, RequestContext requestContext) {
-        return new UserHasProjectReadPermissionValidator();
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     /**

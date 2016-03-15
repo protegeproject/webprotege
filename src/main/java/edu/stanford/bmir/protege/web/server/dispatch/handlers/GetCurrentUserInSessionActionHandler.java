@@ -43,7 +43,7 @@ public class GetCurrentUserInSessionActionHandler implements ActionHandler<GetCu
     }
 
     @Override
-    public RequestValidator<GetCurrentUserInSessionAction> getRequestValidator(GetCurrentUserInSessionAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetCurrentUserInSessionAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

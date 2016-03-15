@@ -34,7 +34,7 @@ public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAc
     }
 
     @Override
-    public RequestValidator<ResetPasswordAction> getRequestValidator(
+    public RequestValidator getRequestValidator(
             ResetPasswordAction action, RequestContext requestContext) {
         return NullValidator.get();
     }

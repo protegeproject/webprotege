@@ -26,7 +26,7 @@ public class GetEntityCrudKitsActionHandler implements ActionHandler<GetEntityCr
     }
 
     @Override
-    public RequestValidator<GetEntityCrudKitsAction> getRequestValidator(GetEntityCrudKitsAction action, RequestContext requestContext) {
+    public RequestValidator getRequestValidator(GetEntityCrudKitsAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

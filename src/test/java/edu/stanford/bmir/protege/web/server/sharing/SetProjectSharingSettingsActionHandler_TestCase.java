@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -32,7 +33,7 @@ public class SetProjectSharingSettingsActionHandler_TestCase {
     private ProjectSharingSettingsManager sharingSettingsManager;
 
     @Mock
-    private UserIsProjectOwnerValidator<SetProjectSharingSettingsAction> validator;
+    private UserIsProjectOwnerValidator validator;
 
     @Mock
     private SetProjectSharingSettingsAction action;
@@ -46,16 +47,19 @@ public class SetProjectSharingSettingsActionHandler_TestCase {
     @Mock
     private OWLAPIProjectManager projectManager;
 
+    @Mock
+    private ValidatorFactory<UserIsProjectOwnerValidator> validatorFactory;
+
     @Before
     public void setUp() throws Exception {
-        handler = new SetProjectSharingSettingsActionHandler(sharingSettingsManager, validator, projectManager);
+        handler = new SetProjectSharingSettingsActionHandler(projectManager, sharingSettingsManager, validatorFactory);
         when(action.getProjectSharingSettings()).thenReturn(sharingSettings);
     }
 
     @Test
     public void shouldReturnSuppliedValidator() {
-        RequestValidator<SetProjectSharingSettingsAction> v = handler.getAdditionalRequestValidator(action, mock(RequestContext.class));
-        assertThat(v, Matchers.<RequestValidator<SetProjectSharingSettingsAction>>is(validator));
+        RequestValidator v = handler.getAdditionalRequestValidator(action, mock(RequestContext.class));
+        assertThat(v, Matchers.<RequestValidator>is(validator));
     }
 
     @Test

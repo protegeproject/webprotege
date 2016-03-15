@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.server.frame;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionChoice;
 import edu.stanford.bmir.gwtcodemirror.client.AutoCompletionResult;
 import edu.stanford.bmir.gwtcodemirror.client.EditorPosition;
@@ -12,10 +10,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
-import edu.stanford.bmir.protege.web.server.inject.ManchesterSyntaxParsingContextModule;
-import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
-import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.mansyntax.ManchesterSyntaxFrameParser;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
@@ -42,17 +38,19 @@ import java.util.*;
 public class GetManchesterSyntaxFrameCompletionsActionHandler
         extends AbstractHasProjectActionHandler<GetManchesterSyntaxFrameCompletionsAction, GetManchesterSyntaxFrameCompletionsResult> {
 
-    private final ManchesterSyntaxKeywords syntaxStyles;
+    private final ManchesterSyntaxKeywords syntaxStyles = new ManchesterSyntaxKeywords();
+
+    private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
 
     @Inject
-    public GetManchesterSyntaxFrameCompletionsActionHandler(OWLAPIProjectManager projectManager) {
+    public GetManchesterSyntaxFrameCompletionsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<ReadPermissionValidator> validatorFactory) {
         super(projectManager);
-        syntaxStyles = new ManchesterSyntaxKeywords();
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<GetManchesterSyntaxFrameCompletionsAction> getAdditionalRequestValidator(GetManchesterSyntaxFrameCompletionsAction action, RequestContext requestContext) {
-        return UserHasProjectReadPermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(GetManchesterSyntaxFrameCompletionsAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override

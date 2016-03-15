@@ -34,7 +34,7 @@ public class GetIndividualsActionHandler extends AbstractHasProjectActionHandler
     }
 
     @Override
-    protected RequestValidator<GetIndividualsAction> getAdditionalRequestValidator(GetIndividualsAction action, RequestContext requestContext) {
+    protected RequestValidator getAdditionalRequestValidator(GetIndividualsAction action, RequestContext requestContext) {
         return NullValidator.get();
     }
 

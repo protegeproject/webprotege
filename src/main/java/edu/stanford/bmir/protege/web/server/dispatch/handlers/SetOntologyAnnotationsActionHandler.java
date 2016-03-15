@@ -8,7 +8,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.NullValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.WritePermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.server.owlapi.RenameMap;
@@ -32,11 +33,12 @@ import java.util.Set;
  */
 public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHandler<Set<OWLAnnotation>, SetOntologyAnnotationsAction, SetOntologyAnnotationsResult> {
 
-    private static final UserHasProjectWritePermissionValidator<SetOntologyAnnotationsAction> VALIDATOR = new UserHasProjectWritePermissionValidator<SetOntologyAnnotationsAction>();
+    private final ValidatorFactory<WritePermissionValidator> validatorFactory;
 
     @Inject
-    public SetOntologyAnnotationsActionHandler(OWLAPIProjectManager projectManager) {
+    public SetOntologyAnnotationsActionHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class SetOntologyAnnotationsActionHandler extends AbstractProjectChangeHa
     }
 
     @Override
-    protected RequestValidator<SetOntologyAnnotationsAction> getAdditionalRequestValidator(SetOntologyAnnotationsAction action, RequestContext requestContext) {
-        return NullValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(SetOntologyAnnotationsAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 }

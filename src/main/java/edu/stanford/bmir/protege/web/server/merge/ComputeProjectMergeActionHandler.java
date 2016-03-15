@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
+import edu.stanford.bmir.protege.web.server.dispatch.validators.AdminPermissionValidator;
+import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.inject.UploadsDirectory;
 import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.shared.merge.ComputeProjectMergeResult;
@@ -12,7 +14,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHan
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
-import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectReadPermissionValidator;
 import edu.stanford.bmir.protege.web.server.owlapi.*;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.server.render.*;
@@ -42,15 +43,18 @@ public class ComputeProjectMergeActionHandler extends AbstractHasProjectActionHa
 
     private final File uploadsDirectory;
 
+    private final ValidatorFactory<AdminPermissionValidator> validatorFactory;
+
     @Inject
-    public ComputeProjectMergeActionHandler(@UploadsDirectory File uploadsDirectory, OWLAPIProjectManager projectManager) {
+    public ComputeProjectMergeActionHandler(@UploadsDirectory File uploadsDirectory, OWLAPIProjectManager projectManager, ValidatorFactory<AdminPermissionValidator> validatorFactory) {
         super(projectManager);
         this.uploadsDirectory = uploadsDirectory;
+        this.validatorFactory = validatorFactory;
     }
 
     @Override
-    protected RequestValidator<ComputeProjectMergeAction> getAdditionalRequestValidator(ComputeProjectMergeAction action, RequestContext requestContext) {
-        return UserHasProjectReadPermissionValidator.get();
+    protected RequestValidator getAdditionalRequestValidator(ComputeProjectMergeAction action, RequestContext requestContext) {
+        return validatorFactory.getValidator(action.getProjectId(), requestContext.getUserId());
     }
 
     @Override
