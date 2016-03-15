@@ -4,8 +4,8 @@ import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.user.HasGetUserIdByUserIdOrEmail;
-import edu.stanford.bmir.protege.web.server.permissions.AccessControlListEntry;
-import edu.stanford.bmir.protege.web.server.permissions.AccessControlListRepository;
+import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecord;
+import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordRepository;
 import edu.stanford.bmir.protege.web.server.permissions.WorldProjectPermissionRecordRepository;
 import edu.stanford.bmir.protege.web.server.permissions.WorldProjectPermissionRecord;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
@@ -35,12 +35,12 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     
     private final WorldProjectPermissionRecordRepository worldRepository;
 
-    private final AccessControlListRepository repository;
+    private final ProjectPermissionRecordRepository repository;
 
     private final HasGetUserIdByUserIdOrEmail userLookup;
 
     @Inject
-    public ProjectSharingSettingsManagerImpl(WebProtegeLogger logger, WorldProjectPermissionRecordRepository worldRepository, AccessControlListRepository repository, HasGetUserIdByUserIdOrEmail userLookup) {
+    public ProjectSharingSettingsManagerImpl(WebProtegeLogger logger, WorldProjectPermissionRecordRepository worldRepository, ProjectPermissionRecordRepository repository, HasGetUserIdByUserIdOrEmail userLookup) {
         this.logger = logger;
         this.worldRepository = worldRepository;
         this.repository = repository;
@@ -73,14 +73,14 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     @Override
     public void setProjectSharingSettings(ProjectSharingSettings settings) {
         ProjectId projectId = settings.getProjectId();
-        List<AccessControlListEntry> entries = new ArrayList<>();
+        List<ProjectPermissionRecord> entries = new ArrayList<>();
         for(SharingSetting setting : settings.getSharingSettings()) {
             PersonId personId = setting.getPersonId();
             Optional<UserId> userId = userLookup.getUserByUserIdOrEmail(personId.getId());
             if(userId.isPresent()) {
                 Collection<Permission> permissions = getPermission(setting.getSharingPermission());
                 for(Permission permission : permissions) {
-                    AccessControlListEntry e = new AccessControlListEntry(
+                    ProjectPermissionRecord e = new ProjectPermissionRecord(
                             projectId,
                             userId.get(),
                             permission);

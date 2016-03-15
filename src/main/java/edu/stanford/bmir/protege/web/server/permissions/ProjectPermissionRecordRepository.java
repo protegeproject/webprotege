@@ -3,10 +3,8 @@ package edu.stanford.bmir.protege.web.server.permissions;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.Repository;
 
-import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
@@ -14,19 +12,19 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 11/03/16
  */
-public interface AccessControlListRepository extends Repository<AccessControlListEntry, Long> {
+public interface ProjectPermissionRecordRepository extends Repository<ProjectPermissionRecord, Long> {
 
-    Stream<AccessControlListEntry> findByProjectId(ProjectId projectId);
+    Stream<ProjectPermissionRecord> findByProjectId(ProjectId projectId);
 
-    Stream<AccessControlListEntry> findByUserId(UserId userId);
+    Stream<ProjectPermissionRecord> findByUserId(UserId userId);
 
-    Stream<AccessControlListEntry> findByProjectIdAndUserId(ProjectId projectId, UserId userId);
+    Stream<ProjectPermissionRecord> findByProjectIdAndUserId(ProjectId projectId, UserId userId);
 
     void deleteByProjectId(ProjectId projectId);
 
-    AccessControlListEntry save(AccessControlListEntry entry);
+    ProjectPermissionRecord save(ProjectPermissionRecord entry);
 
-    Iterable<AccessControlListEntry> save(Iterable<AccessControlListEntry> iterable);
+    Iterable<ProjectPermissionRecord> save(Iterable<ProjectPermissionRecord> iterable);
 
     int countByProjectIdAndUserIdAndPermission(ProjectId projectId, UserId userId, Permission permission);
 }
