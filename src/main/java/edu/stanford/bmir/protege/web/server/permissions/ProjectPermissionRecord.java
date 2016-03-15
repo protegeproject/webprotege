@@ -4,12 +4,8 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.annotation.Generated;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -19,9 +15,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 11/03/16
  */
-@Document(collection = "AccessControlList")
-@TypeAlias("AccessControlListEntry")
-public class AccessControlListEntry {
+@Document(collection = "ProjectPermissionRecords")
+@TypeAlias("ProjectPermissionRecord")
+public class ProjectPermissionRecord {
 
     private final ProjectId projectId;
 
@@ -29,7 +25,7 @@ public class AccessControlListEntry {
 
     private final Permission permission;
 
-    public AccessControlListEntry(ProjectId projectId, UserId userId, Permission permission) {
+    public ProjectPermissionRecord(ProjectId projectId, UserId userId, Permission permission) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
         this.permission = checkNotNull(permission);
@@ -57,10 +53,10 @@ public class AccessControlListEntry {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof AccessControlListEntry)) {
+        if (!(obj instanceof ProjectPermissionRecord)) {
             return false;
         }
-        AccessControlListEntry other = (AccessControlListEntry) obj;
+        ProjectPermissionRecord other = (ProjectPermissionRecord) obj;
         return this.projectId.equals(other.projectId)
                 && this.userId.equals(other.userId)
                 && this.permission.equals(other.permission);
@@ -69,7 +65,7 @@ public class AccessControlListEntry {
 
     @Override
     public String toString() {
-        return toStringHelper("AccessControlListEntry")
+        return toStringHelper("ProjectPermissionRecord")
                 .addValue(projectId)
                 .addValue(userId)
                 .addValue(permission)

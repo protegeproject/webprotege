@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static edu.stanford.bmir.protege.web.server.project.ProjectRecordTranslator.translateToProjectDetails;
 
@@ -22,15 +21,15 @@ import static edu.stanford.bmir.protege.web.server.project.ProjectRecordTranslat
  */
 public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager {
 
-    private final AccessControlListRepository accessControlListRepository;
+    private final ProjectPermissionRecordRepository projectPermissionRecordRepository;
 
     private final WorldProjectPermissionRecordRepository worldProjectPermissionRecordRepository;
 
     private final ProjectRecordRepository projectRecordRepository;
 
     @Inject
-    public ProjectPermissionsManagerImpl(AccessControlListRepository accessControlListRepository, WorldProjectPermissionRecordRepository worldProjectPermissionRecordRepository, ProjectRecordRepository projectRecordRepository) {
-        this.accessControlListRepository = accessControlListRepository;
+    public ProjectPermissionsManagerImpl(ProjectPermissionRecordRepository projectPermissionRecordRepository, WorldProjectPermissionRecordRepository worldProjectPermissionRecordRepository, ProjectRecordRepository projectRecordRepository) {
+        this.projectPermissionRecordRepository = projectPermissionRecordRepository;
         this.worldProjectPermissionRecordRepository = worldProjectPermissionRecordRepository;
         this.projectRecordRepository = projectRecordRepository;
     }
@@ -38,7 +37,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     @Override
     public PermissionsSet getPermissionsSet(ProjectId projectId, UserId userId) {
         PermissionsSet.Builder builder = PermissionsSet.builder();
-        accessControlListRepository.findByProjectIdAndUserId(projectId, userId)
+        projectPermissionRecordRepository.findByProjectIdAndUserId(projectId, userId)
                 .forEach(r -> {
                     Permission permission = r.getPermission();
                     builder.addPermission(permission);
@@ -70,7 +69,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
     @Override
     public List<ProjectDetails> getReadableProjects(UserId userId) {
         Set<ProjectDetails> result = new HashSet<>();
-        accessControlListRepository.findByUserId(userId)
+        projectPermissionRecordRepository.findByUserId(userId)
                 .forEach(r -> {
                     Optional<ProjectRecord> record = projectRecordRepository.findOne(r.getProjectId());
                     result.add(translateToProjectDetails(record.get()));
@@ -85,7 +84,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     @Override
     public boolean hasPermission(ProjectId projectId, UserId userId, Permission permission) {
-        int count = accessControlListRepository.countByProjectIdAndUserIdAndPermission(projectId, userId, permission);
+        int count = projectPermissionRecordRepository.countByProjectIdAndUserIdAndPermission(projectId, userId, permission);
         if(count > 0) {
             return true;
         }

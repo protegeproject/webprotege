@@ -4,13 +4,10 @@ package edu.stanford.bmir.protege.web.server.permissions;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.lang.NullPointerException;
@@ -22,9 +19,9 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AccessControlListEntry_TestCase {
+public class ProjectPermissionRecord_TestCase {
 
-    private AccessControlListEntry accessControlListEntry;
+    private ProjectPermissionRecord projectPermissionRecord;
     @Mock
     private ProjectId projectId;
     @Mock
@@ -35,77 +32,77 @@ public class AccessControlListEntry_TestCase {
     @Before
     public void setUp()
     {
-        accessControlListEntry = new AccessControlListEntry(projectId, userId, permission);
+        projectPermissionRecord = new ProjectPermissionRecord(projectId, userId, permission);
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_projectId_IsNull() {
-        new AccessControlListEntry(null, userId, permission);
+        new ProjectPermissionRecord(null, userId, permission);
     }
 
     @Test
     public void shouldReturnSupplied_projectId() {
-        assertThat(accessControlListEntry.getProjectId(), is(this.projectId));
+        assertThat(projectPermissionRecord.getProjectId(), is(this.projectId));
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_userId_IsNull() {
-        new AccessControlListEntry(projectId, null, permission);
+        new ProjectPermissionRecord(projectId, null, permission);
     }
 
     @Test
     public void shouldReturnSupplied_userId() {
-        assertThat(accessControlListEntry.getUserId(), is(this.userId));
+        assertThat(projectPermissionRecord.getUserId(), is(this.userId));
     }
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_permission_IsNull() {
-        new AccessControlListEntry(projectId, userId, null);
+        new ProjectPermissionRecord(projectId, userId, null);
     }
 
     @Test
     public void shouldReturnSupplied_permission() {
-        assertThat(accessControlListEntry.getPermission(), is(this.permission));
+        assertThat(projectPermissionRecord.getPermission(), is(this.permission));
     }
 
     @Test
     public void shouldBeEqualToSelf() {
-        assertThat(accessControlListEntry, is(accessControlListEntry));
+        assertThat(projectPermissionRecord, is(projectPermissionRecord));
     }
 
     @Test
     public void shouldNotBeEqualToNull() {
-        assertThat(accessControlListEntry.equals(null), is(false));
+        assertThat(projectPermissionRecord.equals(null), is(false));
     }
 
     @Test
     public void shouldBeEqualToOther() {
-        assertThat(accessControlListEntry, is(new AccessControlListEntry(projectId, userId, permission)));
+        assertThat(projectPermissionRecord, is(new ProjectPermissionRecord(projectId, userId, permission)));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(accessControlListEntry, is(not(new AccessControlListEntry(mock(ProjectId.class), userId, permission))));
+        assertThat(projectPermissionRecord, is(not(new ProjectPermissionRecord(mock(ProjectId.class), userId, permission))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_userId() {
-        assertThat(accessControlListEntry, is(not(new AccessControlListEntry(projectId, mock(UserId.class), permission))));
+        assertThat(projectPermissionRecord, is(not(new ProjectPermissionRecord(projectId, mock(UserId.class), permission))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_permission() {
-        assertThat(accessControlListEntry, is(not(new AccessControlListEntry(projectId, userId, mock(Permission.class)))));
+        assertThat(projectPermissionRecord, is(not(new ProjectPermissionRecord(projectId, userId, mock(Permission.class)))));
     }
 
     @Test
     public void shouldBeEqualToOtherHashCode() {
-        assertThat(accessControlListEntry.hashCode(), is(new AccessControlListEntry(projectId, userId, permission).hashCode()));
+        assertThat(projectPermissionRecord.hashCode(), is(new ProjectPermissionRecord(projectId, userId, permission).hashCode()));
     }
 
     @Test
     public void shouldImplementToString() {
-        assertThat(accessControlListEntry.toString(), startsWith("AccessControlListEntry"));
+        assertThat(projectPermissionRecord.toString(), startsWith("AccessControlListEntry"));
     }
 
 }
