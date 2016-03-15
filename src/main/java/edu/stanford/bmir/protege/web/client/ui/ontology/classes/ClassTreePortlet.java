@@ -209,6 +209,13 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                             MessageBox.showMessage("Direct link", builder.toSafeHtml().asString());
                         }
                     });
+                    contextMenu.addSeparator();
+                    contextMenu.addItem("Refresh tree", new ClickHandler() {
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            onRefresh();
+                        }
+                    });
                     contextMenu.show(e.getXY()[0], e.getXY()[1] + 5);
                 }
             };
