@@ -26,5 +26,5 @@ public interface ProjectPermissionRecordRepository extends Repository<ProjectPer
 
     Iterable<ProjectPermissionRecord> save(Iterable<ProjectPermissionRecord> iterable);
 
-    int countByProjectIdAndUserIdAndPermission(ProjectId projectId, UserId userId, Permission permission);
+    int countByProjectIdAndUserIdAndPermissions(ProjectId projectId, UserId userId, Permission permissions);
 }

@@ -1,11 +1,15 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Collection;
+import java.util.Set;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,12 +27,12 @@ public class ProjectPermissionRecord {
 
     private final UserId userId;
 
-    private final Permission permission;
+    private final ImmutableSet<Permission> permissions;
 
-    public ProjectPermissionRecord(ProjectId projectId, UserId userId, Permission permission) {
+    public ProjectPermissionRecord(ProjectId projectId, UserId userId, ImmutableSet<Permission> permissions) {
         this.projectId = checkNotNull(projectId);
         this.userId = checkNotNull(userId);
-        this.permission = checkNotNull(permission);
+        this.permissions = checkNotNull(ImmutableSet.copyOf(permissions));
     }
 
     public ProjectId getProjectId() {
@@ -39,13 +43,13 @@ public class ProjectPermissionRecord {
         return userId;
     }
 
-    public Permission getPermission() {
-        return permission;
+    public ImmutableSet<Permission> getPermissions() {
+        return permissions;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(projectId, userId, permission);
+        return Objects.hashCode(projectId, userId, permissions);
     }
 
     @Override
@@ -59,7 +63,7 @@ public class ProjectPermissionRecord {
         ProjectPermissionRecord other = (ProjectPermissionRecord) obj;
         return this.projectId.equals(other.projectId)
                 && this.userId.equals(other.userId)
-                && this.permission.equals(other.permission);
+                && this.permissions.equals(other.permissions);
     }
 
 
@@ -68,7 +72,7 @@ public class ProjectPermissionRecord {
         return toStringHelper("ProjectPermissionRecord")
                 .addValue(projectId)
                 .addValue(userId)
-                .addValue(permission)
+                .addValue(permissions)
                 .toString();
     }
 }

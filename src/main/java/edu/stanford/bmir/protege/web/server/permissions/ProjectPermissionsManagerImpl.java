@@ -39,16 +39,17 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
         PermissionsSet.Builder builder = PermissionsSet.builder();
         projectPermissionRecordRepository.findByProjectIdAndUserId(projectId, userId)
                 .forEach(r -> {
-                    Permission permission = r.getPermission();
-                    builder.addPermission(permission);
-                    if(permission.isWritePermission()) {
-                        // Users who can write can also comment
-                        builder.addPermission(Permission.getCommentPermission());
-                    }
-                    else if(permission.isCommentPermission()) {
-                        // Users who can comment can also read
-                        builder.addPermission(Permission.getReadPermission());
-                    }
+                    r.getPermissions().forEach(permission -> {
+                        builder.addPermission(permission);
+                        if(permission.isWritePermission()) {
+                            // Users who can write can also comment
+                            builder.addPermission(Permission.getCommentPermission());
+                        }
+                        else if(permission.isCommentPermission()) {
+                            // Users who can comment can also read
+                            builder.addPermission(Permission.getReadPermission());
+                        }
+                    });
                 });
         // Users can always write, comment and read the projects they own.  They are also admins.
         Optional<ProjectRecord> record = projectRecordRepository.findOne(projectId);
@@ -84,7 +85,7 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     @Override
     public boolean hasPermission(ProjectId projectId, UserId userId, Permission permission) {
-        int count = projectPermissionRecordRepository.countByProjectIdAndUserIdAndPermission(projectId, userId, permission);
+        int count = projectPermissionRecordRepository.countByProjectIdAndUserIdAndPermissions(projectId, userId, permission);
         if(count > 0) {
             return true;
         }
