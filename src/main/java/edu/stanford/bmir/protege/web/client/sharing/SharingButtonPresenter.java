@@ -34,12 +34,22 @@ public class SharingButtonPresenter {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
+    private final Button button;
+
     @Inject
     public SharingButtonPresenter(ProjectId projectId, PlaceController placeController, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.projectId = projectId;
         this.placeController = placeController;
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
+        button = new Button("Share", new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                goToSharingSettingsPlace();
+            }
+        });
+        button.asWidget().addStyleName(WebProtegeClientBundle.BUNDLE.buttons().btn());
+        button.asWidget().addStyleName(WebProtegeClientBundle.BUNDLE.buttons().topBarButton());
     }
 
     public void start(final AcceptsOneWidget container) {
@@ -49,20 +59,15 @@ public class SharingButtonPresenter {
                 if(result.getPermissionsSet().contains(Permission.getAdminPermission())) {
                     displayButton(container);
                 }
+                else {
+                    button.removeFromParent();
+                }
             }
         });
 
     }
 
     private void displayButton(AcceptsOneWidget container) {
-        Button button = new Button("Share", new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                goToSharingSettingsPlace();
-            }
-        });
-        button.asWidget().addStyleName(WebProtegeClientBundle.BUNDLE.buttons().btn());
-        button.asWidget().addStyleName(WebProtegeClientBundle.BUNDLE.buttons().topBarButton());
         container.setWidget(button);
     }
 

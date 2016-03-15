@@ -58,6 +58,9 @@ public class ProjectMenuPresenter {
                 if(result.getPermissionsSet().contains(Permission.getAdminPermission())) {
                     displayButton(container);
                 }
+                else {
+                    view.asWidget().removeFromParent();
+                }
             }
         });
     }

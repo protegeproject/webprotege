@@ -44,15 +44,12 @@ public class TopBarPresenter implements HasDispose {
     }
 
     public void start(AcceptsOneWidget container) {
-
-
         container.setWidget(view);
         goToHomePresenter.start(view.getGoToHomeWidgetContainer());
         projectMenuPresenter.start(view.getProjectMenuContainer());
         loggedInUserPresenter.start(view.getLoggedInUserWidgetContainer());
         helpPresenter.start(view.getHelpWidgetContainer());
         sharingButtonPresenter.start(view.getSharingSettingsContainer());
-
     }
 
     @Override
