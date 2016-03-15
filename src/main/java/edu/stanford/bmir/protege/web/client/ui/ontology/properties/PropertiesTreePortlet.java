@@ -198,6 +198,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
                 }
             }
         });
+        updateButtonStates();
     }
 
 
