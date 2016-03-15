@@ -12,6 +12,8 @@ import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.actionbar.application.*;
 import edu.stanford.bmir.protege.web.client.actionbar.project.*;
+import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
+import edu.stanford.bmir.protege.web.client.app.ForbiddenViewImpl;
 import edu.stanford.bmir.protege.web.client.banner.BannerView;
 import edu.stanford.bmir.protege.web.client.banner.BannerViewImpl;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
@@ -215,6 +217,8 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(WatchTypeSelectorView.class).to(WatchTypeSelectorViewImpl.class);
 
         bind(ProjectMenuView.class).to(ProjectMenuViewImpl.class);
+
+        bind(ForbiddenView.class).to(ForbiddenViewImpl.class);
 
     }
 

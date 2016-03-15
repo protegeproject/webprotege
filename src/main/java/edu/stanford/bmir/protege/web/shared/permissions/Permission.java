@@ -22,6 +22,8 @@ public class Permission implements Serializable {
 
     private static final Permission WRITE_PERMISSION = new Permission(PermissionName.WRITE.getPermissionName());
 
+    private static final Permission ADMIN_PERMISSION = new Permission(PermissionName.ADMIN.getPermissionName());
+
     private String permissionName;
 
 
@@ -63,6 +65,9 @@ public class Permission implements Serializable {
         if(PermissionName.READ.getPermissionName().equals(permissionName)) {
             return READ_PERMISSION;
         }
+        else if(PermissionName.ADMIN.getPermissionName().equals(permissionName)) {
+            return ADMIN_PERMISSION;
+        }
         else if(PermissionName.WRITE.getPermissionName().equals(permissionName)) {
             return WRITE_PERMISSION;
         }
@@ -96,6 +101,14 @@ public class Permission implements Serializable {
         return WRITE_PERMISSION;
     }
 
+
+    /**
+     * Gets the permission that represents the admin permission.
+     * @return The permission object representing the admin permission.  Not {@code null}.
+     */
+    public static Permission getAdminPermission() {
+        return ADMIN_PERMISSION;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -80,6 +80,11 @@ public class Permission_TestCase {
     }
 
     @Test
+    public void shouldReturnAdminPermission() {
+        assertThat(Permission.getAdminPermission(), is(Permission.getPermission(PermissionName.ADMIN.getPermissionName())));
+    }
+
+    @Test
     public void shouldReturnTrueForRead() {
         assertThat(Permission.getReadPermission().isReadPermission(), is(true));
     }

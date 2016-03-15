@@ -51,10 +51,11 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
                         builder.addPermission(Permission.getReadPermission());
                     }
                 });
-        // Users can always write, comment and read the projects they own
+        // Users can always write, comment and read the projects they own.  They are also admins.
         Optional<ProjectRecord> record = projectRecordRepository.findOne(projectId);
         if(record.isPresent()) {
             if(record.get().getOwner().equals(userId)) {
+                builder.addPermission(Permission.getAdminPermission());
                 builder.addPermission(Permission.getWritePermission());
                 builder.addPermission(Permission.getCommentPermission());
                 builder.addPermission(Permission.getReadPermission());
