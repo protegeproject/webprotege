@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.events;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
+import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
@@ -38,11 +39,12 @@ public class EventPollingManager {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    public static EventPollingManager get(int pollingPeriodInMS, ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
-        return new EventPollingManager(pollingPeriodInMS, projectId, eventBus, dispatchServiceManager, loggedInUserProvider);
-    }
-
-    private EventPollingManager(int pollingPeriodInMS, ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
+    @Inject
+    public EventPollingManager(@EventPollingPeriod int pollingPeriodInMS,
+                               ProjectId projectId,
+                               EventBus eventBus,
+                               DispatchServiceManager dispatchServiceManager,
+                               LoggedInUserProvider loggedInUserProvider) {
         this.eventBus = eventBus;
         this.loggedInUserProvider = loggedInUserProvider;
         if(pollingPeriodInMS < 1) {
@@ -50,7 +52,6 @@ public class EventPollingManager {
         }
         this.pollingPeriodInMS = pollingPeriodInMS;
         this.projectId = checkNotNull(projectId, "projectId must not be null");
-//        this.dispatchManager = checkNotNull(dispatchManager, "dispatchManager must not be null");
         pollingTimer = new Timer() {
             @Override
             public void run() {
@@ -62,6 +63,9 @@ public class EventPollingManager {
     }
 
     public void start() {
+        if(pollingTimer.isRunning()) {
+            return;
+        }
         pollingTimer.scheduleRepeating(pollingPeriodInMS);
     }
 

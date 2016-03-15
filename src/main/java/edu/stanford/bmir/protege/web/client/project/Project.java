@@ -17,8 +17,6 @@ public class Project implements HasProjectId, HasDispose {
 
     private final ProjectDetails projectDetails;
 
-    private EventPollingManager eventPollingManager;
-
     /**
      * Creates a project from the specified details.
      * @param projectDetails The details.  Not {@code null}.
@@ -27,8 +25,6 @@ public class Project implements HasProjectId, HasDispose {
     @Inject
     public Project(ProjectDetails projectDetails, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
         this.projectDetails = checkNotNull(projectDetails);
-        this.eventPollingManager = EventPollingManager.get(10 * 1000, projectDetails.getProjectId(), eventBus, dispatchServiceManager, loggedInUserProvider);
-        eventPollingManager.start();
     }
 
     public ProjectId getProjectId() {
@@ -45,6 +41,5 @@ public class Project implements HasProjectId, HasDispose {
 
     public void dispose() {
         // TODO: we might notify the session that project has been closed
-        eventPollingManager.stop();
     }
 }

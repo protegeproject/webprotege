@@ -22,6 +22,8 @@ import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandlerImpl;
+import edu.stanford.bmir.protege.web.client.events.EventPollingPeriod;
+import edu.stanford.bmir.protege.web.client.events.EventPollingPeriodProvider;
 import edu.stanford.bmir.protege.web.client.help.*;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListView;
 import edu.stanford.bmir.protege.web.client.login.LoginPresenter;
@@ -219,6 +221,9 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(ProjectMenuView.class).to(ProjectMenuViewImpl.class);
 
         bind(ForbiddenView.class).to(ForbiddenViewImpl.class);
+
+        bind(int.class).annotatedWith(EventPollingPeriod.class)
+                .toProvider(EventPollingPeriodProvider.class);
 
     }
 
