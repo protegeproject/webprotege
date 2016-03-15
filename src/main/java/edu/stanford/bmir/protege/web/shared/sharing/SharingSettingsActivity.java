@@ -1,9 +1,13 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
+import com.google.common.base.Objects;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -17,8 +21,8 @@ public class SharingSettingsActivity extends AbstractActivity {
     private final SharingSettingsPlace place;
 
     public SharingSettingsActivity(SharingSettingsPresenter presenter, SharingSettingsPlace place) {
-        this.presenter = presenter;
-        this.place = place;
+        this.presenter = checkNotNull(presenter);
+        this.place = checkNotNull(place);
     }
 
     @Override
@@ -29,7 +33,7 @@ public class SharingSettingsActivity extends AbstractActivity {
 
     @Override
     public int hashCode() {
-        return "SharingSettingsActivity".hashCode();
+        return Objects.hashCode(presenter, place);
     }
 
     @Override
@@ -40,6 +44,16 @@ public class SharingSettingsActivity extends AbstractActivity {
         if (!(obj instanceof SharingSettingsActivity)) {
             return false;
         }
-        return true;
+        SharingSettingsActivity other = (SharingSettingsActivity) obj;
+        return this.presenter.equals(other.presenter)
+                && this.place.equals(other.place);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("SharingSettingsActivity")
+                .addValue(place)
+                .toString();
     }
 }
