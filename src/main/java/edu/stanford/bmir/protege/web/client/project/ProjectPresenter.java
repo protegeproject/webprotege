@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.PermissionScreener;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.events.EventPollingManager;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveSwitcherPresenter;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectivePresenter;
 import edu.stanford.bmir.protege.web.client.topbar.TopBarPresenter;
@@ -48,8 +49,12 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
 
     private final PermissionScreener permissionScreener;
 
+    private final EventPollingManager eventPollingManager;
+
     @Inject
-    public ProjectPresenter(ProjectId projectId, ProjectView view,
+    public ProjectPresenter(ProjectId projectId,
+                            ProjectView view,
+                            EventPollingManager eventPollingManager,
                             DispatchServiceManager dispatchServiceManager,
                             LoggedInUserProvider loggedInUserProvider,
                             TopBarPresenter topBarPresenter,
@@ -58,6 +63,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
                             PermissionScreener permissionScreener) {
         this.projectId = projectId;
         this.view = view;
+        this.eventPollingManager = eventPollingManager;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionScreener = permissionScreener;
         this.topBarPresenter = topBarPresenter;
@@ -76,6 +82,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         topBarPresenter.dispose();
         linkBarPresenter.dispose();
         perspectivePresenter.dispose();
+        eventPollingManager.stop();
     }
 
     public void start(final AcceptsOneWidget container, final ProjectViewPlace place) {
@@ -92,6 +99,7 @@ public class ProjectPresenter implements HasDispose, HasProjectId {
         topBarPresenter.start(view.getTopBarContainer());
         linkBarPresenter.start(view.getPerspectiveLinkBarViewContainer(), place);
         perspectivePresenter.start(view.getPerspectiveViewContainer(), place);
+        eventPollingManager.start();
     }
 
     @Override
