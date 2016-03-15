@@ -12,6 +12,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SuggestBox;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.itemlist.PersonIdItemListSuggestionOracle;
+import edu.stanford.bmir.protege.web.client.user.UserIdSuggestOracle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
@@ -31,20 +34,22 @@ public class SharingSettingEditorImpl extends Composite implements SharingSettin
 
     private static SharingSettingEditorImplUiBinder ourUiBinder = GWT.create(SharingSettingEditorImplUiBinder.class);
 
+
+    @UiField(provided = true)
+    SuggestBox personIdField;
+
     @UiField
     ListBox permissionField;
 
-    @UiField
-    SuggestBox personIdField;
 
     private boolean dirty = false;
 
-    public SharingSettingEditorImpl() {
+    public SharingSettingEditorImpl(DispatchServiceManager dispatchServiceManager) {
+        personIdField = new SuggestBox(new UserIdSuggestOracle(dispatchServiceManager));
         initWidget(ourUiBinder.createAndBindUi(this));
         for(SharingPermission sharingPermission : SharingPermission.values()) {
             permissionField.addItem(sharingPermission.name());
         }
-
     }
 
 

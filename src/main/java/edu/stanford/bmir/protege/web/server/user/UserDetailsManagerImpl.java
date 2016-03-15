@@ -25,11 +25,22 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         this.repository = userRecordRepository;
     }
 
+
     @Override
     public Collection<UserId> getUserIds() {
         return repository.findAll()
                 .map(UserRecord::getUserId)
                 .collect(toList());
+    }
+
+    @Override
+    public List<UserId> getUserIdsContainingIgnoreCase(String userName, long limit) {
+        return repository.findByUserIdContainingIgnoreCase(userName)
+                .map(UserRecord::getUserId)
+                .sorted()
+                .limit(limit)
+                .collect(toList());
+
     }
 
     @Override
