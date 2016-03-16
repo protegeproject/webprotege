@@ -44,10 +44,7 @@ import java.util.Set;
  */
 public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFrame<NamedIndividualFrame>> implements ValueEditor<LabelledFrame<NamedIndividualFrame>>, HasEnabled, EditorView<LabelledFrame<NamedIndividualFrame>> {
 
-    private NamedIndividualFrame editedFrame;
-
-    @UiField
-    protected TextBox displayNameField;
+    private Optional<LabelledFrame<NamedIndividualFrame>> editedFrame = Optional.absent();
 
     @UiField
     protected TextBox iriField;
@@ -107,7 +104,6 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        displayNameField.setEnabled(enabled);
         iriField.setEnabled(false);
         types.setEnabled(enabled);
         assertions.setEnabled(enabled);
@@ -116,14 +112,13 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     @Override
     public void setValue(final LabelledFrame<NamedIndividualFrame> frame, HasEntityDataProvider entityDataProvider) {
-        editedFrame = frame.getFrame();
-        displayNameField.setValue(frame.getDisplayName());
-        iriField.setValue(editedFrame.getSubject().getIRI().toString());
-        assertions.setValue(editedFrame.getPropertyValueList());
+        editedFrame = Optional.of(frame);
+        iriField.setValue(frame.getFrame().getSubject().getIRI().toString());
+        assertions.setValue(frame.getFrame().getPropertyValueList());
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
 
         List<OWLPrimitiveData> dataList = new ArrayList<OWLPrimitiveData>();
-        for (OWLClass cls : editedFrame.getClasses()) {
+        for (OWLClass cls : frame.getFrame().getClasses()) {
             final Optional<OWLEntityData> rendering = entityDataProvider.getEntityData(cls);
             if (rendering.isPresent()) {
                 dataList.add(rendering.get());
@@ -132,7 +127,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
         types.setValue(dataList);
 
         List<OWLPrimitiveData> sameAsList = new ArrayList<OWLPrimitiveData>();
-        for (OWLNamedIndividual individual : editedFrame.getSameIndividuals()) {
+        for (OWLNamedIndividual individual : frame.getFrame().getSameIndividuals()) {
             Optional<OWLEntityData> individualRendering = entityDataProvider.getEntityData(individual);
             if (individualRendering.isPresent()) {
                 sameAsList.add(individualRendering.get());
@@ -143,7 +138,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     @Override
     public boolean isWellFormed() {
-        return !getDisplayName().isEmpty() && types.isWellFormed() && assertions.isWellFormed() && sameAs.isWellFormed();
+        return types.isWellFormed() && assertions.isWellFormed() && sameAs.isWellFormed();
     }
 
     @Override
@@ -153,14 +148,14 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     @Override
     public Optional<LabelledFrame<NamedIndividualFrame>> getValue() {
-       if(editedFrame == null) {
+       if(!editedFrame.isPresent()) {
            return Optional.absent();
        }
        PropertyValueList propertyValueList = assertions.getValue().get();
        Set<OWLClass> rawTypes = getRawTypes();
        Set<OWLNamedIndividual> sameAs = getRawSameAs();
-       NamedIndividualFrame reference = new NamedIndividualFrame(editedFrame.getSubject(), rawTypes, propertyValueList, sameAs);
-       return Optional.of(new LabelledFrame<NamedIndividualFrame>(getDisplayName(), reference));
+       NamedIndividualFrame reference = new NamedIndividualFrame(editedFrame.get().getFrame().getSubject(), rawTypes, propertyValueList, sameAs);
+       return Optional.of(new LabelledFrame<>(editedFrame.get().getDisplayName(), reference));
    }
 
     private Set<OWLClass> getRawTypes() {
@@ -183,18 +178,6 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
             }
         }
         return rawSameAs;
-    }
-
-    private String getDisplayName() {
-        return displayNameField.getText().trim();
-    }
-
-    @UiHandler("displayNameField")
-    protected void handleDisplayNameChange(ValueChangeEvent<String> evt) {
-        setDirty(true, EventStrategy.FIRE_EVENTS);
-        if (isWellFormed()) {
-            ValueChangeEvent.fire(this, getValue());
-        }
     }
 
     @UiHandler("assertions")
@@ -243,7 +226,6 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     @Override
     public void clearValue() {
-        displayNameField.setText("");
         iriField.setText("");
         types.clearValue();
         assertions.clearValue();
