@@ -15,7 +15,6 @@ import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.login.SignUpForAccountHandler;
 import edu.stanford.bmir.protege.web.client.login.SignUpForAccountHandlerImpl;
-import edu.stanford.bmir.protege.web.client.actionbar.project.*;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenViewImpl;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
