@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.library.button;
 
 import com.google.gwt.user.client.ui.Button;
-import com.gwtext.client.widgets.form.Label;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,10 +15,8 @@ public class DeleteButton extends Button {
 
     public DeleteButton() {
         super(TEXT);
-        Label deleteLabel = new Label(TEXT);
         addStyleName("button-style");
         addStyleName("delete-button");
         setTitle("Delete");
-//        addStyleName("web-protege-dialog-button-compact");
     }
 }

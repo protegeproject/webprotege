@@ -5,9 +5,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermCrossProduct;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -48,7 +48,6 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
         else {
             getService().getCrossProduct(getProjectId(), (OWLClass) entity, new AsyncCallback<OBOTermCrossProduct>() {
                 public void onFailure(Throwable caught) {
-                    MessageBox.alert(caught.getMessage());
                     GWT.log(caught.getMessage(), caught);
                 }
 
@@ -77,10 +76,10 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
         getService().setCrossProduct(getProjectId(), (OWLClass) entity, crossProduct, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
                 if(caught instanceof NotSignedInException) {
-                    MessageBox.alert("You are not signed in.  Changes not saved.  You must be signed in for your changes to be saved.");
+                    MessageBox.showMessage("You are not signed in.  Changes not saved.  You must be signed in for your changes to be saved.");
                 }
                 else {
-                    MessageBox.alert(caught.getMessage());
+                    MessageBox.showMessage(caught.getMessage());
                     GWT.log(caught.getMessage(), caught);
                 }
             }
