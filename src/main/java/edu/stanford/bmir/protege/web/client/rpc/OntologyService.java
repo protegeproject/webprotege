@@ -22,13 +22,7 @@ public interface OntologyService extends RemoteService {
     public List<EntityData> moveCls(String projectName, String clsName, String oldParentName, String newParentName, boolean checkForCycles,
             String user, String operationDescription);
 
-    /*
-     * Properties methods
-     */
-
     public List<EntityData> getSubproperties(String projectName, String propertyName);
-
-    public PaginationData<EntityData> search(String projectName, String searchString, ValueType valueType, int start, int limit, String sort, String dir);
 
     public List<EntityData> getPathToRoot(String projectName, String entityName);
 

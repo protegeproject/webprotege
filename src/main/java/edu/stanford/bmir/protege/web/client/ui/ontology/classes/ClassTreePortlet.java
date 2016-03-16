@@ -16,10 +16,6 @@ import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
 import com.gwtext.client.dd.DragData;
 import com.gwtext.client.dd.DragDrop;
-import com.gwtext.client.widgets.Component;
-import com.gwtext.client.widgets.form.Field;
-import com.gwtext.client.widgets.form.TextField;
-import com.gwtext.client.widgets.form.event.TextFieldListenerAdapter;
 import com.gwtext.client.widgets.tree.*;
 import com.gwtext.client.widgets.tree.event.DefaultSelectionModelListenerAdapter;
 import com.gwtext.client.widgets.tree.event.MultiSelectionModelListener;
@@ -47,7 +43,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.DiscussionThreadDialog;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
-import edu.stanford.bmir.protege.web.client.ui.search.SearchUtil;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileResultHandler;
 import edu.stanford.bmir.protege.web.client.watches.WatchPresenter;
@@ -447,36 +442,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         else {
             GWT.log("Unknown tree selection model for class tree: " + selModel, null);
         }
-    }
-
-    protected Component createSearchField() {
-        final TextField searchField = new TextField("Search: ", "search");
-        searchField.setSelectOnFocus(true);
-        searchField.setAutoWidth(true);
-        searchField.setEmptyText("Type search string");
-        searchField.addListener(new TextFieldListenerAdapter() {
-            @Override
-            public void onSpecialKey(final Field field, final EventObject e) {
-                if (e.getKey() == EventObject.ENTER) {
-                    SearchUtil searchUtil = new SearchUtil(getProjectId(), getSelectionModel(), getSearchAsyncCallback());
-                    searchUtil.setBusyComponent(searchField);
-                    searchUtil.setSearchedValueType(ValueType.Cls);
-                    searchUtil.search(searchField.getText());
-                }
-            }
-        });
-        return searchField;
-    }
-
-    protected AsyncCallback<Boolean> getSearchAsyncCallback() {
-        return new AsyncCallback<Boolean>() {
-            public void onFailure(Throwable caught) {
-                MessageBox.showAlert("Search error", "An error occurred during the search. Please try again.");
-            }
-
-            public void onSuccess(Boolean result) {
-            }
-        };
     }
 
     protected void addDragAndDropSupport() {
