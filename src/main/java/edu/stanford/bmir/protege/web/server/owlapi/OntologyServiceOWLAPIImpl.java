@@ -155,22 +155,6 @@ public class OntologyServiceOWLAPIImpl extends WebProtegeRemoteServiceServlet im
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    /**
-     * Gets the imports of the root ontology for the specified project.
-     * @param projectName The name of the project for which the imports will be retrieved.
-     * @return ImportsData for the specified project.
-     */
-    public ImportsData getImportedOntologies(String projectName) {
-        // Is this the imports closure? Direct imports???
-        OWLOntology rootOntology = getOntology(projectName);
-        ImportsData importsData = new ImportsData(toName(rootOntology.getOntologyID()));
-        for (OWLOntology importedOntology : rootOntology.getDirectImports()) {
-            ImportsData importedOntologyImportsData = new ImportsData(toName(importedOntology.getOntologyID()));
-            importsData.addImport(importedOntologyImportsData);
-        }
-        return importsData;
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

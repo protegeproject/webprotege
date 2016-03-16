@@ -24,10 +24,6 @@ public class OntologyServiceManager {
         proxy = GWT.create(OntologyService.class);
     }
 
-    public void getImportedOntologies(ProjectId projectId, AsyncCallback<ImportsData> cb) {
-        proxy.getImportedOntologies(projectId.getId(), cb);
-    }
-
     /*
      * Class methods
      */
