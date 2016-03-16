@@ -2,9 +2,6 @@ package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.actionbar.project.ShowFreshEntitySettingsHandler;
-import edu.stanford.bmir.protege.web.client.actionbar.project.ShowProjectDetailsHandler;
-import edu.stanford.bmir.protege.web.client.actionbar.project.UploadAndMergeHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
