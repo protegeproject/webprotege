@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.filesubmission;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.FileUploadResponseAttributes;
+import edu.stanford.bmir.protege.web.client.upload.FileUploadResponseAttributes;
 import edu.stanford.bmir.protege.web.server.WebProtegeFileStore;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
