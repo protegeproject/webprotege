@@ -11,8 +11,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public interface ProjectSharingSettingsManager {
 
-    void applyDefaultSharingSettings(ProjectId projectId, UserId forUser);
-
     void setProjectSharingSettings(ProjectSharingSettings projectSharingSettings);
 
     ProjectSharingSettings getProjectSharingSettings(ProjectId projectId);

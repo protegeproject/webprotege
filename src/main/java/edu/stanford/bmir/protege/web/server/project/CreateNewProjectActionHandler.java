@@ -56,7 +56,6 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
             ProjectId projectId = project.getProjectId();
             if (!projectDetailsManager.isExistingProject(projectId)) {
                 projectDetailsManager.registerProject(projectId, newProjectSettings);
-                projectSharingSettingsManager.applyDefaultSharingSettings(projectId, executionContext.getUserId());
             }
             return new CreateNewProjectResult(projectDetailsManager.getProjectDetails(projectId));
         } catch (OWLOntologyCreationException | OWLOntologyStorageException | IOException e) {

@@ -103,19 +103,4 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
              worldRepository.save(new WorldProjectPermissionRecord(projectId, permissions));
         }
     }
-
-    /**
-     * Applies the default sharing setting to a project.  The default sharing settings are that the project is private,
-     * but the signed in user is an editor.
-     * @param projectId The project id that identifies the project to apply sharing settings to.
-     */
-    @Override
-    public void applyDefaultSharingSettings(ProjectId projectId, UserId userId) {
-        List<SharingSetting> userSharingSettings = new ArrayList<>();
-        if (!userId.isGuest()) {
-            userSharingSettings.add(new SharingSetting(new PersonId(userId.getUserName()), SharingPermission.EDIT));
-        }
-        ProjectSharingSettings sharingSettings = new ProjectSharingSettings(projectId, com.google.common.base.Optional.absent(), userSharingSettings);
-        setProjectSharingSettings(sharingSettings);
-    }
 }
