@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
-import com.google.common.base.*;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.user.HasGetUserIdByUserIdOrEmail;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecord;
@@ -75,7 +74,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         ProjectId projectId = settings.getProjectId();
         List<ProjectPermissionRecord> entries = new ArrayList<>();
         Map<PersonId, SharingSetting> map = settings.getSharingSettings().stream()
-                .collect(toMap(SharingSetting::getPersonId, s -> s));
+                .collect(toMap(s -> s.getPersonId(), s -> s));
         for(SharingSetting setting : map.values()) {
             PersonId personId = setting.getPersonId();
             Optional<UserId> userId = userLookup.getUserByUserIdOrEmail(personId.getId());

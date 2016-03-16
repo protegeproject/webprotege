@@ -12,11 +12,19 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
+import edu.stanford.bmir.protege.web.shared.sharing.ProjectSharingSettings;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingPermission;
+import edu.stanford.bmir.protege.web.shared.sharing.SharingSetting;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -56,6 +64,8 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
             ProjectId projectId = project.getProjectId();
             if (!projectDetailsManager.isExistingProject(projectId)) {
                 projectDetailsManager.registerProject(projectId, newProjectSettings);
+                UserId userId = executionContext.getUserId();
+                applyOwnerPermissions(projectId, userId);
             }
             return new CreateNewProjectResult(projectDetailsManager.getProjectDetails(projectId));
         } catch (OWLOntologyCreationException | OWLOntologyStorageException | IOException e) {
@@ -63,6 +73,13 @@ public class CreateNewProjectActionHandler  implements ActionHandler<CreateNewPr
         }
     }
 
+    private void applyOwnerPermissions(ProjectId projectId, UserId userId) {
+        List<SharingSetting> sharingSettings = new ArrayList<>();
+        PersonId personId = PersonId.of(userId);
+        sharingSettings.add(new SharingSetting(personId, SharingPermission.MANAGE));
+        projectSharingSettingsManager.setProjectSharingSettings(
+                new ProjectSharingSettings(projectId, com.google.common.base.Optional.absent(), sharingSettings));
+    }
 
 
 }
