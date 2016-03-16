@@ -41,14 +41,6 @@ public class OntologyServiceManager {
         proxy.getSubproperties(projectId.getId(), propertyName, cb);
     }
 
-    /*
-     * Search
-     */
-
-    public void search(ProjectId projectId, String searchString, ValueType valueType, int start, int limit, String sort, String dir, AsyncCallback<PaginationData<EntityData>> cb) {
-        proxy.search(projectId.getId(), searchString, valueType, start, limit, sort, dir, cb);
-    }
-
     public void getPathToRoot(ProjectId projectId, String entityName, AsyncCallback<List<EntityData>> cb) {
         proxy.getPathToRoot(projectId.getId(), entityName, cb);
     }
