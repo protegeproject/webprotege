@@ -14,8 +14,6 @@ import edu.stanford.bmir.protege.web.client.actionbar.application.*;
 import edu.stanford.bmir.protege.web.client.actionbar.project.*;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenViewImpl;
-import edu.stanford.bmir.protege.web.client.banner.BannerView;
-import edu.stanford.bmir.protege.web.client.banner.BannerViewImpl;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
@@ -142,11 +140,6 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(ShowFreshEntitySettingsHandler.class).to(ShowFreshEntitySettingsHandlerImpl.class);
         bind(ChangePasswordHandler.class).to(ChangePasswordHandlerImpl.class);
         bind(ShowAboutBoxHandler.class).to(ShowAboutBoxHandlerImpl.class);
-
-        bind(BannerView.class).to(BannerViewImpl.class);
-        bind(ApplicationActionBar.class).to(ApplicationActionBarImpl.class);
-        bind(ProjectActionBar.class).to(ProjectActionBarImpl.class);
-//        bind(ProjectListView.class).to(ProjectListViewImpl.class);
 
         bind(LoggedInUserProjectPermissionChecker.class).to(LoggedInUserProjectPermissionCheckerImpl.class);
 
