@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.projectmanager;
 
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.EmptySuccessWebProtegeCallback;
 import edu.stanford.bmir.protege.web.shared.project.*;
 
 import javax.inject.Inject;
@@ -23,11 +23,11 @@ public class TrashManagerRequestHandlerImpl implements TrashManagerRequestHandle
 
     @Override
     public void handleMoveProjectToTrash(final ProjectId projectId) {
-        dispatchServiceManager.execute(new MoveProjectsToTrashAction(projectId), new EmptySuccessWebProtegeCallback<MoveProjectsToTrashResult>());
+        dispatchServiceManager.execute(new MoveProjectsToTrashAction(projectId), new DispatchServiceCallback<>());
     }
 
     @Override
     public void handleRemoveProjectFromTrash(final ProjectId projectId) {
-        dispatchServiceManager.execute(new RemoveProjectFromTrashAction(projectId), new EmptySuccessWebProtegeCallback<RemoveProjectsFromTrashResult>());
+        dispatchServiceManager.execute(new RemoveProjectFromTrashAction(projectId), new DispatchServiceCallback<>());
     }
 }
