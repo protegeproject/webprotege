@@ -1,8 +1,7 @@
-package edu.stanford.bmir.protege.web.client.actionbar.application;
+package edu.stanford.bmir.protege.web.client.login;
 
 import com.google.gwt.place.shared.PlaceController;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.login.LoginPlace;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

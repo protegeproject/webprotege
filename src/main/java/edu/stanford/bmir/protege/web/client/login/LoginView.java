@@ -3,8 +3,6 @@ package edu.stanford.bmir.protege.web.client.login;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ProvidesResize;
 import com.google.gwt.user.client.ui.RequiresResize;
-import edu.stanford.bmir.protege.web.client.actionbar.application.SignInRequestHandler;
-import edu.stanford.bmir.protege.web.client.actionbar.application.SignUpForAccountHandler;
 
 /**
  * Matthew Horridge
