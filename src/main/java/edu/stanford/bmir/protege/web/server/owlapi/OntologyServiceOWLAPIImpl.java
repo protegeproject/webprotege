@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 import edu.stanford.bmir.protege.web.client.rpc.OntologyService;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
-import edu.stanford.bmir.protege.web.server.PaginationServerUtil;
 import edu.stanford.bmir.protege.web.server.WebProtegeRemoteServiceServlet;
 import edu.stanford.bmir.protege.web.server.hierarchy.AssertedClassHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLAnnotationPropertyHierarchyProvider;
