@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.project;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
-import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectType;
+import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.project.UnknownProjectException;

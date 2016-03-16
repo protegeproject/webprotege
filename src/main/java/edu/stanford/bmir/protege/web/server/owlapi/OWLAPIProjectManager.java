@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
+import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
