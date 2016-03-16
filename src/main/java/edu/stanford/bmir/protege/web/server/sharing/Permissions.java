@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
@@ -37,18 +38,18 @@ public class Permissions {
         }
     }
 
-    public static Set<Permission> getPermissionsForSharingPermission(SharingPermission sharingPermission) {
+    public static ImmutableSet<Permission> fromSharingPermission(SharingPermission sharingPermission) {
         switch (sharingPermission) {
             case MANAGE:
-                return Sets.newHashSet(getAdminPermission(), getWritePermission(), getCommentPermission(), getReadPermission());
+                return ImmutableSet.of(getAdminPermission(), getWritePermission(), getCommentPermission(), getReadPermission());
             case EDIT:
-                return Sets.newHashSet(getWritePermission(), getCommentPermission(), getReadPermission());
+                return ImmutableSet.of(getWritePermission(), getCommentPermission(), getReadPermission());
             case COMMENT:
-                return Sets.newHashSet(getWritePermission(), getCommentPermission(), getReadPermission());
+                return ImmutableSet.of(getWritePermission(), getCommentPermission(), getReadPermission());
             case VIEW:
-                return Sets.newHashSet(getWritePermission(), getCommentPermission(), getReadPermission());
+                return ImmutableSet.of(getWritePermission(), getCommentPermission(), getReadPermission());
             default:
-                return Collections.emptySet();
+                return ImmutableSet.of();
         }
     }
 }
