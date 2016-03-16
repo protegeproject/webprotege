@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.chgpwd;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.user.HasGetUserIdByUserIdOrEmail;
@@ -15,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -66,7 +67,7 @@ public class ResetPasswordActionHandler_TestCase {
 
     @Test
     public void shouldReturnInvalidEmailAddressIfCannotFindAnyUser() {
-        when(mpm.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.<UserId>absent());
+        when(mpm.getUserByUserIdOrEmail(any(String.class))).thenReturn(Optional.<UserId>empty());
         ResetPasswordResult result = handler.execute(action, context);
         assertThat(result.getResultCode(), is(ResetPasswordResultCode.INVALID_EMAIL_ADDRESS));
     }

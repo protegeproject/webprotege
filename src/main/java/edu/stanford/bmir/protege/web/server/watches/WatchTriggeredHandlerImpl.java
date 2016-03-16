@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.watches;
 
-import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import edu.stanford.bmir.protege.web.client.place.ItemSelection;
 import edu.stanford.bmir.protege.web.server.mail.SendMail;
@@ -17,6 +16,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import java.util.Date;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

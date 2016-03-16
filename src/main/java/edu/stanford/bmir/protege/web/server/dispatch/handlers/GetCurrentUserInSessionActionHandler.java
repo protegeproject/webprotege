@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
@@ -14,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>

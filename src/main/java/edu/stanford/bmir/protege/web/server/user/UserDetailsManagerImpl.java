@@ -1,12 +1,13 @@
 package edu.stanford.bmir.protege.web.server.user;
 
-import com.google.common.base.Optional;
+import com.google.common.base.*;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.stream.Collectors.toList;
@@ -46,11 +47,11 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
     @Override
     public Optional<UserId> getUserIdByEmailAddress(EmailAddress emailAddress) {
         if(emailAddress.getEmailAddress().isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         java.util.Optional<UserRecord> record = repository.findOneByEmailAddress(emailAddress.getEmailAddress());
         if(!record.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(record.get().getUserId());
     }
@@ -62,23 +63,23 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         }
         java.util.Optional<UserRecord> record = repository.findOne(userId);
         if(!record.isPresent()) {
-            return Optional.absent();
+            return Optional.empty();
         }
-        return Optional.of(UserDetails.getUserDetails(userId, userId.getUserName(), Optional.fromNullable(record.get().getEmailAddress())));
+        return Optional.of(UserDetails.getUserDetails(userId, userId.getUserName(), com.google.common.base.Optional.fromNullable(record.get().getEmailAddress())));
     }
 
     @Override
     public Optional<String> getEmail(UserId userId) {
         if(userId.isGuest()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         java.util.Optional<UserRecord> record = repository.findOne(userId);
         if(record == null) {
-            return Optional.absent();
+            return Optional.empty();
         }
         String emailAddress = record.get().getEmailAddress();
         if(emailAddress.isEmpty()) {
-            return Optional.absent();
+            return Optional.empty();
         }
         return Optional.of(emailAddress);
     }
@@ -111,6 +112,6 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         if(byEmail.isPresent()) {
             return Optional.of(byEmail.get().getUserId());
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 }

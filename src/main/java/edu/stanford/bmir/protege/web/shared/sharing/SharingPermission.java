@@ -23,14 +23,10 @@ public enum SharingPermission implements Serializable {
     /**
      * A user can edit a project.
      */
-    EDIT;
-
+    EDIT,
 
     /**
-     * Gets the default sharing setting for a project.
-     * @return The SharingSetting that represent the default sharing setting.
+     * A user can manage a project
      */
-    public static SharingPermission getDefaultSharingSetting() {
-        return EDIT;
-    }
+    MANAGE;
 }

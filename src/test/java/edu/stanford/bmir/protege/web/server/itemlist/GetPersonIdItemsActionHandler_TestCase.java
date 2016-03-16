@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.server.itemlist;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.itemlist.GetPersonIdItemsAction;
@@ -15,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;

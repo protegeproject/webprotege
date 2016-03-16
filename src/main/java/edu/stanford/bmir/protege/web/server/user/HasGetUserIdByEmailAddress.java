@@ -1,8 +1,9 @@
 package edu.stanford.bmir.protege.web.server.user;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import java.util.Optional;
 
 /**
  * Matthew Horridge

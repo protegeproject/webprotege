@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.mail;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManager;
 import edu.stanford.bmir.protege.web.shared.mail.GetEmailAddressAction;
@@ -10,6 +9,7 @@ import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Author: Matthew Horridge<br>
@@ -48,13 +48,7 @@ public class GetEmailAddressActionHandler implements ActionHandler<GetEmailAddre
 
     @Override
     public GetEmailAddressResult execute(GetEmailAddressAction action, ExecutionContext executionContext) {
-        Optional<EmailAddress> address = userDetailsManager.getEmail(action.getUserId()).transform(new Function<String, EmailAddress>() {
-            @Nullable
-            @Override
-            public EmailAddress apply(String s) {
-                return new EmailAddress(s);
-            }
-        });
-        return new GetEmailAddressResult(action.getUserId(), address);
+        Optional<EmailAddress> address = userDetailsManager.getEmail(action.getUserId()).map(e -> new EmailAddress(e));
+        return new GetEmailAddressResult(action.getUserId(), address.map(a -> com.google.common.base.Optional.of(a)).orElse(com.google.common.base.Optional.absent()));
     }
 }
