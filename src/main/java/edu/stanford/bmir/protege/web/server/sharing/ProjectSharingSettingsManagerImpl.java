@@ -80,7 +80,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
             PersonId personId = setting.getPersonId();
             Optional<UserId> userId = userLookup.getUserByUserIdOrEmail(personId.getId());
             if(userId.isPresent()) {
-                ImmutableSet<Permission> permissions = getPermission(setting.getSharingPermission());
+                ImmutableSet<Permission> permissions = Permissions.fromSharingPermission(setting.getSharingPermission());
                 ProjectPermissionRecord e = new ProjectPermissionRecord(
                         projectId,
                         userId.get(),
@@ -99,7 +99,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         }
         worldRepository.deleteAllByProjectId(projectId);
         if(settings.getLinkSharingPermission().isPresent()) {
-            ImmutableSet<Permission> permissions = getPermission(settings.getLinkSharingPermission().get());
+            ImmutableSet<Permission> permissions = Permissions.fromSharingPermission(settings.getLinkSharingPermission().get());
              worldRepository.save(new WorldProjectPermissionRecord(projectId, permissions));
         }
     }
@@ -117,23 +117,5 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         }
         ProjectSharingSettings sharingSettings = new ProjectSharingSettings(projectId, com.google.common.base.Optional.absent(), userSharingSettings);
         setProjectSharingSettings(sharingSettings);
-    }
-
-    private ImmutableSet<Permission> getPermission(SharingPermission sharingPermission) {
-        ImmutableSet.Builder<Permission> permissions = new ImmutableSet.Builder<Permission>();
-        switch (sharingPermission) {
-            case EDIT:
-                permissions.add(Permission.getWritePermission());
-                permissions.add(Permission.getCommentPermission());
-                permissions.add(Permission.getReadPermission());
-                break;
-            case COMMENT:
-                permissions.add(Permission.getCommentPermission());
-                permissions.add(Permission.getReadPermission());
-                break;
-            case VIEW:
-                permissions.add(Permission.getReadPermission());
-        }
-        return permissions.build();
     }
 }
