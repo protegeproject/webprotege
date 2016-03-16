@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ValueBoxBase;
-import edu.stanford.bmir.protege.web.client.rpc.data.SignupInfo;
+import edu.stanford.bmir.protege.web.client.signup.SignupInfo;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationServiceProvider;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationWidget;

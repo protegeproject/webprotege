@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,9 +21,6 @@ public class ProjectSettingsTestCase {
 
     @Mock
     private ProjectId projectId;
-
-    @Mock
-    private ProjectType projectType;
 
     private String projectDescription = "DESCRIPTION";
 

@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.client.merge;
 
 import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
+import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileDialogController;
 import edu.stanford.bmir.protege.web.client.ui.upload.UploadFileResultHandler;

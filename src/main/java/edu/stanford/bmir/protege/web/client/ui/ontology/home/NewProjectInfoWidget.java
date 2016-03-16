@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.home;
 
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.ValidationState;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogForm;
@@ -51,7 +50,7 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm implements HasIni
     }
 
     public NewProjectInfo getNewProjectInfo() {
-        return new NewProjectInfo(getProjectName(), getProjectDescription(), getProjectType());
+        return new NewProjectInfo(getProjectName(), getProjectDescription());
     }
 
     public String getProjectName() {
@@ -61,14 +60,6 @@ public class NewProjectInfoWidget extends WebProtegeDialogForm implements HasIni
     public String getProjectDescription() {
         return projectDescriptionTextArea.getText().trim();
     }
-
-    public ProjectType getProjectType() {
-        // TODO: FIX!!!
-        return new ProjectType("OWL Project");
-    }
-
-
-
 
     private class EmptyProjectNameValidator implements WebProtegeDialogValidator {
 

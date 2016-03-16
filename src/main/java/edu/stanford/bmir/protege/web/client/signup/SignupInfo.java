@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.rpc.data;
+package edu.stanford.bmir.protege.web.client.signup;
 
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationServiceProvider;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
