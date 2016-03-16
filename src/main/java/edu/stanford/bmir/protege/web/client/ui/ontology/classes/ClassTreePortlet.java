@@ -986,7 +986,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return "<img src=\"" + BUNDLE.eyeDownIcon().getSafeUri().asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
         }
     }
-    
+
     private boolean hasChild(final TreeNode parentNode, final String childId) {
         return getDirectChild(parentNode, childId) != null;
     }

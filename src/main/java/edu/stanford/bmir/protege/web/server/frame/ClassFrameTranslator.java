@@ -94,7 +94,7 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
     }
 
     private Set<OWLAxiom> translateToAxioms(OWLClass subject, ClassFrame classFrame, Mode mode) {
-        Set<OWLAxiom> result = new HashSet<OWLAxiom>();
+        Set<OWLAxiom> result = new HashSet<>();
 //        for (OWLClass cls : classFrame.getClasses()) {
 //            result.add(DataFactory.get().getOWLSubClassOfAxiom(subject, cls));
 //        }

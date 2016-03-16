@@ -108,19 +108,18 @@ public class UUIDEntityCrudKitHandler implements EntityCrudKitHandler<UUIDSuffix
     public <E extends OWLEntity> void update(ChangeSetEntityCrudSession session, E entity, EntityShortForm shortForm, EntityCrudContext context, OntologyChangeList.Builder<E> changeListBuilder) {
         final OWLDataFactory df = context.getDataFactory();
         OWLLiteral browserTextLiteral = getLabellingLiteral(shortForm.getShortForm(), context);
-        OntologyChangeList.Builder<E> builder = new OntologyChangeList.Builder<E>();
         OWLAxiom freshAx = df.getOWLAnnotationAssertionAxiom(df.getRDFSLabel(), entity.getIRI(), browserTextLiteral);
         final OWLOntology targetOntology = context.getTargetOntology();
         for(OWLOntology ont : targetOntology.getImportsClosure()) {
             for(OWLAnnotationAssertionAxiom ax : ont.getAnnotationAssertionAxioms(entity.getIRI())) {
                 if(ax.getProperty().isLabel()) {
-                    builder.removeAxiom(ont, ax);
-                    builder.addAxiom(ont, freshAx);
+                    changeListBuilder.removeAxiom(ont, ax);
+                    changeListBuilder.addAxiom(ont, freshAx);
                 }
             }
         }
-        if(builder.isEmpty()) {
-            builder.addAxiom(targetOntology, freshAx);
+        if(changeListBuilder.isEmpty()) {
+            changeListBuilder.addAxiom(targetOntology, freshAx);
         }
     }
 
