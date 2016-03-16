@@ -11,6 +11,7 @@
 <%@ page import="edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector" %>
 <%@ page import="java.io.IOException" %>
 <%@ page import="edu.stanford.bmir.protege.web.server.user.UserDetailsManager" %>
+<%@ page import="java.util.Optional" %>
 <!DOCTYPE html>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -84,9 +85,17 @@
         }
         else {
             UserDetailsManager userDetailsManager = WebProtegeInjector.get().getInstance(UserDetailsManager.class);
-            userInSession = new UserInSession(
-                UserDetails.getUserDetails(userId, userId.getUserName(), userDetailsManager.getEmail(userId))
-            );
+            Optional<String> email = userDetailsManager.getEmail(userId);
+            if(email.isPresent()) {
+                userInSession = new UserInSession(
+                        UserDetails.getUserDetails(userId, userId.getUserName(), com.google.common.base.Optional.of(email.get()))
+                );
+            }
+            else {
+                userInSession = new UserInSession(
+                        UserDetails.getUserDetails(userId, userId.getUserName(), com.google.common.base.Optional.<String>absent())
+                );
+            }
         }
         ClientObjectWriter.get("userInSession", new UserInSessionEncoder())
                 .writeVariableDeclaration(userInSession, out);

@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.server.sharing;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.HashMultimap;
+import com.google.common.base.*;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
 import edu.stanford.bmir.protege.web.server.user.HasGetUserIdByUserIdOrEmail;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecord;
 import edu.stanford.bmir.protege.web.server.permissions.ProjectPermissionRecordRepository;
@@ -20,10 +18,10 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.Optional;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Collectors.toSet;
+import static edu.stanford.bmir.protege.web.server.sharing.Permissions.toSharingPermission;
+import static java.util.stream.Collectors.*;
 
 /**
  * Matthew Horridge
@@ -36,7 +34,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     
     private final WorldProjectPermissionRecordRepository worldRepository;
 
-    private final ProjectPermissionRecordRepository repository;
+    private final ProjectPermissionRecordRepository projectPermissionRepository;
 
     private final HasGetUserIdByUserIdOrEmail userLookup;
 
@@ -44,36 +42,32 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
     public ProjectSharingSettingsManagerImpl(WebProtegeLogger logger, WorldProjectPermissionRecordRepository worldRepository, ProjectPermissionRecordRepository repository, HasGetUserIdByUserIdOrEmail userLookup) {
         this.logger = logger;
         this.worldRepository = worldRepository;
-        this.repository = repository;
+        this.projectPermissionRepository = repository;
         this.userLookup = userLookup;
     }
 
     @Override
     public ProjectSharingSettings getProjectSharingSettings(ProjectId projectId) {
-        Multimap<UserId, Permission> userPermissions = HashMultimap.create();
-        repository.findByProjectId(projectId)
-                .forEach(e -> userPermissions.putAll(e.getUserId(), e.getPermissions()));
+        List<SharingSetting> sharingSettings = projectPermissionRepository.findByProjectId(projectId)
+                .map(r -> toSharingPermission(r.getPermissions())
+                        .map(sharingPermission -> new SharingSetting(PersonId.of(r.getUserId()), sharingPermission)))
+                .filter(sharingSetting -> sharingSetting.isPresent())
+                .map(sharingSetting -> sharingSetting.get())
+                .collect(toList());
 
+        Optional<WorldProjectPermissionRecord> worldRecord = worldRepository.findOneByProjectId(projectId);
+        final Optional<SharingPermission> worldPermission = worldRecord.flatMap(r -> toSharingPermission(r.getPermissions()));
 
-        Set<SharingSetting> sharingSettings = new HashSet<>();
-        for(UserId userId : userPermissions.keys()) {
-            Collection<Permission> permissions = userPermissions.get(userId);
-            Optional<SharingPermission> sharingPermission = PermissionMapper.mapToSharingPermission(permissions);
-            if(sharingPermission.isPresent()) {
-                sharingSettings.add(new SharingSetting(new PersonId(userId.getUserName()), sharingPermission.get()));
-            }
-        }
-        java.util.Optional<WorldProjectPermissionRecord> worldRecord = worldRepository.findOneByProjectId(projectId);
-        final Optional<SharingPermission> worldPermission;
-        if(worldRecord.isPresent()) {
-            Set<Permission> worldPermissions = worldRecord.get().getPermissions();
-            worldPermission = PermissionMapper.mapToSharingPermission(worldPermissions);
+        com.google.common.base.Optional<SharingPermission> linkSharing;
+        if(worldPermission.isPresent()) {
+            linkSharing = com.google.common.base.Optional.of(worldPermission.get());
         }
         else {
-            worldPermission = Optional.absent();
+            linkSharing = com.google.common.base.Optional.absent();
         }
-        return new ProjectSharingSettings(projectId, worldPermission, new ArrayList<>(sharingSettings));
+        return new ProjectSharingSettings(projectId, linkSharing, sharingSettings);
     }
+
 
 
     @Override
@@ -99,9 +93,9 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
                 // We need to send the user an email invitation
             }
         }
-        repository.deleteByProjectId(projectId);
+        projectPermissionRepository.deleteByProjectId(projectId);
         if(!entries.isEmpty()) {
-            repository.save(entries);
+            projectPermissionRepository.save(entries);
         }
         worldRepository.deleteAllByProjectId(projectId);
         if(settings.getLinkSharingPermission().isPresent()) {
@@ -121,7 +115,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         if (!userId.isGuest()) {
             userSharingSettings.add(new SharingSetting(new PersonId(userId.getUserName()), SharingPermission.EDIT));
         }
-        ProjectSharingSettings sharingSettings = new ProjectSharingSettings(projectId, Optional.absent(), userSharingSettings);
+        ProjectSharingSettings sharingSettings = new ProjectSharingSettings(projectId, com.google.common.base.Optional.absent(), userSharingSettings);
         setProjectSharingSettings(sharingSettings);
     }
 

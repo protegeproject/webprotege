@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.sharing;
 
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.io.Serializable;
 
@@ -26,6 +27,10 @@ public class PersonId implements Serializable, IsSerializable, Comparable<Person
 
     public PersonId(String id) {
         this.id = checkNotNull(id);
+    }
+
+    public static PersonId of(UserId userId) {
+        return new PersonId(userId.getUserName());
     }
 
     public String getId() {
