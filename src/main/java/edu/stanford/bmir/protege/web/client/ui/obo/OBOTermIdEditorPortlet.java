@@ -3,9 +3,9 @@ package edu.stanford.bmir.protege.web.client.ui.obo;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -33,7 +33,7 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
         getContentHolder().setWidget(editor.asWidget());
         getService().getNamespaces(getProjectId(), new AsyncCallback<Set<OBONamespace>>() {
             public void onFailure(Throwable caught) {
-                MessageBox.alert(caught.getMessage());
+                MessageBox.showMessage(caught.getMessage());
             }
 
             public void onSuccess(Set<OBONamespace> result) {
@@ -53,7 +53,7 @@ public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
         OBOTextEditorServiceAsync service = getService();
         service.getTermId(getProjectId(), entity, new AsyncCallback<OBOTermId>() {
             public void onFailure(Throwable caught) {
-                MessageBox.alert(caught.getMessage());
+                MessageBox.showMessage(caught.getMessage());
             }
 
             public void onSuccess(OBOTermId result) {

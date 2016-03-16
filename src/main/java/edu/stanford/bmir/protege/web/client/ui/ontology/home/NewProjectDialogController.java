@@ -4,13 +4,13 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.project.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEvent;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
 import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
@@ -78,20 +78,20 @@ public class NewProjectDialogController extends WebProtegeOKCancelDialogControll
             @Override
             public void handleExecutionException(Throwable cause) {
                 if (cause instanceof NotSignedInException) {
-                    MessageBox.alert("You must be signed in to create new projects");
+                    MessageBox.showMessage("You must be signed in to create new projects");
                 }
                 else if (cause instanceof ProjectAlreadyRegisteredException) {
                     ProjectAlreadyRegisteredException ex = (ProjectAlreadyRegisteredException) cause;
                     String projectName = ex.getProjectId().getId();
-                    MessageBox.alert("The project name " + projectName + " is already registered.  Please try a different name.");
+                    MessageBox.showMessage("The project name " + projectName + " is already registered.  Please try a different name.");
                 }
                 else if (cause instanceof ProjectDocumentExistsException) {
                     ProjectDocumentExistsException ex = (ProjectDocumentExistsException) cause;
                     String projectName = ex.getProjectId().getId();
-                    MessageBox.alert("There is already a non-empty project on the server with the id " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
+                    MessageBox.showMessage("There is already a non-empty project on the server with the id " + projectName + ".  This project has NOT been overwritten.  Please contact the administrator to resolve this issue.");
                 }
                 else {
-                    MessageBox.alert(cause.getMessage());
+                    MessageBox.showMessage(cause.getMessage());
                 }
             }
         });

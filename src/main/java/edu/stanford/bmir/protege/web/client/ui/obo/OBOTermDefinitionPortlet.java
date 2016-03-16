@@ -4,9 +4,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermDefinition;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -47,10 +47,10 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
         getService().setDefinition(getProjectId(), entity, editor.getValue().get(), new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
                 if(caught instanceof NotSignedInException) {
-                    MessageBox.alert("Your changes to the term definition have not been saved.  You must be signed in to make changes.");
+                    MessageBox.showMessage("Your changes to the term definition have not been saved.  You must be signed in to make changes.");
                 }
                 else {
-                    MessageBox.alert(caught.getMessage());
+                    MessageBox.showMessage(caught.getMessage());
                     GWT.log(caught.getMessage(), caught);
                 }
 
@@ -66,7 +66,7 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
     protected void displayEntity(OWLEntity entity) {
         getService().getDefinition(getProjectId(), entity, new AsyncCallback<OBOTermDefinition>() {
             public void onFailure(Throwable caught) {
-                MessageBox.alert(caught.getMessage());
+                MessageBox.showMessage(caught.getMessage());
             }
 
             public void onSuccess(OBOTermDefinition result) {

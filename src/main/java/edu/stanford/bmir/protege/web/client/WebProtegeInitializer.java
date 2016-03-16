@@ -3,9 +3,9 @@ package edu.stanford.bmir.protege.web.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitManagerInitializationTask;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
@@ -55,7 +55,7 @@ public class WebProtegeInitializer {
                 // Consider logging and posting to server.
                 GWT.log("Uncaught exception", e);
                 if (e instanceof SerializationException) {
-                    MessageBox.alert("WebProtege has been upgraded.  Please clear your browser caches and refresh your browser.");
+                    MessageBox.showMessage("WebProtege has been upgraded.  Please clear your browser caches and refresh your browser.");
                 }
             }
         });

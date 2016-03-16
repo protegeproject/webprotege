@@ -5,11 +5,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalAPIService;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.BioPortalAPIServiceAsync;
 import edu.stanford.bmir.protege.web.client.rpc.bioportal.PublishToBioPortalInfo;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDetails;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
@@ -43,7 +43,7 @@ public class PublishToBioPortalDialogController extends WebProtegeOKCancelDialog
                 }
                 catch (IOException e) {
                     e.printStackTrace();
-                    MessageBox.alert("There was a problem publishing the ontology to BioPortal");
+                    MessageBox.showMessage("There was a problem publishing the ontology to BioPortal");
                 }
                 finally {
                     closer.hide();
@@ -58,12 +58,12 @@ public class PublishToBioPortalDialogController extends WebProtegeOKCancelDialog
         service.uploadProjectToBioPortal(details.getDisplayName(), details.getProjectId(), revisionNumber, publishInfo, new AsyncCallback<Void>() {
             public void onFailure(Throwable caught) {
                 ProgressMonitor.get().hideProgressMonitor();
-                MessageBox.alert("There was a problem publishing the ontology to BioPortal.  Error message: " + caught.getMessage());
+                MessageBox.showMessage("There was a problem publishing the ontology to BioPortal.  Error message: " + caught.getMessage());
             }
 
             public void onSuccess(Void result) {
                 ProgressMonitor.get().hideProgressMonitor();
-                MessageBox.alert("The ontology was successfully published to BioPortal");
+                MessageBox.showMessage("The ontology was successfully published to BioPortal");
                 closer.hide();
             }
         });

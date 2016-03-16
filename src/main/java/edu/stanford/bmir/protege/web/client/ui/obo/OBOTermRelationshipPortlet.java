@@ -4,8 +4,8 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -68,7 +68,7 @@ public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
         }
         getService().getRelationships(getProjectId(),  (OWLClass) current.get(), new AsyncCallback<OBOTermRelationships>() {
             public void onFailure(Throwable caught) {
-                MessageBox.alert(caught.getMessage());
+                MessageBox.showMessage(caught.getMessage());
             }
 
             public void onSuccess(OBOTermRelationships result) {
