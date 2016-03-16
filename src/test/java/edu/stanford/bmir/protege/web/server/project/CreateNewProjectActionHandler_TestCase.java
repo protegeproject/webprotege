@@ -89,12 +89,6 @@ public class CreateNewProjectActionHandler_TestCase {
     }
 
     @Test
-    public void shouldApplyDefaultSharingSettings() {
-        executeCreateNewProject();
-        verify(projectSharingSettingsManager, times(1)).applyDefaultSharingSettings(projectId, userId);
-    }
-
-    @Test
     public void shouldNotAllowGuestsToCreateProjects() {
         when(userId.isGuest()).thenReturn(true);
         CreateNewProjectAction action = new CreateNewProjectAction(newProjectSettings);
