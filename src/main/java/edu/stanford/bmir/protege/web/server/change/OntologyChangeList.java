@@ -62,17 +62,17 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
      */
     public static class Builder<R> {
 
-        private List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
+        private List<OWLOntologyChange> builderChanges = new ArrayList<OWLOntologyChange>();
 
         public Builder() {
         }
 
         private void add(OWLOntologyChange change) {
-            changes.add(change);
+            builderChanges.add(change);
         }
 
         public boolean isEmpty() {
-            return changes.isEmpty();
+            return builderChanges.isEmpty();
         }
 
         public void addAxiom(OWLOntology ontology, OWLAxiom axiom) {
@@ -112,7 +112,7 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
 
 
         private OntologyChangeList<R> build(Optional<R> subject) {
-            return new OntologyChangeList<R>(changes, subject);
+            return new OntologyChangeList<>(builderChanges, subject);
         }
 
 

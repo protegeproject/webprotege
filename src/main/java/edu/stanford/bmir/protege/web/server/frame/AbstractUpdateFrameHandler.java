@@ -80,25 +80,29 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
         FrameTranslator<F, S> translator = createTranslator();
 
 
-        final FrameChangeGenerator<F, S> changeGenerator = new FrameChangeGenerator<F, S>(from.getFrame(), to.getFrame(), translator);
+        final FrameChangeGenerator<F, S> changeGenerator = new FrameChangeGenerator<>(from.getFrame(), to.getFrame(), translator);
         final FixedMessageChangeDescriptionGenerator<S> descGenerator = new FixedMessageChangeDescriptionGenerator<S>(getChangeDescription(from, to));
         project.applyChanges(userId, changeGenerator, descGenerator);
         if(!from.getDisplayName().equals(to.getDisplayName())) {
-            // Set changes
+            applyChangesToChangeDisplayName(project, executionContext, to, userId);
 
-            EntityCrudKitHandler<?, ChangeSetEntityCrudSession> entityEditorKit = project.getEntityCrudKitHandler();
-            ChangeSetEntityCrudSession session = entityEditorKit.createChangeSetSession();
-            OntologyChangeList.Builder<S> changeListBuilder = new OntologyChangeList.Builder<S>();
-            entityEditorKit.update(session, to.getFrame().getSubject(),
-                                     EntityShortForm.get(to.getDisplayName()),
-                                     project.getEntityCrudContext(executionContext.getUserId()),
-                                     changeListBuilder);
-            FixedChangeListGenerator<S> changeListGenerator = FixedChangeListGenerator.get(changeListBuilder.build().getChanges());
-            FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator = FixedMessageChangeDescriptionGenerator.get("Renamed entity");
-            project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
         }
         EventList<ProjectEvent<?>> events = project.getEventManager().getEventsFromTag(startTag);
         return createResponse(action.getTo(), events);
+    }
+
+    private void applyChangesToChangeDisplayName(OWLAPIProject project, ExecutionContext executionContext, LabelledFrame<F> to, UserId userId) {
+        // Set changes
+        EntityCrudKitHandler<?, ChangeSetEntityCrudSession> entityEditorKit = project.getEntityCrudKitHandler();
+        ChangeSetEntityCrudSession session = entityEditorKit.createChangeSetSession();
+        OntologyChangeList.Builder<S> changeListBuilder = new OntologyChangeList.Builder<>();
+        entityEditorKit.update(session, to.getFrame().getSubject(),
+                                 EntityShortForm.get(to.getDisplayName()),
+                                 project.getEntityCrudContext(executionContext.getUserId()),
+                                 changeListBuilder);
+        FixedChangeListGenerator<S> changeListGenerator = FixedChangeListGenerator.get(changeListBuilder.build().getChanges());
+        FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator = FixedMessageChangeDescriptionGenerator.get("Renamed entity");
+        project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
     }
 
     protected abstract Result createResponse(LabelledFrame<F> to, EventList<ProjectEvent<?>> events);

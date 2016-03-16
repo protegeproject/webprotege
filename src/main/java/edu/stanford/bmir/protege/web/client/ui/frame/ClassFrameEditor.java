@@ -39,9 +39,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     @UiField
     protected TextBox iriField;
 
-//    @UiField(provided = true)
-//    protected final PrimitiveDataListEditor subclassof;
-
     @UiField(provided = true)
     protected final PropertyValueListEditor annotations;
 
@@ -51,8 +48,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     private LabelledFrame<ClassFrame> lastClassFrame;
 
     private OWLClass currentSubject;
-
-//    private Set<OWLClass> currentClasses = new HashSet<OWLClass>();
 
     private boolean enabled = true;
 
@@ -84,8 +79,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
         lastClassFrame = lcf;
         currentSubject = lcf.getFrame().getSubject();
-//        currentClasses.clear();
-//        currentClasses.addAll(lcf.getFrame().getClasses());
 
         String unquoted = removeQuotes(lcf.getDisplayName());
         displayNameField.setValue(unquoted);
@@ -188,7 +181,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 //                builder.addClass(cls);
 //            }
             ClassFrame cf = builder.build();
-            LabelledFrame<ClassFrame> labelledClassFrame = new LabelledFrame<ClassFrame>(getDisplayName(), cf);
+            LabelledFrame<ClassFrame> labelledClassFrame = new LabelledFrame<>(getDisplayName(), cf);
             GWT.log("[EditorView] getValue: " + labelledClassFrame);
             return Optional.of(labelledClassFrame);
         }
