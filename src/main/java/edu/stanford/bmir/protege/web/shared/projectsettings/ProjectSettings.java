@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
 import com.google.common.base.Objects;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import java.io.Serializable;
