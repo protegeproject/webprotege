@@ -47,14 +47,13 @@ import java.util.Set;
  */
 public class DataPropertyFrameEditor extends Composite implements EditorView<LabelledFrame<DataPropertyFrame>>, HasEnabled {
 
+    private Optional<LabelledFrame<DataPropertyFrame>> lastDataPropertyFrame = Optional.absent();
+
     interface DataPropertyFrameEditorUiBinder extends UiBinder<HTMLPanel, DataPropertyFrameEditor> {
 
     }
 
     private static DataPropertyFrameEditorUiBinder ourUiBinder = GWT.create(DataPropertyFrameEditorUiBinder.class);
-
-    @UiField
-    protected TextBox displayNameField;
 
     @UiField
     protected TextBox iriField;
@@ -93,13 +92,6 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
         iriField.setEnabled(false);
         setEnabled(false);
     }
-
-    @UiHandler("displayNameField")
-    protected void handleDisplayNameChanged(ValueChangeEvent<String> event) {
-        fireValueChangedIfWellFormed();
-    }
-
-
 
     @UiHandler("annotations")
     protected void handleAnnotationsChanged(ValueChangeEvent<Optional<PropertyValueList>> event) {
@@ -141,7 +133,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
     @Override
     public void setValue(LabelledFrame<DataPropertyFrame> object) {
         dirty = false;
-        displayNameField.setText(object.getDisplayName());
+        lastDataPropertyFrame = Optional.of(object);
         final DataPropertyFrame frame = object.getFrame();
         iriField.setText(frame.getSubject().getIRI().toString());
         annotations.setValue(frame.getPropertyValueList());
@@ -178,7 +170,6 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
 
     @Override
     public void clearValue() {
-        displayNameField.setText("");
         iriField.setText("");
         annotations.clearValue();
         domains.clearValue();
@@ -187,6 +178,9 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
 
     @Override
     public Optional<LabelledFrame<DataPropertyFrame>> getValue() {
+        if(!lastDataPropertyFrame.isPresent()) {
+            return Optional.absent();
+        }
         OWLDataProperty property = DataFactory.getOWLDataProperty(getIRIString());
         final Set<OWLClass> domainsClasses = Sets.newHashSet();
         if (domains.getValue().isPresent()) {
@@ -201,7 +195,7 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
             }
         }
         DataPropertyFrame frame = new DataPropertyFrame(property, annotations.getValue().get(), domainsClasses, rangeTypes, functionalCheckBox.getValue());
-        return Optional.of(new LabelledFrame<DataPropertyFrame>(getDisplayName(), frame));
+        return Optional.of(new LabelledFrame<>(lastDataPropertyFrame.get().getDisplayName(), frame));
     }
 
     @Override
@@ -221,15 +215,11 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
 
     @Override
     public boolean isWellFormed() {
-        return !getDisplayName().isEmpty() && !getIRIString().isEmpty() && annotations.isWellFormed() && domains.isWellFormed() && ranges.isWellFormed();
+        return !getIRIString().isEmpty() && annotations.isWellFormed() && domains.isWellFormed() && ranges.isWellFormed();
     }
 
     private String getIRIString() {
         return iriField.getText().trim();
-    }
-
-    private String getDisplayName() {
-        return displayNameField.getText().trim();
     }
 
     @Override
@@ -240,7 +230,6 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        displayNameField.setEnabled(enabled);
         annotations.setEnabled(enabled);
         domains.setEnabled(enabled);
         ranges.setEnabled(enabled);
