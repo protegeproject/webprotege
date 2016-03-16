@@ -6,8 +6,6 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.client.actionbar.application.SignInRequestHandler;
-import edu.stanford.bmir.protege.web.client.actionbar.application.SignUpForAccountHandler;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.place.SignUpPlace;

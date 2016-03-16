@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.actionbar.application;
+package edu.stanford.bmir.protege.web.client.login;
 
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
