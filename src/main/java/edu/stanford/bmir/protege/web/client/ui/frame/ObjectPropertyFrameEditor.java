@@ -47,9 +47,6 @@ import java.util.*;
 public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameEditor, ValueEditor<LabelledFrame<ObjectPropertyFrame>>, HasEnabled, EditorView<LabelledFrame<ObjectPropertyFrame>> {
 
     @UiField
-    protected TextBox displayNameField;
-
-    @UiField
     protected TextBox iriField;
 
     @UiField(provided = true)
@@ -90,12 +87,6 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         ranges.setPlaceholder("Enter class name");
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         add(rootElement);
-        displayNameField.addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                handleChange();
-            }
-        });
     }
 
     private boolean enabled = false;
@@ -106,11 +97,6 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
             dirty = true;
             ValueChangeEvent.fire(this, getValue());
         }
-    }
-
-    @UiHandler("displayNameField")
-    protected void handleDisplayNameChanged(ValueChangeEvent<String> event) {
-        fireEventIfWellFormed();
     }
 
     @UiHandler("annotations")
@@ -144,7 +130,6 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        displayNameField.setEnabled(enabled);
         iriField.setEnabled(false);
         annotations.setEnabled(enabled);
         domains.setEnabled(enabled);
@@ -163,7 +148,6 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     @Override
     public void setValue(LabelledFrame<ObjectPropertyFrame> object) {
         dirty = false;
-        displayNameField.setValue(object.getDisplayName());
         final ObjectPropertyFrame frame = object.getFrame();
         iriField.setValue(frame.getSubject().getIRI().toString());
         annotations.setValue(new PropertyValueList(Collections.<PropertyValue>unmodifiableSet(frame.getAnnotationPropertyValues())));
@@ -201,7 +185,6 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     @Override
     public void clearValue() {
         dirty = false;
-        displayNameField.setValue("");
         iriField.setValue("");
         annotations.clearValue();
         previouslySetValue = Optional.absent();
@@ -212,7 +195,6 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
         if(!previouslySetValue.isPresent()) {
             return previouslySetValue;
         }
-        String displayName = getDisplayName();
         Set<PropertyAnnotationValue> annotationValueSet = new HashSet<PropertyAnnotationValue>();
         annotationValueSet.addAll(annotations.getValue().get().getAnnotationPropertyValues());
         final ObjectPropertyFrame previousFrame = previouslySetValue.get().getFrame();
@@ -230,16 +212,13 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
                 new HashSet<>(editedRanges),
                 Collections.<OWLObjectProperty>emptySet(),
                 characteristics);
-        return Optional.of(new LabelledFrame<>(displayName, frame));
+        return Optional.of(new LabelledFrame<>(previouslySetValue.get().getDisplayName(), frame));
     }
 
-    private String getDisplayName() {
-        return displayNameField.getText().trim();
-    }
 
     @Override
     public boolean isWellFormed() {
-        return !getDisplayName().isEmpty() && annotations.isWellFormed() && domains.isWellFormed() && ranges.isWellFormed();
+        return annotations.isWellFormed() && domains.isWellFormed() && ranges.isWellFormed();
     }
 
     /**
