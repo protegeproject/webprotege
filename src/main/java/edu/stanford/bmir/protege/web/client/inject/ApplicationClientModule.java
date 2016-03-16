@@ -131,7 +131,6 @@ public class ApplicationClientModule extends AbstractGinModule {
 
         bind(ManchesterSyntaxFrameEditor.class).to(ManchesterSyntaxFrameEditorImpl.class);
 
-        bind(ShowShareSettingsHandler.class).to(ShareSettingsHandlerImpl.class);
         bind(ShowProjectDetailsHandler.class).to(ShowProjectDetailsHandlerImpl.class);
         bind(UploadAndMergeHandler.class).to(UploadAndMergeHandlerImpl.class);
         bind(SignInRequestHandler.class).to(SignInRequestHandlerImpl.class);
