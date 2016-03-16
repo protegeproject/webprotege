@@ -34,9 +34,6 @@ import java.util.ArrayList;
 public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPresenter, EditorView<LabelledFrame<ClassFrame>> {
 
     @UiField
-    protected TextBox displayNameField;
-
-    @UiField
     protected TextBox iriField;
 
     @UiField(provided = true)
@@ -79,10 +76,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
         lastClassFrame = lcf;
         currentSubject = lcf.getFrame().getSubject();
-
-        String unquoted = removeQuotes(lcf.getDisplayName());
-        displayNameField.setValue(unquoted);
-
         iriField.setValue(lcf.getFrame().getSubject().getIRI().toString());
         annotations.setValue(new PropertyValueList(new ArrayList<PropertyValue>(lcf.getFrame().getAnnotationPropertyValues())));
         properties.setValue(new PropertyValueList(new ArrayList<PropertyValue>(lcf.getFrame().getLogicalPropertyValues())));
@@ -116,7 +109,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
     private void setEnabledInternal(boolean enabled) {
         this.enabled = enabled;
-        displayNameField.setEnabled(enabled);
         iriField.setEnabled(false);
         annotations.setEnabled(enabled);
         properties.setEnabled(enabled);
@@ -177,38 +169,22 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
             ClassFrame.Builder builder = new ClassFrame.Builder(currentSubject);
             builder.addPropertyValues(annotations.getValue().get().getPropertyValues());
             builder.addPropertyValues(properties.getValue().get().getPropertyValues());
-//            for(OWLClass cls : currentClasses) {
-//                builder.addClass(cls);
-//            }
             ClassFrame cf = builder.build();
-            LabelledFrame<ClassFrame> labelledClassFrame = new LabelledFrame<>(getDisplayName(), cf);
+            LabelledFrame<ClassFrame> labelledClassFrame = new LabelledFrame<>(lastClassFrame.getDisplayName(), cf);
             GWT.log("[EditorView] getValue: " + labelledClassFrame);
             return Optional.of(labelledClassFrame);
         }
     }
 
-
-
-    private String getDisplayName() {
-        return displayNameField.getText().trim();
-    }
-
     @Override
     public boolean isWellFormed() {
-        return !getDisplayName().isEmpty() && annotations.isWellFormed() && properties.isWellFormed();
+        return annotations.isWellFormed() && properties.isWellFormed();
     }
 
     @Override
     public void clearValue() {
-        displayNameField.setText("");
         annotations.clearValue();
         properties.clearValue();
-    }
-
-
-    @UiHandler("displayNameField")
-    protected void handeDisplayNameChange(ValueChangeEvent<String> evt) {
-        setDirty(true, EventStrategy.FIRE_EVENTS);
     }
 
     @UiHandler("annotations")
@@ -237,21 +213,6 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     protected void handlePropertiesDirtyChanged(DirtyChangedEvent evt) {
         setDirty(true, EventStrategy.FIRE_EVENTS);
     }
-
-
-
-//    @UiHandler("subclassof")
-//    protected void handleSubClassOfChanged(ValueChangeEvent<Optional<OWLPrimitiveDataList>> evt) {
-//        if(isWellFormed()) {
-//            ValueChangeEvent.fire(this, getValue());
-//        }
-//    }
-//
-//    @UiHandler("subclassof")
-//    protected void handleSubClassOfDirty(DirtyChangedEvent evt) {
-//        setDirty(true, EventStrategy.FIRE_EVENTS);
-//    }
-
 
     private void setDirty(boolean dirty, EventStrategy eventStrategy) {
         this.dirty = dirty;
