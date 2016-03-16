@@ -5,7 +5,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.EntityType;

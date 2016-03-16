@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.permissions;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 
 /**

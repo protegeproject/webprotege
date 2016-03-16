@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.ui.CreateFreshPerspectiveRequestHandler;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsAction;
 import edu.stanford.bmir.protege.web.shared.permissions.GetPermissionsResult;
 import edu.stanford.bmir.protege.web.shared.permissions.Permission;

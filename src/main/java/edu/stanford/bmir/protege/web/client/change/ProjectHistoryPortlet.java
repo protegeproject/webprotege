@@ -4,7 +4,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-
 import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;

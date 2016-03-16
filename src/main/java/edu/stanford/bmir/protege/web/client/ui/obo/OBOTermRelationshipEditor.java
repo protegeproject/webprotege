@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;

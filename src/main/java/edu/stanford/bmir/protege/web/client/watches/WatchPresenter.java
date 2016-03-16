@@ -11,7 +11,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.DialogButton;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogButtonHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialogCloser;
-import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.*;

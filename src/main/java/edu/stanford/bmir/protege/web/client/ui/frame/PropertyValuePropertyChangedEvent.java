@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPropertyData;
 
 /**

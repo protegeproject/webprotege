@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.inject;
 
-import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
 import com.google.gwt.place.shared.PlaceHistoryHandler;

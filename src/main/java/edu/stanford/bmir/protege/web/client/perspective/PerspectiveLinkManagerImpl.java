@@ -1,14 +1,10 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.perspective.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -16,7 +12,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Matthew Horridge

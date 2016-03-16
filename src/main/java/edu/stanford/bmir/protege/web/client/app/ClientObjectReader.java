@@ -1,11 +1,7 @@
 package edu.stanford.bmir.protege.web.client.app;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window;
 
 /**
  * Matthew Horridge

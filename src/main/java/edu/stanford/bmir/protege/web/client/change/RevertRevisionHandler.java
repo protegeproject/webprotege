@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.change;
 
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

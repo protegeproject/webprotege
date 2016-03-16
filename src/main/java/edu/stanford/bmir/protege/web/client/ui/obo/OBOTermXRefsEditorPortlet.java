@@ -1,12 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.obo;
 
-import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
-import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.obo.OBOXRef;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;

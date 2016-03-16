@@ -6,8 +6,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
-import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -16,7 +14,6 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.util.*;
 
 /**

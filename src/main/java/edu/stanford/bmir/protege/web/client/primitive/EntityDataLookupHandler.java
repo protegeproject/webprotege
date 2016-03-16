@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.client.primitive;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.util.Set;

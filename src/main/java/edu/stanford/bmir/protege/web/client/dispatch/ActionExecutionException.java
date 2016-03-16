@@ -1,9 +1,5 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
-
-import java.io.Serializable;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

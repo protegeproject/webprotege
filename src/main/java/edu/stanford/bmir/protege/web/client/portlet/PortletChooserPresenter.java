@@ -8,10 +8,7 @@ import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Matthew Horridge

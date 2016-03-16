@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.frame;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.SimplePanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;

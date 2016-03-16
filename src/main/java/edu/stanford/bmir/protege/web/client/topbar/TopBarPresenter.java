@@ -2,10 +2,9 @@ package edu.stanford.bmir.protege.web.client.topbar;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
-import edu.stanford.bmir.protege.web.client.sharing.*;
 import edu.stanford.bmir.protege.web.client.help.HelpPresenter;
+import edu.stanford.bmir.protege.web.client.project.ProjectMenuPresenter;
+import edu.stanford.bmir.protege.web.client.sharing.SharingButtonPresenter;
 import edu.stanford.bmir.protege.web.client.user.LoggedInUserPresenter;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 

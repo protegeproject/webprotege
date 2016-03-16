@@ -9,8 +9,12 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
+import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.actionbar.application.*;
+import edu.stanford.bmir.protege.web.client.actionbar.application.SignInRequestHandler;
+import edu.stanford.bmir.protege.web.client.actionbar.application.SignInRequestHandlerImpl;
+import edu.stanford.bmir.protege.web.client.actionbar.application.SignUpForAccountHandler;
+import edu.stanford.bmir.protege.web.client.actionbar.application.SignUpForAccountHandlerImpl;
 import edu.stanford.bmir.protege.web.client.actionbar.project.*;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenView;
 import edu.stanford.bmir.protege.web.client.app.ForbiddenViewImpl;
@@ -18,6 +22,7 @@ import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewImpl;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordView;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordViewImpl;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.SignInRequiredHandlerImpl;
 import edu.stanford.bmir.protege.web.client.events.EventPollingPeriod;
@@ -34,12 +39,13 @@ import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermi
 import edu.stanford.bmir.protege.web.client.permissions.PermissionChecker;
 import edu.stanford.bmir.protege.web.client.permissions.PermissionManager;
 import edu.stanford.bmir.protege.web.client.perspective.*;
-import edu.stanford.bmir.protege.web.client.place.*;
+import edu.stanford.bmir.protege.web.client.place.PlaceHistoryHandlerProvider;
+import edu.stanford.bmir.protege.web.client.place.PlaceManager;
+import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
+import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityMapper;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserView;
 import edu.stanford.bmir.protege.web.client.portlet.PortletChooserViewImpl;
 import edu.stanford.bmir.protege.web.client.project.*;
-import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenter;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsPresenterFactory;
 import edu.stanford.bmir.protege.web.client.sharing.SharingSettingsView;
@@ -61,9 +67,11 @@ import edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductEditor;
 import edu.stanford.bmir.protege.web.client.ui.obo.OBOTermCrossProductEditorImpl;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsView;
 import edu.stanford.bmir.protege.web.client.ui.ontology.annotations.AnnotationsViewImpl;
-import edu.stanford.bmir.protege.web.client.ui.projectlist.*;
+import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectDetailPresenterFactory;
+import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectDetailsPresenter;
+import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectDetailsView;
+import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectDetailsViewImpl;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.*;
-import edu.stanford.bmir.protege.web.client.perspective.PerspectiveFactory;
 import edu.stanford.bmir.protege.web.client.user.*;
 import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorView;
 import edu.stanford.bmir.protege.web.client.watches.WatchTypeSelectorViewImpl;
@@ -93,7 +101,6 @@ public class ApplicationClientModule extends AbstractGinModule {
                 .build(PerspectiveFactory.class));
 
         bind(ProjectId.class).toProvider(ProjectIdProvider.class);
-        bind(Project.class).toProvider(ProjectProvider.class);
         bind(ActiveProjectManager.class).to(ActiveProjectManagerImpl.class).asEagerSingleton();
         bind(PermissionManager.class).asEagerSingleton();
         bind(PermissionChecker.class).to(PermissionManager.class);
@@ -104,7 +111,6 @@ public class ApplicationClientModule extends AbstractGinModule {
 
         bind(EventBus.class).to(SimpleEventBus.class).asEagerSingleton();
         bind(PlaceController.class).toProvider(PlaceControllerProvider.class).asEagerSingleton();
-        bind(ProjectManager.class).asEagerSingleton();
         bind(DispatchServiceManager.class).asEagerSingleton();
         bind(ApplicationView.class).to(ApplicationViewImpl.class).asEagerSingleton();
 

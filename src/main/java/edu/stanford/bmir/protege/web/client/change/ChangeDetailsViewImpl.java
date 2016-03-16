@@ -19,9 +19,7 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

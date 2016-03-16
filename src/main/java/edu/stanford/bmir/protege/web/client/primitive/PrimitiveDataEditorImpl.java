@@ -13,13 +13,13 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedEvent;
 import edu.stanford.bmir.protege.web.client.ui.anchor.AnchorClickedHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestion;
-import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
@@ -29,7 +29,10 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWL2Datatype;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;

@@ -1,21 +1,19 @@
 package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
-import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesResult;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesAction;
+import edu.stanford.bmir.protege.web.shared.revision.GetRevisionSummariesResult;
+import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 
 import java.util.ArrayList;
 import java.util.Collections;

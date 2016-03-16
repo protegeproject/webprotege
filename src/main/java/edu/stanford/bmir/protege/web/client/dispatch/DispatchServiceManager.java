@@ -2,20 +2,13 @@ package edu.stanford.bmir.protege.web.client.dispatch;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.actionbar.application.SignInRequestHandler;
-import edu.stanford.bmir.protege.web.client.actionbar.application.SignUpForAccountHandler;
 import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
-import edu.stanford.bmir.protege.web.client.login.LoginPlace;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
-import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
-import edu.stanford.bmir.protege.web.shared.HasBrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContainer;
@@ -25,7 +18,6 @@ import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import sun.rmi.runtime.Log;
 
 import javax.inject.Inject;
 import java.util.HashMap;

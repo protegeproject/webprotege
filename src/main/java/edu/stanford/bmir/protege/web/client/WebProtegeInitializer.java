@@ -1,15 +1,11 @@
 package edu.stanford.bmir.protege.web.client;
 
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.widgets.MessageBox;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitManagerInitializationTask;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
-import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;

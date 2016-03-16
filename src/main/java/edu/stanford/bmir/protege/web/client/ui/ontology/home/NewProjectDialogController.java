@@ -12,7 +12,10 @@ import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.ProjectCreatedEvent;
-import edu.stanford.bmir.protege.web.shared.project.*;
+import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectAction;
+import edu.stanford.bmir.protege.web.shared.project.CreateNewProjectResult;
+import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyRegisteredException;
+import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentExistsException;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**

@@ -10,9 +10,11 @@ import edu.stanford.bmir.protege.web.client.actionbar.application.SignInRequestH
 import edu.stanford.bmir.protege.web.client.actionbar.application.SignUpForAccountHandler;
 import edu.stanford.bmir.protege.web.client.chgpwd.ResetPasswordPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.place.SignUpPlace;
-import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.auth.AuthenticatedActionExecutor;
+import edu.stanford.bmir.protege.web.shared.auth.AuthenticationResponse;
+import edu.stanford.bmir.protege.web.shared.auth.PerformLoginActionFactory;
+import edu.stanford.bmir.protege.web.shared.auth.SignInDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 

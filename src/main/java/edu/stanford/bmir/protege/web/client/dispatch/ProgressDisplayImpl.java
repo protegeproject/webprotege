@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
 
 /**

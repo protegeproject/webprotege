@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorHandler;
 import edu.stanford.bmir.protege.web.client.ui.notes.editor.NoteContentEditorMode;

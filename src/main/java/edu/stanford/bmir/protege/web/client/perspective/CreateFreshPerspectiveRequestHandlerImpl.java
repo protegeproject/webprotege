@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.client.ui.CreateFreshPerspectiveRequestHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;

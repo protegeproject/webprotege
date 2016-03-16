@@ -1,10 +1,7 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
-
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

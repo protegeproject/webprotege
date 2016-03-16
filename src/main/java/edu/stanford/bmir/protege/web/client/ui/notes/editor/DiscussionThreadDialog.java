@@ -3,11 +3,8 @@ package edu.stanford.bmir.protege.web.client.ui.notes.editor;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPresenter;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;

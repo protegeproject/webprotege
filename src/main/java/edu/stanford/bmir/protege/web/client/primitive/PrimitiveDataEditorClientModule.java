@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.gwt.inject.client.AbstractGinModule;
-import edu.stanford.bmir.protege.web.client.inject.ActiveProjectIdProvider;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
  * Author: Matthew Horridge<br>

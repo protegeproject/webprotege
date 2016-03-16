@@ -1,8 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteAction;
 import edu.stanford.bmir.protege.web.shared.notes.DeleteNoteResult;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;

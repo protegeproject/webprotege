@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.client.itemlist;
 
 import com.google.gwt.user.client.ui.ValueBoxBase;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.shared.itemlist.*;
+import edu.stanford.bmir.protege.web.shared.itemlist.GetUserIdCompletionsActionFactory;
+import edu.stanford.bmir.protege.web.shared.itemlist.ItemNameAtCursorParserImpl;
+import edu.stanford.bmir.protege.web.shared.itemlist.UserIdItemRenderer;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**

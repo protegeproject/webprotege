@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 /**

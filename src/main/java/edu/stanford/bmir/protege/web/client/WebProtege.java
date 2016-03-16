@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client;
 
 
 import com.google.common.base.Optional;
-import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceHistoryHandler;

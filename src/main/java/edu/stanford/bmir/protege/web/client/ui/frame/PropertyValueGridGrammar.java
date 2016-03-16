@@ -1,9 +1,14 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Author: Matthew Horridge<br>

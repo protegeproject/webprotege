@@ -5,7 +5,6 @@ import edu.stanford.bmir.protege.web.client.rpc.EmptySuccessWebProtegeCallback;
 import edu.stanford.bmir.protege.web.shared.project.*;
 
 import javax.inject.Inject;
-import java.util.Collections;
 
 /**
  * Author: Matthew Horridge<br>

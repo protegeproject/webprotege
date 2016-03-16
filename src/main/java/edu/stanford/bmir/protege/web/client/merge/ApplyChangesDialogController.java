@@ -6,8 +6,6 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.merge.MergeData;
 
-import java.util.List;
-
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research

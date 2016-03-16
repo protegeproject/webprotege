@@ -1,10 +1,8 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.EntityType;
-import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.util.HashSet;
 import java.util.Set;

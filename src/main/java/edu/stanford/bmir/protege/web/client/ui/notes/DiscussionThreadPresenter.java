@@ -1,16 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadAction;
@@ -19,16 +12,26 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
+import edu.stanford.bmir.protege.web.client.portlet.HasPortletActions;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.bmir.protege.web.shared.event.*;
-import edu.stanford.bmir.protege.web.shared.notes.*;
+import edu.stanford.bmir.protege.web.shared.notes.DiscussionThread;
+import edu.stanford.bmir.protege.web.shared.notes.Note;
+import edu.stanford.bmir.protege.web.shared.notes.NoteDeletedEvent;
+import edu.stanford.bmir.protege.web.shared.notes.NoteDeletedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
