@@ -1,4 +1,4 @@
-package edu.stanford.bmir.protege.web.client.ui.upload;
+package edu.stanford.bmir.protege.web.client.upload;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FileUpload;
