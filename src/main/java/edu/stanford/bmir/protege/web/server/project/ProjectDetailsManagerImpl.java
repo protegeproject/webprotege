@@ -50,7 +50,7 @@ public class ProjectDetailsManagerImpl implements ProjectDetailsManager {
 
     @Override
     public boolean isExistingProject(ProjectId projectId) {
-        return repository.findOne(projectId) != null;
+        return repository.findOne(projectId).isPresent();
     }
 
     @Override
