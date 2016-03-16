@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.client.rpc.data;
 
 import com.google.common.base.Objects;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
@@ -18,8 +19,6 @@ public class NewProjectSettings implements IsSerializable {
 
     private String projectDescription;
 
-    private ProjectType projectType;
-
     private DocumentId sourceDocumentId = null;
 
 
@@ -34,23 +33,18 @@ public class NewProjectSettings implements IsSerializable {
      * @param projectOwner The desired owner of the project.  Not null.
      * @param displayName The desired project name for the new project.  Not {@code null}.
      * @param projectDescription The desired project description for the new project.  Not {@code null}.
-     * @param projectType The type of projectType. Not null.
      * @throws NullPointerException if either projectOwner, displayName or projectDescription are null.
      */
-    public NewProjectSettings(UserId projectOwner, String displayName, String projectDescription, ProjectType projectType) {
+    public NewProjectSettings(UserId projectOwner, String displayName, String projectDescription) {
         if (displayName == null) {
             throw new NullPointerException("displayName must not be null.");
         }
         if (projectDescription == null) {
             throw new NullPointerException("projectDescription must not be null.");
         }
-        if (projectType == null) {
-            throw new NullPointerException("projectType must not be null");
-        }
         this.projectOwner = projectOwner;
         this.displayName = displayName;
         this.projectDescription = projectDescription;
-        this.projectType = projectType;
     }
 
 
@@ -61,14 +55,13 @@ public class NewProjectSettings implements IsSerializable {
      * @param projectOwner The desired owner of the project.  Not null.
      * @param displayName The desired project name for the new project.  Not null.
      * @param projectDescription The desired project description for the new project.  Not null.
-     * @param projectType The type of projectType. Not null.
      * @param sourceDocumentId A {@link DocumentId} object that should be used to identify the source document with
      * which to initialise a project.  May be null.
      * @throws NullPointerException if either projectOwner, displayName, projectDescription or sourceDocumentId are
      *                              null.
      */
-    public NewProjectSettings(UserId projectOwner, String displayName, String projectDescription, ProjectType projectType, DocumentId sourceDocumentId) {
-        this(projectOwner, displayName, projectDescription, projectType);
+    public NewProjectSettings(UserId projectOwner, String displayName, String projectDescription, DocumentId sourceDocumentId) {
+        this(projectOwner, displayName, projectDescription);
         this.sourceDocumentId = sourceDocumentId;
     }
 
@@ -95,14 +88,6 @@ public class NewProjectSettings implements IsSerializable {
      */
     public String getProjectDescription() {
         return projectDescription;
-    }
-
-    /**
-     * Gets the desired type of the project.
-     * @return The project type.
-     */
-    public ProjectType getProjectType() {
-        return projectType;
     }
 
     /**

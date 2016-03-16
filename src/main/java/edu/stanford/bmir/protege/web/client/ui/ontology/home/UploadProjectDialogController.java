@@ -8,10 +8,9 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallbackWithProgressDisplay;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
+import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 import edu.stanford.bmir.protege.web.client.rpc.data.NewProjectSettings;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
-import edu.stanford.bmir.protege.web.client.rpc.data.ProjectType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.progress.ProgressMonitor;
@@ -88,8 +87,7 @@ public class UploadProjectDialogController extends WebProtegeOKCancelDialogContr
         DocumentId documentId = result.getDocumentId();
         String projectName = data.getProjectSettings().getProjectName();
         String projectDescription = data.getProjectSettings().getProjectDescription();
-        ProjectType projectType = data.getProjectSettings().getProjectType();
-        NewProjectSettings newProjectSettings = new NewProjectSettings(userId, projectName, projectDescription, projectType, documentId);
+        NewProjectSettings newProjectSettings = new NewProjectSettings(userId, projectName, projectDescription, documentId);
 
         dispatchServiceManager.execute(new CreateNewProjectAction(newProjectSettings), new DispatchServiceCallbackWithProgressDisplay<CreateNewProjectResult>() {
             @Override

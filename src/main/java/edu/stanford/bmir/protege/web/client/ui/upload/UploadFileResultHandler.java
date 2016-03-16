@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.upload;
 
-import edu.stanford.bmir.protege.web.client.rpc.data.DocumentId;
+import edu.stanford.bmir.protege.web.client.csv.DocumentId;
 
 /**
  * Author: Matthew Horridge<br>
