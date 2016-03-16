@@ -44,15 +44,14 @@ import java.util.Set;
  */
 public class AnnotationPropertyFrameEditor extends Composite implements EditorView<LabelledFrame<AnnotationPropertyFrame>>, HasEnabled {
 
+    private Optional<LabelledFrame<AnnotationPropertyFrame>> lastFrame = Optional.absent();
+
     interface AnnotationPropertyFrameEditorUiBinder extends UiBinder<HTMLPanel, AnnotationPropertyFrameEditor> {
 
     }
 
     private static AnnotationPropertyFrameEditorUiBinder ourUiBinder = GWT.create(AnnotationPropertyFrameEditorUiBinder.class);
 
-
-    @UiField
-    protected TextBox displayNameField;
 
     @UiField
     protected TextBox iriField;
@@ -107,11 +106,6 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
         setEnabled(false);
     }
 
-    @UiHandler("displayNameField")
-    protected void handleDisplayNameChanged(ValueChangeEvent<String> event) {
-        fireValueChangedIfWellFormed();
-    }
-
     @UiHandler("annotations")
     protected void handleAnnotationsChanged(ValueChangeEvent<Optional<PropertyValueList>> event) {
         fireValueChangedIfWellFormed();
@@ -143,7 +137,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     @Override
     public void setValue(LabelledFrame<AnnotationPropertyFrame> object) {
         dirty = false;
-        displayNameField.setText(object.getDisplayName());
+        lastFrame = Optional.of(object);
         final AnnotationPropertyFrame frame = object.getFrame();
         iriField.setText(frame.getSubject().getIRI().toString());
         annotations.setValue(frame.getPropertyValueList());
@@ -179,7 +173,6 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
 
     @Override
     public void clearValue() {
-        displayNameField.setText("");
         iriField.setText("");
         annotations.clearValue();
         domains.clearValue();
@@ -188,6 +181,9 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
 
     @Override
     public Optional<LabelledFrame<AnnotationPropertyFrame>> getValue() {
+        if(!lastFrame.isPresent()) {
+            return Optional.absent();
+        }
         OWLAnnotationProperty property = DataFactory.getOWLAnnotationProperty(getIRIString());
         final Set<OWLEntity> domainsClasses = Sets.newHashSet();
         for(OWLPrimitiveData data : domains.getValue().get()) {
@@ -198,7 +194,7 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
             rangeTypes.add((OWLEntity) data.getObject());
         }
         AnnotationPropertyFrame frame = new AnnotationPropertyFrame(property, annotations.getValue().get().getAnnotationPropertyValues(), domainsClasses, rangeTypes);
-        return Optional.of(new LabelledFrame<AnnotationPropertyFrame>(getDisplayName(), frame));
+        return Optional.of(new LabelledFrame<>(lastFrame.get().getDisplayName(), frame));
     }
 
     @Override
@@ -218,15 +214,11 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
 
     @Override
     public boolean isWellFormed() {
-        return !getDisplayName().isEmpty() && !getIRIString().isEmpty() && annotations.isWellFormed() && domains.isWellFormed() && ranges.isWellFormed();
+        return !getIRIString().isEmpty() && annotations.isWellFormed() && domains.isWellFormed() && ranges.isWellFormed();
     }
 
     private String getIRIString() {
         return iriField.getText().trim();
-    }
-
-    private String getDisplayName() {
-        return displayNameField.getText().trim();
     }
 
     @Override
@@ -237,7 +229,6 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        displayNameField.setEnabled(enabled);
         annotations.setEnabled(enabled);
         domains.setEnabled(enabled);
         ranges.setEnabled(enabled);
