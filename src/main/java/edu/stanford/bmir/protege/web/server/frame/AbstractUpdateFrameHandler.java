@@ -84,14 +84,14 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
         final FixedMessageChangeDescriptionGenerator<S> descGenerator = new FixedMessageChangeDescriptionGenerator<S>(getChangeDescription(from, to));
         project.applyChanges(userId, changeGenerator, descGenerator);
         if(!from.getDisplayName().equals(to.getDisplayName())) {
-            applyChangesToChangeDisplayName(project, executionContext, to, userId);
+            applyChangesToChangeDisplayName(project, executionContext, from, to, userId);
 
         }
         EventList<ProjectEvent<?>> events = project.getEventManager().getEventsFromTag(startTag);
         return createResponse(action.getTo(), events);
     }
 
-    private void applyChangesToChangeDisplayName(OWLAPIProject project, ExecutionContext executionContext, LabelledFrame<F> to, UserId userId) {
+    private void applyChangesToChangeDisplayName(OWLAPIProject project, ExecutionContext executionContext, LabelledFrame<F> from, LabelledFrame<F> to, UserId userId) {
         // Set changes
         EntityCrudKitHandler<?, ChangeSetEntityCrudSession> entityEditorKit = project.getEntityCrudKitHandler();
         ChangeSetEntityCrudSession session = entityEditorKit.createChangeSetSession();
@@ -101,7 +101,9 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
                                  project.getEntityCrudContext(executionContext.getUserId()),
                                  changeListBuilder);
         FixedChangeListGenerator<S> changeListGenerator = FixedChangeListGenerator.get(changeListBuilder.build().getChanges());
-        FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator = FixedMessageChangeDescriptionGenerator.get("Renamed entity");
+        String typePrintName = from.getFrame().getSubject().getEntityType().getPrintName().toLowerCase();
+        FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator =
+                FixedMessageChangeDescriptionGenerator.get("Renamed the " + typePrintName + " " + from.getDisplayName() + " to " + to.getDisplayName());
         project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
     }
 
