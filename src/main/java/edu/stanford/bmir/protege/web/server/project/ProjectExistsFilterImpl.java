@@ -16,12 +16,9 @@ public class ProjectExistsFilterImpl implements ProjectExistsFilter {
 
     private OWLAPIProjectFileStoreFactory fileStoreFactory;
 
-    private WebProtegeLogger logger;
-
     @Inject
-    public ProjectExistsFilterImpl(OWLAPIProjectFileStoreFactory fileStoreFactory, WebProtegeLogger logger) {
+    public ProjectExistsFilterImpl(OWLAPIProjectFileStoreFactory fileStoreFactory) {
         this.fileStoreFactory = fileStoreFactory;
-        this.logger = logger;
     }
 
     @Override
