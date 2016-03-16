@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedExceptio
  * Stanford Center for Biomedical Informatics Research
  * 20/02/15
  */
-public abstract class DispatchServiceCallback<T> {
+public class DispatchServiceCallback<T> {
 
     private DispatchErrorMessageDisplay errorMessageDisplay;
 
