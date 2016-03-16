@@ -8,11 +8,6 @@
     <g:HTMLPanel styleName="web-protege-laf" addStyleNames="{wp.style.formMain}">
 
         <div class="{wp.style.formGroup}">
-            <g:Label text="Display name" styleName="{wp.style.formLabel}"/>
-            <g:TextBox ui:field="displayNameField" width="100%" addStyleNames="{wp.style.formField}"/>
-        </div>
-
-        <div class="{wp.style.formGroup}">
             <g:Label text="IRI" addStyleNames="{wp.style.formLabel}"/>
             <g:TextBox ui:field="iriField" width="100%"/>
         </div>
