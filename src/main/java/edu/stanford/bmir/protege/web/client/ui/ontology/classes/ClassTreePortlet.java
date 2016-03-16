@@ -164,23 +164,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             //listener for click on the comment icon to display notes
             nodeListener = new TreeNodeListenerAdapter() {
 
-                //TODO: this functionality is similar to that found in AbstractFieldWidget and
-                @Override
-                public boolean doBeforeClick(final Node node, final EventObject e) {
-                    onCellClickOrDblClick(node, e);
-                    return true;
-                }
-
-                private void onCellClickOrDblClick(Node node, EventObject e) {
-                    final Element target = e.getTarget();
-                    if (target != null) {
-                        final String targetId = target.getId();
-                        if (targetId.endsWith(SUFFIX_ID_LOCAL_ANNOTATION_IMG) || targetId.endsWith(SUFFIX_ID_LOCAL_ANNOTATION_COUNT)) {
-                            showClassNotes(node);
-                        }
-                    }
-                }
-
                 @Override
                 public void onContextMenu(final Node node, EventObject e) {
                     treePanel.getSelectionModel().select((TreeNode) node);
@@ -711,7 +694,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private void showClassNotSelectedMessage() {
-        MessageBox.showAlert("No class selected", "Please select a class to delete.");
+        MessageBox.showAlert("No class selected", "Please select a class.");
     }
 
     private void deleteCls(final OWLClass cls) {
@@ -761,10 +744,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         return new GetSubclassesOfClassHandler(parentClsName, parentNode, null);
     }
 
-    protected String getStoredSubclassCount(final TreeNode node) {
-        return node.getAttribute("scc");
-    }
-
     public boolean isSubclassesLoaded(final TreeNode node) {
         final String val = node.getAttribute("subclassesLoaded");
         return val != null && val.equals("true");
@@ -772,13 +751,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     public void setSubclassesLoaded(final TreeNode node, final boolean loaded) {
         node.setAttribute("subclassesLoaded", loaded ? "true" : "false");
-    }
-
-    public void getRootCls() {
-        // This is spectacularly horrible.  This used to be a remote call.  It turns out that this only worked because
-        // of the delay in the remote call - I've no idea why, and as this is being replaced I'll leave it like this
-        // for now.
-
     }
 
     protected void moveClass(final EntityData cls, final EntityData oldParent, final EntityData newParent) {
@@ -991,7 +963,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             final String idLocalAnnotationCnt = node.getId() + SUFFIX_ID_LOCAL_ANNOTATION_COUNT;
 
             // TODO: add a css for this
-            text = text + "<span style=\"padding-left: 2px;\"><img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(localAnnotationsCount) + " on this category. \nClick on the icon to see and edit the notes\" /></span>" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"font-size:95%;color:#15428B;font-weight:bold;\">" + localAnnotationsCount + "</span>";
+            text = text + "<span style=\"padding-left: 2px;\"><img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(localAnnotationsCount) + " on this category.\" /></span>" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"font-size:95%;color:#15428B;font-weight:bold;\">" + localAnnotationsCount + "</span>";
         }
 
         final int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
@@ -1014,16 +986,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return "<img src=\"" + BUNDLE.eyeDownIcon().getSafeUri().asString() + "\" " + ClassTreePortlet.WATCH_ICON_STYLE_STRING + " title=\"" + " Watched branch\"></img>";
         }
     }
-
-    private void showClassNotes(final Node node) {
-        SubclassEntityData subClassData = (SubclassEntityData) node.getUserObject();
-        String name = subClassData.getName();
-        OWLClass cls = DataFactory.getOWLClass(name);
-
-        DiscussionThreadDialog dlg = discussionThreadDialogProvider.get();
-        dlg.showDialog(cls);
-    }
-
+    
     private boolean hasChild(final TreeNode parentNode, final String childId) {
         return getDirectChild(parentNode, childId) != null;
     }

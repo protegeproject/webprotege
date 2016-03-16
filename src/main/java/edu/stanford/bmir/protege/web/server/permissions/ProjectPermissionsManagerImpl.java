@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.permissions;
 
+import edu.stanford.bmir.protege.web.server.project.ProjectExistsFilter;
 import edu.stanford.bmir.protege.web.server.project.ProjectRecord;
 import edu.stanford.bmir.protege.web.server.project.ProjectRecordRepository;
 import edu.stanford.bmir.protege.web.server.project.ProjectRecordTranslator;
@@ -27,11 +28,14 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
 
     private final ProjectRecordRepository projectRecordRepository;
 
+    private final ProjectExistsFilter projectExistsFilter;
+
     @Inject
-    public ProjectPermissionsManagerImpl(ProjectPermissionRecordRepository projectPermissionRecordRepository, WorldProjectPermissionRecordRepository worldProjectPermissionRecordRepository, ProjectRecordRepository projectRecordRepository) {
+    public ProjectPermissionsManagerImpl(ProjectPermissionRecordRepository projectPermissionRecordRepository, WorldProjectPermissionRecordRepository worldProjectPermissionRecordRepository, ProjectRecordRepository projectRecordRepository, ProjectExistsFilter projectExistsFilter) {
         this.projectPermissionRecordRepository = projectPermissionRecordRepository;
         this.worldProjectPermissionRecordRepository = worldProjectPermissionRecordRepository;
         this.projectRecordRepository = projectRecordRepository;
+        this.projectExistsFilter = projectExistsFilter;
     }
 
     @Override
@@ -75,7 +79,9 @@ public class ProjectPermissionsManagerImpl implements ProjectPermissionsManager 
         projectPermissionRecordRepository.findByUserId(userId)
                 .forEach(r -> {
                     Optional<ProjectRecord> record = projectRecordRepository.findOne(r.getProjectId());
-                    result.add(translateToProjectDetails(record.get()));
+                    if (record.isPresent() && projectExistsFilter.isProjectPresent(record.get().getProjectId())) {
+                        result.add(translateToProjectDetails(record.get()));
+                    }
                 });
         projectRecordRepository.findByOwner(userId)
                 .map(ProjectRecordTranslator::translateToProjectDetails)
