@@ -9,7 +9,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Matthew Horridge

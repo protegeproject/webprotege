@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.dispatch.cache;
 
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.dispatch.cache.AbstractResultCachingStrategy;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
-import edu.stanford.bmir.protege.web.client.project.ProjectManager;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;

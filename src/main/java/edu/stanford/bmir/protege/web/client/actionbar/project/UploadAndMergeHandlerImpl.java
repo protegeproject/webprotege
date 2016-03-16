@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.client.actionbar.project;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.merge.MergeUploadedProjectWorkflow;
 import edu.stanford.bmir.protege.web.client.merge.UploadAndMergeProjectWorkflow;
+import edu.stanford.bmir.protege.web.client.project.ActiveProjectManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;

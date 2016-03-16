@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.client.app;
 
-import com.google.common.base.Optional;
-import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;

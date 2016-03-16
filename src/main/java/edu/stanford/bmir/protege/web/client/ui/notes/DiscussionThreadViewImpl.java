@@ -3,14 +3,9 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
-import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchService;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

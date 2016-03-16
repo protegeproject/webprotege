@@ -1,8 +1,5 @@
 package edu.stanford.bmir.protege.web.client.dispatch.cache;
 
-import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCacheInvalidationEvent;
-import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCacheInvalidationEventHandler;
-
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>

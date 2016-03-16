@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.diff;
 
 import com.google.gwt.safehtml.shared.SafeHtml;
-import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 
 /**
  * Matthew Horridge

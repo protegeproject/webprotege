@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
-import com.google.gwt.user.client.ui.*;
-import edu.stanford.bmir.protege.web.client.inject.ApplicationClientInjector;
+import com.google.gwt.user.client.ui.HasEnabled;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;

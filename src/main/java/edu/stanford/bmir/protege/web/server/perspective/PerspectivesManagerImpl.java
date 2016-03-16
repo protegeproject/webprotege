@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.perspective;
 
 import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.perspective.PerspectiveLinkManagerImpl;
-import edu.stanford.bmir.protege.web.client.project.Project;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -13,7 +12,6 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -78,8 +76,4 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
         }
     }
 
-    @Override
-    public void setDefaultPerspectives(Project projectId, List<PerspectiveId> perspectives) {
-
-    }
 }

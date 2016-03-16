@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.notes.Note;
 
 import javax.inject.Inject;

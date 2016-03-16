@@ -19,11 +19,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.AbstractDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import com.google.gwt.view.client.SingleSelectionModel;
+import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListResources;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
+import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
-import edu.stanford.bmir.protege.web.client.ui.projectlist.ProjectListResources;
-import edu.stanford.bmir.protege.web.shared.TimeUtil;
 
 /**
  * Author: Matthew Horridge<br>

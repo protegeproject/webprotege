@@ -5,7 +5,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
 import edu.stanford.bmir.protege.web.shared.merge.Diff;
-import edu.stanford.bmir.protege.web.shared.axiom.OWLAxiomData;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import java.util.List;

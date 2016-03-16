@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.crud;
 
-import com.google.gwt.core.client.GWT;
 import edu.stanford.bmir.protege.web.client.ApplicationInitManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;

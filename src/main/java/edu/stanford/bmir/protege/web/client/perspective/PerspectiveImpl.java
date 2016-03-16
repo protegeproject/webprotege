@@ -2,17 +2,21 @@ package edu.stanford.bmir.protege.web.client.perspective;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.AttachEvent;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.assistedinject.Assisted;
-import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 import edu.stanford.bmir.protege.web.client.portlet.EntityPortlet;
+import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
-import edu.stanford.protege.widgetmap.client.*;
-import edu.stanford.protege.widgetmap.shared.node.*;
+import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
+import edu.stanford.protege.widgetmap.client.WidgetMapPanel;
+import edu.stanford.protege.widgetmap.client.WidgetMapPanelManager;
+import edu.stanford.protege.widgetmap.client.WidgetMapRootWidget;
+import edu.stanford.protege.widgetmap.shared.node.Node;
+import edu.stanford.protege.widgetmap.shared.node.NodeProperties;
+import edu.stanford.protege.widgetmap.shared.node.TerminalNode;
+import edu.stanford.protege.widgetmap.shared.node.TerminalNodeId;
 
 import javax.inject.Inject;
 

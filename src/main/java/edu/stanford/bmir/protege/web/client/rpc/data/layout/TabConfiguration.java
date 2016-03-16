@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.client.rpc.data.layout;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static com.google.common.base.MoreObjects.toStringHelper;

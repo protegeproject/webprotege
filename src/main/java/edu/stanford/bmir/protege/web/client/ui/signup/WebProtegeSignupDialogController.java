@@ -13,7 +13,9 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDia
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationHandler;
 import edu.stanford.bmir.protege.web.client.ui.verification.HumanVerificationServiceProvider;
-import edu.stanford.bmir.protege.web.shared.auth.*;
+import edu.stanford.bmir.protege.web.shared.auth.Md5DigestAlgorithmProvider;
+import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
+import edu.stanford.bmir.protege.web.shared.auth.SaltProvider;
 import edu.stanford.bmir.protege.web.shared.user.*;
 
 

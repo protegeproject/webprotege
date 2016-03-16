@@ -8,7 +8,10 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import edu.stanford.bmir.protege.web.client.primitive.*;
+import edu.stanford.bmir.protege.web.client.primitive.FreshEntitiesPolicy;
+import edu.stanford.bmir.protege.web.client.primitive.MutableFreshEntitiesHandler;
+import edu.stanford.bmir.protege.web.client.primitive.NullFreshEntitySuggestStrategy;
+import edu.stanford.bmir.protege.web.client.primitive.SimpleFreshEntitySuggestStrategy;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
@@ -16,7 +19,6 @@ import edu.stanford.bmir.protege.web.shared.entity.*;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueDescriptor;
 import org.semanticweb.owlapi.model.EntityType;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
