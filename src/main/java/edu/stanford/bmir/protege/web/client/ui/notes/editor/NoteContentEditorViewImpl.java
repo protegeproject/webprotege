@@ -88,9 +88,6 @@ public class NoteContentEditorViewImpl extends Composite implements NoteContentE
 
     @Override
     public Optional<NoteContent> getValue() {
-        if (getBody().isEmpty()) {
-            return Optional.absent();
-        }
         NoteContent.Builder contentBuilder = NoteContent.builder();
         if (!getTopic().isEmpty()) {
             contentBuilder.setSubject(getTopic());
