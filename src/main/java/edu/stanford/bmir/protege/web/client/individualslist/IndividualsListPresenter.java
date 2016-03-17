@@ -81,7 +81,10 @@ public class IndividualsListPresenter {
         view.addSelectionHandler(new SelectionHandler<OWLNamedIndividualData>() {
             @Override
             public void onSelection(com.google.gwt.event.logical.shared.SelectionEvent<OWLNamedIndividualData> event) {
-                selectionModel.setSelection(event.getSelectedItem().getEntity());
+                OWLNamedIndividualData selectedItem = event.getSelectedItem();
+                if (selectedItem != null) {
+                    selectionModel.setSelection(selectedItem.getEntity());
+                }
             }
         });
 
