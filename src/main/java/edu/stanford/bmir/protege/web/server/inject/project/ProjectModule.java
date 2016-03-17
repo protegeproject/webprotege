@@ -3,8 +3,13 @@ package edu.stanford.bmir.protege.web.server.inject.project;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.multibindings.Multibinder;
 import edu.stanford.bmir.protege.web.server.OntologyChangeSubjectProvider;
 import edu.stanford.bmir.protege.web.server.change.HasGetRevisionSummary;
+import edu.stanford.bmir.protege.web.server.change.ReverseEngineeredChangeDescriptionGenerator;
+import edu.stanford.bmir.protege.web.server.change.ReverseEngineeredChangeDescriptionGeneratorFactory;
+import edu.stanford.bmir.protege.web.server.change.matcher.*;
 import edu.stanford.bmir.protege.web.server.events.EventLifeTime;
 import edu.stanford.bmir.protege.web.server.events.EventManager;
 import edu.stanford.bmir.protege.web.server.events.HasPostEvents;
@@ -19,8 +24,6 @@ import edu.stanford.bmir.protege.web.server.owlapi.HasApplyChanges;
 import edu.stanford.bmir.protege.web.server.owlapi.change.*;
 import edu.stanford.bmir.protege.web.server.render.*;
 import edu.stanford.bmir.protege.web.server.shortform.*;
-import edu.stanford.bmir.protege.web.server.util.TempFileFactory;
-import edu.stanford.bmir.protege.web.server.util.TempFileFactoryImpl;
 import edu.stanford.bmir.protege.web.server.watches.*;
 import edu.stanford.bmir.protege.web.shared.BrowserTextProvider;
 import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
@@ -46,7 +49,6 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import java.io.File;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static com.google.inject.Scopes.*;
 
@@ -94,6 +96,18 @@ public class ProjectModule extends AbstractModule {
         bind(File.class)
                 .annotatedWith(WatchFile.class)
                 .toProvider(WatchFileProvider.class);
+
+        Multibinder<ChangeMatcher> multibinder = Multibinder.newSetBinder(binder(), ChangeMatcher.class);
+        multibinder.addBinding().to(AnnotationAssertionChangeMatcher.class);
+        multibinder.addBinding().to(PropertyDomainAxiomChangeMatcher.class);
+        multibinder.addBinding().to(PropertyRangeAxiomChangeMatcher.class);
+        multibinder.addBinding().to(EditedAnnotationAssertion.class);
+        multibinder.addBinding().to(FunctionalDataPropertyAxiomChangeMatcher.class);
+        multibinder.addBinding().to(ClassAssertionAxiomMatcher.class);
+
+        install(new FactoryModuleBuilder()
+                .implement(ReverseEngineeredChangeDescriptionGenerator.class, ReverseEngineeredChangeDescriptionGenerator.class)
+                .build(ReverseEngineeredChangeDescriptionGeneratorFactory.class));
 
 
         bind(OWLAPIProject.class)
@@ -352,6 +366,7 @@ public class ProjectModule extends AbstractModule {
 
         bind(HasApplyChanges.class)
                 .to(OWLAPIProject.class);
+
 
         // @formatter:on
     }

@@ -35,6 +35,10 @@ public abstract class AbstractHasProjectActionHandler<A extends Action<R> & HasP
         this.projectManager = checkNotNull(projectManager);
     }
 
+    public OWLAPIProjectManager getProjectManager() {
+        return projectManager;
+    }
+
     @Override
     final public RequestValidator getRequestValidator(A action, RequestContext requestContext) {
         final RequestValidator additionalRequestValidator = getAdditionalRequestValidator(action, requestContext);
