@@ -148,6 +148,7 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     @Override
     public Optional<LabelledFrame<NamedIndividualFrame>> getValue() {
+        GWT.log("[NamedIndividualFrameEditor] Get value: Dirty: " + isDirty() + " Edited frame: " + editedFrame);
        if(!editedFrame.isPresent()) {
            return Optional.absent();
        }
@@ -199,7 +200,9 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
 
     @UiHandler("types")
     protected void handleTypesChanged(ValueChangeEvent<Optional<List<OWLPrimitiveData>>> event) {
+        GWT.log("[NamedIndividualFrameEditor] Types changed");
         if(isWellFormed()) {
+            GWT.log("[NamedIndividualFrameEditor] Types are well formed");
             ValueChangeEvent.fire(this, getValue());
         }
     }
