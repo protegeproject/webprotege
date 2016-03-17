@@ -259,6 +259,7 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
 
 
     private void handleValueEditorValueChanged() {
+        dirty = true;
         ValueChangeEvent.fire(this, getValue());
         ensureBlank();
     }
