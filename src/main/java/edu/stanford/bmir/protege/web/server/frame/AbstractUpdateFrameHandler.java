@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
+import com.google.common.collect.Sets;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
-import edu.stanford.bmir.protege.web.server.change.FixedChangeListGenerator;
-import edu.stanford.bmir.protege.web.server.change.FixedMessageChangeDescriptionGenerator;
-import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
+import edu.stanford.bmir.protege.web.server.change.*;
+import edu.stanford.bmir.protege.web.server.change.matcher.EditedAnnotationAssertion;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
 import edu.stanford.bmir.protege.web.server.crud.EntityCrudKitHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
@@ -35,7 +35,8 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
     private final ValidatorFactory<WritePermissionValidator> validatorFactory;
 
     @Inject
-    public AbstractUpdateFrameHandler(OWLAPIProjectManager projectManager, ValidatorFactory<WritePermissionValidator> validatorFactory) {
+    public AbstractUpdateFrameHandler(OWLAPIProjectManager projectManager,
+                                      ValidatorFactory<WritePermissionValidator> validatorFactory) {
         super(projectManager);
         this.validatorFactory = validatorFactory;
     }
@@ -79,33 +80,28 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
 
         FrameTranslator<F, S> translator = createTranslator();
 
-
         final FrameChangeGenerator<F, S> changeGenerator = new FrameChangeGenerator<>(from.getFrame(), to.getFrame(), translator);
-        final FixedMessageChangeDescriptionGenerator<S> descGenerator = new FixedMessageChangeDescriptionGenerator<S>(getChangeDescription(from, to));
-        project.applyChanges(userId, changeGenerator, descGenerator);
-        if(!from.getDisplayName().equals(to.getDisplayName())) {
-            applyChangesToChangeDisplayName(project, executionContext, from, to, userId);
-
-        }
+        ChangeDescriptionGenerator<S> generator = project.getChangeDescriptionGeneratorFactory().get("Edited " + from.getDisplayName());
+        project.applyChanges(userId, changeGenerator, generator);
         EventList<ProjectEvent<?>> events = project.getEventManager().getEventsFromTag(startTag);
         return createResponse(action.getTo(), events);
     }
 
-    private void applyChangesToChangeDisplayName(OWLAPIProject project, ExecutionContext executionContext, LabelledFrame<F> from, LabelledFrame<F> to, UserId userId) {
-        // Set changes
-        EntityCrudKitHandler<?, ChangeSetEntityCrudSession> entityEditorKit = project.getEntityCrudKitHandler();
-        ChangeSetEntityCrudSession session = entityEditorKit.createChangeSetSession();
-        OntologyChangeList.Builder<S> changeListBuilder = new OntologyChangeList.Builder<>();
-        entityEditorKit.update(session, to.getFrame().getSubject(),
-                                 EntityShortForm.get(to.getDisplayName()),
-                                 project.getEntityCrudContext(executionContext.getUserId()),
-                                 changeListBuilder);
-        FixedChangeListGenerator<S> changeListGenerator = FixedChangeListGenerator.get(changeListBuilder.build().getChanges());
-        String typePrintName = from.getFrame().getSubject().getEntityType().getPrintName().toLowerCase();
-        FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator =
-                FixedMessageChangeDescriptionGenerator.get("Renamed the " + typePrintName + " " + from.getDisplayName() + " to " + to.getDisplayName());
-        project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
-    }
+//    private void applyChangesToChangeDisplayName(OWLAPIProject project, ExecutionContext executionContext, LabelledFrame<F> from, LabelledFrame<F> to, UserId userId) {
+//        // Set changes
+//        EntityCrudKitHandler<?, ChangeSetEntityCrudSession> entityEditorKit = project.getEntityCrudKitHandler();
+//        ChangeSetEntityCrudSession session = entityEditorKit.createChangeSetSession();
+//        OntologyChangeList.Builder<S> changeListBuilder = new OntologyChangeList.Builder<>();
+//        entityEditorKit.update(session, to.getFrame().getSubject(),
+//                                 EntityShortForm.get(to.getDisplayName()),
+//                                 project.getEntityCrudContext(executionContext.getUserId()),
+//                                 changeListBuilder);
+//        FixedChangeListGenerator<S> changeListGenerator = FixedChangeListGenerator.get(changeListBuilder.build().getChanges());
+//        String typePrintName = from.getFrame().getSubject().getEntityType().getPrintName().toLowerCase();
+//        FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator =
+//                FixedMessageChangeDescriptionGenerator.get("Renamed the " + typePrintName + " " + from.getDisplayName() + " to " + to.getDisplayName());
+//        project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
+//    }
 
     protected abstract Result createResponse(LabelledFrame<F> to, EventList<ProjectEvent<?>> events);
 
