@@ -20,4 +20,8 @@ public interface InputBoxView extends HasInitialFocusable {
     String getInputValue();
 
     Widget getWidget();
+
+    void setMultiline(boolean multiline);
+
+    void setInitialInput(String initialInput);
 }

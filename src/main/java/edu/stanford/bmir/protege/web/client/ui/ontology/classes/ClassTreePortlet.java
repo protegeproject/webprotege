@@ -36,6 +36,8 @@ import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
@@ -183,9 +185,12 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                         @Override
                         public void onClick(ClickEvent event) {
                             String location = Window.Location.getHref();
-                            SafeHtmlBuilder builder = new SafeHtmlBuilder();
-                            builder.appendEscaped(location);
-                            MessageBox.showMessage("Direct link", builder.toSafeHtml().asString());
+                            InputBox.showOkDialog("Direct link", true, location, new InputBoxHandler() {
+                                @Override
+                                public void handleAcceptInput(String input) {
+
+                                }
+                            });
                         }
                     });
                     contextMenu.addSeparator();

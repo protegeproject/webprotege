@@ -5,6 +5,9 @@ import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -14,19 +17,31 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 public class InputBox {
 
     public static void showDialog(String title, InputBoxHandler handler) {
-        InputBoxController controller = new InputBoxController(title, handler);
+        showDialog(title, true, "", handler);
+    }
+
+    public static void showDialog(String title, boolean multiline, String initialInput, InputBoxHandler handler) {
+        InputBoxController controller = new InputBoxController(title, initialInput, handler, Arrays.asList(DialogButton.OK, DialogButton.CANCEL));
+        controller.setMultiline(multiline);
         WebProtegeDialog.showDialog(controller);
     }
 
-    private static class InputBoxController extends WebProtegeOKCancelDialogController<String> {
+    public static void showOkDialog(String title, boolean multiline, String initialInput, InputBoxHandler handler) {
+        InputBoxController controller = new InputBoxController(title, initialInput, handler, Arrays.asList(DialogButton.OK));
+        controller.setMultiline(multiline);
+        WebProtegeDialog.showDialog(controller);
+    }
+
+    private static class InputBoxController extends WebProtegeDialogController<String> {
 
         private InputBoxView view = new InputBoxViewImpl();
 
         private InputBoxHandler inputBoxHandler;
 
-        private InputBoxController(String title, InputBoxHandler handler) {
-            super(title);
+        private InputBoxController(String title, String initialInput, InputBoxHandler handler, List<DialogButton> buttonList) {
+            super(title, buttonList, buttonList.get(0), DialogButton.CANCEL);
             this.inputBoxHandler = handler;
+            view.setInitialInput(initialInput);
             setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<String>() {
                 @Override
                 public void handleHide(String data, WebProtegeDialogCloser closer) {
@@ -34,6 +49,10 @@ public class InputBox {
                     closer.hide();
                 }
             });
+        }
+
+        public void setMultiline(boolean multiline) {
+            view.setMultiline(multiline);
         }
 
         @Override

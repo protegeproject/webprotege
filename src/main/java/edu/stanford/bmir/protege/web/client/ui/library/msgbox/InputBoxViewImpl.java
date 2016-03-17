@@ -52,4 +52,14 @@ public class InputBoxViewImpl extends Composite implements InputBoxView, HasInit
     public Widget getWidget() {
         return this;
     }
+
+    @Override
+    public void setMultiline(boolean multiline) {
+        inputArea.setMultiline(multiline);
+    }
+
+    @Override
+    public void setInitialInput(String initialInput) {
+        inputArea.setText(initialInput);
+    }
 }
