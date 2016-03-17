@@ -407,6 +407,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     private void handleCreateProperty(final CreateEntityInfo createEntityInfo) {
         Optional<OWLEntity> sel = getSelectedEntity();
+        GWT.log("[PropertiesTreePortlet] Creating entity.  Current selection: " + sel);
         if (!sel.isPresent()) {
             // Temp hack
             if (isAnnotationPropertiesRootSelected()) {
@@ -415,7 +416,10 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             return;
         }
 
-        // What follows is a cut and paste hack.  It will all be replaced by gwt-dispatch.
+        if(isAnnotationPropertiesRootSelected()) {
+            createSubProperties(Optional.<OWLAnnotationProperty>absent(), createEntityInfo);
+            return;
+        }
 
         OWLEntity selectedEntity = sel.get();
         selectedEntity.accept(new OWLEntityVisitor() {
