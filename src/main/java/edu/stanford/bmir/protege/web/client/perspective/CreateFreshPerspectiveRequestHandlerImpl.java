@@ -14,7 +14,7 @@ public class CreateFreshPerspectiveRequestHandlerImpl implements CreateFreshPers
 
     @Override
     public void createFreshPerspective(final Callback callback) {
-        InputBox.showDialog("Enter name", new InputBoxHandler() {
+        InputBox.showDialog("Enter tab name", false, "", new InputBoxHandler() {
             @Override
             public void handleAcceptInput(String input) {
                 String trimmedInput = input.trim();
