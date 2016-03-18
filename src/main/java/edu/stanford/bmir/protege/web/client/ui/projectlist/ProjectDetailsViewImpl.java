@@ -61,12 +61,7 @@ public class ProjectDetailsViewImpl extends Composite implements ProjectDetailsV
     protected void handleMenuButtonClicked(ClickEvent event) {
         PopupMenu popupMenu = new PopupMenu();
         for(final UIAction action : actions) {
-            popupMenu.addItem(action.getLabel(), new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    action.execute();
-                }
-            });
+            popupMenu.addItem(action);
         }
         popupMenu.showRelativeTo(menuButton);
     }

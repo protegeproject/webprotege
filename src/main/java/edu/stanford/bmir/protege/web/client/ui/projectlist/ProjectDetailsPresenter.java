@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.projectlist;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.ui.projectmanager.DownloadProjectRequestHandler;
@@ -69,7 +70,7 @@ public class ProjectDetailsPresenter {
     private void addOpenAction() {
         view.addAction(new AbstractUiAction("Open") {
             @Override
-            public void execute() {
+            public void execute(ClickEvent e) {
                 loadProjectRequestHandler.handleProjectLoadRequest(details.getProjectId());
             }
         });
@@ -78,7 +79,7 @@ public class ProjectDetailsPresenter {
     private void addOpenInNewWindowAction() {
         view.addAction(new AbstractUiAction("Open in new window") {
             @Override
-            public void execute() {
+            public void execute(ClickEvent e) {
                 loadProjectInNewWindowRequestHandler.handleLoadProjectInNewWindow(details.getProjectId());
             }
         });
@@ -87,7 +88,7 @@ public class ProjectDetailsPresenter {
     private void addDowloadAction() {
         view.addAction(new AbstractUiAction("Download") {
             @Override
-            public void execute() {
+            public void execute(ClickEvent e) {
                 downloadProjectRequestHandler.handleProjectDownloadRequest(details.getProjectId());
             }
         });
@@ -103,7 +104,7 @@ public class ProjectDetailsPresenter {
         }
         view.addAction(new AbstractUiAction(trashActionLabel) {
             @Override
-            public void execute() {
+            public void execute(ClickEvent e) {
                 if (details.isInTrash()) {
                     trashManagerRequestHandler.handleRemoveProjectFromTrash(details.getProjectId());
                 }

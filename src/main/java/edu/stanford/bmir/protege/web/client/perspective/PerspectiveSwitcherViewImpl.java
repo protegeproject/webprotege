@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TabBar;
 import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
@@ -30,8 +31,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class PerspectiveSwitcherViewImpl extends Composite implements PerspectiveSwitcherView {
 
 
-
     interface PerspectiveSwitcherViewImplUiBinder extends UiBinder<HTMLPanel, PerspectiveSwitcherViewImpl> {
+
     }
 
     private static PerspectiveSwitcherViewImplUiBinder ourUiBinder = GWT.create(PerspectiveSwitcherViewImplUiBinder.class);
@@ -102,7 +103,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
          * Veto the selection if it does not correspond to the highlighted link
          */
         PerspectiveId link = displayedPerspectives.get(event.getItem());
-        if(!highlightedPerspective.equals(Optional.<PerspectiveId>of(link))) {
+        if (!highlightedPerspective.equals(Optional.<PerspectiveId>of(link))) {
             event.cancel();
         }
     }
@@ -110,13 +111,15 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     @UiHandler("newTabButton")
     protected void handleNewPerspectiveButtonClicked(ClickEvent clickEvent) {
         PopupMenu popupMenu = new PopupMenu();
-        for(final PerspectiveId perspectiveId : bookmarkedPerspectives) {
-            popupMenu.addItem(perspectiveId.getId(), new ClickHandler() {
+        for (final PerspectiveId perspectiveId : bookmarkedPerspectives) {
+            AbstractUiAction action = new AbstractUiAction(perspectiveId.getId()) {
                 @Override
-                public void onClick(ClickEvent event) {
+                public void execute(ClickEvent clickEvent) {
                     addBookMarkedPerspectiveLinkHandler.handleAddBookmarkedPerspective(perspectiveId);
                 }
-            });
+            };
+            action.setEnabled(false);
+            popupMenu.addItem(action);
         }
         popupMenu.addSeparator();
         popupMenu.addItem("Other\u2026", new ClickHandler() {
@@ -130,7 +133,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
 
     public void setPerspectiveLinks(List<PerspectiveId> perspectives) {
         removeAllDisplayedPerspectives();
-        for(final PerspectiveId perspectiveId : perspectives) {
+        for (final PerspectiveId perspectiveId : perspectives) {
             addPerspectiveLink(perspectiveId);
         }
         ensureHighlightedPerspectiveLinkIsSelected();
@@ -173,7 +176,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     @Override
     public void removePerspectiveLink(PerspectiveId perspectiveId) {
         int index = displayedPerspectives.indexOf(perspectiveId);
-        if(index == -1) {
+        if (index == -1) {
             return;
         }
         displayedPerspectives.remove(perspectiveId);
@@ -181,7 +184,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     }
 
     private void removeAllDisplayedPerspectives() {
-        while(tabBar.getTabCount() > 0) {
+        while (tabBar.getTabCount() > 0) {
             tabBar.removeTab(0);
         }
         this.displayedPerspectives.clear();
@@ -235,11 +238,11 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
     }
 
     private void ensureHighlightedPerspectiveLinkIsSelected() {
-        if(!highlightedPerspective.isPresent()) {
+        if (!highlightedPerspective.isPresent()) {
             return;
         }
-        for(int i = 0; i < displayedPerspectives.size(); i++) {
-            if(displayedPerspectives.get(i).equals(highlightedPerspective.get())) {
+        for (int i = 0; i < displayedPerspectives.size(); i++) {
+            if (displayedPerspectives.get(i).equals(highlightedPerspective.get())) {
                 if (tabBar.getSelectedTab() != i) {
                     tabBar.selectTab(i);
                 }

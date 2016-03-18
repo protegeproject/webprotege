@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.client.ui.UIAction;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
-import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenuItem;
 
 /**
  * Matthew Horridge
@@ -42,11 +41,6 @@ public class ProjectMenuViewImpl extends Composite implements ProjectMenuView {
 
     @Override
     public void addMenuAction(final UIAction uiAction) {
-        popupMenu.addItem(new PopupMenuItem(new SafeHtmlBuilder().appendEscaped(uiAction.getLabel()).toSafeHtml()) {
-            @Override
-            public void handleClicked(ClickEvent clickEvent) {
-                uiAction.execute();
-            }
-        });
+        popupMenu.addItem(uiAction);
     }
 }

@@ -284,14 +284,14 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     public static interface WebProtegeMenu extends CssResource {
 
-        @ClassName("popup-menu-item")
-        String popupMenuItem();
+        String popupMenu();
 
-        @ClassName("popup-menu-inner")
         String popupMenuInner();
 
-        @ClassName("popup-menu")
-        String popupMenu();
+        String popupMenuItem();
+
+        @ClassName("popupMenuItem-disabled")
+        String popupMenuItemDisabled();
 
         String separator();
     }

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.project;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -67,19 +68,19 @@ public class ProjectMenuPresenter {
 
         view.addMenuAction(new AbstractUiAction("Settings") {
             @Override
-            public void execute() {
+            public void execute(ClickEvent e) {
                 showProjectDetailsHandler.handleShowProjectDetails();
             }
         });
         view.addMenuAction(new AbstractUiAction("New entity settings") {
             @Override
-            public void execute() {
+            public void execute(ClickEvent e) {
                 showFreshEntitySettingsHandler.handleShowFreshEntitySettings();
             }
         });
         view.addMenuAction(new AbstractUiAction("Upload and merge") {
             @Override
-            public void execute() {
+            public void execute(ClickEvent e) {
                 uploadAndMergeHandler.handleUploadAndMerge();
             }
         });
