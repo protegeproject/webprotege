@@ -956,9 +956,6 @@ select {
 .derived-property-value textarea {
 }
 
-[disabled] {
-    background-color: #f1eded !important;
-}
 
 .error {
     border-bottom: solid #ff0000 2px;
