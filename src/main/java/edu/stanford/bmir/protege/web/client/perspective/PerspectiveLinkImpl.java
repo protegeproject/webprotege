@@ -82,13 +82,5 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
         menuButton.setVisible(visible);
     }
 
-    public void setSelected(boolean selected) {
-        if (selected) {
-            addStyleName(WebProtegeClientBundle.BUNDLE.style().selectionHighlightInverted());
-        }
-        else {
-            removeStyleName(WebProtegeClientBundle.BUNDLE.style().selectionHighlightInverted());
-        }
-    }
 
 }
