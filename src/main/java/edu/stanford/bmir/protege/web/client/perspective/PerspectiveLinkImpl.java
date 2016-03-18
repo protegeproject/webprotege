@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.inject.assistedinject.Assisted;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.MenuButton;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
+import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 
 import javax.inject.Inject;
@@ -80,4 +81,14 @@ public class PerspectiveLinkImpl extends Composite implements PerspectiveLink {
     public void setMenuButtonVisible(boolean visible) {
         menuButton.setVisible(visible);
     }
+
+    public void setSelected(boolean selected) {
+        if (selected) {
+            addStyleName(WebProtegeClientBundle.BUNDLE.style().selectionHighlightInverted());
+        }
+        else {
+            removeStyleName(WebProtegeClientBundle.BUNDLE.style().selectionHighlightInverted());
+        }
+    }
+
 }
