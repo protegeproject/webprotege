@@ -7,30 +7,29 @@
             cursor: pointer;
         }
 
-        /*.topBar {*/
-            /*background: #707070;*/
-            /*height: 2px;*/
-            /*width: 100%;*/
-            /*margin-bottom: 2px;*/
-        /*}*/
+        .topBar {
+            background: #707070;
+            height: 2px;
+            width: 100%;
+            margin-bottom: 2px;
+        }
 
-        /*.middleBar {*/
-            /*background: #707070;*/
-            /*height: 2px;*/
-            /*width: 100%;*/
-            /*margin-bottom: 2px;*/
-        /*}*/
+        .middleBar {
+            background: #707070;
+            height: 2px;
+            width: 100%;
+            margin-bottom: 2px;
+        }
 
-        /*.bottomBar {*/
-            /*background: #707070;*/
-            /*height: 2px;*/
-            /*width: 100%;*/
-        /*}*/
+        .bottomBar {
+            background: #707070;
+            height: 2px;
+            width: 100%;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" title="Menu" ui:field="main">
-        &#9776;
-        <!--<g:HTMLPanel  addStyleNames="{style.topBar}"/>-->
-        <!--<g:HTMLPanel  addStyleNames="{style.middleBar}"/>-->
-        <!--<g:HTMLPanel  addStyleNames="{style.bottomBar}"/>-->
+        <g:HTMLPanel  addStyleNames="{style.topBar}"/>
+        <g:HTMLPanel  addStyleNames="{style.middleBar}"/>
+        <g:HTMLPanel  addStyleNames="{style.bottomBar}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
