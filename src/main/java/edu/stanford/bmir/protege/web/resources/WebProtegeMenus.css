@@ -1,4 +1,4 @@
-.popup-menu {
+.popupMenu {
     background: white;
     box-shadow: 0 4px 5px rgba(0, 0, 0, .2);
     border: 1px solid #e0e0e0;
@@ -11,12 +11,12 @@
     outline: thick;
 }
 
-.popup-menu-inner {
+.popupMenuInner {
     background: #ffffff;
     box-sizing: border-box;
 }
 
-.popup-menu-item {
+.popupMenuItem {
     background: none repeat scroll 0 0 #ffffff;
     cursor: pointer;
     font-size: 14px;
@@ -28,9 +28,14 @@
     box-sizing: border-box;
 }
 
-.popup-menu-item:hover {
+.popupMenuItem:hover {
     background: dodgerblue;
     color: #ffffff;
+}
+
+.popupMenuItem-disabled {
+    background: #ffffff;
+    color: #e0e0e0;
 }
 
 .separator {

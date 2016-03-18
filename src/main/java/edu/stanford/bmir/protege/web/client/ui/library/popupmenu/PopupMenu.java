@@ -2,9 +2,9 @@ package edu.stanford.bmir.protege.web.client.ui.library.popupmenu;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.*;
+import edu.stanford.bmir.protege.web.client.ui.AbstractUiAction;
+import edu.stanford.bmir.protege.web.client.ui.UIAction;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
@@ -30,31 +30,19 @@ public class PopupMenu {
         popupPanel.setWidget(holder);
     }
 
-    public void addItem(final String text, final ClickHandler clickHandler) {
-        addItem(new SafeHtmlBuilder().appendEscaped(text).toSafeHtml(), clickHandler);
-    }
-
-    public void addItem(final SafeHtml safeHtml, final ClickHandler clickHandler) {
-        PopupMenuItem popupMenuItem = new PopupMenuItem(safeHtml) {
+    public UIAction addItem(final String label, final ClickHandler clickHandler) {
+        AbstractUiAction action = new AbstractUiAction(label) {
             @Override
-            public void handleClicked(ClickEvent clickEvent) {
+            public void execute(ClickEvent clickEvent) {
                 clickHandler.onClick(clickEvent);
             }
         };
-        addItem(popupMenuItem);
+        addItem(action);
+        return action;
     }
 
-    public void addItem(final PopupMenuItem popupMenuItem) {
-        HTML panel = new HTML(popupMenuItem.getHtml());
-        panel.addStyleName(BUNDLE.menu().popupMenuItem());
-        holder.add(panel);
-        panel.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                hide();
-                popupMenuItem.handleClicked(event);
-            }
-        });
+    public void addItem(final UIAction action) {
+        holder.add(new MenuItem(action, this));
     }
 
     public void addSeparator() {

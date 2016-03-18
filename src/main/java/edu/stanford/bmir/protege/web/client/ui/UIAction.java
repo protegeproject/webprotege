@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 13/06/2014
  */
@@ -21,5 +23,5 @@ public interface UIAction {
 
     boolean isEnabled();
 
-    void execute();
+    void execute(ClickEvent clickEvent);
 }
