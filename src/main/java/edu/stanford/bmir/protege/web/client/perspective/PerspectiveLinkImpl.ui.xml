@@ -2,8 +2,27 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:popupmenu="urn:import:edu.stanford.bmir.protege.web.client.ui.library.popupmenu">
 
+    <ui:style>
+        .label {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .menuButtonContainer {
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+            top: 1px;
+        }
+        .button {
+            display: inline-block;
+        }
+    </ui:style>
+
     <g:HTMLPanel>
-        <g:InlineLabel ui:field="label"/>
-        <popupmenu:MenuButton ui:field="menuButton"/>
+        <g:Label ui:field="label" addStyleNames="{style.label}"/>
+        <g:HTMLPanel addStyleNames="{style.menuButtonContainer}">
+            <popupmenu:MenuButton ui:field="menuButton" addStyleNames="{style.button}"/>
+        </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>
