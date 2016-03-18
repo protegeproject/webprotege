@@ -45,6 +45,4 @@
 
 	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
 
-    <stylesheet src="widgetmap.css"/>
-
 </module>
