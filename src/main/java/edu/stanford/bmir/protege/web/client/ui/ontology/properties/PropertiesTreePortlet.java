@@ -499,73 +499,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
     }
 
 
-//    private void doCreateAnnotationProperty(OWLAnnotationProperty property, CreateEntityInfo createEntityInfo) {
-//        String projectName = getProject().getDisplayName();
-//        final String superPropName;
-//        if (property != null) {
-//            superPropName = property.getIRI().toString();
-//        }
-//        else {
-//            superPropName = null;
-//        }
-//        for (String browserText : createEntityInfo.getBrowserTexts()) {
-//            OntologyServiceManager.getInstance().createAnnotationProperty(projectName, browserText, superPropName, GlobalSettings.get().getUserName(), "Created object property", new AsyncCallback<EntityData>() {
-//                @Override
-//                public void onFailure(Throwable caught) {
-//                    MessageBox.alert("There was a problem creating the property.  Please try again.");
-//                }
-//
-//                @Override
-//                public void handleSuccess(EntityData result) {
-//                    //                        refreshFromServer(500);
-//                    if (lastSelectedTreeNode != null) {
-//                        lastSelectedTreeNode.expand();
-//                    }
-//                }
-//            });
-//        }
-//    }
-
-//    private void doCreateDataProperty(OWLDataProperty property, CreateEntityInfo createEntityInfo) {
-//        String projectName = getProject().getDisplayName();
-//        for (String browserText : createEntityInfo.getBrowserTexts()) {
-//            OntologyServiceManager.getInstance().createDatatypeProperty(projectName, browserText, property.getIRI().toString(), GlobalSettings.get().getUserName(), "Created object property", new AsyncCallback<EntityData>() {
-//                @Override
-//                public void onFailure(Throwable caught) {
-//                    MessageBox.alert("There was a problem creating the property.  Please try again.");
-//                }
-//
-//                @Override
-//                public void handleSuccess(EntityData result) {
-//                    //                        refreshFromServer(500);
-//                    if (lastSelectedTreeNode != null) {
-//                        lastSelectedTreeNode.expand();
-//                    }
-//                }
-//            });
-//        }
-//    }
-
-//    private void doCreateObjectProperty(OWLObjectProperty property, CreateEntityInfo createEntityInfo) {
-//        String projectName = getProject().getDisplayName();
-//        for (String browserText : createEntityInfo.getBrowserTexts()) {
-//            OntologyServiceManager.getInstance().createObjectProperty(projectName, browserText, property.getIRI().toString(), GlobalSettings.get().getUserName(), "Created object property", new AsyncCallback<EntityData>() {
-//                @Override
-//                public void onFailure(Throwable caught) {
-//                    MessageBox.alert("There was a problem creating the property.  Please try again.");
-//                }
-//
-//                @Override
-//                public void handleSuccess(EntityData result) {
-//                    //                        refreshFromServer(500);
-//                    if (lastSelectedTreeNode != null) {
-//                        lastSelectedTreeNode.expand();
-//                    }
-//                }
-//            });
-//        }
-//    }
-
     protected void onDeleteProperty() {
 
         Optional<OWLEntity> selection = getSelectedEntity();
@@ -600,7 +533,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         if (propertyEntity == null) {
             return;
         }
-        dispatchServiceManager.execute(new DeleteEntityAction(propertyEntity, getProjectId()), new DeletePropertyHandler());
+        dispatchServiceManager.execute(new DeleteEntityAction(propertyEntity, getProjectId()), new DeletePropertyHandler(propertyEntity));
     }
 
     private TreeNode getDirectChild(TreeNode parentNode, String childId) {
@@ -788,6 +721,12 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
     class DeletePropertyHandler extends DispatchServiceCallback<DeleteEntityResult> {
 
+        private final OWLEntity entity;
+
+        public DeletePropertyHandler(OWLEntity entity) {
+            this.entity = entity;
+        }
+
         @Override
         protected String getErrorMessage(Throwable throwable) {
             return "Error deleting property";
@@ -796,6 +735,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         @Override
         public void handleSuccess(DeleteEntityResult result) {
             GWT.log("Delete successfully property ", null);
+            onPropertyDeleted(new EntityData(entity.toStringID()));
         }
     }
 
