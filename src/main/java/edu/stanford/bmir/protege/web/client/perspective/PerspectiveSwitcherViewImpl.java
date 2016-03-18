@@ -118,7 +118,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
                     addBookMarkedPerspectiveLinkHandler.handleAddBookmarkedPerspective(perspectiveId);
                 }
             };
-            action.setEnabled(false);
+            action.setEnabled(!displayedPerspectives.contains(perspectiveId));
             popupMenu.addItem(action);
         }
         popupMenu.addSeparator();

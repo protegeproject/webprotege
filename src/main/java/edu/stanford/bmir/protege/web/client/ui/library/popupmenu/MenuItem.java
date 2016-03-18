@@ -68,7 +68,7 @@ public class MenuItem extends Composite implements HasEnabled, HasText {
     @Override
     public void setEnabled(boolean enabled) {
         if(enabled) {
-            removeStyleName(WebProtegeClientBundle.BUNDLE.menu().popupMenuItem());
+            removeStyleName(WebProtegeClientBundle.BUNDLE.menu().popupMenuItemDisabled());
         }
         else {
             addStyleName(WebProtegeClientBundle.BUNDLE.menu().popupMenuItemDisabled());
