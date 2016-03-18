@@ -5,31 +5,28 @@
             display: inline-block;
             width: 12px;
             cursor: pointer;
+            height: 10px;
         }
 
-        .topBar {
-            background: #707070;
-            height: 2px;
-            width: 100%;
-            margin-bottom: 2px;
+        .container {
+            position: absolute;
         }
 
-        .middleBar {
-            background: #707070;
-            height: 2px;
-            width: 100%;
-            margin-bottom: 2px;
+        .container svg {
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
-        .bottomBar {
-            background: #707070;
-            height: 2px;
-            width: 100%;
-        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" title="Menu" ui:field="main">
-        <g:HTMLPanel  addStyleNames="{style.topBar}"/>
-        <g:HTMLPanel  addStyleNames="{style.middleBar}"/>
-        <g:HTMLPanel  addStyleNames="{style.bottomBar}"/>
+        <g:HTMLPanel addStyleNames="{style.container}">
+            <svg width="12" height="10">
+                <rect x="0" y="0" width="12" height="2" style="stroke-width:0;fill:currentColor;"/>
+                <rect x="0" y="4" width="12" height="2" style="stroke-width:0;fill:currentColor;"/>
+                <rect x="0" y="8" width="12" height="2" style="stroke-width:0;fill:currentColor;"/>
+            </svg>
+        </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>
