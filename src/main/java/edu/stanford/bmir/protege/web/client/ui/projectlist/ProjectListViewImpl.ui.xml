@@ -29,17 +29,17 @@
             width: 400px;
             flex-grow: 0;
             padding: 5px;
+            align-items: baseline;
         }
         .ownerCol {
             width: 200px;
             flex-grow: 0;
             padding: 5px;
+            align-items: baseline;
         }
         .menuButtonCol {
             flex-grow: 0;
-            padding-top: 3px;
-            padding-right: 10px;
-            padding-left: 10px;
+            align-items: baseline;
         }
 
         .projectList {
