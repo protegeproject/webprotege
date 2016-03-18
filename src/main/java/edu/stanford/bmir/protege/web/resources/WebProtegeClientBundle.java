@@ -290,7 +290,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
         String popupMenuItem();
 
-        @ClassName("popupMenuItem-disabled")
         String popupMenuItemDisabled();
 
         String separator();

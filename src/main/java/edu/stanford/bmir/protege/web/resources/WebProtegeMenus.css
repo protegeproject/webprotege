@@ -33,7 +33,12 @@
     color: #ffffff;
 }
 
-.popupMenuItem-disabled {
+.popupMenuItemDisabled {
+    background: #ffffff;
+    color: #e0e0e0;
+}
+
+.popupMenuItemDisabled:hover {
     background: #ffffff;
     color: #e0e0e0;
 }
