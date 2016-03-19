@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.perspective;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceChangeEvent;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
@@ -22,7 +23,9 @@ import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
 import edu.stanford.protege.widgetmap.shared.node.Node;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 16/05/2014
@@ -180,15 +183,22 @@ public class PerspectivePresenter implements HasDispose {
                 });
     }
 
-    private void savePerspectiveLayout(PerspectiveId perspectiveId, Optional<Node> node) {
-        GWT.log("Saving perspective: " + perspectiveId);
-        UserId currentUserId = loggedInUserProvider.getCurrentUserId();
-        if(currentUserId.isGuest()) {
-            return;
+    private final Map<PerspectiveId, SavePerspectiveRunner> perspectivesToSave = new HashMap<>();
+
+    private final Timer perspectiveSaveTimer = new Timer() {
+        @Override
+        public void run() {
+            for(SavePerspectiveRunner runner : perspectivesToSave.values()) {
+                runner.savePerspective();
+            }
+            perspectivesToSave.clear();
         }
-        PerspectiveLayout layout = new PerspectiveLayout(perspectiveId, node);
-        dispatchServiceManager.execute(new SetPerspectiveLayoutAction(projectId, currentUserId, layout), new DispatchServiceCallback<SetPerspectiveLayoutResult>() {
-        });
+    };
+
+    private void savePerspectiveLayout(PerspectiveId perspectiveId, Optional<Node> node) {
+        perspectivesToSave.put(perspectiveId, new SavePerspectiveRunner(projectId, perspectiveId, node, dispatchServiceManager, loggedInUserProvider));
+        perspectiveSaveTimer.cancel();
+        perspectiveSaveTimer.schedule(1000);
     }
 
 
@@ -196,6 +206,41 @@ public class PerspectivePresenter implements HasDispose {
     public void dispose() {
         for(Perspective tab : perspectiveCache.values()) {
             tab.dispose();
+        }
+    }
+
+
+    private static class SavePerspectiveRunner {
+
+        private final ProjectId projectId;
+
+        private final PerspectiveId perspectiveId;
+
+        private final Optional<Node> node;
+
+        private final DispatchServiceManager dispatchServiceManager;
+
+        private final LoggedInUserProvider loggedInUserProvider;
+
+
+
+        public SavePerspectiveRunner(ProjectId projectId, PerspectiveId perspectiveId, Optional<Node> node, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider) {
+            this.projectId = projectId;
+            this.perspectiveId = perspectiveId;
+            this.node = node;
+            this.dispatchServiceManager = dispatchServiceManager;
+            this.loggedInUserProvider = loggedInUserProvider;
+        }
+
+        public void savePerspective() {
+            GWT.log("[PerspectivePresenter] Saving perspective: " + perspectiveId);
+            UserId currentUserId = loggedInUserProvider.getCurrentUserId();
+            if(currentUserId.isGuest()) {
+                return;
+            }
+            PerspectiveLayout layout = new PerspectiveLayout(perspectiveId, node);
+            dispatchServiceManager.execute(new SetPerspectiveLayoutAction(projectId, currentUserId, layout), new DispatchServiceCallback<SetPerspectiveLayoutResult>() {
+            });
         }
     }
 }
