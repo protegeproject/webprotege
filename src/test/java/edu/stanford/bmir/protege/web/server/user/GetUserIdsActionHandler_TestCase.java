@@ -6,7 +6,6 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsAction;
 import edu.stanford.bmir.protege.web.shared.user.GetUserIdsResult;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.server.metaproject.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

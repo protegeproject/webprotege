@@ -13,7 +13,6 @@ import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.server.Session;
 import org.semanticweb.owlapi.model.*;
 
 import java.text.DecimalFormat;
