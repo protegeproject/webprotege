@@ -14,4 +14,6 @@ public interface ChangeListView extends IsWidget {
     void addSeparator(String separatorText);
 
     void clear();
+
+    void setDetailsVisible(boolean showDetails);
 }

@@ -34,4 +34,6 @@ public interface ChangeDetailsView extends IsWidget {
     void setRevertRevisionVisible(boolean visible);
 
     void setRevertRevisionHandler(RevertRevisionHandler revertRevisionHandler);
+
+    void setDetailsVisible(boolean detailsVisible);
 }

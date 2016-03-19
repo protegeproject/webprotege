@@ -35,6 +35,13 @@ public class PortletAction implements HasEnabled, HasStateChangedHandler<Portlet
         return name;
     }
 
+    public void setName(String name) {
+        if (!this.name.equals(name)) {
+            this.name = name;
+            stateChangedHandler.handleStateChanged(this);
+        }
+    }
+
     public PortletActionHandler getActionHandler() {
         return actionHandler;
     }

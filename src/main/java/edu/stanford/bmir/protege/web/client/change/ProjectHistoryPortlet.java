@@ -31,12 +31,30 @@ public class ProjectHistoryPortlet extends AbstractOWLEntityPortlet {
         }
     });
 
+    private final PortletAction toggleDetailsAction;
+
+    private boolean showDetails = true;
+
     @Inject
     public ProjectHistoryPortlet(ChangeListViewPresenter presenter, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.presenter = presenter;
-        ChangeListView changeListView = presenter.getView();
+        final ChangeListView changeListView = presenter.getView();
         addPortletAction(refreshAction);
+        toggleDetailsAction = new PortletAction("Hide details", new PortletActionHandler() {
+            @Override
+            public void handleActionInvoked(PortletAction action, ClickEvent event) {
+                showDetails = !showDetails;
+                changeListView.setDetailsVisible(showDetails);
+                if(showDetails) {
+                    action.setName("Hide details");
+                }
+                else {
+                    action.setName("Show details");
+                }
+            }
+        });
+        addPortletAction(toggleDetailsAction);
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
         getContentHolder().setWidget(scrollPanel);
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {

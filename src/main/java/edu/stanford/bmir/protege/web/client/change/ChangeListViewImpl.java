@@ -5,6 +5,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Matthew Horridge
@@ -40,5 +41,16 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
     @Override
     public void clear() {
         rootElement.clear();
+    }
+
+    @Override
+    public void setDetailsVisible(boolean detailsVisible) {
+        for(int i = 0; i < rootElement.getWidgetCount(); i++) {
+            Widget widget = rootElement.getWidget(i);
+            if (widget instanceof ChangeDetailsView) {
+                ChangeDetailsView view = (ChangeDetailsView) widget;
+                view.setDetailsVisible(detailsVisible);
+            }
+        }
     }
 }

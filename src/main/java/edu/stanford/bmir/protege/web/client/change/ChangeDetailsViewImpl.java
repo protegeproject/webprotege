@@ -127,6 +127,12 @@ public class ChangeDetailsViewImpl extends Composite implements ChangeDetailsVie
     }
 
     @Override
+    public void setDetailsVisible(boolean detailsVisible) {
+        diffView.asWidget().setVisible(detailsVisible);
+        subjectsField.setVisible(detailsVisible);
+    }
+
+    @Override
     public void setChangeCount(int changeCount) {
         changeCountField.setText(Integer.toString(changeCount));
     }
