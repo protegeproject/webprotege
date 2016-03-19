@@ -175,9 +175,13 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                         public void onClick(ClickEvent event) {
                             Optional<OWLEntity> selectedEntity = getSelectedEntity();
                             if (selectedEntity.isPresent()) {
-                                SafeHtmlBuilder builder = new SafeHtmlBuilder();
-                                builder.appendEscaped(selectedEntity.get().getIRI().toQuotedString());
-                                MessageBox.showMessage("IRI", builder.toSafeHtml().asString());
+                                String iri = selectedEntity.get().getIRI().toQuotedString();
+                                InputBox.showOkDialog("Class IRI", true, iri, new InputBoxHandler() {
+                                    @Override
+                                    public void handleAcceptInput(String input) {
+
+                                    }
+                                });
                             }
                         }
                     });

@@ -4,6 +4,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
@@ -28,8 +31,11 @@ import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyEntityData;
 import edu.stanford.bmir.protege.web.client.rpc.data.PropertyType;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
+import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityDialogController;
 import edu.stanford.bmir.protege.web.client.ui.ontology.entity.CreateEntityInfo;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
@@ -102,6 +108,46 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             @Override
             public void onExpandNode(TreeNode node) {
                 getSubProperties(node.getId(), true);
+            }
+
+            @Override
+            public void onContextMenu(TreeNode node, EventObject e) {
+                PopupMenu contextMenu = new PopupMenu();
+                contextMenu.addItem("Show IRI", new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        Optional<OWLEntity> selectedEntity = getSelectedEntity();
+                        if (selectedEntity.isPresent()) {
+                            String iri = selectedEntity.get().getIRI().toQuotedString();
+                            InputBox.showOkDialog("Property IRI", true, iri, new InputBoxHandler() {
+                                @Override
+                                public void handleAcceptInput(String input) {
+
+                                }
+                            });
+                        }
+                    }
+                });
+                contextMenu.addItem("Show direct link", new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        String location = Window.Location.getHref();
+                        InputBox.showOkDialog("Direct link", true, location, new InputBoxHandler() {
+                            @Override
+                            public void handleAcceptInput(String input) {
+
+                            }
+                        });
+                    }
+                });
+                contextMenu.addSeparator();
+                contextMenu.addItem("Refresh tree", new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        onRefresh();
+                    }
+                });
+                contextMenu.show(e.getXY()[0], e.getXY()[1] + 5);
             }
         });
 
@@ -200,6 +246,19 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         updateButtonStates();
     }
 
+    @Override
+    protected void onRefresh() {
+        treePanel.setVisible(false);
+        TreeNode rootNode = treePanel.getRootNode();
+        rootNode.collapse();
+        for(Node child : rootNode.getChildNodes()) {
+            rootNode.removeChild(child);
+        }
+        rootNode.expand();
+        getSubProperties(rootNode.getId(), true);
+        treePanel.setVisible(true);
+        updateButtonStates();
+    }
 
     private Optional<OWLEntityData> getSelectedTreeNodeEntityData() {
         TreeSelectionModel tsm = treePanel.getSelectionModel();
@@ -703,6 +762,8 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
                     getSubProperties(childName.getName(), false);
                 }
             }
+
+            handleAfterSetEntity(getSelectedEntity());
         }
 
         private boolean hasChild(String parentId, String childId) {
