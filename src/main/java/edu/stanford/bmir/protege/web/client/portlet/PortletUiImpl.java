@@ -80,6 +80,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
             @Override
             public void handleStateChanged(PortletAction value) {
                 button.setEnabled(value.isEnabled());
+                button.setText(value.getName());
             }
         });
     }

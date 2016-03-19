@@ -89,10 +89,16 @@
             padding-right: 2px;
             padding-left: 2px;
         }
+        .container {
+            display: inline-block; width: 100%
+        }
+        .main:hover {
+            background-color: #f0f0f0;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
-        <div style="display: inline-block;">
+        <g:HTMLPanel addStyleNames="{style.container}">
             <div>
                 <g:InlineLabel ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
                 <g:InlineLabel ui:field="revisionField" addStyleNames="{style.revisionField}"/>
@@ -117,7 +123,7 @@
             <g:Label
                     text="There are too many changes to show here.  If you would like to view them, please download this revision."
                     ui:field="tooManyChangesMessage" addStyleNames="{style.tooManyChangesMessage}"/>
-        </div>
+        </g:HTMLPanel>
 
     </g:HTMLPanel>
 </ui:UiBinder>
