@@ -31,9 +31,13 @@ public interface ChangeDetailsView extends IsWidget {
 
     void setChangeCount(int changeCount);
 
+    void setDetailsVisible(boolean detailsVisible);
+
     void setRevertRevisionVisible(boolean visible);
 
     void setRevertRevisionHandler(RevertRevisionHandler revertRevisionHandler);
 
-    void setDetailsVisible(boolean detailsVisible);
+    void setDownloadRevisionVisible(boolean visible);
+
+    void setDownloadRevisionHandler(DownloadRevisionHandler downloadRevisionHandler);
 }

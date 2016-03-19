@@ -10,11 +10,13 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.download.ProjectRevisionDownloader;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.shared.TimeUtil;
 import edu.stanford.bmir.protege.web.shared.change.*;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
+import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.pagination.Page;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -37,6 +39,8 @@ public class ChangeListViewPresenter {
 
     private boolean revertChangesVisible = false;
 
+    private boolean downloadVisible = false;
+
     private Optional<ProjectId> projectId = Optional.absent();
 
     @Inject
@@ -49,6 +53,10 @@ public class ChangeListViewPresenter {
         this.revertChangesVisible = revertChangesVisible;
     }
 
+    public void setDownloadVisible(boolean downloadVisible) {
+        this.downloadVisible = downloadVisible;
+    }
+
     public ChangeListView getView() {
         return view;
     }
@@ -59,7 +67,7 @@ public class ChangeListViewPresenter {
         dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.<OWLEntity>absent()), new DispatchServiceCallback<GetProjectChangesResult>() {
             @Override
             public void handleSuccess(GetProjectChangesResult result) {
-                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT, revertChangesVisible);
+                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT, revertChangesVisible, downloadVisible);
             }
         });
     }
@@ -70,7 +78,7 @@ public class ChangeListViewPresenter {
         dispatchServiceManager.execute(new GetProjectChangesAction(projectId, Optional.of(entity)), new DispatchServiceCallback<GetProjectChangesResult>() {
             @Override
             public void handleSuccess(GetProjectChangesResult result) {
-                fillView(result.getChanges(), SubjectDisplay.DO_NOT_DISPLAY_SUBJECT, revertChangesVisible);
+                fillView(result.getChanges(), SubjectDisplay.DO_NOT_DISPLAY_SUBJECT, revertChangesVisible, downloadVisible);
             }
         });
     }
@@ -81,12 +89,12 @@ public class ChangeListViewPresenter {
         dispatchServiceManager.execute(new GetWatchedEntityChangesAction(projectId, userId), new DispatchServiceCallback<GetWatchedEntityChangesResult>() {
             @Override
             public void handleSuccess(GetWatchedEntityChangesResult result) {
-                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT, revertChangesVisible);
+                fillView(result.getChanges(), SubjectDisplay.DISPLAY_SUBJECT, revertChangesVisible, downloadVisible);
             }
         });
     }
 
-    private void fillView(ImmutableList<ProjectChange> changes, SubjectDisplay subjectDisplay, boolean revertChangesVisible) {
+    private void fillView(ImmutableList<ProjectChange> changes, SubjectDisplay subjectDisplay, boolean revertChangesVisible, boolean downloadVisible) {
         view.clear();
         List<ProjectChange> projectChanges = new ArrayList<>(changes);
         Collections.sort(projectChanges, Ordering.compound(Arrays.asList(
@@ -118,10 +126,21 @@ public class ChangeListViewPresenter {
             view.setRevertRevisionVisible(revertChangesVisible);
             view.setRevertRevisionHandler(new RevertRevisionHandler() {
                 @Override
-                public void handleRevertRevision() {
+                public void handleRevertRevision(RevisionNumber revisionNumber) {
                     ChangeListViewPresenter.this.handleRevertRevision(projectChange);
                 }
             });
+            view.setDownloadRevisionHandler(new DownloadRevisionHandler() {
+                @Override
+                public void handleDownloadRevision(RevisionNumber revisionNumber) {
+                    ProjectRevisionDownloader downloader = new ProjectRevisionDownloader(
+                            projectId.get(),
+                            revisionNumber,
+                            DownloadFormatExtension.owl);
+                    downloader.download();
+                }
+            });
+            view.setDownloadRevisionVisible(downloadVisible);
             Page<DiffElement<String, SafeHtml>> page = projectChange.getDiff();
             List<DiffElement<String, SafeHtml>> pageElements = page.getPageElements();
             if (page.getPageCount() == 1) {

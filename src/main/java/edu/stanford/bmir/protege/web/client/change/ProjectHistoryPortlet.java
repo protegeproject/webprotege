@@ -4,6 +4,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
@@ -31,14 +33,18 @@ public class ProjectHistoryPortlet extends AbstractOWLEntityPortlet {
         }
     });
 
+    private final LoggedInUserProjectPermissionChecker permissionChecker;
+
     private final PortletAction toggleDetailsAction;
 
     private boolean showDetails = true;
 
     @Inject
-    public ProjectHistoryPortlet(ChangeListViewPresenter presenter, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+    public ProjectHistoryPortlet(ChangeListViewPresenter presenter, LoggedInUserProjectPermissionChecker permissionChecker, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.presenter = presenter;
+        this.permissionChecker = permissionChecker;
+        presenter.setDownloadVisible(true);
         final ChangeListView changeListView = presenter.getView();
         addPortletAction(refreshAction);
         toggleDetailsAction = new PortletAction("Hide details", new PortletActionHandler() {
@@ -85,8 +91,15 @@ public class ProjectHistoryPortlet extends AbstractOWLEntityPortlet {
 
     @Override
     protected void onRefresh() {
-        ProjectId projectId = getProjectId();
-        presenter.setChangesForProject(projectId);
         refreshAction.setEnabled(false);
+        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+            @Override
+            public void handleSuccess(Boolean result) {
+                ProjectId projectId = getProjectId();
+                presenter.setRevertChangesVisible(result);
+                presenter.setChangesForProject(projectId);
+            }
+        });
+
     }
 }

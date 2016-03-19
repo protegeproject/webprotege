@@ -5,9 +5,9 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 19/03/15
+ * 19/03/16
  */
-public interface RevertRevisionHandler {
+public interface DownloadRevisionHandler {
 
-    void handleRevertRevision(RevisionNumber revisionNumber);
+    void handleDownloadRevision(RevisionNumber revisionNumber);
 }
