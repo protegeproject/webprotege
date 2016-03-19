@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.classes;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -208,15 +209,13 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                 }
             };
         }
-
-        Timer t = new Timer() {
+        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
-            public void run() {
+            public void execute() {
                 EntityData root = new EntityData(OWLRDFVocabulary.OWL_THING.getIRI().toString(), "owl:Thing");
                 createRoot(root);
             }
-        };
-        t.schedule(1000);
+        });
     }
 
     private void registerEventHandlers() {
