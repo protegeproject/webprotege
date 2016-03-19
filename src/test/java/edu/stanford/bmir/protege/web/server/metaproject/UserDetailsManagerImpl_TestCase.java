@@ -3,18 +3,18 @@ package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManagerImpl;
+import edu.stanford.bmir.protege.web.server.user.UserRecord;
 import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
 import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.server.metaproject.MetaProject;
-import edu.stanford.smi.protege.server.metaproject.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.lang.NullPointerException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -26,15 +26,6 @@ public class UserDetailsManagerImpl_TestCase {
 
     private UserDetailsManagerImpl userDetailsManagerImpl;
 
-    @Mock
-    private MetaProject metaProject;
-
-    @Mock
-    private MetaProjectStore metaProjectStore;
-
-    @Mock
-    private User user;
-
     private String userName = "THE USER NAME";
 
     private String email = "THE EMAIL";
@@ -42,12 +33,28 @@ public class UserDetailsManagerImpl_TestCase {
     @Mock
     private UserRecordRepository userRecordRepository;
 
+    private List<UserRecord> userRecords = new ArrayList<>();
+
+    @Mock
+    private UserRecord userRecord;
+
+    @Mock
+    private UserId userId;
+
     @Before
     public void setUp()
     {
+        userRecords.clear();
+
+        when(userId.getUserName()).thenReturn(userName);
+        when(userRecord.getUserId()).thenReturn(userId);
+        when(userRecord.getEmailAddress()).thenReturn(email);
+        userRecords.add(userRecord);
+
+        when(userRecordRepository.findAll()).thenReturn(userRecords.stream());
+        when(userRecordRepository.findOneByEmailAddress(email)).thenReturn(java.util.Optional.of(userRecord));
+
         userDetailsManagerImpl = new UserDetailsManagerImpl(userRecordRepository);
-        when(user.getName()).thenReturn(userName);
-        when(user.getEmail()).thenReturn(email);
     }
 
     @Test(expected = NullPointerException.class)
@@ -58,26 +65,22 @@ public class UserDetailsManagerImpl_TestCase {
 
     @Test
     public void should_getUserIds() {
-        when(metaProject.getUsers()).thenReturn(Collections.singleton(user));
         assertThat(userDetailsManagerImpl.getUserIds(), hasItem(UserId.getUserId(userName)));
     }
 
     @Test
     public void should_getEmail() {
-        when(metaProject.getUser(userName)).thenReturn(user);
         assertThat(userDetailsManagerImpl.getEmail(UserId.getUserId(userName)), is(Optional.of(email)));
     }
 
     @Test
     public void shouldGetUserIdByEmail() {
-        when(metaProject.getUsers()).thenReturn(Collections.singleton(user));
         EmailAddress emailAddress = new EmailAddress(email);
         assertThat(userDetailsManagerImpl.getUserIdByEmailAddress(emailAddress), is(Optional.of(UserId.getUserId(userName))));
     }
 
     @Test
     public void shouldNotGetUserIdByEmail() {
-        when(metaProject.getUsers()).thenReturn(Collections.singleton(user));
         EmailAddress emailAddress = new EmailAddress("Other Email");
         assertThat(userDetailsManagerImpl.getUserIdByEmailAddress(emailAddress), is(Optional.absent()));
     }

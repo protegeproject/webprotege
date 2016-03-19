@@ -6,9 +6,6 @@ import edu.stanford.bmir.protege.web.server.filter.WebProtegeWebAppFilter;
 import edu.stanford.bmir.protege.web.server.init.WebProtegeConfigurationException;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
-import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectStore;
-import edu.stanford.smi.protege.server.metaproject.MetaProject;
-import edu.stanford.smi.protege.util.Log;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import javax.servlet.ServletContextEvent;
@@ -47,16 +44,8 @@ public class WebProtegeInitializer implements ServletContextListener {
         }
     }
 
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
 
-    public void contextDestroyed(ServletContextEvent sce) {
-        try {
-            MetaProject metaProject = WebProtegeInjector.get().getInstance(MetaProject.class);
-            MetaProjectStore metaProjectStore = WebProtegeInjector.get().getInstance(MetaProjectStore.class);
-            metaProjectStore.saveMetaProjectNow(metaProject);
-        }
-        catch (Throwable e) {
-            WebProtegeInjector.get().getInstance(WebProtegeLogger.class).severe(e);
-        }
-        Log.getLogger(WebProtegeInitializer.class).info("WebProtege cleanly disposed");
     }
 }
