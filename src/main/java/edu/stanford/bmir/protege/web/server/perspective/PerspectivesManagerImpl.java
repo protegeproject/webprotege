@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -53,7 +54,7 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
     private ImmutableList<PerspectiveId> readPerspectives(File file) {
         try {
             PerspectiveListSerializer serializer = new PerspectiveListSerializer();
-            return ImmutableList.copyOf(serializer.deserializePerspectiveList(file));
+            return ImmutableList.copyOf(new LinkedHashSet<>(serializer.deserializePerspectiveList(file)));
         } catch (IOException e) {
             logger.warn("Error reading perspectives file: {}", file.getAbsoluteFile(), e);
             return ImmutableList.copyOf(perspectiveIds);
@@ -64,7 +65,7 @@ public class PerspectivesManagerImpl implements PerspectivesManager {
     public void setPerspectives(ProjectId projectId, UserId userId, List<PerspectiveId> perspectives) {
         File file = perspectiveFileManager.getPerspectiveListForUser(projectId, userId);
         file.getParentFile().mkdirs();
-        writePerspectives(file, perspectives);
+        writePerspectives(file, new ArrayList<>(new LinkedHashSet<>(perspectives)));
     }
 
     private void writePerspectives(File toFile, List<PerspectiveId> perspectives) {
