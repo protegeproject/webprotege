@@ -26,8 +26,11 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
     @UiField
     protected HTMLPanel rootElement;
 
+    private boolean detailsVisible = true;
+
     @Override
     public void addChangeDetailsView(ChangeDetailsView view) {
+        view.setDetailsVisible(detailsVisible);
         rootElement.add(view);
     }
 
@@ -52,5 +55,6 @@ public class ChangeListViewImpl extends Composite implements ChangeListView {
                 view.setDetailsVisible(detailsVisible);
             }
         }
+        this.detailsVisible = detailsVisible;
     }
 }

@@ -1,7 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:diff="urn:import:edu.stanford.bmir.protege.web.client.diff"
-             xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel">
+             xmlns:timelabel="urn:import:edu.stanford.bmir.protege.web.client.ui.library.timelabel"
+             xmlns:popupmenu="urn:import:edu.stanford.bmir.protege.web.client.ui.library.popupmenu">
 
     <ui:style>
         .main {
@@ -19,18 +20,6 @@
             padding-left: 24px;
         }
 
-        .revisionField {
-            font-size: 10px;
-            color: #ffffff;
-            background-color: #cbcbcb;
-            float: right;
-            padding: 1px;
-            margin-right: 5px;
-            font-weight: bold;
-            border-radius: 2px;
-            padding-left: 2px;
-            padding-right: 2px;
-        }
 
         .revertButton {
             border: none;
@@ -95,13 +84,37 @@
         .main:hover {
             background-color: #f0f0f0;
         }
+
+        .rightContainer {
+            float: right;
+        }
+
+        .revisionField {
+            font-size: 10px;
+            color: #ffffff;
+            background-color: #aaaaaa;
+            padding: 1px;
+            margin-right: 5px;
+            font-weight: bold;
+            border-radius: 2px;
+            padding-left: 2px;
+            padding-right: 2px;
+            cursor: pointer;
+        }
+        .revisionField:hover {
+            background-color: #707070;
+        }
+
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.container}">
             <div>
                 <g:InlineLabel ui:field="highLevelDescriptionField" addStyleNames="{style.highLevelDescription}"/>
-                <g:InlineLabel ui:field="revisionField" addStyleNames="{style.revisionField}"/>
+                <g:HTMLPanel addStyleNames="{style.rightContainer}">
+                    <g:InlineLabel ui:field="revisionField" addStyleNames="{style.revisionField}"/>
+                </g:HTMLPanel>
+
             </div>
             <div class="{style.author}">
                 <g:SimplePanel ui:field="authorUserIcon" addStyleNames="{style.userIcon}"/>
@@ -110,10 +123,10 @@
                 <g:InlineLabel ui:field="changeCountField"/>
                 changes
                 <timelabel:ElapsedTimeLabel ui:field="timestampField" addStyleNames="{style.timestampField}"/>
-                <g:Button ui:field="revertButton" title="Revert changes in this revision"
-                          addStyleNames="{style.revertButton}">
-                    <span class="glyphicon glyphicon-backward"/>
-                </g:Button>
+                <!--<g:Button ui:field="revertButton" title="Revert changes in this revision"-->
+                          <!--addStyleNames="{style.revertButton}">-->
+                    <!--<span class="glyphicon glyphicon-backward"/>-->
+                <!--</g:Button>-->
             </div>
             <div class="{style.subjectsField}">
                 <g:InlineHTML ui:field="subjectsField"/>
