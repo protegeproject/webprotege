@@ -1,4 +1,6 @@
 @external web-protege-laf;
+@url classIconUrl svgClassIcon;
+@url annotationPropertyIconUrl svgAnnotationPropertyIcon;
 
 .webProtegeLaf {
 
@@ -71,9 +73,11 @@
     opacity:0.5;
 }
 
-@sprite .classIconInset {
-    gwt-image: 'classIcon';
-    background-position: 2px 2px;
+.classIconInset {
+    /*gwt-image: 'classIcon';*/
+    background-image: classIconUrl;
+    background-repeat: no-repeat;
+    background-position: 2px 1px;
     width: auto;
     height: auto;
     padding-left: 22px !important;
@@ -121,9 +125,11 @@
 
 
 
-@sprite .annotationPropertyIconInset {
-    gwt-image: 'annotationPropertyIcon';
-    background-position: 2px 2px;
+.annotationPropertyIconInset {
+    /*gwt-image: 'annotationPropertyIcon';*/
+    background-image: annotationPropertyIconUrl;
+    background-repeat: no-repeat;
+    background-position: 2px 1px;
     width: auto;
     height: auto;
     padding-left: 22px !important;
