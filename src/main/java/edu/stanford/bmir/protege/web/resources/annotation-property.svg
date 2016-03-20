@@ -4,9 +4,12 @@
         "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" style="color:#9BBBE3;">
     <g class="entityIcon">
-        <line x1="4" y1="9" x2="14" y2="9" style="stroke:currentColor" stroke-width="3"/>
-        <circle r="3" cx="4" cy="9" style="fill:currentColor"/>
-        <circle r="3" cx="14" cy="9" style="fill:currentColor"/>
+        <line x1="4" y1="9" x2="14" y2="9" style="stroke:currentColor" stroke-width="2"/>
+        <rect x="3" y="6" width="4" height="6" style="fill:currentColor"/>
+        <rect x="13" y="6" width="4" height="6" style="fill:currentColor"/>
+
+        <!--<circle r="3" cx="4" cy="9" style="fill:currentColor"/>-->
+        <!--<circle r="3" cx="14" cy="9" style="fill:currentColor"/>-->
     </g>
 
 </svg>
