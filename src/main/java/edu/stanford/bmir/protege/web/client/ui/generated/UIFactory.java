@@ -157,9 +157,9 @@ public class UIFactory {
             else if (portletJavaClassName.equals(IndividualsListPortlet.class.getName())) {
                 entityPortlet = individualsListPortletProvider.get();
             }
-            else if (portletJavaClassName.equals(MetricsPortlet.class.getName())) {
-                entityPortlet = metricsPortletProvider.get();
-            }
+//            else if (portletJavaClassName.equals(MetricsPortlet.class.getName())) {
+//                entityPortlet = metricsPortletProvider.get();
+//            }
             else if (portletJavaClassName.equals(PropertiesTreePortlet.class.getName())) {
                 entityPortlet = propertiesTreePortletProvider.get();
             }
@@ -241,7 +241,7 @@ public class UIFactory {
                 DiscussionThreadPortlet.class.getName(), ProjectHistoryPortlet.class.getName(),
                 ProjectFeedPortlet.class.getName(),
                 ClassTreePortlet.class.getName(),
-                IndividualsListPortlet.class.getName(), MetricsPortlet.class.getName(),
+                IndividualsListPortlet.class.getName(), //MetricsPortlet.class.getName(),
                 PropertiesTreePortlet.class.getName(),
                 EntityChangesPortlet.class.getName(), WatchedEntitiesPortlet.class.getName(),
                 OBOTermCrossProductPortlet.class.getName(),
