@@ -262,3 +262,7 @@
 .sharingDropDown {
     text-transform: lowercase;
 }
+
+.entityIcon {
+    color: #007fff;
+}

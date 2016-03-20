@@ -664,7 +664,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
             node.setIconCls(BUNDLE.style().dataPropertyIcon());
         }
         else if (type == PropertyType.ANNOTATION) {
-            node.setIconCls(BUNDLE.style().annotationPropertyIcon());
+            node.setIcon(BUNDLE.svgAnnotationPropertyIcon().getSafeUri().asString());
         }
         else {
             node.setIconCls(BUNDLE.style().objectPropertyIcon());
