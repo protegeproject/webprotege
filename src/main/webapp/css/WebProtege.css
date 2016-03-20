@@ -1707,3 +1707,8 @@ td {
     -o-animation-name: pulse;
     animation-name: pulse;
 }
+
+
+.entityIcon {
+    color: magenta;
+}

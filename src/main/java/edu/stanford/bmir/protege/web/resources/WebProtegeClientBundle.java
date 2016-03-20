@@ -50,6 +50,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("annotation-property.png")
     ImageResource annotationPropertyIcon();
 
+    @Source("annotation-property.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgAnnotationPropertyIcon();
+
     @Source("datatype.png")
     ImageResource datatypeIcon();
 
@@ -140,6 +144,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
 
     public static interface WebProtegeCss extends CssResource {
+
+        String entityIcon();
 
         String webProtegeLaf();
 
