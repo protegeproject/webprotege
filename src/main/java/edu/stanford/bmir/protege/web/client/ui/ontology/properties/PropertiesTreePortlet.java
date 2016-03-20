@@ -658,10 +658,10 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         PropertyEntityData entityData = (PropertyEntityData) node.getUserObject();
         PropertyType type = entityData.getPropertyType();
         if (type == PropertyType.OBJECT) {
-            node.setIconCls(BUNDLE.style().objectPropertyIcon());
+            node.setIcon(BUNDLE.svgPropertyIcon().getSafeUri().asString());
         }
         else if (type == PropertyType.DATATYPE) {
-            node.setIconCls(BUNDLE.style().dataPropertyIcon());
+            node.setIcon(BUNDLE.svgPropertyIcon().getSafeUri().asString());
         }
         else if (type == PropertyType.ANNOTATION) {
             node.setIcon(BUNDLE.svgAnnotationPropertyIcon().getSafeUri().asString());
