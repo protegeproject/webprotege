@@ -971,7 +971,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             final String idLocalAnnotationCnt = node.getId() + SUFFIX_ID_LOCAL_ANNOTATION_COUNT;
 
             // TODO: add a css for this
-            text = text + "<span style=\"padding-left: 2px;\"><img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.commentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(localAnnotationsCount) + " on this category.\" /></span>" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"font-size:95%;color:#15428B;font-weight:bold;\">" + localAnnotationsCount + "</span>";
+            text = text + "<span style=\"padding-left: 2px;\"><img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.svgCommentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(localAnnotationsCount) + " on this category.\" /></span>" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"font-size:95%;color:#15428B;font-weight:bold;\">" + localAnnotationsCount + "</span>";
         }
 
         final int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
