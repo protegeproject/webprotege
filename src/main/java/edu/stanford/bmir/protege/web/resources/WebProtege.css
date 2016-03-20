@@ -1,6 +1,7 @@
 @external web-protege-laf;
 @url classIconUrl svgClassIcon;
 @url annotationPropertyIconUrl svgAnnotationPropertyIcon;
+@url individualIconUrl svgIndividualIcon;
 
 .webProtegeLaf {
 
@@ -192,9 +193,10 @@
     opacity:0.5;
 }
 
-@sprite .individualIconInset {
-    gwt-image: 'individualIcon';
-    background-position: 2px 2px;
+.individualIconInset {
+    background-image: individualIconUrl;
+    background-repeat: no-repeat;
+    background-position: 2px 1px;
     width: auto;
     height: auto;
     padding-left: 22px !important;
