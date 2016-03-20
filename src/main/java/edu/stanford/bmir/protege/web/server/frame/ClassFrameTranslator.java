@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.collect.Lists;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
+import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueState;
@@ -59,6 +60,11 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
         propertyValues = new PropertyValueMinimiser().minimisePropertyValues(propertyValues, rootOntology, project);
         Collections.sort(propertyValues, new PropertyValueComparator(project));
         builder.addPropertyValues(propertyValues);
+        for(OWLSubClassOfAxiom ax : rootOntology.getSubClassAxiomsForSubClass(subject)) {
+            if(!ax.getSuperClass().isAnonymous()) {
+                builder.addClass(ax.getSuperClass().asOWLClass());
+            }
+        }
         return builder.build();
     }
 
@@ -95,9 +101,9 @@ public class ClassFrameTranslator implements EntityFrameTranslator<ClassFrame, O
 
     private Set<OWLAxiom> translateToAxioms(OWLClass subject, ClassFrame classFrame, Mode mode) {
         Set<OWLAxiom> result = new HashSet<>();
-//        for (OWLClass cls : classFrame.getClasses()) {
-//            result.add(DataFactory.get().getOWLSubClassOfAxiom(subject, cls));
-//        }
+        for (OWLClass cls : classFrame.getClassEntries()) {
+            result.add(DataFactory.get().getOWLSubClassOfAxiom(subject, cls));
+        }
         for (PropertyValue propertyValue : classFrame.getPropertyValues()) {
             AxiomPropertyValueTranslator translator = new AxiomPropertyValueTranslator();
             result.addAll(translator.getAxioms(subject, propertyValue, mode));
