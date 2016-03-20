@@ -12,18 +12,27 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+import edu.stanford.bmir.protege.web.shared.HasEntityDataProvider;
+import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValue;
 import edu.stanford.bmir.protege.web.shared.frame.PropertyValueList;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>
@@ -31,7 +40,7 @@ import java.util.ArrayList;
  * Bio-Medical Informatics Research Group<br>
  * Date: 03/12/2012
  */
-public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPresenter, EditorView<LabelledFrame<ClassFrame>> {
+public class ClassFrameEditor extends AbstractFrameEditor<LabelledFrame<ClassFrame>> implements ClassFrameEditorPresenter, EditorView<LabelledFrame<ClassFrame>> {
 
     @UiField
     protected TextBox iriField;
@@ -41,6 +50,9 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
     @UiField(provided = true)
     protected final PropertyValueListEditor properties;
+
+    @UiField(provided = true)
+    protected final PrimitiveDataListEditor classes;
 
     private LabelledFrame<ClassFrame> lastClassFrame;
 
@@ -59,18 +71,21 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     private static ClassFrameEditor2UiBinder ourUiBinder = GWT.create(ClassFrameEditor2UiBinder.class);
 
     @Inject
-    public ClassFrameEditor(PropertyValueListEditor annotations, PropertyValueListEditor properties) {
+    public ClassFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager,  PropertyValueListEditor annotations, PropertyValueListEditor properties) {
+        super(projectId, dispatchServiceManager);
         this.annotations = annotations;
         this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
+        this.classes = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
         this.properties = properties;
         this.properties.setGrammar(PropertyValueGridGrammar.getClassGrammar());
+
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         setWidget(rootElement);
 
     }
 
-    public void setValue(final LabelledFrame<ClassFrame> lcf) {
+    public void setValue(final LabelledFrame<ClassFrame> lcf, HasEntityDataProvider entityDataProvider) {
         GWT.log("[EditorView] setValue: " + lcf);
 
         setDirty(false, EventStrategy.DO_NOT_FIRE_EVENTS);
@@ -79,15 +94,17 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
         iriField.setValue(lcf.getFrame().getSubject().getIRI().toString());
         annotations.setValue(new PropertyValueList(new ArrayList<PropertyValue>(lcf.getFrame().getAnnotationPropertyValues())));
         properties.setValue(new PropertyValueList(new ArrayList<PropertyValue>(lcf.getFrame().getLogicalPropertyValues())));
-        updatePropertiesEnabled();
 
-    }
-
-    private void updatePropertiesEnabled() {
-        if(lastClassFrame == null) {
-            return;
+        List<OWLPrimitiveData> dataList = new ArrayList<>();
+        for (OWLClass cls : lcf.getFrame().getClassEntries()) {
+            final Optional<OWLEntityData> rendering = entityDataProvider.getEntityData(cls);
+            if (rendering.isPresent()) {
+                dataList.add(rendering.get());
+            }
         }
+        classes.setValue(dataList);
     }
+
 
     /**
      * Returns true if the widget is enabled, false if not.
@@ -112,7 +129,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
         iriField.setEnabled(false);
         annotations.setEnabled(enabled);
         properties.setEnabled(enabled);
-        updatePropertiesEnabled();
+        classes.setEnabled(enabled);
     }
 
     /**
@@ -136,7 +153,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
 
     @Override
     public boolean isDirty() {
-        return annotations.isDirty() || properties.isDirty() || dirty;
+        return annotations.isDirty() || classes.isDirty() || properties.isDirty() || dirty;
     }
 
 
@@ -167,6 +184,9 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
         }
         else {
             ClassFrame.Builder builder = new ClassFrame.Builder(currentSubject);
+            for(OWLPrimitiveData cls : classes.getValue().get()) {
+                builder.addClass((OWLClass) cls.getObject());
+            }
             builder.addPropertyValues(annotations.getValue().get().getPropertyValues());
             builder.addPropertyValues(properties.getValue().get().getPropertyValues());
             ClassFrame cf = builder.build();
@@ -185,6 +205,7 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
     public void clearValue() {
         annotations.clearValue();
         properties.clearValue();
+        classes.clearValue();
     }
 
     @UiHandler("annotations")
@@ -208,6 +229,15 @@ public class ClassFrameEditor extends SimplePanel implements ClassFrameEditorPre
             ValueChangeEvent.fire(this, getValue());
         }
     }
+
+    @UiHandler("classes")
+    protected void handleClassesValueChange(ValueChangeEvent<Optional<List<OWLPrimitiveData>>> evt) {
+        if(isWellFormed()) {
+            ValueChangeEvent.fire(this, getValue());
+        }
+    }
+
+
 
     @UiHandler("properties")
     protected void handlePropertiesDirtyChanged(DirtyChangedEvent evt) {
