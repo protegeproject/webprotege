@@ -12,17 +12,17 @@
             <g:TextBox ui:field="iriField" width="100%"/>
         </div>
 
-        <div style="height: 30px;"/>
+        <div style="height: 10px;"/>
 
         <g:Label text="Annotations" addStyleNames="{wp.style.formLabel}"/>
         <frame:PropertyValueListEditor ui:field="annotations"/>
 
-        <div style="height: 30px;"/>
+        <div style="height: 15px;"/>
 
         <g:Label text="Domain" addStyleNames="{wp.style.formLabel}"/>
         <wp:PrimitiveDataListEditor ui:field="domains"/>
 
-        <div style="height: 30px;"/>
+        <div style="height: 15px;"/>
 
         <g:Label text="Range" addStyleNames="{wp.style.formLabel}"/>
         <wp:PrimitiveDataListEditor ui:field="ranges"/>
