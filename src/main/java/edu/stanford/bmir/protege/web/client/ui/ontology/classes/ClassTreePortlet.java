@@ -726,7 +726,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             node.setIconCls(BUNDLE.style().deprecatedClassIcon());
         }
         else {
-            node.setIconCls(BUNDLE.style().classIcon());
+            node.setIcon(BUNDLE.svgClassIcon().getSafeUri().asString());
         }
 
     }
