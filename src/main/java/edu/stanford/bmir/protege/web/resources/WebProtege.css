@@ -2,6 +2,7 @@
 @url classIconUrl svgClassIcon;
 @url annotationPropertyIconUrl svgAnnotationPropertyIcon;
 @url individualIconUrl svgIndividualIcon;
+@url literalIconUrl svgLiteralIcon;
 
 .webProtegeLaf {
 
@@ -174,8 +175,9 @@
     gwt-image: 'literalIcon';
 }
 
-@sprite .literalIconInset {
-    gwt-image: 'literalIcon';
+.literalIconInset {
+    background-image: literalIconUrl;
+    background-repeat: no-repeat;
     background-position: 2px 2px;
     width: auto;
     height: auto;
