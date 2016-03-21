@@ -1,10 +1,14 @@
 package edu.stanford.bmir.protege.web.client.change;
 
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
+import edu.stanford.bmir.protege.web.client.filter.FilterView;
+import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
@@ -13,6 +17,9 @@ import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
+import edu.stanford.bmir.protege.web.shared.filter.FilterId;
+import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
+import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
@@ -23,6 +30,8 @@ public class ProjectHistoryPortlet extends AbstractOWLEntityPortlet {
 
     public static final String REFRESH_TO_SEE_THE_LATEST_CHANGES = "Click to see the latest changes";
     public static final String LATEST_CHANGES_VISIBLE = "Latest changes displayed";
+
+    public static final FilterId SHOW_DETAILS_FILTER = new FilterId("Show details");
 
     private final ChangeListViewPresenter presenter;
 
@@ -35,10 +44,6 @@ public class ProjectHistoryPortlet extends AbstractOWLEntityPortlet {
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
-    private final PortletAction toggleDetailsAction;
-
-    private boolean showDetails = true;
-
     @Inject
     public ProjectHistoryPortlet(ChangeListViewPresenter presenter, LoggedInUserProjectPermissionChecker permissionChecker, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
@@ -47,20 +52,6 @@ public class ProjectHistoryPortlet extends AbstractOWLEntityPortlet {
         presenter.setDownloadVisible(true);
         final ChangeListView changeListView = presenter.getView();
         addPortletAction(refreshAction);
-        toggleDetailsAction = new PortletAction("Hide details", new PortletActionHandler() {
-            @Override
-            public void handleActionInvoked(PortletAction action, ClickEvent event) {
-                showDetails = !showDetails;
-                changeListView.setDetailsVisible(showDetails);
-                if(showDetails) {
-                    action.setName("Hide details");
-                }
-                else {
-                    action.setName("Show details");
-                }
-            }
-        });
-        addPortletAction(toggleDetailsAction);
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
         getContentHolder().setWidget(scrollPanel);
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
@@ -77,6 +68,16 @@ public class ProjectHistoryPortlet extends AbstractOWLEntityPortlet {
         });
         onRefresh();
         setTitle("Project History");
+
+        FilterView filterView = new FilterViewImpl();
+        filterView.addFilter(SHOW_DETAILS_FILTER, FilterSetting.ON);
+        filterView.addValueChangeHandler(new ValueChangeHandler<FilterSet>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<FilterSet> event) {
+                changeListView.setDetailsVisible(event.getValue().hasSetting(SHOW_DETAILS_FILTER, FilterSetting.ON));
+            }
+        });
+        setFilter(filterView);
     }
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
