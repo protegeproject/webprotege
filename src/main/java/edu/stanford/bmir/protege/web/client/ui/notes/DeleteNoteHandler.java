@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>
@@ -10,5 +11,5 @@ import edu.stanford.bmir.protege.web.shared.notes.NoteId;
  */
 public interface DeleteNoteHandler {
 
-    void handleDeleteNote(NoteId noteId);
+    void handleDeleteNote(OWLEntity targetEntity, NoteId noteId);
 }

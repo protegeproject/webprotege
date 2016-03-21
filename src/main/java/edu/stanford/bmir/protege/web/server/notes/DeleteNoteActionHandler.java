@@ -36,7 +36,7 @@ public class DeleteNoteActionHandler extends AbstractHasProjectActionHandler<Del
     @Override
     protected DeleteNoteResult execute(DeleteNoteAction action, OWLAPIProject project, ExecutionContext executionContext) {
         EventTag currentEventTag = project.getEventManager().getCurrentTag();
-        project.getNotesManager().deleteNoteAndReplies(action.getNoteId());
+        project.getNotesManager().deleteNoteAndReplies(action.getTargetEntity(), action.getNoteId());
         return new DeleteNoteResult(action.getNoteId(), project.getEventManager().getEventsFromTag(currentEventTag));
     }
 
