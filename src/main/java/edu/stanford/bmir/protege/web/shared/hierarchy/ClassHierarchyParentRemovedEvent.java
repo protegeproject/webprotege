@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -28,5 +30,14 @@ public class ClassHierarchyParentRemovedEvent extends HierarchyChangedEvent<OWLC
     @Override
     protected void dispatch(ClassHierarchyParentRemovedHandler handler) {
         handler.handleClassHierarchyParentRemoved(this);
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("ClassHierarchyParentRemovedEvent")
+                .add("child", getChild())
+                .add("parent", getParent())
+                .toString();
     }
 }

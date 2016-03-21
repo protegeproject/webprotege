@@ -238,10 +238,15 @@ public class ValueListEditorImpl<O> extends Composite implements ValueListEditor
     }
 
     private void handleDelete(ValueEditor<O> editor) {
+        Optional<List<O>> before = getValue();
         removeEditor(editor);
         ensureBlank();
         dirty = true;
         fireEvent(new DirtyChangedEvent());
+        Optional<List<O>> after = getValue();
+        if (!after.equals(before)) {
+            ValueChangeEvent.fire(this, after);
+        }
     }
 
     private void removeEditor(ValueEditor<O> editor) {

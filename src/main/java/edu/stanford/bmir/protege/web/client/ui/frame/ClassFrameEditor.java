@@ -233,6 +233,7 @@ public class ClassFrameEditor extends AbstractFrameEditor<LabelledFrame<ClassFra
     @UiHandler("classes")
     protected void handleClassesValueChange(ValueChangeEvent<Optional<List<OWLPrimitiveData>>> evt) {
         if(isWellFormed()) {
+            this.dirty = true;
             ValueChangeEvent.fire(this, getValue());
         }
     }

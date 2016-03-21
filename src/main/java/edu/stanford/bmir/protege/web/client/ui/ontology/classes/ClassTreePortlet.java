@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
+import com.gwtext.client.data.Tree;
 import com.gwtext.client.dd.DragData;
 import com.gwtext.client.dd.DragDrop;
 import com.gwtext.client.widgets.tree.*;
@@ -312,6 +313,9 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
     }
 
     private void handleParentRemovedEvent(ClassHierarchyParentRemovedEvent event) {
+        try {
+            GWT.log("[ClassTreePortlet] Handling parent removed: " + event);
+            inRemove = true;
             TreeNode parentTn = findTreeNode(event.getParent());
             if (parentTn != null) {
                 // We should check
@@ -323,16 +327,17 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                         String existingChildId = existingChild.getId();
                         if (childId != null && existingChildId != null && childId.equals(existingChildId)) {
                             OWLClass child = event.getChild();
-                            if(getSelectedTreeNodeClass().equals(Optional.of(child))) {
-                                Node parentNode = childTn.getParentNode();
-                                treePanel.getSelectionModel().select((TreeNode) parentNode);
-                            }
                             childTn.remove();
+                            setSelectionInTree(getSelectedEntity());
                             return;
                         }
                     }
                 }
             }
+        } finally {
+            inRemove = false;
+        }
+
 
     }
 
@@ -387,6 +392,8 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         }
     }
 
+    private boolean inRemove = false;
+
     private TreePanel createTreePanel() {
         treePanel = new TreePanel();
         treePanel.setAnimate(true);
@@ -400,6 +407,16 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                     getSubclasses(((EntityData) node.getUserObject()).getName(), node);
                 }
             }
+
+            @Override
+            public boolean doBeforeRemove(Tree tree, TreeNode parent, TreeNode node) {
+                return super.doBeforeRemove(tree, parent, node);
+            }
+
+            @Override
+            public void onRemove(Tree tree, TreeNode parent, TreeNode node) {
+                super.onRemove(tree, parent, node);
+            }
         });
 
         addDragAndDropSupport();
@@ -412,26 +429,30 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             ((DefaultSelectionModel) selModel).addSelectionModelListener(new DefaultSelectionModelListenerAdapter() {
                 @Override
                 public void onSelectionChange(final DefaultSelectionModel sm, final TreeNode node) {
-                    Optional<OWLClassData> selectedClassDataFromTree = getSelectedTreeNodeClassData();
-                    if (selectedClassDataFromTree.isPresent()) {
-                        getSelectionModel().setSelection(selectedClassDataFromTree.get().getEntity());
-                    }
-
+                    transmitSelectionFromTree();
                 }
             });
         }
         else if (selModel instanceof MultiSelectionModel) {
             ((MultiSelectionModel) selModel).addSelectionModelListener(new MultiSelectionModelListener() {
                 public void onSelectionChange(final MultiSelectionModel sm, final TreeNode[] nodes) {
-                    Optional<OWLClassData> selectedClassDataFromTree = getSelectedTreeNodeClassData();
-                    if (selectedClassDataFromTree.isPresent()) {
-                        getSelectionModel().setSelection(selectedClassDataFromTree.get().getEntity());
-                    }
+                    transmitSelectionFromTree();
                 }
             });
         }
         else {
             GWT.log("Unknown tree selection model for class tree: " + selModel, null);
+        }
+    }
+
+    private void transmitSelectionFromTree() {
+        if(inRemove) {
+            GWT.log("[ClassTreePortlet] In Remove.  Not updating selection.");
+            return;
+        }
+        Optional<OWLClassData> selectedClassDataFromTree = getSelectedTreeNodeClassData();
+        if (selectedClassDataFromTree.isPresent()) {
+            getSelectionModel().setSelection(selectedClassDataFromTree.get().getEntity());
         }
     }
 
@@ -494,8 +515,10 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             return null;
         }
         final TreeNode root = treePanel.getRootNode();
-        final TreeNode node = findTreeNode(root, id, new ArrayList<TreeNode>());
-        return node;
+        if(id.equals(OWLRDFVocabulary.OWL_THING.getIRI().toString())) {
+            return root;
+        }
+        return findTreeNode(root, id, new ArrayList<TreeNode>());
     }
 
     protected TreeNode findTreeNode(final TreeNode node, final String id, final ArrayList<TreeNode> visited) {
@@ -877,10 +900,6 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         if(!selection.isPresent()) {
             return;
         }
-        //happens only at initialization
-//        if (!isRendered() || treePanel == null || treePanel.getRootNode() == null) {
-//            return;
-//        }
         getPathToRoot(selection.get());
     }
 
