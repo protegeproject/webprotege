@@ -317,26 +317,22 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             GWT.log("[ClassTreePortlet] Handling parent removed: " + event);
             inRemove = true;
             TreeNode parentTn = findTreeNode(event.getParent());
-            GWT.log("[ClassTreePortlet] Couldn't find parent: " + event);
+            GWT.log("[ClassTreePortlet]     Parent node: " + parentTn);
             if (parentTn != null) {
-                // We should check
-                TreeNode childTn = findTreeNode(event.getChild());
-                if (childTn != null) {
-                    for (Node existingChild : parentTn.getChildNodes()) {
-//                    String parentId = parentTn.getId();
-                        String childId = childTn.getId();
-                        String existingChildId = existingChild.getId();
-                        if (childId != null && existingChildId != null && childId.equals(existingChildId)) {
-                            OWLClass child = event.getChild();
-                            childTn.remove();
-                            if (parentTn.getChildNodes().length < 1) {
-                                parentTn.setExpandable(false);
-                            }
-                            setSelectionInTree(getSelectedEntity());
-                            return;
+                for(Node childTn : parentTn.getChildNodes()) {
+                    String nodeClsName = getNodeClsName(childTn);
+                    if(nodeClsName != null && nodeClsName.equals(event.getChild().getIRI().toString())) {
+                        GWT.log("[ClassTreePortlet]     Child node: " + childTn);
+                        parentTn.removeChild(childTn);
+                        int childCount = parentTn.getChildNodes().length;
+                        GWT.log("[ClassTreePortlet]     Child count after removal: " + childCount);
+                        if (childCount == 0) {
+                            parentTn.setExpandable(false);
                         }
+                        setSelectionInTree(getSelectedEntity());
                     }
                 }
+
             }
         } finally {
             inRemove = false;
@@ -514,26 +510,26 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
         return findTreeNode(cls.getIRI().toString());
     }
 
-    protected TreeNode findTreeNode(final String id) {
+    protected TreeNode findTreeNode(final String iri) {
         if (treePanel == null) {
             return null;
         }
         final TreeNode root = treePanel.getRootNode();
-        if(id.equals(OWLRDFVocabulary.OWL_THING.getIRI().toString())) {
+        if(iri.equals(OWLRDFVocabulary.OWL_THING.getIRI().toString())) {
             return root;
         }
-        return findTreeNode(root, id, new ArrayList<TreeNode>());
+        return findTreeNode(root, iri, new ArrayList<TreeNode>());
     }
 
-    protected TreeNode findTreeNode(final TreeNode node, final String id, final ArrayList<TreeNode> visited) {
-        if (getNodeClsName(node).equals(id)) {
+    protected TreeNode findTreeNode(final TreeNode node, final String iri, final ArrayList<TreeNode> visited) {
+        if (getNodeClsName(node).equals(iri)) {
             return node;
         }
         else {
             visited.add(node);
             final Node[] children = node.getChildNodes();
             for (final Node element2 : children) {
-                final TreeNode n = findTreeNode((TreeNode) element2, id, visited);
+                final TreeNode n = findTreeNode((TreeNode) element2, iri, visited);
                 if (n != null) {
                     return n;
                 }
@@ -994,7 +990,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             final String idLocalAnnotationCnt = node.getId() + SUFFIX_ID_LOCAL_ANNOTATION_COUNT;
 
             // TODO: add a css for this
-            text = text + "<span style=\"padding-left: 2px;\"><img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.svgCommentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(localAnnotationsCount) + " on this category.\" /></span>" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"font-size:95%;color:#15428B;font-weight:bold;\">" + localAnnotationsCount + "</span>";
+            text = text + "<span style=\"padding-left: 2px;\"><img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.svgCommentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(localAnnotationsCount) + " on this category.\" /></span>" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"color: #a0a0a0; font-size: smaller;\">(" + localAnnotationsCount + ")</span>";
         }
 
         final int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
