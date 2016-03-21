@@ -25,16 +25,19 @@ public class FilterCheckBox extends Composite {
     @UiField
     CheckBox checkBox;
 
+    private FilterId filterId;
+
     public FilterCheckBox() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
-    public void setFilterId(FilterId id) {
-        checkBox.setText(id.getLabel());
+    public void setFilterId(FilterId id, String rendering) {
+        this.filterId = id;
+        checkBox.setText(rendering);
     }
 
     public FilterId getFilterId() {
-        return new FilterId(checkBox.getText());
+        return filterId;
     }
 
     public void setSetting(FilterSetting filterSetting) {

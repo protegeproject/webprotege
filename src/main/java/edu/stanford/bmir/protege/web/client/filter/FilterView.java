@@ -11,6 +11,8 @@ import edu.stanford.bmir.protege.web.shared.filter.*;
  */
 public interface FilterView extends IsWidget, HasValueChangeHandlers<FilterSet> {
 
+    void setFilterIdRenderer(FilterIdRenderer renderer);
+
     void addFilterGroup(String filterGroup);
 
     void addFilter(FilterId filterId, FilterSetting initialSetting);
