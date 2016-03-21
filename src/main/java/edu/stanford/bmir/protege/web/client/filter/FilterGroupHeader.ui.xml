@@ -3,6 +3,7 @@
     <ui:style>
         .main {
             margin-bottom: 5px;
+            white-space: nowrap;
         }
         .label {
             font-weight: bold;

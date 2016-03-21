@@ -20,4 +20,6 @@ public interface FilterView extends IsWidget, HasValueChangeHandlers<FilterSet> 
     void closeCurrentGroup();
 
     FilterSet getFilterSet();
+
+
 }

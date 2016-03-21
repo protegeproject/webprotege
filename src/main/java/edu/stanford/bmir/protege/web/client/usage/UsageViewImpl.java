@@ -21,6 +21,7 @@ import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.client.ui.*;
 import com.google.gwt.view.client.ListDataProvider;
 import edu.stanford.bmir.protege.web.client.csv.CSVGridResources;
+import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomTypeGroup;
 import edu.stanford.bmir.protege.web.shared.usage.UsageFilter;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
@@ -44,10 +45,6 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
 public class UsageViewImpl extends Composite implements UsageView {
 
 
-    private UsageFilterEditorView filterEditorView;
-
-    private PopupPanel usageEditorViewPopupPanel;
-
     interface UsageViewImplUiBinder extends UiBinder<HTMLPanel, UsageViewImpl> {
 
     }
@@ -61,21 +58,7 @@ public class UsageViewImpl extends Composite implements UsageView {
 
     private OWLEntity currentSubject;
 
-    @UiField
-    protected Label filterMessage;
-
     public UsageViewImpl() {
-        filterEditorView = new UsageFilterEditorViewImpl();
-        usageEditorViewPopupPanel = new PopupPanel(true);
-        usageEditorViewPopupPanel.setWidget(filterEditorView);
-        usageEditorViewPopupPanel.addCloseHandler(new CloseHandler<PopupPanel>() {
-            @Override
-            public void onClose(CloseEvent<PopupPanel> event) {
-                handleUsageFilterChanged();
-            }
-        });
-
-
         dataGrid = new DataGrid<UsageReference>(Integer.MAX_VALUE, CSVGridResources.INSTANCE);
 
         dataGrid.addColumn(new EntityColumn(), "Entity");
@@ -163,12 +146,12 @@ public class UsageViewImpl extends Composite implements UsageView {
 
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
+
     }
 
     @Override
-    public void showFilter() {
-        usageEditorViewPopupPanel.setPopupPosition(5, 5);
-        usageEditorViewPopupPanel.show();
+    public void onResize() {
+        LayoutUtil.setBounds(dataGrid, 0, 0, 0, 0);
     }
 
     @Override
@@ -178,6 +161,7 @@ public class UsageViewImpl extends Composite implements UsageView {
         dataProvider.getList().addAll(references);
         dataGrid.setVisibleRange(0, references.size());
         ColumnSortEvent.fire(dataGrid, dataGrid.getColumnSortList());
+        dataGrid.onResize();
     }
 
     @Override
@@ -186,25 +170,8 @@ public class UsageViewImpl extends Composite implements UsageView {
     }
 
     @Override
-    public UsageFilter getUsageFilter() {
-        return filterEditorView.getUsageFilter();
-    }
-
-    @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<UsageFilter> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
-    }
-
-    private void handleUsageFilterChanged() {
-        Style.Display display;
-        if(getUsageFilter().isFiltering()) {
-            display = Style.Display.BLOCK;
-        }
-        else {
-            display = Style.Display.NONE;
-        }
-        filterMessage.getElement().getStyle().setDisplay(display);
-        ValueChangeEvent.fire(this, getUsageFilter());
     }
 
     private static final TextCell CELL = new TextCell();
