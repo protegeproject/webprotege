@@ -57,6 +57,7 @@ public class FilterViewImpl extends Composite implements FilterView {
 
     @Override
     public void addFilterGroup(String filterGroup) {
+        closeCurrentGroup();
         filterGroupHeader = new FilterGroupHeader();
         filterGroupHeader.setLabel(filterGroup);
         container.add(filterGroupHeader);
@@ -65,6 +66,7 @@ public class FilterViewImpl extends Composite implements FilterView {
     @Override
     public void closeCurrentGroup() {
         if(filterGroupHeader == null) {
+            currentGroup.clear();
             return;
         }
         final List<FilterCheckBox> currentGroupCopy = new ArrayList<>(currentGroup);
@@ -80,6 +82,8 @@ public class FilterViewImpl extends Composite implements FilterView {
                 handleSelect(currentGroupCopy, FilterSetting.OFF);
             }
         });
+        currentGroup.clear();
+        filterGroupHeader = null;
     }
 
     private void handleSelect(List<FilterCheckBox> group, FilterSetting setting) {

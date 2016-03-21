@@ -103,6 +103,7 @@ public class PortletUiImpl extends Composite implements PortletUi {
     public void setFilterView(FilterView filterView) {
         this.filterView = Optional.of(filterView);
         filterButton.setVisible(true);
+        filterView.closeCurrentGroup();
     }
 
     @Override

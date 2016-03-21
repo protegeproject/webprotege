@@ -1,5 +1,14 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:HTMLPanel ui:field="container">
+    <ui:style>
+        .main {
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 30px;
+            padding-left: 5px;
+        }
+
+    </ui:style>
+    <g:HTMLPanel ui:field="container" addStyleNames="{style.main}">
     </g:HTMLPanel>
 </ui:UiBinder>
