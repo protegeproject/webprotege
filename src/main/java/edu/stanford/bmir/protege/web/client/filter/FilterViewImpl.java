@@ -37,13 +37,23 @@ public class FilterViewImpl extends Composite implements FilterView {
     @UiField
     HTMLPanel container;
 
+    private FilterIdRenderer renderer = new FilterIdRenderer() {
+        @Override
+        public String render(FilterId filterId) {
+            return filterId.getLabel();
+        }
+    };
+
     private List<FilterCheckBox> currentGroup = new ArrayList<>();
 
     public FilterViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
     }
 
-
+    @Override
+    public void setFilterIdRenderer(FilterIdRenderer renderer) {
+        this.renderer = renderer;
+    }
 
     @Override
     public void addFilterGroup(String filterGroup) {
@@ -81,7 +91,7 @@ public class FilterViewImpl extends Composite implements FilterView {
     @Override
     public void addFilter(FilterId filterId, FilterSetting initialSetting) {
         FilterCheckBox checkBox = new FilterCheckBox();
-        checkBox.setFilterId(filterId);
+        checkBox.setFilterId(filterId, renderer.render(filterId));
         checkBox.setSetting(initialSetting);
         container.add(checkBox);
         currentGroup.add(checkBox);
