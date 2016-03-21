@@ -317,6 +317,7 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             GWT.log("[ClassTreePortlet] Handling parent removed: " + event);
             inRemove = true;
             TreeNode parentTn = findTreeNode(event.getParent());
+            GWT.log("[ClassTreePortlet] Couldn't find parent: " + event);
             if (parentTn != null) {
                 // We should check
                 TreeNode childTn = findTreeNode(event.getChild());
@@ -328,6 +329,9 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
                         if (childId != null && existingChildId != null && childId.equals(existingChildId)) {
                             OWLClass child = event.getChild();
                             childTn.remove();
+                            if (parentTn.getChildNodes().length < 1) {
+                                parentTn.setExpandable(false);
+                            }
                             setSelectionInTree(getSelectedEntity());
                             return;
                         }
