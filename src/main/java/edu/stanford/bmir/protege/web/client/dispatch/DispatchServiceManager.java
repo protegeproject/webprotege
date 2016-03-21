@@ -6,6 +6,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
 import edu.stanford.bmir.protege.web.client.rpc.data.NotSignedInException;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
@@ -17,6 +20,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
 import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
+import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 import javax.inject.Inject;
@@ -134,10 +138,29 @@ public class DispatchServiceManager {
         }
     }
 
-    private void handleError(Throwable throwable, Action<?> action, DispatchServiceCallback<?> callback) {
+    private void handleError(final Throwable throwable, final Action<?> action, final DispatchServiceCallback<?> callback) {
         if(throwable instanceof NotSignedInException) {
             signInRequiredHandler.handleSignInRequired();
             return;
+        }
+        if (throwable instanceof PermissionDeniedException) {
+            // Try to determine if the user is logged in.  The session might have expired.
+            execute(new GetCurrentUserInSessionAction(), new DispatchServiceCallback<GetCurrentUserInSessionResult>() {
+                @Override
+                public void handleSuccess(GetCurrentUserInSessionResult result) {
+                    if(result.getUserDetails().getUserId().isGuest()) {
+                        signInRequiredHandler.handleSignInRequired();
+                    }
+                    else {
+                        callback.onFailure(throwable);
+                    }
+                }
+
+                @Override
+                public void handleErrorFinally(Throwable throwable) {
+                    callback.onFailure(throwable);
+                }
+            });
         }
         // Skip handling for actions that do not care about errors
         if(action instanceof InvocationExceptionTolerantAction) {
