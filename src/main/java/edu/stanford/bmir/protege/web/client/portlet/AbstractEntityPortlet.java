@@ -14,9 +14,11 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
+import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
+import edu.stanford.bmir.protege.web.shared.filter.Filter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedEvent;
 import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedHandler;
@@ -231,6 +233,11 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
     @Override
     public void addPortletAction(PortletAction portletAction) {
         portletUi.addPortletAction(portletAction);
+        portletUi.setToolbarVisible(true);
+    }
+
+    public void setFilter(FilterView filterView) {
+        portletUi.setFilterView(filterView);
         portletUi.setToolbarVisible(true);
     }
 

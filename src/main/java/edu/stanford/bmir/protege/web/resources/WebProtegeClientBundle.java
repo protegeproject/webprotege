@@ -151,7 +151,6 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("edit.png")
     ImageResource editIcon();
 
-
     @Source("WebProtege.css")
     WebProtegeCss style();
 
@@ -164,6 +163,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @Source("WebProtegeDialog.css")
     WebProtegeDialog dialog();
 
+    @Source("filter.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgFilter();
 
     public static interface WebProtegeCss extends CssResource {
 
@@ -290,6 +292,8 @@ public interface WebProtegeClientBundle extends ClientBundle {
         String btnE();
 
         String toolbarButton();
+
+        String toolbarButtonSelected();
 
         String circularButton();
 

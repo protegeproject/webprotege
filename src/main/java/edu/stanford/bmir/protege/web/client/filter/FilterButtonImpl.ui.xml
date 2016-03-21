@@ -1,0 +1,22 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .main {
+            stroke: currentColor;
+            fill: currentColor;
+            width: 14px;
+            height: 14px;
+        }
+    </ui:style>
+    <g:HTMLPanel addStyleNames="{wp.buttons.toolbarButton} {style.main}" title="Filter">
+        <svg width="14" height="14">
+            <line x1="3" y1="2" x2="3" y2="12" style="stroke-width:1;fill:currentColor;"/>
+            <line x1="7" y1="2" x2="7" y2="12"/>
+            <line x1="11" y1="2" x2="11" y2="12"/>
+            <circle r="1.5" cx="3" cy="8"/>
+            <circle r="1.5" cx="7" cy="4"/>
+            <circle r="1.5" cx="11" cy="10"/>
+        </svg>
+    </g:HTMLPanel>
+</ui:UiBinder>
