@@ -15,6 +15,7 @@ import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteContent;
 import edu.stanford.bmir.protege.web.shared.notes.NoteHeader;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -78,5 +79,10 @@ public class NotePostedEventPanel extends Composite implements ProjectFeedItemDi
     @Override
     public void updateElapsedTimeDisplay() {
         timeLabel.update();
+    }
+
+    @Override
+    public UserId getUserId() {
+        return UserId.getUserId(userNameLabel.getText());
     }
 }

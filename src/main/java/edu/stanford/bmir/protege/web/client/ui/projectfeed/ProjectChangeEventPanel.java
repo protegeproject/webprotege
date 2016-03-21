@@ -51,6 +51,11 @@ public class ProjectChangeEventPanel extends Composite implements ProjectFeedIte
         initWidget(rootElement);
     }
 
+    @Override
+    public UserId getUserId() {
+        return UserId.getUserId(userNameLabel.getText());
+    }
+
     public void setUserName(String userName) {
         userIconHolder.setWidget(UserIcon.get(UserId.getUserId(userName)));
         userNameLabel.setText(userName);

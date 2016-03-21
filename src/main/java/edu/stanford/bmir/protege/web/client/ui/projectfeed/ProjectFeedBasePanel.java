@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.projectfeed;
 
 import com.google.gwt.user.client.ui.Composite;
+import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,7 +17,9 @@ public class ProjectFeedBasePanel extends Composite {
 
     private ProjectFeedPanel eventPanel;
 
-    public ProjectFeedBasePanel(final ProjectId projectId, HasEventHandlerManagement eventHandlerMan, SelectionModel selectionModel) {
+    public ProjectFeedBasePanel(final ProjectId projectId,
+                                HasEventHandlerManagement eventHandlerMan,
+                                SelectionModel selectionModel) {
         eventPanel = new ProjectFeedPanel(projectId, selectionModel);
         initWidget(eventPanel);
         eventHandlerMan.addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
@@ -50,5 +54,13 @@ public class ProjectFeedBasePanel extends Composite {
                 }
             }
         });
+    }
+
+    public void setUserActivityVisible(UserId userId, boolean visible) {
+        eventPanel.setUserActivityVisible(userId, visible);
+    }
+
+    public void setOntologyChangesVisible(boolean visible) {
+        eventPanel.setOntologyChangesVisible(visible);
     }
 }

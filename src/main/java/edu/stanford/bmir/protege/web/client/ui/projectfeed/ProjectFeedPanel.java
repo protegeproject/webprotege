@@ -16,6 +16,7 @@ import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -30,13 +31,17 @@ import java.util.Set;
 public class ProjectFeedPanel extends Composite {
 
 
-    private static final int MAX_FEED_SIZE = 50;
+    private static final int MAX_FEED_SIZE = 300;
 
     private static final int ONE_MINUTE = 60 * 1000;
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
     private SelectionModel selectionModel;
+
+    private Set<UserId> hiddenUsersActivity = new HashSet<>();
+
+    private boolean showOntologyChanges = true;
 
     private Timer elapsedTimesUpdateTimer = new Timer() {
         @Override
@@ -61,6 +66,35 @@ public class ProjectFeedPanel extends Composite {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         this.selectionModel = selectionModel;
         initWidget(rootElement);
+    }
+
+    public void setUserActivityVisible(UserId userId, boolean visible) {
+        if (!visible) {
+            hiddenUsersActivity.add(userId);
+        }
+        else {
+            hiddenUsersActivity.remove(userId);
+        }
+        applyFilter();
+    }
+
+    public void setOntologyChangesVisible(boolean visible) {
+        this.showOntologyChanges = visible;
+        applyFilter();
+    }
+
+    private void applyFilter() {
+        for(int i = 0; i < changeEventTable.getRowCount(); i++) {
+            ProjectFeedItemDisplay widget = (ProjectFeedItemDisplay) changeEventTable.getWidget(i, 0);
+            boolean visible = isVisible(widget);
+            widget.setVisible(visible);
+        }
+    }
+
+    private boolean isVisible(ProjectFeedItemDisplay widget) {
+        boolean isHiddenUser = hiddenUsersActivity.contains(widget.getUserId());
+        boolean isHiddenProjectChange = !showOntologyChanges && widget instanceof ProjectChangeEventPanel;
+        return !isHiddenUser && !isHiddenProjectChange;
     }
 
     public void postChangeEvent(ProjectChangedEvent event) {
@@ -89,7 +123,8 @@ public class ProjectFeedPanel extends Composite {
 
     }
 
-    private void insertWidgetIntoFeed(Widget widget) {
+    private void insertWidgetIntoFeed(ProjectFeedItemDisplay widget) {
+        widget.setVisible(isVisible(widget));
         changeEventTable.insertRow(0);
         changeEventTable.setWidget(0, 0, widget);
         pruneIfNecessary();
