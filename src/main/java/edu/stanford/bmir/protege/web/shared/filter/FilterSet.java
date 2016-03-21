@@ -32,4 +32,8 @@ public class FilterSet {
             return result;
         }
     }
+
+    public boolean hasSetting(FilterId filterId, FilterSetting value) {
+        return value.equals(map.get(filterId));
+    }
 }
