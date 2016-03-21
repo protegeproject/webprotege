@@ -46,4 +46,9 @@ public class UserStartedViewingProjectEventPanel extends Composite implements Pr
     public void updateElapsedTimeDisplay() {
         timeLabel.update();
     }
+
+    @Override
+    public UserId getUserId() {
+        return UserId.getUserId(userNameLabel.getText());
+    }
 }
