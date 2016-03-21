@@ -23,15 +23,6 @@ public class MenuButton extends Composite implements HasClickHandlers {
     }
 
     private static MenuButtonUiBinder ourUiBinder = GWT.create(MenuButtonUiBinder.class);
-//
-//    @UiField
-//    HTMLPanel topBar;
-//
-//    @UiField
-//    HTMLPanel middleBar;
-//
-//    @UiField
-//    HTMLPanel bottomBar;
 
     public MenuButton() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
@@ -41,11 +32,4 @@ public class MenuButton extends Composite implements HasClickHandlers {
     public HandlerRegistration addClickHandler(ClickHandler handler) {
         return addDomHandler(handler, ClickEvent.getType());
     }
-
-    public void setColor(String color) {
-//        topBar.getElement().getStyle().setBackgroundColor(color);
-//        middleBar.getElement().getStyle().setBackgroundColor(color);
-//        bottomBar.getElement().getStyle().setBackgroundColor(color);
-    }
-
 }

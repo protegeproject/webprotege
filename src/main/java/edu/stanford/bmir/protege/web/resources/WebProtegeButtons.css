@@ -139,6 +139,10 @@
     cursor: pointer;
 }
 
+.toolbarButtonSelected {
+    color: dodgerblue;
+}
+
 .toolbarButton:hover {
     border: solid 1px #464646;
     background: #707070;

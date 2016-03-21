@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import edu.stanford.bmir.protege.web.client.filter.FilterView;
+import edu.stanford.bmir.protege.web.shared.filter.Filter;
 
 /**
  * Matthew Horridge
@@ -14,9 +16,14 @@ public interface PortletUi extends IsWidget {
 
     void setMenuButtonVisible(boolean visible);
 
+    void addMenuAction(PortletAction action);
+
+    void setFilterView(FilterView filterView);
+
+    void setFilterApplied(boolean filterApplied);
+
     void addPortletAction(PortletAction action);
 
-    void addMenuAction(PortletAction action);
 
     AcceptsOneWidget getContentHolder();
 

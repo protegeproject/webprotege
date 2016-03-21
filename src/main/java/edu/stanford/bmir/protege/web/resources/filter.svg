@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+        "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" stroke="currentColor"  fill="currentColor">
+    <line x1="3" y1="2" x2="3" y2="12"/>
+    <line x1="7" y1="2" x2="7" y2="12"/>
+    <line x1="11" y1="2" x2="11" y2="12"/>
+    <circle r="1" cx="3" cy="8"/>
+    <circle r="1" cx="7" cy="4"/>
+    <circle r="1" cx="11" cy="10"/>
+</svg>

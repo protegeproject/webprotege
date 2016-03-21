@@ -1,15 +1,24 @@
 package edu.stanford.bmir.protege.web.client.ui.projectfeed;
 
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.filter.FilterView;
+import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
+import edu.stanford.bmir.protege.web.shared.filter.Filter;
+import edu.stanford.bmir.protege.web.shared.filter.FilterId;
+import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
+import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,21 +28,9 @@ import javax.inject.Inject;
  */
 public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
 
-    private static final String HIDE_MY_ACTIVITY = "Hide my activity";
+    public static final FilterId SHOW_MY_ACTIVITY_FILTER = new FilterId("Show my activity");
 
-    private static final String SHOW_MY_ACTIVITY = "Show my activity";
-
-    private static final String SHOW_ONTOLOGY_CHANGES = "Show ontology changes";
-
-    private static final String HIDE_ONTOLOGY_CHANGES = "Hide ontology changes";
-
-    private final PortletAction showMyActivityAction;
-
-    private final PortletAction showOntologyChangesAction;
-
-    private boolean showMyActivity = true;
-
-    private boolean showOntologyChanges = true;
+    public static final FilterId SHOW_PROJECT_CHANGES_FILTER = new FilterId("Show project changes");
 
     private final LoggedInUserProvider loggedInUserProvider;
 
@@ -46,43 +43,28 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
         basePanel = new ProjectFeedBasePanel(getProjectId(), this, selectionModel);
         setTitle("Project feed");
         getContentHolder().setWidget(basePanel);
-        showMyActivityAction = new PortletAction(HIDE_MY_ACTIVITY, new PortletActionHandler() {
+
+        FilterView filterView = new FilterViewImpl();
+        filterView.addFilterGroup("Project feed settings");
+        filterView.addFilter(SHOW_MY_ACTIVITY_FILTER, FilterSetting.ON);
+        filterView.addFilter(SHOW_PROJECT_CHANGES_FILTER, FilterSetting.ON);
+        filterView.closeCurrentGroup();
+        filterView.addValueChangeHandler(new ValueChangeHandler<FilterSet>() {
             @Override
-            public void handleActionInvoked(PortletAction action, ClickEvent event) {
-                updateShowMyActivity();
+            public void onValueChange(ValueChangeEvent<FilterSet> event) {
+                applyFilters(event.getValue());
             }
         });
-
-        showOntologyChangesAction = new PortletAction(HIDE_ONTOLOGY_CHANGES, new PortletActionHandler() {
-            @Override
-            public void handleActionInvoked(PortletAction action, ClickEvent event) {
-                updateShowOntologyChanges();
-            }
-        });
-
-        addPortletAction(showMyActivityAction);
-        addPortletAction(showOntologyChangesAction);
+        setFilter(filterView);
     }
 
-    private void updateShowMyActivity() {
-        showMyActivity = !showMyActivity;
-        basePanel.setUserActivityVisible(loggedInUserProvider.getCurrentUserId(), showMyActivity);
-        if(showMyActivity) {
-            showMyActivityAction.setName(HIDE_MY_ACTIVITY);
-        }
-        else {
-            showMyActivityAction.setName(SHOW_MY_ACTIVITY);
-        }
+    private void applyFilters(FilterSet filterSet) {
+        FilterSetting showMyActivity = filterSet.getFilterSetting(SHOW_MY_ACTIVITY_FILTER, FilterSetting.ON);
+        basePanel.setUserActivityVisible(loggedInUserProvider.getCurrentUserId(), showMyActivity == FilterSetting.ON);
+
+        FilterSetting showProjectChanges = filterSet.getFilterSetting(SHOW_PROJECT_CHANGES_FILTER, FilterSetting.ON);
+        basePanel.setUserActivityVisible(loggedInUserProvider.getCurrentUserId(), showProjectChanges == FilterSetting.ON);
+
     }
 
-    private void updateShowOntologyChanges() {
-        showOntologyChanges = !showOntologyChanges;
-        basePanel.setOntologyChangesVisible(showOntologyChanges);
-        if(showOntologyChanges) {
-            showOntologyChangesAction.setName(HIDE_ONTOLOGY_CHANGES);
-        }
-        else {
-            showOntologyChangesAction.setName(SHOW_ONTOLOGY_CHANGES);
-        }
-    }
 }
