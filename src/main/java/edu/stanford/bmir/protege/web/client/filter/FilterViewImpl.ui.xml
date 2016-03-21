@@ -4,10 +4,10 @@
         .main {
             max-height: 250px;
             overflow-y: auto;
-            padding-right: 30px;
-            padding-left: 5px;
+            padding: 5px;
+            padding-right: 25px;
+            margin: 0;
         }
-
     </ui:style>
     <g:HTMLPanel ui:field="container" addStyleNames="{style.main}">
     </g:HTMLPanel>
