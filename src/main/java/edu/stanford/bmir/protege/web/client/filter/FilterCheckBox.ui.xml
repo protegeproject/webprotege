@@ -4,6 +4,7 @@
         .main {
             padding: 3px;
             padding-left: 10px;
+            white-space: nowrap;
         }
         .main:hover {
             background: #f0f0f0;
