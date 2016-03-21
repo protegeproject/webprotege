@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -37,7 +38,7 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
 
     private DeleteNoteHandler deleteNoteHandler = new DeleteNoteHandler() {
         @Override
-        public void handleDeleteNote(NoteId noteId) {
+        public void handleDeleteNote(OWLEntity targetEntity, NoteId noteId) {
         }
     };
 
@@ -54,7 +55,11 @@ public class NoteActionViewImpl extends Composite implements NoteActionView {
 
     @UiHandler("deleteWidget")
     protected void handleDeleteClicked(ClickEvent clickEvent) {
-        deleteNoteHandler.handleDeleteNote(noteId);
+        Optional<OWLEntity> selection = selectionModel.getSelection();
+        if(!selection.isPresent()) {
+            return;
+        }
+        deleteNoteHandler.handleDeleteNote(selection.get(), noteId);
     }
 
     private NoteId noteId;
