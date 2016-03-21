@@ -990,7 +990,19 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
             final String idLocalAnnotationCnt = node.getId() + SUFFIX_ID_LOCAL_ANNOTATION_COUNT;
 
             // TODO: add a css for this
-            text = text + "<span style=\"padding-left: 2px;\"><img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.svgCommentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(localAnnotationsCount) + " on this category.\" /></span>" + "<span id=\"" + idLocalAnnotationCnt + "\" style=\"color: #a0a0a0; font-size: smaller;\">(" + localAnnotationsCount + ")</span>";
+            text = text + "<div style='display: inline-block;'>" +
+                    "<div style=\"padding-left: 4px;\n" +
+                    "display: inline-block;\n" +
+                    "position: relative;\n" +
+                    "top: 1px;\n" +
+                    "padding-right: 2px\">" +
+                    "<img id=\"" + idLocalAnnotationImg + "\" src=\"" + BUNDLE.svgCommentSmallFilledIcon().getSafeUri().asString() + "\" title=\"" + getNiceNoteCountText(localAnnotationsCount) + " on this category.\" /></div>" +
+                    "<div id=\"" + idLocalAnnotationCnt + "\" style=\"color: #909090;\n" +
+                    "font-size: smaller;\n" +
+                    "display: inline-block;\n" +
+                    "position: relative;\n" +
+                    "top: -3px;\n" +
+                    "padding-left: 1px;\">(" + localAnnotationsCount + ")</div></div>";
         }
 
         final int childrenAnnotationsCount = entityData.getChildrenAnnotationsCount();
