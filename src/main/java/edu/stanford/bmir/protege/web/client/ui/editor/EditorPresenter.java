@@ -200,6 +200,7 @@ public class EditorPresenter implements HasDispose {
                     final Widget editorWidget = editorView.asWidget();
                     editorHolder.setWidget(editorWidget);
                     setEditorState(value, editorCtx, editorManager);
+                    updatePermissionBasedItems();
                 }
             });
         }
