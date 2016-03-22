@@ -66,6 +66,7 @@ public class CreateNewProjectActionHandler_TestCase {
         handler = new CreateNewProjectActionHandler(projectManager, projectDetailsManager, projectSharingSettingsManager);
         when(projectManager.createNewProject(newProjectSettings)).thenReturn(project);
         when(executionContext.getUserId()).thenReturn(userId);
+        when(userId.getUserName()).thenReturn("User_Name");
         when(project.getProjectId()).thenReturn(projectId);
         when(projectDetailsManager.getProjectDetails(projectId)).thenReturn(projectDetails);
         when(requestContext.getUserId()).thenReturn(userId);
