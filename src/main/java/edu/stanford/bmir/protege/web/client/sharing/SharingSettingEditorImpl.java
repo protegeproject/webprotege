@@ -2,16 +2,16 @@ package edu.stanford.bmir.protege.web.client.sharing;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.user.UserIdSuggestOracle;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
@@ -51,10 +51,23 @@ public class SharingSettingEditorImpl extends Composite implements SharingSettin
         }
     }
 
+    @UiHandler("personIdField")
+    protected void handlePersonIdSelected(SelectionEvent<SuggestOracle.Suggestion> event) {
+        dirty = true;
+        ValueChangeEvent.fire(this, getValue());
+    }
+
+
+    @UiHandler("permissionField")
+    protected void handlePermissionChanged(ChangeEvent changeEvent) {
+        dirty = true;
+        ValueChangeEvent.fire(this, getValue());
+    }
 
     @UiHandler("personIdField")
     protected void handlePersonIdChanged(ValueChangeEvent<String> e) {
         dirty = true;
+        GWT.log("[SharingSettingEditorImpl] Value changed in person id field: " + e.getValue());
         ValueChangeEvent.fire(this, getValue());
     }
 
@@ -74,6 +87,9 @@ public class SharingSettingEditorImpl extends Composite implements SharingSettin
 
     @Override
     public Optional<SharingSetting> getValue() {
+        if(personIdField.getValue().trim().isEmpty()) {
+            return Optional.absent();
+        }
         return Optional.of(
                 new SharingSetting(new PersonId(personIdField.getText().trim()), SharingPermission.values()[permissionField.getSelectedIndex()])
         );
