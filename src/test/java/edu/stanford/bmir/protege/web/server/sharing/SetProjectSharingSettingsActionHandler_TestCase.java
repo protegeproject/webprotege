@@ -53,6 +53,7 @@ public class SetProjectSharingSettingsActionHandler_TestCase {
     @Before
     public void setUp() throws Exception {
         handler = new SetProjectSharingSettingsActionHandler(projectManager, sharingSettingsManager, validatorFactory);
+        when(validatorFactory.getValidator(any(), any())).thenReturn(validator);
         when(action.getProjectSharingSettings()).thenReturn(sharingSettings);
     }
 
