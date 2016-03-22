@@ -2,6 +2,7 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
 import java.lang.NullPointerException;
+import java.util.ArrayList;
 import java.util.List;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -18,6 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
+import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectSharingSettings_TestCase {
@@ -30,12 +32,10 @@ public class ProjectSharingSettings_TestCase {
     @Mock
     private Optional<SharingPermission> linkSharingPermission;
 
-    @Mock
-    private List<SharingSetting> sharingSettings;
+    private List<SharingSetting> sharingSettings = new ArrayList<>();
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         projectSharingSettings = new ProjectSharingSettings(projectId, linkSharingPermission, sharingSettings);
     }
 
@@ -86,17 +86,19 @@ public class ProjectSharingSettings_TestCase {
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_projectId() {
-        assertThat(projectSharingSettings, is(not(new ProjectSharingSettings(Mockito.mock(ProjectId.class), linkSharingPermission, sharingSettings))));
+        assertThat(projectSharingSettings, is(not(new ProjectSharingSettings(mock(ProjectId.class), linkSharingPermission, sharingSettings))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_linkSharingPermission() {
-        assertThat(projectSharingSettings, is(not(new ProjectSharingSettings(projectId, Mockito.mock(Optional.class), sharingSettings))));
+        assertThat(projectSharingSettings, is(not(new ProjectSharingSettings(projectId, mock(Optional.class), sharingSettings))));
     }
 
     @Test
     public void shouldNotBeEqualToOtherThatHasDifferent_sharingSettings() {
-        assertThat(projectSharingSettings, is(not(new ProjectSharingSettings(projectId, linkSharingPermission, Mockito.mock(List.class)))));
+        ArrayList<SharingSetting> otherSharingSettings = new ArrayList<>();
+        otherSharingSettings.add(mock(SharingSetting.class));
+        assertThat(projectSharingSettings, is(not(new ProjectSharingSettings(projectId, linkSharingPermission, otherSharingSettings))));
     }
 
     @Test

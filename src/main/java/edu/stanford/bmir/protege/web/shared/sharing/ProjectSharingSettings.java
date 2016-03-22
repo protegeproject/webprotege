@@ -33,7 +33,7 @@ public class ProjectSharingSettings implements Serializable {
 
     public ProjectSharingSettings(ProjectId projectId, Optional<SharingPermission> linkSharingPermission, List<SharingSetting> sharingSettings) {
         this.projectId = checkNotNull(projectId);
-        this.sharingSettings = new ArrayList<>(checkNotNull(sharingSettings));
+        this.sharingSettings.addAll(checkNotNull(sharingSettings));
         this.linkSharingPermission = checkNotNull(linkSharingPermission);
     }
 
@@ -51,7 +51,7 @@ public class ProjectSharingSettings implements Serializable {
 
     @Override
     public int hashCode() {
-        return projectId.hashCode() + sharingSettings.hashCode();
+        return Objects.hashCode(projectId, linkSharingPermission, sharingSettings);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ProjectSharingSettings implements Serializable {
             return false;
         }
         ProjectSharingSettings other = (ProjectSharingSettings) obj;
-        return other.projectId.equals(this.projectId) && other.sharingSettings.equals(this.sharingSettings);
+        return other.projectId.equals(this.projectId) && this.linkSharingPermission.equals(other.linkSharingPermission) && other.sharingSettings.equals(this.sharingSettings);
     }
 
 
