@@ -23,7 +23,7 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
 
     @Inject
     public UserDetailsManagerImpl(UserRecordRepository userRecordRepository) {
-        this.repository = userRecordRepository;
+        this.repository = checkNotNull(userRecordRepository);
     }
 
 

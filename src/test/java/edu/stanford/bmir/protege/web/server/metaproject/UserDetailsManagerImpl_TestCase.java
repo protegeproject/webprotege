@@ -52,6 +52,7 @@ public class UserDetailsManagerImpl_TestCase {
         userRecords.add(userRecord);
 
         when(userRecordRepository.findAll()).thenReturn(userRecords.stream());
+        when(userRecordRepository.findOne(userId)).thenReturn(java.util.Optional.of(userRecord));
         when(userRecordRepository.findOneByEmailAddress(email)).thenReturn(java.util.Optional.of(userRecord));
 
         userDetailsManagerImpl = new UserDetailsManagerImpl(userRecordRepository);
@@ -59,29 +60,23 @@ public class UserDetailsManagerImpl_TestCase {
 
     @Test(expected = NullPointerException.class)
     public void shouldThrowNullPointerExceptionIf_Repository_IsNull() {
-        new UserDetailsManagerImpl(userRecordRepository);
+        new UserDetailsManagerImpl(null);
     }
 
 
     @Test
     public void should_getUserIds() {
-        assertThat(userDetailsManagerImpl.getUserIds(), hasItem(UserId.getUserId(userName)));
+        assertThat(userDetailsManagerImpl.getUserIds(), hasItem(userId));
     }
 
     @Test
     public void should_getEmail() {
-        assertThat(userDetailsManagerImpl.getEmail(UserId.getUserId(userName)), is(Optional.of(email)));
+        assertThat(userDetailsManagerImpl.getEmail(userId), is(java.util.Optional.of(email)));
     }
 
     @Test
     public void shouldGetUserIdByEmail() {
         EmailAddress emailAddress = new EmailAddress(email);
-        assertThat(userDetailsManagerImpl.getUserIdByEmailAddress(emailAddress), is(Optional.of(UserId.getUserId(userName))));
-    }
-
-    @Test
-    public void shouldNotGetUserIdByEmail() {
-        EmailAddress emailAddress = new EmailAddress("Other Email");
-        assertThat(userDetailsManagerImpl.getUserIdByEmailAddress(emailAddress), is(Optional.absent()));
+        assertThat(userDetailsManagerImpl.getUserIdByEmailAddress(emailAddress), is(java.util.Optional.of(userId)));
     }
 }
