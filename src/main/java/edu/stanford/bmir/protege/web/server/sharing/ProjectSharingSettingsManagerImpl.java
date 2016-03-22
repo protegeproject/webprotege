@@ -74,7 +74,7 @@ public class ProjectSharingSettingsManagerImpl implements ProjectSharingSettings
         ProjectId projectId = settings.getProjectId();
         List<ProjectPermissionRecord> entries = new ArrayList<>();
         Map<PersonId, SharingSetting> map = settings.getSharingSettings().stream()
-                .collect(toMap(s -> s.getPersonId(), s -> s));
+                .collect(toMap(s -> s.getPersonId(), s -> s, (s1, s2) -> s1));
         for(SharingSetting setting : map.values()) {
             PersonId personId = setting.getPersonId();
             Optional<UserId> userId = userLookup.getUserByUserIdOrEmail(personId.getId());
