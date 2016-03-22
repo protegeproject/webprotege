@@ -17,6 +17,8 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,14 +39,13 @@ public class GetUserIdCompletionsActionHandler_TestCase {
     private GetUserIdCompletionsAction action;
 
     @Before
-    public void setUp()
-        throws Exception
-    {
+    public void setUp() {
         actionHandler = new GetUserIdCompletionsActionHandler(userDetailsManager);
         userIds = Arrays.asList(johnSmith, janeDoe);
         when(userDetailsManager.getUserIds()).thenReturn(userIds);
         when(johnSmith.getUserName()).thenReturn("John Smith");
         when(janeDoe.getUserName()).thenReturn("Jane Doe");
+        when(userDetailsManager.getUserIdsContainingIgnoreCase(anyString(), anyLong())).thenReturn(userIds);
     }
 
     @Test(expected = java.lang.NullPointerException.class)
@@ -53,16 +54,9 @@ public class GetUserIdCompletionsActionHandler_TestCase {
     }
 
     @Test
-    public void shouldIgnoreCase() {
+    public void shouldReturnFoundUserIds() {
         when(action.getCompletionText()).thenReturn("j");
         GetPossibleItemCompletionsResult<UserId> result = actionHandler.execute(action, mock(ExecutionContext.class));
         assertThat(result.getPossibleItemCompletions(), hasItems(janeDoe, johnSmith));
-    }
-
-    @Test
-    public void shouldMatchWithinUserName() {
-        when(action.getCompletionText()).thenReturn("Doe");
-        GetPossibleItemCompletionsResult<UserId> result = actionHandler.execute(action, mock(ExecutionContext.class));
-        assertThat(result.getPossibleItemCompletions(), hasItem(janeDoe));
     }
 }
