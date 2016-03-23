@@ -39,6 +39,6 @@
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:TabBar ui:field="tabBar" addStyleNames="{style.linkTabBar}"/>
-        <g:Button ui:field="newTabButton" text="Add new tab" addStyleNames="{style.newTabButton} {wp.buttons.btn} {wp.buttons.topBarButton}"/>
+        <g:Button ui:field="newTabButton" text="Add tab" addStyleNames="{style.newTabButton} {wp.buttons.btn} {wp.buttons.topBarButton}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
