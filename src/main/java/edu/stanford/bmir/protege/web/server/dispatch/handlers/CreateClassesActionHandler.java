@@ -70,6 +70,14 @@ public class CreateClassesActionHandler extends AbstractHasProjectActionHandler<
     }
 
     private ChangeDescriptionGenerator<Set<OWLClass>> createChangeText(OWLAPIProject project, CreateClassesAction action) {
-        return new FixedMessageChangeDescriptionGenerator<Set<OWLClass>>(OWLMessageFormatter.formatMessage("Created {0} as subclasses of {1}", project, action.getBrowserTexts(), action.getSuperClass()));
+        action.getBrowserTexts();
+        String msg;
+        if(action.getBrowserTexts().size() > 1) {
+            msg = "Added {0} as subclasses of {1}";
+        }
+        else {
+            msg = "Added {0} as a subclass of {1}";
+        }
+        return new FixedMessageChangeDescriptionGenerator<>(OWLMessageFormatter.formatMessage(msg, project, action.getBrowserTexts(), action.getSuperClass()));
     }
 }
