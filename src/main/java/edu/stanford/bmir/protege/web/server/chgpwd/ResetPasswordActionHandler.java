@@ -93,7 +93,7 @@ public class ResetPasswordActionHandler implements ActionHandler<ResetPasswordAc
             Salt salt = saltProvider.get();
             SaltedPasswordDigest saltedPasswordDigest = passwordDigestAlgorithm.getDigestOfSaltedPassword(pwd, salt);
             authenticationManager.setDigestedPassword(userId.get(), saltedPasswordDigest, salt);
-            mailer.sendEmail(executionContext.getUserId(), emailAddress, pwd);
+            mailer.sendEmail(userId.get(), emailAddress, pwd);
             logger.info("The password for %s has been reset.  " +
                             "An email has been sent to %s that contains the new password.",
                     executionContext.getUserId().getUserName(),
