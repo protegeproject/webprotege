@@ -122,7 +122,7 @@ public class PerspectiveSwitcherViewImpl extends Composite implements Perspectiv
             popupMenu.addItem(action);
         }
         popupMenu.addSeparator();
-        popupMenu.addItem("Other\u2026", new ClickHandler() {
+        popupMenu.addItem("Add blank tab\u2026", new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 addPerspectiveLinkRequestHandler.handleAddNewPerspectiveLinkRequest();
