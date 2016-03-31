@@ -14,7 +14,7 @@ import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.FormDataTuple;
+import edu.stanford.bmir.protege.web.shared.form.Tuple;
 import edu.stanford.bmir.protege.web.shared.form.FormElementData;
 import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
@@ -43,9 +43,9 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
 
     private final Repeatability repeatability;
 
-    private final ValueEditor<List<FormDataTuple>> delegateEditor;
+    private final ValueEditor<List<Tuple>> delegateEditor;
 
-    public FormElementEditorImpl(FormElementId formElementId, ValueEditorFactory<FormDataTuple> editorFactory, Repeatability repeatability) {
+    public FormElementEditorImpl(FormElementId formElementId, ValueEditorFactory<Tuple> editorFactory, Repeatability repeatability) {
         this.formElementId = formElementId;
         this.repeatability = repeatability;
         initWidget(ourUiBinder.createAndBindUi(this));
@@ -71,11 +71,11 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
 
     @Override
     public Optional<FormElementData> getValue() {
-        Optional<List<FormDataTuple>> delegateValue = delegateEditor.getValue();
+        Optional<List<Tuple>> delegateValue = delegateEditor.getValue();
         if(!delegateValue.isPresent()) {
             return Optional.absent();
         }
-        List<FormDataTuple> editedValue = delegateValue.get();
+        List<Tuple> editedValue = delegateValue.get();
         return Optional.of(new FormElementData(formElementId, editedValue));
     }
 
@@ -91,9 +91,9 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
 
     @Override
     public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormElementData>> handler) {
-        return delegateEditor.addValueChangeHandler(new ValueChangeHandler<Optional<List<FormDataTuple>>>() {
+        return delegateEditor.addValueChangeHandler(new ValueChangeHandler<Optional<List<Tuple>>>() {
             @Override
-            public void onValueChange(ValueChangeEvent<Optional<List<FormDataTuple>>> event) {
+            public void onValueChange(ValueChangeEvent<Optional<List<Tuple>>> event) {
                 ValueChangeEvent.fire(FormElementEditorImpl.this, getValue());
             }
         });

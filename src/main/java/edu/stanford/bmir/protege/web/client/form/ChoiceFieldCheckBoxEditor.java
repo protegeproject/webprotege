@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.FormDataTuple;
+import edu.stanford.bmir.protege.web.shared.form.Tuple;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
     }
 
     @Override
-    public void setValue(FormDataTuple object) {
+    public void setValue(Tuple object) {
         clearValue();
         for(OWLPrimitiveData data : object.getData()) {
             for(CheckBox checkBox : checkBoxes.keySet()) {
@@ -86,7 +86,7 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
     }
 
     @Override
-    public Optional<FormDataTuple> getValue() {
+    public Optional<Tuple> getValue() {
         List<OWLPrimitiveData> selected = new ArrayList<>();
         for(CheckBox checkBox : checkBoxes.keySet()) {
             if(checkBox.getValue()) {
@@ -94,7 +94,7 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
             }
         }
 
-        return Optional.<FormDataTuple>of(new FormDataTuple(selected));
+        return Optional.<Tuple>of(new Tuple(selected));
     }
 
     @Override
@@ -108,7 +108,7 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataTuple>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<Tuple>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

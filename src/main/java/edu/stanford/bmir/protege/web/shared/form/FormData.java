@@ -26,7 +26,7 @@ public class FormData implements IsSerializable {
     public FormData(List<FormElementDescriptor> formElementDescriptors) {
         this.formElementDescriptors = formElementDescriptors;
         FormElementId elementId = new FormElementId("TheComment");
-        formElementData.put(elementId, new FormElementData(elementId, Arrays.asList(new FormDataTuple(new OWLLiteralData(DataFactory.get().getOWLLiteral("My comment!!!!"))))));
+        formElementData.put(elementId, new FormElementData(elementId, Arrays.asList(new Tuple(new OWLLiteralData(DataFactory.get().getOWLLiteral("My comment!!!!"))))));
     }
 
     public Optional<FormElementData> getFormElementData(FormElementId formElementId) {

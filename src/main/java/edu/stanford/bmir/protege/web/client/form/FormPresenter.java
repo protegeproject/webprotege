@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
@@ -45,16 +44,33 @@ public class FormPresenter {
         GWT.log("[FormPresenter] Displaying form data");
         displayForm(new FormData(
                 Arrays.asList(
-                        new FormElementDescriptor(new FormElementId("TheLabel"), "Label", Repeatability.UNREPEATABLE, new StringFieldDescriptor("Enter label", StringType.SIMPLE_STRING, LineMode.SINGLE_LINE, "")),
+                        new FormElementDescriptor(
+                                new FormElementId("TheLabel"),
+                                "Label",
+                                Repeatability.UNREPEATABLE,
+                                new StringFieldDescriptor(
+                                        "Enter label",
+                                        StringType.SIMPLE_STRING,
+                                        LineMode.SINGLE_LINE,
+                                        ""
+                                )
+                        ),
                         new FormElementDescriptor(new FormElementId("TheComment"), "Comment", Repeatability.UNREPEATABLE, new StringFieldDescriptor("Enter comment", StringType.LANG_STRING, LineMode.MULTI_LINE, "")),
                         new FormElementDescriptor(new FormElementId("Synonyms"), "Synonyms", Repeatability.REPEATABLE, new StringFieldDescriptor("Enter synonym", StringType.LANG_STRING, LineMode.MULTI_LINE, "")),
-                        new FormElementDescriptor(new FormElementId("EngineConfiguration"), "Engine Configuration", Repeatability.REPEATABLE, new ChoiceFieldDescriptor(ChoiceFieldType.COMBO_BOX, Arrays.<ChoiceDescriptor>asList(
-                                new ChoiceDescriptor("Twin Jet - Wing Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
-                                new ChoiceDescriptor("Twin Jet - Tail Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
-                                new ChoiceDescriptor("Tri Jet - Wing/Tail Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
-                                new ChoiceDescriptor("Tri Jet - Wing Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
-                                new ChoiceDescriptor("Quad Jet - Wing Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
-                                new ChoiceDescriptor("Quad Jet - Tail Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad"))
+
+                        new FormElementDescriptor(
+                                new FormElementId("EngineConfiguration"),
+                                "Engine Configuration",
+                                Repeatability.REPEATABLE,
+                                new ChoiceFieldDescriptor(
+                                        ChoiceFieldType.COMBO_BOX,
+                                        Arrays.<ChoiceDescriptor>asList(
+                                    new ChoiceDescriptor("Twin Jet - Wing Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
+                                    new ChoiceDescriptor("Twin Jet - Tail Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
+                                    new ChoiceDescriptor("Tri Jet - Wing/Tail Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
+                                    new ChoiceDescriptor("Tri Jet - Wing Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
+                                    new ChoiceDescriptor("Quad Jet - Wing Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
+                                    new ChoiceDescriptor("Quad Jet - Tail Mounted", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad"))
                         ))),
                         new FormElementDescriptor(new FormElementId("Possible Roles"), "Role", Repeatability.UNREPEATABLE, new ChoiceFieldDescriptor(ChoiceFieldType.CHECK_BOX, Arrays.<ChoiceDescriptor>asList(
                                 new ChoiceDescriptor("Passenger", DataFactory.getOWLEntityData(DataFactory.getOWLClass("http://aero.com/quad"), "Quad")),
@@ -102,7 +118,7 @@ public class FormPresenter {
     }
 
     private Optional<FormElementEditor> getFormElementEditor(FormElementDescriptor descriptor) {
-        Optional<ValueEditorFactory<FormDataTuple>> editorFactory = getValueEditorFactory(descriptor.getFormFieldDescriptor());
+        Optional<ValueEditorFactory<Tuple>> editorFactory = getValueEditorFactory(descriptor.getFormFieldDescriptor());
         if(!editorFactory.isPresent()) {
             return Optional.<FormElementEditor>absent();
         }
@@ -114,12 +130,12 @@ public class FormPresenter {
         );
     }
 
-    private Optional<ValueEditorFactory<FormDataTuple>> getValueEditorFactory(final FormFieldDescriptor formFieldDescriptor) {
+    private Optional<ValueEditorFactory<Tuple>> getValueEditorFactory(final FormFieldDescriptor formFieldDescriptor) {
         if(formFieldDescriptor.getAssociatedFieldTypeId().equals(StringFieldDescriptor.getFieldTypeId())) {
-            return Optional.<ValueEditorFactory<FormDataTuple>>of(
-                    new ValueEditorFactory<FormDataTuple>() {
+            return Optional.<ValueEditorFactory<Tuple>>of(
+                    new ValueEditorFactory<Tuple>() {
                         @Override
-                        public ValueEditor<FormDataTuple> createEditor() {
+                        public ValueEditor<Tuple> createEditor() {
                             StringFieldDescriptor descriptor = (StringFieldDescriptor) formFieldDescriptor;
                             StringFieldEditor stringFieldEditor = new StringFieldEditor(projectId);
                             stringFieldEditor.setPlaceholder(descriptor.getPlaceholder());
@@ -131,10 +147,10 @@ public class FormPresenter {
             );
         }
         else if(formFieldDescriptor.getAssociatedFieldTypeId().equals(ChoiceFieldDescriptor.getFieldTypeId())) {
-            return Optional.<ValueEditorFactory<FormDataTuple>>of(
-                    new ValueEditorFactory<FormDataTuple>() {
+            return Optional.<ValueEditorFactory<Tuple>>of(
+                    new ValueEditorFactory<Tuple>() {
                         @Override
-                        public ValueEditor<FormDataTuple> createEditor() {
+                        public ValueEditor<Tuple> createEditor() {
                             ChoiceFieldDescriptor descriptor = (ChoiceFieldDescriptor) formFieldDescriptor;
                             ChoiceFieldEditor editor;
                             if(descriptor.getType() == ChoiceFieldType.RADIO_BUTTON) {
@@ -153,7 +169,7 @@ public class FormPresenter {
             );
         }
         else {
-            return Optional.<ValueEditorFactory<FormDataTuple>>absent();
+            return Optional.<ValueEditorFactory<Tuple>>absent();
         }
     }
 

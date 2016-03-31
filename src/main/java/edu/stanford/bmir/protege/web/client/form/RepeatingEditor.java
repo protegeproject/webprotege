@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.FormDataTuple;
+import edu.stanford.bmir.protege.web.shared.form.Tuple;
 
 import java.util.List;
 
@@ -17,17 +17,17 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class RepeatingEditor implements ValueEditor<List<FormDataTuple>> {
+public class RepeatingEditor implements ValueEditor<List<Tuple>> {
 
-    private ValueListEditor<FormDataTuple> delegate;
+    private ValueListEditor<Tuple> delegate;
 
-    public RepeatingEditor(ValueListEditor<FormDataTuple> delegate) {
+    public RepeatingEditor(ValueListEditor<Tuple> delegate) {
         this.delegate = delegate;
         delegate.setEnabled(true);
     }
 
     @Override
-    public void setValue(List<FormDataTuple> object) {
+    public void setValue(List<Tuple> object) {
         delegate.setValue(object);
     }
 
@@ -37,7 +37,7 @@ public class RepeatingEditor implements ValueEditor<List<FormDataTuple>> {
     }
 
     @Override
-    public Optional<List<FormDataTuple>> getValue() {
+    public Optional<List<Tuple>> getValue() {
         return delegate.getValue();
     }
 
@@ -52,7 +52,7 @@ public class RepeatingEditor implements ValueEditor<List<FormDataTuple>> {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<List<FormDataTuple>>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<List<Tuple>>> handler) {
         return delegate.addValueChangeHandler(handler);
     }
 
