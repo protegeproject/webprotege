@@ -13,11 +13,10 @@ import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.FormDataTuple;
+import edu.stanford.bmir.protege.web.shared.form.Tuple;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
 import edu.stanford.bmir.protege.web.shared.form.field.StringType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -29,7 +28,7 @@ import java.util.Collections;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class StringFieldEditor extends Composite implements ValueEditor<FormDataTuple> {
+public class StringFieldEditor extends Composite implements ValueEditor<Tuple> {
 
     interface StringFieldEditorUiBinder extends UiBinder<HTMLPanel, StringFieldEditor> {
 
@@ -82,7 +81,7 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
     }
 
     @Override
-    public void setValue(FormDataTuple object) {
+    public void setValue(Tuple object) {
         Optional<OWLPrimitiveData> primitiveDataOptional = object.getSingleValueData();
         if(!primitiveDataOptional.isPresent()) {
             clearValue();
@@ -98,12 +97,12 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
     }
 
     @Override
-    public Optional<FormDataTuple> getValue() {
+    public Optional<Tuple> getValue() {
         Optional<OWLPrimitiveData> editedValue = editor.getValue();
         if(!editedValue.isPresent()) {
             return Optional.absent();
         }
-        FormDataTuple tuple = new FormDataTuple(editedValue.get());
+        Tuple tuple = new Tuple(editedValue.get());
         return Optional.of(tuple);
     }
 
@@ -118,7 +117,7 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataTuple>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<Tuple>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

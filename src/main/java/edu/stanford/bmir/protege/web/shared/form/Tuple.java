@@ -15,20 +15,20 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class FormDataTuple implements IsSerializable {
+public class Tuple implements IsSerializable {
 
 
     @SuppressWarnings("GwtInconsistentSerializableClass")
     private List<OWLPrimitiveData> data = new ArrayList<>();
 
-    private FormDataTuple() {
+    private Tuple() {
     }
 
-    public FormDataTuple(OWLPrimitiveData data) {
+    public Tuple(OWLPrimitiveData data) {
         this.data.add(data);
     }
 
-    public FormDataTuple(List<OWLPrimitiveData> data) {
+    public Tuple(List<OWLPrimitiveData> data) {
         this.data.addAll(data);
     }
 

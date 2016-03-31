@@ -8,7 +8,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.FormDataTuple;
+import edu.stanford.bmir.protege.web.shared.form.Tuple;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,17 +18,17 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class NonRepeatingEditor implements ValueEditor<List<FormDataTuple>> {
+public class NonRepeatingEditor implements ValueEditor<List<Tuple>> {
 
-    private final ValueEditor<FormDataTuple> delegate;
+    private final ValueEditor<Tuple> delegate;
 
-    public NonRepeatingEditor(ValueEditor<FormDataTuple> delegate) {
+    public NonRepeatingEditor(ValueEditor<Tuple> delegate) {
         this.delegate = delegate;
         delegate.asWidget().setWidth("100%");
     }
 
     @Override
-    public void setValue(List<FormDataTuple> object) {
+    public void setValue(List<Tuple> object) {
         if(object.isEmpty()) {
             delegate.clearValue();
             return;
@@ -42,8 +42,8 @@ public class NonRepeatingEditor implements ValueEditor<List<FormDataTuple>> {
     }
 
     @Override
-    public Optional<List<FormDataTuple>> getValue() {
-        Optional<FormDataTuple> delegateValue = delegate.getValue();
+    public Optional<List<Tuple>> getValue() {
+        Optional<Tuple> delegateValue = delegate.getValue();
         if(!delegateValue.isPresent()) {
             return Optional.absent();
         }
@@ -63,10 +63,10 @@ public class NonRepeatingEditor implements ValueEditor<List<FormDataTuple>> {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<List<FormDataTuple>>> handler) {
-        return delegate.addValueChangeHandler(new ValueChangeHandler<Optional<FormDataTuple>>() {
+    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<List<Tuple>>> handler) {
+        return delegate.addValueChangeHandler(new ValueChangeHandler<Optional<Tuple>>() {
             @Override
-            public void onValueChange(ValueChangeEvent<Optional<FormDataTuple>> event) {
+            public void onValueChange(ValueChangeEvent<Optional<Tuple>> event) {
                 ValueChangeEvent.fire(NonRepeatingEditor.this, getValue());
             }
         });

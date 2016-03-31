@@ -19,14 +19,14 @@ public class FormElementData implements IsSerializable {
 
     private FormElementId formElementId;
 
-    private List<FormDataTuple> values = new ArrayList<>();
+    private List<Tuple> tuples = new ArrayList<>();
 
     private FormElementData() {
     }
 
-    public FormElementData(FormElementId formElementId, List<FormDataTuple> values) {
+    public FormElementData(FormElementId formElementId, List<Tuple> values) {
         this.formElementId = formElementId;
-        this.values = values;
+        this.tuples.addAll(values);
     }
 
     public FormElementId getFormElementId() {
@@ -34,16 +34,16 @@ public class FormElementData implements IsSerializable {
     }
 
     public Optional<OWLPrimitiveData> getSingleValueData() {
-        if(values.isEmpty()) {
+        if(tuples.isEmpty()) {
             return Optional.absent();
         }
         else {
-            return values.get(0).getSingleValueData();
+            return tuples.get(0).getSingleValueData();
         }
     }
 
-    public List<FormDataTuple> getTuples() {
-        return values;
+    public List<Tuple> getTuples() {
+        return new ArrayList<>(tuples);
     }
 
 
@@ -51,7 +51,7 @@ public class FormElementData implements IsSerializable {
     public String toString() {
         return toStringHelper("FormElementData")
                 .addValue(formElementId)
-                .addValue(values)
+                .addValue(tuples)
                 .toString();
     }
 }
