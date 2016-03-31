@@ -11,6 +11,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.form.FormView;
+import edu.stanford.bmir.protege.web.client.form.FormViewImpl;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.login.SignUpForAccountHandler;
@@ -221,6 +223,9 @@ public class ApplicationClientModule extends AbstractGinModule {
 
         bind(int.class).annotatedWith(EventPollingPeriod.class)
                 .toProvider(EventPollingPeriodProvider.class);
+
+        bind(FormView.class)
+                .to(FormViewImpl.class);
 
     }
 
