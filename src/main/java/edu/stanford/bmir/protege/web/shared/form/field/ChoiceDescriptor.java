@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 
 /**
  * Matthew Horridge
@@ -12,23 +12,22 @@ public class ChoiceDescriptor implements IsSerializable {
 
     private String label;
 
-    @SuppressWarnings("GwtInconsistentSerializableClass")
-    private OWLPrimitiveData data;
+    private FormDataValue value;
 
 
     private ChoiceDescriptor() {
     }
 
-    public ChoiceDescriptor(String label, OWLPrimitiveData data) {
+    public ChoiceDescriptor(String label, FormDataValue value) {
         this.label = label;
-        this.data = data;
+        this.value = value;
     }
 
     public String getLabel() {
         return label;
     }
 
-    public OWLPrimitiveData getData() {
-        return data;
+    public FormDataValue getValue() {
+        return value;
     }
 }

@@ -52,7 +52,7 @@ public class DispatchServiceExecutorImpl_TestCase<A extends Action<R>, R extends
     @Test(expected = ActionExecutionException.class)
     public void shouldThrowActionExecutionException() {
         ExecutionContext executionContext = this.executionContext;
-        when(actionHandler.execute(action, executionContext)).thenThrow(new RuntimeException());
+        when(actionHandler.execute(action, executionContext)).thenThrow(new RuntimeException("Exception as part of test"));
         executor.execute(action, requestContext, executionContext);
     }
 

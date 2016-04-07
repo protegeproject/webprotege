@@ -9,21 +9,21 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class GetFormDataResult implements Result {
+public class GetFormResult implements Result {
 
     private ProjectId projectId;
 
     private OWLEntity entity;
 
-    private FormData formData;
+    private FormDescriptor formDescriptor;
 
-    private GetFormDataResult() {
+    private GetFormResult() {
     }
 
-    public GetFormDataResult(ProjectId projectId, OWLEntity entity, FormData formData) {
+    public GetFormResult(ProjectId projectId, OWLEntity entity, FormDescriptor formDescriptor) {
         this.projectId = projectId;
         this.entity = entity;
-        this.formData = formData;
+        this.formDescriptor = this.formDescriptor;
     }
 
     public ProjectId getProjectId() {
@@ -34,7 +34,7 @@ public class GetFormDataResult implements Result {
         return entity;
     }
 
-    public FormData getFormData() {
-        return formData;
+    public FormDescriptor getFormData() {
+        return formDescriptor;
     }
 }

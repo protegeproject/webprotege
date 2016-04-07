@@ -11,16 +11,16 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class GetFormDataAction implements Action<GetFormDataResult>, HasProjectId, HasSubject<OWLEntity> {
+public class GetFormAction implements Action<GetFormResult>, HasProjectId, HasSubject<OWLEntity> {
 
     private ProjectId projectId;
 
     private OWLEntity subject;
 
-    private GetFormDataAction() {
+    private GetFormAction() {
     }
 
-    public GetFormDataAction(ProjectId projectId, OWLEntity subject) {
+    public GetFormAction(ProjectId projectId, OWLEntity subject) {
         this.projectId = projectId;
         this.subject = subject;
     }

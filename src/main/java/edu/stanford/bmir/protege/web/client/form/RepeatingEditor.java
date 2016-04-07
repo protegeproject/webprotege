@@ -8,7 +8,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.Tuple;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 
 import java.util.List;
 
@@ -17,18 +18,18 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class RepeatingEditor implements ValueEditor<List<Tuple>> {
+public class RepeatingEditor implements ValueEditor<FormDataList> {
 
-    private ValueListEditor<Tuple> delegate;
+    private ValueListEditor<FormDataValue> delegate;
 
-    public RepeatingEditor(ValueListEditor<Tuple> delegate) {
+    public RepeatingEditor(ValueListEditor<FormDataValue> delegate) {
         this.delegate = delegate;
         delegate.setEnabled(true);
     }
 
     @Override
-    public void setValue(List<Tuple> object) {
-        delegate.setValue(object);
+    public void setValue(FormDataList object) {
+        delegate.setValue(object.getList());
     }
 
     @Override
@@ -37,8 +38,12 @@ public class RepeatingEditor implements ValueEditor<List<Tuple>> {
     }
 
     @Override
-    public Optional<List<Tuple>> getValue() {
-        return delegate.getValue();
+    public Optional<FormDataList> getValue() {
+        Optional<List<FormDataValue>> value = delegate.getValue();
+        if(!value.isPresent()) {
+            return Optional.absent();
+        }
+        return Optional.of(new FormDataList(value.get()));
     }
 
     @Override
@@ -52,8 +57,13 @@ public class RepeatingEditor implements ValueEditor<List<Tuple>> {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<List<Tuple>>> handler) {
-        return delegate.addValueChangeHandler(handler);
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataList>> handler) {
+        return new HandlerRegistration() {
+            @Override
+            public void removeHandler() {
+
+            }
+        };
     }
 
     @Override

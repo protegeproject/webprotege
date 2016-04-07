@@ -11,15 +11,21 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
-import edu.stanford.bmir.protege.web.client.primitive.*;
+import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
+import edu.stanford.bmir.protege.web.client.primitive.NullFreshEntitySuggestStrategy;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorView;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
+import edu.stanford.bmir.protege.web.shared.entity.OWLLiteralData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.Tuple;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.LineMode;
 import edu.stanford.bmir.protege.web.shared.form.field.StringType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 import java.util.Collections;
 
@@ -28,7 +34,7 @@ import java.util.Collections;
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class StringFieldEditor extends Composite implements ValueEditor<Tuple> {
+public class StringFieldEditor extends Composite implements ValueEditor<FormDataValue> {
 
     interface StringFieldEditorUiBinder extends UiBinder<HTMLPanel, StringFieldEditor> {
 
@@ -81,13 +87,13 @@ public class StringFieldEditor extends Composite implements ValueEditor<Tuple> {
     }
 
     @Override
-    public void setValue(Tuple object) {
-        Optional<OWLPrimitiveData> primitiveDataOptional = object.getSingleValueData();
-        if(!primitiveDataOptional.isPresent()) {
+    public void setValue(FormDataValue object) {
+        Optional<OWLLiteral> primitive = object.asLiteral();
+        if(!primitive.isPresent()) {
             clearValue();
         }
         else {
-            editor.setValue(primitiveDataOptional.get());
+            editor.setValue(new OWLLiteralData(primitive.get()));
         }
     }
 
@@ -97,13 +103,13 @@ public class StringFieldEditor extends Composite implements ValueEditor<Tuple> {
     }
 
     @Override
-    public Optional<Tuple> getValue() {
+    public Optional<FormDataValue> getValue() {
         Optional<OWLPrimitiveData> editedValue = editor.getValue();
         if(!editedValue.isPresent()) {
-            return Optional.absent();
+            return Optional.<FormDataValue>absent();
         }
-        Tuple tuple = new Tuple(editedValue.get());
-        return Optional.of(tuple);
+        OWLLiteralData literalData = (OWLLiteralData) editedValue.get();
+        return Optional.<FormDataValue>of(FormDataPrimitive.get(literalData.getLiteral()));
     }
 
     @Override
@@ -117,7 +123,7 @@ public class StringFieldEditor extends Composite implements ValueEditor<Tuple> {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<Tuple>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

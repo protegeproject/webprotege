@@ -1,39 +1,38 @@
 package edu.stanford.bmir.protege.web.client.form;
 
 import com.google.common.base.Optional;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.Tuple;
-
-import java.util.Arrays;
-import java.util.List;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class NonRepeatingEditor implements ValueEditor<List<Tuple>> {
+public class NonRepeatingEditor implements ValueEditor<FormDataList> {
 
-    private final ValueEditor<Tuple> delegate;
+    private final ValueEditor<FormDataValue> delegate;
 
-    public NonRepeatingEditor(ValueEditor<Tuple> delegate) {
+    public NonRepeatingEditor(ValueEditor<FormDataValue> delegate) {
         this.delegate = delegate;
         delegate.asWidget().setWidth("100%");
     }
 
     @Override
-    public void setValue(List<Tuple> object) {
-        if(object.isEmpty()) {
-            delegate.clearValue();
-            return;
+    public void setValue(FormDataList object) {
+        Optional<FormDataValue> first = object.getFirst();
+        if(first.isPresent()) {
+            delegate.setValue(first.get());
         }
-        delegate.setValue(object.get(0));
+        else {
+            delegate.clearValue();
+        }
     }
 
     @Override
@@ -42,14 +41,13 @@ public class NonRepeatingEditor implements ValueEditor<List<Tuple>> {
     }
 
     @Override
-    public Optional<List<Tuple>> getValue() {
-        Optional<Tuple> delegateValue = delegate.getValue();
-        if(!delegateValue.isPresent()) {
+    public Optional<FormDataList> getValue() {
+        Optional<FormDataValue> value = delegate.getValue();
+        if(!value.isPresent()) {
             return Optional.absent();
         }
-        else {
-            return Optional.of(Arrays.asList(delegateValue.get()));
-        }
+        FormDataList delegateValue = new FormDataList(value.get());
+        return Optional.of(delegateValue);
     }
 
     @Override
@@ -63,13 +61,13 @@ public class NonRepeatingEditor implements ValueEditor<List<Tuple>> {
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<List<Tuple>>> handler) {
-        return delegate.addValueChangeHandler(new ValueChangeHandler<Optional<Tuple>>() {
+    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormDataList>> handler) {
+        return new HandlerRegistration() {
             @Override
-            public void onValueChange(ValueChangeEvent<Optional<Tuple>> event) {
-                ValueChangeEvent.fire(NonRepeatingEditor.this, getValue());
+            public void removeHandler() {
+
             }
-        });
+        };
     }
 
     @Override
