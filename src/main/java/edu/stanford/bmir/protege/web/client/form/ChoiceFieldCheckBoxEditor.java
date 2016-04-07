@@ -14,8 +14,8 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.Tuple;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 
 import java.util.ArrayList;
@@ -67,11 +67,11 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
     }
 
     @Override
-    public void setValue(Tuple object) {
+    public void setValue(FormDataValue value) {
         clearValue();
-        for(OWLPrimitiveData data : object.getData()) {
+        for(FormDataValue data : value.asList()) {
             for(CheckBox checkBox : checkBoxes.keySet()) {
-                if(checkBoxes.get(checkBox).getData().equals(data)) {
+                if(checkBoxes.get(checkBox).getValue().equals(data)) {
                     checkBox.setValue(true);
                 }
             }
@@ -86,15 +86,15 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
     }
 
     @Override
-    public Optional<Tuple> getValue() {
-        List<OWLPrimitiveData> selected = new ArrayList<>();
+    public Optional<FormDataValue> getValue() {
+        List<FormDataValue> selected = new ArrayList<>();
         for(CheckBox checkBox : checkBoxes.keySet()) {
             if(checkBox.getValue()) {
-                selected.add(checkBoxes.get(checkBox).getData());
+                selected.add(checkBoxes.get(checkBox).getValue());
             }
         }
 
-        return Optional.<Tuple>of(new Tuple(selected));
+        return Optional.<FormDataValue>of(new FormDataList(selected));
     }
 
     @Override
@@ -108,7 +108,7 @@ public class ChoiceFieldCheckBoxEditor extends Composite implements ChoiceFieldE
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<Tuple>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

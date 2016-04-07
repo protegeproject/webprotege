@@ -14,12 +14,9 @@ import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueListEditorImpl;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.form.Tuple;
-import edu.stanford.bmir.protege.web.shared.form.FormElementData;
-import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataList;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.Repeatability;
-
-import java.util.List;
 
 /**
  * Matthew Horridge
@@ -39,15 +36,9 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
     @UiField
     SimplePanel editorHolder;
 
-    private final FormElementId formElementId;
+    private final ValueEditor<FormDataList> delegateEditor;
 
-    private final Repeatability repeatability;
-
-    private final ValueEditor<List<Tuple>> delegateEditor;
-
-    public FormElementEditorImpl(FormElementId formElementId, ValueEditorFactory<Tuple> editorFactory, Repeatability repeatability) {
-        this.formElementId = formElementId;
-        this.repeatability = repeatability;
+    public FormElementEditorImpl(ValueEditorFactory<FormDataValue> editorFactory, Repeatability repeatability) {
         initWidget(ourUiBinder.createAndBindUi(this));
         if(repeatability == Repeatability.REPEATABLE) {
             delegateEditor = new RepeatingEditor(new ValueListEditorImpl<>(editorFactory));
@@ -60,8 +51,8 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
 
 
     @Override
-    public void setValue(FormElementData value) {
-        delegateEditor.setValue(value.getTuples());
+    public void setValue(FormDataList value) {
+        delegateEditor.setValue(value);
     }
 
     @Override
@@ -70,13 +61,8 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
     }
 
     @Override
-    public Optional<FormElementData> getValue() {
-        Optional<List<Tuple>> delegateValue = delegateEditor.getValue();
-        if(!delegateValue.isPresent()) {
-            return Optional.absent();
-        }
-        List<Tuple> editedValue = delegateValue.get();
-        return Optional.of(new FormElementData(formElementId, editedValue));
+    public Optional<FormDataList> getValue() {
+        return delegateEditor.getValue();
     }
 
     @Override
@@ -90,10 +76,10 @@ public class FormElementEditorImpl extends Composite implements FormElementEdito
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormElementData>> handler) {
-        return delegateEditor.addValueChangeHandler(new ValueChangeHandler<Optional<List<Tuple>>>() {
+    public HandlerRegistration addValueChangeHandler(final ValueChangeHandler<Optional<FormDataList>> handler) {
+        return delegateEditor.addValueChangeHandler(new ValueChangeHandler<Optional<FormDataList>>() {
             @Override
-            public void onValueChange(ValueChangeEvent<Optional<List<Tuple>>> event) {
+            public void onValueChange(ValueChangeEvent<Optional<FormDataList>> event) {
                 ValueChangeEvent.fire(FormElementEditorImpl.this, getValue());
             }
         });

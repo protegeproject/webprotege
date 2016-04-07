@@ -1,14 +1,15 @@
 package edu.stanford.bmir.protege.web.shared.form.field;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.form.HasFormElementId;
+
+import java.io.Serializable;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
  * 30/03/16
  */
-public class FormElementDescriptor implements HasFormElementId, HasRepeatability, IsSerializable {
+public class FormElementDescriptor implements HasFormElementId, HasRepeatability, Serializable {
 
     private FormElementId formElementId;
 

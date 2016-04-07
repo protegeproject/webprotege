@@ -13,11 +13,12 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.Tuple;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Matthew Horridge
@@ -65,15 +66,10 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
     }
 
     @Override
-    public void setValue(Tuple dataTuple) {
-        Optional<OWLPrimitiveData> val = dataTuple.getSingleValueData();
-        if(!val.isPresent()) {
-            clearValue();
-            return;
-        }
+    public void setValue(FormDataValue value) {
         for(RadioButton radioButton : choiceButtons.keySet()) {
             ChoiceDescriptor choiceDescriptor = choiceButtons.get(radioButton);
-            if(choiceDescriptor.getData().equals(val.get())) {
+            if(choiceDescriptor.getValue().equals(value)) {
                 radioButton.setValue(true);
                 break;
             }
@@ -88,14 +84,14 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
     }
 
     @Override
-    public Optional<Tuple> getValue() {
+    public Optional<FormDataValue> getValue() {
         for(RadioButton radioButton : choiceButtons.keySet()) {
             if(radioButton.getValue()) {
                 ChoiceDescriptor descriptor = choiceButtons.get(radioButton);
-                return Optional.<Tuple>of(new Tuple(descriptor.getData()));
+                return Optional.of(descriptor.getValue());
             }
         }
-        return Optional.<Tuple>absent();
+        return Optional.<FormDataValue>absent();
     }
 
     @Override
@@ -109,7 +105,7 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<Tuple>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 

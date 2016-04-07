@@ -14,8 +14,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
-import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
-import edu.stanford.bmir.protege.web.shared.form.Tuple;
+import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.ChoiceDescriptor;
 
 import java.util.ArrayList;
@@ -61,17 +60,14 @@ public class ChoiceFieldComboBoxEditor extends Composite implements ChoiceFieldE
     }
 
     @Override
-    public void setValue(Tuple object) {
-        Optional<OWLPrimitiveData> value = object.getSingleValueData();
-        if(!value.isPresent()) {
-            return;
-        }
+    public void setValue(FormDataValue value) {
         int index = 1;
         for(ChoiceDescriptor descriptor : choiceDescriptors) {
-            if(descriptor.getData().equals(value.get())) {
+            if(descriptor.getValue().equals(value)) {
                 comboBox.setSelectedIndex(index);
-                index++;
+                break;
             }
+            index++;
         }
     }
 
@@ -81,15 +77,13 @@ public class ChoiceFieldComboBoxEditor extends Composite implements ChoiceFieldE
     }
 
     @Override
-    public Optional<Tuple> getValue() {
+    public Optional<FormDataValue> getValue() {
         int selIndex = comboBox.getSelectedIndex();
-        GWT.log("COM SEL IND " + selIndex);
         if(selIndex < 1) {
-            return Optional.absent();
+            return Optional.<FormDataValue>absent();
         }
-        OWLPrimitiveData selData = choiceDescriptors.get(selIndex - 1).getData();
-        GWT.log("SEL DAT " + selData);
-        return Optional.of(new Tuple(selData));
+        FormDataValue selData = choiceDescriptors.get(selIndex - 1).getValue();
+        return Optional.<FormDataValue>of(selData);
     }
 
     @Override
@@ -103,7 +97,7 @@ public class ChoiceFieldComboBoxEditor extends Composite implements ChoiceFieldE
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<Tuple>> handler) {
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Optional<FormDataValue>> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
