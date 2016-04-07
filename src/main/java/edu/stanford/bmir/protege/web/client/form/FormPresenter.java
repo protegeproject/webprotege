@@ -14,10 +14,12 @@ import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataValue;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Matthew Horridge
@@ -79,7 +81,8 @@ public class FormPresenter {
                                 new ChoiceDescriptor("Passenger", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/Passenger"))),
                                 new ChoiceDescriptor("Cargo", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/Cargo"))),
                                 new ChoiceDescriptor("Combi", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/Combi")))
-                        )))
+                        ))),
+                        new FormElementDescriptor(new FormElementId("ClassName"), "The Class", Repeatability.UNREPEATABLE, new ClassNameFieldDescriptor(Collections.<OWLClass>emptySet()))
                 )
         ), entity);
 
@@ -166,10 +169,10 @@ public class FormPresenter {
                         public ValueEditor<FormDataValue> createEditor() {
                             ChoiceFieldDescriptor descriptor = (ChoiceFieldDescriptor) formFieldDescriptor;
                             ChoiceFieldEditor editor;
-                            if(descriptor.getType() == ChoiceFieldType.RADIO_BUTTON) {
+                            if (descriptor.getType() == ChoiceFieldType.RADIO_BUTTON) {
                                 editor = new ChoiceFieldRadioButtonEditor();
                             }
-                            else if(descriptor.getType() == ChoiceFieldType.CHECK_BOX) {
+                            else if (descriptor.getType() == ChoiceFieldType.CHECK_BOX) {
                                 editor = new ChoiceFieldCheckBoxEditor();
                             }
                             else {
@@ -177,6 +180,16 @@ public class FormPresenter {
                             }
                             editor.setChoices(descriptor.getChoiceDescriptors());
                             return editor;
+                        }
+                    }
+            );
+        }
+        else if(formFieldDescriptor.getAssociatedFieldTypeId().equals(ClassNameFieldDescriptor.getFieldTypeId())) {
+            return Optional.<ValueEditorFactory<FormDataValue>>of(
+                    new ValueEditorFactory<FormDataValue>() {
+                        @Override
+                        public ValueEditor<FormDataValue> createEditor() {
+                            return new ClassNameFieldEditor(projectId);
                         }
                     }
             );

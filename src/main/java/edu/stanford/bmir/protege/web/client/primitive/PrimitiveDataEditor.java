@@ -229,5 +229,5 @@ public interface PrimitiveDataEditor extends IsWidget, HasEnabled, ValueEditor<O
      * @param autoSelectSuggestions {@code true} if the suggestions are auto selected, otherwise {@code false}.
      */
     void setAutoSelectSuggestions(boolean autoSelectSuggestions);
-
+    
 }

@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.form.data;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 
 import java.util.*;
 
@@ -24,6 +25,11 @@ public class FormDataObject extends FormDataValue {
 
     public Optional<FormDataValue> get(String key) {
         return Optional.fromNullable(map.get(key));
+    }
+
+    @Override
+    public Optional<OWLClassData> asOWLClassData() {
+        return Optional.absent();
     }
 
     @Override

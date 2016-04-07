@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.primitive;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestOracle;

@@ -49,6 +49,8 @@ public class ExpandingTextBoxImpl extends SimplePanel implements Focusable, HasA
 
     private String placeholder = "";
 
+    private boolean requestingFocus = false;
+
 
     interface ExpandingTextBoxImplUiBinder extends UiBinder<HTMLPanel, ExpandingTextBoxImpl> {
 

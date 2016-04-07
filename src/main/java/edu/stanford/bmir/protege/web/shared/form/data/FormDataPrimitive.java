@@ -3,6 +3,8 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
+import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -23,7 +25,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class FormDataPrimitive extends FormDataValue {
 
-    private OWLObject primitive;
+
+    @SuppressWarnings("GwtInconsistentSerializableClass")
+    private Object primitive;
 
     private FormDataPrimitive() {
     }
@@ -42,8 +46,16 @@ public class FormDataPrimitive extends FormDataValue {
         primitive = checkNotNull(iri);
     }
 
+    private FormDataPrimitive(OWLEntityData entityData) {
+        this.primitive = entityData;
+    }
+
     public static FormDataPrimitive get(OWLEntity entity) {
         return new FormDataPrimitive(entity);
+    }
+
+    public static FormDataPrimitive get(OWLEntityData entityData) {
+        return new FormDataPrimitive(entityData);
     }
 
     public static FormDataPrimitive get(IRI iri) {
@@ -71,6 +83,16 @@ public class FormDataPrimitive extends FormDataValue {
     public Optional<OWLLiteral> asLiteral() {
         if(primitive instanceof OWLLiteral) {
             return Optional.of((OWLLiteral) primitive);
+        }
+        else {
+            return Optional.absent();
+        }
+    }
+
+    @Override
+    public Optional<OWLClassData> asOWLClassData() {
+        if(primitive instanceof OWLClassData) {
+            return Optional.of((OWLClassData) primitive);
         }
         else {
             return Optional.absent();
