@@ -27,7 +27,7 @@ public class FormDataPrimitive extends FormDataValue {
 
 
     @SuppressWarnings("GwtInconsistentSerializableClass")
-    private Object primitive;
+    private OWLObject primitive;
 
     private FormDataPrimitive() {
     }
@@ -46,17 +46,17 @@ public class FormDataPrimitive extends FormDataValue {
         primitive = checkNotNull(iri);
     }
 
-    private FormDataPrimitive(OWLEntityData entityData) {
-        this.primitive = entityData;
-    }
+//    private FormDataPrimitive(OWLEntityData entityData) {
+//        this.primitive = entityData;
+//    }
 
     public static FormDataPrimitive get(OWLEntity entity) {
         return new FormDataPrimitive(entity);
     }
 
-    public static FormDataPrimitive get(OWLEntityData entityData) {
-        return new FormDataPrimitive(entityData);
-    }
+//    public static FormDataPrimitive get(OWLEntityData entityData) {
+//        return new FormDataPrimitive(entityData);
+//    }
 
     public static FormDataPrimitive get(IRI iri) {
         return new FormDataPrimitive(iri);
@@ -89,15 +89,15 @@ public class FormDataPrimitive extends FormDataValue {
         }
     }
 
-    @Override
-    public Optional<OWLClassData> asOWLClassData() {
-        if(primitive instanceof OWLClassData) {
-            return Optional.of((OWLClassData) primitive);
-        }
-        else {
-            return Optional.absent();
-        }
-    }
+//    @Override
+//    public Optional<OWLClassData> asOWLClassData() {
+//        if(primitive instanceof OWLClassData) {
+//            return Optional.of((OWLClassData) primitive);
+//        }
+//        else {
+//            return Optional.absent();
+//        }
+//    }
 
     @Override
     public int hashCode() {

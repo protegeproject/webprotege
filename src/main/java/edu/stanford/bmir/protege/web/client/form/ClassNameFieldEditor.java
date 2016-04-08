@@ -56,13 +56,13 @@ public class ClassNameFieldEditor extends Composite implements ValueEditor<FormD
 
     @Override
     public void setValue(FormDataValue object) {
-        Optional<OWLClassData> classData = object.asOWLClassData();
-        if(classData.isPresent()) {
-            editor.setValue(classData.get());
-        }
-        else {
-            editor.clearValue();
-        }
+//        Optional<OWLClassData> classData = object.asOWLClassData();
+//        if(classData.isPresent()) {
+//            editor.setValue(classData.get());
+//        }
+//        else {
+//            editor.clearValue();
+//        }
     }
 
     @Override
@@ -73,14 +73,14 @@ public class ClassNameFieldEditor extends Composite implements ValueEditor<FormD
     @Override
     public Optional<FormDataValue> getValue() {
         Optional<OWLPrimitiveData> value = editor.getValue();
-        if(!value.isPresent()) {
+//        if(!value.isPresent()) {
             return Optional.absent();
-        }
-        OWLPrimitiveData theValue = value.get();
-        if(!(theValue instanceof OWLClassData)) {
-            return Optional.absent();
-        }
-        return Optional.<FormDataValue>of(FormDataPrimitive.get((OWLClassData) value.get()));
+//        }
+//        OWLPrimitiveData theValue = value.get();
+//        if(!(theValue instanceof OWLClassData)) {
+//            return Optional.absent();
+//        }
+//        return Optional.<FormDataValue>of(FormDataPrimitive.get((OWLClassData) value.get()));
     }
 
     @Override

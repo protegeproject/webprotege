@@ -71,7 +71,9 @@ public class ChoiceFieldRadioButtonEditor extends Composite implements ChoiceFie
             ChoiceDescriptor choiceDescriptor = choiceButtons.get(radioButton);
             if(choiceDescriptor.getValue().equals(value)) {
                 radioButton.setValue(true);
-                break;
+            }
+            else {
+                radioButton.setValue(false);
             }
         }
     }
