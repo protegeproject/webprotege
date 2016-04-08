@@ -31,7 +31,7 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
                                   ProjectId projectId) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.presenter = presenter;
-        setTitle("Individuals");
+        setTitle("Individuals by Class");
         presenter.installActions(this);
         presenter.start(getContentHolder());
 
@@ -66,10 +66,10 @@ public class IndividualsListPortlet extends AbstractOWLEntityPortlet {
 
     private void updateTitle(Optional<? extends OWLEntity> entityData) {
         if(entityData.isPresent()) {
-            setTitle("Individuals");
+            setTitle("Individuals by Class");
         }
         else {
-            setTitle("Individuals (nothing selected)");
+            setTitle("Individuals by Class (nothing selected)");
         }
     }
 
