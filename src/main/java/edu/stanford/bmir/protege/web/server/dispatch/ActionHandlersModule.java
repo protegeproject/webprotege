@@ -21,6 +21,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.handlers.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.*;
 import edu.stanford.bmir.protege.web.server.entities.LookupEntitiesActionHandler;
 import edu.stanford.bmir.protege.web.server.events.GetProjectEventsActionHandler;
+import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
@@ -58,6 +59,7 @@ import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.*;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
+import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorAction;
 
 /**
  * Matthew Horridge
@@ -217,5 +219,7 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(SetPerspectiveLayoutActionHandler.class);
         multibinder.addBinding().to(GetPerspectivesActionHandler.class);
         multibinder.addBinding().to(SetPerspectivesActionHandler.class);
+
+        multibinder.addBinding().to(GetFormDescriptorActionHander.class);
     }
 }

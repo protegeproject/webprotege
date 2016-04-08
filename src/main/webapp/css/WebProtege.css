@@ -1712,3 +1712,7 @@ td {
 .entityIcon {
     color: magenta;
 }
+
+.gwt-CheckBox > label {
+    padding-left: 10px;
+}

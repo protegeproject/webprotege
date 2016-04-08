@@ -49,10 +49,10 @@ public class FormDataList extends FormDataValue {
         }
     }
 
-    @Override
-    public Optional<OWLClassData> asOWLClassData() {
-        return Optional.absent();
-    }
+//    @Override
+//    public Optional<OWLClassData> asOWLClassData() {
+//        return Optional.absent();
+//    }
 
     public List<FormDataValue> getList() {
         return new ArrayList<>(list);

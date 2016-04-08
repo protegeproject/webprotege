@@ -22,7 +22,10 @@
         .language-field {
             box-sizing: border-box;
         }
-
+        .main textarea {
+            border: 1px transparent;
+            border-bottom: 1px solid #f0f0f0;
+        }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
         <table>

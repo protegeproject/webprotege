@@ -31,5 +31,5 @@ public abstract class FormDataValue implements IsSerializable {
     public abstract List<FormDataValue> asList();
 
 
-    public abstract Optional<OWLClassData> asOWLClassData();
+//    public abstract Optional<OWLClassData> asOWLClassData();
 }
