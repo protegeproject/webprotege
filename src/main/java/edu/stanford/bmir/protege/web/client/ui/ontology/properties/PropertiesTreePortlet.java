@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtext.client.core.EventObject;
 import com.gwtext.client.data.Node;
@@ -97,7 +98,6 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
 
         treePanel = new TreePanel();
         treePanel.setAnimate(true);
-        treePanel.setAutoScroll(true);
 
         treePanel.addListener(new TreePanelListenerAdapter() {
             @Override
@@ -165,7 +165,7 @@ public class PropertiesTreePortlet extends AbstractOWLEntityPortlet {
         addToolbarButtons();
         addPortletAction(createAction);
         addPortletAction(deleteAction);
-        getContentHolder().setWidget(treePanel.asWidget());
+        getContentHolder().setWidget(new ScrollPanel(treePanel.asWidget()));
 
 
         addProjectEventHandler(ObjectPropertyHierarchyParentAddedEvent.TYPE, new ObjectPropertyHierarchyParentAddedHandler() {
