@@ -49,12 +49,7 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
         filterView.addFilter(SHOW_MY_ACTIVITY_FILTER, FilterSetting.ON);
         filterView.addFilter(SHOW_PROJECT_CHANGES_FILTER, FilterSetting.ON);
         filterView.closeCurrentGroup();
-        filterView.addValueChangeHandler(new ValueChangeHandler<FilterSet>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<FilterSet> event) {
-                applyFilters(event.getValue());
-            }
-        });
+        filterView.addValueChangeHandler(event -> applyFilters(event.getValue()));
         setFilter(filterView);
     }
 
