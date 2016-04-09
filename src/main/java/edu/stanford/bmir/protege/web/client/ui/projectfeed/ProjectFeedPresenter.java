@@ -1,12 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.projectfeed;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import edu.stanford.bmir.protege.web.shared.change.ProjectChange;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
-import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
@@ -25,13 +22,13 @@ public class ProjectFeedPresenter {
 
     private final ProjectFeedView view;
 
-    private final Provider<ProjectChangeEventPanel> projectChangeEventViewProvider;
+    private final Provider<ProjectChangeEventView> projectChangeEventViewProvider;
 
-    private final Provider<NotePostedEventPanel> notePostedEventViewProvider;
+    private final Provider<NotePostedEventView> notePostedEventViewProvider;
 
-    private final Provider<UserStartedViewingProjectEventPanel> userStartedViewingProjectEventViewProvider;
+    private final Provider<UserStartedViewingProjectEventView> userStartedViewingProjectEventViewProvider;
 
-    private final Provider<UserStoppedViewingProjectEventPanel> userStoppedViewingProjectEventViewProvider;
+    private final Provider<UserStoppedViewingProjectEventView> userStoppedViewingProjectEventViewProvider;
 
     private final Set<NoteId> noteIds = new HashSet<>();
 
@@ -40,10 +37,10 @@ public class ProjectFeedPresenter {
 
     @Inject
     public ProjectFeedPresenter(ProjectFeedView view,
-                                Provider<ProjectChangeEventPanel> projectChangeEventViewProvider,
-                                Provider<NotePostedEventPanel> notePostedEventViewProvider,
-                                Provider<UserStartedViewingProjectEventPanel> userStartedViewingProjectEventViewProvider,
-                                Provider<UserStoppedViewingProjectEventPanel> userStoppedViewingProjectEventViewProvider) {
+                                Provider<ProjectChangeEventView> projectChangeEventViewProvider,
+                                Provider<NotePostedEventView> notePostedEventViewProvider,
+                                Provider<UserStartedViewingProjectEventView> userStartedViewingProjectEventViewProvider,
+                                Provider<UserStoppedViewingProjectEventView> userStoppedViewingProjectEventViewProvider) {
         this.view = view;
         this.projectChangeEventViewProvider = projectChangeEventViewProvider;
         this.notePostedEventViewProvider = notePostedEventViewProvider;
@@ -57,21 +54,6 @@ public class ProjectFeedPresenter {
         eventHandlerMan.addProjectEventHandler(UserStartingViewingProjectEvent.TYPE, event -> postUserStartedViewingProjectEvent(event));
         eventHandlerMan.addProjectEventHandler(UserStoppedViewingProjectEvent.TYPE, event -> postUserStoppedViewingProjectEvent(event));
     }
-
-    public void postUserStartedViewingProjectEvent(UserStartingViewingProjectEvent event) {
-        UserStartedViewingProjectEventPanel panel = userStartedViewingProjectEventViewProvider.get();
-        panel.setUserId(event.getUserId());
-        panel.setTimestamp(new Date().getTime());
-        view.insertWidgetIntoFeed(panel);
-    }
-
-    public void postUserStoppedViewingProjectEvent(UserStoppedViewingProjectEvent event) {
-        UserStoppedViewingProjectEventPanel panel = userStoppedViewingProjectEventViewProvider.get();
-        panel.setUserId(event.getUserId());
-        panel.setTimestamp(new Date().getTime());
-        view.insertWidgetIntoFeed(panel);
-    }
-
 
     public IsWidget getView() {
         return view;
@@ -90,12 +72,12 @@ public class ProjectFeedPresenter {
             return;
         }
         lastRevisionNumber = event.getRevisionNumber();
-        final ProjectChangeEventPanel changePanel = projectChangeEventViewProvider.get();
-        changePanel.setUserName(event.getUserId().getUserName());
-        changePanel.setTimestamp(event.getTimestamp());
-        changePanel.setChangedEntities(event.getSubjects());
-        changePanel.setDescription(event.getRevisionSummary().getDescription());
-        view.insertWidgetIntoFeed(changePanel);
+        final ProjectChangeEventView eventView = projectChangeEventViewProvider.get();
+        eventView.setUserName(event.getUserId().getUserName());
+        eventView.setTimestamp(event.getTimestamp());
+        eventView.setChangedEntities(event.getSubjects());
+        eventView.setDescription(event.getRevisionSummary().getDescription());
+        view.insertWidgetIntoFeed(eventView);
     }
 
     public void postNotePostedEvent(NotePostedEvent event) {
@@ -104,10 +86,25 @@ public class ProjectFeedPresenter {
             return;
         }
         noteIds.add(noteId);
-        final NotePostedEventPanel notePostedEventPanel = notePostedEventViewProvider.get();
-        notePostedEventPanel.setValue(event);
-        view.insertWidgetIntoFeed(notePostedEventPanel);
-
+        final NotePostedEventView eventView = notePostedEventViewProvider.get();
+        eventView.setValue(event);
+        view.insertWidgetIntoFeed(eventView);
     }
+
+
+    public void postUserStartedViewingProjectEvent(UserStartingViewingProjectEvent event) {
+        UserStartedViewingProjectEventView eventView = userStartedViewingProjectEventViewProvider.get();
+        eventView.setUserId(event.getUserId());
+        eventView.setTimestamp(new Date().getTime());
+        view.insertWidgetIntoFeed(eventView);
+    }
+
+    public void postUserStoppedViewingProjectEvent(UserStoppedViewingProjectEvent event) {
+        UserStoppedViewingProjectEventView eventView = userStoppedViewingProjectEventViewProvider.get();
+        eventView.setUserId(event.getUserId());
+        eventView.setTimestamp(new Date().getTime());
+        view.insertWidgetIntoFeed(eventView);
+    }
+
 
 }
