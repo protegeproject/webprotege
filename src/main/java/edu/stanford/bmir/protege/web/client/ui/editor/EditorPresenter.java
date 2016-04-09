@@ -164,6 +164,10 @@ public class EditorPresenter implements HasDispose {
         UpdateObjectAction<O> updateAction = editorManager.createUpdateObjectAction(pristineValue, editedValue, editorCtx);
         setEditorState(editedValue, editorCtx, editorManager);
         dispatchServiceManager.execute(updateAction, new DispatchServiceCallback<Result>() {
+            @Override
+            public void handleSuccess(Result result) {
+
+            }
         });
     }
 
