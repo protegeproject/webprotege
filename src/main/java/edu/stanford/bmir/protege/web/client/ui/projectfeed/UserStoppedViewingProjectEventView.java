@@ -15,13 +15,13 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/03/2013
  */
-public class UserStoppedViewingProjectEventPanel extends Composite implements ProjectFeedItemDisplay {
+public class UserStoppedViewingProjectEventView extends Composite implements ProjectFeedItemDisplay {
 
-    interface UserStoppedViewingProjectEventPanelUiBinder extends UiBinder<HTMLPanel, UserStoppedViewingProjectEventPanel> {
+    interface UserStoppedViewingProjectEventViewUiBinder extends UiBinder<HTMLPanel, UserStoppedViewingProjectEventView> {
 
     }
 
-    private static UserStoppedViewingProjectEventPanelUiBinder ourUiBinder = GWT.create(UserStoppedViewingProjectEventPanelUiBinder.class);
+    private static UserStoppedViewingProjectEventViewUiBinder ourUiBinder = GWT.create(UserStoppedViewingProjectEventViewUiBinder.class);
 
     @UiField
     protected Label userNameLabel;
@@ -29,7 +29,7 @@ public class UserStoppedViewingProjectEventPanel extends Composite implements Pr
     @UiField
     protected ElapsedTimeLabel timeLabel;
 
-    public UserStoppedViewingProjectEventPanel() {
+    public UserStoppedViewingProjectEventView() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

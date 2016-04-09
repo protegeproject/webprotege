@@ -15,9 +15,9 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 27/03/2013
  */
-public class UserStartedViewingProjectEventPanel extends Composite implements ProjectFeedItemDisplay {
+public class UserStartedViewingProjectEventView extends Composite implements ProjectFeedItemDisplay {
 
-    interface UserStartedViewingProjectEventPanelUiBinder extends UiBinder<HTMLPanel, UserStartedViewingProjectEventPanel> {
+    interface UserStartedViewingProjectEventPanelUiBinder extends UiBinder<HTMLPanel, UserStartedViewingProjectEventView> {
 
     }
 
@@ -29,7 +29,7 @@ public class UserStartedViewingProjectEventPanel extends Composite implements Pr
     @UiField
     protected ElapsedTimeLabel timeLabel;
 
-    public UserStartedViewingProjectEventPanel() {
+    public UserStartedViewingProjectEventView() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

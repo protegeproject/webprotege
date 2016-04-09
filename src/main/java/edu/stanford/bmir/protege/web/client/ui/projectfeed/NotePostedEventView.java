@@ -23,9 +23,9 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  * Bio-Medical Informatics Research Group<br>
  * Date: 26/03/2013
  */
-public class NotePostedEventPanel extends Composite implements ProjectFeedItemDisplay {
+public class NotePostedEventView extends Composite implements ProjectFeedItemDisplay {
 
-    interface NotePostedEventPanelUiBinder extends UiBinder<HTMLPanel, NotePostedEventPanel> {
+    interface NotePostedEventPanelUiBinder extends UiBinder<HTMLPanel, NotePostedEventView> {
 
     }
 
@@ -47,7 +47,7 @@ public class NotePostedEventPanel extends Composite implements ProjectFeedItemDi
     protected HTML bodyLabel;
 
     @Inject
-    public NotePostedEventPanel(SelectionModel selectionModel) {
+    public NotePostedEventView(SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         entityLabel.setSelectionModel(selectionModel);

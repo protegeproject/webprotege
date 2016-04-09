@@ -20,7 +20,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 26/03/2013
  */
-public class ProjectChangeEventPanel extends Composite implements ProjectFeedItemDisplay {
+public class ProjectChangeEventView extends Composite implements ProjectFeedItemDisplay {
 
     @UiField
     protected SimplePanel userIconHolder;
@@ -40,14 +40,14 @@ public class ProjectChangeEventPanel extends Composite implements ProjectFeedIte
 
     private SelectionModel selectionModel;
 
-    interface ChangeEventPanelUiBinder extends UiBinder<HTMLPanel, ProjectChangeEventPanel> {
+    interface ChangeEventPanelUiBinder extends UiBinder<HTMLPanel, ProjectChangeEventView> {
 
     }
 
     private static ChangeEventPanelUiBinder ourUiBinder = GWT.create(ChangeEventPanelUiBinder.class);
 
     @Inject
-    public ProjectChangeEventPanel(SelectionModel selectionModel) {
+    public ProjectChangeEventView(SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         this.selectionModel = selectionModel;
         initWidget(rootElement);

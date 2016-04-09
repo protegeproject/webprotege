@@ -8,17 +8,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
-import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.UserStartingViewingProjectEvent;
-import edu.stanford.bmir.protege.web.shared.event.UserStoppedViewingProjectEvent;
-import edu.stanford.bmir.protege.web.shared.notes.NoteId;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,7 +50,7 @@ public class ProjectFeedView extends Composite {
     private static RollingProjectChangedEventPanelUiBinder ourUiBinder = GWT.create(RollingProjectChangedEventPanelUiBinder.class);
 
     @Inject
-    public ProjectFeedView(SelectionModel selectionModel) {
+    public ProjectFeedView() {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }
@@ -88,7 +80,7 @@ public class ProjectFeedView extends Composite {
 
     private boolean isVisible(ProjectFeedItemDisplay widget) {
         boolean isHiddenUser = hiddenUsersActivity.contains(widget.getUserId());
-        boolean isHiddenProjectChange = !showOntologyChanges && widget instanceof ProjectChangeEventPanel;
+        boolean isHiddenProjectChange = !showOntologyChanges && widget instanceof ProjectChangeEventView;
         return !isHiddenUser && !isHiddenProjectChange;
     }
 
