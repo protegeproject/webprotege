@@ -52,24 +52,13 @@ public class LoginPresenter {
         this.loggedInUserManager = loggedInUserManager;
         this.placeController = placeController;
         this.resetPasswordPresenter = resetPasswordPresenter;
-        view.setSignInHandler(new SignInRequestHandler() {
-            @Override
-            public void handleSignInRequest() {
-                handleSignIn();
-            }
-        });
-        view.setForgotPasswordHandler(new ForgotPasswordHandler() {
-            @Override
-            public void handleForgotPassword() {
-                handleResetPassword();
-            }
-        });
-        view.setSignUpForAccountHandler(new SignUpForAccountHandler() {
-            @Override
-            public void handleSignUpForAccount() {
-                placeController.goTo(new SignUpPlace());
-            }
-        });
+        view.setSignInHandler(this::handleSignIn);
+        view.setForgotPasswordHandler(this::handleResetPassword);
+        view.setSignUpForAccountHandler(this::handleSignUpForAccout);
+    }
+
+    private void handleSignUpForAccout() {
+        placeController.goTo(new SignUpPlace());
     }
 
     public LoginView getView() {
