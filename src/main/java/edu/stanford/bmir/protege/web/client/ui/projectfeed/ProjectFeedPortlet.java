@@ -30,10 +30,10 @@ public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
     private final ProjectFeedPresenter presenter;
 
     @Inject
-    public ProjectFeedPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserManager) {
+    public ProjectFeedPortlet(ProjectFeedPresenter presenter, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserManager) {
         super(selectionModel, eventBus, projectId, loggedInUserManager);
         this.loggedInUserProvider = loggedInUserManager;
-        presenter = new ProjectFeedPresenter(new ProjectFeedView(selectionModel));
+        this.presenter = presenter;
         presenter.bind(this);
         setTitle("Project feed");
         getContentHolder().setWidget(presenter.getView());
