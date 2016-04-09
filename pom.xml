@@ -13,7 +13,8 @@
     <name>GWT Maven Archetype</name>
 
     <properties>
-        <gwtVersion>2.7.0</gwtVersion>
+        <gwtVersion>2.8.0-beta1</gwtVersion>
+        <guava.version>20.0-SNAPSHOT</guava.version>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gwt.test.mode>htmlunit</gwt.test.mode>
@@ -109,12 +110,12 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava-gwt</artifactId>
-            <version>18.0</version>
+            <version>${guava.version}</version>
         </dependency>
 
         <dependency>
