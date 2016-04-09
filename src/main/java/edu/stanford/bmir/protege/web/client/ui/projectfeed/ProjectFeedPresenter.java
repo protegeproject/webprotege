@@ -19,29 +19,23 @@ public class ProjectFeedPresenter {
     private final ProjectFeedView view;
 
     @Inject
-    public ProjectFeedPresenter(final ProjectId projectId,
-                                final ProjectFeedView view,
-                                HasEventHandlerManagement eventHandlerMan) {
+    public ProjectFeedPresenter(final ProjectFeedView view) {
         this.view = view;
+
+    }
+
+    public void bind(HasEventHandlerManagement eventHandlerMan) {
         eventHandlerMan.addProjectEventHandler(ProjectChangedEvent.TYPE, event -> {
-            if (event.getProjectId().equals(projectId)) {
-                view.postChangeEvent(event);
-            }
+            view.postChangeEvent(event);
         });
         eventHandlerMan.addProjectEventHandler(NotePostedEvent.TYPE, event -> {
-            if (event.getProjectId().equals(projectId)) {
-                view.postNotePostedEvent(event);
-            }
+            view.postNotePostedEvent(event);
         });
         eventHandlerMan.addProjectEventHandler(UserStartingViewingProjectEvent.TYPE, event -> {
-            if (event.getProjectId().equals(projectId)) {
-                view.postUserStartedViewingProjectEvent(event);
-            }
+            view.postUserStartedViewingProjectEvent(event);
         });
         eventHandlerMan.addProjectEventHandler(UserStoppedViewingProjectEvent.TYPE, event -> {
-            if (event.getProjectId().equals(projectId)) {
-                view.postUserStoppedViewingProjectEvent(event);
-            }
+            view.postUserStoppedViewingProjectEvent(event);
         });
     }
 
