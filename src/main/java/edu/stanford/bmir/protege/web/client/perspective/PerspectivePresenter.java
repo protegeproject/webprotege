@@ -71,26 +71,16 @@ public class PerspectivePresenter implements HasDispose {
         this.perspectiveFactory = perspectiveFactory;
         this.emptyPerspectivePresenterFactory = emptyPerspectivePresenterFactory;
         this.portletChooserPresenter = portletChooserPresenter;
-        eventBus.addHandler(PlaceChangeEvent.TYPE, new PlaceChangeEvent.Handler() {
-            @Override
-            public void onPlaceChange(PlaceChangeEvent event) {
-                if(event.getNewPlace() instanceof ProjectViewPlace) {
-                    displayPerspective(((ProjectViewPlace) event.getNewPlace()).getPerspectiveId());
-                }
+
+        eventBus.addHandler(PlaceChangeEvent.TYPE, event -> {
+            if(event.getNewPlace() instanceof ProjectViewPlace) {
+                displayPerspective(((ProjectViewPlace) event.getNewPlace()).getPerspectiveId());
             }
         });
-        eventBus.addHandler(ResetPerspectiveEvent.getType(), new ResetPerspectiveHandler() {
-            @Override
-            public void handleResetPerspective(ResetPerspectiveEvent event) {
-                resetPerspective(event.getPerspectiveId());
-            }
-        });
-        eventBus.addHandler(AddViewToPerspectiveEvent.getType(), new AddViewToPerspectiveHandler() {
-            @Override
-            public void handleAddViewToPerspective(PerspectiveId perspectiveId) {
-                addViewToPerspective(perspectiveId);
-            }
-        });
+
+        eventBus.addHandler(ResetPerspectiveEvent.getType(), event -> resetPerspective(event.getPerspectiveId()));
+
+        eventBus.addHandler(AddViewToPerspectiveEvent.getType(), perspectiveId -> addViewToPerspective(perspectiveId));
     }
 
     public void start(AcceptsOneWidget container, ProjectViewPlace place) {
@@ -120,12 +110,7 @@ public class PerspectivePresenter implements HasDispose {
         if(perspective == null) {
             return;
         }
-        portletChooserPresenter.show(new PortletChooserPresenter.PortletSelectedHandler() {
-            @Override
-            public void handlePortletSelected(PortletId portletId) {
-                perspective.dropView(portletId.getPortletId());
-            }
-        });
+        portletChooserPresenter.show(portletId -> perspective.dropView(portletId.getPortletId()));
     }
 
     private void displayPerspective(final PerspectiveId perspectiveId) {
@@ -168,11 +153,8 @@ public class PerspectivePresenter implements HasDispose {
                         perspective.setEmptyPerspectiveWidget(emptyPerspectivePresenter.getView());
                         Optional<Node> rootNode = result.getPerspectiveLayout().getRootNode();
                         perspective.setRootNode(rootNode);
-                        perspective.setRootNodeChangedHandler(new RootNodeChangedHandler() {
-                            @Override
-                            public void handleRootNodeChanged(RootNodeChangedEvent rootNodeChangedEvent) {
-                                savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
-                            }
+                        perspective.setRootNodeChangedHandler(rootNodeChangedEvent -> {
+                            savePerspectiveLayout(perspectiveId, rootNodeChangedEvent.getTo());
                         });
                         perspectiveCache.put(perspectiveId, perspective);
                         perspectiveView.setWidget(perspective);
@@ -240,6 +222,7 @@ public class PerspectivePresenter implements HasDispose {
             }
             PerspectiveLayout layout = new PerspectiveLayout(perspectiveId, node);
             dispatchServiceManager.execute(new SetPerspectiveLayoutAction(projectId, currentUserId, layout), new DispatchServiceCallback<SetPerspectiveLayoutResult>() {
+
             });
         }
     }
