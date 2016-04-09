@@ -119,7 +119,7 @@ public class LoginViewImpl extends Composite implements LoginView {
 
     @Override
     public void showLoginFailedErrorMessage() {
-        MessageBox.showAlert("Unable to log in.  User name or passord is incorrect.");
+        MessageBox.showAlert("Unable to log in.  User name or password is incorrect.");
     }
 
     @Override
