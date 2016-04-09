@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.ui.library.entitylabel.EntityLabel;
 import edu.stanford.bmir.protege.web.client.ui.library.timelabel.ElapsedTimeLabel;
 import edu.stanford.bmir.protege.web.client.user.UserIcon;
@@ -45,6 +46,7 @@ public class ProjectChangeEventPanel extends Composite implements ProjectFeedIte
 
     private static ChangeEventPanelUiBinder ourUiBinder = GWT.create(ChangeEventPanelUiBinder.class);
 
+    @Inject
     public ProjectChangeEventPanel(SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         this.selectionModel = selectionModel;

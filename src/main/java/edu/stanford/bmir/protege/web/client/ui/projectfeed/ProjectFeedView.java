@@ -35,9 +35,6 @@ public class ProjectFeedView extends Composite {
 
     private static final int ONE_MINUTE = 60 * 1000;
 
-    private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
-
-    private SelectionModel selectionModel;
 
     private Set<UserId> hiddenUsersActivity = new HashSet<>();
 
@@ -54,8 +51,6 @@ public class ProjectFeedView extends Composite {
     @UiField
     protected FlexTable changeEventTable;
 
-    private Set<NoteId> noteIds = new HashSet<NoteId>();
-
     interface RollingProjectChangedEventPanelUiBinder extends UiBinder<HTMLPanel, ProjectFeedView> {
 
     }
@@ -65,7 +60,6 @@ public class ProjectFeedView extends Composite {
     @Inject
     public ProjectFeedView(SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
-        this.selectionModel = selectionModel;
         initWidget(rootElement);
     }
 
@@ -98,51 +92,12 @@ public class ProjectFeedView extends Composite {
         return !isHiddenUser && !isHiddenProjectChange;
     }
 
-    public void postChangeEvent(ProjectChangedEvent event) {
-        if(event.getRevisionNumber().getValue() <= lastRevisionNumber.getValue()) {
-            return;
-        }
-        lastRevisionNumber = event.getRevisionNumber();
-        final ProjectChangeEventPanel changePanel = new ProjectChangeEventPanel(selectionModel);
-        changePanel.setUserName(event.getUserId().getUserName());
-        changePanel.setTimestamp(event.getTimestamp());
-        changePanel.setChangedEntities(event.getSubjects());
-        changePanel.setDescription(event.getRevisionSummary().getDescription());
-        insertWidgetIntoFeed(changePanel);
-    }
 
-
-    public void postNotePostedEvent(NotePostedEvent event) {
-        final NoteId noteId = event.getNoteDetails().getNoteHeader().getNoteId();
-        if(noteIds.contains(noteId)) {
-            return;
-        }
-        noteIds.add(noteId);
-        final NotePostedEventPanel notePostedEventPanel = new NotePostedEventPanel(selectionModel);
-        notePostedEventPanel.setValue(event);
-        insertWidgetIntoFeed(notePostedEventPanel);
-
-    }
-
-    private void insertWidgetIntoFeed(ProjectFeedItemDisplay widget) {
+    public void insertWidgetIntoFeed(ProjectFeedItemDisplay widget) {
         widget.setVisible(isVisible(widget));
         changeEventTable.insertRow(0);
         changeEventTable.setWidget(0, 0, widget);
         pruneIfNecessary();
-    }
-
-    public void postUserStartedViewingProjectEvent(UserStartingViewingProjectEvent event) {
-        UserStartedViewingProjectEventPanel panel = new UserStartedViewingProjectEventPanel();
-        panel.setUserId(event.getUserId());
-        panel.setTimestamp(new Date().getTime());
-        insertWidgetIntoFeed(panel);
-    }
-
-    public void postUserStoppedViewingProjectEvent(UserStoppedViewingProjectEvent event) {
-        UserStoppedViewingProjectEventPanel panel = new UserStoppedViewingProjectEventPanel();
-        panel.setUserId(event.getUserId());
-        panel.setTimestamp(new Date().getTime());
-        insertWidgetIntoFeed(panel);
     }
 
     private void pruneIfNecessary() {
