@@ -20,9 +20,9 @@ public class ProjectFeedPresenter {
 
     @Inject
     public ProjectFeedPresenter(final ProjectId projectId,
-                                HasEventHandlerManagement eventHandlerMan,
-                                SelectionModel selectionModel) {
-        view = new ProjectFeedView(projectId, selectionModel);
+                                final ProjectFeedView view,
+                                HasEventHandlerManagement eventHandlerMan) {
+        this.view = view;
         eventHandlerMan.addProjectEventHandler(ProjectChangedEvent.TYPE, event -> {
             if (event.getProjectId().equals(projectId)) {
                 view.postChangeEvent(event);
