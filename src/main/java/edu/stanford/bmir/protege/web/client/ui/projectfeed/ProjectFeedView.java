@@ -7,6 +7,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.UserStartingViewingProjectEvent;
@@ -61,7 +62,8 @@ public class ProjectFeedView extends Composite {
 
     private static RollingProjectChangedEventPanelUiBinder ourUiBinder = GWT.create(RollingProjectChangedEventPanelUiBinder.class);
 
-    public ProjectFeedView(ProjectId projectId, SelectionModel selectionModel) {
+    @Inject
+    public ProjectFeedView(SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         this.selectionModel = selectionModel;
         initWidget(rootElement);
