@@ -43,27 +43,11 @@ public class LoginViewImpl extends Composite implements LoginView {
     protected Button signUpForAccountButton;
 
 
-    private SignInRequestHandler signInRequestHandler = new SignInRequestHandler() {
-        @Override
-        public void handleSignInRequest() {
+    private SignInRequestHandler signInRequestHandler = () -> {};
 
-        }
-    };
+    private ForgotPasswordHandler forgotPasswordHandler = () -> {};
 
-    private ForgotPasswordHandler forgotPasswordHandler = new ForgotPasswordHandler() {
-        @Override
-        public void handleForgotPassword() {
-
-        }
-    };
-
-
-    private SignUpForAccountHandler signUpForAccountHandler = new SignUpForAccountHandler() {
-        @Override
-        public void handleSignUpForAccount() {
-
-        }
-    };
+    private SignUpForAccountHandler signUpForAccountHandler = () -> {};
 
     @Inject
     public LoginViewImpl() {
