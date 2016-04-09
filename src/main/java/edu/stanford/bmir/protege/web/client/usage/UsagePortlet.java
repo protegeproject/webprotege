@@ -1,9 +1,6 @@
 package edu.stanford.bmir.protege.web.client.usage;
 
 import com.google.common.base.Optional;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -11,8 +8,6 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
-import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomTypeGroup;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
@@ -62,12 +57,7 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();
         getContentHolder().setWidget(usageView.asWidget());
-        usageView.addValueChangeHandler(new ValueChangeHandler<UsageFilter>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<UsageFilter> event) {
-                updateDisplayForSelectedEntity();
-            }
-        });
+        usageView.addValueChangeHandler(event -> updateDisplayForSelectedEntity());
 
         FilterView filterView = new FilterViewImpl();
 
@@ -81,12 +71,7 @@ public class UsagePortlet extends AbstractOWLEntityPortlet {
         for(AxiomTypeGroup axiomTypeGroup : AxiomTypeGroup.values()) {
             filterView.addFilter(new FilterId(axiomTypeGroup.getDisplayName()), FilterSetting.ON);
         }
-        filterView.addValueChangeHandler(new ValueChangeHandler<FilterSet>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<FilterSet> event) {
-                applyFilter(event.getValue());
-            }
-        });
+        filterView.addValueChangeHandler(event -> applyFilter(event.getValue()));
         setFilter(filterView);
     }
 
