@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,45 +29,48 @@ public class ProjectFeedPresenter {
 
     private final Provider<NotePostedEventPanel> notePostedEventViewProvider;
 
+    private final Provider<UserStartedViewingProjectEventPanel> userStartedViewingProjectEventViewProvider;
+
+    private final Provider<UserStoppedViewingProjectEventPanel> userStoppedViewingProjectEventViewProvider;
+
     private final Set<NoteId> noteIds = new HashSet<>();
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
 
     @Inject
-    public ProjectFeedPresenter(final ProjectFeedView view,
+    public ProjectFeedPresenter(ProjectFeedView view,
                                 Provider<ProjectChangeEventPanel> projectChangeEventViewProvider,
-                                Provider<NotePostedEventPanel> notePostedEventViewProvider) {
+                                Provider<NotePostedEventPanel> notePostedEventViewProvider,
+                                Provider<UserStartedViewingProjectEventPanel> userStartedViewingProjectEventViewProvider,
+                                Provider<UserStoppedViewingProjectEventPanel> userStoppedViewingProjectEventViewProvider) {
         this.view = view;
         this.projectChangeEventViewProvider = projectChangeEventViewProvider;
         this.notePostedEventViewProvider = notePostedEventViewProvider;
-
+        this.userStartedViewingProjectEventViewProvider = userStartedViewingProjectEventViewProvider;
+        this.userStoppedViewingProjectEventViewProvider = userStoppedViewingProjectEventViewProvider;
     }
 
     public void bind(HasEventHandlerManagement eventHandlerMan) {
         eventHandlerMan.addProjectEventHandler(ProjectChangedEvent.TYPE, event -> postChangeEvent(event));
         eventHandlerMan.addProjectEventHandler(NotePostedEvent.TYPE, event -> postNotePostedEvent(event));
-//        eventHandlerMan.addProjectEventHandler(UserStartingViewingProjectEvent.TYPE, event -> {
-//            view.postUserStartedViewingProjectEvent(event);
-//        });
-//        eventHandlerMan.addProjectEventHandler(UserStoppedViewingProjectEvent.TYPE, event -> {
-//            view.postUserStoppedViewingProjectEvent(event);
-//        });
+        eventHandlerMan.addProjectEventHandler(UserStartingViewingProjectEvent.TYPE, event -> postUserStartedViewingProjectEvent(event));
+        eventHandlerMan.addProjectEventHandler(UserStoppedViewingProjectEvent.TYPE, event -> postUserStoppedViewingProjectEvent(event));
     }
 
-    //    public void postUserStartedViewingProjectEvent(UserStartingViewingProjectEvent event) {
-//        UserStartedViewingProjectEventPanel panel = new UserStartedViewingProjectEventPanel();
-//        panel.setUserId(event.getUserId());
-//        panel.setTimestamp(new Date().getTime());
-//        insertWidgetIntoFeed(panel);
-//    }
-//
-//    public void postUserStoppedViewingProjectEvent(UserStoppedViewingProjectEvent event) {
-//        UserStoppedViewingProjectEventPanel panel = new UserStoppedViewingProjectEventPanel();
-//        panel.setUserId(event.getUserId());
-//        panel.setTimestamp(new Date().getTime());
-//        insertWidgetIntoFeed(panel);
-//    }
+    public void postUserStartedViewingProjectEvent(UserStartingViewingProjectEvent event) {
+        UserStartedViewingProjectEventPanel panel = userStartedViewingProjectEventViewProvider.get();
+        panel.setUserId(event.getUserId());
+        panel.setTimestamp(new Date().getTime());
+        view.insertWidgetIntoFeed(panel);
+    }
+
+    public void postUserStoppedViewingProjectEvent(UserStoppedViewingProjectEvent event) {
+        UserStoppedViewingProjectEventPanel panel = userStoppedViewingProjectEventViewProvider.get();
+        panel.setUserId(event.getUserId());
+        panel.setTimestamp(new Date().getTime());
+        view.insertWidgetIntoFeed(panel);
+    }
 
 
     public IsWidget getView() {
