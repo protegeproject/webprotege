@@ -10,8 +10,6 @@ import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
 import edu.stanford.bmir.protege.web.server.frame.EntityFrameTranslator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
-import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorResult;
@@ -88,10 +86,10 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
                         ""
                 )
         ));
-        FormElementId commentFieldId = new FormElementId("rdfs:Comment");
+        FormElementId definitionFieldId = new FormElementId("Definition");
         builder.addDescriptor(new FormElementDescriptor(
-                commentFieldId,
-                "rdfs:comment",
+                definitionFieldId,
+                "Definition",
                 Repeatability.UNREPEATABLE,
                 new StringFieldDescriptor(
                         "Enter label",
@@ -148,9 +146,9 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
                     builder.addData(labelFieldId, FormDataPrimitive.get((OWLLiteral) value));
                 }
             }
-            else if(pv.getProperty().equals(dataFactory.getRDFSComment())) {
+            else if(pv.getProperty().equals(dataFactory.getOWLAnnotationProperty(SKOSVocabulary.DEFINITION.getIRI()))) {
                 if (pv.getValue() instanceof OWLLiteral) {
-                    builder.addData(commentFieldId, FormDataPrimitive.get((OWLLiteral) pv.getValue()));
+                    builder.addData(definitionFieldId, FormDataPrimitive.get((OWLLiteral) pv.getValue()));
                 }
             }
             else if(pv.getProperty().equals(dataFactory.getOWLDeprecated())) {
