@@ -7,7 +7,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.shared.event.NotePostedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.UserStartingViewingProjectEvent;
@@ -28,7 +27,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 26/03/2013
  */
-public class ProjectFeedPanel extends Composite {
+public class ProjectFeedView extends Composite {
 
 
     private static final int MAX_FEED_SIZE = 300;
@@ -56,13 +55,13 @@ public class ProjectFeedPanel extends Composite {
 
     private Set<NoteId> noteIds = new HashSet<NoteId>();
 
-    interface RollingProjectChangedEventPanelUiBinder extends UiBinder<HTMLPanel, ProjectFeedPanel> {
+    interface RollingProjectChangedEventPanelUiBinder extends UiBinder<HTMLPanel, ProjectFeedView> {
 
     }
 
     private static RollingProjectChangedEventPanelUiBinder ourUiBinder = GWT.create(RollingProjectChangedEventPanelUiBinder.class);
 
-    public ProjectFeedPanel(ProjectId projectId, SelectionModel selectionModel) {
+    public ProjectFeedView(ProjectId projectId, SelectionModel selectionModel) {
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         this.selectionModel = selectionModel;
         initWidget(rootElement);
