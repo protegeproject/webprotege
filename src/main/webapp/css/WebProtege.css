@@ -892,7 +892,6 @@ select {
     cursor: pointer;
     font-size: 13px;
     font-weight: 700;
-    margin: 1px;
     padding: 5px 8px;
     line-height: 16px;
 }
