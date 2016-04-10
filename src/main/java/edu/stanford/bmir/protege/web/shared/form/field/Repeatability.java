@@ -6,8 +6,10 @@ package edu.stanford.bmir.protege.web.shared.form.field;
  * 30/03/16
  */
 public enum Repeatability {
+    NON_REPEATABLE,
 
-    REPEATABLE,
+    REPEATABLE_VERTICAL,
 
-    UNREPEATABLE
+    REPEATABLE_HORIZONTAL,
+
 }
