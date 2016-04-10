@@ -1,7 +1,12 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
+    <ui:style>
+        .container {
+            overflow-y: scroll;
+        }
+    </ui:style>
     <g:HTMLPanel addStyleNames="web-protege-laf">
-        <g:FlowPanel ui:field="holder" addStyleNames="{wp.style.formMain}"/>
+        <g:FlowPanel ui:field="holder" addStyleNames="{wp.style.formMain} {style.container}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

@@ -46,6 +46,15 @@ public class FormDataPrimitive extends FormDataValue {
         primitive = checkNotNull(iri);
     }
 
+    @Override
+    public Optional<IRI> asIRI() {
+        if(primitive instanceof IRI) {
+            return Optional.of((IRI)primitive);
+        }
+        else {
+            return Optional.absent();
+        }
+    }
 //    private FormDataPrimitive(OWLEntityData entityData) {
 //        this.primitive = entityData;
 //    }

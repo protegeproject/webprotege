@@ -139,12 +139,12 @@ public class FormPresenter {
         }
         else if (formFieldDescriptor.getAssociatedFieldTypeId().equals(ClassNameFieldDescriptor.getFieldTypeId())) {
             return Optional.<ValueEditorFactory<FormDataValue>>of(
-                    new ValueEditorFactory<FormDataValue>() {
-                        @Override
-                        public ValueEditor<FormDataValue> createEditor() {
-                            return new ClassNameFieldEditor(projectId);
-                        }
-                    }
+                    () -> new ClassNameFieldEditor(projectId)
+            );
+        }
+        else if(formFieldDescriptor.getAssociatedFieldTypeId().equals(ImageFieldDescriptor.getFieldTypeId())) {
+            return Optional.of(
+                    () -> new ImageFieldEditor()
             );
         }
         else {
