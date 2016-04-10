@@ -66,7 +66,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
         builder.addDescriptor(new FormElementDescriptor(
                 labelFieldId,
                 "Label",
-                Repeatability.UNREPEATABLE,
+                Repeatability.NON_REPEATABLE,
                 new StringFieldDescriptor(
                         "Enter label",
                         StringType.SIMPLE_STRING,
@@ -78,7 +78,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
         builder.addDescriptor(new FormElementDescriptor(
            altLabelFieldId,
                 "Synonyms",
-                Repeatability.REPEATABLE,
+                Repeatability.REPEATABLE_VERTICAL,
                 new StringFieldDescriptor(
                         "Enter synonym",
                         StringType.LANG_STRING,
@@ -90,7 +90,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
         builder.addDescriptor(new FormElementDescriptor(
                 definitionFieldId,
                 "Definition",
-                Repeatability.UNREPEATABLE,
+                Repeatability.NON_REPEATABLE,
                 new StringFieldDescriptor(
                         "Enter label",
                         StringType.SIMPLE_STRING,
@@ -102,7 +102,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
         builder.addDescriptor(new FormElementDescriptor(
                 statusFieldId,
                 "Status",
-                Repeatability.UNREPEATABLE,
+                Repeatability.NON_REPEATABLE,
                 new ChoiceFieldDescriptor(
                         ChoiceFieldType.CHECK_BOX,
                         Arrays.asList(
@@ -114,7 +114,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
         builder.addDescriptor(new FormElementDescriptor(
                 depictionFieldId,
                 "Depictions",
-                Repeatability.REPEATABLE,
+                Repeatability.REPEATABLE_HORIZONTAL,
                 new ImageFieldDescriptor()
         ));
 
@@ -137,7 +137,7 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
         builder.addDescriptor(new FormElementDescriptor(
                 manufacturerField,
                 "Manufacturer",
-                Repeatability.UNREPEATABLE,
+                Repeatability.NON_REPEATABLE,
                 new ChoiceFieldDescriptor(
                         ChoiceFieldType.COMBO_BOX,
                         manufacturerChoices
