@@ -110,6 +110,13 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
                         )
                 )
         ));
+        FormElementId depictionFieldId = new FormElementId("depiction");
+        builder.addDescriptor(new FormElementDescriptor(
+                depictionFieldId,
+                "Depictions",
+                Repeatability.REPEATABLE,
+                new ImageFieldDescriptor()
+        ));
 
         FormElementId manufacturerField = new FormElementId("manufacturerField");
         List<ChoiceDescriptor> manufacturerChoices;
@@ -159,6 +166,11 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
             else if(pv.getProperty().equals(dataFactory.getOWLAnnotationProperty(SKOSVocabulary.ALTLABEL.getIRI()))) {
                 if(pv.getValue() instanceof OWLLiteral) {
                     builder.addData(altLabelFieldId, FormDataPrimitive.get((OWLLiteral) pv.getValue()));
+                }
+            }
+            else if(pv.getProperty().equals(dataFactory.getOWLAnnotationProperty(IRI.create("http://xmlns.com/foaf/0.1/depiction")))) {
+                if(pv.getValue() instanceof IRI) {
+                    builder.addData(depictionFieldId, FormDataPrimitive.get((IRI) pv.getValue()));
                 }
             }
             else if(pv.getProperty().getIRI().toString().equals("http://webprotege.stanford.edu/hasManufacturer")) {

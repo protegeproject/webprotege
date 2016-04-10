@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.form.data;
 import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
 import java.util.List;
@@ -29,6 +30,8 @@ public abstract class FormDataValue implements IsSerializable {
      * then the values contained in the list will be returned, otherwise this value as a one element list.
      */
     public abstract List<FormDataValue> asList();
+
+    public abstract Optional<IRI> asIRI();
 
 
 //    public abstract Optional<OWLClassData> asOWLClassData();
