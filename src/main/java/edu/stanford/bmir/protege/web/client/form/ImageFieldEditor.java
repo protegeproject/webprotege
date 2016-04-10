@@ -66,10 +66,12 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
             imageField.setUrl(theIRI.get().toString());
             imageField.getElement().getStyle().clearDisplay();
             placeHolder.setVisible(false);
+            setTitle("Source: " + theIRI.get().toString());
         }
         else {
             imageField.getElement().getStyle().setDisplay(Style.Display.NONE);
             placeHolder.setVisible(true);
+            setTitle("");
         }
     }
 
