@@ -52,7 +52,7 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
 
     public ImageFieldEditor() {
         initWidget(ourUiBinder.createAndBindUi(this));
-
+        updateUi();
     }
 
     @Override
