@@ -13,6 +13,7 @@
         }
         .deleteButton {
             flex-grow: 0;
+            flex-shrink: 0;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}">
