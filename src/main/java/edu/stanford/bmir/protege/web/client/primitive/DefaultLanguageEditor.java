@@ -6,12 +6,16 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.lang.*;
 import edu.stanford.bmir.protege.web.client.ui.library.common.EventStrategy;
 import edu.stanford.bmir.protege.web.client.ui.library.common.HasPlaceholder;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
+
+import java.util.Arrays;
 
 /**
  * Author: Matthew Horridge<br>
@@ -28,8 +32,8 @@ public class DefaultLanguageEditor extends Composite implements LanguageEditor, 
     private String placeholder = "";
 
     @Inject
-    public DefaultLanguageEditor(SuggestBox baseBox) {
-        suggestBox = baseBox;
+    public DefaultLanguageEditor(LangSuggestOracle oracle) {
+        suggestBox = new SuggestBox(oracle);
         suggestBox.setWidth("30px");
         suggestBox.addValueChangeHandler(new ValueChangeHandler<String>() {
             @Override
