@@ -7,12 +7,15 @@ import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.assistedinject.GinFactoryModuleBuilder;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
+import com.google.inject.TypeLiteral;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.form.FormView;
 import edu.stanford.bmir.protege.web.client.form.FormViewImpl;
+import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
+import edu.stanford.bmir.protege.web.client.lang.LanguageCodes;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandler;
 import edu.stanford.bmir.protege.web.client.login.SignInRequestHandlerImpl;
 import edu.stanford.bmir.protege.web.client.login.SignUpForAccountHandler;
@@ -83,8 +86,11 @@ import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationPropertiesProvider;
 import edu.stanford.bmir.protege.web.shared.auth.Md5MessageDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.MessageDigestAlgorithm;
+import edu.stanford.bmir.protege.web.shared.lang.LanguageCode;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>
@@ -226,6 +232,10 @@ public class ApplicationClientModule extends AbstractGinModule {
 
         bind(FormView.class)
                 .to(FormViewImpl.class);
+
+        bind(new TypeLiteral<List<LanguageCode>>(){})
+                .annotatedWith(LanguageCodes.class)
+                .toProvider(LangCodesProvider.class);
 
     }
 

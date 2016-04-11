@@ -167,6 +167,9 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgFilter();
 
+    @Source("language-codes.txt")
+    TextResource languageCodes();
+
     public static interface WebProtegeCss extends CssResource {
 
         String entityIcon();
