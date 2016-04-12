@@ -9,5 +9,5 @@ import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
  */
 public interface HasFormElementId {
 
-    FormElementId getFormElementId();
+    FormElementId getId();
 }

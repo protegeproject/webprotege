@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.form;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -7,6 +8,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
+import edu.stanford.bmir.protege.web.shared.form.field.FormElementId;
 
 /**
  * Matthew Horridge
@@ -21,6 +23,8 @@ public class FormElementViewImpl extends Composite implements FormElementView {
 
     private static FormElementViewImplUiBinder ourUiBinder = GWT.create(FormElementViewImplUiBinder.class);
 
+    private FormElementId formElementId = null;
+
     @UiField
     Label label;
 
@@ -29,6 +33,16 @@ public class FormElementViewImpl extends Composite implements FormElementView {
 
     public FormElementViewImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
+    }
+
+    @Override
+    public void setId(FormElementId elementId) {
+        formElementId = elementId;
+    }
+
+    @Override
+    public Optional<FormElementId> getId() {
+        return Optional.fromNullable(formElementId);
     }
 
     @Override

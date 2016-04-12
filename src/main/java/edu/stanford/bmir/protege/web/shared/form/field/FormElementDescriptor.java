@@ -11,31 +11,38 @@ import java.io.Serializable;
  */
 public class FormElementDescriptor implements HasFormElementId, HasRepeatability, Serializable {
 
-    private FormElementId formElementId;
+    private FormElementId id;
 
-    private String formLabel;
+    private String label;
+
+    private FormFieldDescriptor fieldDescriptor;
 
     private Repeatability repeatability;
 
-    private FormFieldDescriptor formFieldDescriptor;
+    private Required required;
 
     private FormElementDescriptor() {
     }
 
-    public FormElementDescriptor(FormElementId formElementId, String formLabel, Repeatability repeatability, FormFieldDescriptor formFieldDescriptor) {
-        this.formElementId = formElementId;
-        this.formLabel = formLabel;
+    public FormElementDescriptor(FormElementId id,
+                                 String formLabel,
+                                 FormFieldDescriptor fieldDescriptor,
+                                 Repeatability repeatability,
+                                 Required required) {
+        this.id = id;
+        this.label = formLabel;
         this.repeatability = repeatability;
-        this.formFieldDescriptor = formFieldDescriptor;
+        this.fieldDescriptor = fieldDescriptor;
+        this.required = required;
     }
 
     @Override
-    public FormElementId getFormElementId() {
-        return formElementId;
+    public FormElementId getId() {
+        return id;
     }
 
-    public String getFormLabel() {
-        return formLabel;
+    public String getLabel() {
+        return label;
     }
 
     @Override
@@ -43,7 +50,11 @@ public class FormElementDescriptor implements HasFormElementId, HasRepeatability
         return repeatability;
     }
 
-    public FormFieldDescriptor getFormFieldDescriptor() {
-        return formFieldDescriptor;
+    public Required getRequired() {
+        return required;
+    }
+
+    public FormFieldDescriptor getFieldDescriptor() {
+        return fieldDescriptor;
     }
 }

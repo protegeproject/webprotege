@@ -129,7 +129,25 @@ public class FormDataPrimitive extends FormDataValue {
     @Override
     public String toString() {
         return toStringHelper("FormDataPrimitive")
-                .addValue(primitive)
+                .addValue(asString())
                 .toString();
+    }
+
+
+    public String asString() {
+        if(primitive instanceof IRI) {
+            return "IRI(" + ((IRI) primitive).toQuotedString() + ")";
+        }
+        else if(primitive instanceof OWLLiteral) {
+            OWLLiteral literal = (OWLLiteral) primitive;
+            return "Literal(" +
+                    literal.toString() + ")";
+        }
+        else if(primitive instanceof OWLEntity) {
+            return ((OWLEntity) primitive).getEntityType().getName() + "(" + ((OWLEntity) primitive).getIRI().toQuotedString() + ")";
+        }
+        else {
+            throw new RuntimeException("Unknown Type");
+        }
     }
 }

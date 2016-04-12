@@ -98,4 +98,8 @@ public class FormDataList extends FormDataValue {
                 .addValue(list)
                 .toString();
     }
+
+    public static FormDataList empty() {
+        return new FormDataList();
+    }
 }
