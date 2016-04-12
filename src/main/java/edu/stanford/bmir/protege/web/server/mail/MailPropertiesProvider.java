@@ -83,7 +83,8 @@ public class MailPropertiesProvider implements Provider<Properties> {
         try {
             return System.getProperties();
         } catch (SecurityException e) {
-            logger.severe(e);
+            System.err.println("A security exception was thrown while asking for the system properties: "
+                    + e.getMessage());
             return new Properties();
         }
     }
