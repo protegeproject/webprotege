@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.form;
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Label;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
+import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataObject;
@@ -53,6 +54,15 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
     public ImageFieldEditor() {
         initWidget(ourUiBinder.createAndBindUi(this));
         updateUi();
+        // The drag over handler is required in order to enable drop support
+        placeHolder.addDragOverHandler(dragOverEvent -> {});
+        placeHolder.addDropHandler(event -> {
+            String data = event.getDataTransfer().getData("text/plain");
+            if(data.startsWith("http:") || data.startsWith("https:")) {
+                event.preventDefault();
+                setEditedValue(data);
+            }
+        });
     }
 
     @Override
@@ -80,6 +90,7 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
         showEditingDialog();
     }
 
+
     @UiHandler("placeHolder")
     protected void handlePlaceHolderClicked(ClickEvent event) {
         showEditingDialog();
@@ -91,14 +102,18 @@ public class ImageFieldEditor extends Composite implements ValueEditor<FormDataV
                 false,
                 theIRI.transform(iri -> iri.toString()).or(""),
                 input -> {
-                    Optional<IRI> newValue = Optional.of(IRI.create(input));
-                    if (!theIRI.equals(newValue)) {
-                        theIRI = newValue;
-                        imageField.setUrl(input);
-                        updateUi();
-                        ValueChangeEvent.fire(ImageFieldEditor.this, getValue());
-                    }
+                    setEditedValue(input);
                 });
+    }
+
+    private void setEditedValue(String editedValue) {
+        Optional<IRI> newValue = Optional.of(IRI.create(editedValue));
+        if (!theIRI.equals(newValue)) {
+            theIRI = newValue;
+            imageField.setUrl(editedValue);
+            updateUi();
+            ValueChangeEvent.fire(ImageFieldEditor.this, getValue());
+        }
     }
 
     @Override

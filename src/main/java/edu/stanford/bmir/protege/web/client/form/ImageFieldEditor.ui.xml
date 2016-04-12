@@ -16,17 +16,18 @@
             margin: 2px;
             height: 100px;
             width: 200px;
-            padding: 5px;
+            padding-top: 20px;
+            padding-left: 15px;
+            padding-right: 15px;
             text-align: center;
             box-sizing: border-box;
             cursor: pointer;
-            line-height: 80px;
             font-weight: normal;
             font-size: 14px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" ui:field="container">
-        <g:Label ui:field="placeHolder" text="Click to add image" addStyleNames="{style.placeHolder}"/>
+        <g:Label ui:field="placeHolder" text="Drop images here or click to set image" addStyleNames="{style.placeHolder}"/>
         <g:Image ui:field="imageField" addStyleNames="{style.image}"/>
     </g:HTMLPanel>
 </ui:UiBinder>
