@@ -14,7 +14,6 @@ public class ChoiceDescriptor implements IsSerializable {
 
     private FormDataValue value;
 
-
     private ChoiceDescriptor() {
     }
 

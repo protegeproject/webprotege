@@ -44,7 +44,7 @@ public class NonRepeatingEditor implements ValueEditor<FormDataList> {
     public Optional<FormDataList> getValue() {
         Optional<FormDataValue> value = delegate.getValue();
         if(!value.isPresent()) {
-            return Optional.absent();
+            return Optional.of(FormDataList.empty());
         }
         FormDataList delegateValue = new FormDataList(value.get());
         return Optional.of(delegateValue);

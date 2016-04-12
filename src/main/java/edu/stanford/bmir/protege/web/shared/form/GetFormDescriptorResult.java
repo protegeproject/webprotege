@@ -17,13 +17,23 @@ public class GetFormDescriptorResult implements Result {
 
     private FormDescriptor formDescriptor;
 
+    private FormData formData;
+
     private GetFormDescriptorResult() {
     }
 
-    public GetFormDescriptorResult(ProjectId projectId, OWLEntity entity, FormDescriptor formDescriptor) {
+    public GetFormDescriptorResult(ProjectId projectId,
+                                   OWLEntity entity,
+                                   FormDescriptor formDescriptor,
+                                   FormData formData) {
         this.projectId = projectId;
         this.entity = entity;
         this.formDescriptor = formDescriptor;
+        this.formData = formData;
+    }
+
+    public FormData getFormData() {
+        return formData;
     }
 
     public ProjectId getProjectId() {

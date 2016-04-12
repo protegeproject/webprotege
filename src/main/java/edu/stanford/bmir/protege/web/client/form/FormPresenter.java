@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
+import edu.stanford.bmir.protege.web.shared.form.FormData;
 import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
 import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorAction;
 import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorResult;
@@ -49,7 +50,7 @@ public class FormPresenter {
         dispatchServiceManager.execute(new GetFormDescriptorAction(projectId, entity), new DispatchServiceCallback<GetFormDescriptorResult>() {
             @Override
             public void handleSuccess(GetFormDescriptorResult result) {
-                displayForm(result.getFormDescriptor(), entity);
+                displayForm(result.getFormDescriptor(), result.getFormData(), entity);
             }
 
             @Override
@@ -60,21 +61,21 @@ public class FormPresenter {
     }
 
 
-    private void displayForm(FormDescriptor formDescriptor, final OWLEntity subject) {
-        GWT.log("DISPLAY FORM: " + subject);
-
+    private void displayForm(FormDescriptor formDescriptor, FormData formData, final OWLEntity subject) {
         for (FormElementView elementView : formView.getElementViews()) {
+            FormElementId elementId = elementView.getId().get();
             Optional<FormDataList> elementData = elementView.getEditor().getValue();
-            GWT.log(elementData.toString());
+            GWT.log("FormData: " + elementId + " = " + elementData.toString());
         }
         formView.clear();
         for (FormElementDescriptor elementDescriptor : formDescriptor.getFormElementDescriptors()) {
             Optional<FormElementEditor> elementEditor = getFormElementEditor(elementDescriptor);
             if (elementEditor.isPresent()) {
                 FormElementView elementView = new FormElementViewImpl();
-                elementView.setFormLabel(elementDescriptor.getFormLabel());
+                elementView.setId(elementDescriptor.getId());
+                elementView.setFormLabel(elementDescriptor.getLabel());
                 elementView.setEditor(elementEditor.get());
-                Optional<FormDataList> data = formDescriptor.getFormElementData(elementDescriptor.getFormElementId());
+                Optional<FormDataList> data = formData.getFormElementData(elementDescriptor.getId());
                 if (data.isPresent()) {
                     elementEditor.get().setValue(data.get());
                 }
@@ -88,7 +89,7 @@ public class FormPresenter {
     }
 
     private Optional<FormElementEditor> getFormElementEditor(FormElementDescriptor descriptor) {
-        Optional<ValueEditorFactory<FormDataValue>> editorFactory = getValueEditorFactory(descriptor.getFormFieldDescriptor());
+        Optional<ValueEditorFactory<FormDataValue>> editorFactory = getValueEditorFactory(descriptor.getFieldDescriptor());
         if (!editorFactory.isPresent()) {
             return Optional.<FormElementEditor>absent();
         }
