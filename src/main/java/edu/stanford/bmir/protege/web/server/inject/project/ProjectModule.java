@@ -105,6 +105,7 @@ public class ProjectModule extends AbstractModule {
         multibinder.addBinding().to(FunctionalDataPropertyAxiomChangeMatcher.class);
         multibinder.addBinding().to(ClassAssertionAxiomMatcher.class);
         multibinder.addBinding().to(SubClassOfAxiomMatcher.class);
+        multibinder.addBinding().to(SubClassOfChangeMatcher.class);
 
         install(new FactoryModuleBuilder()
                 .implement(ReverseEngineeredChangeDescriptionGenerator.class, ReverseEngineeredChangeDescriptionGenerator.class)
