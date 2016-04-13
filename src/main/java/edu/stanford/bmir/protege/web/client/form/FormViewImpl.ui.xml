@@ -3,7 +3,6 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
     <ui:style>
         .container {
-            overflow-y: scroll;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="web-protege-laf">

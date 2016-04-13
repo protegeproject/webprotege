@@ -17,14 +17,21 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
 
     private FormFieldDescriptor descriptor;
 
-    // Weight?
+    private double flexGrow;
+
+    private double flexShrink;
 
     private CompositeFieldDescriptorEntry() {
     }
 
-    public CompositeFieldDescriptorEntry(FormElementId elementId, FormFieldDescriptor descriptor) {
+    public CompositeFieldDescriptorEntry(FormElementId elementId,
+                                         double flexGrow,
+                                         double flexShrink,
+                                         FormFieldDescriptor descriptor) {
         this.elementId = checkNotNull(elementId);
         this.descriptor = checkNotNull(descriptor);
+        this.flexGrow = flexGrow;
+        this.flexShrink = flexShrink;
     }
 
     public FormElementId getElementId() {
@@ -34,4 +41,13 @@ public class CompositeFieldDescriptorEntry implements Serializable, IsSerializab
     public FormFieldDescriptor getDescriptor() {
         return descriptor;
     }
+
+    public double getFlexGrow() {
+        return flexGrow;
+    }
+
+    public double getFlexShrink() {
+        return flexShrink;
+    }
+
 }

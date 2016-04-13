@@ -5,25 +5,24 @@
             width: 100%;
         }
         .image {
-            max-height: 100px;
+            max-height: 50px;
             width: auto;
             cursor: pointer;
         }
         .placeHolder {
             color: #c0c0c0;
-            border: 3px dashed #d0d0d0;
-            border-radius: 6px;
+            border: 2px dashed #d0d0d0;
+            border-radius: 12px;
             margin: 2px;
-            height: 100px;
+            height: 50px;
             width: 200px;
-            padding-top: 20px;
+            padding-top: 8px;
             padding-left: 15px;
             padding-right: 15px;
             text-align: center;
             box-sizing: border-box;
             cursor: pointer;
             font-weight: normal;
-            font-size: 14px;
         }
     </ui:style>
     <g:HTMLPanel addStyleNames="{style.main}" ui:field="container">

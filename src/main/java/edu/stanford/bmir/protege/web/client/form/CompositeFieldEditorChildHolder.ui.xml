@@ -2,10 +2,9 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
         .main {
-            flex-grow: 0;
-            flex-shrink: 0;
+            flex-grow: 1;
+            flex-shrink: 1;
             width: 200px;
-            height: 100%;
             align-content: flex-start;
         }
     </ui:style>

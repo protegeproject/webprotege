@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
@@ -43,7 +44,8 @@ public class FormPresenter {
     }
 
     public void start(AcceptsOneWidget container) {
-        container.setWidget(formView);
+        ScrollPanel sp = new ScrollPanel(formView.asWidget());
+        container.setWidget(sp);
     }
 
     public void setSubject(final OWLEntity entity) {
@@ -153,23 +155,25 @@ public class FormPresenter {
         else if(formFieldDescriptor.getAssociatedFieldTypeId().equals(CompositeFieldDescriptor.getFieldTypeId())) {
             CompositeFieldDescriptor descriptor = (CompositeFieldDescriptor) formFieldDescriptor;
             List<ValueEditorFactory<FormDataValue>> childEditorFactories = new ArrayList<>();
-            List<FormElementId> childIds = new ArrayList<>();
+            List<CompositeFieldDescriptorEntry> childDescriptorEntries = new ArrayList<>();
             for(CompositeFieldDescriptorEntry childDescriptor : descriptor.getChildDescriptors()) {
                 Optional<ValueEditorFactory<FormDataValue>> childEditorFactory = getValueEditorFactory(childDescriptor.getDescriptor());
                 if(!childEditorFactory.isPresent()) {
                     return Optional.absent();
                 }
-                childIds.add(childDescriptor.getElementId());
+                childDescriptorEntries.add(childDescriptor);
                 childEditorFactories.add(childEditorFactory.get());
             }
             return Optional.of(
                     () -> {
                         CompositeFieldEditor editor = new CompositeFieldEditor();
-                        for(int i = 0; i < childIds.size(); i++) {
-                            FormElementId childId = childIds.get(i);
+                        for(int i = 0; i < childDescriptorEntries.size(); i++) {
+                            FormElementId childId = childDescriptorEntries.get(i).getElementId();
                             ValueEditorFactory<FormDataValue> childFactory = childEditorFactories.get(i);
                             ValueEditor<FormDataValue> childEditor = childFactory.createEditor();
-                            editor.addChildEditor(childId, childEditor);
+                            double flexGrow = childDescriptorEntries.get(i).getFlexGrow();
+                            double flexShrink = childDescriptorEntries.get(i).getFlexShrink();
+                            editor.addChildEditor(childId, flexGrow, flexShrink, childEditor);
                         }
                         return editor;
                     }
