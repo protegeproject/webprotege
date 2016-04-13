@@ -102,4 +102,9 @@ public class FormDataList extends FormDataValue {
     public static FormDataList empty() {
         return new FormDataList();
     }
+
+    @Override
+    public boolean isObject() {
+        return false;
+    }
 }

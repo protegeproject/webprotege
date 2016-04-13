@@ -34,6 +34,8 @@ public abstract class FormDataValue implements IsSerializable {
 
     public abstract Optional<IRI> asIRI();
 
+    public abstract boolean isObject();
+
 
 //    public abstract Optional<OWLClassData> asOWLClassData();
 }

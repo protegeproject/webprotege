@@ -67,4 +67,9 @@ public class FormDataObject extends FormDataValue {
                 .addValue(map)
                 .toString();
     }
+
+    @Override
+    public boolean isObject() {
+        return true;
+    }
 }
