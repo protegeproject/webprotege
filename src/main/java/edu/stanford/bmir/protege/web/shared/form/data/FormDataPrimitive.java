@@ -150,4 +150,9 @@ public class FormDataPrimitive extends FormDataValue {
             throw new RuntimeException("Unknown Type");
         }
     }
+
+    @Override
+    public boolean isObject() {
+        return false;
+    }
 }

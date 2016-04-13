@@ -19,6 +19,8 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Matthew Horridge
@@ -146,6 +148,31 @@ public class FormPresenter {
         else if(formFieldDescriptor.getAssociatedFieldTypeId().equals(ImageFieldDescriptor.getFieldTypeId())) {
             return Optional.of(
                     () -> new ImageFieldEditor()
+            );
+        }
+        else if(formFieldDescriptor.getAssociatedFieldTypeId().equals(CompositeFieldDescriptor.getFieldTypeId())) {
+            CompositeFieldDescriptor descriptor = (CompositeFieldDescriptor) formFieldDescriptor;
+            List<ValueEditorFactory<FormDataValue>> childEditorFactories = new ArrayList<>();
+            List<FormElementId> childIds = new ArrayList<>();
+            for(CompositeFieldDescriptorEntry childDescriptor : descriptor.getChildDescriptors()) {
+                Optional<ValueEditorFactory<FormDataValue>> childEditorFactory = getValueEditorFactory(childDescriptor.getDescriptor());
+                if(!childEditorFactory.isPresent()) {
+                    return Optional.absent();
+                }
+                childIds.add(childDescriptor.getElementId());
+                childEditorFactories.add(childEditorFactory.get());
+            }
+            return Optional.of(
+                    () -> {
+                        CompositeFieldEditor editor = new CompositeFieldEditor();
+                        for(int i = 0; i < childIds.size(); i++) {
+                            FormElementId childId = childIds.get(i);
+                            ValueEditorFactory<FormDataValue> childFactory = childEditorFactories.get(i);
+                            ValueEditor<FormDataValue> childEditor = childFactory.createEditor();
+                            editor.addChildEditor(childId, childEditor);
+                        }
+                        return editor;
+                    }
             );
         }
         else {
