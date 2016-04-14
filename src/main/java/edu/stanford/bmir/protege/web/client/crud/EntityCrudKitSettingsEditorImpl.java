@@ -140,7 +140,9 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
             editor = getSuffixSettingsEditor(descriptor);
             touchedEditors.set(selIndex, Optional.of(editor));
             editor.setValue(descriptor.getDefaultSuffixSettings());
-            iriPrefixEditor.setValue(descriptor.getDefaultPrefixSettings().getIRIPrefix());
+            if (!prefixIsDirty && forceRefresh) {
+                iriPrefixEditor.setValue(descriptor.getDefaultPrefixSettings().getIRIPrefix());
+            }
         }
         schemeSpecificSettingsEditorHolder.setWidget(editor);
         validatePrefix();
