@@ -75,17 +75,12 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
     private void showDialog(final GetEntityCrudKitSettingsResult result) {
         EntityCrudKitSettingsDialogController controller = dialogControllerProvider.get();
         WebProtegeDialog<EntityCrudKitSettings<?>> dlg = new WebProtegeDialog<EntityCrudKitSettings<?>>(controller);
-        dlg.setPopupPositionAndShow((w, h) -> {
-            dlg.setPopupPosition((Window.getClientWidth() - w) / 2, 100);
-        });
+        dlg.setPopupPositionAndShow(
+                (w, h) -> dlg.setPopupPosition((Window.getClientWidth() - w) / 2, 100));
         controller.getEditor().setValue(result.getSettings());
 
-        dlg.getController().setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<EntityCrudKitSettings<?>>() {
-            @Override
-            public void handleHide(EntityCrudKitSettings<?> data, final WebProtegeDialogCloser closer) {
-                updateFreshEntitySettings(result.getSettings(), data, closer);
-            }
-        });
+        dlg.getController().setDialogButtonHandler(DialogButton.OK,
+                (data, closer) -> updateFreshEntitySettings(result.getSettings(), data, closer));
     }
 
     private void updateFreshEntitySettings(final EntityCrudKitSettings<?> fromSettings, final EntityCrudKitSettings<?> toSettings, final WebProtegeDialogCloser closer) {
