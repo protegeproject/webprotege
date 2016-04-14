@@ -4,6 +4,8 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
+        .main {
+        }
         .validator {
             color: #ff0000;
             padding: 2px;
@@ -11,7 +13,7 @@
         }
     </ui:style>
 
-    <g:HTMLPanel>
+    <g:HTMLPanel addStyleNames="{style.main}">
 
         <div class="{wp.style.formGroup}">
             <g:Label text="IRI Prefix" addStyleNames="{wp.style.dlgLabel}"/>
