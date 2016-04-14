@@ -74,18 +74,25 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
 
     private void showDialog(final GetEntityCrudKitSettingsResult result) {
         EntityCrudKitSettingsDialogController controller = dialogControllerProvider.get();
-        WebProtegeDialog<EntityCrudKitSettings<?>> dlg = new WebProtegeDialog<EntityCrudKitSettings<?>>(controller);
+
+        WebProtegeDialog<EntityCrudKitSettings<?>> dlg = new WebProtegeDialog<>(controller);
+
+        dlg.getController().setDialogButtonHandler(DialogButton.OK,
+                (data, closer) -> updateFreshEntitySettings(result.getSettings(), data, closer));
+
         dlg.setPopupPositionAndShow(
                 (w, h) -> dlg.setPopupPosition((Window.getClientWidth() - w) / 2, 100));
         controller.getEditor().setValue(result.getSettings());
 
-        dlg.getController().setDialogButtonHandler(DialogButton.OK,
-                (data, closer) -> updateFreshEntitySettings(result.getSettings(), data, closer));
+
     }
 
     private void updateFreshEntitySettings(final EntityCrudKitSettings<?> fromSettings, final EntityCrudKitSettings<?> toSettings, final WebProtegeDialogCloser closer) {
         String oldPrefix = fromSettings.getPrefixSettings().getIRIPrefix();
+        GWT.log("[ShowFreshEntitySettingsHandlerImpl] Old Prefix: " + oldPrefix);
         String newPrefix = toSettings.getPrefixSettings().getIRIPrefix();
+        GWT.log("[ShowFreshEntitySettingsHandlerImpl] New Prefix: " + newPrefix);
+
         if(!oldPrefix.equals(newPrefix)) {
             MessageBox.showYesNoConfirmBox("Find and replace prefix?", "You changed the IRI prefix for new entities from <span style=\"font-weight:bold;\">" + oldPrefix + "</span> to <span style=\"font-weight:bold;\">" + newPrefix + "</span>. " +
                     "<br><br>Do you want to find and <span style=\"font-weight:bold;\">replace existing occurrences</span> of the previous prefix with the new prefix?"

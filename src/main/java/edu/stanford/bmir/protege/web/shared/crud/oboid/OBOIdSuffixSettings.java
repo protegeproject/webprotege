@@ -25,7 +25,7 @@ public class OBOIdSuffixSettings extends EntityCrudKitSuffixSettings {
 
     private int totalDigits = DEFAULT_TOTAL_DIGITS;
 
-    private List<UserIdRange> userIdRanges = new ArrayList<UserIdRange>();
+    private List<UserIdRange> userIdRanges = new ArrayList<>();
 
 
     /**

@@ -123,7 +123,7 @@ public class MessageBox {
             }
         });
         WebProtegeDialog<Void> dlg = createDialog(controller);
-        dlg.setVisible(true);
+        dlg.show();
         scheduleCentering(dlg);
 
     }
