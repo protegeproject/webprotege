@@ -31,11 +31,6 @@ public final class UUIDSuffixKit extends EntityCrudKit<UUIDSuffixSettings> {
     }
 
     @Override
-    public EntityCrudKitSuffixSettingsEditor<UUIDSuffixSettings> getSuffixSettingsEditor() {
-        return new UUIDSuffixSettingsEditor();
-    }
-
-    @Override
     public EntityCrudKitPrefixSettings getDefaultPrefixSettings() {
         return new EntityCrudKitPrefixSettings();
     }

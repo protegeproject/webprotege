@@ -6,6 +6,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeOKCancelDialogController;
 import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSettings;
 
+import javax.inject.Inject;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -16,11 +18,12 @@ public class EntityCrudKitSettingsDialogController extends WebProtegeOKCancelDia
 
     private static final String TITLE = "New Entity Settings";
 
-    final EntityCrudKitSettingsEditor editor = new EntityCrudKitSettingsEditorImpl();
+    private final EntityCrudKitSettingsEditor editor;
 
-    public EntityCrudKitSettingsDialogController() {
+    @Inject
+    public EntityCrudKitSettingsDialogController(EntityCrudKitSettingsEditor editor) {
         super(TITLE);
-
+        this.editor = editor;
     }
 
     public EntityCrudKitSettingsEditor getEditor() {

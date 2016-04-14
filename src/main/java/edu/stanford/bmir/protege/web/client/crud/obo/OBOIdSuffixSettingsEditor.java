@@ -19,6 +19,8 @@ import edu.stanford.bmir.protege.web.shared.crud.EntityCrudKitSuffixSettingsEdit
 import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
 import edu.stanford.bmir.protege.web.shared.crud.oboid.UserIdRange;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,15 +47,12 @@ public class OBOIdSuffixSettingsEditor extends Composite implements EntityCrudKi
     @UiField(provided = true)
     protected ValueListEditorImpl<UserIdRange> userRangeTable;
 
+    @Inject
+    protected Provider<UserIdRangeEditor> userIdRangeEditorProvider;
+
 
     public OBOIdSuffixSettingsEditor() {
-        userRangeTable = new ValueListEditorImpl<UserIdRange>(new ValueEditorFactory<UserIdRange>() {
-            @Override
-            public ValueEditor<UserIdRange> createEditor() {
-//                return new UserIdRangeEditorImpl(null);
-                throw new RuntimeException();
-            }
-        });
+        userRangeTable = new ValueListEditorImpl<>(() -> userIdRangeEditorProvider.get());
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
     }

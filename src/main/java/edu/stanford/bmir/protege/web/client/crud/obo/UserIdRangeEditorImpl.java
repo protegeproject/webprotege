@@ -28,8 +28,6 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class UserIdRangeEditorImpl extends Composite implements UserIdRangeEditor {
 
-    private final DispatchServiceManager dispatchServiceManager;
-
     interface UserIdRangeEditorImplUiBinder extends UiBinder<HTMLPanel, UserIdRangeEditorImpl> {
 
     }
@@ -49,9 +47,8 @@ public class UserIdRangeEditorImpl extends Composite implements UserIdRangeEdito
     private boolean dirty;
 
     @Inject
-    public UserIdRangeEditorImpl(DispatchServiceManager dispatchServiceManager) {
-        this.dispatchServiceManager = dispatchServiceManager;
-        userIdEditor = new SuggestBox(new UserIdSuggestOracle(dispatchServiceManager));
+    public UserIdRangeEditorImpl(UserIdSuggestOracle userIdSuggestOracle) {
+        userIdEditor = new SuggestBox(userIdSuggestOracle);
         userIdEditor.getElement().setAttribute("placeholder", "Type user name");
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

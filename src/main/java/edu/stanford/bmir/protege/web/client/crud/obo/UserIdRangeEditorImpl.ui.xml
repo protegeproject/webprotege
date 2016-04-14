@@ -2,24 +2,30 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:text="urn:import:edu.stanford.bmir.protege.web.client.ui.library.text">
     <ui:style>
-        .box-sizing-style {
-            box-sizing: border-box;
+        .main {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+        .userIdEditor {
+            flex-grow: 1;
+            flex-shrink: 1;
+        }
+        .startEditor {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+        .endEditor {
+            flex-grow: 0;
+            flex-shrink: 0;
         }
 
     </ui:style>
-    <g:HTMLPanel  addStyleNames="{style.box-sizing-style}">
-        <table style="border-collapse: collapse; border-spacing: 0px;">
-            <tr>
-                <td>
-                    <g:SuggestBox ui:field="userIdEditor" addStyleNames="{style.box-sizing-style}"/>
-                </td>
-                <td>
-                    <text:PlaceholderTextBox ui:field="startEditor" visibleLength="8" placeholder="start" addStyleNames="{style.box-sizing-style}"/>
-                </td>
-                <td>
-                    <text:PlaceholderTextBox ui:field="endEditor" visibleLength="8" placeholder="end" addStyleNames="{style.box-sizing-style}"/>
-                </td>
-            </tr>
-        </table>
+    <g:HTMLPanel  addStyleNames="{style.main}">
+            <g:SuggestBox ui:field="userIdEditor" addStyleNames="{style.userIdEditor}"/>
+            <text:PlaceholderTextBox ui:field="startEditor" visibleLength="8" placeholder="start"
+                                     addStyleNames="{style.startEditor}"/>
+            <text:PlaceholderTextBox ui:field="endEditor" visibleLength="8" placeholder="end"
+                                     addStyleNames="{style.endEditor}"/>
     </g:HTMLPanel>
 </ui:UiBinder>

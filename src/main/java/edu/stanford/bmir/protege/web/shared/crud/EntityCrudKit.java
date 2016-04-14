@@ -62,12 +62,12 @@ public abstract class EntityCrudKit<S extends EntityCrudKitSuffixSettings> imple
         return displayName;
     }
 
-    /**
-     * Gets an editor for viewing and altering the suffix settings.
-     * This method may only be called on the client side.
-     * @return An editor.  Not {@code null}.
-     */
-    public abstract EntityCrudKitSuffixSettingsEditor<S> getSuffixSettingsEditor();
+//    /**
+//     * Gets an editor for viewing and altering the suffix settings.
+//     * This method may only be called on the client side.
+//     * @return An editor.  Not {@code null}.
+//     */
+//    public abstract EntityCrudKitSuffixSettingsEditor<S> getSuffixSettingsEditor();
 
     public abstract EntityCrudKitPrefixSettings getDefaultPrefixSettings();
 
