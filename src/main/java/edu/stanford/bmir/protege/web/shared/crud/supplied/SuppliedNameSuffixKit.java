@@ -29,11 +29,6 @@ public class SuppliedNameSuffixKit extends EntityCrudKit<SuppliedNameSuffixSetti
     }
 
     @Override
-    public EntityCrudKitSuffixSettingsEditor<SuppliedNameSuffixSettings> getSuffixSettingsEditor() {
-        return new SuppliedSuffixSettingsEditor();
-    }
-
-    @Override
     public EntityCrudKitPrefixSettings getDefaultPrefixSettings() {
         return new EntityCrudKitPrefixSettings();
     }

@@ -12,6 +12,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.HasClientApplicationProperties;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditor;
+import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsEditorImpl;
+import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditor;
+import edu.stanford.bmir.protege.web.client.crud.obo.UserIdRangeEditorImpl;
 import edu.stanford.bmir.protege.web.client.form.FormView;
 import edu.stanford.bmir.protege.web.client.form.FormViewImpl;
 import edu.stanford.bmir.protege.web.client.lang.LangCodesProvider;
@@ -236,6 +240,9 @@ public class ApplicationClientModule extends AbstractGinModule {
         bind(new TypeLiteral<List<LanguageCode>>(){})
                 .annotatedWith(LanguageCodes.class)
                 .toProvider(LangCodesProvider.class);
+
+        bind(EntityCrudKitSettingsEditor.class).to(EntityCrudKitSettingsEditorImpl.class);
+        bind(UserIdRangeEditor.class).to(UserIdRangeEditorImpl.class);
 
     }
 

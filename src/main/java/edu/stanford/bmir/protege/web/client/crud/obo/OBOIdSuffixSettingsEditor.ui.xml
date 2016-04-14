@@ -18,6 +18,11 @@
             overflow-x: hidden;
             overflow-y: scroll;
         }
+        .userRangeList {
+            width: 100%;
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
     </ui:style>
 
     <g:HTMLPanel addStyleNames="{wp.style.formMain}">
@@ -28,11 +33,11 @@
         <div style="height: 10px;"/>
 
         <g:Label text="User specific ranges" addStyleNames="{wp.style.dlgLabel}"/>
-        <g:ScrollPanel height="200px" width="400px" addStyleNames="{style.scroll-panel-style}">
-            <g:HTMLPanel addStyleNames="{style.table-style}">
-                <editor:ValueListEditorImpl ui:field="userRangeTable"/>
-            </g:HTMLPanel>
+
+        <g:ScrollPanel width="500px" height="200px">
+            <editor:ValueListEditorImpl ui:field="userRangeTable" enabled="true" addStyleNames="{style.userRangeList}"/>
         </g:ScrollPanel>
+
 
         <div style="height: 10px;"/>
     </g:HTMLPanel>

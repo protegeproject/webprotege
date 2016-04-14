@@ -16,6 +16,8 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
+import javax.inject.Provider;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -28,10 +30,15 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
 
     private final ActiveProjectManager activeProjectManager;
 
+    private final Provider<EntityCrudKitSettingsDialogController> dialogControllerProvider;
+
     @Inject
-    public ShowFreshEntitySettingsHandlerImpl(DispatchServiceManager dispatchServiceManager, ActiveProjectManager activeProjectManager) {
+    public ShowFreshEntitySettingsHandlerImpl(DispatchServiceManager dispatchServiceManager,
+                                              ActiveProjectManager activeProjectManager,
+                                              Provider<EntityCrudKitSettingsDialogController> dialogControllerProvider) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.activeProjectManager = activeProjectManager;
+        this.dialogControllerProvider = dialogControllerProvider;
     }
 
     @Override
@@ -64,7 +71,7 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
     }
 
     private void showDialog(final GetEntityCrudKitSettingsResult result) {
-        EntityCrudKitSettingsDialogController controller = new EntityCrudKitSettingsDialogController();
+        EntityCrudKitSettingsDialogController controller = dialogControllerProvider.get();
         WebProtegeDialog<EntityCrudKitSettings<?>> dlg = new WebProtegeDialog<EntityCrudKitSettings<?>>(controller);
         dlg.setVisible(true);
         controller.getEditor().setValue(result.getSettings());

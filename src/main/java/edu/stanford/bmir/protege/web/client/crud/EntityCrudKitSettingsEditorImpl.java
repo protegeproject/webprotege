@@ -14,11 +14,21 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
+import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.client.crud.obo.OBOIdSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.client.crud.supplied.SuppliedSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.client.crud.uuid.UUIDSuffixSettingsEditor;
+import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.HasInitialFocusable;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedEvent;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.crud.*;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixKit;
+import edu.stanford.bmir.protege.web.shared.crud.oboid.OBOIdSuffixSettings;
+import edu.stanford.bmir.protege.web.shared.crud.supplied.SuppliedNameSuffixKit;
+import edu.stanford.bmir.protege.web.shared.crud.uuid.UUIDSuffixKit;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +64,11 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
 
     private List<Optional<EntityCrudKitSuffixSettingsEditor>> touchedEditors = new ArrayList<Optional<EntityCrudKitSuffixSettingsEditor>>();
 
-    public EntityCrudKitSettingsEditorImpl() {
+    private final Provider<OBOIdSuffixSettingsEditor> oboIdSuffixSettingsEditorProvider;
+
+    @Inject
+    public EntityCrudKitSettingsEditorImpl(Provider<OBOIdSuffixSettingsEditor> oboIdSuffixSettingsEditorProvider) {
+        this.oboIdSuffixSettingsEditorProvider = oboIdSuffixSettingsEditorProvider;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         EntityCrudKitManager kitManager = EntityCrudKitManager.get();
@@ -123,7 +137,7 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
             }
         }
         else {
-            editor = descriptor.getSuffixSettingsEditor();
+            editor = getSuffixSettingsEditor(descriptor);
             touchedEditors.set(selIndex, Optional.of(editor));
             editor.setValue(descriptor.getDefaultSuffixSettings());
             iriPrefixEditor.setValue(descriptor.getDefaultPrefixSettings().getIRIPrefix());
@@ -131,6 +145,21 @@ public class EntityCrudKitSettingsEditorImpl extends Composite implements Entity
         schemeSpecificSettingsEditorHolder.setWidget(editor);
         validatePrefix();
         return Optional.of(editor);
+    }
+
+    private EntityCrudKitSuffixSettingsEditor getSuffixSettingsEditor(EntityCrudKit<?> crudKit) {
+        if(crudKit.getKitId().equals(OBOIdSuffixKit.get().getKitId())) {
+            return oboIdSuffixSettingsEditorProvider.get();
+        }
+        else if(crudKit.getKitId().equals(UUIDSuffixKit.get().getKitId())) {
+            return new UUIDSuffixSettingsEditor();
+        }
+        else if(crudKit.getKitId().equals(SuppliedNameSuffixKit.get().getKitId())) {
+            return new SuppliedSuffixSettingsEditor();
+        }
+        else {
+            throw new RuntimeException("Unknown Entity Crud Kit");
+        }
     }
 
     private String getIRIPrefix() {

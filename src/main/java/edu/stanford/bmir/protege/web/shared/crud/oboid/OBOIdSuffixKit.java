@@ -28,10 +28,10 @@ public class OBOIdSuffixKit extends EntityCrudKit<OBOIdSuffixSettings> {
         return INSTANCE;
     }
 
-    @Override
-    public EntityCrudKitSuffixSettingsEditor<OBOIdSuffixSettings> getSuffixSettingsEditor() {
-        return new OBOIdSuffixSettingsEditor();
-    }
+//    @Override
+//    public EntityCrudKitSuffixSettingsEditor<OBOIdSuffixSettings> getSuffixSettingsEditor() {
+//        return new OBOIdSuffixSettingsEditor();
+//    }
 
     @Override
     public EntityCrudKitPrefixSettings getDefaultPrefixSettings() {
