@@ -60,6 +60,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
         attachAcceleratorKeyHandlers(contentWidget);
 
+        center();
     }
 
     @Override
@@ -124,6 +125,7 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
     @Override
     public void show() {
+        setTitle(controller.getTitle());
         super.show();
         setFocusToDefaultWidget();
     }
