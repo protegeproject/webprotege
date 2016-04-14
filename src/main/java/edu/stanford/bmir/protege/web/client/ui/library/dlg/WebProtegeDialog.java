@@ -60,8 +60,6 @@ public final class WebProtegeDialog<D> extends DialogBox {
 
         attachAcceleratorKeyHandlers(contentWidget);
 
-        center();
-
     }
 
     @Override

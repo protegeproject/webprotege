@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.crud.EntityCrudKitSettingsDialogController;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
@@ -73,7 +75,9 @@ public class ShowFreshEntitySettingsHandlerImpl implements ShowFreshEntitySettin
     private void showDialog(final GetEntityCrudKitSettingsResult result) {
         EntityCrudKitSettingsDialogController controller = dialogControllerProvider.get();
         WebProtegeDialog<EntityCrudKitSettings<?>> dlg = new WebProtegeDialog<EntityCrudKitSettings<?>>(controller);
-        dlg.setVisible(true);
+        dlg.setPopupPositionAndShow((w, h) -> {
+            dlg.setPopupPosition((Window.getClientWidth() - w) / 2, 100);
+        });
         controller.getEditor().setValue(result.getSettings());
 
         dlg.getController().setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<EntityCrudKitSettings<?>>() {

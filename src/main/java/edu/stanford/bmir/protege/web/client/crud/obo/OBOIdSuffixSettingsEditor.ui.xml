@@ -5,19 +5,6 @@
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
 
     <ui:style>
-        .table-style {
-            width: 100%;
-            padding: 2px;
-            padding-right: 3px;
-            vertical-align: top;
-        }
-
-        .scroll-panel-style {
-            border-top: 1px solid #f1f1f1;
-            border-bottom: 1px solid #f1f1f1;
-            overflow-x: hidden;
-            overflow-y: scroll;
-        }
         .userRangeList {
             width: 100%;
             padding-right: 10px;
