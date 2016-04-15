@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.common.base.Optional;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
@@ -11,13 +10,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedInEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedInHandler;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
-import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedEvent;
 import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedHandler;
@@ -67,26 +63,11 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectId = projectId;
 
-        addApplicationEventHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
-            @Override
-            public void handleUserLoggedIn(UserLoggedInEvent event) {
-                onLogin(event.getUserId());
-            }
-        });
+        addApplicationEventHandler(UserLoggedInEvent.TYPE, event -> onLogin(event.getUserId()));
 
-        addApplicationEventHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
-            @Override
-            public void handleUserLoggedOut(UserLoggedOutEvent event) {
-                onLogout(event.getUserId());
-            }
-        });
+        addApplicationEventHandler(UserLoggedOutEvent.TYPE, event -> onLogout(event.getUserId()));
 
-        addProjectEventHandler(PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
-            @Override
-            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
-                onPermissionsChanged();
-            }
-        });
+        addProjectEventHandler(PermissionsChangedEvent.TYPE, event -> onPermissionsChanged());
 
         HandlerRegistration handlerRegistration = selectionModel.addSelectionChangedHandler(new EntitySelectionChangedHandler() {
             @Override
@@ -98,12 +79,7 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
             }
         });
         handlerRegistrations.add(handlerRegistration);
-        asWidget().addAttachHandler(new AttachEvent.Handler() {
-            @Override
-            public void onAttachOrDetach(AttachEvent event) {
-                handleActivated();
-            }
-        });
+        asWidget().addAttachHandler(event -> handleActivated());
     }
 
     @Override
