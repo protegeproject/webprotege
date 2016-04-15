@@ -17,14 +17,19 @@ public class StringFieldDescriptor implements FormFieldDescriptor {
 
     private String pattern;
 
+    private String patternViolationErrorMessage;
+
     private StringFieldDescriptor() {
     }
 
-    public StringFieldDescriptor(String placeholder, StringType stringType, LineMode lineMode, String pattern) {
+    public StringFieldDescriptor(String placeholder, StringType stringType, LineMode lineMode,
+                                 String pattern,
+                                 String patternViolationErrorMessage) {
         this.placeholder = placeholder;
         this.stringType = stringType;
         this.lineMode = lineMode;
         this.pattern = pattern;
+        this.patternViolationErrorMessage = patternViolationErrorMessage;
     }
 
     @Override
@@ -46,6 +51,10 @@ public class StringFieldDescriptor implements FormFieldDescriptor {
 
     public String getPattern() {
         return pattern;
+    }
+
+    public String getPatternViolationErrorMessage() {
+        return patternViolationErrorMessage;
     }
 
     public LineMode getLineMode() {

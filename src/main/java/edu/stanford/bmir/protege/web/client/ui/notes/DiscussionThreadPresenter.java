@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetDiscussionThreadAction;
@@ -43,6 +45,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DiscussionThreadPresenter implements HasDispose {
 
+    private static final Messages MESSAGES = GWT.create(Messages.class);
+
     private final DispatchServiceManager dispatchServiceManager;
 
     private DiscussionThreadView view;
@@ -59,13 +63,8 @@ public class DiscussionThreadPresenter implements HasDispose {
 
     private final Provider<NoteContainerPresenter> noteContainerPresenterProvider;
 
-    private PortletAction postNewTopicAction = new PortletAction("New topic",
-            new PortletActionHandler() {
-                @Override
-                public void handleActionInvoked(PortletAction action, ClickEvent event) {
-                    handlePostNewTopic();
-                }
-            });
+    private PortletAction postNewTopicAction = new PortletAction(MESSAGES.newTopic(),
+            (action, event) -> handlePostNewTopic());
 
     @Inject
     public DiscussionThreadPresenter(ProjectId projectId,

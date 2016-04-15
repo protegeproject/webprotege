@@ -1,6 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'
-        >
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
 
         .main {
@@ -51,8 +51,8 @@
 
     <g:HTMLPanel addStyleNames="{style.main}">
         <g:HTMLPanel addStyleNames="{style.header}">
-            <g:Label addStyleNames="{style.displayNameCol}" text="Project name"/>
-            <g:Label addStyleNames="{style.ownerCol}" text="Owner"/>
+            <g:Label addStyleNames="{style.displayNameCol}" text="{msg.projectName}"/>
+            <g:Label addStyleNames="{style.ownerCol}" text="{msg.owner}"/>
             <g:Label addStyleNames="{style.menuButtonCol}"/>
         </g:HTMLPanel>
         <g:FlowPanel ui:field="itemContainer" addStyleNames="{style.projectList}"/>

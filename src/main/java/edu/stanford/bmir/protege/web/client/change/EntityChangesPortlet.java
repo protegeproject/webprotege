@@ -31,8 +31,7 @@ public class EntityChangesPortlet extends AbstractOWLEntityPortlet {
                                 ChangeListViewPresenter presenter) {
 		super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.presenter = presenter;
-        ScrollPanel scrollPanel = new ScrollPanel(presenter.getView().asWidget());
-        getContentHolder().setWidget(scrollPanel);
+        getContentHolder().setWidget(presenter.getView().asWidget());
 
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override

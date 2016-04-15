@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.server.form;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -10,9 +12,7 @@ import edu.stanford.bmir.protege.web.server.frame.ClassFrameTranslator;
 import edu.stanford.bmir.protege.web.server.frame.EntityFrameTranslator;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.shared.form.FormDescriptor;
-import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorAction;
-import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorResult;
+import edu.stanford.bmir.protege.web.shared.form.*;
 import edu.stanford.bmir.protege.web.shared.form.data.FormDataPrimitive;
 import edu.stanford.bmir.protege.web.shared.form.field.*;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
@@ -51,177 +51,202 @@ public class GetFormDescriptorActionHander extends AbstractHasProjectActionHandl
 
     @Override
     protected GetFormDescriptorResult execute(GetFormDescriptorAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        return new GetFormDescriptorResult(action.getProjectId(), action.getSubject(), getDummy(action.getSubject(), project, project.getDataFactory()));
+        return getDummy(action.getSubject(), project, project.getDataFactory());
     }
 
 
 
-    private FormDescriptor getDummy(OWLEntity entity, OWLAPIProject project, final OWLDataFactory dataFactory) {
+    private GetFormDescriptorResult getDummy(OWLEntity entity, OWLAPIProject project, final OWLDataFactory dataFactory) {
         if(!entity.isOWLClass()) {
-            return FormDescriptor.builder().build();
+            return new GetFormDescriptorResult(project.getProjectId(), entity, FormDescriptor.empty(), FormData.empty());
         }
 
-        FormDescriptor.Builder builder = FormDescriptor.builder();
+        FormDescriptor.Builder builder = FormDescriptor.builder(new FormId("Class"));
         FormElementId labelFieldId = new FormElementId("Label");
         builder.addDescriptor(new FormElementDescriptor(
                 labelFieldId,
                 "Label",
-                Repeatability.NON_REPEATABLE,
                 new StringFieldDescriptor(
                         "Enter label",
                         StringType.SIMPLE_STRING,
                         LineMode.SINGLE_LINE,
-                        ""
-                )
+                        ".+",
+                        "Please enter a non-empty label"
+                ),
+                Repeatability.NON_REPEATABLE,
+                Required.REQUIRED
         ));
         FormElementId altLabelFieldId = new FormElementId("skos:altLabel");
         builder.addDescriptor(new FormElementDescriptor(
-           altLabelFieldId,
+                altLabelFieldId,
                 "Synonyms",
-                Repeatability.REPEATABLE_VERTICAL,
                 new StringFieldDescriptor(
                         "Enter synonym",
                         StringType.LANG_STRING,
                         LineMode.SINGLE_LINE,
+                        "",
                         ""
-                )
+                ),
+                Repeatability.REPEATABLE_VERTICAL,
+                Required.OPTIONAL
         ));
         FormElementId definitionFieldId = new FormElementId("Definition");
         builder.addDescriptor(new FormElementDescriptor(
                 definitionFieldId,
                 "Definition",
-                Repeatability.NON_REPEATABLE,
                 new StringFieldDescriptor(
                         "Enter label",
                         StringType.SIMPLE_STRING,
                         LineMode.SINGLE_LINE,
+                        "",
                         ""
-                )
-        ));
-        FormElementId statusFieldId = new FormElementId("Status");
-        builder.addDescriptor(new FormElementDescriptor(
-                statusFieldId,
-                "Status",
+                ),
                 Repeatability.NON_REPEATABLE,
-                new ChoiceFieldDescriptor(
-                        ChoiceFieldType.CHECK_BOX,
-                        Arrays.asList(
-                                new ChoiceDescriptor("Deprecated", FormDataPrimitive.get(dataFactory.getOWLLiteral(true)))
-                        )
-                )
+                Required.OPTIONAL
         ));
+        FormElementId statusFieldId = new FormElementId("ProductionStatus");
+        builder.addDescriptor(new FormElementDescriptor(
+                        statusFieldId,
+                        "Production Status",
+                        new ChoiceFieldDescriptor(
+                                ChoiceFieldType.COMBO_BOX,
+                                Arrays.asList(
+                                        new ChoiceDescriptor("In Production", FormDataPrimitive.get(dataFactory.getOWLClass(IRI.create("http://webprotege.stanford.edu/InProduction")))),
+                                        new ChoiceDescriptor("Out of Production", FormDataPrimitive.get(dataFactory.getOWLClass(IRI.create("http://webprotege.stanford.edu/NotInProduction")))))
+                        ),
+                        Repeatability.NON_REPEATABLE,
+                        Required.REQUIRED
+                )
+        );
         FormElementId depictionFieldId = new FormElementId("depiction");
         builder.addDescriptor(new FormElementDescriptor(
                 depictionFieldId,
                 "Depictions",
+                new ImageFieldDescriptor(),
                 Repeatability.REPEATABLE_HORIZONTAL,
-                new ImageFieldDescriptor()
+                Required.OPTIONAL
         ));
 
         FormElementId manufacturerField = new FormElementId("manufacturerField");
         List<ChoiceDescriptor> manufacturerChoices;
-        if(project.getClassHierarchyProvider().getAncestors(entity.asOWLClass()).contains(dataFactory.getOWLClass(IRI.create("http://webprotege.stanford.edu/R3boSgK0ZoXcizHloIAZhy")))) {
-            manufacturerChoices = Arrays.asList(
-                    new ChoiceDescriptor("Boeing", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/Boeing")))),
-                    new ChoiceDescriptor("Airbus", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/AirbusIndustrie")))),
-                    new ChoiceDescriptor("Lockheed", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/AirbusIndustrie"))))
-            );
-        }
-        else {
-            manufacturerChoices = Arrays.asList(
-                    new ChoiceDescriptor("Rolls Royce", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/RollsRoyce")))),
-                    new ChoiceDescriptor("General Electric", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/GeneralElectric")))),
-                    new ChoiceDescriptor("Pratt & Whitney", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/PrattAndWhitney"))))
-            );
-        }
+//        if(project.getClassHierarchyProvider().getAncestors(entity.asOWLClass()).contains(dataFactory.getOWLClass(IRI.create("http://webprotege.stanford.edu/R3boSgK0ZoXcizHloIAZhy")))) {
+        manufacturerChoices = Arrays.asList(
+                new ChoiceDescriptor("Boeing", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/Boeing")))),
+                new ChoiceDescriptor("Airbus", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/AirbusIndustrie")))),
+                new ChoiceDescriptor("Lockheed", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/AirbusIndustrie"))))
+        );
+//        }
+//        else {
+//            manufacturerChoices = Arrays.asList(
+//                    new ChoiceDescriptor("Rolls Royce", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/RollsRoyce")))),
+//                    new ChoiceDescriptor("General Electric", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/GeneralElectric")))),
+//                    new ChoiceDescriptor("Pratt & Whitney", FormDataPrimitive.get(dataFactory.getOWLNamedIndividual(IRI.create("http://webprotege.stanford.edu/PrattAndWhitney"))))
+//            );
+//        }
         builder.addDescriptor(new FormElementDescriptor(
                 manufacturerField,
                 "Manufacturer",
-                Repeatability.NON_REPEATABLE,
                 new ChoiceFieldDescriptor(
                         ChoiceFieldType.COMBO_BOX,
                         manufacturerChoices
-                )
+                ),
+                Repeatability.NON_REPEATABLE,
+                Required.REQUIRED
         ));
 
+        List<CompositeFieldDescriptorEntry> childEntries = new ArrayList<>();
+        childEntries.add(new CompositeFieldDescriptorEntry(
+                new FormElementId("Designer.FirstName"),
+                1, 1,
+                new StringFieldDescriptor(
+                        "Enter first name",
+                        StringType.SIMPLE_STRING,
+                        LineMode.SINGLE_LINE,
+                        "",
+                        ""
+                )
+        ));
+        childEntries.add(new CompositeFieldDescriptorEntry(
+                new FormElementId("Designer.LastName"),
+                1, 1,
+                new StringFieldDescriptor(
+                        "Enter last name",
+                        StringType.SIMPLE_STRING,
+                        LineMode.SINGLE_LINE,
+                        "",
+                        ""
+                )
+        ));
+        childEntries.add(new CompositeFieldDescriptorEntry(
+                new FormElementId("Designer.Role"),
+                0, 0,
+                new ChoiceFieldDescriptor(
+                        ChoiceFieldType.COMBO_BOX,
+                        Arrays.asList(
+                                new ChoiceDescriptor("Chief designer", FormDataPrimitive.get(IRI.create("Chief"))),
+                                new ChoiceDescriptor("Assistant designer", FormDataPrimitive.get(IRI.create("Assistant"))),
+                                new ChoiceDescriptor("Junior designer", FormDataPrimitive.get(IRI.create("Junior")))
+                        )
+                )
+        ));
+        CompositeFieldDescriptor designerField = new CompositeFieldDescriptor(childEntries);
+        builder.addDescriptor(new FormElementDescriptor(
+                new FormElementId("Designer"),
+                "Designer",
+                designerField,
+                Repeatability.REPEATABLE_VERTICAL,
+                Required.REQUIRED
+        ));
+
+        FormData.Builder dataBuilder = FormData.builder();
         EntityFrameTranslator<ClassFrame, OWLClass> translator = new ClassFrameTranslator();
         ClassFrame frame = translator.getFrame(entity.asOWLClass(), project.getRootOntology(), project);
         for(PropertyValue pv : frame.getPropertyValues()) {
             if(pv.getProperty().equals(dataFactory.getRDFSLabel())) {
                 OWLObject value = pv.getValue();
                 if (value instanceof OWLLiteral) {
-                    builder.addData(labelFieldId, FormDataPrimitive.get((OWLLiteral) value));
+                    dataBuilder.addData(labelFieldId, FormDataPrimitive.get((OWLLiteral) value));
                 }
             }
             else if(pv.getProperty().equals(dataFactory.getOWLAnnotationProperty(SKOSVocabulary.DEFINITION.getIRI()))) {
                 if (pv.getValue() instanceof OWLLiteral) {
-                    builder.addData(definitionFieldId, FormDataPrimitive.get((OWLLiteral) pv.getValue()));
+                    dataBuilder.addData(definitionFieldId, FormDataPrimitive.get((OWLLiteral) pv.getValue()));
                 }
             }
             else if(pv.getProperty().equals(dataFactory.getOWLDeprecated())) {
                 if(pv.getValue() instanceof OWLLiteral) {
-                    builder.addData(statusFieldId, FormDataPrimitive.get((OWLLiteral) pv.getValue()));
+                    dataBuilder.addData(statusFieldId, FormDataPrimitive.get((OWLLiteral) pv.getValue()));
                 }
             }
             else if(pv.getProperty().equals(dataFactory.getOWLAnnotationProperty(SKOSVocabulary.ALTLABEL.getIRI()))) {
                 if(pv.getValue() instanceof OWLLiteral) {
-                    builder.addData(altLabelFieldId, FormDataPrimitive.get((OWLLiteral) pv.getValue()));
+                    dataBuilder.addData(altLabelFieldId, FormDataPrimitive.get((OWLLiteral) pv.getValue()));
                 }
             }
             else if(pv.getProperty().equals(dataFactory.getOWLAnnotationProperty(IRI.create("http://xmlns.com/foaf/0.1/depiction")))) {
                 if(pv.getValue() instanceof IRI) {
-                    builder.addData(depictionFieldId, FormDataPrimitive.get((IRI) pv.getValue()));
+                    dataBuilder.addData(depictionFieldId, FormDataPrimitive.get((IRI) pv.getValue()));
                 }
             }
             else if(pv.getProperty().getIRI().toString().equals("http://webprotege.stanford.edu/hasManufacturer")) {
                 if(pv.getValue() instanceof OWLNamedIndividual) {
                     if (pv.getState() == PropertyValueState.ASSERTED) {
-                        builder.addData(manufacturerField, FormDataPrimitive.get((OWLNamedIndividual) pv.getValue()));
+                        dataBuilder.addData(manufacturerField, FormDataPrimitive.get((OWLNamedIndividual) pv.getValue()));
                     }
                 }
             }
+            else if(pv.getProperty().getIRI().toString().equals("http://webprotege.stanford.edu/hasProductionStatus")) {
+                OWLObject value = pv.getValue();
+                if (value instanceof OWLClass) {
+                    dataBuilder.addData(statusFieldId, FormDataPrimitive.get((OWLClass) value));
+                }
+            }
         }
-        return builder.build();
-//
-//
-//
-//        return new FormDescriptor(
-//                Arrays.asList(
-//                        new FormElementDescriptor(
-//                                new FormElementId("TheLabel"),
-//                                "Label",
-//                                Repeatability.UNREPEATABLE,
-//                                new StringFieldDescriptor(
-//                                        "Enter label",
-//                                        StringType.SIMPLE_STRING,
-//                                        LineMode.SINGLE_LINE,
-//                                        ""
-//                                )
-//                        ),
-//                        new FormElementDescriptor(new FormElementId("TheComment"), "Comment", Repeatability.UNREPEATABLE, new StringFieldDescriptor("Enter comment", StringType.LANG_STRING, LineMode.MULTI_LINE, "")),
-//                        new FormElementDescriptor(new FormElementId("Synonyms"), "Synonyms", Repeatability.REPEATABLE, new StringFieldDescriptor("Enter synonym", StringType.LANG_STRING, LineMode.MULTI_LINE, "")),
-//
-//                        new FormElementDescriptor(
-//                                new FormElementId("EngineConfiguration"),
-//                                "Engine Configuration",
-//                                Repeatability.REPEATABLE,
-//                                new ChoiceFieldDescriptor(
-//                                        ChoiceFieldType.COMBO_BOX,
-//                                        Arrays.<ChoiceDescriptor>asList(
-//                                                new ChoiceDescriptor("Twin Jet - Wing Mounted", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/TJWM"))),
-//                                                new ChoiceDescriptor("Twin Jet - Tail Mounted", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/TJTM"))),
-//                                                new ChoiceDescriptor("Tri Jet - Wing/Tail Mounted", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/TrJWTM"))),
-//                                                new ChoiceDescriptor("Tri Jet - Wing Mounted", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/TrJWM"))),
-//                                                new ChoiceDescriptor("Quad Jet - Wing Mounted", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/QJWM"))),
-//                                                new ChoiceDescriptor("Quad Jet - Tail Mounted", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/QJTM")))
-//                                        ))),
-//                        new FormElementDescriptor(new FormElementId("PossibleRoles"), "Role", Repeatability.UNREPEATABLE, new ChoiceFieldDescriptor(ChoiceFieldType.CHECK_BOX, Arrays.<ChoiceDescriptor>asList(
-//                                new ChoiceDescriptor("Passenger", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/Passenger"))),
-//                                new ChoiceDescriptor("Cargo", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/Cargo"))),
-//                                new ChoiceDescriptor("Combi", FormDataPrimitive.get(DataFactory.getOWLClass("http://aero.com/Combi")))
-//                        ))),
-//                        new FormElementDescriptor(new FormElementId("ClassName"), "The Class", Repeatability.UNREPEATABLE, new ClassNameFieldDescriptor(Collections.<OWLClass>emptySet()))
-//                ),
-//        new HashMap<>());
+        return new GetFormDescriptorResult(
+                project.getProjectId(),
+                entity,
+                builder.build(),
+                dataBuilder.build()
+        );
     }
 }

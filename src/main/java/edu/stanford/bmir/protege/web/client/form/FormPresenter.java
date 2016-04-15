@@ -115,6 +115,10 @@ public class FormPresenter {
                             stringFieldEditor.setPlaceholder(descriptor.getPlaceholder());
                             stringFieldEditor.setLineMode(descriptor.getLineMode());
                             stringFieldEditor.setStringType(descriptor.getStringType());
+                            if (!descriptor.getPattern().isEmpty()) {
+                                stringFieldEditor.setPattern(descriptor.getPattern());
+                                stringFieldEditor.setPatternViolationErrorMessage(descriptor.getPatternViolationErrorMessage());
+                            }
                             return stringFieldEditor;
                         }
                     }

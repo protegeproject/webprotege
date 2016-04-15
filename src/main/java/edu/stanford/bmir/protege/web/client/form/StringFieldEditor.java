@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -29,6 +30,8 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 
 import java.util.Collections;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
@@ -48,6 +51,14 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
     @UiField(provided = true)
     DefaultLanguageEditor languageEditor;
 
+    private Optional<String> pattern = Optional.absent();
+
+    private Optional<String> patternViolationErrorMessage = Optional.absent();
+
+    private Optional<String> langPattern = Optional.absent();
+
+    private Optional<String> langPatternViolationErrorMessage = Optional.absent();
+
     @Inject
     public StringFieldEditor(ProjectId projectId) {
         this.editor = WebProtegeClientInjector.getPrimitiveDataEditor(projectId);
@@ -57,6 +68,7 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
         editor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<OWLPrimitiveData>> event) {
+                validateInput();
                 ValueChangeEvent.fire(StringFieldEditor.this, getValue());
             }
         });
@@ -66,6 +78,33 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
 
     public void setPlaceholder(String placeholder) {
         editor.setPlaceholder(placeholder);
+    }
+
+    public void setPattern(String pattern) {
+        this.pattern = Optional.of(checkNotNull(pattern));
+    }
+
+    public void setPatternViolationErrorMessage(String patternViolationErrorMessage) {
+        this.patternViolationErrorMessage = Optional.of(checkNotNull(patternViolationErrorMessage));
+    }
+
+    private void validateInput() {
+        if(pattern.isPresent()) {
+            RegExp regExp = RegExp.compile(pattern.get());
+            if(!regExp.test(editor.getText().trim())) {
+                if (patternViolationErrorMessage.isPresent()) {
+                    editor.setTitle(patternViolationErrorMessage.get());
+                }
+            }
+            else {
+                editor.getElement().getStyle().clearBorderColor();
+            }
+
+        }
+        if(langPattern.isPresent()) {
+
+        }
+
     }
 
     public void setStringType(StringType stringType) {

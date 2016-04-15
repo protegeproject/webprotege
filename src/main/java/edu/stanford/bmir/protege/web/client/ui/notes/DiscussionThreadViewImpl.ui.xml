@@ -9,8 +9,6 @@
         }
     </ui:style>
     <g:HTMLPanel height="100%" width="100%" addStyleNames="{style.thread-style}">
-        <g:ScrollPanel height="100%" width="100%">
-            <g:FlexTable ui:field="notesList"  height="100%" width="100%"/>
-        </g:ScrollPanel>
+        <g:FlexTable ui:field="notesList"  height="100%" width="100%"/>
     </g:HTMLPanel>
 </ui:UiBinder>
