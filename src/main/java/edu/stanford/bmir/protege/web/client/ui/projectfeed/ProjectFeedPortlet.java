@@ -4,7 +4,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 26/03/2013
  */
-public class ProjectFeedPortlet extends AbstractOWLEntityPortlet {
+public class ProjectFeedPortlet extends AbstractWebProtegeOWLPortlet {
 
     public static final FilterId SHOW_MY_ACTIVITY_FILTER = new FilterId("Show my activity");
 

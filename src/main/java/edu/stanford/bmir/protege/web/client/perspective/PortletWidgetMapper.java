@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.portlet.CouldNotFindPortletWidget;
-import edu.stanford.bmir.protege.web.client.portlet.EntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import edu.stanford.protege.widgetmap.client.WidgetMapper;
@@ -49,10 +49,10 @@ public class PortletWidgetMapper implements WidgetMapper {
         GWT.log("[PortletWidgetMapper] Instantiate portlet: " + portletClass);
         ViewHolder viewHolder;
         if(portletClass != null) {
-            final EntityPortlet entityPortlet = uiFactory.createPortlet(portletClass);
-            if (entityPortlet != null) {
-                GWT.log("[PortletWidgetMapper] Created portlet: " + entityPortlet.getClass().getName());
-                viewHolder = createViewHolder(terminalNode.getNodeId(), entityPortlet);
+            final WebProtegePortlet portlet = uiFactory.createPortlet(portletClass);
+            if (portlet != null) {
+                GWT.log("[PortletWidgetMapper] Created portlet: " + portlet.getClass().getName());
+                viewHolder = createViewHolder(terminalNode.getNodeId(), portlet);
             }
             else {
                 viewHolder = new ViewHolder(new CouldNotFindPortletWidget(), NodeProperties.emptyNodeProperties());
@@ -67,20 +67,20 @@ public class PortletWidgetMapper implements WidgetMapper {
     }
 
 
-    private ViewHolder createViewHolder(final TerminalNodeId nodeId, final EntityPortlet entityPortlet) {
+    private ViewHolder createViewHolder(final TerminalNodeId nodeId, final WebProtegePortlet portlet) {
         ViewHolder viewHolder;
-        if(entityPortlet instanceof HasFixedPrimaryAxisSize) {
-            viewHolder = new FixedSizeViewHolder(entityPortlet.asWidget(), NodeProperties.emptyNodeProperties(), ((HasFixedPrimaryAxisSize) entityPortlet).getFixedPrimaryAxisSize());
+        if(portlet instanceof HasFixedPrimaryAxisSize) {
+            viewHolder = new FixedSizeViewHolder(portlet.asWidget(), NodeProperties.emptyNodeProperties(), ((HasFixedPrimaryAxisSize) portlet).getFixedPrimaryAxisSize());
         }
         else {
-            viewHolder = new ViewHolder(entityPortlet, NodeProperties.emptyNodeProperties());
+            viewHolder = new ViewHolder(portlet, NodeProperties.emptyNodeProperties());
         }
-        entityPortlet.asWidget().setSize("100%", "100%");
+        portlet.asWidget().setSize("100%", "100%");
         viewHolder.addStyleName("drop-zone");
         viewHolder.addCloseHandler(new CloseHandler<Widget>() {
             @Override
             public void onClose(CloseEvent<Widget> event) {
-                entityPortlet.dispose();
+                portlet.dispose();
                 nodeId2ViewHolderMap.remove(nodeId);
             }
         });

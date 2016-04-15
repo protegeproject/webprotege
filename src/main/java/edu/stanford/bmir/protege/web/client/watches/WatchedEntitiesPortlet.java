@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -20,7 +20,7 @@ import edu.stanford.bmir.protege.web.shared.watches.WatchAddedHandler;
 
 import javax.inject.Inject;
 
-public class WatchedEntitiesPortlet extends AbstractOWLEntityPortlet {
+public class WatchedEntitiesPortlet extends AbstractWebProtegeOWLPortlet {
 
     private final LoggedInUserProvider loggedInUserProvider;
 

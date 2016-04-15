@@ -3,14 +3,13 @@ package edu.stanford.bmir.protege.web.client.change;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
@@ -26,7 +25,7 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import javax.inject.Inject;
 
-public class ProjectHistoryPortlet extends AbstractOWLEntityPortlet {
+public class ProjectHistoryPortlet extends AbstractWebProtegeOWLPortlet {
 
     public static final String REFRESH_TO_SEE_THE_LATEST_CHANGES = "Click to see the latest changes";
     public static final String LATEST_CHANGES_VISIBLE = "Latest changes displayed";

@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdResult;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
-public class OntologyIdPortlet extends AbstractOWLEntityPortlet implements HasFixedPrimaryAxisSize {
+public class OntologyIdPortlet extends AbstractWebProtegeOWLPortlet implements HasFixedPrimaryAxisSize {
 
     private final DispatchServiceManager dispatchServiceManager;
 

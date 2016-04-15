@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.client.change.EntityChangesPortlet;
 import edu.stanford.bmir.protege.web.client.change.ProjectHistoryPortlet;
 import edu.stanford.bmir.protege.web.client.form.FormPortlet;
 import edu.stanford.bmir.protege.web.client.metrics.MetricsPortlet;
-import edu.stanford.bmir.protege.web.client.portlet.EntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletDescriptor;
 import edu.stanford.bmir.protege.web.client.renderer.OWLEntityDescriptionBrowserPortlet;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet;
@@ -147,8 +147,8 @@ public class UIFactory {
     }
 
 
-    public EntityPortlet createPortlet(String portletJavaClassName) {
-        EntityPortlet entityPortlet = null;
+    public WebProtegePortlet createPortlet(String portletJavaClassName) {
+        WebProtegePortlet portlet = null;
         try {
             String replacementName = backwardsCompatMap.get(portletJavaClassName);
             if(replacementName != null) {
@@ -156,83 +156,83 @@ public class UIFactory {
             }
             
             if (portletJavaClassName.equals(ClassTreePortlet.class.getName())) {
-                entityPortlet = classTreePortletProvider.get();
+                portlet = classTreePortletProvider.get();
             }
             else if (portletJavaClassName.equals(IndividualsListPortlet.class.getName())) {
-                entityPortlet = individualsListPortletProvider.get();
+                portlet = individualsListPortletProvider.get();
             }
 //            else if (portletJavaClassName.equals(MetricsPortlet.class.getName())) {
 //                entityPortlet = metricsPortletProvider.get();
 //            }
             else if (portletJavaClassName.equals(PropertiesTreePortlet.class.getName())) {
-                entityPortlet = propertiesTreePortletProvider.get();
+                portlet = propertiesTreePortletProvider.get();
             }
             else if (portletJavaClassName.equals(ProjectHistoryPortlet.class.getName())) {
-                entityPortlet = changeSummaryPortletProvider.get();
+                portlet = changeSummaryPortletProvider.get();
             }
             else if (portletJavaClassName.equals(WatchedEntitiesPortlet.class.getName())) {
-                entityPortlet = watchedEntitiesPortletProvider.get();
+                portlet = watchedEntitiesPortletProvider.get();
             }
             else if (portletJavaClassName.equals(EntityChangesPortlet.class.getName())) {
-                entityPortlet = changesPortletProvider.get();
+                portlet = changesPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermRelationshipPortlet.class.getName())) {
-                entityPortlet = oboTermRelationshipPortletProvider.get();
+                portlet = oboTermRelationshipPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermDefinitionPortlet.class.getName())) {
-                entityPortlet = oboTermDefinitionPortletProvider.get();
+                portlet = oboTermDefinitionPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermIdEditorPortlet.class.getName())) {
-                entityPortlet = oboTermIdEditorPortletProvider.get();
+                portlet = oboTermIdEditorPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermSynonymsPortlet.class.getName())) {
-                entityPortlet = oboTermSynonymsPortletProvider.get();
+                portlet = oboTermSynonymsPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermCrossProductPortlet.class.getName())) {
-                entityPortlet = oboTermCrossProductPortletProvider.get();
+                portlet = oboTermCrossProductPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OBOTermXRefsEditorPortlet.class.getName())) {
-                entityPortlet = oboTermXRefsEditorPortletProvider.get();
+                portlet = oboTermXRefsEditorPortletProvider.get();
             }
             else if (portletJavaClassName.equals(RevisionsPortlet.class.getName())) {
-                entityPortlet = revisionsPortletProvider.get();
+                portlet = revisionsPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OntologyIdPortlet.class.getName())) {
-                entityPortlet = ontologyIdPortletProvider.get();
+                portlet = ontologyIdPortletProvider.get();
             }
             else if (portletJavaClassName.equals(OntologyAnnotationsPortlet.class.getName())) {
-                entityPortlet = ontologyAnnotationsPortletProvider.get();
+                portlet = ontologyAnnotationsPortletProvider.get();
             }
             else if (portletJavaClassName.equals(ProjectFeedPortlet.class.getName())) {
-                entityPortlet = projectFeedPortletProvider.get();
+                portlet = projectFeedPortletProvider.get();
             }
             else if (portletJavaClassName.equals(DiscussionThreadPortlet.class.getName())) {
-                entityPortlet = discussionThreadPortletProvider.get();
+                portlet = discussionThreadPortletProvider.get();
             }
             else if (portletJavaClassName.equals(EditorPortlet.class.getName())) {
-                entityPortlet = editorPortletProvider.get();
+                portlet = editorPortletProvider.get();
             }
             else if (portletJavaClassName.equals(UsagePortlet.class.getName())) {
-                entityPortlet = usagePortletProvider.get();
+                portlet = usagePortletProvider.get();
             } else if (portletJavaClassName.equals(OWLEntityDescriptionBrowserPortlet.class.getName())) {
-                entityPortlet = entityDescriptionBrowserPortletProvider.get();
+                portlet = entityDescriptionBrowserPortletProvider.get();
             }
             else if (portletJavaClassName.endsWith(OWLEntityDescriptionEditorPortlet.class.getName())) {
-                entityPortlet = entityDescriptionEditorPortletProvider.get();
+                portlet = entityDescriptionEditorPortletProvider.get();
             }
             else if(portletJavaClassName.equals(FormPortlet.class.getName())) {
-                entityPortlet = formPortletProvider.get();
+                portlet = formPortletProvider.get();
             }
             else {
                 GWT.log("[UIFactory] Portlet not found: " + portletJavaClassName);
             }
-            if(entityPortlet != null) {
+            if(portlet != null) {
                 GWT.log("[UIFactory] Initialized portlet: " + portletJavaClassName);
             }
         } catch (Exception e) {
             GWT.log("[UIFactory] An error occurred when creating an instance of " + portletJavaClassName, e);
         }
-        return entityPortlet;
+        return portlet;
     }
 
     public static List<String> getAvailablePortletNames() {

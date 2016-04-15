@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.shared.HasDispose;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitle;
 import edu.stanford.protege.widgetmap.client.view.HasViewTitleChangedHandlers;
 
-public interface EntityPortlet extends IsWidget, HasDispose, HasViewTitleChangedHandlers, HasViewTitle, HasPortletActions {
+public interface WebProtegePortlet extends IsWidget, HasDispose, HasViewTitleChangedHandlers, HasViewTitle, HasPortletActions {
 
     AcceptsOneWidget getContentHolder();
 
