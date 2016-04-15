@@ -53,7 +53,7 @@ public class EntityChangesPortlet extends AbstractWebProtegeOWLPortlet {
         }
         lastRevisionNumber = event.getRevisionNumber();
         for(OWLEntityData entityData : event.getSubjects()) {
-            if(isSelected(entityData.getEntity())) {
+            if(getSelectionModel().getSelection().equals(Optional.of(entityData.getEntity()))) {
                 updateDisplayForSelectedEntity();
                 return;
             }
