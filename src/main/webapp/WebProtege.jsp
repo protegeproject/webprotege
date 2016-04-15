@@ -21,7 +21,9 @@
 
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="Content-Language" content="en-us">
+    <meta http-equiv="Content-Language" content="<%= request.getLocale() %>">
+
+    <meta name="gwt:property" content="locale=<%= request.getLocale() %>">
 
     <title><%writeApplicationName(out);%></title>
 

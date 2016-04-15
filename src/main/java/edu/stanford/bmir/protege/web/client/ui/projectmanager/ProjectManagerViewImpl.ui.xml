@@ -3,7 +3,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:projectlist="urn:import:edu.stanford.bmir.protege.web.client.ui.projectlist">
     <ui:with field="wp" type="edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle"/>
-
+    <ui:with field="msg" type="edu.stanford.bmir.protege.web.client.Messages"/>
     <ui:style>
         .main {
             display: flex;
@@ -32,7 +32,6 @@
             display: flex;
             flex-direction: column;
             padding: 10px;
-            width: 200px;
             flex-grow: 0;
             flex-shrink: 0;
         }
@@ -83,25 +82,25 @@
         <g:HTMLPanel addStyleNames="{style.topBar}">
             <g:SimplePanel ui:field="loggedInUserButton" addStyleNames="{style.loggedInUserView}"/>
             <h1>
-                Projects
+                <g:Label text="{msg.projects}"/>
             </h1>
         </g:HTMLPanel>
         <g:HTMLPanel addStyleNames="{style.projectList}">
             <g:HTMLPanel addStyleNames="{style.sideBar}">
-                <g:Button ui:field="createProjectButton" text="&#x2600; Create Project" enabled="false" addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {wp.buttons.btnInline}"/>
+                <g:Button ui:field="createProjectButton" text="&#x2600; {msg.createProject}" enabled="false" addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {wp.buttons.btnInline}"/>
                 <div style="height: 10px;"/>
-                <g:Button ui:field="uploadProjectButton" text="&#x21ea; Upload Project" addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {wp.buttons.btnInline}"/>
+                <g:Button ui:field="uploadProjectButton" text="&#x21ea; {msg.uploadProject}" addStyleNames="{wp.buttons.btn} {wp.buttons.btnB} {wp.buttons.btnInline}"/>
                 <g:HTMLPanel addStyleNames="{style.filterPanel}">
                     <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
-                        <g:CheckBox ui:field="ownedByMeCheckBox" text="Owned by me" addStyleNames="{style.checkBox}"/>
+                        <g:CheckBox ui:field="ownedByMeCheckBox" text="{msg.ownedByMe}" addStyleNames="{style.checkBox}"/>
                     </g:HTMLPanel>
 
                     <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
-                        <g:CheckBox ui:field="sharedWithMeCheckBox" text="Shared with me" addStyleNames="{style.checkBox}"/>
+                        <g:CheckBox ui:field="sharedWithMeCheckBox" text="{msg.sharedWithMe}" addStyleNames="{style.checkBox}"/>
                     </g:HTMLPanel>
 
                     <g:HTMLPanel addStyleNames="{style.checkBoxHolder}">
-                        <g:CheckBox ui:field="inTrashCheckBox" text="Trash" addStyleNames="{style.checkBox}"/>
+                        <g:CheckBox ui:field="inTrashCheckBox" text="{msg.trash}" addStyleNames="{style.checkBox}"/>
                     </g:HTMLPanel>
 
                 </g:HTMLPanel>

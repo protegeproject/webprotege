@@ -38,11 +38,12 @@
 
     <inherits name="edu.stanford.protege.widgetmap.widgetmap"/>
     <inherits name="com.google.gwt.activity.Activity"/>
+    <inherits name="com.google.gwt.i18n.I18N"/>
 
     <!--<generate-with class="edu.stanford.bmir.protege.web.server.generated.UIFactoryGenerator">-->
         <!--<when-type-assignable class="edu.stanford.bmir.protege.web.client.ui.generated.PluginFactory"/>-->
     <!--</generate-with>-->
-
+    <extend-property name="locale" values="de" />
 	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
 
 </module>

@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
+import edu.stanford.protege.widgetmap.resources.WidgetMapClientBundle;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
@@ -48,6 +49,7 @@ public class WebProtege implements EntryPoint {
         BUNDLE.buttons().ensureInjected();
         BUNDLE.menu().ensureInjected();
         BUNDLE.dialog().ensureInjected();
+        WidgetMapClientBundle.BUNDLE.style().ensureInjected();
 
         ApplicationPresenter applicationPresenter = WebProtegeClientInjector.getApplicationPresenter();
         ApplicationView applicationView = applicationPresenter.getApplicationView();

@@ -329,7 +329,7 @@
                         <goals>
                             <goal>compile</goal>
                             <goal>test</goal>
-                            <!--<goal>i18n</goal>-->
+                            <goal>i18n</goal>
                             <goal>generateAsync</goal>
                         </goals>
                     </execution>
@@ -340,6 +340,7 @@
                     <extraJvmArgs>-Xms1000M -Xmx2000M</extraJvmArgs>
                     <logLevel>ERROR</logLevel>
                     <localWorkers>1</localWorkers>
+                    <i18nMessagesBundle>edu.stanford.bmir.protege.web.client.Messages</i18nMessagesBundle>
                 </configuration>
             </plugin>
 

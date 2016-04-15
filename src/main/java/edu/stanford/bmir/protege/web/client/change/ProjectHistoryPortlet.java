@@ -52,8 +52,7 @@ public class ProjectHistoryPortlet extends AbstractOWLEntityPortlet {
         presenter.setDownloadVisible(true);
         final ChangeListView changeListView = presenter.getView();
         addPortletAction(refreshAction);
-        ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
-        getContentHolder().setWidget(scrollPanel);
+        getContentHolder().setWidget(changeListView.asWidget());
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override
             public void handleProjectChanged(ProjectChangedEvent event) {

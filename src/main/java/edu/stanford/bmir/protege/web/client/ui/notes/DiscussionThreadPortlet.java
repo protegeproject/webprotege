@@ -26,8 +26,7 @@ public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         presenter = discussionThreadPresenter;
         presenter.installActions(this);
-        ScrollPanel sp = new ScrollPanel(presenter.getWidget());
-        getContentHolder().setWidget(sp);
+        getContentHolder().setWidget(presenter.getWidget());
         setTitle("Discussions");
     }
 

@@ -21,6 +21,7 @@ import com.gwtext.client.widgets.tree.event.MultiSelectionModelListener;
 import com.gwtext.client.widgets.tree.event.TreeNodeListenerAdapter;
 import com.gwtext.client.widgets.tree.event.TreePanelListenerAdapter;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
+import edu.stanford.bmir.protege.web.client.Messages;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportDialogController;
 import edu.stanford.bmir.protege.web.client.csv.CSVImportViewImpl;
 import edu.stanford.bmir.protege.web.client.csv.DocumentId;
@@ -83,6 +84,8 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  */
 public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
+    private static final Messages MESSAGES = GWT.create(Messages.class);
+
     private static final String SUFFIX_ID_LOCAL_ANNOTATION_COUNT = "_locAnnCnt";
 
     private static final String SUFFIX_ID_LOCAL_ANNOTATION_IMG = "_locAnnImg";
@@ -109,21 +112,21 @@ public class ClassTreePortlet extends AbstractOWLEntityPortlet {
 
     private final WatchPresenter watchPresenter;
 
-    private final PortletAction createClassAction = new PortletAction("Create", new PortletActionHandler() {
+    private final PortletAction createClassAction = new PortletAction(MESSAGES.create(), new PortletActionHandler() {
         @Override
         public void handleActionInvoked(PortletAction action, ClickEvent event) {
             onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES);
         }
     });
 
-    private final PortletAction deleteClassAction = new PortletAction("Delete", new PortletActionHandler() {
+    private final PortletAction deleteClassAction = new PortletAction(MESSAGES.delete(), new PortletActionHandler() {
         @Override
         public void handleActionInvoked(PortletAction action, ClickEvent event) {
             onDeleteCls();
         }
     });
 
-    private final PortletAction watchClassAction = new PortletAction("Watch", new PortletActionHandler() {
+    private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(), new PortletActionHandler() {
         @Override
         public void handleActionInvoked(PortletAction action, ClickEvent event) {
             editWatches();
