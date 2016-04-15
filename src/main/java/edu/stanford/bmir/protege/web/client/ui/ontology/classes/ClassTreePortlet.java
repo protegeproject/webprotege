@@ -64,6 +64,7 @@ import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.watches.*;
 import org.semanticweb.owlapi.model.EntityType;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -1371,4 +1372,15 @@ public class ClassTreePortlet extends AbstractWebProtegeOWLPortlet {
         return noteCount == 1 ? "There is 1 note" : "There are " + noteCount + " notes";
     }
 
+    private Optional<OWLClass> toOWLClass(EntityData entityData) {
+        if(entityData == null) {
+            return Optional.absent();
+        }
+        String name = entityData.getName();
+        if(name == null) {
+            return Optional.absent();
+        }
+        IRI iri = IRI.create(name);
+        return Optional.of(DataFactory.getOWLClass(iri));
+    }
 }

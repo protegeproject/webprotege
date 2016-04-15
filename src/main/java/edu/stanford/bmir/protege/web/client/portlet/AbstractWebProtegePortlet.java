@@ -30,10 +30,7 @@ import java.util.List;
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * @deprecated Use {@link AbstractWebProtegeOWLPortlet}.
- */
-@Deprecated
+
 public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, HasEventHandlerManagement {
 
     private final SelectionModel selectionModel;

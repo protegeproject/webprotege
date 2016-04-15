@@ -442,13 +442,19 @@ public class PropertiesTreePortlet extends AbstractWebProtegeOWLPortlet {
      *
      * @return The {@link org.semanticweb.owlapi.model.EntityType} of the selected entity.  Not {@code null}.
      */
-    @Override
-    public Optional<EntityType<?>> getSelectedEntityType() {
+    private Optional<EntityType<?>> getSelectedEntityType() {
         if (isAnnotationPropertiesRootSelected()) {
             return Optional.<EntityType<?>>of(EntityType.ANNOTATION_PROPERTY);
         }
-        return super.getSelectedEntityType();
+        Optional<OWLEntity> selectedEntity = getSelectedEntity();
+        if(!selectedEntity.isPresent()) {
+            return Optional.absent();
+        }
+        else {
+            return Optional.<EntityType<?>>of(selectedEntity.get().getEntityType());
+        }
     }
+
 
     private void onCreateProperty() {
         Optional<EntityType<?>> selectedEntityType = getSelectedEntityType();
