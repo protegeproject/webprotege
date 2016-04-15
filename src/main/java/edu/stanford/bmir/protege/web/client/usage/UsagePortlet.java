@@ -7,7 +7,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
 import edu.stanford.bmir.protege.web.shared.axiom.AxiomTypeGroup;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
@@ -33,7 +33,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 11/07/2013
  */
-public class UsagePortlet extends AbstractOWLEntityPortlet {
+public class UsagePortlet extends AbstractWebProtegeOWLPortlet {
 
     public static final FilterId SHOW_DEFINING_AXIOMS = new FilterId("Show defining axioms");
 

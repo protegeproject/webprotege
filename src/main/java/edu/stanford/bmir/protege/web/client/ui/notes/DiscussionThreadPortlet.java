@@ -1,10 +1,9 @@
 package edu.stanford.bmir.protege.web.client.ui.notes;
 
 import com.google.common.base.Optional;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -17,7 +16,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/03/2013
  */
-public class DiscussionThreadPortlet extends AbstractOWLEntityPortlet {
+public class DiscussionThreadPortlet extends AbstractWebProtegeOWLPortlet {
 
     private DiscussionThreadPresenter presenter;
 

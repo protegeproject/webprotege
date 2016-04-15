@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.ontology.revisions;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserManager;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractOWLEntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
@@ -15,7 +15,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/10/2012
  */
-public class RevisionsPortlet extends AbstractOWLEntityPortlet {
+public class RevisionsPortlet extends AbstractWebProtegeOWLPortlet {
 
     public static final int INITIAL_HEIGHT = 400;
 

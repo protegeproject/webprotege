@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.assistedinject.Assisted;
-import edu.stanford.bmir.protege.web.client.portlet.EntityPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.ui.LayoutUtil;
 import edu.stanford.bmir.protege.web.shared.perspective.PerspectiveId;
 import edu.stanford.protege.widgetmap.client.RootNodeChangedHandler;
@@ -61,7 +61,7 @@ public final class PerspectiveImpl extends Composite implements IsWidget, Perspe
         return perspectiveId;
     }
 
-    private void removePortlet(final EntityPortlet portlet) {
+    private void removePortlet(final WebProtegePortlet portlet) {
         portlet.dispose();
     }
 

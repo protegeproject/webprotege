@@ -19,9 +19,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Date: 28/11/2012
  */
 @SuppressWarnings("deprecated")
-public abstract class AbstractOWLEntityPortlet extends AbstractEntityPortlet {
+public abstract class AbstractWebProtegeOWLPortlet extends AbstractWebProtegePortlet {
 
-    protected AbstractOWLEntityPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+    protected AbstractWebProtegeOWLPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
     }
 

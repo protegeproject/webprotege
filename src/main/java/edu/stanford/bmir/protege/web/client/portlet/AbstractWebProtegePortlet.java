@@ -18,7 +18,6 @@ import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
-import edu.stanford.bmir.protege.web.shared.filter.Filter;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedEvent;
 import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedHandler;
@@ -36,10 +35,10 @@ import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * @deprecated Use {@link AbstractOWLEntityPortlet}.
+ * @deprecated Use {@link AbstractWebProtegeOWLPortlet}.
  */
 @Deprecated
-public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHandlerManagement {
+public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, HasEventHandlerManagement {
 
     private final SelectionModel selectionModel;
 
@@ -54,14 +53,14 @@ public abstract class AbstractEntityPortlet implements EntityPortlet, HasEventHa
     private final PortletUi portletUi = new PortletUiImpl();
 
     @Inject
-    public AbstractEntityPortlet(SelectionModel selectionModel,
-                                 EventBus eventBus,
-                                 LoggedInUserProvider loggedInUserProvider,
-                                 ProjectId projectId) {
+    public AbstractWebProtegePortlet(SelectionModel selectionModel,
+                                     EventBus eventBus,
+                                     LoggedInUserProvider loggedInUserProvider,
+                                     ProjectId projectId) {
         this(selectionModel, eventBus, projectId, loggedInUserProvider);
     }
 
-    private AbstractEntityPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
+    private AbstractWebProtegePortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super();
         this.selectionModel = selectionModel;
         this.eventBus = eventBus;
