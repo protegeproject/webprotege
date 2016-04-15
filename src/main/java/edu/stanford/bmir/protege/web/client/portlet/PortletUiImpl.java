@@ -50,8 +50,6 @@ public class PortletUiImpl extends Composite implements PortletUi {
 
     private Optional<FilterView> filterView = Optional.absent();
 
-    private final PopupMenu popupMenu = new PopupMenu();
-
     public PortletUiImpl() {
         initWidget(ourUiBinder.createAndBindUi(this));
         setToolbarVisible(false);
@@ -61,12 +59,6 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @Override
     public void setToolbarVisible(boolean visible) {
         toolbar.setVisible(visible);
-        if(!visible) {
-            contentHolder.getElement().getStyle().setTop(0, Style.Unit.PX);
-        }
-        else {
-            contentHolder.getElement().getStyle().setTop(23, Style.Unit.PX);
-        }
     }
 
     @Override
