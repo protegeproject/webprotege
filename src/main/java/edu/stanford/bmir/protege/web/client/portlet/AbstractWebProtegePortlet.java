@@ -112,9 +112,6 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
     protected void onRefresh() {
     }
 
-    public void commitChanges() {
-    }
-
     protected void onLogin(UserId userId) {
     }
 
