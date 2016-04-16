@@ -4,8 +4,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -29,15 +27,12 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceHistoryMapper;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBox;
-import edu.stanford.bmir.protege.web.client.ui.library.msgbox.InputBoxHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.client.ui.library.msgbox.YesNoHandler;
 import edu.stanford.bmir.protege.web.client.ui.library.popupmenu.PopupMenu;
@@ -55,9 +50,7 @@ import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentAddedHandler;
 import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedEvent;
-import edu.stanford.bmir.protege.web.shared.hierarchy.ClassHierarchyParentRemovedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
@@ -107,36 +100,18 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
-    private final Provider<DiscussionThreadDialog> discussionThreadDialogProvider;
-
     private final LoggedInUserProjectPermissionChecker permissionChecker;
 
     private final WatchPresenter watchPresenter;
 
-    private final PortletAction createClassAction = new PortletAction(MESSAGES.create(), new PortletActionHandler() {
-        @Override
-        public void handleActionInvoked(PortletAction action, ClickEvent event) {
-            onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES);
-        }
-    });
+    private final PortletAction createClassAction = new PortletAction(MESSAGES.create(), (action, event) -> onCreateCls(event.isShiftKeyDown() ? CreateClassesMode.IMPORT_CSV : CreateClassesMode.CREATE_SUBCLASSES));
 
-    private final PortletAction deleteClassAction = new PortletAction(MESSAGES.delete(), new PortletActionHandler() {
-        @Override
-        public void handleActionInvoked(PortletAction action, ClickEvent event) {
-            onDeleteCls();
-        }
-    });
+    private final PortletAction deleteClassAction = new PortletAction(MESSAGES.delete(), (action, event) -> onDeleteCls());
 
-    private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(), new PortletActionHandler() {
-        @Override
-        public void handleActionInvoked(PortletAction action, ClickEvent event) {
-            editWatches();
-        }
-    });
+    private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(), (action, event) -> editWatches());
 
     @Inject
     public ClassTreePortlet(SelectionModel selectionModel,
-                            WebProtegePlaceHistoryMapper placeHistoryMapper,
                             WatchPresenter watchPresenter,
                             EventBus eventBus,
                             DispatchServiceManager dispatchServiceManager,
@@ -152,7 +127,6 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
-        this.discussionThreadDialogProvider = discussionThreadDialogProvider;
         this.permissionChecker = loggedInUserProjectPermissionChecker;
         this.watchPresenter = watchPresenter;
         addPortletAction(createClassAction);
