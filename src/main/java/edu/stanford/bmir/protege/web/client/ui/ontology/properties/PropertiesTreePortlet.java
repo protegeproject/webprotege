@@ -170,63 +170,49 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         addProjectEventHandler(ObjectPropertyHierarchyParentAddedEvent.TYPE, new ObjectPropertyHierarchyParentAddedHandler() {
             @Override
             public void handleObjectPropertyHierarchyParentAdded(ObjectPropertyHierarchyParentAddedEvent event) {
-                if (isEventForThisProject(event)) {
-                    handleRelationshipAdded(event);
-                }
+                handleRelationshipAdded(event);
             }
         });
 
         addProjectEventHandler(ObjectPropertyHierarchyParentRemovedEvent.TYPE, new ObjectPropertyHierarchyParentRemovedHandler() {
             @Override
             public void handleObjectPropertyHierarchyParentRemoved(ObjectPropertyHierarchyParentRemovedEvent event) {
-                if (isEventForThisProject(event)) {
-                    handleRelationshipRemoved(event);
-                }
+                handleRelationshipRemoved(event);
             }
         });
 
         addProjectEventHandler(DataPropertyHierarchyParentAddedEvent.TYPE, new DataPropertyHierarchyParentAddedHandler() {
             @Override
             public void handleDataPropertyParentAdded(DataPropertyHierarchyParentAddedEvent event) {
-                if (isEventForThisProject(event)) {
-                    handleRelationshipAdded(event);
-                }
+                handleRelationshipAdded(event);
             }
         });
 
         addProjectEventHandler(AnnotationPropertyHierarchyParentAddedEvent.TYPE, new AnnotationPropertyHierarchyParentAddedHandler() {
             @Override
             public void handleAnnotationPropertyHierarchyParentAdded(AnnotationPropertyHierarchyParentAddedEvent event) {
-                if (isEventForThisProject(event)) {
-                    handleRelationshipAdded(event);
-                }
+                handleRelationshipAdded(event);
             }
         });
 
         addProjectEventHandler(HierarchyRootAddedEvent.TYPE, new HierarchyRootAddedHandler<Serializable>() {
             @Override
             public void handleHierarchyRootAdded(HierarchyRootAddedEvent<Serializable> event) {
-                if (isEventForThisProject(event)) {
-                    handleRootAdded(event);
-                }
+                handleRootAdded(event);
             }
         });
 
         addProjectEventHandler(HierarchyRootRemovedEvent.TYPE, new HierarchyRootRemovedHandler<Serializable>() {
             @Override
             public void handleHierarchyRootRemoved(HierarchyRootRemovedEvent<Serializable> event) {
-                if (isEventForThisProject(event)) {
-                    handleRootRemoved(event);
-                }
+                handleRootRemoved(event);
             }
         });
 
         addProjectEventHandler(BrowserTextChangedEvent.TYPE, new BrowserTextChangedHandler() {
             @Override
             public void browserTextChanged(BrowserTextChangedEvent event) {
-                if (isEventForThisProject(event)) {
-                    handleBrowserTextChanged(event);
-                }
+                handleBrowserTextChanged(event);
             }
         });
         DefaultSelectionModel selModel = new DefaultSelectionModel();
@@ -250,7 +236,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         treePanel.setVisible(false);
         TreeNode rootNode = treePanel.getRootNode();
         rootNode.collapse();
-        for(Node child : rootNode.getChildNodes()) {
+        for (Node child : rootNode.getChildNodes()) {
             rootNode.removeChild(child);
         }
         rootNode.expand();
@@ -271,10 +257,10 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     }
 
     private static Optional<OWLEntityData> getEntityDataFromTreeNode(TreeNode selectedTreeNode) {
-        if(selectedTreeNode == null) {
+        if (selectedTreeNode == null) {
             return Optional.absent();
         }
-        if(ANNOTATION_PROPERTIES_ROOT_NAME.equals(selectedTreeNode.getText())) {
+        if (ANNOTATION_PROPERTIES_ROOT_NAME.equals(selectedTreeNode.getText())) {
             return Optional.absent();
         }
         Object userObject = selectedTreeNode.getUserObject();
@@ -447,7 +433,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
             return Optional.<EntityType<?>>of(EntityType.ANNOTATION_PROPERTY);
         }
         Optional<OWLEntity> selectedEntity = getSelectedEntity();
-        if(!selectedEntity.isPresent()) {
+        if (!selectedEntity.isPresent()) {
             return Optional.absent();
         }
         else {
@@ -480,7 +466,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
             return;
         }
 
-        if(isAnnotationPropertiesRootSelected()) {
+        if (isAnnotationPropertiesRootSelected()) {
             createSubProperties(Optional.<OWLAnnotationProperty>absent(), createEntityInfo);
             return;
         }

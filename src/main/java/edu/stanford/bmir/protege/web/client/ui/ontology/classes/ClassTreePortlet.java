@@ -102,7 +102,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     private TreeNodeListenerAdapter nodeListener;
 
     private boolean registeredEventHandlers = false;
-    
+
     private final DispatchServiceManager dispatchServiceManager;
 
     private final LoggedInUserProvider loggedInUserProvider;
@@ -234,54 +234,42 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         addProjectEventHandler(BrowserTextChangedEvent.TYPE, new BrowserTextChangedHandler() {
             @Override
             public void browserTextChanged(BrowserTextChangedEvent event) {
-//                if (isEventForThisProject(event)) {
                 onEntityBrowserTextChanged(event);
-//                }
             }
         });
 
         addProjectEventHandler(EntityNotesChangedEvent.TYPE, new EntityNotesChangedHandler() {
             @Override
             public void entityNotesChanged(EntityNotesChangedEvent event) {
-                if (isEventForThisProject(event)) {
-                    onNotesChanged(event);
-                }
+                onNotesChanged(event);
             }
         });
 
         addProjectEventHandler(WatchAddedEvent.TYPE, new WatchAddedHandler() {
             @Override
             public void handleWatchAdded(WatchAddedEvent event) {
-                if (isEventForThisProject(event)) {
-                    onWatchAdded(event);
-                }
+                onWatchAdded(event);
             }
         });
 
         addProjectEventHandler(WatchRemovedEvent.TYPE, new WatchRemovedHandler() {
             @Override
             public void handleWatchRemoved(WatchRemovedEvent event) {
-                if (isEventForThisProject(event)) {
-                    ClassTreePortlet.this.handleWatchRemoved(event);
-                }
+                ClassTreePortlet.this.handleWatchRemoved(event);
             }
         });
 
         addProjectEventHandler(EntityDeprecatedChangedEvent.TYPE, new EntityDeprecatedChangedHandler() {
             @Override
             public void handleEntityDeprecatedChangedEvent(EntityDeprecatedChangedEvent evt) {
-                if (isEventForThisProject(evt)) {
-                    onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated());
-                }
+                onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated());
             }
         });
 
         addProjectEventHandler(ClassHierarchyParentAddedEvent.TYPE, new ClassHierarchyParentAddedHandler() {
             @Override
             public void handleClassHierarchyParentAdded(final ClassHierarchyParentAddedEvent event) {
-                if (isEventForThisProject(event)) {
-                    handleParentAddedEvent(event);
-                }
+                handleParentAddedEvent(event);
             }
         });
 
@@ -289,9 +277,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         addProjectEventHandler(ClassHierarchyParentRemovedEvent.TYPE, new ClassHierarchyParentRemovedHandler() {
             @Override
             public void handleClassHierarchyParentRemoved(ClassHierarchyParentRemovedEvent event) {
-                if (isEventForThisProject(event)) {
-                    handleParentRemovedEvent(event);
-                }
+                handleParentRemovedEvent(event);
             }
         });
 
@@ -320,9 +306,9 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
             TreeNode parentTn = findTreeNode(event.getParent());
             GWT.log("[ClassTreePortlet]     Parent node: " + parentTn);
             if (parentTn != null) {
-                for(Node childTn : parentTn.getChildNodes()) {
+                for (Node childTn : parentTn.getChildNodes()) {
                     String nodeClsName = getNodeClsName(childTn);
-                    if(nodeClsName != null && nodeClsName.equals(event.getChild().getIRI().toString())) {
+                    if (nodeClsName != null && nodeClsName.equals(event.getChild().getIRI().toString())) {
                         GWT.log("[ClassTreePortlet]     Child node: " + childTn);
                         parentTn.removeChild(childTn);
                         int childCount = parentTn.getChildNodes().length;
@@ -447,7 +433,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     }
 
     private void transmitSelectionFromTree() {
-        if(inRemove) {
+        if (inRemove) {
             GWT.log("[ClassTreePortlet] In Remove.  Not updating selection.");
             return;
         }
@@ -461,14 +447,14 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         treePanel.addListener(new TreePanelListenerAdapter() {
             @Override
             public boolean doBeforeNodeDrop(final TreePanel treePanel, final TreeNode target, final DragData dragData, final String point, final DragDrop source, final TreeNode dropNode, final DropNodeCallback dropNodeCallback) {
-                    final boolean success = Window.confirm("Are you sure you want to move " + getNodeBrowserText(dropNode) + " from parent " + getNodeBrowserText(dropNode.getParentNode()) + " to parent " + getNodeBrowserText(target) + " ?");
-                    if (success) {
-                        moveClass((EntityData) dropNode.getUserObject(), (EntityData) dropNode.getParentNode().getUserObject(), (EntityData) target.getUserObject());
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
+                final boolean success = Window.confirm("Are you sure you want to move " + getNodeBrowserText(dropNode) + " from parent " + getNodeBrowserText(dropNode.getParentNode()) + " to parent " + getNodeBrowserText(target) + " ?");
+                if (success) {
+                    moveClass((EntityData) dropNode.getUserObject(), (EntityData) dropNode.getParentNode().getUserObject(), (EntityData) target.getUserObject());
+                    return true;
+                }
+                else {
+                    return false;
+                }
 
             }
         });
@@ -516,7 +502,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
             return null;
         }
         final TreeNode root = treePanel.getRootNode();
-        if(iri.equals(OWLRDFVocabulary.OWL_THING.getIRI().toString())) {
+        if (iri.equals(OWLRDFVocabulary.OWL_THING.getIRI().toString())) {
             return root;
         }
         return findTreeNode(root, iri, new ArrayList<TreeNode>());
@@ -625,7 +611,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
 
     private void createSubClasses() {
-        if(!getSelectedTreeNodeClass().isPresent()) {
+        if (!getSelectedTreeNodeClass().isPresent()) {
             showClassNotSelectedMessage();
             return;
         }
@@ -633,7 +619,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
             @Override
             public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
                 final Optional<OWLClass> superCls = getSelectedTreeNodeClass();
-                if(!superCls.isPresent()) {
+                if (!superCls.isPresent()) {
                     return;
                 }
                 final Set<String> browserTexts = new HashSet<String>(createEntityInfo.getBrowserTexts());
@@ -649,7 +635,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
     private void createSubClassesByImportingCSVDocument() {
         final Optional<OWLClass> selCls = getSelectedTreeNodeClass();
-        if(!selCls.isPresent()) {
+        if (!selCls.isPresent()) {
             return;
         }
         UploadFileDialogController controller = new UploadFileDialogController("Upload CSV", new UploadFileResultHandler() {
@@ -696,8 +682,6 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
             }
         };
     }
-
-
 
 
     protected DispatchServiceCallback<CreateClassResult> getCreateClassAsyncHandler() {
@@ -792,7 +776,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean hasPermission) {
-                if(hasPermission) {
+                if (hasPermission) {
                     OntologyServiceManager.getInstance().moveCls(getProjectId(), cls.getName(), oldParent.getName(), newParent.getName(), false, loggedInUserProvider.getCurrentUserId(), getMoveClsOperationDescription(cls, oldParent, newParent), new MoveClassHandler(cls.getName()));
                 }
             }
@@ -898,7 +882,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
 
     private void setSelectionInTree(Optional<OWLEntity> selection) {
-        if(!selection.isPresent()) {
+        if (!selection.isPresent()) {
             return;
         }
         getPathToRoot(selection.get());
@@ -1051,7 +1035,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entity) {
-        if(getSelectedTreeNodeClass().equals(entity)) {
+        if (getSelectedTreeNodeClass().equals(entity)) {
             return;
         }
         setSelectionInTree(entity);
@@ -1091,7 +1075,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         setSubclassesLoaded(root, false);
 
         Optional<OWLEntity> selection = getSelectedEntity();
-        if(selection.isPresent() && !selection.get().isTopEntity()) {
+        if (selection.isPresent() && !selection.get().isTopEntity()) {
             setSelectionInTree(selection);
         }
         else {
@@ -1227,7 +1211,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
             onClassCreated(result.getObject(), result.getSuperClasses());
             SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(), result.getBrowserText(result.getObject()).or(""), Collections.<EntityData>emptyList(), 0);
             ObjectPath<OWLClass> pathToRoot = result.getPathToRoot();
-            if(pathToRoot.isEmpty()) {
+            if (pathToRoot.isEmpty()) {
                 return;
             }
             onSubclassAdded(new EntityData(pathToRoot.getSecondToLastElement().getIRI().toString()), Arrays.<EntityData>asList(subClassData), false);
@@ -1236,7 +1220,6 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     }
 
     class DeleteClassHandler extends DispatchServiceCallback<DeleteEntityResult> {
-
 
 
         @Override
@@ -1373,11 +1356,11 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     }
 
     private Optional<OWLClass> toOWLClass(EntityData entityData) {
-        if(entityData == null) {
+        if (entityData == null) {
             return Optional.absent();
         }
         String name = entityData.getName();
-        if(name == null) {
+        if (name == null) {
             return Optional.absent();
         }
         IRI iri = IRI.create(name);
