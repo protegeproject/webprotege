@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class EditorPortlet extends AbstractWebProtegeOWLPortlet {
+public class EditorPortlet extends AbstractWebProtegePortlet {
 
     private EditorPresenter editorPresenter;
 
@@ -31,7 +31,7 @@ public class EditorPortlet extends AbstractWebProtegeOWLPortlet {
                          final ProjectId projectId,
                          LoggedInUserProvider loggedInUserProvider,
             EditorPresenter editorPresenter) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.editorPresenter = editorPresenter;
         setTitle("Nothing selected");
         final Widget editorHolder = editorPresenter.getView();

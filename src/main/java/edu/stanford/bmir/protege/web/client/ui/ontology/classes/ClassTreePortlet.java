@@ -30,7 +30,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.place.WebProtegePlaceHistoryMapper;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
@@ -83,7 +83,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  *
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
-public class ClassTreePortlet extends AbstractWebProtegeOWLPortlet {
+public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
     private static final Messages MESSAGES = GWT.create(Messages.class);
 
@@ -149,7 +149,7 @@ public class ClassTreePortlet extends AbstractWebProtegeOWLPortlet {
 
     private ClassTreePortlet(SelectionModel selectionModel,
                              WatchPresenter watchPresenter, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.discussionThreadDialogProvider = discussionThreadDialogProvider;

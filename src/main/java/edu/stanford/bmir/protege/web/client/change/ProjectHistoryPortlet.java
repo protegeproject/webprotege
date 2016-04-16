@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
@@ -25,7 +25,7 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 import javax.inject.Inject;
 
-public class ProjectHistoryPortlet extends AbstractWebProtegeOWLPortlet {
+public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
 
     public static final String REFRESH_TO_SEE_THE_LATEST_CHANGES = "Click to see the latest changes";
     public static final String LATEST_CHANGES_VISIBLE = "Latest changes displayed";
@@ -45,7 +45,7 @@ public class ProjectHistoryPortlet extends AbstractWebProtegeOWLPortlet {
 
     @Inject
     public ProjectHistoryPortlet(ChangeListViewPresenter presenter, LoggedInUserProjectPermissionChecker permissionChecker, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         presenter.setDownloadVisible(true);

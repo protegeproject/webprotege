@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorService;
 import edu.stanford.bmir.protege.web.client.rpc.OBOTextEditorServiceAsync;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -17,12 +17,12 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/05/2012
  */
-public abstract class AbstractOBOTermPortlet extends AbstractWebProtegeOWLPortlet {
+public abstract class AbstractOBOTermPortlet extends AbstractWebProtegePortlet {
 
     private static final OBOTextEditorServiceAsync SERVICE = GWT.create(OBOTextEditorService.class);
 
     protected AbstractOBOTermPortlet(SelectionModel selectionModel,  EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
         // TODO:
 //        addStyleName("web-protege-laf");
     }

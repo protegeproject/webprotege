@@ -7,7 +7,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
@@ -20,7 +20,7 @@ import javax.inject.Inject;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
  */
-public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegeOWLPortlet {
+public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegePortlet {
 
     private final HTML html;
 
@@ -28,7 +28,7 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegeOWLPor
 
     @Inject
     public OWLEntityDescriptionBrowserPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         html = new HTML();
         getContentHolder().setWidget(new ScrollPanel(html));

@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.notes;
 import com.google.common.base.Optional;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -16,13 +16,13 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/03/2013
  */
-public class DiscussionThreadPortlet extends AbstractWebProtegeOWLPortlet {
+public class DiscussionThreadPortlet extends AbstractWebProtegePortlet {
 
     private DiscussionThreadPresenter presenter;
 
     @Inject
     public DiscussionThreadPortlet(ProjectId projectId, EventBus eventBus, SelectionModel selectionModel, LoggedInUserProvider loggedInUserProvider, DiscussionThreadPresenter discussionThreadPresenter) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
         presenter = discussionThreadPresenter;
         presenter.installActions(this);
         getContentHolder().setWidget(presenter.getWidget());

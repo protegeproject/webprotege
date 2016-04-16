@@ -48,13 +48,7 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
     @Inject
     public AbstractWebProtegePortlet(SelectionModel selectionModel,
                                      EventBus eventBus,
-                                     LoggedInUserProvider loggedInUserProvider,
-                                     ProjectId projectId) {
-        this(selectionModel, eventBus, projectId, loggedInUserProvider);
-    }
-
-    private AbstractWebProtegePortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
-        super();
+                                     LoggedInUserProvider loggedInUserProvider, ProjectId projectId) {
         this.selectionModel = selectionModel;
         this.eventBus = eventBus;
         this.loggedInUserProvider = loggedInUserProvider;
@@ -78,6 +72,7 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
         handlerRegistrations.add(handlerRegistration);
         asWidget().addAttachHandler(event -> handleActivated());
     }
+
 
     @Override
     public void setToolbarVisible(boolean visible) {

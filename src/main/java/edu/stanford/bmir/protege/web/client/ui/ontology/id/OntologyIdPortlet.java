@@ -6,7 +6,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetRootOntologyIdResult;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
@@ -19,7 +19,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
-public class OntologyIdPortlet extends AbstractWebProtegeOWLPortlet implements HasFixedPrimaryAxisSize {
+public class OntologyIdPortlet extends AbstractWebProtegePortlet implements HasFixedPrimaryAxisSize {
 
     private final DispatchServiceManager dispatchServiceManager;
 
@@ -27,7 +27,7 @@ public class OntologyIdPortlet extends AbstractWebProtegeOWLPortlet implements H
 
     @Inject
     public OntologyIdPortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserManager loggedInUserManager) {
-        super(selectionModel, eventBus, projectId, loggedInUserManager);
+        super(selectionModel, eventBus, loggedInUserManager, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         editor = new OntologyIdViewImpl();
         getContentHolder().setWidget(editor.asWidget());
