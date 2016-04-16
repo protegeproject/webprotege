@@ -22,7 +22,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.LegacyCompatUtil;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
@@ -58,7 +58,7 @@ import java.util.List;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 // TODO: add action descriptions and labels in the config similar to the ClassTreePortlet
-public class PropertiesTreePortlet extends AbstractWebProtegeOWLPortlet {
+public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
 
     public static final String ANNOTATION_PROPERTIES_ROOT_NAME = "Annotation properties";
 
@@ -88,7 +88,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegeOWLPortlet {
 
     @Inject
     public PropertiesTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = permissionChecker;

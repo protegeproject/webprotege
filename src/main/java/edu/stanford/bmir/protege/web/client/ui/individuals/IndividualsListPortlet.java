@@ -5,13 +5,13 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListPresenter;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-public class IndividualsListPortlet extends AbstractWebProtegeOWLPortlet {
+public class IndividualsListPortlet extends AbstractWebProtegePortlet {
 
     private final IndividualsListPresenter presenter;
 
@@ -29,7 +29,7 @@ public class IndividualsListPortlet extends AbstractWebProtegeOWLPortlet {
                                   EventBus eventBus,
                                   LoggedInUserProvider loggedInUserProvider,
                                   ProjectId projectId) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.presenter = presenter;
         setTitle("Individuals by Class");
         presenter.installActions(this);

@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.change.ChangeListView;
 import edu.stanford.bmir.protege.web.client.change.ChangeListViewPresenter;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
 import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -20,7 +20,7 @@ import edu.stanford.bmir.protege.web.shared.watches.WatchAddedHandler;
 
 import javax.inject.Inject;
 
-public class WatchedEntitiesPortlet extends AbstractWebProtegeOWLPortlet {
+public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
 
     private final LoggedInUserProvider loggedInUserProvider;
 
@@ -35,7 +35,7 @@ public class WatchedEntitiesPortlet extends AbstractWebProtegeOWLPortlet {
 
     @Inject
     public WatchedEntitiesPortlet(ChangeListViewPresenter presenter, SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.loggedInUserProvider = loggedInUserProvider;
         this.presenter = presenter;
         ChangeListView changeListView = presenter.getView();

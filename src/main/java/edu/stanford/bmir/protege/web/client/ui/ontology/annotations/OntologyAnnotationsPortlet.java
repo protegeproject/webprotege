@@ -13,7 +13,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotati
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
-import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegeOWLPortlet;
+import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEventHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -30,7 +30,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
-public class OntologyAnnotationsPortlet extends AbstractWebProtegeOWLPortlet {
+public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
 
     private static final int DEFAULT_HEIGHT = 400;
 
@@ -44,7 +44,7 @@ public class OntologyAnnotationsPortlet extends AbstractWebProtegeOWLPortlet {
 
     @Inject
     public OntologyAnnotationsPortlet(AnnotationsView annotationsView, SelectionModel selectionModel, EventBus eventBus,  DispatchServiceManager dispatchServiceManager, ProjectId projectId, LoggedInUserProvider loggedInUserProvider, LoggedInUserProjectPermissionChecker permissionChecker) {
-        super(selectionModel, eventBus, projectId, loggedInUserProvider);
+        super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.annotationsView = annotationsView;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
