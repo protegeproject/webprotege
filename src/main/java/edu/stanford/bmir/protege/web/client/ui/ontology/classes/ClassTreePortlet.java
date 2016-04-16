@@ -173,50 +173,26 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                 public void onContextMenu(final Node node, EventObject e) {
                     treePanel.getSelectionModel().select((TreeNode) node);
                     PopupMenu contextMenu = new PopupMenu();
-                    contextMenu.addItem("Show IRI", new ClickHandler() {
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            Optional<OWLEntity> selectedEntity = getSelectedEntity();
-                            if (selectedEntity.isPresent()) {
-                                String iri = selectedEntity.get().getIRI().toQuotedString();
-                                InputBox.showOkDialog("Class IRI", true, iri, new InputBoxHandler() {
-                                    @Override
-                                    public void handleAcceptInput(String input) {
-
-                                    }
-                                });
-                            }
+                    contextMenu.addItem("Show IRI", event -> {
+                        Optional<OWLEntity> selectedEntity = getSelectedEntity();
+                        if (selectedEntity.isPresent()) {
+                            String iri = selectedEntity.get().getIRI().toQuotedString();
+                            InputBox.showOkDialog("Class IRI", true, iri, input -> {});
                         }
                     });
-                    contextMenu.addItem("Show direct link", new ClickHandler() {
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            String location = Window.Location.getHref();
-                            InputBox.showOkDialog("Direct link", true, location, new InputBoxHandler() {
-                                @Override
-                                public void handleAcceptInput(String input) {
-
-                                }
-                            });
-                        }
+                    contextMenu.addItem("Show direct link", event -> {
+                        String location = Window.Location.getHref();
+                        InputBox.showOkDialog("Direct link", true, location, input -> {});
                     });
                     contextMenu.addSeparator();
-                    contextMenu.addItem("Refresh tree", new ClickHandler() {
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            onRefresh();
-                        }
-                    });
+                    contextMenu.addItem("Refresh tree", event -> onRefresh());
                     contextMenu.show(e.getXY()[0], e.getXY()[1] + 5);
                 }
             };
         }
-        Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                EntityData root = new EntityData(OWLRDFVocabulary.OWL_THING.getIRI().toString(), "owl:Thing");
-                createRoot(root);
-            }
+        Scheduler.get().scheduleDeferred(() -> {
+            EntityData root = new EntityData(OWLRDFVocabulary.OWL_THING.getIRI().toString(), "owl:Thing");
+            createRoot(root);
         });
     }
 
@@ -231,55 +207,19 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         //
         ///////////////////////////////////////////////////////////////////////////
 
-        addProjectEventHandler(BrowserTextChangedEvent.TYPE, new BrowserTextChangedHandler() {
-            @Override
-            public void browserTextChanged(BrowserTextChangedEvent event) {
-                onEntityBrowserTextChanged(event);
-            }
-        });
+        addProjectEventHandler(BrowserTextChangedEvent.TYPE, event -> onEntityBrowserTextChanged(event));
 
-        addProjectEventHandler(EntityNotesChangedEvent.TYPE, new EntityNotesChangedHandler() {
-            @Override
-            public void entityNotesChanged(EntityNotesChangedEvent event) {
-                onNotesChanged(event);
-            }
-        });
+        addProjectEventHandler(EntityNotesChangedEvent.TYPE, event -> onNotesChanged(event));
 
-        addProjectEventHandler(WatchAddedEvent.TYPE, new WatchAddedHandler() {
-            @Override
-            public void handleWatchAdded(WatchAddedEvent event) {
-                onWatchAdded(event);
-            }
-        });
+        addProjectEventHandler(WatchAddedEvent.TYPE, event -> onWatchAdded(event));
 
-        addProjectEventHandler(WatchRemovedEvent.TYPE, new WatchRemovedHandler() {
-            @Override
-            public void handleWatchRemoved(WatchRemovedEvent event) {
-                ClassTreePortlet.this.handleWatchRemoved(event);
-            }
-        });
+        addProjectEventHandler(WatchRemovedEvent.TYPE, event -> handleWatchRemoved(event));
 
-        addProjectEventHandler(EntityDeprecatedChangedEvent.TYPE, new EntityDeprecatedChangedHandler() {
-            @Override
-            public void handleEntityDeprecatedChangedEvent(EntityDeprecatedChangedEvent evt) {
-                onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated());
-            }
-        });
+        addProjectEventHandler(EntityDeprecatedChangedEvent.TYPE, evt -> onEntityDeprecatedChanged(evt.getEntity(), evt.isDeprecated()));
 
-        addProjectEventHandler(ClassHierarchyParentAddedEvent.TYPE, new ClassHierarchyParentAddedHandler() {
-            @Override
-            public void handleClassHierarchyParentAdded(final ClassHierarchyParentAddedEvent event) {
-                handleParentAddedEvent(event);
-            }
-        });
+        addProjectEventHandler(ClassHierarchyParentAddedEvent.TYPE, event -> handleParentAddedEvent(event));
 
-
-        addProjectEventHandler(ClassHierarchyParentRemovedEvent.TYPE, new ClassHierarchyParentRemovedHandler() {
-            @Override
-            public void handleClassHierarchyParentRemoved(ClassHierarchyParentRemovedEvent event) {
-                handleParentRemovedEvent(event);
-            }
-        });
+        addProjectEventHandler(ClassHierarchyParentRemovedEvent.TYPE, event -> handleParentRemovedEvent(event));
 
     }
 
@@ -292,7 +232,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                 public void handleSuccess(GetEntityDataResult result) {
                     SubclassEntityData subClassData = new SubclassEntityData(event.getChild().toStringID(), result.getEntityDataMap().get(event.getChild()).getBrowserText(), Collections.<EntityData>emptyList(), 0);
                     subClassData.setValueType(ValueType.Cls);
-                    onSubclassAdded((EntityData) tn.getUserObject(), Arrays.<EntityData>asList(subClassData), false);
+                    onSubclassAdded((EntityData) tn.getUserObject(), Arrays.asList(subClassData), false);
                 }
             });
 
