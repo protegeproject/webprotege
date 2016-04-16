@@ -145,12 +145,6 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
         handlerRegistrations.add(reg);
     }
 
-
-    public boolean isEventForThisProject(Event<?> event) {
-        Object source = event.getSource();
-        return source instanceof ProjectId && source.equals(getProjectId());
-    }
-
     private void removeHandlers() {
         for (HandlerRegistration reg : handlerRegistrations) {
             reg.removeHandler();
