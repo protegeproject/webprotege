@@ -231,8 +231,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         updateButtonStates();
     }
 
-    @Override
-    protected void onRefresh() {
+    private void onRefresh() {
         treePanel.setVisible(false);
         TreeNode rootNode = treePanel.getRootNode();
         rootNode.collapse();
@@ -629,7 +628,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     }
 
     @Override
-    public void onPermissionsChanged() {
+    public void handlePermissionsChanged() {
         updateButtonStates();
     }
 

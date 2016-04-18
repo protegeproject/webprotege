@@ -74,17 +74,16 @@ public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
     }
 
     @Override
-    public void onLogin(UserId userId) {
+    public void handleLogin(UserId userId) {
         onRefresh();
     }
 
     @Override
-    public void onLogout(UserId userId) {
+    public void handleLogout(UserId userId) {
         onRefresh();
     }
 
-    @Override
-    protected void onRefresh() {
+    private void onRefresh() {
         if (asWidget().isAttached()) {
             presenter.setChangesForWatches(getProjectId(), getUserId());
             setTitle("Watched Entity Changes");

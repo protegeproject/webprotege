@@ -54,11 +54,11 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
         this.loggedInUserProvider = loggedInUserProvider;
         this.projectId = projectId;
 
-        addApplicationEventHandler(UserLoggedInEvent.TYPE, event -> onLogin(event.getUserId()));
+        addApplicationEventHandler(UserLoggedInEvent.TYPE, event -> handleLogin(event.getUserId()));
 
-        addApplicationEventHandler(UserLoggedOutEvent.TYPE, event -> onLogout(event.getUserId()));
+        addApplicationEventHandler(UserLoggedOutEvent.TYPE, event -> handleLogout(event.getUserId()));
 
-        addProjectEventHandler(PermissionsChangedEvent.TYPE, event -> onPermissionsChanged());
+        addProjectEventHandler(PermissionsChangedEvent.TYPE, event -> handlePermissionsChanged());
 
         HandlerRegistration handlerRegistration = selectionModel.addSelectionChangedHandler(new EntitySelectionChangedHandler() {
             @Override
@@ -102,23 +102,18 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
     }
 
     protected void handleBeforeSetEntity(Optional<OWLEntity> existingEntity) {
-
     }
 
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-
     }
 
-    protected void onRefresh() {
+    protected void handleLogin(UserId userId) {
     }
 
-    protected void onLogin(UserId userId) {
+    protected void handleLogout(UserId userId) {
     }
 
-    protected void onLogout(UserId userId) {
-    }
-
-    public void onPermissionsChanged() {
+    public void handlePermissionsChanged() {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

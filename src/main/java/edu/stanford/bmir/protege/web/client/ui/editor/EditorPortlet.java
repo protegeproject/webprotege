@@ -26,10 +26,9 @@ public class EditorPortlet extends AbstractWebProtegePortlet {
     @Inject
     public EditorPortlet(
             SelectionModel selectionModel,
-            final DispatchServiceManager dispatchServiceManager,
-                         final EventBus eventBus,
-                         final ProjectId projectId,
-                         LoggedInUserProvider loggedInUserProvider,
+            final EventBus eventBus,
+            final ProjectId projectId,
+            LoggedInUserProvider loggedInUserProvider,
             EditorPresenter editorPresenter) {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.editorPresenter = editorPresenter;

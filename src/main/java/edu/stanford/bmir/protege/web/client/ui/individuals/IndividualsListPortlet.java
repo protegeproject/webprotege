@@ -74,7 +74,7 @@ public class IndividualsListPortlet extends AbstractWebProtegePortlet {
     }
 
     @Override
-    public void onPermissionsChanged() {
+    public void handlePermissionsChanged() {
     }
 
 

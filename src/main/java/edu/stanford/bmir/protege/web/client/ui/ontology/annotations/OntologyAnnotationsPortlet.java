@@ -92,17 +92,17 @@ public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
     }
 
     @Override
-    protected void onLogin(UserId userId) {
+    protected void handleLogin(UserId userId) {
         updateState();
     }
 
     @Override
-    protected void onLogout(UserId userId) {
+    protected void handleLogout(UserId userId) {
         updateState();
     }
 
     @Override
-    public void onPermissionsChanged() {
+    public void handlePermissionsChanged() {
         updateState();
     }
 

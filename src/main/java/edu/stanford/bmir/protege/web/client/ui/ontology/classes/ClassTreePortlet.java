@@ -965,8 +965,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         return null;
     }
 
-    @Override
-    protected void onRefresh() {
+    private void onRefresh() {
         if (treePanel == null) {
             return;
         }
@@ -1021,7 +1020,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     }
 
     @Override
-    public void onPermissionsChanged() {
+    public void handlePermissionsChanged() {
         updateButtonStates();
         onRefresh();
     }

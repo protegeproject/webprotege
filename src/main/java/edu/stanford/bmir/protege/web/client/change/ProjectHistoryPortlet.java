@@ -88,8 +88,7 @@ public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
         lastRevisionNumber = event.getRevisionNumber();
     }
 
-    @Override
-    protected void onRefresh() {
+    private void onRefresh() {
         refreshAction.setEnabled(false);
         permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
             @Override
