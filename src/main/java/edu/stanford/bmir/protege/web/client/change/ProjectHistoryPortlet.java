@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.client.change;
 
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.web.bindery.event.shared.EventBus;
@@ -11,11 +10,8 @@ import edu.stanford.bmir.protege.web.client.filter.FilterViewImpl;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
-import edu.stanford.bmir.protege.web.client.portlet.PortletActionHandler;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
 import edu.stanford.bmir.protege.web.shared.event.ProjectChangedEvent;
-import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.filter.FilterId;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
@@ -27,45 +23,30 @@ import javax.inject.Inject;
 
 public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
 
-    public static final String REFRESH_TO_SEE_THE_LATEST_CHANGES = "Click to see the latest changes";
-    public static final String LATEST_CHANGES_VISIBLE = "Latest changes displayed";
-
     public static final FilterId SHOW_DETAILS_FILTER = new FilterId("Show details");
 
     private final ChangeListViewPresenter presenter;
 
-    private final PortletAction refreshAction = new PortletAction("Refresh", new PortletActionHandler() {
-        @Override
-        public void handleActionInvoked(PortletAction action, ClickEvent event) {
-            onRefresh();
-        }
-    });
+    private final PortletAction refreshAction = new PortletAction("Refresh", (action, event) -> reload());
 
     private final LoggedInUserProjectPermissionChecker permissionChecker;
+
+    private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
+
 
     @Inject
     public ProjectHistoryPortlet(ChangeListViewPresenter presenter, LoggedInUserProjectPermissionChecker permissionChecker, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
+        setTitle("Project History");
         this.presenter = presenter;
         this.permissionChecker = permissionChecker;
         presenter.setDownloadVisible(true);
         final ChangeListView changeListView = presenter.getView();
-        addPortletAction(refreshAction);
         getContentHolder().setWidget(changeListView.asWidget());
-        addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
-            @Override
-            public void handleProjectChanged(ProjectChangedEvent event) {
-                ProjectHistoryPortlet.this.handleProjectChanged(event);
-            }
-        });
-        addApplicationEventHandler(PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
-            @Override
-            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
-                onRefresh();
-            }
-        });
-        onRefresh();
-        setTitle("Project History");
+        addPortletAction(refreshAction);
+
+        addProjectEventHandler(ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));
+        addApplicationEventHandler(PermissionsChangedEvent.TYPE, event -> reload());
 
         FilterView filterView = new FilterViewImpl();
         filterView.addFilter(SHOW_DETAILS_FILTER, FilterSetting.ON);
@@ -76,9 +57,8 @@ public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
             }
         });
         setFilter(filterView);
+        reload();
     }
-
-    private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);
 
     private void handleProjectChanged(ProjectChangedEvent event) {
         if (lastRevisionNumber.equals(event.getRevisionNumber())) {
@@ -88,9 +68,9 @@ public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
         lastRevisionNumber = event.getRevisionNumber();
     }
 
-    private void onRefresh() {
+    private void reload() {
         refreshAction.setEnabled(false);
-        permissionChecker.hasWritePermission(new DispatchServiceCallback<Boolean>() {
+        permissionChecker.hasReadPermission(new DispatchServiceCallback<Boolean>() {
             @Override
             public void handleSuccess(Boolean result) {
                 ProjectId projectId = getProjectId();
