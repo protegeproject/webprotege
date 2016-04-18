@@ -161,7 +161,6 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
     @Override
     public void dispose() {
         removeHandlers();
-
     }
 
     private String title = "";
