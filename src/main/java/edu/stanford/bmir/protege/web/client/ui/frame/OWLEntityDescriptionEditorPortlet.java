@@ -36,9 +36,4 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractWebProtegePortlet
             presenter.clearSubject();
         }
     }
-
-    @Override
-    protected void onRefresh() {
-        presenter.refresh();
-    }
 }
