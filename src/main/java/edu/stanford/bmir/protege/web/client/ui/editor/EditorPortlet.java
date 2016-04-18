@@ -34,10 +34,8 @@ public class EditorPortlet extends AbstractWebProtegePortlet {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.editorPresenter = editorPresenter;
         setTitle("Nothing selected");
-        final Widget editorHolder = editorPresenter.getView();
-        editorHolder.setSize("100%", "100%");
-        ScrollPanel sp = new ScrollPanel(editorHolder);
-        getContentHolder().setWidget(sp);
+        final Widget editorView = editorPresenter.getView();
+        getContentHolder().setWidget(editorView);
     }
 
     @Override
