@@ -40,7 +40,7 @@ public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
         this.presenter = presenter;
         ChangeListView changeListView = presenter.getView();
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
-        getContentHolder().setWidget(scrollPanel);
+        setWidget(scrollPanel);
         onRefresh();
         addProjectEventHandler(WatchAddedEvent.TYPE, event -> refreshDelayed());
         addProjectEventHandler(WatchAddedEvent.TYPE, event -> refreshDelayed());

@@ -26,7 +26,7 @@ public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
     public OBOTermDefinitionPortlet(ProjectId projectId, SelectionModel selectionModel, EventBus eventBus, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         editor = new OBOTermDefinitionEditorImpl();
-        getContentHolder().setWidget(editor.asWidget());
+        setWidget(editor.asWidget());
     }
 
     @Override

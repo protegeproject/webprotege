@@ -42,7 +42,7 @@ public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
         this.permissionChecker = permissionChecker;
         presenter.setDownloadVisible(true);
         final ChangeListView changeListView = presenter.getView();
-        getContentHolder().setWidget(changeListView.asWidget());
+        setWidget(changeListView.asWidget());
         addPortletAction(refreshAction);
 
         addProjectEventHandler(ProjectChangedEvent.TYPE, event -> handleProjectChanged(event));

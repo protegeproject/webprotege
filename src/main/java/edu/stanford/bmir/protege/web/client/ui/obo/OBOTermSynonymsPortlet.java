@@ -29,7 +29,7 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         editor = new OBOTermSynonymListEditor();
         editor.setEnabled(true);
-        getContentHolder().setWidget(editor);
+        setWidget(editor);
     }
 
     @Override

@@ -11,9 +11,7 @@ import edu.stanford.protege.widgetmap.client.view.HasViewTitleChangedHandlers;
  * some part of a project in the WebProtege user interface.  The displayed content is typically tied to the selection
  * with different content being displayed for different selected entities.
  */
-public interface WebProtegePortlet extends IsWidget, HasDispose, HasViewTitleChangedHandlers, HasViewTitle, HasPortletActions {
-
-    AcceptsOneWidget getContentHolder();
+public interface WebProtegePortlet extends IsWidget, HasDispose, HasViewTitleChangedHandlers, HasViewTitle, HasPortletActions, AcceptsOneWidget {
 
     void setToolbarVisible(boolean visible);
 

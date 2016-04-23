@@ -33,7 +33,7 @@ public class IndividualsListPortlet extends AbstractWebProtegePortlet {
         this.presenter = presenter;
         setTitle("Individuals by Class");
         presenter.installActions(this);
-        presenter.start(getContentHolder());
+        presenter.start(this);
 
 //        if (preconfiguredClass != null && preconfiguredClass.isPresent()) {
             // TODO:

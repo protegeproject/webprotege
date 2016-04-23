@@ -57,6 +57,11 @@ public class PortletUiImpl extends Composite implements PortletUi {
     }
 
     @Override
+    public void setWidget(IsWidget isWidget) {
+        contentHolder.setWidget(isWidget);
+    }
+
+    @Override
     public void setToolbarVisible(boolean visible) {
         toolbar.setVisible(visible);
     }
@@ -126,10 +131,4 @@ public class PortletUiImpl extends Composite implements PortletUi {
     @Override
     public void addMenuAction(final PortletAction action) {
     }
-
-    @Override
-    public AcceptsOneWidget getContentHolder() {
-        return contentHolder;
-    }
-
 }

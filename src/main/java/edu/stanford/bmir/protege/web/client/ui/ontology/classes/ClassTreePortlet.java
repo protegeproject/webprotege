@@ -944,7 +944,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         treePanel.setRootNode(root);
         treePanel.setSize("100%", "100%");
         ScrollPanel sp = new ScrollPanel(treePanel);
-        getContentHolder().setWidget(sp);
+        setWidget(sp);
         createSelectionListener();
 
         // MH: createTreeNode calls get subclasses, so it was being called twice

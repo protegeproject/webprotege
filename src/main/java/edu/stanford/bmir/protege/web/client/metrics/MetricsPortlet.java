@@ -25,7 +25,7 @@ public class MetricsPortlet extends AbstractWebProtegePortlet {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         view = new MetricsViewImpl();
-        getContentHolder().setWidget(view.asWidget());
+        setWidget(view.asWidget());
         metricsPresenter = new MetricsPresenter(getProjectId(), view, dispatchServiceManager);
         metricsPresenter.bind(this);
         updateDisplay();

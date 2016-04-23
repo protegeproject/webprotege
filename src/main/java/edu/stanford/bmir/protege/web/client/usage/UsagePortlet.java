@@ -56,7 +56,7 @@ public class UsagePortlet extends AbstractWebProtegePortlet {
         super(selectionModel, eventBus, loggedInUserManager, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         usageView = new UsageViewImpl();
-        getContentHolder().setWidget(usageView.asWidget());
+        setWidget(usageView.asWidget());
         usageView.addValueChangeHandler(event -> updateDisplayForSelectedEntity());
 
         FilterView filterView = new FilterViewImpl();
