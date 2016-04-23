@@ -13,6 +13,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
@@ -32,6 +33,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -77,22 +79,22 @@ public class AnnotationPropertyFrameEditor extends Composite implements EditorVi
     @Inject
     public AnnotationPropertyFrameEditor(ProjectId projectId,
                                          PropertyValueListEditor annotationsEditor,
-
+                                         Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                                          DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         annotations = annotationsEditor;
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        domains = new PrimitiveDataListEditor(projectId,
-                PrimitiveType.CLASS,
+        domains = new PrimitiveDataListEditor(primitiveDataEditorProvider,
+                                              PrimitiveType.CLASS,
                                               PrimitiveType.OBJECT_PROPERTY,
                                               PrimitiveType.DATA_PROPERTY,
                                               PrimitiveType.ANNOTATION_PROPERTY,
                                               PrimitiveType.NAMED_INDIVIDUAL,
                                               PrimitiveType.DATA_TYPE);
         domains.setPlaceholder("Enter an entity name");
-        ranges = new PrimitiveDataListEditor(projectId,
-                PrimitiveType.DATA_TYPE,
+        ranges = new PrimitiveDataListEditor(primitiveDataEditorProvider,
+                                             PrimitiveType.DATA_TYPE,
                                              PrimitiveType.CLASS,
                                              PrimitiveType.OBJECT_PROPERTY,
                                              PrimitiveType.DATA_PROPERTY,

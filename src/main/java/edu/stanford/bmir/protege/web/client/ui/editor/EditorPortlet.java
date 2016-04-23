@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
+import edu.stanford.bmir.protege.web.shared.portlet.Portlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
+@Portlet(id = "edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet", displayName = "Editor")
 public class EditorPortlet extends AbstractWebProtegePortlet {
 
     private EditorPresenter editorPresenter;

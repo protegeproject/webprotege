@@ -16,7 +16,9 @@ import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
  * Stanford Center for Biomedical Informatics Research
  * 17/12/15
  */
-@GinModules({ApplicationClientModule.class, PrimitiveDataEditorClientModule.class})
+@GinModules(
+        value = {ApplicationClientModule.class, PrimitiveDataEditorClientModule.class},
+        properties = "webprotege.gin.module")
 public interface ApplicationClientInjector extends Ginjector {
 
     public WebProtegeInitializer getWebProtegeInitializer();

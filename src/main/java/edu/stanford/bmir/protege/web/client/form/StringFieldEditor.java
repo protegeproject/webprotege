@@ -12,10 +12,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
-import edu.stanford.bmir.protege.web.client.primitive.DefaultLanguageEditor;
-import edu.stanford.bmir.protege.web.client.primitive.NullFreshEntitySuggestStrategy;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorView;
+import edu.stanford.bmir.protege.web.client.primitive.*;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.shared.DirtyChangedHandler;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
@@ -28,6 +25,7 @@ import edu.stanford.bmir.protege.web.shared.form.field.StringType;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
+import javax.inject.Provider;
 import java.util.Collections;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -60,8 +58,8 @@ public class StringFieldEditor extends Composite implements ValueEditor<FormData
     private Optional<String> langPatternViolationErrorMessage = Optional.absent();
 
     @Inject
-    public StringFieldEditor(ProjectId projectId) {
-        this.editor = WebProtegeClientInjector.getPrimitiveDataEditor(projectId);
+    public StringFieldEditor(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+        this.editor = (PrimitiveDataEditorImpl) primitiveDataEditorProvider.get();
         this.languageEditor = (DefaultLanguageEditor) editor.getLanguageEditor();
         initWidget(ourUiBinder.createAndBindUi(this));
         editor.setAllowedTypes(Collections.singleton(PrimitiveType.LITERAL));

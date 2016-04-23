@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditorFactory;
 import edu.stanford.bmir.protege.web.shared.form.FormData;
@@ -20,6 +21,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,11 +38,15 @@ public class FormPresenter {
 
     private final ProjectId projectId;
 
+    private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
+
     @Inject
-    public FormPresenter(DispatchServiceManager dispatchServiceManager, FormView formView, ProjectId projectId) {
+    public FormPresenter(DispatchServiceManager dispatchServiceManager, FormView formView, ProjectId projectId,
+                         Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
         this.dispatchServiceManager = dispatchServiceManager;
         this.formView = formView;
         this.projectId = projectId;
+        this.primitiveDataEditorProvider = primitiveDataEditorProvider;
     }
 
     public void start(AcceptsOneWidget container) {
@@ -111,7 +117,7 @@ public class FormPresenter {
                         @Override
                         public ValueEditor<FormDataValue> createEditor() {
                             StringFieldDescriptor descriptor = (StringFieldDescriptor) formFieldDescriptor;
-                            StringFieldEditor stringFieldEditor = new StringFieldEditor(projectId);
+                            StringFieldEditor stringFieldEditor = new StringFieldEditor(primitiveDataEditorProvider);
                             stringFieldEditor.setPlaceholder(descriptor.getPlaceholder());
                             stringFieldEditor.setLineMode(descriptor.getLineMode());
                             stringFieldEditor.setStringType(descriptor.getStringType());
@@ -148,7 +154,7 @@ public class FormPresenter {
         }
         else if (formFieldDescriptor.getAssociatedFieldTypeId().equals(ClassNameFieldDescriptor.getFieldTypeId())) {
             return Optional.<ValueEditorFactory<FormDataValue>>of(
-                    () -> new ClassNameFieldEditor(projectId)
+                    () -> new ClassNameFieldEditor(projectId, primitiveDataEditorProvider)
             );
         }
         else if(formFieldDescriptor.getAssociatedFieldTypeId().equals(ImageFieldDescriptor.getFieldTypeId())) {

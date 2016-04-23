@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
@@ -31,6 +32,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -69,13 +71,13 @@ public class NamedIndividualFrameEditor extends AbstractFrameEditor<LabelledFram
     private static NamedIndividualFrameEditorUiBinder ourUiBinder = GWT.create(NamedIndividualFrameEditorUiBinder.class);
 
     @Inject
-    public NamedIndividualFrameEditor(PropertyValueListEditor assertionsEditor, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+    public NamedIndividualFrameEditor(PropertyValueListEditor assertionsEditor, ProjectId projectId, Provider<PrimitiveDataEditor> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager) {
         super(projectId, dispatchServiceManager);
         assertions = assertionsEditor;
         assertions.setGrammar(PropertyValueGridGrammar.getNamedIndividualGrammar());
-        types = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
+        types = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
         types.setPlaceholder("Enter class name");
-        sameAs = new PrimitiveDataListEditor(projectId, PrimitiveType.NAMED_INDIVIDUAL);
+        sameAs = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.NAMED_INDIVIDUAL);
         sameAs.setPlaceholder("Enter individual name");
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
