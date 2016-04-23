@@ -23,12 +23,12 @@ public class WebProtegeClientInjector {
     private ApplicationClientInjector injector;
 
     public WebProtegeClientInjector() {
-        // It is important that this is loaded lazily.  The reason for this is that a Module has to be generated
-        // by the GWT code generator that sets up bindings from PortletFactory to PortletFactoryGenerated.
         injector = GWT.create(ApplicationClientInjector.class);
     }
 
     public static WebProtegeClientInjector get() {
+        // It is important that this is loaded lazily.  The reason for this is that a Module has to be generated
+        // by the GWT code generator that sets up bindings from PortletFactory to PortletFactoryGenerated.
         if(instance == null) {
             instance = new WebProtegeClientInjector();
         }
@@ -43,20 +43,6 @@ public class WebProtegeClientInjector {
         return getInjector().getWebProtegeInitializer();
     }
 
-//    public UIFactory getUiFactory(ProjectId projectId) {
-//        ProjectIdProvider.setProjectId(projectId);
-//        return getInjector().getUiFactory();
-//    }
-
-    private ApplicationClientInjector getInjector() {
-        return injector;
-    }
-
-//    public PrimitiveDataEditorImpl getPrimitiveDataEditor(ProjectId projectId) {
-//        ProjectIdProvider.setProjectId(projectId);
-//        return getInjector().getPrimitiveDataEditor();
-//    }
-
     public ClientApplicationProperties getClientApplicationProperties() {
         return getInjector().getClientApplicationProperties();
     }
@@ -67,5 +53,9 @@ public class WebProtegeClientInjector {
 
     public PlaceHistoryHandler getPlaceHistoryHandler() {
         return getInjector().getPlaceHistoryHandler();
+    }
+
+    private ApplicationClientInjector getInjector() {
+        return injector;
     }
 }
