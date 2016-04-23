@@ -31,6 +31,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,11 +72,11 @@ public class ClassFrameEditor extends AbstractFrameEditor<LabelledFrame<ClassFra
     private static ClassFrameEditor2UiBinder ourUiBinder = GWT.create(ClassFrameEditor2UiBinder.class);
 
     @Inject
-    public ClassFrameEditor(ProjectId projectId, DispatchServiceManager dispatchServiceManager,  PropertyValueListEditor annotations, PropertyValueListEditor properties) {
+    public ClassFrameEditor(ProjectId projectId, Provider<PrimitiveDataEditor> primitiveDataEditorProvider, DispatchServiceManager dispatchServiceManager,  PropertyValueListEditor annotations, PropertyValueListEditor properties) {
         super(projectId, dispatchServiceManager);
         this.annotations = annotations;
         this.annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        this.classes = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
+        this.classes = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
         this.properties = properties;
         this.properties.setGrammar(PropertyValueGridGrammar.getClassGrammar());
 

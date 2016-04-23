@@ -14,12 +14,15 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.*;
 import edu.stanford.bmir.protege.web.client.inject.WebProtegeClientInjector;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 import edu.stanford.bmir.protege.web.shared.csv.*;
 import edu.stanford.bmir.protege.web.shared.entity.OWLPrimitiveData;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,10 +64,10 @@ public class CSVImportViewImpl extends Composite implements CSVImportView {
     @UiField
     protected FlexTable flexTableHeader;
 
-    private final ProjectId projectId;
+    private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
 
-    public CSVImportViewImpl(ProjectId projectId) {
-        this.projectId = projectId;
+    public CSVImportViewImpl(Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+        this.primitiveDataEditorProvider = primitiveDataEditorProvider;
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);
         for(CSVRowImportType importType : CSVRowImportType.values()) {
@@ -170,7 +173,7 @@ public class CSVImportViewImpl extends Composite implements CSVImportView {
             flexTable.getColumnFormatter().setWidth(0, COLUMN_NUMBER_COLUMN_WIDTH);
             flexTable.getRowFormatter().setVerticalAlign(i, HasVerticalAlignment.ALIGN_TOP);
             final CSVColumnRelationEditorViewImpl widget = new CSVColumnRelationEditorViewImpl(
-                    WebProtegeClientInjector.getPrimitiveDataEditor(projectId)
+                    (PrimitiveDataEditorImpl) primitiveDataEditorProvider.get()
             );
             widget.addFocusHandler(new ColumnHighligherFocusHandler(i));
             final int colIndex = i;

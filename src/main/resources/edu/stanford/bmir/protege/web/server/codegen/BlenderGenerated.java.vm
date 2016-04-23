@@ -1,0 +1,5 @@
+package edu.stanford.bmir.protege.web.client.codegen;
+
+public class BlenderGenerated implements Blender {
+    public BlenderGenerated() {}
+}

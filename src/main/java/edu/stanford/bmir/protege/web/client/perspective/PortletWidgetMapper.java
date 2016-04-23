@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.perspective;
 
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -7,8 +8,10 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.portlet.CouldNotFindPortletWidget;
+import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
+import edu.stanford.bmir.protege.web.shared.PortletId;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import edu.stanford.protege.widgetmap.client.WidgetMapper;
 import edu.stanford.protege.widgetmap.client.view.FixedSizeViewHolder;
@@ -32,9 +35,12 @@ public class PortletWidgetMapper implements WidgetMapper {
 
     private final UIFactory uiFactory;
 
+    private final PortletFactory portletFactory;
+
     @Inject
-    public PortletWidgetMapper(UIFactory uiFactory) {
+    public PortletWidgetMapper(UIFactory uiFactory, PortletFactory portletFactory) {
         this.uiFactory = uiFactory;
+        this.portletFactory = portletFactory;
     }
 
     @Override
@@ -49,14 +55,22 @@ public class PortletWidgetMapper implements WidgetMapper {
         GWT.log("[PortletWidgetMapper] Instantiate portlet: " + portletClass);
         ViewHolder viewHolder;
         if(portletClass != null) {
-            final WebProtegePortlet portlet = uiFactory.createPortlet(portletClass);
-            if (portlet != null) {
-                GWT.log("[PortletWidgetMapper] Created portlet: " + portlet.getClass().getName());
-                viewHolder = createViewHolder(terminalNode.getNodeId(), portlet);
+            Optional<WebProtegePortlet> thePortlet = portletFactory.createPortlet(new PortletId(portletClass));
+            if(thePortlet.isPresent()) {
+                GWT.log("[PortletWidgetMapper] Created portlet from auto-generated factory");
+                viewHolder = createViewHolder(terminalNode.getNodeId(), thePortlet.get());
             }
             else {
-                viewHolder = new ViewHolder(new CouldNotFindPortletWidget(), NodeProperties.emptyNodeProperties());
+                final WebProtegePortlet portlet = uiFactory.createPortlet(portletClass);
+                if (portlet != null) {
+                    GWT.log("[PortletWidgetMapper] Created portlet: " + portlet.getClass().getName());
+                    viewHolder = createViewHolder(terminalNode.getNodeId(), portlet);
+                }
+                else {
+                    viewHolder = new ViewHolder(new CouldNotFindPortletWidget(), NodeProperties.emptyNodeProperties());
+                }
             }
+
         }
         else {
             viewHolder = new ViewHolder(new Label("No view class specified"), NodeProperties.emptyNodeProperties());

@@ -87,6 +87,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <version>${gwtVersion}</version>
+        </dependency>
+
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
             <version>2.0</version>
@@ -304,6 +310,13 @@
             <artifactId>gson</artifactId>
             <version>2.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -337,7 +350,7 @@
                 <configuration>
                     <runTarget>WebProtege.jsp</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <extraJvmArgs>-Xms1000M -Xmx2000M</extraJvmArgs>
+                    <extraJvmArgs>-Xms1000M -Xmx3000M</extraJvmArgs>
                     <logLevel>ERROR</logLevel>
                     <localWorkers>1</localWorkers>
                     <i18nMessagesBundle>edu.stanford.bmir.protege.web.client.Messages</i18nMessagesBundle>

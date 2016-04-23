@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.TextBox;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.client.ui.editor.ValueEditor;
@@ -36,6 +37,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import java.util.*;
 
 /**
@@ -75,15 +77,15 @@ public class ObjectPropertyFrameEditor extends FlowPanel implements EntityFrameE
     private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public ObjectPropertyFrameEditor(PropertyValueListEditor annotationsEditor, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+    public ObjectPropertyFrameEditor(PropertyValueListEditor annotationsEditor, Provider<PrimitiveDataEditor> primitiveDataEditorProvider, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         annotations = annotationsEditor;
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        domains = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
+        domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
         domains.setPlaceholder("Enter class name");
-        ranges = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
+        ranges = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
         ranges.setPlaceholder("Enter class name");
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         add(rootElement);

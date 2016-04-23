@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationView;
 import edu.stanford.bmir.protege.web.shared.app.WebProtegePropertyName;
+import edu.stanford.bmir.protege.web.client.codegen.Blender;
 import edu.stanford.protege.widgetmap.resources.WidgetMapClientBundle;
 
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
@@ -24,7 +25,9 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
 public class WebProtege implements EntryPoint {
 
     public void onModuleLoad() {
-        WebProtegeInitializer initializer = WebProtegeClientInjector.getWebProtegeInitializer();
+        GWT.create(Blender.class);
+
+        WebProtegeInitializer initializer = WebProtegeClientInjector.get().getWebProtegeInitializer();
         initializer.init(new AsyncCallback<Void>() {
             @Override
             public void onFailure(Throwable caught) {
@@ -51,23 +54,23 @@ public class WebProtege implements EntryPoint {
         BUNDLE.dialog().ensureInjected();
         WidgetMapClientBundle.BUNDLE.style().ensureInjected();
 
-        ApplicationPresenter applicationPresenter = WebProtegeClientInjector.getApplicationPresenter();
+        ApplicationPresenter applicationPresenter = WebProtegeClientInjector.get().getApplicationPresenter();
         ApplicationView applicationView = applicationPresenter.getApplicationView();
 
         RootLayoutPanel.get().add(applicationView);
 
 
-        HasClientApplicationProperties properties = WebProtegeClientInjector.getClientApplicationProperties();
+        HasClientApplicationProperties properties = WebProtegeClientInjector.get().getClientApplicationProperties();
         final Optional<String> appName = properties.getClientApplicationProperty(WebProtegePropertyName.APPLICATION_NAME);
         if (appName.isPresent()) {
             Window.setTitle(appName.get());
         }
 
 
-        WebProtegeActivityManager activityManager =  WebProtegeClientInjector.getActivityManager();
+        WebProtegeActivityManager activityManager =  WebProtegeClientInjector.get().getActivityManager();
         activityManager.setDisplay(applicationView);
 
-        PlaceHistoryHandler placeHistoryHandler = WebProtegeClientInjector.getPlaceHistoryHandler();
+        PlaceHistoryHandler placeHistoryHandler = WebProtegeClientInjector.get().getPlaceHistoryHandler();
         placeHistoryHandler.handleCurrentHistory();
 
 

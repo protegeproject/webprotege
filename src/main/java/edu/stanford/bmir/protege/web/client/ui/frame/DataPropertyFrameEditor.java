@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.*;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataListEditor;
 import edu.stanford.bmir.protege.web.client.ui.editor.EditorView;
 import edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle;
@@ -35,6 +36,7 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import javax.inject.Provider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -79,13 +81,13 @@ public class DataPropertyFrameEditor extends Composite implements EditorView<Lab
     private final DispatchServiceManager dispatchServiceManager;
 
     @Inject
-    public DataPropertyFrameEditor(PropertyValueListEditor editor, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
+    public DataPropertyFrameEditor(PropertyValueListEditor editor, Provider<PrimitiveDataEditor> primitiveDataEditorProvider, ProjectId projectId, DispatchServiceManager dispatchServiceManager) {
         this.projectId = projectId;
         this.dispatchServiceManager = dispatchServiceManager;
         annotations = editor;
         annotations.setGrammar(PropertyValueGridGrammar.getAnnotationsGrammar());
-        domains = new PrimitiveDataListEditor(projectId, PrimitiveType.CLASS);
-        ranges = new PrimitiveDataListEditor(projectId, PrimitiveType.DATA_TYPE);
+        domains = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.CLASS);
+        ranges = new PrimitiveDataListEditor(primitiveDataEditorProvider, PrimitiveType.DATA_TYPE);
         WebProtegeClientBundle.BUNDLE.style().ensureInjected();
         HTMLPanel rootElement = ourUiBinder.createAndBindUi(this);
         initWidget(rootElement);

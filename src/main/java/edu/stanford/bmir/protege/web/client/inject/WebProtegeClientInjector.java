@@ -17,35 +17,55 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class WebProtegeClientInjector {
 
-    private static ApplicationClientInjector injector = GWT.create(ApplicationClientInjector.class);
 
-    public static ApplicationPresenter getApplicationPresenter() {
-        return injector.getApplicationPresenter();
+    private static WebProtegeClientInjector instance;
+
+    private ApplicationClientInjector injector;
+
+    public WebProtegeClientInjector() {
+        // It is important that this is loaded lazily.  The reason for this is that a Module has to be generated
+        // by the GWT code generator that sets up bindings from PortletFactory to PortletFactoryGenerated.
+        injector = GWT.create(ApplicationClientInjector.class);
     }
 
-    public static WebProtegeInitializer getWebProtegeInitializer() {
-        return injector.getWebProtegeInitializer();
+    public static WebProtegeClientInjector get() {
+        if(instance == null) {
+            instance = new WebProtegeClientInjector();
+        }
+        return instance;
     }
 
-    public static UIFactory getUiFactory(ProjectId projectId) {
-        ProjectIdProvider.setProjectId(projectId);
-        return injector.getUiFactory();
+    public ApplicationPresenter getApplicationPresenter() {
+        return getInjector().getApplicationPresenter();
     }
 
-    public static PrimitiveDataEditorImpl getPrimitiveDataEditor(ProjectId projectId) {
-        ProjectIdProvider.setProjectId(projectId);
-        return injector.getPrimitiveDataEditor();
+    public WebProtegeInitializer getWebProtegeInitializer() {
+        return getInjector().getWebProtegeInitializer();
     }
 
-    public static ClientApplicationProperties getClientApplicationProperties() {
-        return injector.getClientApplicationProperties();
+//    public UIFactory getUiFactory(ProjectId projectId) {
+//        ProjectIdProvider.setProjectId(projectId);
+//        return getInjector().getUiFactory();
+//    }
+
+    private ApplicationClientInjector getInjector() {
+        return injector;
     }
 
-    public static WebProtegeActivityManager getActivityManager() {
-        return injector.getActivityManager();
+//    public PrimitiveDataEditorImpl getPrimitiveDataEditor(ProjectId projectId) {
+//        ProjectIdProvider.setProjectId(projectId);
+//        return getInjector().getPrimitiveDataEditor();
+//    }
+
+    public ClientApplicationProperties getClientApplicationProperties() {
+        return getInjector().getClientApplicationProperties();
     }
 
-    public static PlaceHistoryHandler getPlaceHistoryHandler() {
-        return injector.getPlaceHistoryHandler();
+    public WebProtegeActivityManager getActivityManager() {
+        return getInjector().getActivityManager();
+    }
+
+    public PlaceHistoryHandler getPlaceHistoryHandler() {
+        return getInjector().getPlaceHistoryHandler();
     }
 }

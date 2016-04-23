@@ -41,8 +41,8 @@ public class ClassNameFieldEditor extends Composite implements ValueEditor<FormD
     @UiField(provided = true)
     PrimitiveDataEditorImpl editor;
 
-    public ClassNameFieldEditor(ProjectId projectId) {
-        editor = WebProtegeClientInjector.getPrimitiveDataEditor(projectId);
+    public ClassNameFieldEditor(ProjectId projectId, Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+        editor = (PrimitiveDataEditorImpl) primitiveDataEditorProvider.get();
         initWidget(ourUiBinder.createAndBindUi(this));
         editor.addValueChangeHandler(new ValueChangeHandler<Optional<OWLPrimitiveData>>() {
             @Override

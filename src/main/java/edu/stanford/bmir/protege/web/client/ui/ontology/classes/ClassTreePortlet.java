@@ -29,6 +29,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.*;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.client.portlet.PortletAction;
+import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditor;
 import edu.stanford.bmir.protege.web.client.rpc.OntologyServiceManager;
 import edu.stanford.bmir.protege.web.client.rpc.data.*;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.WebProtegeDialog;
@@ -110,6 +111,8 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
     private final PortletAction watchClassAction = new PortletAction(MESSAGES.watch(), (action, event) -> editWatches());
 
+    private final Provider<PrimitiveDataEditor> primitiveDataEditorProvider;
+
     @Inject
     public ClassTreePortlet(SelectionModel selectionModel,
                             WatchPresenter watchPresenter,
@@ -118,17 +121,20 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
                             final ProjectId projectId,
                             LoggedInUserProvider loggedInUserProvider,
                             Provider<DiscussionThreadDialog> discussionThreadDialogProvider,
-                            LoggedInUserProjectPermissionChecker permissionChecker) {
-        this(selectionModel, watchPresenter, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, null, discussionThreadDialogProvider, permissionChecker);
+                            LoggedInUserProjectPermissionChecker permissionChecker,
+                            Provider<PrimitiveDataEditor> primitiveDataEditorProvider) {
+        this(selectionModel, primitiveDataEditorProvider, watchPresenter, eventBus, dispatchServiceManager, loggedInUserProvider, projectId, null, discussionThreadDialogProvider, permissionChecker);
     }
 
     private ClassTreePortlet(SelectionModel selectionModel,
+                             Provider<PrimitiveDataEditor> primitiveDataEditorProvider,
                              WatchPresenter watchPresenter, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, final ProjectId projectId, final String topClass, Provider<DiscussionThreadDialog> discussionThreadDialogProvider, LoggedInUserProjectPermissionChecker loggedInUserProjectPermissionChecker) {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = loggedInUserProjectPermissionChecker;
         this.watchPresenter = watchPresenter;
+        this.primitiveDataEditorProvider = primitiveDataEditorProvider;
         addPortletAction(createClassAction);
         addPortletAction(deleteClassAction);
         addPortletAction(watchClassAction);
@@ -555,8 +561,8 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         UploadFileDialogController controller = new UploadFileDialogController("Upload CSV", new UploadFileResultHandler() {
             @Override
             public void handleFileUploaded(final DocumentId fileDocumentId) {
-                WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<CSVImportDescriptor>(
-                        new CSVImportDialogController(getProjectId(), fileDocumentId, selCls.get(), dispatchServiceManager, new CSVImportViewImpl(getProjectId())));
+                WebProtegeDialog<CSVImportDescriptor> csvImportDialog = new WebProtegeDialog<>(
+                        new CSVImportDialogController(getProjectId(), fileDocumentId, selCls.get(), dispatchServiceManager, new CSVImportViewImpl(primitiveDataEditorProvider)));
                 csvImportDialog.setVisible(true);
 
             }
