@@ -264,7 +264,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     }
 
     private void onWatchAdded(WatchAddedEvent event) {
-        if (!event.getUserId().equals(getUserId())) {
+        if (!event.getUserId().equals(loggedInUserProvider.getCurrentUserId())) {
             return;
         }
         Watch<?> watch = event.getWatch();
@@ -284,7 +284,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
     }
 
     private void handleWatchRemoved(WatchRemovedEvent event) {
-        if (!event.getUserId().equals(getUserId())) {
+        if (!event.getUserId().equals(loggedInUserProvider.getCurrentUserId())) {
             return;
         }
         Watch<?> watch = event.getWatch();

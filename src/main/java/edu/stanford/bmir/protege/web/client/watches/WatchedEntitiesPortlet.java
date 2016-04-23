@@ -42,30 +42,10 @@ public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
         ScrollPanel scrollPanel = new ScrollPanel(changeListView.asWidget());
         getContentHolder().setWidget(scrollPanel);
         onRefresh();
-        addProjectEventHandler(WatchAddedEvent.TYPE, new WatchAddedHandler() {
-            @Override
-            public void handleWatchAdded(WatchAddedEvent event) {
-                refreshDelayed();
-            }
-        });
-        addProjectEventHandler(WatchAddedEvent.TYPE, new WatchAddedHandler() {
-            @Override
-            public void handleWatchAdded(WatchAddedEvent event) {
-                refreshDelayed();
-            }
-        });
-        asWidget().addAttachHandler(new AttachEvent.Handler() {
-            @Override
-            public void onAttachOrDetach(AttachEvent event) {
-                onRefresh();
-            }
-        });
-        addPortletAction(new PortletAction("Refresh", new PortletActionHandler() {
-            @Override
-            public void handleActionInvoked(PortletAction action, ClickEvent event) {
-                onRefresh();
-            }
-        }));
+        addProjectEventHandler(WatchAddedEvent.TYPE, event -> refreshDelayed());
+        addProjectEventHandler(WatchAddedEvent.TYPE, event -> refreshDelayed());
+        asWidget().addAttachHandler(event -> onRefresh());
+        addPortletAction(new PortletAction("Refresh", (action, event) -> onRefresh()));
     }
 
     private void refreshDelayed() {
@@ -85,7 +65,7 @@ public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
 
     private void onRefresh() {
         if (asWidget().isAttached()) {
-            presenter.setChangesForWatches(getProjectId(), getUserId());
+            presenter.setChangesForWatches(getProjectId(), loggedInUserProvider.getCurrentUserId());
             setTitle("Watched Entity Changes");
         }
     }

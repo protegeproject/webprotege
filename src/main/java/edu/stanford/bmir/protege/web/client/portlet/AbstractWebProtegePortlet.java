@@ -35,8 +35,6 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
 
     private final EventBus eventBus;
 
-    private final LoggedInUserProvider loggedInUserProvider;
-
     private List<HandlerRegistration> handlerRegistrations = new ArrayList<>();
 
     private final ProjectId projectId;
@@ -49,7 +47,6 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
                                      LoggedInUserProvider loggedInUserProvider, ProjectId projectId) {
         this.selectionModel = selectionModel;
         this.eventBus = eventBus;
-        this.loggedInUserProvider = loggedInUserProvider;
         this.projectId = projectId;
 
         addApplicationEventHandler(UserLoggedInEvent.TYPE, event -> handleLogin(event.getUserId()));
@@ -91,10 +88,6 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
 
     public ProjectId getProjectId() {
         return projectId;
-    }
-
-    public UserId getUserId() {
-        return loggedInUserProvider.getCurrentUserId();
     }
 
     protected void handleBeforeSetEntity(Optional<OWLEntity> existingEntity) {
