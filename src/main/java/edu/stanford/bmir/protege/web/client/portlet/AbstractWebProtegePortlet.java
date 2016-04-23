@@ -15,8 +15,6 @@ import edu.stanford.bmir.protege.web.client.filter.FilterView;
 import edu.stanford.bmir.protege.web.shared.event.HasEventHandlerManagement;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedEvent;
-import edu.stanford.bmir.protege.web.shared.selection.EntitySelectionChangedHandler;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.protege.widgetmap.client.view.ViewTitleChangedEvent;
@@ -60,15 +58,13 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
 
         addProjectEventHandler(PermissionsChangedEvent.TYPE, event -> handlePermissionsChanged());
 
-        HandlerRegistration handlerRegistration = selectionModel.addSelectionChangedHandler(new EntitySelectionChangedHandler() {
-            @Override
-            public void handleSelectionChanged(EntitySelectionChangedEvent event) {
+        HandlerRegistration handlerRegistration = selectionModel.addSelectionChangedHandler(e -> {
                 if (portletUi.asWidget().isAttached()) {
-                    handleBeforeSetEntity(event.getPreviousSelection());
-                    handleAfterSetEntity(event.getLastSelection());
+                    handleBeforeSetEntity(e.getPreviousSelection());
+                    handleAfterSetEntity(e.getLastSelection());
                 }
             }
-        });
+        );
         handlerRegistrations.add(handlerRegistration);
         asWidget().addAttachHandler(event -> handleActivated());
     }
