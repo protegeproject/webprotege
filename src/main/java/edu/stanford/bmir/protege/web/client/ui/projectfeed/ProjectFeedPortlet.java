@@ -36,7 +36,7 @@ public class ProjectFeedPortlet extends AbstractWebProtegePortlet {
         this.presenter = presenter;
         presenter.bind(this);
         setTitle("Project feed");
-        getContentHolder().setWidget(presenter.getView());
+        setWidget(presenter.getView());
 
         FilterView filterView = new FilterViewImpl();
         filterView.addFilterGroup("Project feed settings");

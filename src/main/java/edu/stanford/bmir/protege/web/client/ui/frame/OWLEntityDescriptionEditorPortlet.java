@@ -22,7 +22,7 @@ public class OWLEntityDescriptionEditorPortlet extends AbstractWebProtegePortlet
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.presenter = presenter;
         presenter.attach(this);
-        getContentHolder().setWidget(presenter.getView());
+        setWidget(presenter.getView());
     }
 
     @Override

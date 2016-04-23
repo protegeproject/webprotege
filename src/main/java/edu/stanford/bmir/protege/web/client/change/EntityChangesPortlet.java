@@ -30,7 +30,7 @@ public class EntityChangesPortlet extends AbstractWebProtegePortlet {
                                 ChangeListViewPresenter presenter) {
 		super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.presenter = presenter;
-        getContentHolder().setWidget(presenter.getView().asWidget());
+        setWidget(presenter.getView().asWidget());
 
         addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override

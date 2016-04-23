@@ -30,7 +30,7 @@ public class OntologyIdPortlet extends AbstractWebProtegePortlet implements HasF
         super(selectionModel, eventBus, loggedInUserManager, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         editor = new OntologyIdViewImpl();
-        getContentHolder().setWidget(editor.asWidget());
+        setWidget(editor.asWidget());
         setTitle("Ontology Id");
         editor.setEnabled(false);
         updateDisplay();

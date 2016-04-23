@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
@@ -66,16 +67,20 @@ public abstract class AbstractWebProtegePortlet implements WebProtegePortlet, Ha
         asWidget().addAttachHandler(event -> handleActivated());
     }
 
+    @Override
+    public void setWidget(IsWidget isWidget) {
+        portletUi.setWidget(isWidget);
+    }
 
     @Override
     public void setToolbarVisible(boolean visible) {
         portletUi.setToolbarVisible(visible);
     }
 
-    @Override
-    public AcceptsOneWidget getContentHolder() {
-        return portletUi.getContentHolder();
-    }
+//    @Override
+//    public AcceptsOneWidget getContentHolder() {
+//        return portletUi.getContentHolder();
+//    }
 
     public SelectionModel getSelectionModel() {
         return selectionModel;

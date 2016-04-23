@@ -139,7 +139,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
 
         addPortletAction(createAction);
         addPortletAction(deleteAction);
-        getContentHolder().setWidget(new ScrollPanel(treePanel.asWidget()));
+        setWidget(new ScrollPanel(treePanel.asWidget()));
 
 
         addProjectEventHandler(ObjectPropertyHierarchyParentAddedEvent.TYPE, event -> handleRelationshipAdded(event));

@@ -10,7 +10,7 @@ import edu.stanford.bmir.protege.web.shared.filter.Filter;
  * Stanford Center for Biomedical Informatics Research
  * 10/02/16
  */
-public interface PortletUi extends IsWidget {
+public interface PortletUi extends IsWidget, AcceptsOneWidget {
 
     void setToolbarVisible(boolean visible);
 
@@ -23,8 +23,5 @@ public interface PortletUi extends IsWidget {
     void setFilterApplied(boolean filterApplied);
 
     void addPortletAction(PortletAction action);
-
-
-    AcceptsOneWidget getContentHolder();
 
 }

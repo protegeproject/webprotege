@@ -30,7 +30,7 @@ public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
     public OBOTermCrossProductPortlet(OBOTermCrossProductEditor editor, SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         this.editor = editor;
-        getContentHolder().setWidget(editor.asWidget());
+        setWidget(editor.asWidget());
     }
 
 

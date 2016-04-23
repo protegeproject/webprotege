@@ -32,7 +32,7 @@ public class RevisionsPortlet extends AbstractWebProtegePortlet {
         this.dispatchServiceManager = dispatchServiceManager;
         this.presenter = new RevisionsListViewPresenter(getProjectId(), eventBus,  new RevisionsListViewImpl(), dispatchServiceManager);
         presenter.reload();
-        getContentHolder().setWidget(presenter.getWidget());
+        setWidget(presenter.getWidget());
         setTitle("Revisions");
         presenter.reload();
     }

@@ -25,7 +25,7 @@ public class DiscussionThreadPortlet extends AbstractWebProtegePortlet {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         presenter = discussionThreadPresenter;
         presenter.installActions(this);
-        getContentHolder().setWidget(presenter.getWidget());
+        setWidget(presenter.getWidget());
         setTitle("Discussions");
     }
 

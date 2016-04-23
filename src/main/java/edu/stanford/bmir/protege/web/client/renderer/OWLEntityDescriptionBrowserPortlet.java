@@ -31,7 +31,7 @@ public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegePortle
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
         html = new HTML();
-        getContentHolder().setWidget(new ScrollPanel(html));
+        setWidget(new ScrollPanel(html));
         addProjectEventHandler(ClassFrameChangedEvent.TYPE, new ClassFrameChangedEventHandler() {
             @Override
             public void classFrameChanged(ClassFrameChangedEvent event) {

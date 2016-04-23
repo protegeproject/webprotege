@@ -35,7 +35,7 @@ public class EditorPortlet extends AbstractWebProtegePortlet {
         this.editorPresenter = editorPresenter;
         setTitle("Nothing selected");
         final Widget editorView = editorPresenter.getView();
-        getContentHolder().setWidget(editorView);
+        setWidget(editorView);
     }
 
     @Override

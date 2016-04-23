@@ -26,7 +26,7 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
     public OBOTermXRefsEditorPortlet(SelectionModel selectionModel, EventBus eventBus, ProjectId projectId, LoggedInUserProvider loggedInUserProvider) {
         super(selectionModel, eventBus, projectId, loggedInUserProvider);
         editor = new XRefListEditor();
-        getContentHolder().setWidget(editor);
+        setWidget(editor);
         editor.setEnabled(true);
     }
 

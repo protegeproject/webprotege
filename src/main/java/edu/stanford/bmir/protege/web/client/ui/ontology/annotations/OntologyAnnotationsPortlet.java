@@ -49,7 +49,7 @@ public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
         setTitle("Ontology annotations");
-        getContentHolder().setWidget(new ScrollPanel(annotationsView.asWidget()));
+        setWidget(new ScrollPanel(annotationsView.asWidget()));
         annotationsView.addValueChangeHandler(new ValueChangeHandler<Optional<Set<OWLAnnotation>>>() {
             @Override
             public void onValueChange(ValueChangeEvent<Optional<Set<OWLAnnotation>>> event) {

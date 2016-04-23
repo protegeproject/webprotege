@@ -27,7 +27,7 @@ public class FormPortlet extends AbstractWebProtegePortlet {
 
     @Override
     protected void handleAfterSetEntity(Optional<OWLEntity> entityData) {
-        formPresenter.start(getContentHolder());
+        formPresenter.start(this);
         if (entityData.isPresent()) {
             formPresenter.setSubject(entityData.get());
         }
