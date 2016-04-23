@@ -66,8 +66,6 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private final LoggedInUserProvider loggedInUserProvider;
-
     private final PortletAction createAction = new PortletAction("Create", new PortletActionHandler() {
         @Override
         public void handleActionInvoked(PortletAction action, ClickEvent event) {
@@ -90,7 +88,6 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
     public PropertiesTreePortlet(SelectionModel selectionModel, EventBus eventBus, DispatchServiceManager dispatchServiceManager, LoggedInUserProvider loggedInUserProvider, ProjectId projectId, LoggedInUserProjectPermissionChecker permissionChecker) {
         super(selectionModel, eventBus, loggedInUserProvider, projectId);
         this.dispatchServiceManager = dispatchServiceManager;
-        this.loggedInUserProvider = loggedInUserProvider;
         this.permissionChecker = permissionChecker;
 
         setTitle("Properties Tree");
@@ -112,40 +109,19 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
             @Override
             public void onContextMenu(TreeNode node, EventObject e) {
                 PopupMenu contextMenu = new PopupMenu();
-                contextMenu.addItem("Show IRI", new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        Optional<OWLEntity> selectedEntity = getSelectedEntity();
-                        if (selectedEntity.isPresent()) {
-                            String iri = selectedEntity.get().getIRI().toQuotedString();
-                            InputBox.showOkDialog("Property IRI", true, iri, new InputBoxHandler() {
-                                @Override
-                                public void handleAcceptInput(String input) {
-
-                                }
-                            });
-                        }
+                contextMenu.addItem("Show IRI", event -> {
+                    Optional<OWLEntity> selectedEntity = getSelectedEntity();
+                    if (selectedEntity.isPresent()) {
+                        String iri = selectedEntity.get().getIRI().toQuotedString();
+                        InputBox.showOkDialog("Property IRI", true, iri, input -> {});
                     }
                 });
-                contextMenu.addItem("Show direct link", new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        String location = Window.Location.getHref();
-                        InputBox.showOkDialog("Direct link", true, location, new InputBoxHandler() {
-                            @Override
-                            public void handleAcceptInput(String input) {
-
-                            }
-                        });
-                    }
+                contextMenu.addItem("Show direct link", event -> {
+                    String location = Window.Location.getHref();
+                    InputBox.showOkDialog("Direct link", true, location, input -> {});
                 });
                 contextMenu.addSeparator();
-                contextMenu.addItem("Refresh tree", new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        onRefresh();
-                    }
-                });
+                contextMenu.addItem("Refresh tree", event -> onRefresh());
                 contextMenu.show(e.getXY()[0], e.getXY()[1] + 5);
             }
         });
@@ -161,60 +137,24 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         treePanel.setRootNode(root);
         treePanel.setRootVisible(false);
 
-        addToolbarButtons();
         addPortletAction(createAction);
         addPortletAction(deleteAction);
         getContentHolder().setWidget(new ScrollPanel(treePanel.asWidget()));
 
 
-        addProjectEventHandler(ObjectPropertyHierarchyParentAddedEvent.TYPE, new ObjectPropertyHierarchyParentAddedHandler() {
-            @Override
-            public void handleObjectPropertyHierarchyParentAdded(ObjectPropertyHierarchyParentAddedEvent event) {
-                handleRelationshipAdded(event);
-            }
-        });
+        addProjectEventHandler(ObjectPropertyHierarchyParentAddedEvent.TYPE, event -> handleRelationshipAdded(event));
 
-        addProjectEventHandler(ObjectPropertyHierarchyParentRemovedEvent.TYPE, new ObjectPropertyHierarchyParentRemovedHandler() {
-            @Override
-            public void handleObjectPropertyHierarchyParentRemoved(ObjectPropertyHierarchyParentRemovedEvent event) {
-                handleRelationshipRemoved(event);
-            }
-        });
+        addProjectEventHandler(ObjectPropertyHierarchyParentRemovedEvent.TYPE, event -> handleRelationshipRemoved(event));
 
-        addProjectEventHandler(DataPropertyHierarchyParentAddedEvent.TYPE, new DataPropertyHierarchyParentAddedHandler() {
-            @Override
-            public void handleDataPropertyParentAdded(DataPropertyHierarchyParentAddedEvent event) {
-                handleRelationshipAdded(event);
-            }
-        });
+        addProjectEventHandler(DataPropertyHierarchyParentAddedEvent.TYPE, event -> handleRelationshipAdded(event));
 
-        addProjectEventHandler(AnnotationPropertyHierarchyParentAddedEvent.TYPE, new AnnotationPropertyHierarchyParentAddedHandler() {
-            @Override
-            public void handleAnnotationPropertyHierarchyParentAdded(AnnotationPropertyHierarchyParentAddedEvent event) {
-                handleRelationshipAdded(event);
-            }
-        });
+        addProjectEventHandler(AnnotationPropertyHierarchyParentAddedEvent.TYPE, event -> handleRelationshipAdded(event));
 
-        addProjectEventHandler(HierarchyRootAddedEvent.TYPE, new HierarchyRootAddedHandler<Serializable>() {
-            @Override
-            public void handleHierarchyRootAdded(HierarchyRootAddedEvent<Serializable> event) {
-                handleRootAdded(event);
-            }
-        });
+        addProjectEventHandler(HierarchyRootAddedEvent.TYPE, event -> handleRootAdded(event));
 
-        addProjectEventHandler(HierarchyRootRemovedEvent.TYPE, new HierarchyRootRemovedHandler<Serializable>() {
-            @Override
-            public void handleHierarchyRootRemoved(HierarchyRootRemovedEvent<Serializable> event) {
-                handleRootRemoved(event);
-            }
-        });
+        addProjectEventHandler(HierarchyRootRemovedEvent.TYPE, event -> handleRootRemoved(event));
 
-        addProjectEventHandler(BrowserTextChangedEvent.TYPE, new BrowserTextChangedHandler() {
-            @Override
-            public void browserTextChanged(BrowserTextChangedEvent event) {
-                handleBrowserTextChanged(event);
-            }
-        });
+        addProjectEventHandler(BrowserTextChangedEvent.TYPE, event -> handleBrowserTextChanged(event));
         DefaultSelectionModel selModel = new DefaultSelectionModel();
         treePanel.setSelectionModel(selModel);
         selModel.addSelectionModelListener(new DefaultSelectionModelListenerAdapter() {
@@ -374,13 +314,6 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         }
     }
 
-
-    protected void insertNodeInTree(TreeNode parentNode, EntityData child) {
-        TreeNode treeNode = createTreeNode(child);
-        parentNode.appendChild(treeNode);
-    }
-
-
     protected void onPropertyDeleted(EntityData entity) {
         TreeNode propNode = findTreeNode(entity.getName());
         if (propNode != null) {
@@ -392,34 +325,6 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
                 propNode.remove();
             }
         }
-    }
-
-
-    private boolean hasChild(TreeNode parentNode, String childId) {
-        return getDirectChild(parentNode, childId) != null;
-    }
-
-    protected void addToolbarButtons() {
-//        createButton = new Button("Create");
-//        createButton.setCls("toolbar-button");
-//        createButton.addListener(new ButtonListenerAdapter() {
-//            @Override
-//            public void onClick(Button button, EventObject e) {
-//                onCreateProperty();
-//            }
-//        });
-//
-//
-//        deleteButton = new Button("Delete");
-//        // deleteButton.setIconCls("protege-class-delete-icon");
-//        deleteButton.setCls("toolbar-button");
-//        deleteButton.addListener(new ButtonListenerAdapter() {
-//            @Override
-//            public void onClick(Button button, EventObject e) {
-//                onDeleteProperty();
-//            }
-//        });
-//        setTopToolbar(new Button[]{createButton, deleteButton});
     }
 
     /**
@@ -446,12 +351,7 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         if (!selectedEntityType.isPresent()) {
             return;
         }
-        WebProtegeDialog.showDialog(new CreateEntityDialogController(selectedEntityType.get(), new CreateEntityDialogController.CreateEntityHandler() {
-            @Override
-            public void handleCreateEntity(CreateEntityInfo createEntityInfo) {
-                handleCreateProperty(createEntityInfo);
-            }
-        }));
+        WebProtegeDialog.showDialog(new CreateEntityDialogController(selectedEntityType.get(), createEntityInfo -> handleCreateProperty(createEntityInfo)));
     }
 
     private void handleCreateProperty(final CreateEntityInfo createEntityInfo) {
