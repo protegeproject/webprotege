@@ -59,7 +59,9 @@ import java.util.List;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 // TODO: add action descriptions and labels in the config similar to the ClassTreePortlet
-@Portlet(id = "portlets.PropertiesTree", title = "Property Hierarchy")
+@Portlet(id = "portlets.PropertiesTree",
+        title = "Property Hierarchy",
+        tooltip = "Displays the object, data and annotation property hierarchies as a tree.")
 public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
 
     public static final String ANNOTATION_PROPERTIES_ROOT_NAME = "Annotation properties";

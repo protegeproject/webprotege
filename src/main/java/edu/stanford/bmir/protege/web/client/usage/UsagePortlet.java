@@ -35,7 +35,7 @@ import java.util.Set;
  * Date: 11/07/2013
  */
 
-@Portlet(id = "portlets.EntityUsage", title = "Entity Usage")
+@Portlet(id = "portlets.EntityUsage", title = "Entity Usage", tooltip = "Displays the usage for the selected class, property or individual.")
 public class UsagePortlet extends AbstractWebProtegePortlet {
 
     public static final FilterId SHOW_DEFINING_AXIOMS = new FilterId("Show defining axioms");

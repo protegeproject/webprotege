@@ -15,7 +15,9 @@ import javax.inject.Inject;
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 18/03/2014
  */
 
-@Portlet(id = "portlets.owl.EntityDescriptionEditor", title = "OWL Entity Description Editor")
+@Portlet(id = "portlets.owl.EntityDescriptionEditor",
+        title = "OWL Entity Description Editor",
+        tooltip = "Allows the description of the selected entity to be edited in Manchester Syntax.  The complete OWL 2 syntax is supported.")
 public class OWLEntityDescriptionEditorPortlet extends AbstractWebProtegePortlet {
 
     private final ManchesterSyntaxFrameEditorPresenter presenter;

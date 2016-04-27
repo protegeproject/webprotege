@@ -19,7 +19,10 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-@Portlet(id = "portlets.Editor", title = "Editor")
+@Portlet(id = "portlets.EntityEditor",
+        title = "Entity Editor",
+        tooltip = "Displays a simple property-value oriented description of the selected class, property or individual " +
+                "for viewing and editing.")
 public class EditorPortlet extends AbstractWebProtegePortlet {
 
     private EditorPresenter editorPresenter;

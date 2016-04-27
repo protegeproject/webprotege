@@ -17,7 +17,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 
-@Portlet(id = "portlets.ChangesByEntity", title = "Changes by Entity")
+@Portlet(id = "portlets.ChangesByEntity",
+        title = "Entity Changes",
+        tooltip = "Displays a list of project changes for the selected entity.")
 public class EntityChangesPortlet extends AbstractWebProtegePortlet {
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);

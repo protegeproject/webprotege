@@ -78,7 +78,9 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  *
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
-@Portlet(id = "portlets.ClassTree", title = "Class Hierarchy")
+@Portlet(id = "portlets.ClassTree",
+        title = "Class Hierarchy",
+        tooltip = "Displays the class hierarchy as a tree.")
 public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
     private static final Messages MESSAGES = GWT.create(Messages.class);
