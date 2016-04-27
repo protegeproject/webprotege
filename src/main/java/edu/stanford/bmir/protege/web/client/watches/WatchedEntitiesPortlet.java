@@ -17,9 +17,11 @@ import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.watches.WatchAddedEvent;
 import edu.stanford.bmir.protege.web.shared.watches.WatchAddedHandler;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
 
+@Portlet(id = "portlets.WatchedEntities", title = "Watched Entities")
 public class WatchedEntitiesPortlet extends AbstractWebProtegePortlet {
 
     private final LoggedInUserProvider loggedInUserProvider;

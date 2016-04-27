@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
 
@@ -19,6 +20,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
+@Portlet(id = "portlets.OntologyId", title = "Ontology Id")
 public class OntologyIdPortlet extends AbstractWebProtegePortlet implements HasFixedPrimaryAxisSize {
 
     private final DispatchServiceManager dispatchServiceManager;

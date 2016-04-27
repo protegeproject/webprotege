@@ -317,6 +317,13 @@
             <version>1.7</version>
         </dependency>
 
+        <dependency>
+            <groupId>edu.stanford.protege</groupId>
+            <artifactId>webprotege-annotations</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -332,6 +339,21 @@
         <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
         <plugins>
+
+
+            <plugin>
+                <groupId>edu.stanford.protege</groupId>
+                <artifactId>webprotege-maven-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generatePortletFactory</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -354,6 +376,7 @@
                     <logLevel>ERROR</logLevel>
                     <localWorkers>1</localWorkers>
                     <i18nMessagesBundle>edu.stanford.bmir.protege.web.client.Messages</i18nMessagesBundle>
+                    <gen>/tmp/gwt-generated</gen>
                 </configuration>
             </plugin>
 

@@ -47,6 +47,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
@@ -58,6 +59,7 @@ import java.util.List;
 import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUNDLE;
 
 // TODO: add action descriptions and labels in the config similar to the ClassTreePortlet
+@Portlet(id = "portlets.PropertiesTree", title = "Properties Tree")
 public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
 
     public static final String ANNOTATION_PROPERTIES_ROOT_NAME = "Annotation properties";

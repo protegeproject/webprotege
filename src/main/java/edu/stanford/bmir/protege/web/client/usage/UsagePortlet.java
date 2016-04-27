@@ -18,6 +18,7 @@ import edu.stanford.bmir.protege.web.shared.usage.GetUsageAction;
 import edu.stanford.bmir.protege.web.shared.usage.GetUsageResult;
 import edu.stanford.bmir.protege.web.shared.usage.UsageFilter;
 import edu.stanford.bmir.protege.web.shared.usage.UsageReference;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -33,6 +34,8 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 11/07/2013
  */
+
+@Portlet(id = "portlets.EntityUsage", title = "Entity Usage")
 public class UsagePortlet extends AbstractWebProtegePortlet {
 
     public static final FilterId SHOW_DEFINING_AXIOMS = new FilterId("Show defining axioms");

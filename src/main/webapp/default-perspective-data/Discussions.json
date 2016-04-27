@@ -4,13 +4,13 @@
     {
       "weight": 0.3,
       "node": {
-        "portlet": "edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet"
+        "portlet": "portlets.ClassTree"
       }
     },
     {
       "weight": 0.7,
       "node": {
-        "portlet": "edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet"
+        "portlet": "portlets.Discussions"
       }
     }
   ]

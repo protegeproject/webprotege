@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
@@ -21,6 +22,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/05/2012
  */
+@Portlet(id = "portlets.obo.TermId", title = "OBO Term Id")
 public class OBOTermIdEditorPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermIdEditor editor;

@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermDefinition;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
@@ -18,6 +19,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/05/2012
  */
+@Portlet(id = "portlets.obo.TermDefinition", title = "OBO Term Definition")
 public class OBOTermDefinitionPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermDefinitionEditor editor;

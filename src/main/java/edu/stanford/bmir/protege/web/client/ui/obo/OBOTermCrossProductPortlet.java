@@ -11,6 +11,7 @@ import edu.stanford.bmir.protege.web.client.ui.library.msgbox.MessageBox;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermCrossProduct;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -20,6 +21,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/05/2012
  */
+@Portlet(id = "portlets.obo.TermCrossProduct", title = "OBO Term Cross Product")
 public class OBOTermCrossProductPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermCrossProductEditor editor;

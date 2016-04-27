@@ -57,6 +57,7 @@ import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.watches.*;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -77,6 +78,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  *
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
+@Portlet(id = "portlets.ClassTree", title = "Class Hierarchy")
 public class ClassTreePortlet extends AbstractWebProtegePortlet {
 
     private static final Messages MESSAGES = GWT.create(Messages.class);

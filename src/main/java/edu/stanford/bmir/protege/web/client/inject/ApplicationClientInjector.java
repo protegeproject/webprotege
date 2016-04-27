@@ -5,9 +5,8 @@ import com.google.gwt.inject.client.Ginjector;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import edu.stanford.bmir.protege.web.client.WebProtegeInitializer;
 import edu.stanford.bmir.protege.web.client.place.WebProtegeActivityManager;
+import edu.stanford.bmir.protege.web.client.portlet.PortletFactoryModuleGenerated;
 import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorClientModule;
-import edu.stanford.bmir.protege.web.client.primitive.PrimitiveDataEditorImpl;
-import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.workspace.ApplicationPresenter;
 import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
 
@@ -17,17 +16,15 @@ import edu.stanford.bmir.protege.web.shared.app.ClientApplicationProperties;
  * 17/12/15
  */
 @GinModules(
-        value = {ApplicationClientModule.class, PrimitiveDataEditorClientModule.class},
-        properties = "webprotege.gin.module")
+        value = {
+                ApplicationClientModule.class,
+                PrimitiveDataEditorClientModule.class,
+                PortletFactoryModuleGenerated.class})
 public interface ApplicationClientInjector extends Ginjector {
 
     public WebProtegeInitializer getWebProtegeInitializer();
 
     public ApplicationPresenter getApplicationPresenter();
-
-    public PrimitiveDataEditorImpl getPrimitiveDataEditor();
-
-    public UIFactory getUiFactory();
 
     public ClientApplicationProperties getClientApplicationProperties();
 

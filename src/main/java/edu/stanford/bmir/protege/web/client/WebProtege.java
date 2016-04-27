@@ -25,7 +25,6 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
 public class WebProtege implements EntryPoint {
 
     public void onModuleLoad() {
-        GWT.create(Blender.class);
 
         WebProtegeInitializer initializer = WebProtegeClientInjector.get().getWebProtegeInitializer();
         initializer.init(new AsyncCallback<Void>() {

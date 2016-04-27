@@ -7,4 +7,5 @@ package edu.stanford.bmir.protege.web.client.codegen;
  */
 public interface Blender {
 
+    void blend();
 }

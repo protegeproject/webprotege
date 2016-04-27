@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
 
@@ -15,6 +16,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 07/10/2012
  */
+@Portlet(id = "portlets.Revisions", title = "Project Revisions")
 public class RevisionsPortlet extends AbstractWebProtegePortlet {
 
     public static final int INITIAL_HEIGHT = 400;

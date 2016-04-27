@@ -8,9 +8,11 @@ import edu.stanford.bmir.protege.web.client.individualslist.IndividualsListPrese
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+@Portlet(id = "portlets.IndividualsList", title = "Individuals by Class")
 public class IndividualsListPortlet extends AbstractWebProtegePortlet {
 
     private final IndividualsListPresenter presenter;

@@ -12,14 +12,25 @@
             color: #606060;
             font-weight: 200;
         }
+        .idLabel {
+            font-size: smaller;
+        }
     </ui:style>
 
-    <g:HTMLPanel addStyleNames="{style.main}">
-        <div>
-            Could not create view.
-        </div>
-        <div>
-            The view specified in the configuration could not be found.
-        </div>
+    <g:HTMLPanel>
+        <g:HTMLPanel addStyleNames="{style.main}">
+            <div>
+                Could not create view.
+            </div>
+            <div>
+                The view specified in the configuration could not be found.
+            </div>
+            <div class="{style.idLabel}">
+                Specified view: <g:InlineLabel ui:field="portletIdField"/>
+            </div>
+
+
+        </g:HTMLPanel>
+
     </g:HTMLPanel>
 </ui:UiBinder>
