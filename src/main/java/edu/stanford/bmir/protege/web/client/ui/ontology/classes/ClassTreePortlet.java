@@ -143,9 +143,6 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         addPortletAction(deleteClassAction);
         addPortletAction(watchClassAction);
 
-        setTitle("Classes");
-
-
         registerEventHandlers();
 
         updateButtonStates();
