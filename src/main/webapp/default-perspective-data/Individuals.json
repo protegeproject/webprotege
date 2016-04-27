@@ -9,7 +9,7 @@
           {
             "weight": 0.5,
             "node": {
-              "portlet": "portlets.ClassTree"
+              "portlet": "portlets.ClassHierarchy"
             }
           },
           {
