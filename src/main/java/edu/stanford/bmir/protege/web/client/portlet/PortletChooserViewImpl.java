@@ -70,8 +70,8 @@ public class PortletChooserViewImpl extends Composite implements PortletChooserV
         displayName2DescriptorMap.clear();
         listBox.clear();
         for(PortletDescriptor descriptor : portlets) {
-            displayName2DescriptorMap.put(descriptor.getDisplayName(), descriptor);
-            listBox.addItem(descriptor.getDisplayName());
+            displayName2DescriptorMap.put(descriptor.getTitle(), descriptor);
+            listBox.addItem(descriptor.getTitle());
         }
     }
 }

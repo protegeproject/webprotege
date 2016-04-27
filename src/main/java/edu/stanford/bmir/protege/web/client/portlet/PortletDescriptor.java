@@ -13,14 +13,14 @@ public class PortletDescriptor {
 
     private final PortletId portletId;
 
-    private final String displayName;
+    private final String title;
 
     private final String tooltip;
 
 
-    public PortletDescriptor(PortletId portletId, String displayName, String tooltip) {
+    public PortletDescriptor(PortletId portletId, String title, String tooltip) {
         this.portletId = checkNotNull(portletId);
-        this.displayName = checkNotNull(displayName);
+        this.title = checkNotNull(title);
         this.tooltip = checkNotNull(tooltip);
     }
 
@@ -28,8 +28,8 @@ public class PortletDescriptor {
         return portletId;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getTitle() {
+        return title;
     }
 
     public String getTooltip() {

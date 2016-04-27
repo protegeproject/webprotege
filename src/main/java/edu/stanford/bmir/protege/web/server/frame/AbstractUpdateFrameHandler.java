@@ -93,13 +93,13 @@ public abstract class AbstractUpdateFrameHandler<A extends UpdateFrameAction<F, 
 //        ChangeSetEntityCrudSession session = entityEditorKit.createChangeSetSession();
 //        OntologyChangeList.Builder<S> changeListBuilder = new OntologyChangeList.Builder<>();
 //        entityEditorKit.update(session, to.getFrame().getSubject(),
-//                                 EntityShortForm.get(to.getDisplayName()),
+//                                 EntityShortForm.get(to.getTitle()),
 //                                 project.getEntityCrudContext(executionContext.getUserId()),
 //                                 changeListBuilder);
 //        FixedChangeListGenerator<S> changeListGenerator = FixedChangeListGenerator.get(changeListBuilder.build().getChanges());
 //        String typePrintName = from.getFrame().getSubject().getEntityType().getPrintName().toLowerCase();
 //        FixedMessageChangeDescriptionGenerator<S> changeDescriptionGenerator =
-//                FixedMessageChangeDescriptionGenerator.get("Renamed the " + typePrintName + " " + from.getDisplayName() + " to " + to.getDisplayName());
+//                FixedMessageChangeDescriptionGenerator.get("Renamed the " + typePrintName + " " + from.getTitle() + " to " + to.getTitle());
 //        project.applyChanges(userId, changeListGenerator, changeDescriptionGenerator);
 //    }
 

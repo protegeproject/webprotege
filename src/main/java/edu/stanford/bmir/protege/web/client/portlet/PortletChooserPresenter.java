@@ -8,7 +8,6 @@ import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -64,7 +63,7 @@ public class PortletChooserPresenter {
     private List<PortletDescriptor> getPortletDescriptorList() {
         List<PortletDescriptor> availablePortletDescriptors = portletFactory.getAvailablePortletDescriptors();
         Collections.sort(availablePortletDescriptors, (d1, d2) ->
-                d1.getDisplayName().compareToIgnoreCase(d2.getDisplayName())
+                d1.getTitle().compareToIgnoreCase(d2.getTitle())
         );
         return availablePortletDescriptors;
     }

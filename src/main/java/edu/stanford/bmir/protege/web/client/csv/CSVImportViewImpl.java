@@ -127,7 +127,7 @@ public class CSVImportViewImpl extends Composite implements CSVImportView {
         }
 
 
-//        csvGridView.setHeaderText(selectedIndex,  importType.getDisplayName() + " Name");
+//        csvGridView.setHeaderText(selectedIndex,  importType.getTitle() + " Name");
     }
 
     @Override
