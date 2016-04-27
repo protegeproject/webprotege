@@ -4,10 +4,11 @@ import com.google.common.base.Optional;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.client.ui.library.dlg.*;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -24,9 +25,12 @@ public class PortletChooserPresenter {
 
     private final PortletChooserView view;
 
+    private final PortletFactory portletFactory;
+
     @Inject
-    public PortletChooserPresenter(PortletChooserView view) {
+    public PortletChooserPresenter(PortletChooserView view, PortletFactory portletFactory) {
         this.view = view;
+        this.portletFactory = portletFactory;
     }
 
     public void show(final PortletSelectedHandler handler) {
@@ -49,18 +53,19 @@ public class PortletChooserPresenter {
         };
         WebProtegeDialog<Optional<PortletId>> dlg = new WebProtegeDialog<>(controller);
         dlg.show();
-        controller.setDialogButtonHandler(DialogButton.OK, new WebProtegeDialogButtonHandler<Optional<PortletId>>() {
-            @Override
-            public void handleHide(Optional<PortletId> data, WebProtegeDialogCloser closer) {
-                closer.hide();
-                if(data.isPresent()) {
-                    handler.handlePortletSelected(data.get());
-                }
+        controller.setDialogButtonHandler(DialogButton.OK, (data, closer) -> {
+            closer.hide();
+            if(data.isPresent()) {
+                handler.handlePortletSelected(data.get());
             }
         });
     }
 
     private List<PortletDescriptor> getPortletDescriptorList() {
-        return UIFactory.getAvailablePortlets();
+        List<PortletDescriptor> availablePortletDescriptors = portletFactory.getAvailablePortletDescriptors();
+        Collections.sort(availablePortletDescriptors, (d1, d2) ->
+                d1.getDisplayName().compareToIgnoreCase(d2.getDisplayName())
+        );
+        return availablePortletDescriptors;
     }
 }
