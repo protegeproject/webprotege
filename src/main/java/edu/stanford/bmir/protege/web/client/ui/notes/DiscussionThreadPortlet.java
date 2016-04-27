@@ -17,7 +17,9 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/03/2013
  */
-@Portlet(id = "portlets.Discussions", title = "Discussions")
+@Portlet(id = "portlets.Discussions",
+        title = "Entity Discussions",
+        tooltip = "Displays discussions for the selected entity.")
 public class DiscussionThreadPortlet extends AbstractWebProtegePortlet {
 
     private DiscussionThreadPresenter presenter;

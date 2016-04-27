@@ -22,7 +22,9 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
 
-@Portlet(id = "portlets.ProjectHistory", title = "Project History")
+@Portlet(id = "portlets.ProjectHistory",
+        title = "Project History",
+        tooltip = "Displays a list of all changes that have been made to the project")
 public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
 
     public static final FilterId SHOW_DETAILS_FILTER = new FilterId("Show details");

@@ -10,7 +10,7 @@
     {
       "weight": 0.5,
       "node": {
-        "portlet": "portlets.Editor"
+        "portlet": "portlets.EntityEditor"
       }
     },
     {

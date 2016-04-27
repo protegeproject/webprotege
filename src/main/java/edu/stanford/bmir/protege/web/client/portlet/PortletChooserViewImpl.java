@@ -2,10 +2,13 @@ package edu.stanford.bmir.protege.web.client.portlet;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 
@@ -34,6 +37,21 @@ public class PortletChooserViewImpl extends Composite implements PortletChooserV
 
     @UiField
     protected ListBox listBox;
+
+    @UiField
+    Label tooltipField;
+
+    @UiHandler("listBox")
+    protected void handleSelectionChanged(ChangeEvent event) {
+        String value = listBox.getSelectedValue();
+        PortletDescriptor descriptor = displayName2DescriptorMap.get(value);
+        if(descriptor == null) {
+            tooltipField.setText("");
+        }
+        else {
+            tooltipField.setText(descriptor.getTooltip());
+        }
+    }
 
     @Override
     public Optional<PortletId> getSelectedPortletId() {
