@@ -78,7 +78,7 @@ import static edu.stanford.bmir.protege.web.resources.WebProtegeClientBundle.BUN
  *
  * @author Tania Tudorache <tudorache@stanford.edu>
  */
-@Portlet(id = "portlets.ClassTree",
+@Portlet(id = "portlets.ClassHierarchy",
         title = "Class Hierarchy",
         tooltip = "Displays the class hierarchy as a tree.")
 public class ClassTreePortlet extends AbstractWebProtegePortlet {
