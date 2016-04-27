@@ -70,19 +70,9 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
 
     private final DispatchServiceManager dispatchServiceManager;
 
-    private final PortletAction createAction = new PortletAction("Create", new PortletActionHandler() {
-        @Override
-        public void handleActionInvoked(PortletAction action, ClickEvent event) {
-            onCreateProperty();
-        }
-    });
+    private final PortletAction createAction = new PortletAction("Create", (action, event) -> onCreateProperty());
 
-    private final PortletAction deleteAction = new PortletAction("Delete", new PortletActionHandler() {
-        @Override
-        public void handleActionInvoked(PortletAction action, ClickEvent event) {
-            onDeleteProperty();
-        }
-    });
+    private final PortletAction deleteAction = new PortletAction("Delete", (action, event) -> onDeleteProperty());
 
     protected TreePanel treePanel;
 
