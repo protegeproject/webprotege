@@ -18,9 +18,11 @@ import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
 
+@Portlet(id = "portlets.ProjectHistory", title = "Project History")
 public class ProjectHistoryPortlet extends AbstractWebProtegePortlet {
 
     public static final FilterId SHOW_DETAILS_FILTER = new FilterId("Show details");

@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.event.OntologyFrameChangedEventHandl
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import javax.inject.Inject;
@@ -30,6 +31,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 05/07/2013
  */
+@Portlet(id = "portlets.OntologyAnnotations", title = "Ontology Annotations")
 public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
 
     private static final int DEFAULT_HEIGHT = 400;

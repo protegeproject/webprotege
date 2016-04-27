@@ -12,10 +12,12 @@ import edu.stanford.bmir.protege.web.shared.event.ProjectChangedHandler;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
 
+@Portlet(id = "portlets.ChangesByEntity", title = "Changes by Entity")
 public class EntityChangesPortlet extends AbstractWebProtegePortlet {
 
     private RevisionNumber lastRevisionNumber = RevisionNumber.getRevisionNumber(0);

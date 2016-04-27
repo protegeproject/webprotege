@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.client.rpc.AbstractWebProtegeAsyncCallback;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermSynonym;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
@@ -20,6 +21,7 @@ import java.util.List;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/05/2012
  */
+@Portlet(id = "portlets.obo.TermSynonyms", title = "OBO Term Synonyms")
 public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermSynonymListEditor editor;

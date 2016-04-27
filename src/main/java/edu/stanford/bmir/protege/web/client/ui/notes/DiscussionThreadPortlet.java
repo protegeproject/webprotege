@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.portlet.AbstractWebProtegePortlet;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
@@ -16,6 +17,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/03/2013
  */
+@Portlet(id = "portlets.Discussions", title = "Discussions")
 public class DiscussionThreadPortlet extends AbstractWebProtegePortlet {
 
     private DiscussionThreadPresenter presenter;

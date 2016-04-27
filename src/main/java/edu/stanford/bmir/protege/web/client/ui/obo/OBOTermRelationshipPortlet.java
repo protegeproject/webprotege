@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.obo.OBORelationship;
 import edu.stanford.bmir.protege.web.shared.obo.OBOTermRelationships;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -22,6 +23,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/05/2012
  */
+@Portlet(id = "portlets.obo.TermRelationships", title = "OBO Term Relationships")
 public class OBOTermRelationshipPortlet extends AbstractOBOTermPortlet {
     
     private final OBOTermRelationshipEditor editor;

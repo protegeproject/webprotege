@@ -13,6 +13,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityRenderingResult;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.inject.Inject;
@@ -20,6 +21,8 @@ import javax.inject.Inject;
 /**
  * @author Matthew Horridge, Stanford University, Bio-Medical Informatics Research Group, Date: 25/02/2014
  */
+
+@Portlet(id = "portlets.owl.EntityDescriptionBrowser", title = "OWL Entity Description Browser")
 public class OWLEntityDescriptionBrowserPortlet extends AbstractWebProtegePortlet {
 
     private final HTML html;

@@ -4,13 +4,13 @@
     {
       "weight": 0.3,
       "node": {
-        "portlet": "edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet"
+        "portlet": "portlets.ClassTree"
       }
     },
     {
       "weight": 0.5,
       "node": {
-        "portlet": "edu.stanford.bmir.protege.web.client.ui.frame.OWLEntityDescriptionEditorPortlet"
+        "portlet": "portlets.owl.EntityDescriptionEditor"
       }
     },
     {
@@ -21,13 +21,13 @@
           {
             "weight": 0.6,
             "node": {
-              "portlet": "edu.stanford.bmir.protege.web.client.ui.notes.DiscussionThreadPortlet"
+              "portlet": "portlets.DiscussionThread"
             }
           },
           {
             "weight": 0.4,
             "node": {
-              "portlet": "edu.stanford.bmir.protege.web.client.ui.projectfeed.ProjectFeedPortlet"
+              "portlet": "portlets.ProjectFeed"
             }
           }
         ]

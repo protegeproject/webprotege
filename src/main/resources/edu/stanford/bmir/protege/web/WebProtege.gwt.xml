@@ -8,19 +8,6 @@
   
 <module rename-to="webprotege">
 
-    <generate-with class="edu.stanford.bmir.protege.web.server.codegen.BlenderGenerator">
-        <when-type-assignable class="edu.stanford.bmir.protege.web.client.codegen.Blender"/>
-    </generate-with>
-
-    <define-configuration-property name="webprotege.gin.module"
-                                   is-multi-valued="true"/>
-
-    <!-- Add generated modules through this webprotege.gin.module property -->
-    <extend-configuration-property name="webprotege.gin.module"
-                                   value="edu.stanford.bmir.protege.web.client.portlet.PortletFactoryModuleGenerated" />
-
-
-
     <source path="client"/>
     <source path="shared"/>
     <source path="resources"/>

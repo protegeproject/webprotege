@@ -9,6 +9,8 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 import javax.inject.Provider;
 import java.io.File;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Matthew Horridge
@@ -29,18 +31,29 @@ public class PerspectiveFileManager {
 
     private final ProjectDirectoryFactory projectDirectoryFactory;
 
+    private final DefaultPerspectiveDataCopier defaultPerspectiveDataCopier;
+
     @Inject
     public PerspectiveFileManager(@DefaultPerspectiveDataDirectory File defaultPerspectivesDirectory,
                                   ProjectDirectoryFactory projectDirectoryFactory,
-                                  Provider<Md5MessageDigestAlgorithm> algorithmProvider) {
+                                  Provider<Md5MessageDigestAlgorithm> algorithmProvider,
+                                  DefaultPerspectiveDataCopier defaultPerspectiveDataCopier) {
         this.defaultPerspectivesDirectory = defaultPerspectivesDirectory;
         this.projectDirectoryFactory = projectDirectoryFactory;
         this.algorithmProvider = algorithmProvider;
+        this.defaultPerspectiveDataCopier = defaultPerspectiveDataCopier;
     }
 
     public File getDefaultPerspectiveLayout(PerspectiveId perspectiveId) {
+        copyDefaultPerspectiveDataIfNecessary();
         // Location: default-perspectives/{{PerspectiveIdDigest}}.json
         return new File(defaultPerspectivesDirectory, getPerspectiveIdFileName(perspectiveId));
+    }
+
+    private synchronized void copyDefaultPerspectiveDataIfNecessary() {
+        if(!defaultPerspectivesDirectory.exists()) {
+            defaultPerspectiveDataCopier.copyDefaultPerspectiveData();
+        }
     }
 
     public File getDefaultPerspectiveLayoutForProject(ProjectId projectId, PerspectiveId perspectiveId) {

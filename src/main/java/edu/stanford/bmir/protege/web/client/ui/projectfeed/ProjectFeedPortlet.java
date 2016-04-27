@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.shared.filter.FilterSet;
 import edu.stanford.bmir.protege.web.shared.filter.FilterSetting;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
+import edu.stanford.webprotege.shared.annotations.Portlet;
 
 import javax.inject.Inject;
 
@@ -19,6 +20,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 26/03/2013
  */
+@Portlet(id = "portlets.ProjectFeed", title = "Project Feed")
 public class ProjectFeedPortlet extends AbstractWebProtegePortlet {
 
     public static final FilterId SHOW_MY_ACTIVITY_FILTER = new FilterId("Show my activity");

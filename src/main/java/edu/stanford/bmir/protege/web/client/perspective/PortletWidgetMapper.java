@@ -67,7 +67,9 @@ public class PortletWidgetMapper implements WidgetMapper {
                     viewHolder = createViewHolder(terminalNode.getNodeId(), portlet);
                 }
                 else {
-                    viewHolder = new ViewHolder(new CouldNotFindPortletWidget(), NodeProperties.emptyNodeProperties());
+                    CouldNotFindPortletWidget childWidget = new CouldNotFindPortletWidget();
+                    childWidget.setPortletId(portletClass);
+                    viewHolder = new ViewHolder(childWidget, NodeProperties.emptyNodeProperties());
                 }
             }
 

@@ -9,13 +9,13 @@
           {
             "weight": 0.5,
             "node": {
-              "portlet": "edu.stanford.bmir.protege.web.client.ui.ontology.classes.ClassTreePortlet"
+              "portlet": "portlets.ClassTree"
             }
           },
           {
             "weight": 0.5,
             "node": {
-              "portlet": "edu.stanford.bmir.protege.web.client.ui.individuals.IndividualsListPortlet"
+              "portlet": "portlets.IndividualsList"
             }
           }
         ]
@@ -24,7 +24,7 @@
     {
       "weight": 0.5,
       "node": {
-        "portlet": "edu.stanford.bmir.protege.web.client.ui.editor.EditorPortlet"
+        "portlet": "portlets.Editor"
       }
     },
     {

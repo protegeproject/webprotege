@@ -55,12 +55,15 @@ public class PerspectiveFileManager_TestCase {
     @Mock
     private ProjectId projectId;
 
+    @Mock
+    private DefaultPerspectiveDataCopier defaultPerspectiveDataCopier;
+
     @Before
     public void setUp() {
         when(algorithm.computeDigestAsBase16Encoding()).thenReturn(DIGEST);
         when(algorithmProvider.get()).thenReturn(algorithm);
         when(projectDirectoryFactory.getProjectDirectory(projectId)).thenReturn(PROJECT_DIRECTORY);
-        fileManager = new PerspectiveFileManager(defaultPerspectivesDirectory, projectDirectoryFactory, algorithmProvider);
+        fileManager = new PerspectiveFileManager(defaultPerspectivesDirectory, projectDirectoryFactory, algorithmProvider, defaultPerspectiveDataCopier);
     }
 
     @Test
