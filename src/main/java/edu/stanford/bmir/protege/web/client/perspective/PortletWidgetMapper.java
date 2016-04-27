@@ -10,7 +10,6 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.stanford.bmir.protege.web.client.portlet.CouldNotFindPortletWidget;
 import edu.stanford.bmir.protege.web.client.portlet.PortletFactory;
 import edu.stanford.bmir.protege.web.client.portlet.WebProtegePortlet;
-import edu.stanford.bmir.protege.web.client.ui.generated.UIFactory;
 import edu.stanford.bmir.protege.web.shared.PortletId;
 import edu.stanford.protege.widgetmap.client.HasFixedPrimaryAxisSize;
 import edu.stanford.protege.widgetmap.client.WidgetMapper;
@@ -33,13 +32,10 @@ public class PortletWidgetMapper implements WidgetMapper {
 
     private final Map<TerminalNodeId, ViewHolder> nodeId2ViewHolderMap = new HashMap<>();
 
-    private final UIFactory uiFactory;
-
     private final PortletFactory portletFactory;
 
     @Inject
-    public PortletWidgetMapper(UIFactory uiFactory, PortletFactory portletFactory) {
-        this.uiFactory = uiFactory;
+    public PortletWidgetMapper(PortletFactory portletFactory) {
         this.portletFactory = portletFactory;
     }
 
@@ -47,30 +43,23 @@ public class PortletWidgetMapper implements WidgetMapper {
     public IsWidget getWidget(TerminalNode terminalNode) {
         GWT.log("[PortletWidgetMapper] Getting widget for TerminalNode: " + terminalNode);
         ViewHolder cachedViewHolder = nodeId2ViewHolderMap.get(terminalNode.getNodeId());
-        if(cachedViewHolder != null) {
+        if (cachedViewHolder != null) {
             GWT.log("[PortletWidgetMapper] Using cached view: " + terminalNode);
             return cachedViewHolder;
         }
         String portletClass = terminalNode.getNodeProperties().getPropertyValue("portlet", null);
         GWT.log("[PortletWidgetMapper] Instantiate portlet: " + portletClass);
         ViewHolder viewHolder;
-        if(portletClass != null) {
+        if (portletClass != null) {
             Optional<WebProtegePortlet> thePortlet = portletFactory.createPortlet(new PortletId(portletClass));
-            if(thePortlet.isPresent()) {
+            if (thePortlet.isPresent()) {
                 GWT.log("[PortletWidgetMapper] Created portlet from auto-generated factory");
                 viewHolder = createViewHolder(terminalNode.getNodeId(), thePortlet.get());
             }
             else {
-                final WebProtegePortlet portlet = uiFactory.createPortlet(portletClass);
-                if (portlet != null) {
-                    GWT.log("[PortletWidgetMapper] Created portlet: " + portlet.getClass().getName());
-                    viewHolder = createViewHolder(terminalNode.getNodeId(), portlet);
-                }
-                else {
-                    CouldNotFindPortletWidget childWidget = new CouldNotFindPortletWidget();
-                    childWidget.setPortletId(portletClass);
-                    viewHolder = new ViewHolder(childWidget, NodeProperties.emptyNodeProperties());
-                }
+                CouldNotFindPortletWidget childWidget = new CouldNotFindPortletWidget();
+                childWidget.setPortletId(portletClass);
+                viewHolder = new ViewHolder(childWidget, NodeProperties.emptyNodeProperties());
             }
 
         }
@@ -85,7 +74,7 @@ public class PortletWidgetMapper implements WidgetMapper {
 
     private ViewHolder createViewHolder(final TerminalNodeId nodeId, final WebProtegePortlet portlet) {
         ViewHolder viewHolder;
-        if(portlet instanceof HasFixedPrimaryAxisSize) {
+        if (portlet instanceof HasFixedPrimaryAxisSize) {
             viewHolder = new FixedSizeViewHolder(portlet.asWidget(), NodeProperties.emptyNodeProperties(), ((HasFixedPrimaryAxisSize) portlet).getFixedPrimaryAxisSize());
         }
         else {
