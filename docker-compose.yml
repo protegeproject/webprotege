@@ -1,0 +1,13 @@
+version: '2'
+services:
+  webprotege:
+    build: .
+    image: webprotege:v2.6.0-SNAPSHOT
+    container_name: webprotege
+    ports:
+    - "80:8080"
+    links:
+    - mongo
+  mongo:
+    image: mongo
+    container_name: mongo
