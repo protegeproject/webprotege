@@ -23,8 +23,6 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
 
     private OBOTermSynonymListEditor editor;
     
-//    private OBOTermEditorView editorView;
-
     public OBOTermSynonymsPortlet(SelectionModel selectionModel, Project project) {
         super(selectionModel, project);
     }
@@ -32,7 +30,6 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     @Override
     protected void clearDisplay() {
         editor.clearValue();
-//        editorView.rebuild();
     }
 
     @Override
@@ -66,22 +63,8 @@ public class OBOTermSynonymsPortlet extends AbstractOBOTermPortlet {
     @Override
     public void initialize() {
         editor = new OBOTermSynonymListEditor();
-//        editorView = new OBOTermEditorView(editor);
+        editor.setEnabled(true);
         add(editor);
     }
 
-//    private void addAddButton() {
-//        add(new Button("Add synonym", new ClickHandler() {
-//            public void onClick(ClickEvent event) {
-//                handleAdd();
-//            }
-//        }));
-//    }
-
-//    private void handleAdd() {
-//        List<OBOTermSynonym> synonymList = new ArrayList<OBOTermSynonym>(editor.getValues());
-//        synonymList.add(new OBOTermSynonym());
-//        editor.setValues(synonymList);
-//        editorView.rebuild();
-//    }
 }

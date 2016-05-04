@@ -324,8 +324,8 @@
                 <configuration>
                     <runTarget>WebProtege.jsp</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <extraJvmArgs>-Xms1000M -Xmx2000M -XX:MaxPermSize=500M -XX:PermSize=128M</extraJvmArgs>
-                    <logLevel>INFO</logLevel>
+                    <extraJvmArgs>-Xms1000M -Xmx2000M</extraJvmArgs>
+                    <logLevel>ERROR</logLevel>
                     <localWorkers>1</localWorkers>
                 </configuration>
             </plugin>

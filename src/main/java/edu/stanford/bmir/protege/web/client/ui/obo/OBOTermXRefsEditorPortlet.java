@@ -63,5 +63,6 @@ public class OBOTermXRefsEditorPortlet extends AbstractOBOTermPortlet {
     public void initialize() {
         editor = new XRefListEditor();
         add(editor);
+        editor.setEnabled(true);
     }
 }

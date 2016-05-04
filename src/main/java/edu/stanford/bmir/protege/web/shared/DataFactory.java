@@ -249,19 +249,20 @@ public class DataFactory {
             return parseDateTimeFormat(trimmedContent);
         }
         catch (IllegalArgumentException e) {
+            String numberWithoutCommas = trimmedContent.replace(",", "");
             try {
-                Integer value = Integer.parseInt(trimmedContent);
+                Integer value = Integer.parseInt(numberWithoutCommas);
                 return DataFactory.getOWLLiteral(value.intValue());
             }
             catch (NumberFormatException e3) {
                 try {
-                    if(trimmedContent.endsWith("f") || trimmedContent.endsWith("F")) {
-                        Float.parseFloat(trimmedContent);
-                        return DataFactory.getOWLLiteral(trimmedContent, DataFactory.getOWLDatatype(OWL2Datatype.XSD_FLOAT.getIRI()));
+                    if(numberWithoutCommas.endsWith("f") || numberWithoutCommas.endsWith("F")) {
+                        Float.parseFloat(numberWithoutCommas);
+                        return DataFactory.getOWLLiteral(numberWithoutCommas, DataFactory.getOWLDatatype(OWL2Datatype.XSD_FLOAT.getIRI()));
                     }
                     else {
-                        Double value = Double.parseDouble(trimmedContent);
-                        return DataFactory.getOWLLiteral(trimmedContent, DataFactory.getXSDDecimal());
+                        Double value = Double.parseDouble(numberWithoutCommas);
+                        return DataFactory.getOWLLiteral(numberWithoutCommas, DataFactory.getXSDDecimal());
                     }
                 } catch (NumberFormatException e1) {
                     return DataFactory.getOWLLiteral(trimmedContent, dataFactory.getRDFPlainLiteral());

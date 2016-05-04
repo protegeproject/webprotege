@@ -16,7 +16,7 @@
     </ui:style>
 
     <g:HTMLPanel>
-        <g:InlineLabel ui:field="typeLabel" addStyleNames="{style.type-style}"/><g:InlineLabel ui:field="browserTextLabel" addStyleNames="{style.browser-text-style}"/>
+        <g:InlineLabel ui:field="typeLabel" addStyleNames="{style.type-style}"/><g:InlineHyperlink ui:field="browserTextLabel" addStyleNames="{style.browser-text-style}"/>
         <g:InlineLabel ui:field="iriLabel" addStyleNames="{style.iri-style}" visible="false"/>
     </g:HTMLPanel>
 </ui:UiBinder>

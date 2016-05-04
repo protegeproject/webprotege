@@ -60,7 +60,14 @@ public class ChangeEmailAddressPresenter {
                     DispatchServiceManager.get().execute(new SetEmailAddressAction(userId, data.get().getEmailAddress()), new DispatchServiceCallback<SetEmailAddressResult>() {
                         @Override
                         public void handleSuccess(SetEmailAddressResult result) {
-                            closer.hide();
+                            if(result.getResult() == SetEmailAddressResult.Result.ADDRESS_ALREADY_EXISTS) {
+                                MessageBox.showMessage("Address already taken",
+                                        "The email address that you have specified is taken by another user.  " +
+                                                "Please specify a different email address.");
+                            }
+                            else {
+                                closer.hide();
+                            }
                         }
                     });
                 }

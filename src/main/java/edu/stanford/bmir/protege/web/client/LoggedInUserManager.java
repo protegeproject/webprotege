@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client;
 
 import com.google.common.base.Optional;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.app.ClientObjectReader;
 import edu.stanford.bmir.protege.web.client.app.UserInSessionDecoder;
@@ -119,6 +120,7 @@ public class LoggedInUserManager {
         UserInSessionDecoder decoder = new UserInSessionDecoder();
         UserInSession userInSession  = ClientObjectReader.create("userInSession", decoder).read();
         UserDetails userDetails = userInSession.getUserDetails();
+        GWT.log("Decoded user in session: " + userDetails);
         replaceUserAndBroadcastChanges(userDetails, new HashSet<GroupId>(userInSession.getGroups()));
         if(callback.isPresent()) {
             callback.get().onSuccess(userDetails);

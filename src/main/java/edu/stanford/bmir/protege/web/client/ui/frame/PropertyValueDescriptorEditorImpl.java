@@ -307,7 +307,7 @@ public class PropertyValueDescriptorEditorImpl extends Composite implements Prop
     }
 
     private void handlePossibleValueChange() {
-        GWT.log("Handling possible value change");
+        GWT.log("Handling possible value change (from " + currentValue + " to " + getValue() + ")");
         if(currentValue.equals(getValue())) {
             GWT.log("    The values are the same.  Not firing event.");
             return;

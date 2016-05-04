@@ -64,6 +64,6 @@ public interface RevisionManager extends HasGetRevisionSummary {
      * @param changes The changes contained in the revision.  Not {@code null}.
      * @param desc A description of the revision.  Not {@code null}.
      */
-    void addRevision(UserId userId, List<? extends OWLOntologyChangeRecord> changes, String desc);
+    Revision addRevision(UserId userId, List<? extends OWLOntologyChangeRecord> changes, String desc);
 
 }

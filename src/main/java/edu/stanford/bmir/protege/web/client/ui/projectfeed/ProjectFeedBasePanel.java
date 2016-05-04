@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.client.ui.projectfeed;
 import com.google.gwt.user.client.ui.Composite;
 import edu.stanford.bmir.protege.web.shared.event.*;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.selection.SelectionModel;
 
 /**
  * Author: Matthew Horridge<br>
@@ -14,8 +15,8 @@ public class ProjectFeedBasePanel extends Composite {
 
     private ProjectFeedPanel eventPanel;
 
-    public ProjectFeedBasePanel(final ProjectId projectId, HasEventHandlerManagement eventHandlerMan) {
-        eventPanel = new ProjectFeedPanel(projectId);
+    public ProjectFeedBasePanel(final ProjectId projectId, HasEventHandlerManagement eventHandlerMan, SelectionModel selectionModel) {
+        eventPanel = new ProjectFeedPanel(projectId, selectionModel);
         initWidget(eventPanel);
         eventHandlerMan.addProjectEventHandler(ProjectChangedEvent.TYPE, new ProjectChangedHandler() {
             @Override

@@ -19,8 +19,6 @@ import java.io.IOException;
  */
 public class OWLAPIProjectManager {
 
-//    private static OWLAPIProjectManager instance = new OWLAPIProjectManager();
-
     private final OWLAPIProjectCache projectCache;
 
     @Inject

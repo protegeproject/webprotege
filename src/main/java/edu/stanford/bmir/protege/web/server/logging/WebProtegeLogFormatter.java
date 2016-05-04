@@ -1,7 +1,5 @@
 package edu.stanford.bmir.protege.web.server.logging;
 
-import com.google.common.base.Splitter;
-
 import java.util.*;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
@@ -26,6 +24,8 @@ public class WebProtegeLogFormatter extends Formatter {
     public String format(LogRecord logRecord) {
         StringBuilder sb = new StringBuilder();
         sb.append(PREFIX);
+        sb.append(new Date(logRecord.getMillis()));
+        sb.append("\n");
 
         StringBuilder messageBuilder = new StringBuilder();
         if (logRecord.getLevel() == Level.SEVERE) {
@@ -35,27 +35,10 @@ public class WebProtegeLogFormatter extends Formatter {
         }
         messageBuilder.append(logRecord.getMessage());
         Iterable<String> lines = wrap(messageBuilder.toString(), COL_WIDTH);
-        boolean first = true;
         for(String line : lines) {
-            if (!first) {
-                padWithPrefix(sb);
-            }
+            padWithPrefix(sb);
             sb.append(line);
-            if(first) {
-                int len = line.length();
-                while(len < COL_WIDTH) {
-                    sb.append(" ");
-                    len++;
-                }
-                sb.append("        [");
-                sb.append(new Date(logRecord.getMillis()));
-                sb.append("]");
-                sb.append("\n");
-            }
-            else {
-                sb.append("\n");
-            }
-            first = false;
+            sb.append("\n");
         }
         return sb.toString();
     }

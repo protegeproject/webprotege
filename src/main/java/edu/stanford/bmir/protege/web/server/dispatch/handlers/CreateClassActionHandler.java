@@ -8,6 +8,7 @@ import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestValidator;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
+import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.msg.OWLMessageFormatter;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
@@ -29,9 +30,12 @@ import java.util.Set;
  */
 public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLClass, CreateClassAction, CreateClassResult> {
 
+    private final WebProtegeLogger logger;
+
     @Inject
-    public CreateClassActionHandler(OWLAPIProjectManager projectManager) {
+    public CreateClassActionHandler(OWLAPIProjectManager projectManager, WebProtegeLogger logger) {
         super(projectManager);
+        this.logger = logger;
     }
 
     @Override
@@ -41,7 +45,7 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
 
     @Override
     protected RequestValidator<CreateClassAction> getAdditionalRequestValidator(CreateClassAction action, RequestContext requestContext) {
-        return new UserHasProjectWritePermissionValidator();
+        return UserHasProjectWritePermissionValidator.get();
     }
 
 
@@ -52,7 +56,7 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
 
     @Override
     protected ChangeDescriptionGenerator<OWLClass> getChangeDescription(CreateClassAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        return new FixedMessageChangeDescriptionGenerator<OWLClass>(OWLMessageFormatter.formatMessage("Created {0} as a subclass of {1}", project, action.getBrowserText(), action.getSuperClass()));
+        return new FixedMessageChangeDescriptionGenerator<>(OWLMessageFormatter.formatMessage("Created {0} as a subclass of {1}", project, action.getBrowserText(), action.getSuperClass()));
     }
 
     @Override
@@ -67,15 +71,19 @@ public class CreateClassActionHandler extends AbstractProjectChangeHandler<OWLCl
 
     private ObjectPath<OWLClass> getPathToRoot(OWLAPIProject project, OWLClass subClass, OWLClass superClass) {
         Set<List<OWLClass>> paths = project.getClassHierarchyProvider().getPathsToRoot(subClass);
+        if(paths.isEmpty()) {
+            logger.info("[WARNING] Path to root not found for SubClass: %s and SuperClass: %", superClass);
+            return new ObjectPath<>();
+        }
         ObjectPath<OWLClass> pathToRoot = null;
         for(List<OWLClass> path : paths) {
-            if(path.get(path.size() - 2).equals(superClass)) {
-                pathToRoot = new ObjectPath<OWLClass>(path);
+            if(path.size() > 1 && path.get(path.size() - 2).equals(superClass)) {
+                pathToRoot = new ObjectPath<>(path);
                 break;
             }
         }
         if(pathToRoot == null) {
-            throw new RuntimeException("Internal error:  Path to root does not exist.");
+            pathToRoot = new ObjectPath<>();
         }
         return pathToRoot;
     }

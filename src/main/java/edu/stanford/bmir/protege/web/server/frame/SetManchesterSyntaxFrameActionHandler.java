@@ -1,23 +1,18 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import com.google.common.base.Optional;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import edu.stanford.bmir.protege.web.client.dispatch.ActionExecutionException;
 import edu.stanford.bmir.protege.web.server.change.*;
 import edu.stanford.bmir.protege.web.server.dispatch.*;
 import edu.stanford.bmir.protege.web.server.dispatch.validators.UserHasProjectWritePermissionValidator;
-import edu.stanford.bmir.protege.web.server.inject.ManchesterSyntaxParsingContextModule;
-import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.inject.WebProtegeInjector;
 import edu.stanford.bmir.protege.web.server.mansyntax.*;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
-import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameAction;
-import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameResult;
-import edu.stanford.bmir.protege.web.shared.frame.SetManchesterSyntaxFrameAction;
-import edu.stanford.bmir.protege.web.shared.frame.SetManchesterSyntaxFrameResult;
+import edu.stanford.bmir.protege.web.shared.frame.*;
+import org.semanticweb.owlapi.expression.ParserException;
 import org.semanticweb.owlapi.model.*;
 
 import javax.inject.Inject;
@@ -40,10 +35,14 @@ public class SetManchesterSyntaxFrameActionHandler extends AbstractProjectChange
 
     @Override
     protected ChangeListGenerator<Void> getChangeListGenerator(SetManchesterSyntaxFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        Injector injector = WebProtegeInjector.get().createChildInjector(new ProjectModule(project.getProjectId()), new ManchesterSyntaxParsingContextModule(action));
-        ManchesterSyntaxChangeGenerator changeGenerator = injector.getInstance(ManchesterSyntaxChangeGenerator.class);
-        List<OWLOntologyChange> changes = changeGenerator.generateChanges(action.getFromRendering(), action.getToRendering());
-        return new FixedChangeListGenerator<Void>(changes);
+        ManchesterSyntaxChangeGenerator changeGenerator = new ManchesterSyntaxChangeGenerator(project.getManchesterSyntaxFrameParser());
+        try {
+            List<OWLOntologyChange> changes = changeGenerator.generateChanges(action.getFromRendering(), action.getToRendering(), action);
+            return new FixedChangeListGenerator<>(changes);
+        } catch (ParserException e) {
+            ManchesterSyntaxFrameParseError error = ManchesterSyntaxFrameParser.getParseError(e);
+            throw new SetManchesterSyntaxFrameException(error);
+        }
     }
 
     @Override

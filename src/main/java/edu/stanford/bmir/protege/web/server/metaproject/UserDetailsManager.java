@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.user.HasUserIds;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import edu.stanford.smi.protege.server.metaproject.User;
 
 import java.util.Collection;
 
@@ -13,7 +12,7 @@ import java.util.Collection;
  * Stanford Center for Biomedical Informatics Research
  * 06/02/15
  */
-public interface UserDetailsManager extends HasUserIds, HasGetUserByUserIdOrEmail {
+public interface UserDetailsManager extends HasUserIds, HasGetUserByUserIdOrEmail, HasGetUserIdByEmailAddress {
 
     @Override
     Collection<UserId> getUserIds();

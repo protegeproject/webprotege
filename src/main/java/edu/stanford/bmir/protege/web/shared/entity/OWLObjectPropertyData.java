@@ -10,7 +10,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
  * Bio-Medical Informatics Research Group<br>
  * Date: 28/11/2012
  */
-public final class OWLObjectPropertyData extends OWLPropertyData {
+public class OWLObjectPropertyData extends OWLPropertyData {
 
     public OWLObjectPropertyData(OWLObjectProperty entity, String browserText) {
         super(entity, browserText);

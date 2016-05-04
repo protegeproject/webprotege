@@ -172,15 +172,14 @@ public class ApplicationBarImpl extends Composite implements ApplicationActionBa
         popupMenu.showRelativeTo(userNameItem);
     }
 
+
     @Override
     public void setSignedInUser(UserId userId) {
         if (userId.isGuest()) {
             userNameItem.setText("Sign in");
-            signUpForAccountItem.setVisible(true);
         } else {
             SafeHtmlBuilder builder = getSignedInUserNameAsSafeHtml(userId);
             userNameItem.setHTML(builder.toSafeHtml());
-            signUpForAccountItem.setVisible(false);
         }
     }
 

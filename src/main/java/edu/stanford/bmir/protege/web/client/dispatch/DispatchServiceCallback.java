@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.dispatch;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.web.bindery.event.shared.UmbrellaException;
@@ -96,9 +97,7 @@ public abstract class DispatchServiceCallback<T> {
     }
 
     private void displayAndLogError(Throwable throwable) {
-//        Logger logger = Logger.getLogger("AsyncCallbackErrorLogger");
-//        logger.log(Level.SEVERE, "Error executing remote call: " + throwable.getMessage());
-        errorMessageDisplay.displayGeneralErrorMessage("Error", getErrorMessage(throwable));
+        errorMessageDisplay.displayGeneralErrorMessage(getErrorMessageTitle(), getErrorMessage(throwable));
     }
 
     private void _handleIncompatibleRemoteServiceException(IncompatibleRemoteServiceException e) {

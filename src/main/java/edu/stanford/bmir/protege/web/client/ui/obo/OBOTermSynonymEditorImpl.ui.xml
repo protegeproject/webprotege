@@ -32,7 +32,7 @@
 
         <div class="{wp.style.formGroup}">
             <g:Label text="XRefs" addStyleNames="{wp.style.formLabel}"/>
-            <obo:XRefListEditor ui:field="xrefListField"/>
+            <obo:XRefListEditor ui:field="xrefListField" enabled="true"/>
         </div>
     </g:HTMLPanel>
 </ui:UiBinder>

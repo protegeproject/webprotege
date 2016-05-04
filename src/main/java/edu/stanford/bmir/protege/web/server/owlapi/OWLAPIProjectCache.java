@@ -12,6 +12,7 @@ import edu.stanford.bmir.protege.web.server.inject.project.ProjectModule;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLogger;
 import edu.stanford.bmir.protege.web.server.logging.WebProtegeLoggerEx;
+import edu.stanford.bmir.protege.web.server.watches.WatchEventManager;
 import edu.stanford.bmir.protege.web.shared.project.ProjectAlreadyExistsException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectDocumentNotFoundException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -206,7 +207,8 @@ public class OWLAPIProjectCache {
             LAST_ACCESS_LOCK.writeLock().lock();
             Injector projectInjector = projectId2ProjectInjector.remove(projectId);
             lastAccessMap.remove(projectId);
-//            project.dispose();
+            OWLAPIProject project  = projectInjector.getInstance(OWLAPIProject.class);
+            project.dispose();
         }
         finally {
             final int projectsBeingAccessed = lastAccessMap.size();

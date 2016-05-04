@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.base.Optional;
+import edu.stanford.bmir.protege.web.shared.user.EmailAddress;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.smi.protege.server.metaproject.MetaProject;
@@ -61,6 +62,17 @@ public class UserDetailsManagerImpl implements UserDetailsManager {
         for(User user : getMetaProject().getUsers()) {
             if(userNameOrEmail.equals(user.getEmail())) {
                 return Optional.of(user);
+            }
+        }
+        return Optional.absent();
+    }
+
+    @Override
+    public Optional<UserId> getUserIdByEmailAddress(EmailAddress emailAddress) {
+        checkNotNull(emailAddress);
+        for(User user : getMetaProject().getUsers()) {
+            if(emailAddress.getEmailAddress().equalsIgnoreCase(user.getEmail())) {
+                return Optional.of(UserId.getUserId(user.getName()));
             }
         }
         return Optional.absent();

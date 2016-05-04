@@ -59,7 +59,7 @@ public class TimeUtil {
             return getNDaysAgoRendering(timestamp, referenceTimestamp);
         }
 
-        return getMinimalDayMonthYearRendering(timestamp, referenceTimestamp);
+        return getMinimalDayMonthYearRendering(timestamp);
     }
 
     /**
@@ -71,7 +71,7 @@ public class TimeUtil {
      */
     public static boolean isLessThanOneMinuteAgo(long timestamp, long referenceTimestamp) {
         final long delta = referenceTimestamp - timestamp;
-        return 0 <= delta && delta <= ONE_MINUTE;
+        return 0 <= delta && delta < ONE_MINUTE;
     }
 
     /**
@@ -106,8 +106,8 @@ public class TimeUtil {
      * {@code referenceTimestamp}, otherwise {@code false}.
      */
     public static boolean isLessThanOneMonthAgo(long timestamp, long referenceTimestamp) {
-        final long delta = referenceTimestamp - timestamp;
-        return 0 <= delta && delta < ONE_MONTH;
+        long daysBetween = getDaysBetween(timestamp, referenceTimestamp);
+        return daysBetween <= 31;
     }
 
     /**
@@ -118,9 +118,66 @@ public class TimeUtil {
      */
     @SuppressWarnings("deprecation")
     public static boolean isSameCalendarDay(long timestamp, long referenceTimestamp) {
-        Date timestampDate = new Date(timestamp);
-        Date referenceTimestampDate = new Date(referenceTimestamp);
-        return referenceTimestampDate.getDate() == timestampDate.getDate() && (referenceTimestamp - timestamp < ONE_DAY);
+        int daysBetween = getDaysBetween(timestamp, referenceTimestamp);
+        return daysBetween == 0;
+    }
+
+    private static int getDaysBetween(long timestamp, long referenceTimestamp) {
+        // Taken from CalendarUtil
+        return getDaysBetween(new Date(timestamp), new Date(referenceTimestamp));
+    }
+
+
+    /**
+     * Taken from {@link com.google.gwt.user.datepicker.client.CalendarUtil}
+     */
+    private static int getDaysBetween(Date start, Date finish) {
+        // Convert the dates to the same time
+        start = copyDate(start);
+        resetTime(start);
+        finish = copyDate(finish);
+        resetTime(finish);
+
+        long aTime = start.getTime();
+        long bTime = finish.getTime();
+
+        long adjust = 60 * 60 * 1000;
+        adjust = (bTime > aTime) ? adjust : -adjust;
+
+        return (int) ((bTime - aTime + adjust) / (24 * 60 * 60 * 1000));
+    }
+
+
+    /**
+     * Taken from {@link com.google.gwt.user.datepicker.client.CalendarUtil}
+     */
+    private static Date copyDate(Date date) {
+        if (date == null) {
+            return null;
+        }
+        Date newDate = new Date();
+        newDate.setTime(date.getTime());
+        return newDate;
+    }
+
+    /**
+     * Taken from {@link com.google.gwt.user.datepicker.client.CalendarUtil}
+     */
+    private static void resetTime(Date date) {
+        long msec = resetMilliseconds(date.getTime());
+        date.setTime(msec);
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+    }
+
+    private static long resetMilliseconds(long msec) {
+        int offset = (int) (msec % 1000);
+        // Normalize if time is before epoch
+        if (offset < 0) {
+            offset += 1000;
+        }
+        return msec - offset;
     }
 
     /**
@@ -159,9 +216,7 @@ public class TimeUtil {
      */
     @SuppressWarnings("deprecation")
     public static boolean isYesterday(long timestamp, long referenceTimestamp) {
-        Date timestampDate = new Date(timestamp);
-        Date referenceTimestampDate = new Date(referenceTimestamp);
-        return referenceTimestampDate.getDate() - timestampDate.getDate() == 1 && isSameCalendarMonth(timestamp, referenceTimestamp) && isSameCalendarYear(timestamp, referenceTimestamp);
+        return  getDaysBetween(timestamp, referenceTimestamp) == 1;
     }
 
 
@@ -196,7 +251,7 @@ public class TimeUtil {
     }
 
     private static String getNDaysAgoRendering(long timestamp, long referenceTimestamp) {
-        int days = (int) ((referenceTimestamp - timestamp) / ONE_DAY) + 1;
+        int days = getDaysBetween(timestamp, referenceTimestamp);
         if(days == 1) {
             return "one day ago";
         }
@@ -206,15 +261,13 @@ public class TimeUtil {
     }
 
 
-    private static String getMinimalDayMonthYearRendering(long timestamp, long referenceTimestamp) {
+    private static String getMinimalDayMonthYearRendering(long timestamp) {
         final Date timestampDate = new Date(timestamp);
-        final Date referenceTimestampDate = new Date(referenceTimestamp);
+        return formatDay(timestampDate.getDate()) + " " + formatMonth(timestampDate.getMonth()) + " " + formatYear(timestampDate);
+    }
 
-        String rendering = formatDay(timestampDate.getDate()) + " " + formatMonth(referenceTimestampDate.getMonth());
-        if(!isSameCalendarYear(timestamp, referenceTimestamp)) {
-            rendering += " " + (1900 + timestampDate.getYear());
-        }
-        return rendering;
+    private static String formatYear(Date timestampDate) {
+        return Integer.toString(timestampDate.getYear() + 1900);
     }
 
 

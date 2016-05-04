@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.events;
 
 import com.google.common.collect.Maps;
+import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
 import edu.stanford.bmir.protege.web.shared.HasGetChangeSubjects;
 import edu.stanford.bmir.protege.web.shared.event.BrowserTextChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -56,7 +57,7 @@ public class BrowserTextChangedEventComputer implements EventTranslator {
     }
 
     @Override
-    public void translateOntologyChanges(List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
+    public void translateOntologyChanges(Revision revision, List<OWLOntologyChange> appliedChanges, List<ProjectEvent<?>> projectEventList) {
         for(OWLOntologyChange change : appliedChanges) {
             for(OWLEntity entity : hasChangeSubject.getChangeSubjects(change)) {
                 String shortForm = shortFormProvider.getShortForm(entity);
