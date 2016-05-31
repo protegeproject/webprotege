@@ -302,7 +302,7 @@
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>widgetmap</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>
@@ -320,7 +320,7 @@
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>webprotege-annotations</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 
 
@@ -344,7 +344,7 @@
             <plugin>
                 <groupId>edu.stanford.protege</groupId>
                 <artifactId>webprotege-maven-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.0</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
@@ -468,7 +468,8 @@
 					</execution>
 				</executions>
 			</plugin>
-      
+
+
         </plugins>
     </build>
 
