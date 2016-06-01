@@ -542,10 +542,10 @@ public class PropertiesTreePortlet extends AbstractWebProtegePortlet {
         PropertyEntityData entityData = (PropertyEntityData) node.getUserObject();
         PropertyType type = entityData.getPropertyType();
         if (type == PropertyType.OBJECT) {
-            node.setIcon(BUNDLE.svgPropertyIcon().getSafeUri().asString());
+            node.setIcon(BUNDLE.svgObjectPropertyIcon().getSafeUri().asString());
         }
         else if (type == PropertyType.DATATYPE) {
-            node.setIcon(BUNDLE.svgPropertyIcon().getSafeUri().asString());
+            node.setIcon(BUNDLE.svgDataPropertyIcon().getSafeUri().asString());
         }
         else if (type == PropertyType.ANNOTATION) {
             node.setIcon(BUNDLE.svgAnnotationPropertyIcon().getSafeUri().asString());

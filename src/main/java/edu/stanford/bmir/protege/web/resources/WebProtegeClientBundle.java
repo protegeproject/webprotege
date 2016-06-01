@@ -45,8 +45,18 @@ public interface WebProtegeClientBundle extends ClientBundle {
     @DataResource.MimeType("image/svg+xml")
     DataResource svgPropertyIcon();
 
+    @Source("data-property.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgDataPropertyIcon();
+
     @Source("property.png")
     ImageResource objectPropertyIcon();
+
+
+    @Source("object-property.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgObjectPropertyIcon();
+
 
     @Source("property.png")
     ImageResource dataPropertyIcon();
@@ -60,6 +70,10 @@ public interface WebProtegeClientBundle extends ClientBundle {
 
     @Source("datatype.png")
     ImageResource datatypeIcon();
+
+    @Source("datatype.svg")
+    @DataResource.MimeType("image/svg+xml")
+    DataResource svgDatatypeIcon();
 
     @Source("individual.png")
     ImageResource individualIcon();
