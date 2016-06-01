@@ -1,6 +1,9 @@
 @external web-protege-laf;
 @url classIconUrl svgClassIcon;
+@url datatypeIconUrl svgDatatypeIcon;
 @url propertyIconUrl svgPropertyIcon;
+@url objectPropertyIconUrl svgObjectPropertyIcon;
+@url dataPropertyIconUrl svgDataPropertyIcon;
 @url annotationPropertyIconUrl svgAnnotationPropertyIcon;
 @url individualIconUrl svgIndividualIcon;
 @url literalIconUrl svgLiteralIcon;
@@ -87,7 +90,7 @@
 }
 
 .objectPropertyIconInset {
-    background-image: propertyIconUrl;
+    background-image: objectPropertyIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 1px;
     width: auto;
@@ -108,7 +111,7 @@
 
 
 .dataPropertyIconInset {
-    background-image: propertyIconUrl;
+    background-image: dataPropertyIconUrl;
     background-repeat: no-repeat;
     background-position: 2px 1px;
     width: auto;
@@ -152,8 +155,9 @@
 }
 
 
-@sprite .datatypeIconInset {
-    gwt-image: 'datatypeIcon';
+.datatypeIconInset {
+    background-image: datatypeIconUrl;
+    background-repeat: no-repeat;
     background-position: 2px 2px;
     width: auto;
     height: auto;
