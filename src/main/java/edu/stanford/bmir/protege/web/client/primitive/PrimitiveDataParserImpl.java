@@ -109,10 +109,15 @@ public class PrimitiveDataParserImpl implements PrimitiveDataParser {
         }
     }
 
-    public native boolean isAbsoluteIRI(String url) /*-{
-        var pattern = /(\w+):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-        return pattern.test(url);
-    }-*/;
+    public boolean isAbsoluteIRI(String url) {
+        return (url.startsWith("http://")
+                || url.startsWith("https://")
+                || url.startsWith("ftp://"))
+                && !url.contains(" ")
+                && !url.contains("\t")
+                && !url.contains("\r")
+                && !url.contains("\n");
+    }
 
 
 
