@@ -218,11 +218,7 @@
             <artifactId>protege-editor-core-application</artifactId>
             <version>4.1.0</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>edu.stanford.protege</groupId>-->
-            <!--<artifactId>protege</artifactId>-->
-            <!--<version>3.5.1.1</version>-->
-        <!--</dependency>-->
+
         <dependency>
             <groupId>edu.stanford.protege</groupId>
             <artifactId>bioportal-services-lib</artifactId>
