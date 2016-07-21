@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,6 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * 11/03/16
  */
 @Document(collection = "ProjectRecords")
+@TypeAlias("ProjectRecord")
 public class ProjectRecord {
 
     @Id
