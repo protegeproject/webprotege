@@ -30,8 +30,10 @@ public class AxiomByTypeComparator_TestCase {
     @Mock
     private OWLAxiom axiom1, axiom2, axiom3;
 
-    @Mock
-    private AxiomType<?> firstAxiomType, secondAxiomType, thirdAxiomType;
+    private AxiomType<?>
+            firstAxiomType = AxiomType.SUBCLASS_OF,
+            secondAxiomType = AxiomType.EQUIVALENT_CLASSES,
+            thirdAxiomType = AxiomType.DISJOINT_CLASSES;
 
     @Before
     public void setUp() throws Exception {

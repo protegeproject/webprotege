@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
@@ -11,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
  */
 public class NamedIndividualFrameChangedEvent extends EntityFrameChangedEvent<OWLNamedIndividual, NamedIndividualFrameChangedEventHandler> {
 
-    public static final transient Type<NamedIndividualFrameChangedEventHandler> TYPE = new Type<NamedIndividualFrameChangedEventHandler>();
+    public static final transient Event.Type<NamedIndividualFrameChangedEventHandler> TYPE = new Event.Type<NamedIndividualFrameChangedEventHandler>();
 
     public NamedIndividualFrameChangedEvent(OWLNamedIndividual entity, ProjectId projectId) {
         super(entity, projectId);
@@ -26,7 +27,7 @@ public class NamedIndividualFrameChangedEvent extends EntityFrameChangedEvent<OW
      * @return the type
      */
     @Override
-    public Type<NamedIndividualFrameChangedEventHandler> getAssociatedType() {
+    public Event.Type<NamedIndividualFrameChangedEventHandler> getAssociatedType() {
         return TYPE;
     }
 

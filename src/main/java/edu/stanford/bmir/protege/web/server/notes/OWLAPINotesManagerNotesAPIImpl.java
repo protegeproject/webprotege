@@ -25,6 +25,7 @@ import org.protege.notesapi.oc.impl.DefaultOntologyComponent;
 import org.semanticweb.binaryowl.BinaryOWLOntologyDocumentSerializer;
 import org.semanticweb.binaryowl.change.OntologyChangeDataList;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentFormat;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.change.OWLOntologyChangeData;
 import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.model.*;
@@ -117,7 +118,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             OWLOntologyManager notesOntologyManager = WebProtegeOWLManager.createOWLOntologyManager();
             notesOntology = notesOntologyManager.createOntology();
             final OWLDataFactory df = notesOntologyManager.getOWLDataFactory();
-            notesOntologyManager.applyChange(new AddImport(notesOntology, df.getOWLImportsDeclaration(CHANGES_ONTOLOGY_IRI)));
+//            notesOntologyManager.applyChange(new AddImport(notesOntology, df.getOWLImportsDeclaration(CHANGES_ONTOLOGY_IRI)));
             IRI notesOntologyDocumentIRI = IRI.create(notesOntologyDocument);
             notesOntologyManager.setOntologyDocumentIRI(notesOntology, notesOntologyDocumentIRI);
             notesOntologyDocument.getParentFile().mkdirs();

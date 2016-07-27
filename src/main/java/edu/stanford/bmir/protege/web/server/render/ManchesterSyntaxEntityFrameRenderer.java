@@ -3,7 +3,7 @@ package edu.stanford.bmir.protege.web.server.render;
 import com.google.common.base.Optional;
 import com.google.common.collect.*;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
+import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
@@ -297,10 +297,12 @@ public class ManchesterSyntaxEntityFrameRenderer {
             OWLOntology ontology = ont.get();
             if (!ontology.isAnonymous()) {
                 inOntologyTagRenderer.renderOpeningTag(builder);
-                builder.append("    [in ");
-                IRI ontologyIRI = ontology.getOntologyID().getOntologyIRI();
-                builder.append(ontologyIRIShortFormProvider.getShortForm(ontologyIRI));
-                builder.append("]");
+                Optional<IRI> ontologyIRI = ontology.getOntologyID().getOntologyIRI();
+                if (ontologyIRI.isPresent()) {
+                    builder.append("    [in ");
+                    builder.append(ontologyIRIShortFormProvider.getShortForm(ontologyIRI.get()));
+                    builder.append("]");
+                }
                 inOntologyTagRenderer.renderClosingTag(builder);
             }
         }

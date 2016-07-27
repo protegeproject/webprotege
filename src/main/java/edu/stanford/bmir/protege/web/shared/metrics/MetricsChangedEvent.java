@@ -9,7 +9,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class MetricsChangedEvent extends ProjectEvent<MetricsChangedHandler> {
 
-    private static final transient Type<MetricsChangedHandler> TYPE = new Type<MetricsChangedHandler>();
+    private static final transient Event.Type<MetricsChangedHandler> TYPE = new Event.Type<MetricsChangedHandler>();
 
     public MetricsChangedEvent(ProjectId source) {
         super(source);
@@ -18,12 +18,12 @@ public class MetricsChangedEvent extends ProjectEvent<MetricsChangedHandler> {
     private MetricsChangedEvent() {
     }
 
-    public static Type<MetricsChangedHandler> getType() {
+    public static Event.Type<MetricsChangedHandler> getType() {
         return TYPE;
     }
 
     @Override
-    public Type<MetricsChangedHandler> getAssociatedType() {
+    public Event.Type<MetricsChangedHandler> getAssociatedType() {
         return TYPE;
     }
 

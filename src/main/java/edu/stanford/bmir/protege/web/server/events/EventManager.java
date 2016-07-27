@@ -6,7 +6,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 
@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
-public class EventManager<E extends SerializableEvent<?>> implements HasDispose, HasPostEvents<E> {
+public class EventManager<E extends WebProtegeEvent<?>> implements HasDispose, HasPostEvents<E> {
 
 
     private static final int EVENT_LIST_SIZE_LIMIT = 200;
@@ -103,7 +103,7 @@ public class EventManager<E extends SerializableEvent<?>> implements HasDispose,
             writeLock.unlock();
         }
         for(E event : new LinkedHashSet<>(events)) {
-            eventBus.fireEvent(event);
+            eventBus.fireEvent(event.asGWTEvent());
         }
         return currentTag;
     }

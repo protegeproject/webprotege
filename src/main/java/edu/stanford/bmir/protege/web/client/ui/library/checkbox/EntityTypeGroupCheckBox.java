@@ -28,7 +28,7 @@ public class EntityTypeGroupCheckBox extends CheckBox {
             EntityType<?> entityType = it.next();
             sb.append(entityType.getVocabulary().getNamespace().name().toLowerCase());
             sb.append(":");
-            sb.append(entityType.getVocabulary().getShortName());
+            sb.append(entityType.getVocabulary().getShortForm());
             if(it.hasNext()) {
                 sb.append(", ");
             }

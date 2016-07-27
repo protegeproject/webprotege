@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.events;
 
-import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,10 +16,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  * <p>
- *     Represents a list of {@link SerializableEvent}s between to points denoted by {@link EventTag}s.
+ *     Represents a list of {@link edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent}s between to points denoted by {@link EventTag}s.
  * </p>
  */
-public class EventList<E extends SerializableEvent<?>> implements Serializable {
+public class EventList<E extends WebProtegeEvent<?>> implements Serializable {
 
     private EventTag startTag;
 

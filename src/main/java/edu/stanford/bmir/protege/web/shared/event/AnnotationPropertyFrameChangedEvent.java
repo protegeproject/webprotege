@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
@@ -11,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
  */
 public class AnnotationPropertyFrameChangedEvent extends EntityFrameChangedEvent<OWLAnnotationProperty, AnnotationPropertyFrameChangedEventHandler> {
 
-    public static final transient Type<AnnotationPropertyFrameChangedEventHandler> TYPE = new Type<AnnotationPropertyFrameChangedEventHandler>();
+    public static final transient Event.Type<AnnotationPropertyFrameChangedEventHandler> TYPE = new Event.Type<AnnotationPropertyFrameChangedEventHandler>();
 
     public AnnotationPropertyFrameChangedEvent(OWLAnnotationProperty entity, ProjectId projectId) {
         super(entity, projectId);
@@ -30,7 +31,7 @@ public class AnnotationPropertyFrameChangedEvent extends EntityFrameChangedEvent
      * @return the type
      */
     @Override
-    public Type<AnnotationPropertyFrameChangedEventHandler> getAssociatedType() {
+    public Event.Type<AnnotationPropertyFrameChangedEventHandler> getAssociatedType() {
         return TYPE;
     }
 

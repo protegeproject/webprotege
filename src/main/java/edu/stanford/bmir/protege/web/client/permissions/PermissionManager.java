@@ -83,7 +83,7 @@ public class PermissionManager implements HasDispose, PermissionChecker {
             public void handleSuccess(GetPermissionsResult getPermissionsResult) {
                 cache.put(new UserIdProjectIdKey(userId, projectId.get()), getPermissionsResult.getPermissionsSet());
                 GWT.log("[PermissionManager] Firing permissions changed for project: " + projectId);
-                eventBus.fireEventFromSource(new PermissionsChangedEvent(projectId.get()), projectId.get());
+                eventBus.fireEventFromSource(new PermissionsChangedEvent(projectId.get()).asGWTEvent(), projectId.get());
             }
         });
 

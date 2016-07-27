@@ -8,7 +8,7 @@ import edu.stanford.bmir.protege.web.shared.events.EventList;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/03/2013
  */
-public interface HasEventList<T extends SerializableEvent<?>> {
+public interface HasEventList<T extends WebProtegeEvent<?>> {
 
     EventList<T> getEventList();
 

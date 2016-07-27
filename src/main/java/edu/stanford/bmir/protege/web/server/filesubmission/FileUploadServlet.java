@@ -151,10 +151,6 @@ public class FileUploadServlet extends HttpServlet {
         if(e instanceof UnparsableOntologyException) {
             return "Could not parse ontology. Please load your ontology document into Protege to check that it is well formed.";
         }
-        else if(e instanceof UnloadableImportException) {
-            UnloadableImportException importException = (UnloadableImportException) e;
-            return "Could not load imported ontology: " + importException.getImportsDeclaration().getIRI();
-        }
         else if(e instanceof OWLOntologyCreationIOException) {
             OWLOntologyCreationIOException ioException = (OWLOntologyCreationIOException) e;
             return "Problem reading ontology document: " + ioException.getCause().getMessage();

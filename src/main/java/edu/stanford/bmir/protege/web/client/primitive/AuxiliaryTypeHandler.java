@@ -72,7 +72,7 @@ public abstract class AuxiliaryTypeHandler {
 
         @Override
         public Set<OWLAxiom> getAdditionalAxioms(OWLEntity entity) {
-            return entity.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>() {
+            return entity.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>(null) {
                 @Override
                 protected Set<OWLAxiom> getDefaultReturnValue(OWLEntity object) {
                     return Collections.emptySet();

@@ -82,6 +82,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         private PropertyValueState initialState;
 
         private AxiomTranslator(OWLEntity subject, OWLOntology rootOntology, PropertyValueState initialState) {
+            super(null);
             this.subject = subject;
             this.rootOntology = rootOntology;
             this.initialState = initialState;
@@ -179,6 +180,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         private PropertyValueState state;
 
         private ClassExpressionTranslator(PropertyValueState initialState) {
+            super(null);
             this.state = initialState;
         }
 
@@ -303,7 +305,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
             if(mode == Mode.MAXIMAL) {
                 classExpressions.add(df.getOWLObjectMinCardinality(1, propertyValue.getProperty(), propertyValue.getValue()));
             }
-            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>() {
+            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>(null) {
                 @Override
                 public Set<OWLAxiom> visit(OWLClass subject) {
                     Set<OWLAxiom> result = new HashSet<OWLAxiom>();
@@ -328,7 +330,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         public Set<OWLAxiom> visit(final PropertyIndividualValue propertyValue) {
             final OWLDataFactory df = DataFactory.get();
             final OWLClassExpression classExpression = df.getOWLObjectHasValue(propertyValue.getProperty(), propertyValue.getValue());
-            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>() {
+            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>(null) {
                 @Override
                 public Set<OWLAxiom> visit(OWLClass subject) {
                     return Collections.<OWLAxiom>singleton(df.getOWLSubClassOfAxiom(subject, classExpression));
@@ -349,7 +351,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
             if(mode == Mode.MAXIMAL) {
                 classExpressions.add(df.getOWLDataMinCardinality(1, propertyValue.getProperty(), propertyValue.getValue()));
             }
-            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>() {
+            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>(null) {
                 @Override
                 public Set<OWLAxiom> visit(OWLClass subject) {
                     Set<OWLAxiom> result = new HashSet<OWLAxiom>();
@@ -374,7 +376,7 @@ public class AxiomPropertyValueTranslator extends OWLAxiomVisitorAdapter {
         public Set<OWLAxiom> visit(final PropertyLiteralValue propertyValue) {
             final OWLDataFactory df = DataFactory.get();
             final OWLClassExpression classExpression = df.getOWLDataHasValue(propertyValue.getProperty(), propertyValue.getValue());
-            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>() {
+            return subject.accept(new OWLEntityVisitorExAdapter<Set<OWLAxiom>>(null) {
                 @Override
                 public Set<OWLAxiom> visit(OWLClass subject) {
                     return Collections.<OWLAxiom>singleton(df.getOWLSubClassOfAxiom(subject, classExpression));

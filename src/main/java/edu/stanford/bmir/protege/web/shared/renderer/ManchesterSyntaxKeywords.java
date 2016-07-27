@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.shared.renderer;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
+import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 
 import java.util.Comparator;
 import java.util.EnumMap;

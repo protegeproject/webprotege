@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
-import org.coode.owlapi.manchesterowlsyntax.OntologyAxiomPair;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
+import org.semanticweb.owlapi.util.OntologyAxiomPair;
 
 import java.util.Collections;
 import java.util.List;

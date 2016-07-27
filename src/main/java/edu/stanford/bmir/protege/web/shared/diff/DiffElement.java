@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @param <S> The type of source document.
  * @param <E> The type of lineElement contained within each line in the diff.
  */
-public class DiffElement<S extends Serializable, E extends Serializable> implements Serializable, IsSerializable {
+public class DiffElement<S, E> implements Serializable, IsSerializable {
 
     private DiffOperation diffOperation;
 

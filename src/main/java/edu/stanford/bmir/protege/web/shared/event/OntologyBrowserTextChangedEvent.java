@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class OntologyBrowserTextChangedEvent extends Event<OntologyBrowserTextChangedEventHandler> implements Serializable, HasChangedValue<String> {
 
-    public static final transient Type<OntologyBrowserTextChangedEventHandler> TYPE = new Type<OntologyBrowserTextChangedEventHandler>();
+    public static final transient Event.Type<OntologyBrowserTextChangedEventHandler> TYPE = new Event.Type<OntologyBrowserTextChangedEventHandler>();
 
     private OWLOntologyID ontologyID;
 
@@ -68,7 +68,7 @@ public class OntologyBrowserTextChangedEvent extends Event<OntologyBrowserTextCh
      * @return the type
      */
     @Override
-    public Type<OntologyBrowserTextChangedEventHandler> getAssociatedType() {
+    public Event.Type<OntologyBrowserTextChangedEventHandler> getAssociatedType() {
         return TYPE;
     }
 

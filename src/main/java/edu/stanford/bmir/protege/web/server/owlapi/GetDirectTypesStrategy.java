@@ -6,6 +6,7 @@ import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class GetDirectTypesStrategy extends OntologyServiceStrategy<List<EntityD
         
         OWLNamedIndividual individual = getRenderingManager().getEntity(instanceName, EntityType.NAMED_INDIVIDUAL);
         Set<OWLOntology> importsClosure = getRootOntologyImportsClosure();
-        for(OWLClassExpression ce : individual.getTypes(importsClosure)) {
+        for(OWLClassExpression ce : EntitySearcher.getTypes(individual, importsClosure)) {
             if(!ce.isAnonymous()) {
                 result.add(getRenderingManager().getEntityData(ce.asOWLClass()));
             }

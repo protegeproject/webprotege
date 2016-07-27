@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.server.inject.project;
 
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImpl;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -16,8 +17,7 @@ public class OWLDataFactoryProvider implements Provider<OWLDataFactory> {
 
     @Override
     public OWLDataFactory get() {
-        boolean useCachingInDataFactory = false;
-        boolean useCompressionInDataFactory = false;
-        return new OWLDataFactoryImpl(useCachingInDataFactory, useCompressionInDataFactory);
+        boolean useCompression = false;
+        return new OWLDataFactoryImpl(new OWLDataFactoryInternalsImpl(useCompression));
     }
 }

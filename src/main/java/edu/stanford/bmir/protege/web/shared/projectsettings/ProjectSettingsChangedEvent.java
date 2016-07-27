@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.projectsettings;
 
 import com.google.web.bindery.event.shared.Event;
-import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 
 import java.io.Serializable;
 
@@ -12,11 +12,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 25/11/14
  */
-public class ProjectSettingsChangedEvent extends SerializableEvent<ProjectSettingsChangedHandler> {
+public class ProjectSettingsChangedEvent extends WebProtegeEvent<ProjectSettingsChangedHandler> {
 
-    private static final transient Type<ProjectSettingsChangedHandler> TYPE = new Type<ProjectSettingsChangedHandler>();
+    private static final transient Event.Type<ProjectSettingsChangedHandler> TYPE = new Event.Type<ProjectSettingsChangedHandler>();
 
-    public static Type<ProjectSettingsChangedHandler> getType() {
+    public static Event.Type<ProjectSettingsChangedHandler> getType() {
         return TYPE;
     }
 
@@ -41,7 +41,7 @@ public class ProjectSettingsChangedEvent extends SerializableEvent<ProjectSettin
     }
 
     @Override
-    public Type<ProjectSettingsChangedHandler> getAssociatedType() {
+    public Event.Type<ProjectSettingsChangedHandler> getAssociatedType() {
         return TYPE;
     }
 

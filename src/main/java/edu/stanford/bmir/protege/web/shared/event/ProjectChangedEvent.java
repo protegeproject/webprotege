@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.event;
 
 
 import com.google.common.base.Objects;
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -22,7 +23,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
 
-    public transient static final Type<ProjectChangedHandler> TYPE = new Type<ProjectChangedHandler>();
+    public transient static final Event.Type<ProjectChangedHandler> TYPE = new Event.Type<ProjectChangedHandler>();
 
     private Set<OWLEntityData> subjects;
 
@@ -91,7 +92,7 @@ public class ProjectChangedEvent extends ProjectEvent<ProjectChangedHandler> {
 
 
     @Override
-    public Type<ProjectChangedHandler> getAssociatedType() {
+    public Event.Type<ProjectChangedHandler> getAssociatedType() {
         return TYPE;
     }
 

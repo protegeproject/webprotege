@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 
@@ -11,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationProperty;
  */
 public class AnnotationPropertyHierarchyParentRemovedEvent extends HierarchyChangedEvent<OWLAnnotationProperty, AnnotationPropertyHierarchyParentRemoved> {
 
-    public transient static final Type<AnnotationPropertyHierarchyParentRemoved> TYPE = new Type<AnnotationPropertyHierarchyParentRemoved>();
+    public transient static final Event.Type<AnnotationPropertyHierarchyParentRemoved> TYPE = new Event.Type<AnnotationPropertyHierarchyParentRemoved>();
 
     public AnnotationPropertyHierarchyParentRemovedEvent(ProjectId source, OWLAnnotationProperty child, OWLAnnotationProperty parent, HierarchyId<OWLAnnotationProperty> hierarchyId) {
         super(source, child, parent, hierarchyId);
@@ -21,7 +22,7 @@ public class AnnotationPropertyHierarchyParentRemovedEvent extends HierarchyChan
     }
 
     @Override
-    public Type<AnnotationPropertyHierarchyParentRemoved> getAssociatedType() {
+    public Event.Type<AnnotationPropertyHierarchyParentRemoved> getAssociatedType() {
         return TYPE;
     }
 

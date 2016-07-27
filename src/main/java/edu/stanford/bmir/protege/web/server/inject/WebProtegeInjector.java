@@ -10,6 +10,10 @@ import edu.stanford.bmir.protege.web.server.init.ConfigurationTasksModule;
 import edu.stanford.bmir.protege.web.server.mail.MailModule;
 import edu.stanford.bmir.protege.web.server.metaproject.MetaProjectModule;
 import edu.stanford.bmir.protege.web.server.project.ProjectManagerModule;
+import org.semanticweb.owlapi.OWLAPIParsersModule;
+import org.semanticweb.owlapi.OWLAPIServiceLoaderModule;
+import uk.ac.manchester.cs.owl.owlapi.OWLAPIImplModule;
+import uk.ac.manchester.cs.owl.owlapi.concurrent.Concurrency;
 
 import javax.servlet.ServletContext;
 
@@ -38,7 +42,10 @@ public class WebProtegeInjector {
                 new LoggingModule(),
                 new DbModule(),
                 new RepositoryModule(),
-                new ApplicationModule());
+                new ApplicationModule(),
+                new OWLAPIImplModule(Concurrency.CONCURRENT),
+                new OWLAPIParsersModule(),
+                new OWLAPIServiceLoaderModule());
     }
 
     public static synchronized WebProtegeInjector get() {

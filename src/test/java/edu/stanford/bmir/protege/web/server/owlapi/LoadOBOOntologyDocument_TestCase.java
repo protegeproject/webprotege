@@ -2,11 +2,10 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 
 
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
-import org.coode.owlapi.obo.parser.OBOOntologyFormat;
 import org.junit.Test;
+import org.semanticweb.owlapi.formats.OBODocumentFormat;
 import org.semanticweb.owlapi.model.*;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 
@@ -25,10 +24,8 @@ public class LoadOBOOntologyDocument_TestCase {
     public void shouldLoadOBOOntology() throws IOException, OWLOntologyCreationException {
         URL url = LoadOBOOntologyDocument_TestCase.class.getResource(SOURCE_DOCUMENT);
         OWLOntologyManager man = WebProtegeOWLManager.createOWLOntologyManager();
-        BufferedInputStream inputStream = new BufferedInputStream(url.openStream());
-        OWLOntology ont = man.loadOntologyFromOntologyDocument(inputStream);
-        inputStream.close();
-        OWLOntologyFormat ontologyFormat = man.getOntologyFormat(ont);
-        assertThat(ontologyFormat instanceof OBOOntologyFormat, is(true));
+        OWLOntology ont = man.loadOntologyFromOntologyDocument(IRI.create(url));
+        OWLDocumentFormat format = man.getOntologyFormat(ont);
+        assertThat(format instanceof OBODocumentFormat, is(true));
     }
 }

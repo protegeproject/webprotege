@@ -31,7 +31,7 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
 
     private OWLOntology rootOntology;
 
-    private BidirectionalShortFormProviderAdapter delegate;
+    private BidirectionalShortFormProviderAdapterEx delegate;
 
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
@@ -39,15 +39,7 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
     public WebProtegeBidirectionalShortFormProvider(@RootOntology OWLOntology rootOntology, ShortFormProvider shortFormProvider) {
         this.rootOntology = rootOntology;
         final Set<OWLOntology> importsClosure = rootOntology.getImportsClosure();
-        delegate = new BidirectionalShortFormProviderAdapter(importsClosure, shortFormProvider) {
-            @Override
-            public void remove(OWLEntity entity) {
-                if (!entity.isBuiltIn()) {
-                    super.remove(entity);
-                }
-            }
-        };
-
+        delegate = new BidirectionalShortFormProviderAdapterEx(importsClosure, shortFormProvider);
         setupBuiltinObjectRenderings(rootOntology);
 
         OWLOntologyManager manager = rootOntology.getOWLOntologyManager();
@@ -174,6 +166,8 @@ public class WebProtegeBidirectionalShortFormProvider implements BidirectionalSh
             readWriteLock.writeLock().unlock();
         }
     }
+
+
 
 
 }

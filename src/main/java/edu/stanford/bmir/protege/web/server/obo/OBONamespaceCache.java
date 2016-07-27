@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.obo.OBONamespace;
 import org.obolibrary.obo2owl.Obo2OWLConstants;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -52,7 +53,7 @@ public class OBONamespaceCache {
             }
         }
         for(OWLClass cls : project.getRootOntology().getClassesInSignature(true)) {
-            for(OWLAnnotationAssertionAxiom ax : cls.getAnnotationAssertionAxioms(project.getRootOntology())) {
+            for(OWLAnnotationAssertionAxiom ax : EntitySearcher.getAnnotationAssertionAxioms(cls, project.getRootOntology())) {
                 if(isNamespaceAnnotationProperty(ax)) {
                     if(ax.getValue() instanceof OWLLiteral) {
                         OWLLiteral lit = (OWLLiteral) ax.getValue();

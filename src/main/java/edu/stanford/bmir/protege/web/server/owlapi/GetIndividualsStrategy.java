@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.server.owlapi;
 import edu.stanford.bmir.protege.web.client.rpc.data.EntityData;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class GetIndividualsStrategy extends OntologyServiceStrategy<List<EntityD
             }
         }
         else {
-            for(OWLIndividual individual : cls.getIndividuals(rootOntology.getImportsClosure())) {
+            for(OWLIndividual individual : EntitySearcher.getIndividuals(cls, rootOntology.getImportsClosure())) {
                 EntityData entityData = null;
                 if(individual.isAnonymous()) {
                     entityData = rm.getEntityData(individual.asOWLAnonymousIndividual());

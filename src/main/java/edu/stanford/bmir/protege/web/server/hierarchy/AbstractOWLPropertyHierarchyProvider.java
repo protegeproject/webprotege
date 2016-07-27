@@ -3,7 +3,9 @@ package edu.stanford.bmir.protege.web.server.hierarchy;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.protege.editor.owl.model.hierarchy.*;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,7 +19,7 @@ import java.util.Set;
  * Bio-Health Informatics Group<br>
  * Date: 23-Jan-2007<br><br>
  */
-public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLPropertyRange, E extends OWLPropertyExpression<R, E>, P extends E> extends AbstractOWLObjectHierarchyProvider<P> {
+public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLPropertyRange, E extends OWLPropertyExpression, P extends E> extends AbstractOWLObjectHierarchyProvider<P> {
 
     private final OWLOntology rootOntology;
 
@@ -153,7 +155,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
         }
 
         final Set<P> result = new HashSet<P>();
-        for (E subProp : object.getSubProperties(getOntologies())){
+        for (E subProp : EntitySearcher.getSubProperties(object, getOntologies())){
             // Don't add the sub property if it is a parent of
             // itself - i.e. prevent cycles
             if (!subProp.isAnonymous() &&
@@ -176,7 +178,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
             }
         }
 
-        for (E prop : object.getEquivalentProperties(getOntologies())) {
+        for (E prop : EntitySearcher.getEquivalentProperties(object, getOntologies())) {
             if (!prop.isAnonymous()) {
                 result.add((P)prop);
             }
@@ -193,7 +195,7 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
         }
 
         Set<P> result = new HashSet<P>();
-        for (E prop : object.getSuperProperties(getOntologies())) {
+        for (E prop : EntitySearcher.getSuperProperties(object, getOntologies())) {
             if (!prop.isAnonymous()) {
                 result.add((P) prop);
             }
@@ -224,6 +226,11 @@ public abstract class AbstractOWLPropertyHierarchyProvider<R extends OWLProperty
             return isReferenced(property);
         }
 
+        @Nonnull
+        @Override
+        public Boolean visit(OWLAnnotationProperty property) {
+            return isReferenced(property);
+        }
 
         private boolean isReferenced(OWLEntity e) {
             for (OWLOntology ontology : getOntologies()) {

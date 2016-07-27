@@ -2,9 +2,10 @@ package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.shared.frame.HasFreshEntities;
-import org.coode.owlapi.manchesterowlsyntax.OntologyAxiomPair;
-import org.semanticweb.owlapi.expression.ParserException;
+import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.util.OntologyAxiomPair;
+
 import java.util.List;
 import java.util.Set;
 

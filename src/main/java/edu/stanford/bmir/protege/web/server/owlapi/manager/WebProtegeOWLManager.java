@@ -1,15 +1,9 @@
 package edu.stanford.bmir.protege.web.server.owlapi.manager;
 
+import edu.stanford.bmir.protege.web.server.owlapi.BinaryOWLStorerFactory;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentParserFactory;
-import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.io.OWLParserFactory;
-import org.semanticweb.owlapi.io.OWLParserFactoryRegistry;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>
@@ -19,23 +13,28 @@ import java.util.List;
  */
 public class WebProtegeOWLManager {
 
-    static {
-        // Some HORRIBLE HORRIBLE staticness requires this
-        OWLManager.getOWLDataFactory();
-        OWLParserFactoryRegistry parserFactoryRegistry = OWLParserFactoryRegistry.getInstance();
-        List<OWLParserFactory> parserFactoryList = new ArrayList<OWLParserFactory>(parserFactoryRegistry.getParserFactories());
-        Collections.reverse(parserFactoryList);
-        parserFactoryRegistry.clearParserFactories();
-        for(OWLParserFactory parserFactory : parserFactoryList) {
-                parserFactoryRegistry.registerParserFactory(parserFactory);
-        }
-        parserFactoryRegistry.registerParserFactory(new BinaryOWLOntologyDocumentParserFactory());
+    public static OWLOntologyManager createConcurrentOWLOntologyManager() {
+        OWLOntologyManager manager = OWLManager.createConcurrentOWLOntologyManager();
+        augmentManager(manager);
+        return manager;
     }
 
     public static OWLOntologyManager createOWLOntologyManager() {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        manager.addOntologyStorer(new BinaryOWLOntologyDocumentStorer());
+        augmentManager(manager);
         return manager;
     }
+
+    private static void augmentManager(OWLOntologyManager manager) {
+        manager.getOntologyParsers().add(new BinaryOWLOntologyDocumentParserFactory());
+        manager.getOntologyStorers().add(new BinaryOWLStorerFactory());
+
+    }
+
+    //        delegateManager.getOntologyStorers().add(new RDFXMLStorerFactory());
+//        delegateManager.getOntologyStorers().add(new OWLXMLStorerFactory());
+//        delegateManager.getOntologyStorers().add(new FunctionalSyntaxStorerFactory());
+//        delegateManager.getOntologyStorers().add(new ManchesterSyntaxStorerFactory());
+
 
 }

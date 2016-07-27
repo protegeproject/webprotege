@@ -1,6 +1,6 @@
 package edu.stanford.bmir.protege.web.server.events;
 
-import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  *     An interface to an object which can be used to post events.
  * </p>
  */
-public interface HasPostEvents<E extends SerializableEvent<?>> {
+public interface HasPostEvents<E extends WebProtegeEvent<?>> {
 
     /**
      * Posts an event to this event manager.

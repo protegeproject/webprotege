@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -11,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public class EntityDeprecatedChangedEvent extends ProjectEvent<EntityDeprecatedChangedHandler> {
 
-    public transient static final Type<EntityDeprecatedChangedHandler> TYPE = new Type<EntityDeprecatedChangedHandler>();
+    public transient static final Event.Type<EntityDeprecatedChangedHandler> TYPE = new Event.Type<EntityDeprecatedChangedHandler>();
 
     private OWLEntity entity;
 
@@ -38,7 +39,7 @@ public class EntityDeprecatedChangedEvent extends ProjectEvent<EntityDeprecatedC
     }
 
     @Override
-    public Type<EntityDeprecatedChangedHandler> getAssociatedType() {
+    public Event.Type<EntityDeprecatedChangedHandler> getAssociatedType() {
         return TYPE;
     }
 

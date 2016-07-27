@@ -7,7 +7,9 @@ import edu.stanford.bmir.protege.web.shared.notes.Note;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
 import edu.stanford.bmir.protege.web.shared.notes.NoteType;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.search.EntitySearcher;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.util.*;
@@ -38,7 +40,7 @@ public class ChAOBasedNotesStore { // implements MutableNoteStore {
 
 
     static {
-        OWLDataFactory df = new OWLDataFactoryImpl(false, false);
+        OWLDataFactory df = new OWLDataFactoryImpl();
         annotatesProperty = df.getOWLObjectProperty(ChAOVocabulary.ANNOTATES.getIRI());
         createdAtProperty = df.getOWLDataProperty(ChAOVocabulary.CREATED_AT.getIRI());
         authoredByProperty = df.getOWLDataProperty(ChAOVocabulary.AUTHOR.getIRI());
@@ -409,7 +411,7 @@ public class ChAOBasedNotesStore { // implements MutableNoteStore {
 
     private OWLNamedIndividual getSingleValuedObjectPropertyValue(NoteId noteId, OWLObjectProperty property) {
         OWLNamedIndividual noteIndividual = getNoteNamedIndividual(noteId);
-        Set<OWLIndividual> values = noteIndividual.getObjectPropertyValues(property, notesOntology);
+        Collection<OWLIndividual> values = EntitySearcher.getObjectPropertyValues(noteIndividual, property, notesOntology);
         if(values.isEmpty()) {
             throw new FoundZeroButExpectedOneObjectPropertyValue(noteId, property);
         }
@@ -434,7 +436,7 @@ public class ChAOBasedNotesStore { // implements MutableNoteStore {
 
     private OWLLiteral getOptionalSingleValuedDataPropertyValue(NoteId noteId, OWLDataProperty property, OWLLiteral defaultValue) {
         OWLNamedIndividual noteIndividual = getNoteNamedIndividual(noteId);
-        Set<OWLLiteral> values = noteIndividual.getDataPropertyValues(property, notesOntology);
+        Collection<OWLLiteral> values = EntitySearcher.getDataPropertyValues(noteIndividual, property, notesOntology);
         if(values.isEmpty()) {
             return defaultValue;
         }
@@ -478,8 +480,8 @@ public class ChAOBasedNotesStore { // implements MutableNoteStore {
     }
 
     private Set<OWLClass> getNamedTypes(OWLNamedIndividual noteIndividual) {
-        Set<OWLClassExpression> types = noteIndividual.getTypes(notesOntology);
-        Set<OWLClass> namedTypes = new HashSet<OWLClass>(types.size());
+        Collection<OWLClassExpression> types = EntitySearcher.getTypes(noteIndividual, notesOntology);
+        Set<OWLClass> namedTypes = new HashSet<>(types.size());
         for(OWLClassExpression classExpression : types) {
             if(!classExpression.isAnonymous()) {
                 namedTypes.add(classExpression.asOWLClass());
@@ -488,14 +490,14 @@ public class ChAOBasedNotesStore { // implements MutableNoteStore {
         return namedTypes;
     }
 
-
-    public static void main(String[] args) throws Exception {
-        OWLOntologyManager manager = WebProtegeOWLManager.createOWLOntologyManager();
-        OWLOntology ont = manager.loadOntologyFromOntologyDocument(IRI.create("file:/Users/matthewhorridge/Desktop/2013.04.26.OPL_annotation.owl"));
-        ChAOBasedNotesStore ns = new ChAOBasedNotesStore(ont, ont);
-        Set<Note> notes = ns.parseNotesFromOntology();
-        for(Note note : notes) {
-            System.out.println(note);
-        }
-    }
+//
+//    public static void main(String[] args) throws Exception {
+//        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+//        OWLOntology ont = manager.loadOntologyFromOntologyDocument(IRI.create("file:/Users/matthewhorridge/Desktop/2013.04.26.OPL_annotation.owl"));
+//        ChAOBasedNotesStore ns = new ChAOBasedNotesStore(ont, ont);
+//        Set<Note> notes = ns.parseNotesFromOntology();
+//        for(Note note : notes) {
+//            System.out.println(note);
+//        }
+//    }
 }

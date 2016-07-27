@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.watches;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
@@ -13,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> implements HasUserId {
 
-    public transient static final Type<WatchRemovedHandler> TYPE = new Type<WatchRemovedHandler>();
+    public transient static final Event.Type<WatchRemovedHandler> TYPE = new Event.Type<WatchRemovedHandler>();
 
     private Watch<?> watch;
 
@@ -29,7 +30,7 @@ public class WatchRemovedEvent extends ProjectEvent<WatchRemovedHandler> impleme
     }
 
     @Override
-    public Type<WatchRemovedHandler> getAssociatedType() {
+    public Event.Type<WatchRemovedHandler> getAssociatedType() {
         return TYPE;
     }
 

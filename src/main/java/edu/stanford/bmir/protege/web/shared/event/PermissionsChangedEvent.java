@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
 /**
@@ -10,7 +11,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHandler> {
 
-    public static final transient Type<PermissionsChangedHandler> TYPE = new Type<PermissionsChangedHandler>();
+    public static final transient Event.Type<PermissionsChangedHandler> TYPE = new Event.Type<PermissionsChangedHandler>();
 
 
     public PermissionsChangedEvent(ProjectId source) {
@@ -24,7 +25,7 @@ public class PermissionsChangedEvent extends ProjectEvent<PermissionsChangedHand
     }
 
     @Override
-    public Type<PermissionsChangedHandler> getAssociatedType() {
+    public Event.Type<PermissionsChangedHandler> getAssociatedType() {
         return TYPE;
     }
 

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
 import org.semanticweb.owlapi.model.IRI;
@@ -54,8 +55,8 @@ public class ModifiedProjectOntologiesCalculator {
         if(otherOntology.getOntologyID().isAnonymous()) {
             return false;
         }
-        IRI ontologyIRI = ontology.getOntologyID().getOntologyIRI();
-        IRI otherOntologyIRI = otherOntology.getOntologyID().getOntologyIRI();
+        Optional<IRI> ontologyIRI = ontology.getOntologyID().getOntologyIRI();
+        Optional<IRI> otherOntologyIRI = otherOntology.getOntologyID().getOntologyIRI();
         return ontologyIRI.equals(otherOntologyIRI);
     }
 }

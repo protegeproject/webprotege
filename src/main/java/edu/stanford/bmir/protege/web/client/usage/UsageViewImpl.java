@@ -320,7 +320,7 @@ public class UsageViewImpl extends Composite implements UsageView {
             final Optional<OWLRDFVocabulary> owlrdfVocabulary = axiomTypeGroup.getOWLRDFVocabulary();
             if(owlrdfVocabulary.isPresent()) {
                 final OWLRDFVocabulary vocabulary = owlrdfVocabulary.get();
-                String shortName = vocabulary.getNamespace().name().toLowerCase() + ":" + vocabulary.getShortName();
+                String shortName = vocabulary.getNamespace().name().toLowerCase() + ":" + vocabulary.getShortForm();
                 sb.appendHtmlConstant("<br><span style=\"color: gray; font-size: 90%;\">(" + shortName +  ")</span>");
             }
         }

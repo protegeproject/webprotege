@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
@@ -13,7 +14,7 @@ import java.io.Serializable;
  */
 public class OntologyFrameChangedEvent extends ProjectEvent<OntologyFrameChangedEventHandler> implements Serializable {
 
-    public static final transient Type<OntologyFrameChangedEventHandler> TYPE = new Type<OntologyFrameChangedEventHandler>();
+    public static final transient Event.Type<OntologyFrameChangedEventHandler> TYPE = new Event.Type<OntologyFrameChangedEventHandler>();
 
     private OWLOntologyID ontologyID;
 
@@ -37,7 +38,7 @@ public class OntologyFrameChangedEvent extends ProjectEvent<OntologyFrameChanged
      * @return the type
      */
     @Override
-    public Type<OntologyFrameChangedEventHandler> getAssociatedType() {
+    public Event.Type<OntologyFrameChangedEventHandler> getAssociatedType() {
         return TYPE;
     }
 

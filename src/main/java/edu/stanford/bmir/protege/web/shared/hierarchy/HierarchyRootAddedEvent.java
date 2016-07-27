@@ -1,9 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-
-import java.io.Serializable;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 /**
  * Author: Matthew Horridge<br>
@@ -11,9 +11,9 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 25/03/2013
  */
-public class HierarchyRootAddedEvent<T extends Serializable> extends ProjectEvent<HierarchyRootAddedHandler<T>> {
+public class HierarchyRootAddedEvent<T extends OWLEntity> extends ProjectEvent<HierarchyRootAddedHandler<T>> {
 
-    public transient static final Type<HierarchyRootAddedHandler<?>> TYPE = new Type<HierarchyRootAddedHandler<?>>();
+    public transient static final Event.Type<HierarchyRootAddedHandler<?>> TYPE = new Event.Type<HierarchyRootAddedHandler<?>>();
 
     private HierarchyId<T> hierarchyId;
 
@@ -38,14 +38,14 @@ public class HierarchyRootAddedEvent<T extends Serializable> extends ProjectEven
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Serializable> Type<HierarchyRootAddedEvent<T>> getType() {
-        return (Type) TYPE;
+    public static <T extends OWLEntity> Event.Type<HierarchyRootAddedEvent<T>> getType() {
+        return (Event.Type) TYPE;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Type<HierarchyRootAddedHandler<T>> getAssociatedType() {
-        return (Type) TYPE;
+    public Event.Type<HierarchyRootAddedHandler<T>> getAssociatedType() {
+        return (Event.Type) TYPE;
     }
 
     @Override

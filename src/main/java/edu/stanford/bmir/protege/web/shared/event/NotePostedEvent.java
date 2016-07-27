@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 import com.google.common.base.Optional;
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import edu.stanford.bmir.protege.web.shared.notes.NoteDetails;
 import edu.stanford.bmir.protege.web.shared.notes.NoteId;
@@ -14,7 +15,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class NotePostedEvent extends ProjectEvent<NotePostedHandler> {
 
-    public transient static final Type<NotePostedHandler> TYPE = new Type<NotePostedHandler>();
+    public transient static final Event.Type<NotePostedHandler> TYPE = new Event.Type<NotePostedHandler>();
 
     private NoteDetails noteDetails;
 
@@ -55,7 +56,7 @@ public class NotePostedEvent extends ProjectEvent<NotePostedHandler> {
     }
 
     @Override
-    public Type<NotePostedHandler> getAssociatedType() {
+    public Event.Type<NotePostedHandler> getAssociatedType() {
         return TYPE;
     }
 
