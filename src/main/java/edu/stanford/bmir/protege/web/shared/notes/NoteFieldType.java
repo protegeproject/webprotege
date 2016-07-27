@@ -22,23 +22,23 @@ public final class NoteFieldType<T extends Serializable> implements Serializable
         }
     });
 //
-//    public static final NoteFieldType<Boolean> BOOLEAN = new NoteFieldType<Boolean>();
+//    public static final NoteFieldEvent.Type<Boolean> BOOLEAN = new NoteFieldEvent.Type<Boolean>();
 //
-//    public static final NoteFieldType<Integer> INTEGER = new NoteFieldType<Integer>();
+//    public static final NoteFieldEvent.Type<Integer> INTEGER = new NoteFieldEvent.Type<Integer>();
 //
-//    public static final NoteFieldType<Long> LONG = new NoteFieldType<Long>();
+//    public static final NoteFieldEvent.Type<Long> LONG = new NoteFieldEvent.Type<Long>();
 //
-//    public static final NoteFieldType<OWLClass> OWL_CLASS = new NoteFieldType<OWLClass>();
+//    public static final NoteFieldEvent.Type<OWLClass> OWL_CLASS = new NoteFieldEvent.Type<OWLClass>();
 //
-//    public static final NoteFieldType<OWLObjectProperty> OWL_OBJECT_PROPERTY = new NoteFieldType<OWLObjectProperty>();
+//    public static final NoteFieldEvent.Type<OWLObjectProperty> OWL_OBJECT_PROPERTY = new NoteFieldEvent.Type<OWLObjectProperty>();
 //
-//    public static final NoteFieldType<OWLDataProperty> OWL_DATA_PROPERTY = new NoteFieldType<OWLDataProperty>();
+//    public static final NoteFieldEvent.Type<OWLDataProperty> OWL_DATA_PROPERTY = new NoteFieldEvent.Type<OWLDataProperty>();
 //
-//    public static final NoteFieldType<OWLAnnotationProperty> OWL_ANNOTATION_PROPERTY = new NoteFieldType<OWLAnnotationProperty>();
+//    public static final NoteFieldEvent.Type<OWLAnnotationProperty> OWL_ANNOTATION_PROPERTY = new NoteFieldEvent.Type<OWLAnnotationProperty>();
 //
-//    public static final NoteFieldType<OWLNamedIndividual> OWL_NAMED_INDIVIDUAL = new NoteFieldType<OWLNamedIndividual>();
+//    public static final NoteFieldEvent.Type<OWLNamedIndividual> OWL_NAMED_INDIVIDUAL = new NoteFieldEvent.Type<OWLNamedIndividual>();
 //
-//    public static final NoteFieldType<OWLDatatype> OWL_DATATYPE = new NoteFieldType<OWLDatatype>();
+//    public static final NoteFieldEvent.Type<OWLDatatype> OWL_DATATYPE = new NoteFieldEvent.Type<OWLDatatype>();
 
     public static final transient NoteFieldType<NoteType> NOTE_TYPE = new NoteFieldType<NoteType>(new Tokenizer<NoteType>() {
         @Override

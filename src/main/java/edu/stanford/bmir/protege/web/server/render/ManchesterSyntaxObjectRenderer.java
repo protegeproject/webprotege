@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.server.render;
 
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
+import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.IRIShortFormProvider;
@@ -12,7 +12,8 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Iterator;
 
-import static org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax.*;
+import static org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax.*;
+
 
 /**
  * Author: Matthew Horridge<br>
@@ -680,7 +681,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             renderRestriction(ce, SOME);
         }
 
-        private void renderRestriction(OWLQuantifiedRestriction<?, ?, ?> ce, ManchesterOWLSyntax keyword) {
+        private void renderRestriction(OWLQuantifiedRestriction<?> ce, ManchesterOWLSyntax keyword) {
             ce.getProperty().accept(this);
             renderBinaryKeyword(keyword);
             increaseDepth();
@@ -688,7 +689,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             decreaseDepth();
         }
 
-        private void renderRestriction(OWLHasValueRestriction<?, ?, ?> ce, ManchesterOWLSyntax keyword) {
+        private void renderRestriction(OWLHasValueRestriction<?> ce, ManchesterOWLSyntax keyword) {
             ce.getProperty().accept(this);
             renderBinaryKeyword(keyword);
             increaseDepth();
@@ -696,7 +697,7 @@ public class ManchesterSyntaxObjectRenderer implements OWLObjectRenderer {
             decreaseDepth();
         }
 
-        private void renderRestriction(OWLCardinalityRestriction<?, ?, ?> ce, ManchesterOWLSyntax keyword) {
+        private void renderRestriction(OWLCardinalityRestriction<?> ce, ManchesterOWLSyntax keyword) {
             ce.getProperty().accept(this);
             renderBinaryKeyword(keyword);
             stringBuilder.append(ce.getCardinality());

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.shortform;
 
+import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.IRI;
@@ -30,7 +31,7 @@ public class WebProtegeOntologyIRIShortFormProvider extends OntologyIRIShortForm
 
     @Override
     public String getShortForm(IRI iri) {
-        if (iri.equals(rootOntology.getOntologyID().getOntologyIRI())) {
+        if (Optional.of(iri).equals(rootOntology.getOntologyID().getOntologyIRI())) {
             return ROOT_ONTOLOGY_SHORT_FORM;
         }
         return super.getShortForm(iri);

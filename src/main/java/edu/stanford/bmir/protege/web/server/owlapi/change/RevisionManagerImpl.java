@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.server.owlapi.manager.WebProtegeOWLManager;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.change.*;
 import org.semanticweb.owlapi.model.*;
 

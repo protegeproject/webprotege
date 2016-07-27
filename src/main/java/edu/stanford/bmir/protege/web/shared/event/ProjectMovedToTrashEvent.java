@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -11,7 +12,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class ProjectMovedToTrashEvent extends WebProtegeEvent<ProjectMovedToTrashHandler> implements HasProjectId {
 
-    public static final transient Type<ProjectMovedToTrashHandler> TYPE = new Type<ProjectMovedToTrashHandler>();
+    public static final transient Event.Type<ProjectMovedToTrashHandler> TYPE = new Event.Type<ProjectMovedToTrashHandler>();
 
     private ProjectId projectId;
 
@@ -27,7 +28,7 @@ public class ProjectMovedToTrashEvent extends WebProtegeEvent<ProjectMovedToTras
     }
 
     @Override
-    public Type<ProjectMovedToTrashHandler> getAssociatedType() {
+    public Event.Type<ProjectMovedToTrashHandler> getAssociatedType() {
         return TYPE;
     }
 

@@ -4,6 +4,7 @@ import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.frame.*;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +35,7 @@ public class DataPropertyFrameTranslator implements FrameTranslator<DataProperty
                     ranges.add(ax.getRange().asOWLDatatype());
                 }
             }
-            if(subject.isFunctional(ontology)) {
+            if(EntitySearcher.isFunctional(subject, ontology)) {
                 functional = true;
             }
         }

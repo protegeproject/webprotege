@@ -135,7 +135,7 @@ public class OWLAPIProjectDownloader {
         baseFolder = baseFolder + "-REVISION-" + revisionNumber.getValue();
         ZipEntry rootOntologyEntry = new ZipEntry(baseFolder + "/root-ontology." + format.getExtension());
         zipOutputStream.putNextEntry(rootOntologyEntry);
-        rootOntology.getOWLOntologyManager().saveOntology(rootOntology, format.getOntologyFormat(), zipOutputStream);
+        rootOntology.getOWLOntologyManager().saveOntology(rootOntology, format.getDocumentFormat(), zipOutputStream);
         zipOutputStream.closeEntry();
         int importCount = 0;
         for (OWLOntology ontology : rootOntology.getImports()) {
@@ -143,7 +143,7 @@ public class OWLAPIProjectDownloader {
             ZipEntry zipEntry = new ZipEntry(baseFolder + "/imported-ontology-" + importCount + "." + format
                     .getExtension());
             zipOutputStream.putNextEntry(zipEntry);
-            ontology.getOWLOntologyManager().saveOntology(ontology, format.getOntologyFormat(), zipOutputStream);
+            ontology.getOWLOntologyManager().saveOntology(ontology, format.getDocumentFormat(), zipOutputStream);
             zipOutputStream.closeEntry();
         }
         zipOutputStream.finish();

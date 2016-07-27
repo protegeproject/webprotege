@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -11,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public class EntityNotesChangedEvent extends ProjectEvent<EntityNotesChangedHandler> {
 
-    public transient static final Type<EntityNotesChangedHandler> TYPE = new Type<EntityNotesChangedHandler>();
+    public transient static final Event.Type<EntityNotesChangedHandler> TYPE = new Event.Type<EntityNotesChangedHandler>();
 
     private OWLEntity entity;
 
@@ -38,7 +39,7 @@ public class EntityNotesChangedEvent extends ProjectEvent<EntityNotesChangedHand
     }
 
     @Override
-    public Type<EntityNotesChangedHandler> getAssociatedType() {
+    public Event.Type<EntityNotesChangedHandler> getAssociatedType() {
         return TYPE;
     }
 

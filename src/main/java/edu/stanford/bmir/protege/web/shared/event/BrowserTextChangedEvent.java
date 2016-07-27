@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
@@ -11,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
  */
 public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHandler> {
 
-    public transient static final Type<BrowserTextChangedHandler> TYPE = new Type<BrowserTextChangedHandler>();
+    public transient static final Event.Type<BrowserTextChangedHandler> TYPE = new Event.Type<BrowserTextChangedHandler>();
 
 
     private OWLEntity entity;
@@ -39,7 +40,7 @@ public class BrowserTextChangedEvent extends ProjectEvent<BrowserTextChangedHand
     }
 
     @Override
-    public Type<BrowserTextChangedHandler> getAssociatedType() {
+    public Event.Type<BrowserTextChangedHandler> getAssociatedType() {
         return TYPE;
     }
 

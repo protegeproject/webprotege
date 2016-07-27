@@ -22,8 +22,9 @@ import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameComple
 import edu.stanford.bmir.protege.web.shared.renderer.ManchesterSyntaxKeywords;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatchResult;
 import edu.stanford.bmir.protege.web.shared.search.EntityNameMatcher;
-import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
-import org.semanticweb.owlapi.expression.ParserException;
+import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
+
+import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
 import org.semanticweb.owlapi.model.EntityType;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;

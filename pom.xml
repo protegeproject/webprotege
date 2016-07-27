@@ -180,27 +180,27 @@
             <version>2.6</version>
         </dependency>
 
+
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
-            <version>3.5.0</version>
+            <version>4.2.5</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-gwt</artifactId>
-            <version>3.4.9</version>
+            <version>4.2.5-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
-                    <!-- Temporary exclusion until this lib doesn't include supersource dep -->
                     <groupId>net.sourceforge.owlapi</groupId>
-                    <artifactId>owlapi-gwt-supersource</artifactId>
+                    <artifactId>owlapi-gwt-client-side-emul</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>binaryowl</artifactId>
-            <version>1.4.4</version>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>edu.stanford.protege</groupId>
@@ -369,7 +369,7 @@
                     <runTarget>WebProtege.jsp</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <extraJvmArgs>-Xms1000M -Xmx3000M</extraJvmArgs>
-                    <logLevel>ERROR</logLevel>
+                    <logLevel>INFO</logLevel>
                     <localWorkers>1</localWorkers>
                     <i18nMessagesBundle>edu.stanford.bmir.protege.web.client.Messages</i18nMessagesBundle>
                     <gen>/tmp/gwt-generated</gen>

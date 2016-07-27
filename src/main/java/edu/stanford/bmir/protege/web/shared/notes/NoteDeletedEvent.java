@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.notes;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.event.ProjectEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -13,7 +14,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class NoteDeletedEvent extends ProjectEvent<NoteDeletedHandler> {
 
-    public static final transient Type<NoteDeletedHandler> TYPE = new Type<NoteDeletedHandler>();
+    public static final transient Event.Type<NoteDeletedHandler> TYPE = new Event.Type<NoteDeletedHandler>();
 
     private NoteId noteId;
 
@@ -30,7 +31,7 @@ public class NoteDeletedEvent extends ProjectEvent<NoteDeletedHandler> {
     }
 
     @Override
-    public Type<NoteDeletedHandler> getAssociatedType() {
+    public Event.Type<NoteDeletedHandler> getAssociatedType() {
         return TYPE;
     }
 

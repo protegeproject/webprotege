@@ -19,6 +19,7 @@ import edu.stanford.bmir.protege.web.shared.revision.RevisionNumber;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentFormat;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.change.AddAxiomData;
 import org.semanticweb.owlapi.change.AddImportData;
 import org.semanticweb.owlapi.change.AddOntologyAnnotationData;
@@ -55,7 +56,7 @@ public class ProjectImporter {
         rootOntologyDocument = new RootOntologyDocumentProvider(projectDirectory).get();
         WebProtegeLogger logger = WebProtegeInjector.get().getInstance(WebProtegeLogger.class);
         this.revisionStore = new RevisionStoreImpl(projectId,
-                new OWLDataFactoryImpl(false, false),
+                new OWLDataFactoryImpl(),
                 new ChangeHistoryFileProvider(projectDirectory).get(),
                 logger);
         this.revisionStore.load();

@@ -39,9 +39,6 @@ import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedExceptio
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.revision.RevisionSummary;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.coode.owlapi.functionalrenderer.OWLFunctionalSyntaxOntologyStorer;
-import org.coode.owlapi.owlxml.renderer.OWLXMLOntologyStorer;
-import org.coode.owlapi.rdf.rdfxml.RDFXMLOntologyStorer;
 import org.semanticweb.binaryowl.BinaryOWLParseException;
 import org.semanticweb.binaryowl.owlapi.BinaryOWLOntologyDocumentStorer;
 import org.semanticweb.owlapi.change.AddAxiomData;
@@ -51,13 +48,11 @@ import org.semanticweb.owlapi.change.OWLOntologyChangeRecord;
 import org.semanticweb.owlapi.io.OWLObjectRenderer;
 import org.semanticweb.owlapi.io.OWLParserException;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.parameters.ChangeApplied;
 import org.semanticweb.owlapi.util.*;
 import org.semanticweb.owlapi.vocab.Namespaces;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
-import uk.ac.manchester.cs.owl.owlapi.EmptyInMemOWLOntologyFactory;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.ParsableOWLOntologyFactory;
-import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOntologyStorer;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -433,7 +428,11 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             try {
                 projectChangeWriteLock.lock();
                 OWLAPIProjectOWLOntologyManager manager = ((OWLAPIProjectOWLOntologyManager) getRootOntology().getOWLOntologyManager());
-                appliedChanges = manager.getDelegate().applyChanges(minimisedChanges);
+                // TODO: The change from OWL API 3.x to 4.x means that we can't get back the list of changes that were
+                // TODO: actually applied.  Pretty unfortunate really.  This means we have to log the changes that we
+                // TODO: asked to be applied - none of them may have been applied of course.
+                manager.getDelegate().applyChanges(minimisedChanges);
+                appliedChanges = minimisedChanges;
                 final RenameMap renameMap = new RenameMap(iriRenameMap);
                 Optional<R> renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
                 finalResult = new ChangeApplicationResult<R>(renamedResult, appliedChanges, renameMap);
@@ -556,7 +555,7 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
      * @return The ontology change with the renamings.
      */
     private OWLOntologyChange getRenamedChange(OWLOntologyChange change, final OWLObjectDuplicator duplicator) {
-        return change.accept(new OWLOntologyChangeVisitorAdapterEx<OWLOntologyChange>() {
+        return change.accept(new OWLOntologyChangeVisitorEx<OWLOntologyChange>() {
 
             @SuppressWarnings("unchecked")
             private <T extends OWLObject> T duplicate(T ax) {

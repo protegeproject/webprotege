@@ -18,18 +18,6 @@ public abstract class ProjectEvent<H> extends WebProtegeEvent<H> implements HasP
     protected ProjectEvent() {
     }
 
-    @Override
-    protected void setSource(Object source) {
-        if(!(source instanceof ProjectId)) {
-            throw new RuntimeException("Source should be an instance of ProjectId");
-        }
-        super.setSource(source);
-    }
-
-    @Override
-    public ProjectId getSource() {
-        return (ProjectId) super.getSource();
-    }
 
     @Override
     public ProjectId getProjectId() {

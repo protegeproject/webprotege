@@ -2,6 +2,7 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import java.io.Serializable;
 
@@ -11,7 +12,7 @@ import java.io.Serializable;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/03/2013
  */
-public abstract class HierarchyRelationshipAddedEvent<T extends Serializable, H> extends HierarchyChangedEvent<T, H> {
+public abstract class HierarchyRelationshipAddedEvent<T extends OWLEntity, H> extends HierarchyChangedEvent<T, H> {
 
     public HierarchyRelationshipAddedEvent(ProjectId source, T child, T parent, HierarchyId<T> hierarchyId) {
         super(source, child, parent, hierarchyId);

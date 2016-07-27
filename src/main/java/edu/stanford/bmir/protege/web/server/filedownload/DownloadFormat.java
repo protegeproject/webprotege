@@ -1,12 +1,8 @@
 package edu.stanford.bmir.protege.web.server.filedownload;
 
 import edu.stanford.bmir.protege.web.shared.download.DownloadFormatExtension;
-import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxOntologyFormat;
-import org.coode.owlapi.turtle.TurtleOntologyFormat;
-import org.semanticweb.owlapi.io.OWLFunctionalSyntaxOntologyFormat;
-import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
-import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
-import org.semanticweb.owlapi.model.OWLOntologyFormat;
+import org.semanticweb.owlapi.formats.*;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
 
 /**
  * Author: Matthew Horridge<br>
@@ -16,25 +12,25 @@ import org.semanticweb.owlapi.model.OWLOntologyFormat;
  */
 public enum DownloadFormat {
 
-    RDF_XML(new RDFXMLOntologyFormat(), "application/rdf+xml", DownloadFormatExtension.owl),
+    RDF_XML(new RDFXMLDocumentFormat(), "application/rdf+xml", DownloadFormatExtension.owl),
 
-    RDF_TURLE(new TurtleOntologyFormat(), "text/turtle", DownloadFormatExtension.ttl),
+    RDF_TURLE(new TurtleDocumentFormat(), "text/turtle", DownloadFormatExtension.ttl),
 
-    OWL_XML(new OWLXMLOntologyFormat(), "application/owl+xml", DownloadFormatExtension.owx),
+    OWL_XML(new OWLXMLDocumentFormat(), "application/owl+xml", DownloadFormatExtension.owx),
 
-    MANCHESTER(new ManchesterOWLSyntaxOntologyFormat(), "text/owl-manchester", DownloadFormatExtension.omn),
+    MANCHESTER(new ManchesterSyntaxDocumentFormat(), "text/owl-manchester", DownloadFormatExtension.omn),
 
-    FUNCTIONAL_SYNTAX(new OWLFunctionalSyntaxOntologyFormat(), "text/owl-functional", DownloadFormatExtension.ofn);
+    FUNCTIONAL_SYNTAX(new FunctionalSyntaxDocumentFormat(), "text/owl-functional", DownloadFormatExtension.ofn);
 
 
-    private OWLOntologyFormat ontologyFormat;
+    private OWLDocumentFormat DocumentFormat;
 
     private String mimeType;
 
     private DownloadFormatExtension extension;
 
-    private DownloadFormat(OWLOntologyFormat ontologyFormat, String mimeType, DownloadFormatExtension extension) {
-        this.ontologyFormat = ontologyFormat;
+    private DownloadFormat(OWLDocumentFormat DocumentFormat, String mimeType, DownloadFormatExtension extension) {
+        this.DocumentFormat = DocumentFormat;
         this.mimeType = mimeType;
         this.extension = extension;
     }
@@ -44,8 +40,8 @@ public enum DownloadFormat {
         return extension.getExtension();
     }
 
-    public OWLOntologyFormat getOntologyFormat() {
-        return ontologyFormat;
+    public OWLDocumentFormat getDocumentFormat() {
+        return DocumentFormat;
     }
 
     public String getMimeType() {

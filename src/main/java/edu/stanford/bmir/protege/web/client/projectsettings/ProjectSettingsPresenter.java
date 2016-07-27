@@ -63,7 +63,7 @@ public class ProjectSettingsPresenter {
             @Override
             public void handleSuccess(SetProjectSettingsResult setProjectSettingsResult) {
                 closer.hide();
-                eventBus.fireEvent(new ProjectSettingsChangedEvent(data));
+                eventBus.fireEvent(new ProjectSettingsChangedEvent(data).asGWTEvent());
             }
         });
     }

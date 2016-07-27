@@ -2,7 +2,7 @@ package edu.stanford.bmir.protege.web.server.render;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntax;
+import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntax;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLOntology;

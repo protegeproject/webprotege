@@ -1,10 +1,10 @@
 package edu.stanford.bmir.protege.web.server.mansyntax;
 
 import com.google.common.collect.Lists;
-import org.coode.owlapi.manchesterowlsyntax.OntologyAxiomPair;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.RemoveAxiom;
+import org.semanticweb.owlapi.util.OntologyAxiomPair;
 
 import java.util.List;
 import java.util.Set;

@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.merge;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.merge.OntologyDiff;
 import org.junit.Before;
@@ -54,17 +55,17 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
 
     @Test
     public void shouldNotPerformDiffForDifferentOntologyIRIs() {
-        OWLOntologyID projectOntologyId = new OWLOntologyID(mock(IRI.class));
+        OWLOntologyID projectOntologyId = new OWLOntologyID(Optional.of(IRI.create("http://ontology.iri.a")), Optional.<IRI>absent());
         when(projectOntology.getOntologyID()).thenReturn(projectOntologyId);
-        OWLOntologyID externalOntologyId = new OWLOntologyID(mock(IRI.class));
+        OWLOntologyID externalOntologyId = new OWLOntologyID(Optional.of(IRI.create("http://ontology.iri.b")), Optional.<IRI>absent());
         when(externalOntology.getOntologyID()).thenReturn(externalOntologyId);
         assertThat(calculator.getModifiedOntologyDiffs(), is(empty()));
     }
 
     @Test
     public void shouldPerformDiffForSameOntologyIRIs() {
-        IRI commonIRI = mock(IRI.class);
-        OWLOntologyID commonOntologyId = new OWLOntologyID(commonIRI);
+        IRI commonIRI = IRI.create("http://ontology.iri");
+        OWLOntologyID commonOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.<IRI>absent());
         when(projectOntology.getOntologyID()).thenReturn(commonOntologyId);
         when(externalOntology.getOntologyID()).thenReturn(commonOntologyId);
 
@@ -73,10 +74,10 @@ public class ModifiedProjectOntologiesCalculator_TestCase {
 
     @Test
     public void shouldIgnoreVersionIRI() {
-        IRI commonIRI = mock(IRI.class);
-        OWLOntologyID projectOntologyId = new OWLOntologyID(commonIRI, mock(IRI.class));
+        IRI commonIRI = IRI.create("http://ontology.iri");
+        OWLOntologyID projectOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.of(IRI.create("http://version.iri.a")));
         when(projectOntology.getOntologyID()).thenReturn(projectOntologyId);
-        OWLOntologyID externalOntologyId = new OWLOntologyID(commonIRI, mock(IRI.class));
+        OWLOntologyID externalOntologyId = new OWLOntologyID(Optional.of(commonIRI), Optional.of(IRI.create("http://version.iri.b")));
         when(externalOntology.getOntologyID()).thenReturn(externalOntologyId);
 
         assertThat(calculator.getModifiedOntologyDiffs(), contains(ontologyDiff));

@@ -54,7 +54,7 @@ public class ActiveProjectManagerImpl implements ActiveProjectManager {
         Optional<ProjectId> projectId = getActiveProjectId();
         if(!projectId.equals(activeProject)) {
             activeProject = projectId;
-            eventBus.fireEvent(new ActiveProjectChangedEvent(activeProject));
+            eventBus.fireEvent(new ActiveProjectChangedEvent(activeProject).asGWTEvent());
         }
     }
 }

@@ -15,7 +15,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/03/2013
  */
-public abstract class HierarchyChangedEvent<T extends Serializable, H> extends ProjectEvent<H> implements HasSignature {
+public abstract class HierarchyChangedEvent<T extends OWLEntity, H> extends ProjectEvent<H> implements HasSignature {
 
     private T child;
 

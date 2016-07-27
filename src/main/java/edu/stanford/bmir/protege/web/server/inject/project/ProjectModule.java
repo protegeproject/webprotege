@@ -45,6 +45,9 @@ import org.semanticweb.owlapi.util.IRIShortFormProvider;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 import org.semanticweb.owlapi.util.ShortFormProvider;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternals;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryInternalsImplNoCache;
 
 import java.io.File;
 import java.util.Comparator;
@@ -124,15 +127,11 @@ public class ProjectModule extends AbstractModule {
                 .asEagerSingleton();
 
 
-
-        bind(OWLDataFactory.class)
-                .toInstance(new OWLDataFactoryImpl(false, false));
-
         bind(OWLEntityProvider.class)
-                .to(OWLDataFactoryImpl.class);
+                .to(OWLDataFactory.class);
 
         bind(OWLAnnotationPropertyProvider.class)
-                .to(OWLDataFactoryImpl.class);
+                .to(OWLDataFactory.class);
 
 
 

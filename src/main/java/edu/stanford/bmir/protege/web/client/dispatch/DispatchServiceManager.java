@@ -4,9 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
-import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
-import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetCurrentUserInSessionResult;
 import edu.stanford.bmir.protege.web.client.dispatch.cache.ResultCache;
@@ -18,7 +16,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.DispatchServiceResultContai
 import edu.stanford.bmir.protege.web.shared.dispatch.InvocationExceptionTolerantAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.event.HasEventList;
-import edu.stanford.bmir.protege.web.shared.event.SerializableEvent;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.permissions.PermissionDeniedException;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -120,19 +118,19 @@ public class DispatchServiceManager {
 
     private void dispatchEvents(Object result) {
         if(result instanceof HasEventList<?>) {
-            EventList<? extends SerializableEvent<?>> eventList = ((HasEventList<? extends SerializableEvent<?>>) result).getEventList();
+            EventList<? extends WebProtegeEvent<?>> eventList = ((HasEventList<? extends WebProtegeEvent<?>>) result).getEventList();
 
-            List<? extends SerializableEvent<?>> events = eventList.getEvents();
+            List<? extends WebProtegeEvent<?>> events = eventList.getEvents();
             // TODO: FIX - Should be dispatched by the project event manager otherwise we will get events from the
             // TODO: more than once!
 
-            for(Event<?> event : events) {
+            for(WebProtegeEvent<?> event : events) {
                 GWT.log("[DISPATCH] Dispatching event (" + event.toDebugString() + ")");
                 if(event.getSource() != null) {
-                    eventBus.fireEventFromSource(event, event.getSource());
+                    eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
                 }
                 else {
-                    eventBus.fireEvent(event);
+                    eventBus.fireEvent(event.asGWTEvent());
                 }
             }
         }

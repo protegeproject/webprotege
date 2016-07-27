@@ -2,12 +2,8 @@ package edu.stanford.bmir.protege.web.shared.hierarchy;
 
 
 import com.google.gwt.user.client.rpc.IsSerializable;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.*;
 
-import java.io.Serializable;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Bio-Medical Informatics Research Group<br>
  * Date: 22/03/2013
  */
-public class HierarchyId<T extends Serializable> implements IsSerializable {
+public class HierarchyId<T extends OWLEntity> implements IsSerializable {
 
     public static final HierarchyId<OWLClass> CLASS_HIERARCHY = get("Class");
 
@@ -40,8 +36,8 @@ public class HierarchyId<T extends Serializable> implements IsSerializable {
 
     }
 
-    public static <T extends Serializable> HierarchyId<T> get(String id) {
-        return new HierarchyId<T>(checkNotNull(id));
+    public static <T extends OWLEntity> HierarchyId<T> get(String id) {
+        return new HierarchyId<>(checkNotNull(id));
     }
 
     @Override

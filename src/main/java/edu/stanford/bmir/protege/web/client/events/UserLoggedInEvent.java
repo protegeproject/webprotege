@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.events;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
@@ -12,9 +14,12 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
 public class UserLoggedInEvent extends WebProtegeEvent<UserLoggedInHandler> {
 
 
-    public transient static final Type<UserLoggedInHandler> TYPE = new Type<UserLoggedInHandler>();
+    public transient static final Event.Type<UserLoggedInHandler> TYPE = new Event.Type<UserLoggedInHandler>();
 
     private UserId userId;
+
+    private UserLoggedInEvent() {
+    }
 
     public UserLoggedInEvent(UserId userId) {
         this.userId = userId;
@@ -25,7 +30,7 @@ public class UserLoggedInEvent extends WebProtegeEvent<UserLoggedInHandler> {
     }
 
     @Override
-    public Type<UserLoggedInHandler> getAssociatedType() {
+    public Event.Type<UserLoggedInHandler> getAssociatedType() {
         return TYPE;
     }
 
@@ -59,5 +64,10 @@ public class UserLoggedInEvent extends WebProtegeEvent<UserLoggedInHandler> {
         sb.append(userId);
         sb.append(")");
         return sb.toString();
+    }
+
+    @Override
+    public ProjectId getSource() {
+        return null;
     }
 }

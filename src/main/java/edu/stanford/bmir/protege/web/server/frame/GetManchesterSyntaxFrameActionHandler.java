@@ -11,8 +11,9 @@ import edu.stanford.bmir.protege.web.server.shortform.EscapingShortFormProvider;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetManchesterSyntaxFrameResult;
+import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxFrameRenderer;
 import org.semanticweb.owlapi.model.OWLOntology;
-import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxFrameRenderer;
+
 
 import javax.inject.Inject;
 import java.io.StringWriter;
@@ -42,13 +43,13 @@ public class GetManchesterSyntaxFrameActionHandler extends AbstractHasProjectAct
         EscapingShortFormProvider entityShortFormProvider = new EscapingShortFormProvider(project.getRenderingManager().getShortFormProvider());
         final ManchesterOWLSyntaxFrameRenderer frameRenderer = new ManchesterOWLSyntaxFrameRenderer(rootOntology.getImportsClosure(), writer, entityShortFormProvider);
         frameRenderer.setOntologyIRIShortFormProvider(project.getRenderingManager().getOntologyIRIShortFormProvider());
-//        frameRenderer.setRenderExtensions(true);
-        frameRenderer.setRenderOntologyLists(true);
-        frameRenderer.setUseTabbing(true);
-        frameRenderer.setUseWrapping(true);
+        frameRenderer.setRenderExtensions(true);
+//        frameRenderer.setRenderOntologyLists(true);
+//        frameRenderer.setUseTabbing(true);
+//        frameRenderer.setUseWrapping(true);
         frameRenderer.writeFrame(action.getSubject());
-        frameRenderer.writeEntityNaryAxioms(action.getSubject());
-        frameRenderer.writeRulesContainingPredicate(action.getSubject());
+//        frameRenderer.writeEntityNaryAxioms(action.getSubject());
+//        frameRenderer.writeRulesContainingPredicate(action.getSubject());
         return new GetManchesterSyntaxFrameResult(writer.getBuffer().toString());
     }
 

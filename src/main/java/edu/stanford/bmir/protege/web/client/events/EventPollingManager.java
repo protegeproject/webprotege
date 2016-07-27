@@ -10,6 +10,7 @@ import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsAction;
 import edu.stanford.bmir.protege.web.shared.event.GetProjectEventsResult;
+import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.events.EventList;
 import edu.stanford.bmir.protege.web.shared.events.EventTag;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -100,13 +101,13 @@ public class EventPollingManager {
         }
         if (!eventList.isEmpty()) {
             GWT.log("[Event Polling Manager] Dispatching events from polling manager...");
-            for(Event<?> event : eventList.getEvents()) {
+            for(WebProtegeEvent<?> event : eventList.getEvents()) {
                 GWT.log("[Event Polling Manager] Event: " + event.toString());
                 if (event.getSource() != null) {
-                    eventBus.fireEventFromSource(event, event.getSource());
+                    eventBus.fireEventFromSource(event.asGWTEvent(), event.getSource());
                 }
                 else {
-                    eventBus.fireEvent(event);
+                    eventBus.fireEvent(event.asGWTEvent());
                 }
             }
         }

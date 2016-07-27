@@ -200,11 +200,11 @@ public class ImportsCacheManager {
                 final Handler handler = new Handler();
                 serializer.read(is, handler, new OWLDataFactoryImpl());
                 OWLOntologyID id = handler.getOntologyID();
-                if(!id.isAnonymous()) {
+                if(id.getOntologyIRI().isPresent()) {
                     ontologyIDs.add(id);
-                    iri2Document.put(id.getOntologyIRI(), IRI.create(ontologyDocument.toURI()));
-                    if(id.getVersionIRI() != null) {
-                        iri2Document.put(id.getVersionIRI(), IRI.create(ontologyDocument));
+                    iri2Document.put(id.getOntologyIRI().get(), IRI.create(ontologyDocument.toURI()));
+                    if(id.getVersionIRI().isPresent()) {
+                        iri2Document.put(id.getVersionIRI().get(), IRI.create(ontologyDocument));
                     }
                     metadataMap.put(id, new ImportedOntologyMetadata(id, handler.getDocumentIRI(), handler.getTimestamp()));
                 }

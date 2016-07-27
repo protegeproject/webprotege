@@ -40,6 +40,9 @@
     <inherits name="com.google.gwt.i18n.I18N"/>
 
     <extend-property name="locale" values="de" />
+
+    <extend-configuration-property name="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
+
 	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
 
 </module>

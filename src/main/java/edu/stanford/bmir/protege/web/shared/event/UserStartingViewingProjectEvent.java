@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.event;
 
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import edu.stanford.bmir.protege.web.shared.HasUserId;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
@@ -13,7 +14,7 @@ import edu.stanford.bmir.protege.web.shared.project.ProjectId;
  */
 public class UserStartingViewingProjectEvent extends ProjectEvent<UserStartedViewingProjectHandler> implements HasUserId {
 
-    public transient static final Type<UserStartedViewingProjectHandler> TYPE = new Type<UserStartedViewingProjectHandler>();
+    public transient static final Event.Type<UserStartedViewingProjectHandler> TYPE = new Event.Type<UserStartedViewingProjectHandler>();
 
 
     private UserId userId;
@@ -28,7 +29,7 @@ public class UserStartingViewingProjectEvent extends ProjectEvent<UserStartedVie
     }
 
     @Override
-    public Type<UserStartedViewingProjectHandler> getAssociatedType() {
+    public Event.Type<UserStartedViewingProjectHandler> getAssociatedType() {
         return TYPE;
     }
 

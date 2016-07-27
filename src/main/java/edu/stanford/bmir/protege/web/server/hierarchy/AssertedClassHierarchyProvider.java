@@ -6,6 +6,7 @@ import org.protege.owlapi.inference.cls.ParentClassExtractor;
 import org.protege.owlapi.inference.orphan.Relation;
 import org.protege.owlapi.inference.orphan.TerminalElementFinder;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -91,7 +92,7 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
         List<OWLAxiomChange> filteredChanges = filterIrrelevantChanges(changes);
         updateImplicitRoots(filteredChanges);
         for (OWLOntologyChange change : filteredChanges) {
-            for (OWLEntity entity : ((OWLAxiomChange) change).getEntities()) {
+            for (OWLEntity entity : ((OWLAxiomChange) change).getSignature()) {
                 if (entity instanceof OWLClass && !entity.equals(root)) {
                     changedClasses.add((OWLClass) entity);
                 }
@@ -250,7 +251,7 @@ public class AssertedClassHierarchyProvider extends AbstractOWLObjectHierarchyPr
     public Set<OWLClass> getEquivalents(OWLClass object) {
         Set<OWLClass> result = new HashSet<OWLClass>();
         for (OWLOntology ont : getOntologies()) {
-            for (OWLClassExpression equiv : object.getEquivalentClasses(ont)) {
+            for (OWLClassExpression equiv : EntitySearcher.getEquivalentClasses(object, ont)) {
                 if (!equiv.isAnonymous()) {
                     result.add((OWLClass) equiv);
                 }

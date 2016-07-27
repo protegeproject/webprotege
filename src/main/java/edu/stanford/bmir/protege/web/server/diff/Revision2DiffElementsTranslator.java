@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.diff;
 
+import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.owlapi.change.Revision;
 import edu.stanford.bmir.protege.web.shared.Filter;
 import edu.stanford.bmir.protege.web.shared.diff.DiffElement;
@@ -89,10 +90,17 @@ public class Revision2DiffElementsTranslator {
             );
         }
         else {
-            IRI ontologyIRI = changeRecord.getOntologyID().getOntologyIRI();
+            Optional<IRI> ontologyIRI = changeRecord.getOntologyID().getOntologyIRI();
+            final String ontologyIRIShortForm;
+            if(ontologyIRI.isPresent()) {
+                ontologyIRIShortForm = ontologyIRIShortFormProvider.getShortForm(ontologyIRI.get());
+            }
+            else {
+                ontologyIRIShortForm = "Anonymous Ontology";
+            }
             return new DiffElement<>(
                     getDiffOperation(changeRecord),
-                    ontologyIRIShortFormProvider.getShortForm(ontologyIRI),
+                    ontologyIRIShortForm,
                     changeRecord);
         }
     }

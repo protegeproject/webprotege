@@ -95,7 +95,7 @@ public class OntologyChangeList<R> implements HasResult<Optional<R>> {
 //            }
 //        }
 
-        public Builder<R> addAll(List<OWLOntologyChange> changes) {
+        public Builder<R> addAll(List<? extends OWLOntologyChange> changes) {
             for(OWLOntologyChange change : changes) {
                 add(change);
             }

@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.events;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 
 /**
@@ -11,7 +13,7 @@ import edu.stanford.bmir.protege.web.shared.user.UserId;
  */
 public class UserLoggedOutEvent extends WebProtegeEvent<UserLoggedOutHandler> {
 
-    public static final transient Type<UserLoggedOutHandler> TYPE = new Type<UserLoggedOutHandler>();
+    public static final transient Event.Type<UserLoggedOutHandler> TYPE = new Event.Type<UserLoggedOutHandler>();
 
     private UserId userId;
 
@@ -27,12 +29,17 @@ public class UserLoggedOutEvent extends WebProtegeEvent<UserLoggedOutHandler> {
     }
 
     @Override
-    public Type<UserLoggedOutHandler> getAssociatedType() {
+    public Event.Type<UserLoggedOutHandler> getAssociatedType() {
         return TYPE;
     }
 
     @Override
     protected void dispatch(UserLoggedOutHandler handler) {
         handler.handleUserLoggedOut(this);
+    }
+
+    @Override
+    public ProjectId getSource() {
+        return null;
     }
 }

@@ -80,8 +80,8 @@ public class OntologyIdViewImpl extends Composite implements OntologyIdView, Has
             return;
         }
         ontologyIRIField.setValue(object.getOntologyIRI().toString());
-        final IRI versionIRI = object.getVersionIRI();
-        if(versionIRI != null) {
+        final Optional<IRI> versionIRI = object.getVersionIRI();
+        if(versionIRI.isPresent()) {
             versionIRIField.setValue(versionIRI.toString());
         }
         else {

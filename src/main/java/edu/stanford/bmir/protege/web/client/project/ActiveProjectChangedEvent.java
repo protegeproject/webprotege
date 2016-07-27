@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.client.project;
 
 import com.google.common.base.Optional;
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.event.WebProtegeEvent;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 
@@ -14,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ActiveProjectChangedEvent extends WebProtegeEvent<ActiveProjectChangedHandler> {
 
-    public static final transient Type<ActiveProjectChangedHandler> TYPE = new Type<ActiveProjectChangedHandler>();
+    public static final transient Event.Type<ActiveProjectChangedHandler> TYPE = new Event.Type<ActiveProjectChangedHandler>();
 
     private ProjectId projectId;
 
@@ -38,7 +39,7 @@ public class ActiveProjectChangedEvent extends WebProtegeEvent<ActiveProjectChan
     }
 
     @Override
-    public Type<ActiveProjectChangedHandler> getAssociatedType() {
+    public Event.Type<ActiveProjectChangedHandler> getAssociatedType() {
         return TYPE;
     }
 

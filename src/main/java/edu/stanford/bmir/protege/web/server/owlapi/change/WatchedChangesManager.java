@@ -7,8 +7,10 @@ import edu.stanford.bmir.protege.web.shared.watches.EntityFrameWatch;
 import edu.stanford.bmir.protege.web.shared.watches.HierarchyBranchWatch;
 import edu.stanford.bmir.protege.web.shared.watches.Watch;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.search.EntitySearcher;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -123,7 +125,7 @@ public class WatchedChangesManager {
 
             @Override
             public Boolean visit(OWLNamedIndividual individual) {
-                final Set<OWLClassExpression> types = individual.getTypes(rootOntologyImportsClosureProvider.getImportsClosure());
+                final Collection<OWLClassExpression> types = EntitySearcher.getTypes(individual, rootOntologyImportsClosureProvider.getImportsClosure());
                 for (OWLClassExpression ce : types) {
                     if (!ce.isAnonymous()) {
                         if (isWatchedByAncestor(classHierarchyProvider.getAncestors(ce.asOWLClass()))) {

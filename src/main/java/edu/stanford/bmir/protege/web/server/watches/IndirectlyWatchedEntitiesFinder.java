@@ -3,9 +3,11 @@ package edu.stanford.bmir.protege.web.server.watches;
 import edu.stanford.bmir.protege.web.server.hierarchy.OWLObjectHierarchyProvider;
 import edu.stanford.bmir.protege.web.server.inject.project.RootOntology;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.OWLEntityVisitorExAdapter;
 
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +42,7 @@ public class IndirectlyWatchedEntitiesFinder {
     }
 
     public Set<? extends OWLEntity> getRelatedWatchedEntities(OWLEntity entity) {
-        return entity.accept(new OWLEntityVisitorExAdapter<Set<? extends OWLEntity>>() {
+        return entity.accept(new OWLEntityVisitorExAdapter<Set<? extends OWLEntity>>(null) {
             @Override
             protected Set<? extends OWLEntity> getDefaultReturnValue(OWLEntity object) {
                 return Collections.emptySet();
@@ -63,8 +65,8 @@ public class IndirectlyWatchedEntitiesFinder {
 
             @Override
             public Set<? extends OWLEntity> visit(OWLNamedIndividual individual) {
-                Set<OWLClassExpression> types = individual.getTypes(rootOntology.getImportsClosure());
-                Set<OWLClass> result = new HashSet<OWLClass>();
+                Collection<OWLClassExpression> types = EntitySearcher.getTypes(individual, rootOntology.getImportsClosure());
+                Set<OWLClass> result = new HashSet<>();
                 for(OWLClassExpression ce : types) {
                     if(!ce.isAnonymous()) {
                         result.addAll(classHierarchyProvider.getAncestors(ce.asOWLClass()));

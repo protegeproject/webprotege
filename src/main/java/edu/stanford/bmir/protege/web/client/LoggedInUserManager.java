@@ -142,10 +142,10 @@ public class LoggedInUserManager implements LoggedInUserProvider {
         this.userId = newUserDetails.getUserId();
         this.userDetails = newUserDetails;
         if(userId.isGuest()) {
-            eventBus.fireEvent(new UserLoggedOutEvent(previousUserId));
+            eventBus.fireEvent(new UserLoggedOutEvent(previousUserId).asGWTEvent());
         }
         else {
-            eventBus.fireEvent(new UserLoggedInEvent(userId));
+            eventBus.fireEvent(new UserLoggedInEvent(userId).asGWTEvent());
         }
     }
 

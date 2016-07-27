@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.hierarchy;
 
+import com.google.web.bindery.event.shared.Event;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -11,7 +12,7 @@ import org.semanticweb.owlapi.model.OWLClass;
  */
 public class ClassHierarchyParentAddedEvent extends HierarchyChangedEvent<OWLClass, ClassHierarchyParentAddedHandler> {
 
-    public static final transient Type<ClassHierarchyParentAddedHandler> TYPE = new Type<ClassHierarchyParentAddedHandler>();
+    public static final transient Event.Type<ClassHierarchyParentAddedHandler> TYPE = new Event.Type<ClassHierarchyParentAddedHandler>();
 
     public ClassHierarchyParentAddedEvent(ProjectId source, OWLClass child, OWLClass parent, HierarchyId<OWLClass> hierarchyId) {
         super(source, child, parent, hierarchyId);
@@ -21,7 +22,7 @@ public class ClassHierarchyParentAddedEvent extends HierarchyChangedEvent<OWLCla
     }
 
     @Override
-    public Type<ClassHierarchyParentAddedHandler> getAssociatedType() {
+    public Event.Type<ClassHierarchyParentAddedHandler> getAssociatedType() {
         return TYPE;
     }
 

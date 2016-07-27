@@ -170,7 +170,7 @@ public class SelectionModel {
             return;
         }
         Item<?> item = entity
-                .accept(new OWLEntityVisitorExAdapter<Item<?>>() {
+                .accept(new OWLEntityVisitorEx<Item<?>>() {
                     @Override
                     public Item<?> visit(OWLClass desc) {
                         selectedClassManager.setSelection(desc);

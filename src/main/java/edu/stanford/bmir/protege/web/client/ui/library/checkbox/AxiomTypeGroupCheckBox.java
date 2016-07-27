@@ -64,7 +64,7 @@ public class AxiomTypeGroupCheckBox extends CheckBox {
         final Optional<OWLRDFVocabulary> vocab = axiomTypeGroup.getOWLRDFVocabulary();
         String vocabSF = "";
         if(vocab.isPresent()) {
-            vocabSF = "(" + vocab.get().getNamespace().name().toLowerCase() + ":" + vocab.get().getShortName() + ")";
+            vocabSF = "(" + vocab.get().getNamespace().name().toLowerCase() + ":" + vocab.get().getShortForm() + ")";
         }
         setHTML(axiomTypeGroup.getDisplayName() + "   <span style=\"color: gray; font-size: 90%;\">" + vocabSF + "</span>");
 
