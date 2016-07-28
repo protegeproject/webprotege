@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
@@ -12,8 +11,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
+import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 import org.semanticweb.owlapi.model.OWLClass;
 
 import javax.inject.Inject;
@@ -24,7 +23,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<GetClassFrameAction, GetObjectResult<LabelledFrame<ClassFrame>>> {
+public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<GetClassFrameAction, GetClassFrameResult> {
 
     public static final ClassFrameTranslator TRANSLATOR = new ClassFrameTranslator();
 
@@ -51,10 +50,10 @@ public class GetClassFrameActionHandler extends AbstractHasProjectActionHandler<
     }
 
     @Override
-    protected GetObjectResult<LabelledFrame<ClassFrame>> execute(GetClassFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        FrameActionResultTranslator<ClassFrame, OWLClass> translator = new FrameActionResultTranslator<ClassFrame, OWLClass>(action.getSubject(), project, TRANSLATOR);
+    protected GetClassFrameResult execute(GetClassFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
+        FrameActionResultTranslator<ClassFrame, OWLClass> translator = new FrameActionResultTranslator<>(action.getSubject(), project, TRANSLATOR);
         LabelledFrame<ClassFrame> f = translator.doIT();
         final BrowserTextMap browserTextMap = new BrowserTextMap(f, project.getRenderingManager());
-        return new RenderableGetObjectResult<LabelledFrame<ClassFrame>>(f, browserTextMap);
+        return new GetClassFrameResult(f, browserTextMap);
     }
 }

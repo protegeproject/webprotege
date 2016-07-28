@@ -14,6 +14,8 @@ import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataAction;
 import edu.stanford.bmir.protege.web.shared.renderer.GetEntityDataResult;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import java.util.Collections;
+
 /**
  * Author: Matthew Horridge<br>
  * Stanford University<br>
@@ -39,25 +41,14 @@ public abstract class AbstractFrameEditor<O> extends SimplePanel implements Valu
         if (object instanceof HasSignature) {
             final HasSignature hasSignature = (HasSignature) object;
             dispatchServiceManager.execute(new GetEntityDataAction(projectId, ImmutableSet.copyOf(hasSignature.getSignature())), new DispatchServiceCallback<GetEntityDataResult>() {
-
                 @Override
                 public void handleSuccess(final GetEntityDataResult result) {
-                    setValue(object, new HasEntityDataProvider() {
-                        @Override
-                        public Optional<OWLEntityData> getEntityData(OWLEntity entity) {
-                            return Optional.fromNullable(result.getEntityDataMap().get(entity));
-                        }
-                    });
+                    setValue(object, entity -> Optional.fromNullable(result.getEntityDataMap().get(entity)));
                 }
             });
         }
         else {
-            setValue(object, new HasEntityDataProvider() {
-                @Override
-                public Optional<OWLEntityData> getEntityData(OWLEntity entity) {
-                    return Optional.absent();
-                }
-            });
+            setValue(object, entity -> Optional.absent());
         }
     }
 

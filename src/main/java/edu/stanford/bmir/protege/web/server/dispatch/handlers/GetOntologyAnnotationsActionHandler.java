@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
+import com.google.common.collect.ImmutableList;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.server.comparator.OntologyAnnotationsComparator;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
@@ -15,7 +16,9 @@ import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Author: Matthew Horridge<br>
@@ -23,7 +26,7 @@ import java.util.*;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/02/2013
  */
-public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetOntologyAnnotationsAction, RenderableGetObjectResult<Set<OWLAnnotation>>> {
+public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetOntologyAnnotationsAction, GetOntologyAnnotationsResult> {
 
     private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
 
@@ -44,11 +47,11 @@ public class GetOntologyAnnotationsActionHandler extends AbstractHasProjectActio
     }
 
     @Override
-    protected RenderableGetObjectResult<Set<OWLAnnotation>> execute(GetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
-
-        List<OWLAnnotation> result = new ArrayList<OWLAnnotation>(project.getRootOntology().getAnnotations());
+    protected GetOntologyAnnotationsResult execute(GetOntologyAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+        List<OWLAnnotation> result = new ArrayList<>(project.getRootOntology().getAnnotations());
         Collections.sort(result, new OntologyAnnotationsComparator(project));
-        return new RenderableGetObjectResult<Set<OWLAnnotation>>(new LinkedHashSet<OWLAnnotation>(result), BrowserTextMap.build(project.getRenderingManager(), result));
+        BrowserTextMap browserTextMap = BrowserTextMap.build(project.getRenderingManager(), result);
+        return new GetOntologyAnnotationsResult(ImmutableList.copyOf(result), browserTextMap);
     }
 
 }

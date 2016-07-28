@@ -2,9 +2,11 @@ package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.ui.frame.ObjectPropertyFrameEditor;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameAction;
+import edu.stanford.bmir.protege.web.shared.frame.GetObjectPropertyFrameResult;
 import edu.stanford.bmir.protege.web.shared.frame.ObjectPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.UpdateObjectPropertyFrameAction;
 
@@ -16,7 +18,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<ObjectPropertyFrame>> {
+public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<ObjectPropertyFrame>, GetObjectPropertyFrameAction, GetObjectPropertyFrameResult> {
 
     private final ObjectPropertyFrameEditor editor;
 
@@ -31,8 +33,13 @@ public class ObjectPropertyFrameEditorManager implements EditorManager<OWLEntity
     }
 
     @Override
-    public GetObjectAction<LabelledFrame<ObjectPropertyFrame>> createGetObjectAction(OWLEntityContext editorContext) {
+    public GetObjectPropertyFrameAction createAction(OWLEntityContext editorContext) {
         return new GetObjectPropertyFrameAction(editorContext.getProjectId(), editorContext.getEntity().asOWLObjectProperty());
+    }
+
+    @Override
+    public LabelledFrame<ObjectPropertyFrame> extractObject(GetObjectPropertyFrameResult result) {
+        return result.getFrame();
     }
 
     @Override

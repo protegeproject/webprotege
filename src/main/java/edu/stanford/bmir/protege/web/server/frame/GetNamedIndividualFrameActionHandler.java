@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameResult;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.dispatch.ActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -10,6 +11,8 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionVa
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
+import edu.stanford.bmir.protege.web.server.owlapi.RenderingManager;
+import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -22,7 +25,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class GetNamedIndividualFrameActionHandler implements ActionHandler<GetNamedIndividualFrameAction, GetObjectResult<LabelledFrame<NamedIndividualFrame>>> {
+public class GetNamedIndividualFrameActionHandler implements ActionHandler<GetNamedIndividualFrameAction, GetNamedIndividualFrameResult> {
 
     private static final NamedIndividualFrameTranslator TRANSLATOR = new NamedIndividualFrameTranslator();
 
@@ -51,10 +54,14 @@ public class GetNamedIndividualFrameActionHandler implements ActionHandler<GetNa
     }
 
     @Override
-    public GetObjectResult<LabelledFrame<NamedIndividualFrame>> execute(GetNamedIndividualFrameAction action, ExecutionContext executionContext) {
+    public GetNamedIndividualFrameResult execute(GetNamedIndividualFrameAction action, ExecutionContext executionContext) {
         OWLAPIProject project = projectManager.getProject(action.getProjectId());
-        FrameActionResultTranslator<NamedIndividualFrame, OWLNamedIndividual> t = new FrameActionResultTranslator<NamedIndividualFrame, OWLNamedIndividual>(action.getSubject(), project, TRANSLATOR);
-        return new GetObjectResult<LabelledFrame<NamedIndividualFrame>>(t.doIT());
+        NamedIndividualFrameTranslator translator = new NamedIndividualFrameTranslator();
+        NamedIndividualFrame frame = translator.getFrame(action.getSubject(), project.getRootOntology(), project);
+        RenderingManager renderingManager = project.getRenderingManager();
+        String rendering = renderingManager.getShortForm(action.getSubject());
+        LabelledFrame<NamedIndividualFrame> labelledFrame = new LabelledFrame<>(rendering, frame);
+        return new GetNamedIndividualFrameResult(labelledFrame, new BrowserTextMap(frame, renderingManager));
     }
 
 }

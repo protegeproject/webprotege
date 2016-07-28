@@ -7,6 +7,7 @@ import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.ClassFrameChangedEventHandler;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
+import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLClass;
 
@@ -19,7 +20,7 @@ import java.util.Collections;
  * Bio-Medical Informatics Research Group<br>
  * Date: 15/11/2013
  */
-public class GetClassFrameActionResultCachingStrategy extends AbstractResultCachingStrategy<GetClassFrameAction, GetObjectResult<LabelledFrame<ClassFrame>>, OWLClass> {
+public class GetClassFrameActionResultCachingStrategy extends AbstractResultCachingStrategy<GetClassFrameAction, GetClassFrameResult, OWLClass> {
 
     public GetClassFrameActionResultCachingStrategy(ProjectId projectId, EventBus eventBus) {
         super(projectId, eventBus);
@@ -31,22 +32,19 @@ public class GetClassFrameActionResultCachingStrategy extends AbstractResultCach
     }
 
     @Override
-    public boolean shouldCache(GetClassFrameAction action, GetObjectResult<LabelledFrame<ClassFrame>> result) {
+    public boolean shouldCache(GetClassFrameAction action, GetClassFrameResult result) {
         return true;
     }
 
     @Override
-    public Collection<OWLClass> getInvalidationKeys(GetClassFrameAction action, GetObjectResult<LabelledFrame<ClassFrame>> result) {
+    public Collection<OWLClass> getInvalidationKeys(GetClassFrameAction action, GetClassFrameResult result) {
         return Collections.singleton(action.getSubject());
     }
 
     @Override
     public void registerEventHandlers() {
-        registerProjectEventHandler(ClassFrameChangedEvent.TYPE, new ClassFrameChangedEventHandler() {
-            @Override
-            public void classFrameChanged(ClassFrameChangedEvent event) {
-                fireResultsInvalidatedEvent(event.getEntity());
-            }
+        registerProjectEventHandler(ClassFrameChangedEvent.TYPE, event -> {
+            fireResultsInvalidatedEvent(event.getEntity());
         });
     }
 

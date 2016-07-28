@@ -8,8 +8,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.LoggedInUserProvider;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
-import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsAction;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.SetOntologyAnnotationsResult;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
@@ -23,6 +23,8 @@ import edu.stanford.webprotege.shared.annotations.Portlet;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 
 import javax.inject.Inject;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -70,11 +72,11 @@ public class OntologyAnnotationsPortlet extends AbstractWebProtegePortlet {
 
 
     private void updateView() {
-        dispatchServiceManager.execute(new GetOntologyAnnotationsAction(getProjectId()), new DispatchServiceCallback<RenderableGetObjectResult<Set<OWLAnnotation>>>() {
+        dispatchServiceManager.execute(new GetOntologyAnnotationsAction(getProjectId()), new DispatchServiceCallback<GetOntologyAnnotationsResult>() {
             @Override
-            public void handleSuccess(RenderableGetObjectResult<Set<OWLAnnotation>> result) {
-                final Set<OWLAnnotation> object = result.getObject();
-                if (!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(result.getObject()))) {
+            public void handleSuccess(GetOntologyAnnotationsResult result) {
+                final Set<OWLAnnotation> object = new LinkedHashSet<>(result.getAnnotations());
+                if (!lastSet.isPresent() || !annotationsView.getValue().equals(Optional.of(object))) {
                     lastSet = Optional.of(object);
                     annotationsView.setValue(object);
                 }

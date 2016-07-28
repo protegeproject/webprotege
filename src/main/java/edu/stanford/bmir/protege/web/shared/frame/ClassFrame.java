@@ -31,13 +31,13 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
     }
 
     public ClassFrame(OWLClass subject) {
-        this(subject, Collections.<OWLClass>emptySet(), Collections.<PropertyValue>emptySet());
+        this(subject, Collections.emptySet(), Collections.emptySet());
     }
 
     public ClassFrame(OWLClass subject, Set<OWLClass> classes, Set<PropertyValue> propertyValues) {
         this.subject = checkNotNull(subject);
-        this.classEntries = checkNotNull(classes);
-        this.propertyValues = checkNotNull(propertyValues);
+        this.classEntries = new HashSet<>(checkNotNull(classes));
+        this.propertyValues = new HashSet<>(checkNotNull(propertyValues));
     }
 
     /**
@@ -62,7 +62,7 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
     }
 
     public Set<OWLEntity> getSignature() {
-        Set<OWLEntity> result = new HashSet<OWLEntity>();
+        Set<OWLEntity> result = new HashSet<>();
         result.add(subject);
         for(OWLClass entry : classEntries) {
             result.add(entry);
@@ -170,7 +170,7 @@ public class ClassFrame implements EntityFrame<OWLClass>, HasSignature, Serializ
         private OWLClass subject;
 
         // Mutable
-        private final Set<OWLClass> classes = new HashSet<OWLClass>();
+        private final Set<OWLClass> classes = new HashSet<>();
 
         // Mutable
         private final Set<PropertyValue> propertyValues = new LinkedHashSet<PropertyValue>();

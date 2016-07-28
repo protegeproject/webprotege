@@ -14,7 +14,7 @@ import java.io.Serializable;
  *     A high level interface for frame objects.  All frames have some kind of subject.
  * </p>
  */
-public interface Frame<S> extends Serializable, HasSignature, IsSerializable {
+public interface Frame<S> extends HasSignature, IsSerializable {
 
     /**
      * Gets the subject of this frame.

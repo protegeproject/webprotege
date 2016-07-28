@@ -1,6 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import org.semanticweb.owlapi.model.EntityType;
 
 import java.io.Serializable;
@@ -15,7 +17,7 @@ import java.util.Map;
  */
 public class EntityManagerSelectorImpl implements EditorManagerSelector {
 
-    private final Map<EntityType<?>, EditorManager<?, ?>> map = new HashMap<>();
+    private final Map<EntityType<?>, EditorManager<?, ?, ?, ?>> map = new HashMap<>();
 
     @Inject
     public EntityManagerSelectorImpl(ClassFrameEditorManager classFrameEditorManager,
@@ -41,8 +43,8 @@ public class EntityManagerSelectorImpl implements EditorManagerSelector {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <C extends EditorCtx, O extends Serializable> EditorManager<C, O> getEditorManager(EditorCtx editorContext) {
+    public <C extends EditorCtx, O , A extends Action<R>, R extends Result> EditorManager<C, O, A, R> getEditorManager(EditorCtx editorContext) {
         EntityType entityType = ((OWLEntityContext) editorContext).getEntity().getEntityType();
-        return (EditorManager<C, O>) map.get(entityType);
+        return (EditorManager<C, O, A, R>) map.get(entityType);
     }
 }

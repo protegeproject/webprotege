@@ -55,15 +55,11 @@ public class RootOntologyProvider implements Provider<OWLOntology> {
         delegateManager.getOntologyStorers().add(new FunctionalSyntaxStorerFactory());
         delegateManager.getOntologyStorers().add(new ManchesterSyntaxStorerFactory());
 
+        delegateManager.getOntologyParsers().add(new BinaryOWLOntologyDocumentParserFactory());
+
 
         // The wrapper manager
         OWLAPIProjectOWLOntologyManager manager = new OWLAPIProjectOWLOntologyManager();
-
-        // We have to do some twiddling of the factories so that the delegate manager creates ontologies which point
-        // to the non-delegate manager.
-
-        delegateManager.getOntologyParsers().add(new BinaryOWLOntologyDocumentParserFactory());
-
         manager.setDelegate(delegateManager);
 
         try {

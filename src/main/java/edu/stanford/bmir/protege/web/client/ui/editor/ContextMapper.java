@@ -2,6 +2,8 @@ package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,10 +29,11 @@ public class ContextMapper {
      * @param editorCtx The context
      * @return The EditorManager (possibly absent).
      */
-    public <C extends EditorCtx, O extends Serializable> Optional<EditorManager<C, O>> getEditorManager(EditorCtx editorCtx) {
+
+    public <C extends EditorCtx, O, A extends Action<R>, R extends Result> Optional<EditorManager<C, O, A, R>> getEditorManager(EditorCtx editorCtx) {
         for(EditorManagerSelector selector : selectors) {
             if(selector.canEditContext(editorCtx)) {
-                EditorManager<C, O> man = selector.getEditorManager(editorCtx);
+                EditorManager<C, O, A, R> man = selector.getEditorManager(editorCtx);
                 return Optional.of(man);
             }
         }

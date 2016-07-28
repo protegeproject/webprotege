@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.shared;
 
 import com.google.common.base.Optional;
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObject;
@@ -19,9 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *     An immutable map which maps {@link OWLEntity} objects to {@link String} objects representing the browser text.
  * </p>
  */
-public class BrowserTextMap implements Serializable {
+public class BrowserTextMap implements IsSerializable {
 
-    private Map<OWLEntity, String> map = new HashMap<OWLEntity, String>();
+    private Map<OWLEntity, String> map = new HashMap<>();
 
     private BrowserTextMap() {
 
@@ -84,6 +85,16 @@ public class BrowserTextMap implements Serializable {
         }
         return builder.build(browserTextProvider);
     }
+
+    public static BrowserTextMap build(BrowserTextProvider browserTextProvider, Iterable<?> objects) {
+        checkNotNull(objects);
+        Builder builder = new Builder();
+        for(Object o : objects) {
+            build(builder, o);
+        }
+        return builder.build(browserTextProvider);
+    }
+
 
     /**
      * Adds the signature of the specified object to the specified builder.

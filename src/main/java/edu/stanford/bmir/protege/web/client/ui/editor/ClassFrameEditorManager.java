@@ -5,9 +5,11 @@ import edu.stanford.bmir.protege.web.client.dispatch.actions.GetClassFrameAction
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateClassFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.ClassFrameEditor;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
+import edu.stanford.bmir.protege.web.shared.frame.GetClassFrameResult;
 
 /**
  * Author: Matthew Horridge<br>
@@ -15,7 +17,7 @@ import edu.stanford.bmir.protege.web.shared.frame.ClassFrame;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<ClassFrame>> {
+public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<ClassFrame>, GetClassFrameAction, GetClassFrameResult> {
 
     private ClassFrameEditor editor;
 
@@ -30,8 +32,13 @@ public class ClassFrameEditorManager implements EditorManager<OWLEntityContext, 
     }
 
     @Override
-    public GetObjectAction<LabelledFrame<ClassFrame>> createGetObjectAction(OWLEntityContext editorContext) {
+    public GetClassFrameAction createAction(OWLEntityContext editorContext) {
         return new GetClassFrameAction(editorContext.getEntity().asOWLClass(), editorContext.getProjectId());
+    }
+
+    @Override
+    public LabelledFrame<ClassFrame> extractObject(GetClassFrameResult result) {
+        return result.getFrame();
     }
 
     @Override

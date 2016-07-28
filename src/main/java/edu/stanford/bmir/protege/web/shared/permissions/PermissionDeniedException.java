@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.permissions;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import java.io.Serializable;
 
 /**
@@ -12,7 +14,7 @@ import java.io.Serializable;
  *     permissions to do so.
  * </p>
  */
-public class PermissionDeniedException extends RuntimeException implements Serializable {
+public class PermissionDeniedException extends RuntimeException implements IsSerializable {
 
     public PermissionDeniedException() {
     }

@@ -1,10 +1,8 @@
 package edu.stanford.bmir.protege.web.client.dispatch.actions;
 
-import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.HasSubject;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
-import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
@@ -14,7 +12,11 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
  * Bio-Medical Informatics Research Group<br>
  * Date: 20/02/2013
  */
-public class GetNamedIndividualFrameAction extends AbstractHasProjectIdAndSubject<OWLNamedIndividual> implements GetObjectAction<LabelledFrame<NamedIndividualFrame>>, HasProjectId, HasSubject<OWLNamedIndividual> {
+public class GetNamedIndividualFrameAction implements Action<GetNamedIndividualFrameResult>, HasProjectId, HasSubject<OWLNamedIndividual> {
+
+    private ProjectId projectId;
+
+    private OWLNamedIndividual subject;
 
     /**
      * For serialization purposes only
@@ -23,10 +25,31 @@ public class GetNamedIndividualFrameAction extends AbstractHasProjectIdAndSubjec
         super();
     }
 
-    public GetNamedIndividualFrameAction(OWLNamedIndividual subject, ProjectId projectId) {
-        super(subject, projectId);
+
+    public GetNamedIndividualFrameAction(ProjectId projectId, OWLNamedIndividual subject) {
+        this.projectId = projectId;
+        this.subject = subject;
     }
 
+    /**
+     * Get the {@link edu.stanford.bmir.protege.web.shared.project.ProjectId}.
+     *
+     * @return The {@link edu.stanford.bmir.protege.web.shared.project.ProjectId}.  Not {@code null}.
+     */
+    @Override
+    public ProjectId getProjectId() {
+        return projectId;
+    }
+
+    /**
+     * Gets the subject of this object.
+     *
+     * @return The subject.  Not {@code null}.
+     */
+    @Override
+    public OWLNamedIndividual getSubject() {
+        return subject;
+    }
 
     @Override
     public int hashCode() {

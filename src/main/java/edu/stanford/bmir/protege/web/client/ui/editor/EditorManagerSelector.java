@@ -1,5 +1,8 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
+
 import java.io.Serializable;
 
 /**
@@ -12,5 +15,5 @@ public interface EditorManagerSelector {
 
     boolean canEditContext(EditorCtx editorCtx);
 
-    <C extends EditorCtx, O extends Serializable> EditorManager<C, O> getEditorManager(EditorCtx editorContext);
+    <C extends EditorCtx, O, A extends Action<R>, R extends Result> EditorManager<C, O, A, R> getEditorManager(EditorCtx editorContext);
 }

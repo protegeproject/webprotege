@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -11,9 +10,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.frame.DataPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameAction;
+import edu.stanford.bmir.protege.web.shared.frame.GetDataPropertyFrameResult;
 
 import javax.inject.Inject;
 
@@ -23,7 +22,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class GetDataPropertyFrameActionHandler extends AbstractHasProjectActionHandler<GetDataPropertyFrameAction, GetObjectResult<LabelledFrame<DataPropertyFrame>>> {
+public class GetDataPropertyFrameActionHandler extends AbstractHasProjectActionHandler<GetDataPropertyFrameAction, GetDataPropertyFrameResult> {
 
     private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
 
@@ -39,12 +38,12 @@ public class GetDataPropertyFrameActionHandler extends AbstractHasProjectActionH
     }
 
     @Override
-    protected GetObjectResult<LabelledFrame<DataPropertyFrame>> execute(GetDataPropertyFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetDataPropertyFrameResult execute(GetDataPropertyFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
         DataPropertyFrameTranslator translator = new DataPropertyFrameTranslator();
         final DataPropertyFrame frame = translator.getFrame(action.getSubject(), project.getRootOntology(), project);
         String displayName = project.getRenderingManager().getBrowserText(action.getSubject());
-        BrowserTextMap btm = BrowserTextMap.build(project.getRenderingManager(), frame.getSignature().toArray());
-        return new RenderableGetObjectResult<LabelledFrame<DataPropertyFrame>>(new LabelledFrame<DataPropertyFrame>(displayName, frame), btm);
+        BrowserTextMap btm = BrowserTextMap.build(project.getRenderingManager(), frame.getSignature());
+        return new GetDataPropertyFrameResult(new LabelledFrame<>(displayName, frame), btm);
     }
 
     @Override
