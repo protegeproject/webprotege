@@ -54,6 +54,7 @@ import org.semanticweb.owlapi.vocab.Namespaces;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.io.IOException;
@@ -428,11 +429,9 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
             try {
                 projectChangeWriteLock.lock();
                 OWLAPIProjectOWLOntologyManager manager = ((OWLAPIProjectOWLOntologyManager) getRootOntology().getOWLOntologyManager());
-                // TODO: The change from OWL API 3.x to 4.x means that we can't get back the list of changes that were
-                // TODO: actually applied.  Pretty unfortunate really.  This means we have to log the changes that we
-                // TODO: asked to be applied - none of them may have been applied of course.
-                manager.getDelegate().applyChanges(minimisedChanges);
-                appliedChanges = minimisedChanges;
+                List<OWLOntologyChange> effectiveChanges = getEffectiveChanges(minimisedChanges);
+                manager.getDelegate().applyChanges(effectiveChanges);
+                appliedChanges = effectiveChanges;
                 final RenameMap renameMap = new RenameMap(iriRenameMap);
                 Optional<R> renamedResult = getRenamedResult(changeListGenerator, gen.getResult(), renameMap);
                 finalResult = new ChangeApplicationResult<R>(renamedResult, appliedChanges, renameMap);
@@ -466,38 +465,64 @@ public class OWLAPIProject implements HasDispose, HasDataFactory, HasContainsEnt
 
     }
 
-    private List<OWLOntologyChange> getMinimisedChanges(List<OWLOntologyChange> allChangesIncludingRenames) {
-        Set<OWLAxiom> axiomsToAdd = new HashSet<OWLAxiom>();
-        Set<OWLAxiom> axiomsToRemove = new HashSet<OWLAxiom>();
-        for (OWLOntologyChange change : allChangesIncludingRenames) {
-            if (change.isAddAxiom()) {
-                axiomsToAdd.add(change.getAxiom());
-                axiomsToRemove.remove(change.getAxiom());
-            }
-            else if (change.isRemoveAxiom()) {
-                axiomsToRemove.add(change.getAxiom());
-                axiomsToAdd.remove(change.getAxiom());
+    private List<OWLOntologyChange> getEffectiveChanges(List<OWLOntologyChange> minimisedChanges) {
+        List<OWLOntologyChange> result = new ArrayList<>(minimisedChanges.size());
+        for(OWLOntologyChange chg : minimisedChanges) {
+            if(isEffectiveChange(chg)) {
+                result.add(chg);
             }
         }
+        return result;
+    }
 
-        // Minimise changes
-        List<OWLOntologyChange> minimisedChanges = new ArrayList<OWLOntologyChange>();
-        for (OWLOntologyChange change : allChangesIncludingRenames) {
-            if (change.isAddAxiom()) {
-                if (axiomsToAdd.contains(change.getAxiom())) {
-                    minimisedChanges.add(change);
-                }
+    private boolean isEffectiveChange(OWLOntologyChange chg) {
+        return chg.accept(new OWLOntologyChangeVisitorEx<Boolean>() {
+            @Nonnull
+            @Override
+            public Boolean visit(AddAxiom addAxiom) {
+                return !addAxiom.getOntology().containsAxiom(addAxiom.getAxiom());
             }
-            else if (change.isRemoveAxiom()) {
-                if (axiomsToRemove.contains(change.getAxiom())) {
-                    minimisedChanges.add(change);
-                }
+
+            @Nonnull
+            @Override
+            public Boolean visit(RemoveAxiom removeAxiom) {
+                return removeAxiom.getOntology().containsAxiom(removeAxiom.getAxiom());
             }
-            else {
-                minimisedChanges.add(change);
+
+            @Nonnull
+            @Override
+            public Boolean visit(SetOntologyID setOntologyID) {
+                return false;
             }
-        }
-        return minimisedChanges;
+
+            @Nonnull
+            @Override
+            public Boolean visit(AddImport addImport) {
+                return !addImport.getOntology().getImportsDeclarations().contains(addImport.getImportDeclaration());
+            }
+
+            @Nonnull
+            @Override
+            public Boolean visit(RemoveImport removeImport) {
+                return removeImport.getOntology().getImportsDeclarations().contains(removeImport.getImportDeclaration());
+            }
+
+            @Nonnull
+            @Override
+            public Boolean visit(AddOntologyAnnotation addOntologyAnnotation) {
+                return !addOntologyAnnotation.getOntology().getAnnotations().contains(addOntologyAnnotation.getAnnotation());
+            }
+
+            @Nonnull
+            @Override
+            public Boolean visit(RemoveOntologyAnnotation removeOntologyAnnotation) {
+                return removeOntologyAnnotation.getOntology().getAnnotations().contains(removeOntologyAnnotation.getAnnotation());
+            }
+        });
+    }
+
+    private List<OWLOntologyChange> getMinimisedChanges(List<OWLOntologyChange> allChangesIncludingRenames) {
+        return new ChangeListMinimiser().getMinimisedChanges(allChangesIncludingRenames);
     }
 
     /**
