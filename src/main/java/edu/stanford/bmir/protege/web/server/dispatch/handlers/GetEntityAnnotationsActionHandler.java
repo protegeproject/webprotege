@@ -1,7 +1,8 @@
 package edu.stanford.bmir.protege.web.server.dispatch.handlers;
 
-import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
+import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetEntityAnnotationsAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetEntityAnnotationsResult;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -16,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +27,7 @@ import java.util.Set;
  * Bio-Medical Informatics Research Group<br>
  * Date: 21/02/2013
  */
-public class GetEntityAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetEntityAnnotationsAction, RenderableGetObjectResult<Set<OWLAnnotation>>> {
+public class GetEntityAnnotationsActionHandler extends AbstractHasProjectActionHandler<GetEntityAnnotationsAction, GetEntityAnnotationsResult> {
 
     private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
 
@@ -46,7 +48,7 @@ public class GetEntityAnnotationsActionHandler extends AbstractHasProjectActionH
     }
 
     @Override
-    protected RenderableGetObjectResult<Set<OWLAnnotation>> execute(GetEntityAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetEntityAnnotationsResult execute(GetEntityAnnotationsAction action, OWLAPIProject project, ExecutionContext executionContext) {
         Set<OWLAnnotation> result = new HashSet<OWLAnnotation>();
         for(OWLOntology ontology : project.getRootOntology().getImportsClosure()) {
             for (OWLAnnotationAssertionAxiom ax : ontology.getAnnotationAssertionAxioms(action.getSubject())) {
@@ -54,6 +56,6 @@ public class GetEntityAnnotationsActionHandler extends AbstractHasProjectActionH
             }
         }
         BrowserTextMap browserTextMap = new BrowserTextMap(result, project.getRenderingManager());
-        return new RenderableGetObjectResult<Set<OWLAnnotation>>(result, browserTextMap);
+        return new GetEntityAnnotationsResult(new ArrayList<>(result), browserTextMap);
     }
 }

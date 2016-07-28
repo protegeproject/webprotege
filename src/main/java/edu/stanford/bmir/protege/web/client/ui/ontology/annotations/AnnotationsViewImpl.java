@@ -74,7 +74,7 @@ public class AnnotationsViewImpl extends Composite implements AnnotationsView {
 
     @Override
     public void setValue(Set<OWLAnnotation> object) {
-        List<PropertyAnnotationValue> values = new ArrayList<PropertyAnnotationValue>();
+        List<PropertyAnnotationValue> values = new ArrayList<>();
         for(OWLAnnotation annotation : object) {
             values.add(new PropertyAnnotationValue(annotation.getProperty(), annotation.getValue(), PropertyValueState.ASSERTED));
         }

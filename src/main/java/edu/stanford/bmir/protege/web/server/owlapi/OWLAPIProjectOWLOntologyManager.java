@@ -51,6 +51,9 @@ public class OWLAPIProjectOWLOntologyManager implements OWLOntologyManager {
     }
 
     public void sealDelegate() {
+        for(OWLOntology ontology : delegate.getOntologies()) {
+            ontology.setOWLOntologyManager(this);
+        }
         sealed = true;
     }
 

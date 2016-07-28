@@ -1129,7 +1129,7 @@ public class ClassTreePortlet extends AbstractWebProtegePortlet {
         @Override
         public void handleSuccess(final CreateClassResult result) {
             onClassCreated(result.getObject(), result.getSuperClasses());
-            SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(), result.getBrowserText(result.getObject()).or(""), Collections.<EntityData>emptyList(), 0);
+            SubclassEntityData subClassData = new SubclassEntityData(result.getObject().getIRI().toString(), result.getBrowserTextMap().getBrowserText(result.getObject()).or(""), Collections.<EntityData>emptyList(), 0);
             ObjectPath<OWLClass> pathToRoot = result.getPathToRoot();
             if (pathToRoot.isEmpty()) {
                 return;

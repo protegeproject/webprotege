@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.client.ui.frame;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.HasSignature;
 import edu.stanford.bmir.protege.web.shared.frame.Frame;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -15,7 +16,7 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Bio-Medical Informatics Research Group<br>
  * Date: 14/01/2013
  */
-public class LabelledFrame<F extends Frame<?>> implements Serializable, HasSignature {
+public class LabelledFrame<F extends Frame<?>> implements IsSerializable, HasSignature {
 
     private String displayName;
 

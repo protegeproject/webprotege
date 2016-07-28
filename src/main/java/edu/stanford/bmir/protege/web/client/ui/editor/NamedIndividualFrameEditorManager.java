@@ -1,9 +1,11 @@
 package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameAction;
+import edu.stanford.bmir.protege.web.client.dispatch.actions.GetNamedIndividualFrameResult;
 import edu.stanford.bmir.protege.web.client.dispatch.actions.UpdateNamedIndividualFrameAction;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.client.ui.frame.NamedIndividualFrameEditor;
+import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
 import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
 import edu.stanford.bmir.protege.web.shared.frame.NamedIndividualFrame;
@@ -16,7 +18,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<NamedIndividualFrame>> {
+public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntityContext, LabelledFrame<NamedIndividualFrame>, GetNamedIndividualFrameAction, GetNamedIndividualFrameResult> {
 
     private final NamedIndividualFrameEditor editor;
 
@@ -31,8 +33,13 @@ public class NamedIndividualFrameEditorManager implements EditorManager<OWLEntit
     }
 
     @Override
-    public GetObjectAction<LabelledFrame<NamedIndividualFrame>> createGetObjectAction(OWLEntityContext editorContext) {
-        return new GetNamedIndividualFrameAction(editorContext.getEntity().asOWLNamedIndividual(), editorContext.getProjectId());
+    public GetNamedIndividualFrameAction createAction(OWLEntityContext editorContext) {
+        return new GetNamedIndividualFrameAction(editorContext.getProjectId(), editorContext.getEntity().asOWLNamedIndividual());
+    }
+
+    @Override
+    public LabelledFrame<NamedIndividualFrame> extractObject(GetNamedIndividualFrameResult result) {
+        return result.getFrame();
     }
 
     @Override

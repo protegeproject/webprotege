@@ -8,6 +8,9 @@ import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.google.common.base.Objects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -29,9 +32,9 @@ public class GetEntityDataAction implements Action<GetEntityDataResult>, HasProj
     private GetEntityDataAction() {
     }
 
-    public GetEntityDataAction(ProjectId projectId, ImmutableSet<OWLEntity> entities) {
+    public GetEntityDataAction(ProjectId projectId, Set<OWLEntity> entities) {
         this.projectId = checkNotNull(projectId);
-        this.entities = checkNotNull(entities);
+        this.entities = ImmutableSet.copyOf(checkNotNull(entities));
     }
 
     @Override
@@ -39,7 +42,7 @@ public class GetEntityDataAction implements Action<GetEntityDataResult>, HasProj
         return projectId;
     }
 
-    public ImmutableSet<OWLEntity> getEntities() {
+    public Set<OWLEntity> getEntities() {
         return entities;
     }
 

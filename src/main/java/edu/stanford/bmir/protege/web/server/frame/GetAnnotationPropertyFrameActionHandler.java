@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.frame;
 
-import edu.stanford.bmir.protege.web.client.dispatch.RenderableGetObjectResult;
 import edu.stanford.bmir.protege.web.client.ui.frame.LabelledFrame;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
@@ -11,9 +10,9 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
 import edu.stanford.bmir.protege.web.shared.BrowserTextMap;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
 import edu.stanford.bmir.protege.web.shared.frame.AnnotationPropertyFrame;
 import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameAction;
+import edu.stanford.bmir.protege.web.shared.frame.GetAnnotationPropertyFrameResult;
 
 import javax.inject.Inject;
 
@@ -23,7 +22,7 @@ import javax.inject.Inject;
  * Bio-Medical Informatics Research Group<br>
  * Date: 23/04/2013
  */
-public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectActionHandler<GetAnnotationPropertyFrameAction, GetObjectResult<LabelledFrame<AnnotationPropertyFrame>>> {
+public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectActionHandler<GetAnnotationPropertyFrameAction, GetAnnotationPropertyFrameResult> {
 
     private final ValidatorFactory<ReadPermissionValidator> validatorFactory;
 
@@ -39,11 +38,13 @@ public class GetAnnotationPropertyFrameActionHandler extends AbstractHasProjectA
     }
 
     @Override
-    protected GetObjectResult<LabelledFrame<AnnotationPropertyFrame>> execute(GetAnnotationPropertyFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
+    protected GetAnnotationPropertyFrameResult execute(GetAnnotationPropertyFrameAction action, OWLAPIProject project, ExecutionContext executionContext) {
         AnnotationPropertyFrameTranslator translator = new AnnotationPropertyFrameTranslator();
         AnnotationPropertyFrame frame = translator.getFrame(action.getSubject(), project.getRootOntology(), project);
-        LabelledFrame<AnnotationPropertyFrame> labelledFrame = new LabelledFrame<AnnotationPropertyFrame>(project.getRenderingManager().getBrowserText(action.getSubject()), frame);
-        return new RenderableGetObjectResult<LabelledFrame<AnnotationPropertyFrame>>(labelledFrame, BrowserTextMap.build(project.getRenderingManager(), frame.getSignature().toArray()));
+        String label = project.getRenderingManager().getBrowserText(action.getSubject());
+        LabelledFrame<AnnotationPropertyFrame> labelledFrame = new LabelledFrame<>(label, frame);
+        BrowserTextMap btm = BrowserTextMap.build(project.getRenderingManager(), frame.getSignature());
+        return new GetAnnotationPropertyFrameResult(labelledFrame, btm);
     }
 
     @Override

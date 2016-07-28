@@ -10,6 +10,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.not;
@@ -32,8 +35,7 @@ public class GetEntityDataAction_TestCase {
     @Mock
     private ProjectId projectId;
 
-    @Mock
-    private ImmutableSet<OWLEntity> entities;
+    private Set<OWLEntity> entities = new HashSet<>();
 
 
     @Before

@@ -2,8 +2,6 @@ package edu.stanford.bmir.protege.web.client.ui.editor;
 
 import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
@@ -21,10 +19,7 @@ import edu.stanford.bmir.protege.web.client.events.UserLoggedOutEvent;
 import edu.stanford.bmir.protege.web.client.events.UserLoggedOutHandler;
 import edu.stanford.bmir.protege.web.client.permissions.LoggedInUserProjectPermissionChecker;
 import edu.stanford.bmir.protege.web.shared.HasDispose;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectAction;
-import edu.stanford.bmir.protege.web.shared.dispatch.GetObjectResult;
-import edu.stanford.bmir.protege.web.shared.dispatch.Result;
-import edu.stanford.bmir.protege.web.shared.dispatch.UpdateObjectAction;
+import edu.stanford.bmir.protege.web.shared.dispatch.*;
 import edu.stanford.bmir.protege.web.shared.event.HandlerRegistrationManager;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedEvent;
 import edu.stanford.bmir.protege.web.shared.event.PermissionsChangedHandler;
@@ -55,7 +50,7 @@ public class EditorPresenter implements HasDispose {
 
     private final SimplePanel editorHolder = new SimplePanel();
 
-    private Optional<EditorState<?, ?>> lastEditorState = Optional.absent();
+    private Optional<EditorState<?, ?, ?, ?>> lastEditorState = Optional.absent();
 
     private HandlerRegistration valueChangedReg;
 
@@ -75,30 +70,19 @@ public class EditorPresenter implements HasDispose {
     };
 
     @Inject
-    public EditorPresenter(ProjectId projectId, EventBus eventBus, DispatchServiceManager dispatchServiceManager, ContextMapper contextMapper, LoggedInUserProjectPermissionChecker permissionChecker) {
+    public EditorPresenter(ProjectId projectId,
+                           EventBus eventBus,
+                           DispatchServiceManager dispatchServiceManager,
+                           ContextMapper contextMapper,
+                           LoggedInUserProjectPermissionChecker permissionChecker) {
         this.contextMapper = contextMapper;
         this.dispatchServiceManager = dispatchServiceManager;
         this.permissionChecker = permissionChecker;
         this.handlerRegistrationManager = new HandlerRegistrationManager(eventBus);
 
-        handlerRegistrationManager.registerHandlerToProject(projectId, PermissionsChangedEvent.TYPE, new PermissionsChangedHandler() {
-            @Override
-            public void handlePersmissionsChanged(PermissionsChangedEvent event) {
-                updatePermissionBasedItems();
-            }
-        });
-        handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, new UserLoggedInHandler() {
-            @Override
-            public void handleUserLoggedIn(UserLoggedInEvent event) {
-                updatePermissionBasedItems();
-            }
-        });
-        handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, new UserLoggedOutHandler() {
-            @Override
-            public void handleUserLoggedOut(UserLoggedOutEvent event) {
-                updatePermissionBasedItems();
-            }
-        });
+        handlerRegistrationManager.registerHandlerToProject(projectId, PermissionsChangedEvent.TYPE, event -> updatePermissionBasedItems());
+        handlerRegistrationManager.registerHandler(UserLoggedInEvent.TYPE, event -> updatePermissionBasedItems());
+        handlerRegistrationManager.registerHandler(UserLoggedOutEvent.TYPE, event -> updatePermissionBasedItems());
     }
 
     public HandlerRegistration addEditorContextChangedHandler(EditorContextChangedHandler handler) {
@@ -126,13 +110,14 @@ public class EditorPresenter implements HasDispose {
         lastEditorState = Optional.absent();
     }
 
-    private <C extends EditorCtx, O extends Serializable> void setEditorState(O pristineObject, C editorContext, EditorManager<C, O> editorManager) {
-        lastEditorState = Optional.<EditorState<?, ?>>of(new EditorState<C, O>(pristineObject, editorContext, editorManager));
+    private <C extends EditorCtx, O, A extends Action<R>, R extends Result> void setEditorState(O pristineObject, C editorContext, EditorManager<C, O, A, R> editorManager) {
+        EditorState<C, O, A, R> editorState = new EditorState<>(pristineObject, editorContext, editorManager);
+        lastEditorState = Optional.of(editorState);
         handlerManager.fireEvent(new EditorContextChangedEvent(editorContext, editorManager.getDescription(editorContext)));
     }
 
 
-    private <C extends EditorCtx, O extends Serializable> void unbindPrevious(EditorState<C, O> editorState) {
+    private <C extends EditorCtx, O, A extends Action<R>, R extends Result> void unbindPrevious(EditorState<C, O, A, R> editorState) {
         valueChangedReg.removeHandler();
         commitOnValueChangedTimer.cancel();
         if (lastEditorState.isPresent()) {
@@ -146,7 +131,7 @@ public class EditorPresenter implements HasDispose {
      *
      * @param editorState The state to be committed
      */
-    private <C extends EditorCtx, O extends Serializable> void commitCurrentValue(final EditorState<C, O> editorState) {
+    private <C extends EditorCtx, O, A extends Action<R>, R extends Result> void commitCurrentValue(final EditorState<C, O, A, R> editorState) {
         if (!editorState.getEditorManager().getView(editorState.getEditorContext()).isDirty()) {
             return;
         }
@@ -160,7 +145,7 @@ public class EditorPresenter implements HasDispose {
             return;
         }
         final C editorCtx = editorState.getEditorContext();
-        EditorManager<C, O> editorManager = editorState.getEditorManager();
+        EditorManager<C, O, A, R> editorManager = editorState.getEditorManager();
         UpdateObjectAction<O> updateAction = editorManager.createUpdateObjectAction(pristineValue, editedValue, editorCtx);
         setEditorState(editedValue, editorCtx, editorManager);
         dispatchServiceManager.execute(updateAction, new DispatchServiceCallback<Result>() {
@@ -171,39 +156,29 @@ public class EditorPresenter implements HasDispose {
         });
     }
 
-
-    private <C extends EditorCtx, O extends Serializable> void bindNext(final C editorCtx) {
+    private <C extends EditorCtx, O, A extends Action<R>, R extends Result> void bindNext(final C editorCtx) {
         counter++;
-        final Optional<EditorManager<C, O>> selectedMan = contextMapper.getEditorManager(editorCtx);
+        final Optional<EditorManager<C, O, A, R>> selectedMan = contextMapper.getEditorManager(editorCtx);
         if (selectedMan.isPresent()) {
-            final EditorManager<C, O> editorManager = selectedMan.get();
-            GetObjectAction<O> action = editorManager.createGetObjectAction(editorCtx);
+            final EditorManager<C, O, A, R> editorManager = selectedMan.get();
+            A action = editorManager.createAction(editorCtx);
             updatePermissionBasedItems();
-            dispatchServiceManager.execute(action, new DispatchServiceCallback<GetObjectResult<O>>() {
+            dispatchServiceManager.execute(action, new DispatchServiceCallback<R>() {
 
                 private int executionCounter = counter;
 
                 @Override
-                public void handleSuccess(GetObjectResult<O> result) {
-                    handleGetObjectSuccess(result);
-                }
-
-                private void handleGetObjectSuccess(GetObjectResult<O> result) {
+                public void handleSuccess(R result) {
                     if (executionCounter != counter) {
                         return;
                     }
-                    final O value = result.getObject();
+                    final O value = editorManager.extractObject(result);
                     final EditorView<O> editorView = editorManager.getView(editorCtx);
                     editorView.setValue(value);
-                    valueChangedReg = editorView.addValueChangeHandler(new ValueChangeHandler<Optional<O>>() {
-                        @Override
-                        public void onValueChange(ValueChangeEvent<Optional<O>> event) {
-                            rescheduleCommit();
-                        }
-                    });
+                    valueChangedReg = editorView.addValueChangeHandler(event -> rescheduleCommit());
                     final Widget editorWidget = editorView.asWidget();
                     editorHolder.setWidget(editorWidget);
-                    setEditorState(value, editorCtx, editorManager);
+                    setEditorState((O) value, editorCtx, editorManager);
                     updatePermissionBasedItems();
                 }
             });
@@ -243,15 +218,15 @@ public class EditorPresenter implements HasDispose {
     }
 
 
-    private static class EditorState<C extends EditorCtx, O extends Serializable> {
+    private static class EditorState<C extends EditorCtx, O, A extends Action<R>, R extends Result> {
 
         private final O pristineObject;
 
         private final C editorContext;
 
-        private final EditorManager<C, O> editorManager;
+        private final EditorManager<C, O, A, R> editorManager;
 
-        private EditorState(O pristineObject, C editorContext, EditorManager<C, O> editorManager) {
+        private EditorState(O pristineObject, C editorContext, EditorManager<C, O, A, R> editorManager) {
             this.pristineObject = pristineObject;
             this.editorContext = editorContext;
             this.editorManager = editorManager;
@@ -265,7 +240,7 @@ public class EditorPresenter implements HasDispose {
             return editorContext;
         }
 
-        public EditorManager<C, O> getEditorManager() {
+        public EditorManager<C, O, A, R> getEditorManager() {
             return editorManager;
         }
 
