@@ -94,6 +94,8 @@ public class WebProtegeApplicationConfig extends AbstractMongoConfiguration {
         converters.add(new PermissionReadConverter());
         converters.add(new PermissionWriteConverter());
         converters.add(new PermissionSetReadConverter());
+        converters.add(new OWLEntityReadConverter());
+        converters.add(new OWLEntityWriteConverter());
 
         mappingMongoConverter.setCustomConversions(new CustomConversions(converters));
         return mappingMongoConverter;

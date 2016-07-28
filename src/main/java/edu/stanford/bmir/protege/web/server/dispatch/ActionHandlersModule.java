@@ -25,6 +25,8 @@ import edu.stanford.bmir.protege.web.server.form.GetFormDescriptorActionHander;
 import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
+import edu.stanford.bmir.protege.web.server.issues.GetIssuesActionHandler;
+import edu.stanford.bmir.protege.web.server.issues.IssueRecord;
 import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdCompletionsActionHandler;
 import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdItemsActionHandler;
 import edu.stanford.bmir.protege.web.server.itemlist.GetUserIdCompletionsActionHandler;
@@ -221,5 +223,7 @@ public class ActionHandlersModule extends AbstractModule {
         multibinder.addBinding().to(SetPerspectivesActionHandler.class);
 
         multibinder.addBinding().to(GetFormDescriptorActionHander.class);
+
+        multibinder.addBinding().to(GetIssuesActionHandler.class);
     }
 }
