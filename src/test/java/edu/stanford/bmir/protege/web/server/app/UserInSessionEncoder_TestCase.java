@@ -1,9 +1,7 @@
 package edu.stanford.bmir.protege.web.server.app;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
-import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.junit.Before;
@@ -14,7 +12,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.json.Json;
 import javax.json.JsonObject;
-
 import java.io.InputStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;

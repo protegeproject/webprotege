@@ -1,13 +1,14 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
 import com.google.common.collect.Sets;
-import edu.stanford.bmir.protege.web.shared.HasAnnotationAssertionAxioms;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationSubject;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import java.util.Set;
 

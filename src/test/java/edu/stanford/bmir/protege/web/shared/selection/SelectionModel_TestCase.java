@@ -3,25 +3,18 @@ package edu.stanford.bmir.protege.web.shared.selection;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.web.bindery.event.shared.Event;
 import com.google.web.bindery.event.shared.EventBus;
 import edu.stanford.bmir.protege.web.client.place.ItemSelection;
 import edu.stanford.bmir.protege.web.shared.place.ProjectViewPlace;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.*;
 
-import java.util.Set;
-
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**

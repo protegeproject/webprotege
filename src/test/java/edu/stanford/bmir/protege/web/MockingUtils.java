@@ -1,14 +1,12 @@
 package edu.stanford.bmir.protege.web;
 
 import edu.stanford.bmir.protege.web.shared.HasSignature;
-import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.*;
 import uk.ac.manchester.cs.owl.owlapi.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

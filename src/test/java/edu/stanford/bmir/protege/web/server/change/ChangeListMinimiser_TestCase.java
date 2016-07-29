@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.change;
 
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

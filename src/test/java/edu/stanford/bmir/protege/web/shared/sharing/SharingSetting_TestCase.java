@@ -9,8 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.lang.NullPointerException;
-
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class SharingSetting_TestCase {
 

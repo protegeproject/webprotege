@@ -1,13 +1,11 @@
 package edu.stanford.bmir.protege.web.client.app;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.junit.client.GWTTestCase;
 import edu.stanford.bmir.protege.web.client.TestResources;
 import edu.stanford.bmir.protege.web.shared.app.UserInSession;
-import edu.stanford.bmir.protege.web.shared.permissions.GroupId;
 import edu.stanford.bmir.protege.web.shared.user.UserDetails;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 

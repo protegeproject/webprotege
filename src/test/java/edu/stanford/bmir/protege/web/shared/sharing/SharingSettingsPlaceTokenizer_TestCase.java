@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.sharing;
 
-import com.google.gwt.place.shared.Place;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +9,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.Is.isA;
 import static org.mockito.Mockito.when;
 
 /**

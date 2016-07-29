@@ -1,10 +1,8 @@
 package edu.stanford.bmir.protege.web.client.primitive;
 
 import com.google.common.collect.Sets;
-import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.ui.SuggestOracle;
-import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.ui.library.suggest.EntitySuggestOracle;
 import edu.stanford.bmir.protege.web.shared.PrimitiveType;
 

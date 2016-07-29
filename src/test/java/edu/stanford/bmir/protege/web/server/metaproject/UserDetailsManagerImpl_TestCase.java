@@ -1,7 +1,6 @@
 
 package edu.stanford.bmir.protege.web.server.metaproject;
 
-import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.user.UserDetailsManagerImpl;
 import edu.stanford.bmir.protege.web.server.user.UserRecord;
 import edu.stanford.bmir.protege.web.server.user.UserRecordRepository;
@@ -12,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import java.lang.NullPointerException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.object;
 
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.shared.object.OWLDataPropertyExpressionSelector;
-import edu.stanford.bmir.protege.web.shared.object.OWLObjectPropertyExpressionSelector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,8 +9,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 
 import java.util.Arrays;
 import java.util.Collections;

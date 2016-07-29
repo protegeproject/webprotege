@@ -1,7 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.entity;
 
-import edu.stanford.bmir.protege.web.shared.entity.EntityNameUtils;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
 /**

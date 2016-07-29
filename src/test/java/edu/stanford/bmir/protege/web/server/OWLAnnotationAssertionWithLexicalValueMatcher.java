@@ -2,7 +2,9 @@ package edu.stanford.bmir.protege.web.server;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
