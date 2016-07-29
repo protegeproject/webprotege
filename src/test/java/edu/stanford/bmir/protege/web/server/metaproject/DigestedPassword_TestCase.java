@@ -1,18 +1,14 @@
 package edu.stanford.bmir.protege.web.server.metaproject;
 
 import com.google.common.io.BaseEncoding;
-import edu.stanford.bmir.protege.web.server.user.UserRecord;
 import edu.stanford.bmir.protege.web.shared.auth.Md5DigestAlgorithmProvider;
 import edu.stanford.bmir.protege.web.shared.auth.PasswordDigestAlgorithm;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.net.URI;
-
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Matthew Horridge

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.metrics;
 
-import edu.stanford.bmir.protege.web.shared.metrics.BooleanMetricValue;
 import org.junit.Before;
 import org.junit.Test;
 

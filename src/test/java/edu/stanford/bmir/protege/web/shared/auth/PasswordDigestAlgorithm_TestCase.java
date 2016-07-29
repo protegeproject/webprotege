@@ -13,10 +13,8 @@ import javax.inject.Provider;
 import java.io.UnsupportedEncodingException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Matthew Horridge

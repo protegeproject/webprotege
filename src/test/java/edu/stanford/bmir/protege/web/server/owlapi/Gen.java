@@ -1,8 +1,6 @@
 package edu.stanford.bmir.protege.web.server.owlapi;
 
-import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.semanticweb.owlapi.vocab.Namespaces;
-import org.semanticweb.owlapi.vocab.XSDVocabulary;
 
 /**
  * Matthew Horridge

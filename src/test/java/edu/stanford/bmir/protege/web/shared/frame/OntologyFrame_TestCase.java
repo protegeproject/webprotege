@@ -1,22 +1,17 @@
 
 package edu.stanford.bmir.protege.web.shared.frame;
 
-import java.lang.NullPointerException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 
-import static org.hamcrest.MatcherAssert.*;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

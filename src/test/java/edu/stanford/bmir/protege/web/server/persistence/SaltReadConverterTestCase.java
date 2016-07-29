@@ -1,13 +1,10 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
-import com.google.common.io.BaseEncoding;
 import edu.stanford.bmir.protege.web.shared.auth.Salt;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Base64;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

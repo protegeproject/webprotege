@@ -2,7 +2,6 @@
 package edu.stanford.bmir.protege.web.shared.frame;
 
 import com.google.common.collect.ImmutableList;
-import edu.stanford.bmir.protege.web.shared.frame.GetOntologyFramesResult;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;

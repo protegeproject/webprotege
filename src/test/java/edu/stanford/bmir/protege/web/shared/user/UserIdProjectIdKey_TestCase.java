@@ -2,7 +2,6 @@
 package edu.stanford.bmir.protege.web.shared.user;
 
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;

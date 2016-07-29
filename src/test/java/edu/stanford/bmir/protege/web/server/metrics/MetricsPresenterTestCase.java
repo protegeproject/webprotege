@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.metrics;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceCallback;
 import edu.stanford.bmir.protege.web.client.dispatch.DispatchServiceManager;
 import edu.stanford.bmir.protege.web.client.events.RequestRefreshEvent;

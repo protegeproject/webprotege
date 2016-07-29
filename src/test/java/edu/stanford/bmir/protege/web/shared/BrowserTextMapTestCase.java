@@ -1,14 +1,11 @@
 package edu.stanford.bmir.protege.web.shared;
 
 import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.MockingUtils;
 import edu.stanford.bmir.protege.web.shared.entity.OWLClassData;
 import edu.stanford.bmir.protege.web.shared.entity.OWLEntityData;
 import org.junit.Test;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLObject;
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import java.util.Collection;
 import java.util.Collections;

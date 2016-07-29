@@ -2,12 +2,12 @@ package edu.stanford.bmir.protege.web.server.axiom;
 
 import edu.stanford.bmir.protege.web.shared.axiom.DefaultAxiomTypeOrdering;
 import org.junit.Test;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.AxiomType;
 
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
 import static org.semanticweb.owlapi.model.AxiomType.*;
 
 /**

@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.shared.metrics;
 
-import edu.stanford.bmir.protege.web.shared.metrics.IntegerMetricValue;
 import org.junit.Before;
 import org.junit.Test;
 

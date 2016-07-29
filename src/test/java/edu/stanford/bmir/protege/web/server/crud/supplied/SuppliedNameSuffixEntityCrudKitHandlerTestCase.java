@@ -1,18 +1,5 @@
 package edu.stanford.bmir.protege.web.server.crud.supplied;
 
-import static edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher.declarationFor;
-import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.*;
-import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueMatcher.rdfsLabelWithLexicalValue;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-
 import com.google.common.base.Optional;
 import edu.stanford.bmir.protege.web.server.change.OntologyChangeList;
 import edu.stanford.bmir.protege.web.server.crud.ChangeSetEntityCrudSession;
@@ -34,6 +21,16 @@ import org.semanticweb.owlapi.vocab.Namespaces;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import java.util.List;
+
+import static edu.stanford.bmir.protege.web.server.OWLDeclarationAxiomMatcher.declarationFor;
+import static edu.stanford.bmir.protege.web.server.OWLEntityMatcher.owlThing;
+import static edu.stanford.bmir.protege.web.server.RdfsLabelWithLexicalValueMatcher.rdfsLabelWithLexicalValue;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 
 /**

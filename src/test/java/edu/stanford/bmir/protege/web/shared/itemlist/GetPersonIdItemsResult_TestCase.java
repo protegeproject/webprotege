@@ -1,18 +1,16 @@
 
 package edu.stanford.bmir.protege.web.shared.itemlist;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import edu.stanford.bmir.protege.web.shared.sharing.PersonId;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 

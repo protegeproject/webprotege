@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyLong;

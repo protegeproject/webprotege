@@ -1,12 +1,14 @@
 package edu.stanford.bmir.protege.web.server.util;
 
-import edu.stanford.bmir.protege.web.server.util.ZipFileExtractor;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 

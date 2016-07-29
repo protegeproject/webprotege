@@ -1,13 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.place;
 
-import com.google.common.base.Optional;
-import edu.stanford.bmir.protege.web.shared.DataFactory;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.junit.Test;
 import org.semanticweb.owlapi.model.IRI;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 /**
  * Matthew Horridge

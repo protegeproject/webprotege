@@ -1,6 +1,5 @@
 package edu.stanford.bmir.protege.web.server.persistence;
 
-import com.google.common.io.BaseEncoding;
 import edu.stanford.bmir.protege.web.shared.auth.SaltedPasswordDigest;
 import org.junit.Before;
 import org.junit.Test;
