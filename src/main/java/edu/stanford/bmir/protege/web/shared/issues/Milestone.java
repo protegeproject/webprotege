@@ -1,5 +1,7 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -11,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 1 Aug 16
  */
-public class Milestone {
+public class Milestone implements IsSerializable {
 
     private String label;
 
