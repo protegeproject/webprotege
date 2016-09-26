@@ -41,6 +41,9 @@
 
     <extend-property name="locale" values="de" />
 
+    <set-configuration-property name="gin.classloading.exceptedPackages" value="com.google.gwt.core.client"/>
+    <extend-configuration-property name="gin.classloading.exceptedPackages" value="com.google.gwt.core.client.impl"/>
+
     <extend-configuration-property name="rpc.blacklist" value="+com.google.web.bindery.event.shared.Event"/>
 
 	<entry-point class="edu.stanford.bmir.protege.web.client.WebProtege"/>
