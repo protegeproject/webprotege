@@ -3,6 +3,7 @@ package edu.stanford.bmir.protege.web.shared.issues.events;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.springframework.data.annotation.TypeAlias;
 
 import javax.annotation.Nonnull;
 
@@ -14,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 26 Sep 16
  */
+@TypeAlias("IssueUnlabelled")
 public class IssueUnlabelled extends AbstractIssueEvent {
 
     @Nonnull
