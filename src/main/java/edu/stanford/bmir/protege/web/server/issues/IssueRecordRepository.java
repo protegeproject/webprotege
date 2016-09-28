@@ -18,7 +18,7 @@ public interface IssueRecordRepository extends Repository<IssueRecord, Long> {
 
     Optional<IssueRecord> findByProjectIdAndNumber(ProjectId projectId, long issueNumber);
 
-    Stream<IssueRecord> findByProjectIdAndTargetEntities(ProjectId projectId, OWLEntity targetEntity);
+    Stream<IssueRecord> findByProjectId(ProjectId projectId);
 
     Iterable<IssueRecord> findAll();
 

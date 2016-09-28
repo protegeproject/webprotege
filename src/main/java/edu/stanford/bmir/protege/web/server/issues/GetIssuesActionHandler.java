@@ -1,6 +1,7 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -9,18 +10,17 @@ import edu.stanford.bmir.protege.web.server.dispatch.validators.ReadPermissionVa
 import edu.stanford.bmir.protege.web.server.dispatch.validators.ValidatorFactory;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProject;
 import edu.stanford.bmir.protege.web.server.owlapi.OWLAPIProjectManager;
-import edu.stanford.bmir.protege.web.shared.issues.GetIssuesAction;
-import edu.stanford.bmir.protege.web.shared.issues.GetIssuesResult;
-import edu.stanford.bmir.protege.web.shared.issues.Status;
+import edu.stanford.bmir.protege.web.shared.issues.*;
+import edu.stanford.bmir.protege.web.shared.issues.events.IssueAssigned;
+import edu.stanford.bmir.protege.web.shared.issues.events.IssueLabelled;
+import edu.stanford.bmir.protege.web.shared.issues.mention.UserIdMention;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
 
 import javax.inject.Inject;
+import java.util.*;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -52,46 +52,40 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
 
     @Override
     protected GetIssuesResult execute(GetIssuesAction action, OWLAPIProject project, ExecutionContext executionContext) {
-        long issueNumber = repository.count() + 1;
-
+        int issueNumber = (int)repository.count() + 1;
+        long timestamp = System.currentTimeMillis();
         IssueRecord record = new IssueRecord(
                 project.getProjectId(),
                 issueNumber,
+                executionContext.getUserId(),
+                timestamp,
                 "My new issue",
                 "This is a test of the issue system",
-                executionContext.getUserId(),
-                System.currentTimeMillis(),
-                0,
-                0,
                 Status.OPEN,
                 Optional.<UserId>empty(),
-                "",
+                Optional.of(new Milestone("Release 1.0")),
                 ImmutableList.<String>of(),
-                ImmutableList.<OWLEntity>of());
+                ImmutableList.of(
+                        new Comment(
+                                UserId.getGuest(),
+                                timestamp,
+                                Optional.<Long>empty(),
+                                "The body of the comment",
+                                ImmutableSet.of())
+                ),
+                ImmutableList.of(new UserIdMention(UserId.getUserId("Matty Horridge"))),
+                ImmutableList.of(
+                        new IssueAssigned(executionContext.getUserId(), timestamp, UserId.getUserId("Matthew Horridge")),
+                        new IssueLabelled(executionContext.getUserId(), timestamp, "MyLovelyIssue")
+                ));
         repository.save(record);
 
-        repository.findByProjectIdAndTargetEntities(project.getProjectId(), new OWLClassImpl(IRI.create("http://stuff.com/A")))
-                .forEach(System.out::println);
+        List<Issue> issues = repository.findByProjectId(project.getProjectId())
+                .map(ir -> ir.toIssue())
+                .collect(toList());
 
-        Optional<IssueRecord> rec = repository.findByProjectIdAndNumber(project.getProjectId(), 6);
-        rec.ifPresent(r -> {
-            IssueRecord repl = new IssueRecord(r.getProjectId(),
-                    r.getNumber(),
-                    r.getTitle(),
-                    r.getBody(),
-                    r.getOwner(),
-                    r.getCreatedAt(),
-                    System.currentTimeMillis(),
-                    0,
-                    Status.OPEN,
-                    Optional.of(executionContext.getUserId()), "", ImmutableList.<String>of(), ImmutableList.<OWLEntity>of(
-                    new OWLClassImpl(IRI.create("http://stuff.com/A")),
-                    new OWLObjectPropertyImpl(IRI.create("http://stuff.com/prop"))
-            ));
-            repository.deleteByProjectIdAndNumber(r.getProjectId(), r.getNumber());
-            repository.save(repl);
-        });
+        System.out.println("Got the issues!");
 
-        return new GetIssuesResult();
+        return new GetIssuesResult(project.getProjectId(), issues);
     }
 }
