@@ -12,6 +12,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.annotation.Nonnull;
@@ -22,7 +23,6 @@ import java.util.Optional;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Matthew Horridge
@@ -31,9 +31,9 @@ import static java.util.stream.Collectors.toList;
  */
 @Document(collection = "Issues")
 @TypeAlias("IssueRecord")
-//@CompoundIndexes({
-//        @CompoundIndex(unique = true, def = "{'projectId': 1, 'number': 1}")
-//})
+@CompoundIndexes({
+        @CompoundIndex(unique = true, def = "{'projectId': 1, 'number': 1}")
+})
 public class IssueRecord {
 
     @Nonnull
@@ -88,7 +88,7 @@ public class IssueRecord {
 *                 issue has not been assigned to any user.
      * @param milestone A milestone for the issue.  An empty string indicates that there is no milestone set.
      * @param labels A list of labels for the issue.  The values in the list must not be {@code null}.
-     * @param mentions A list of Mention (things that are mentioned in the issue body or in the issue comments.
+     * @param mentions A list of Mentions that occur in the body of the issue or in issue comments.
      */
     public IssueRecord(@Nonnull ProjectId projectId,
                        int number,

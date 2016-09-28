@@ -1,5 +1,6 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
+import edu.stanford.bmir.protege.web.shared.issues.Issue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.springframework.data.repository.Repository;
@@ -27,4 +28,5 @@ public interface IssueRecordRepository extends Repository<IssueRecord, Long> {
     void deleteByProjectIdAndNumber(ProjectId projectId, long number);
 
     void delete(Iterable<? extends IssueRecord> iterable);
+
 }
