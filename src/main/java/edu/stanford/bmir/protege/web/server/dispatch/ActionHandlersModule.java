@@ -26,7 +26,6 @@ import edu.stanford.bmir.protege.web.server.frame.*;
 import edu.stanford.bmir.protege.web.server.individuals.CreateNamedIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.individuals.GetIndividualsActionHandler;
 import edu.stanford.bmir.protege.web.server.issues.GetIssuesActionHandler;
-import edu.stanford.bmir.protege.web.server.issues.IssueRecord;
 import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdCompletionsActionHandler;
 import edu.stanford.bmir.protege.web.server.itemlist.GetPersonIdItemsActionHandler;
 import edu.stanford.bmir.protege.web.server.itemlist.GetUserIdCompletionsActionHandler;
@@ -61,7 +60,6 @@ import edu.stanford.bmir.protege.web.server.watches.GetWatchesActionHandler;
 import edu.stanford.bmir.protege.web.server.watches.RemoveWatchActionHandler;
 import edu.stanford.bmir.protege.web.server.revision.*;
 import edu.stanford.bmir.protege.web.server.watches.SetEntityWatchesActionHandler;
-import edu.stanford.bmir.protege.web.shared.form.GetFormDescriptorAction;
 
 /**
  * Matthew Horridge

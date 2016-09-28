@@ -1,12 +1,21 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.issues.events.IssueEvent;
+import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,9 +27,25 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Stanford Center for Biomedical Informatics Research
  * 27 Jul 16
  */
+@Document(collection = "Issues" )
+@TypeAlias("Issue" )
+@CompoundIndexes({
+        @CompoundIndex(unique = true, def = "{'projectId': 1, 'number': 1}" )
+})
 public class Issue implements IsSerializable {
 
+    @Nonnull
+    private ProjectId projectId;
+
     private int number;
+
+    @Nonnull
+    private UserId creator;
+
+    private long createdAt;
+
+    @Null
+    private Long updatedAt;
 
     @Nonnull
     private String title;
@@ -29,19 +54,7 @@ public class Issue implements IsSerializable {
     private String body;
 
     @Nonnull
-    private UserId creator;
-
-    private long createdAt;
-
-    @Nonnull
     private Status status;
-
-
-    @Nullable
-    private Long updatedAt;
-
-    @Nullable
-    private Long closedAt;
 
     @Nullable
     private UserId assignee;
@@ -50,55 +63,115 @@ public class Issue implements IsSerializable {
     private Milestone milestone;
 
     @Nonnull
-    private ImmutableList<String> labels;
+    private List<String> labels;
 
     @Nonnull
-    private ImmutableList<Comment> comments;
+    private List<Comment> comments;
 
     @Nonnull
-    private ImmutableList<IssueEvent> events;
+    private List<Mention> mentions;
 
     @Nonnull
-    private ImmutableList<IssueTarget> issueTarget;
+    private List<UserId> participants;
 
     @Nonnull
-    private ImmutableList<UserId> participants;
+    private List<IssueEvent> events;
 
 
-    private Issue() {
-    }
-
-
-    public Issue(int number,
-                 @Nonnull String title,
-                 @Nonnull String body,
+    /**
+     * Creates an issues record
+     *
+     * @param projectId    The project that the issue pertains to.
+     * @param number       The issue number.
+     * @param creator      The issue creator.  That is, the user id of the person that created the issue.
+     * @param createdAt    A timestamp specifying when the issue was created.
+     * @param updatedAt    A timestamp specifying when the issue was last updated.  An empty value indicates that the
+     *                     issue has not been updated.
+     * @param title        The issue title.  May be empty.
+     * @param body         The issue body. May be empty.
+     * @param status       The status of the issue.
+     * @param assignee     The UserId of the person that the issue was assigned to. An absent value indicates that the
+     *                     issue has not been assigned to any user.
+     * @param milestone    A milestone for the issue.  An empty string indicates that there is no milestone set.
+     * @param labels       A list of labels for the issue.  The values in the list must not be {@code null}.
+     * @param mentions     A list of Mentions that occur in the body of the issue or in issue comments.
+     * @param participants A list of users that participate in the tracking of this issue.
+     */
+    public Issue(@Nonnull ProjectId projectId,
+                 int number,
                  @Nonnull UserId creator,
                  long createdAt,
                  @Nonnull Optional<Long> updatedAt,
-                 @Nonnull Optional<Long> closedAt,
+                 @Nonnull String title,
+                 @Nonnull String body,
                  @Nonnull Status status,
                  @Nonnull Optional<UserId> assignee,
                  @Nonnull Optional<Milestone> milestone,
                  @Nonnull ImmutableList<String> labels,
                  @Nonnull ImmutableList<Comment> comments,
-                 @Nonnull ImmutableList<IssueEvent> events,
-                 @Nonnull ImmutableList<UserId> participants,
-                 @Nonnull List<IssueTarget> issueTargets) {
+                 @Nonnull ImmutableList<Mention> mentions,
+                 ImmutableList<UserId> participants,
+                 @Nonnull ImmutableList<IssueEvent> events) {
+        this.projectId = checkNotNull(projectId);
         this.number = number;
-        this.issueTarget = ImmutableList.copyOf(issueTargets);
-        this.title = title;
-        this.body = body;
-        this.creator = creator;
+        this.creator = checkNotNull(creator);
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt.orElse(null);
-        this.closedAt = closedAt.orElse(null);
-        this.status = status;
-        this.assignee = assignee.orElse(null);
-        this.milestone = milestone.orElse(null);
-        this.comments = checkNotNull(comments);
+        this.updatedAt = checkNotNull(updatedAt).orElse(null);
+        this.title = checkNotNull(title);
+        this.body = checkNotNull(body);
+        this.status = checkNotNull(status);
+        this.assignee = checkNotNull(assignee).orElse(null);
+        this.milestone = checkNotNull(milestone).orElse(null);
+        this.labels = checkNotNull(labels);
+        this.mentions = checkNotNull(mentions);
+        this.events = checkNotNull(events);
         this.participants = checkNotNull(participants);
-        this.labels = labels;
-        this.events = events;
+        this.comments = checkNotNull(comments);
+    }
+
+    /**
+     * This is a persistence constructor for SpringData.
+     */
+    @PersistenceConstructor
+    protected Issue(@Nonnull ProjectId projectId,
+                    int number,
+                    @Nonnull UserId creator,
+                    long createdAt,
+                    @Nullable Long updatedAt,
+                    @Nonnull String title,
+                    @Nonnull String body,
+                    @Nonnull Status status,
+                    @Nullable UserId assignee,
+                    @Nullable Milestone milestone,
+                    @Nonnull List<String> labels,
+                    @Nonnull List<Comment> comments,
+                    @Nonnull List<Mention> mentions,
+                    @Nonnull List<UserId> participants,
+                    @Nonnull List<IssueEvent> events) {
+        this.projectId = checkNotNull(projectId);
+        this.number = number;
+        this.creator = checkNotNull(creator);
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.title = checkNotNull(title);
+        this.body = checkNotNull(body);
+        this.status = checkNotNull(status);
+        this.assignee = assignee;
+        this.milestone = milestone;
+        this.labels = ImmutableList.copyOf(checkNotNull(labels));
+        this.comments = ImmutableList.copyOf(checkNotNull(comments));
+        this.mentions = ImmutableList.copyOf(checkNotNull(mentions));
+        this.participants = ImmutableList.copyOf(checkNotNull(participants));
+        this.events = ImmutableList.copyOf(checkNotNull(events));
+    }
+
+    @GwtSerializationConstructor
+    private Issue() {
+    }
+
+    @Nonnull
+    public ProjectId getProjectId() {
+        return projectId;
     }
 
     public int getNumber() {
@@ -124,14 +197,8 @@ public class Issue implements IsSerializable {
         return createdAt;
     }
 
-    @Nonnull
     public Optional<Long> getUpdatedAt() {
         return Optional.ofNullable(updatedAt);
-    }
-
-    @Nonnull
-    public Optional<Long> getClosedAt() {
-        return Optional.ofNullable(closedAt);
     }
 
     @Nonnull
@@ -151,43 +218,87 @@ public class Issue implements IsSerializable {
 
     @Nonnull
     public ImmutableList<String> getLabels() {
-        return labels;
+        return ImmutableList.copyOf(labels);
     }
 
     @Nonnull
     public ImmutableList<Comment> getComments() {
-        return comments;
+        return ImmutableList.copyOf(comments);
     }
 
     @Nonnull
-    public ImmutableList<UserId> getParticipants() {
-        return participants;
+    public ImmutableList<Mention> getMentions() {
+        return ImmutableList.copyOf(mentions);
     }
 
     @Nonnull
-    public ImmutableList<IssueEvent> getEvents() {
-        return events;
+    public List<UserId> getParticipants() {
+        return ImmutableList.copyOf(participants);
     }
 
     @Nonnull
-    public List<IssueTarget> getIssueTarget() {
-        return issueTarget;
+    public List<IssueEvent> getEvents() {
+        return ImmutableList.copyOf(events);
     }
 
 
     @Override
+    public int hashCode() {
+        return Objects.hashCode(
+                projectId,
+                number,
+                title,
+                body,
+                creator,
+                createdAt,
+                status,
+                assignee,
+                milestone,
+                labels,
+                events,
+                comments
+        );
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof Issue)) {
+            return false;
+        }
+        Issue other = (Issue) obj;
+        return this.projectId.equals(other.projectId)
+                && this.number == other.number
+                && this.title.equals(other.title)
+                && this.body.equals(other.body)
+                && this.creator.equals(other.creator)
+                && this.createdAt == other.createdAt
+                && this.status == other.status
+                && Objects.equal(this.assignee, other.assignee)
+                && Objects.equal(this.milestone, other.milestone)
+                && this.labels.equals(other.labels)
+                && this.comments.equals(other.comments)
+                && this.mentions.equals(other.mentions)
+                && this.events.equals(other.events);
+    }
+
+    @Override
     public String toString() {
-        return toStringHelper("Issue")
-                .addValue(number)
-                .add("title", title)
-                .add("creator", creator)
-                .add("createdAt", createdAt)
-                .add("body", body)
-                .add("status", status)
-                .add("assignedTo", assignee)
-                .add("milestone", milestone)
-                .add("comments", comments)
-                .add("events", events)
+        return toStringHelper("IssueRecord" )
+                .addValue(projectId)
+                .add("number" , number)
+                .add("owner" , creator)
+                .add("createdAt" , createdAt)
+                .addValue(status)
+                .add("assignee" , assignee)
+                .add("milestone" , milestone)
+                .add("labels" , labels)
+                .add("body" , body)
+                .add("comments" , comments)
+                .add("mentions" , mentions)
+                .add("events" , events)
                 .toString();
     }
 }

@@ -1,15 +1,12 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 
 /**
  * Matthew Horridge
  * Stanford Center for Biomedical Informatics Research
- * 27 Jul 16
+ * 28 Sep 2016
  */
-public enum Status implements IsSerializable {
+public class AddIssueCommentResult implements Result {
 
-    OPEN,
-
-    CLOSED
 }
