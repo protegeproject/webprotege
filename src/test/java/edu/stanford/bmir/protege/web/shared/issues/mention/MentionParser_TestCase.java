@@ -17,6 +17,7 @@ import static edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser_
 import static edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser_TestCase.ParsedUserIdMentionMatcher.mentionedUserId;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -44,6 +45,18 @@ public class MentionParser_TestCase {
     @Test
     public void shouldParseIssueMentionFollowedByFullStop() {
         List<ParsedMention> mentions = parser.parseMentions("#33.");
+        assertThat(mentions, hasItem(mentionedIssue(0, 3, 33)));
+    }
+
+    @Test
+    public void shouldParseIssueMentionFollowedByColon() {
+        List<ParsedMention> mentions = parser.parseMentions("#33:");
+        assertThat(mentions, hasItem(mentionedIssue(0, 3, 33)));
+    }
+
+    @Test
+    public void shouldParseIssueMentionFollowedBySemiColon() {
+        List<ParsedMention> mentions = parser.parseMentions("#33;");
         assertThat(mentions, hasItem(mentionedIssue(0, 3, 33)));
     }
 
@@ -112,6 +125,18 @@ public class MentionParser_TestCase {
     @Test
     public void shouldParseRevisionMentionFollowedByComma() {
         List<ParsedMention> mentions = parser.parseMentions("R33,");
+        assertThat(mentions, hasItem(mentionedRevision(0, 3, 33L)));
+    }
+
+    @Test
+    public void shouldParseRevisionMentionFollowedByColon() {
+        List<ParsedMention> mentions = parser.parseMentions("R33:");
+        assertThat(mentions, hasItem(mentionedRevision(0, 3, 33L)));
+    }
+
+    @Test
+    public void shouldParseRevisionMentionFollowedBySemiColon() {
+        List<ParsedMention> mentions = parser.parseMentions("R33;");
         assertThat(mentions, hasItem(mentionedRevision(0, 3, 33L)));
     }
 
@@ -197,6 +222,16 @@ public class MentionParser_TestCase {
     public void shouldNotParsePrefixedUserIdMention() {
         List<ParsedMention> mentions = parser.parseMentions("Prefix@Matthew");
         assertThat(mentions.isEmpty(), is(true));
+    }
+
+    @Test
+    public void shouldParseMultipleMentions() {
+        List<ParsedMention> mentions = parser.parseMentions("@Matthew please take a look at R33 and issue #44");
+        assertThat(mentions, hasItems(
+                mentionedUserId(0, 8, "Matthew"),
+                mentionedRevision(31, 34, 33),
+                mentionedIssue(45, 48, 44)
+        ));
     }
 
     @Test
