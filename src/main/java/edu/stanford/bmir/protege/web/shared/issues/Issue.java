@@ -2,11 +2,16 @@ package edu.stanford.bmir.protege.web.shared.issues;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.issues.events.IssueEvent;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.annotation.TypeAlias;
 
-import java.io.Serializable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
+
+import static com.google.common.base.MoreObjects.toStringHelper;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Matthew Horridge
@@ -15,100 +20,174 @@ import java.util.List;
  */
 public class Issue implements IsSerializable {
 
-    private  long number;
+    private int number;
 
-    private  ImmutableList<IssueTarget> issueTarget;
+    @Nonnull
+    private String title;
 
-    private  String title;
+    @Nonnull
+    private String body;
 
-    private  String body;
+    @Nonnull
+    private UserId creator;
 
-    private  UserId owner;
+    private long createdAt;
 
-    private  long createdAt;
+    @Nonnull
+    private Status status;
 
-    private  long updatedAt;
 
-    private  long closedAt;
+    @Nullable
+    private Long updatedAt;
 
-    private  Status status;
+    @Nullable
+    private Long closedAt;
 
-    private  UserId assignee;
+    @Nullable
+    private UserId assignee;
 
-    private  int numberOfComments;
+    @Nullable
+    private Milestone milestone;
 
-    private  String milestone;
+    @Nonnull
+    private ImmutableList<String> labels;
 
-    private  ImmutableList<String> labels;
+    @Nonnull
+    private ImmutableList<Comment> comments;
+
+    @Nonnull
+    private ImmutableList<IssueEvent> events;
+
+    @Nonnull
+    private ImmutableList<IssueTarget> issueTarget;
+
+    @Nonnull
+    private ImmutableList<UserId> participants;
+
 
     private Issue() {
     }
 
-    public Issue(long number, List<IssueTarget> issueTargets, String title, String body, UserId owner, long createdAt, long updatedAt, long closedAt, Status status, UserId assignee, int numberOfComments, String milestone, ImmutableList<String> labels) {
+
+    public Issue(int number,
+                 @Nonnull String title,
+                 @Nonnull String body,
+                 @Nonnull UserId creator,
+                 long createdAt,
+                 @Nonnull Optional<Long> updatedAt,
+                 @Nonnull Optional<Long> closedAt,
+                 @Nonnull Status status,
+                 @Nonnull Optional<UserId> assignee,
+                 @Nonnull Optional<Milestone> milestone,
+                 @Nonnull ImmutableList<String> labels,
+                 @Nonnull ImmutableList<Comment> comments,
+                 @Nonnull ImmutableList<IssueEvent> events,
+                 @Nonnull ImmutableList<UserId> participants,
+                 @Nonnull List<IssueTarget> issueTargets) {
         this.number = number;
         this.issueTarget = ImmutableList.copyOf(issueTargets);
         this.title = title;
         this.body = body;
-        this.owner = owner;
+        this.creator = creator;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.closedAt = closedAt;
+        this.updatedAt = updatedAt.orElse(null);
+        this.closedAt = closedAt.orElse(null);
         this.status = status;
-        this.assignee = assignee;
-        this.numberOfComments = numberOfComments;
-        this.milestone = milestone;
+        this.assignee = assignee.orElse(null);
+        this.milestone = milestone.orElse(null);
+        this.comments = checkNotNull(comments);
+        this.participants = checkNotNull(participants);
         this.labels = labels;
+        this.events = events;
     }
 
-    public long getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public List<IssueTarget> getIssueTarget() {
-        return issueTarget;
-    }
-
+    @Nonnull
     public String getTitle() {
         return title;
     }
 
+    @Nonnull
     public String getBody() {
         return body;
     }
 
-    public UserId getOwner() {
-        return owner;
+    @Nonnull
+    public UserId getCreator() {
+        return creator;
     }
 
     public long getCreatedAt() {
         return createdAt;
     }
 
-    public long getUpdatedAt() {
-        return updatedAt;
+    @Nonnull
+    public Optional<Long> getUpdatedAt() {
+        return Optional.ofNullable(updatedAt);
     }
 
-    public long getClosedAt() {
-        return closedAt;
+    @Nonnull
+    public Optional<Long> getClosedAt() {
+        return Optional.ofNullable(closedAt);
     }
 
+    @Nonnull
     public Status getStatus() {
         return status;
     }
 
-    public UserId getAssignee() {
-        return assignee;
+    @Nonnull
+    public Optional<UserId> getAssignee() {
+        return Optional.ofNullable(assignee);
     }
 
-    public int getNumberOfComments() {
-        return numberOfComments;
+    @Nonnull
+    public Optional<Milestone> getMilestone() {
+        return Optional.ofNullable(milestone);
     }
 
-    public String getMilestone() {
-        return milestone;
-    }
-
+    @Nonnull
     public ImmutableList<String> getLabels() {
         return labels;
+    }
+
+    @Nonnull
+    public ImmutableList<Comment> getComments() {
+        return comments;
+    }
+
+    @Nonnull
+    public ImmutableList<UserId> getParticipants() {
+        return participants;
+    }
+
+    @Nonnull
+    public ImmutableList<IssueEvent> getEvents() {
+        return events;
+    }
+
+    @Nonnull
+    public List<IssueTarget> getIssueTarget() {
+        return issueTarget;
+    }
+
+
+    @Override
+    public String toString() {
+        return toStringHelper("Issue")
+                .addValue(number)
+                .add("title", title)
+                .add("creator", creator)
+                .add("createdAt", createdAt)
+                .add("body", body)
+                .add("status", status)
+                .add("assignedTo", assignee)
+                .add("milestone", milestone)
+                .add("comments", comments)
+                .add("events", events)
+                .toString();
     }
 }

@@ -66,7 +66,7 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 
     private OWLOntology notesOntology;
 
-    private final NotesManager notesManager;
+//    private final NotesManager notesManager;
 
     private File notesOntologyDocument;
 
@@ -92,15 +92,15 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
             else {
                 loadExistingNotesOntology();
             }
-            notesManager = NotesManager.createNotesManager(notesOntology, getChangeOntologyDocumentIRI().toString());
-            notesManager.getOWLOntology().getOWLOntologyManager().addOntologyChangeListener(new OWLOntologyChangeListener() {
-                public void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws OWLException {
-                    handleNotesOntologyChanged(Collections.unmodifiableList(changes));
-                }
-            });
+//            notesManager = NotesManager.createNotesManager(notesOntology, getChangeOntologyDocumentIRI().toString());
+//            notesManager.getOWLOntology().getOWLOntologyManager().addOntologyChangeListener(new OWLOntologyChangeListener() {
+//                public void ontologiesChanged(List<? extends OWLOntologyChange> changes) throws OWLException {
+//                    handleNotesOntologyChanged(Collections.unmodifiableList(changes));
+//                }
+//            });
             logger.info(projectId, "Initialized notes manager in %d ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
         }
-        catch (OWLOntologyCreationException | NotesException e) {
+        catch (OWLOntologyCreationException e) {
             // Can't start - too dangerous to do anything without human intervention
             throw new RuntimeException(e);
         }
@@ -203,31 +203,31 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 
     @Override
     public void deleteNoteAndReplies(OWLEntity targetEntity, NoteId noteId) {
-        Annotation note = notesManager.getNote(noteId.getLexicalForm());
-        if (note != null) {
-            notesManager.deleteNote(noteId.getLexicalForm());
-            eventManager.postEvent(new NoteDeletedEvent(projectId, noteId));
-            eventManager.postEvent(new EntityNotesChangedEvent(projectId, targetEntity, getIndirectNotesCount(targetEntity)));
-        }
+//        Annotation note = notesManager.getNote(noteId.getLexicalForm());
+//        if (note != null) {
+//            notesManager.deleteNote(noteId.getLexicalForm());
+//            eventManager.postEvent(new NoteDeletedEvent(projectId, noteId));
+//            eventManager.postEvent(new EntityNotesChangedEvent(projectId, targetEntity, getIndirectNotesCount(targetEntity)));
+//        }
     }
 
 
     @Override
     public void setNoteStatus(NoteId noteId, NoteStatus noteStatus) {
-        Annotation note = notesManager.getNote(noteId.getLexicalForm());
-        if(note == null) {
-            // Sometimes we fail to find the note.  I'm not sure why.  This has something to do with the weird internals
-            // and typing of the notes API.
-            logger.info(projectId, "Failed to find note by Id when changing the note status.  The noteId was %s", noteId);
-            return;
-        }
-        if(noteStatus == NoteStatus.OPEN) {
-            note.setArchived(false);
-        }
-        else {
-            note.setArchived(true);
-        }
-        eventManager.postEvent(new NoteStatusChangedEvent(projectId, noteId, noteStatus));
+//        Annotation note = notesManager.getNote(noteId.getLexicalForm());
+//        if(note == null) {
+//            // Sometimes we fail to find the note.  I'm not sure why.  This has something to do with the weird internals
+//            // and typing of the notes API.
+//            logger.info(projectId, "Failed to find note by Id when changing the note status.  The noteId was %s", noteId);
+//            return;
+//        }
+//        if(noteStatus == NoteStatus.OPEN) {
+//            note.setArchived(false);
+//        }
+//        else {
+//            note.setArchived(true);
+//        }
+//        eventManager.postEvent(new NoteStatusChangedEvent(projectId, noteId, noteStatus));
     }
 
 
@@ -288,9 +288,10 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
         final String subject = noteContent.getSubject().or("");
         final String body = noteContent.getBody().or("");
         final org.protege.notesapi.notes.NoteType noteType = org.protege.notesapi.notes.NoteType.Comment;
-        Annotation annotation = notesManager.createSimpleNote(noteType, subject, body, author.getUserName(), target);
-        annotation.setCreatedAt(timestamp);
-        final NoteId noteId = NoteId.createNoteIdFromLexicalForm(annotation.getId());
+//        Annotation annotation = notesManager.createSimpleNote(noteType, subject, body, author.getUserName(), target);
+//        annotation.setCreatedAt(timestamp);
+//        final NoteId noteId = NoteId.createNoteIdFromLexicalForm(annotation.getId());
+        NoteId noteId = NoteId.createNoteIdFromLexicalForm("ABC");
         NoteHeader noteHeader = new NoteHeader(noteId, Optional.<NoteId>absent(), author, timestamp);
         return Note.createNote(noteHeader, noteContent);
     }
@@ -303,13 +304,13 @@ public class OWLAPINotesManagerNotesAPIImpl implements OWLAPINotesManager {
 
     @Override
     public DiscussionThread getDiscusssionThread(OWLEntity targetEntity) {
-        AnnotatableThing annotatableThing = getAnnotatableThing(targetEntity);
+//        AnnotatableThing annotatableThing = getAnnotatableThing(targetEntity);
         Set<Note> result = new HashSet<Note>();
-        for(Annotation annotation : annotatableThing.getAssociatedAnnotations()) {
-            if (annotation != null) {
-                getAllNotesForAnnotation(annotation, Optional.<NoteId>absent(), result);
-            }
-        }
+//        for(Annotation annotation : annotatableThing.getAssociatedAnnotations()) {
+//            if (annotation != null) {
+//                getAllNotesForAnnotation(annotation, Optional.<NoteId>absent(), result);
+//            }
+//        }
         return new DiscussionThread(result);
     }
 

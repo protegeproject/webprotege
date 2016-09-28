@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.issues.events;
 import com.google.common.base.Objects;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
-import org.springframework.data.annotation.TypeAlias;
 
 import javax.annotation.Nonnull;
 
@@ -14,20 +13,19 @@ import static com.google.common.base.MoreObjects.toStringHelper;
  * Stanford Center for Biomedical Informatics Research
  * 26 Sep 16
  */
-@TypeAlias("IssueLocked")
-public class IssueLocked extends AbstractIssueEvent {
+public class IssueReopened extends AbstractIssueEvent {
 
-    public IssueLocked(@Nonnull UserId userId, long timestamp) {
+    public IssueReopened(@Nonnull UserId userId, long timestamp) {
         super(userId, timestamp);
     }
 
     @GwtSerializationConstructor
-    private IssueLocked() {
+    private IssueReopened() {
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode("IssueLocked", getUserId(), getTimestamp());
+        return Objects.hashCode("IssueReopened", getUserId(), getTimestamp());
     }
 
     @Override
@@ -35,10 +33,10 @@ public class IssueLocked extends AbstractIssueEvent {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof IssueLocked)) {
+        if (!(obj instanceof IssueReopened)) {
             return false;
         }
-        IssueLocked other = (IssueLocked) obj;
+        IssueReopened other = (IssueReopened) obj;
         return this.getTimestamp() == other.getTimestamp()
                 && this.getUserId().equals(other.getUserId());
     }
@@ -46,7 +44,7 @@ public class IssueLocked extends AbstractIssueEvent {
 
     @Override
     public String toString() {
-        return toStringHelper("IssueLocked")
+        return toStringHelper("IssueReopened")
                 .add("userId", getUserId())
                 .add("timestamp", getTimestamp())
                 .toString();

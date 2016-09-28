@@ -3,11 +3,13 @@ package edu.stanford.bmir.protege.web.shared.issues;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Action;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.Objects;
 
+import static com.google.common.base.MoreObjects.toStringHelper;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.gwt.thirdparty.guava.common.base.MoreObjects.toStringHelper;
 
 /**
  * Matthew Horridge
@@ -21,6 +23,7 @@ public class GetIssuesAction implements Action<GetIssuesResult>, HasProjectId {
     private GetIssuesAction() {
     }
 
+    @PersistenceConstructor
     public GetIssuesAction(ProjectId projectId) {
         this.projectId = checkNotNull(projectId);
     }

@@ -22,6 +22,7 @@ import static org.mockito.Mockito.mock;
 public class GetIssuesAction_TestCase {
 
     private GetIssuesAction getIssuesAction;
+
     @Mock
     private ProjectId projectId;
 

@@ -1,7 +1,9 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 import static com.google.common.base.MoreObjects.toStringHelper;
@@ -15,16 +17,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Milestone implements IsSerializable {
 
+    @Nonnull
     private String label;
 
+    @GwtSerializationConstructor
     private Milestone() {
     }
 
-    public Milestone(String label) {
+    public Milestone(@Nonnull String label) {
         this.label = checkNotNull(label);
         checkArgument(!label.isEmpty(), "Milestone label must not be empty");
     }
 
+    @Nonnull
     public String getLabel() {
         return label;
     }
