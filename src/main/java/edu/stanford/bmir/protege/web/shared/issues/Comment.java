@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSet;
 import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.stanford.bmir.protege.web.shared.annotations.GwtSerializationConstructor;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
@@ -11,7 +10,6 @@ import org.springframework.data.annotation.TypeAlias;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
