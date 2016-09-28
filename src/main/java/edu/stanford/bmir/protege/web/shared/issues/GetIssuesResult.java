@@ -3,7 +3,6 @@ package edu.stanford.bmir.protege.web.shared.issues;
 import edu.stanford.bmir.protege.web.shared.HasProjectId;
 import edu.stanford.bmir.protege.web.shared.dispatch.Result;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.List;
  * Stanford Center for Biomedical Informatics Research
  * 27 Jul 16
  */
+@SuppressWarnings("GwtInconsistentSerializableClass" )
 public class GetIssuesResult implements Result, HasProjectId {
 
     private ProjectId projectId;
@@ -22,9 +22,9 @@ public class GetIssuesResult implements Result, HasProjectId {
     private GetIssuesResult() {
     }
 
-    public GetIssuesResult(ProjectId projectId, List<Issue> issues) {
+    public GetIssuesResult(ProjectId projectId, List<Issue> issueCurClients) {
         this.projectId = projectId;
-        this.issues = new ArrayList<>(issues);
+        this.issues = new ArrayList<>(issueCurClients);
     }
 
     @Override

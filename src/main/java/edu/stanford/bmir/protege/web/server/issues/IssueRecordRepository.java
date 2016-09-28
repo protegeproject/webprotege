@@ -2,7 +2,6 @@ package edu.stanford.bmir.protege.web.server.issues;
 
 import edu.stanford.bmir.protege.web.shared.issues.Issue;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.springframework.data.repository.Repository;
 
 import java.util.Optional;
@@ -13,20 +12,20 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 27 Jul 16
  */
-public interface IssueRecordRepository extends Repository<IssueRecord, Long> {
+public interface IssueRecordRepository extends Repository<Issue, Long> {
 
-    IssueRecord save(IssueRecord s);
+    Issue save(Issue s);
 
-    Optional<IssueRecord> findByProjectIdAndNumber(ProjectId projectId, long issueNumber);
+    Optional<Issue> findByProjectIdAndNumber(ProjectId projectId, long issueNumber);
 
-    Stream<IssueRecord> findByProjectId(ProjectId projectId);
+    Stream<Issue> findByProjectId(ProjectId projectId);
 
-    Iterable<IssueRecord> findAll();
+    Iterable<Issue> findAll();
 
     long count();
 
     void deleteByProjectIdAndNumber(ProjectId projectId, long number);
 
-    void delete(Iterable<? extends IssueRecord> iterable);
+    void delete(Iterable<? extends Issue> iterable);
 
 }

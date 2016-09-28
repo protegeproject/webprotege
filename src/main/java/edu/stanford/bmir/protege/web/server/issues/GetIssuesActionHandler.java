@@ -1,7 +1,6 @@
 package edu.stanford.bmir.protege.web.server.issues;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.server.dispatch.AbstractHasProjectActionHandler;
 import edu.stanford.bmir.protege.web.server.dispatch.ExecutionContext;
 import edu.stanford.bmir.protege.web.server.dispatch.RequestContext;
@@ -55,13 +54,14 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
         // TODO: Should work out the issue number
         int issueNumber = (int)repository.count() + 1;
         long timestamp = System.currentTimeMillis();
-        IssueRecord record = new IssueRecord(
+        Issue record = new Issue(
                 project.getProjectId(),
                 issueNumber,
                 executionContext.getUserId(),
                 timestamp,
-                "My new issue",
-                "This is a test of the issue system",
+                Optional.of(System.currentTimeMillis()),
+                "My new issue" ,
+                "This is a test of the issue system" ,
                 Status.OPEN,
                 Optional.<UserId>empty(),
                 Optional.of(new Milestone("Release 1.0")),
@@ -73,15 +73,13 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
                                 Optional.<Long>empty(),
                                 "The body of the comment")
                 ),
-                ImmutableList.of(new UserIdMention(UserId.getUserId("Matty Horridge"))),
-                ImmutableList.of(
+                ImmutableList.of(new UserIdMention(UserId.getUserId("Matty Horridge"))), ImmutableList.of(), ImmutableList.of(
                         new IssueAssigned(executionContext.getUserId(), timestamp, UserId.getUserId("Matthew Horridge")),
                         new IssueLabelled(executionContext.getUserId(), timestamp, "MyLovelyIssue")
                 ));
         repository.save(record);
 
         List<Issue> issues = repository.findByProjectId(project.getProjectId())
-                .map(ir -> ir.toIssue())
                 .collect(toList());
 
         System.out.println("Got the issues!");
