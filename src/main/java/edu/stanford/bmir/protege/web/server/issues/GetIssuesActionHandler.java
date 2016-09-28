@@ -52,6 +52,7 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
 
     @Override
     protected GetIssuesResult execute(GetIssuesAction action, OWLAPIProject project, ExecutionContext executionContext) {
+        // TODO: Should work out the issue number
         int issueNumber = (int)repository.count() + 1;
         long timestamp = System.currentTimeMillis();
         IssueRecord record = new IssueRecord(
@@ -70,8 +71,7 @@ public class GetIssuesActionHandler extends AbstractHasProjectActionHandler<GetI
                                 UserId.getGuest(),
                                 timestamp,
                                 Optional.<Long>empty(),
-                                "The body of the comment",
-                                ImmutableSet.of())
+                                "The body of the comment")
                 ),
                 ImmutableList.of(new UserIdMention(UserId.getUserId("Matty Horridge"))),
                 ImmutableList.of(

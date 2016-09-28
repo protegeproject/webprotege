@@ -34,32 +34,25 @@ public class Comment implements IsSerializable {
     @Nonnull
     private String body;
 
-    @Nonnull
-    private Set<Mention> mentions;
-
     public Comment(@Nonnull UserId createdBy,
                    long createdAt,
                    @Nonnull Optional<Long> updatedAt,
-                   @Nonnull String body,
-                   @Nonnull ImmutableSet<Mention> mentions) {
+                   @Nonnull String body) {
         this(createdBy,
                 createdAt,
                 checkNotNull(updatedAt).orElse(null),
-                body,
-                mentions);
+                body);
     }
 
     @PersistenceConstructor
     private Comment(@Nonnull UserId createdBy,
                       long createdAt,
                       @Nullable Long updatedAt,
-                      @Nonnull String body,
-                      @Nonnull Set<Mention> mentions) {
+                      @Nonnull String body) {
         this.createdBy = checkNotNull(createdBy);
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.body = checkNotNull(body);
-        this.mentions = ImmutableSet.copyOf(checkNotNull(mentions));
     }
 
     @GwtSerializationConstructor
@@ -83,10 +76,6 @@ public class Comment implements IsSerializable {
         return body;
     }
 
-    public ImmutableSet<Mention> getMentions() {
-        return ImmutableSet.copyOf(mentions);
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
@@ -99,7 +88,6 @@ public class Comment implements IsSerializable {
         return this.createdBy.equals(other.createdBy)
                 && this.createdAt == other.createdAt
                 && Objects.equal(this.updatedAt, other.updatedAt)
-                && this.body.equals(other.body)
-                && this.mentions.equals(other.mentions);
+                && this.body.equals(other.body);
     }
 }
