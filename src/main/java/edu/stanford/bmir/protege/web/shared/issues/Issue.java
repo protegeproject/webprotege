@@ -93,7 +93,8 @@ public class Issue implements IsSerializable {
      * @param createdAt    A timestamp specifying when the issue was created.
      * @param updatedAt    A timestamp specifying when the issue was last updated.  An empty value indicates that the
 *                     issue has not been updated.
-     * @param targetEntities
+     * @param targetEntities A collection of entities that the issue pertains to.  The user may explicitly attach
+     *                       this issue to entities using this mechanism.
      * @param title        The issue title.  May be empty.
      * @param body         The issue body. May be empty.
      * @param status       The status of the issue.
