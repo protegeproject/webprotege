@@ -378,7 +378,7 @@ public class MentionParser_TestCase {
                 return false;
             }
             RevisionMention parsedMention = (RevisionMention) item.getParsedMention();
-            if(parsedMention.getRevisionNumber().getValue() != expectedRevision) {
+            if(parsedMention.getRevisionNumber() != expectedRevision) {
                 return false;
             }
             return true;
@@ -388,8 +388,7 @@ public class MentionParser_TestCase {
         public void describeTo(Description description) {
             description.appendValue(
                     new ParsedMention(
-                            new RevisionMention(
-                                    RevisionNumber.getRevisionNumber(expectedRevision)),
+                            new RevisionMention(expectedRevision),
                             expectedStartIndex,
                             expectedEndIndex)
             );
