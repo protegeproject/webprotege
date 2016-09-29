@@ -251,11 +251,13 @@ public class Issue implements IsSerializable {
                 body,
                 creator,
                 createdAt,
+                updatedAt,
                 status,
                 assignee,
                 milestone,
                 labels,
                 events,
+                participants,
                 comments
         );
     }
@@ -275,12 +277,14 @@ public class Issue implements IsSerializable {
                 && this.body.equals(other.body)
                 && this.creator.equals(other.creator)
                 && this.createdAt == other.createdAt
+                && Objects.equal(this.updatedAt, other.updatedAt)
                 && this.status == other.status
                 && Objects.equal(this.assignee, other.assignee)
                 && Objects.equal(this.milestone, other.milestone)
                 && this.labels.equals(other.labels)
                 && this.comments.equals(other.comments)
                 && this.mentions.equals(other.mentions)
+                && this.participants.equals(other.participants)
                 && this.events.equals(other.events);
     }
 
@@ -291,6 +295,7 @@ public class Issue implements IsSerializable {
                 .add("number" , number)
                 .add("owner" , creator)
                 .add("createdAt" , createdAt)
+                .add("updatedAt", updatedAt)
                 .addValue(status)
                 .add("assignee" , assignee)
                 .add("milestone" , milestone)
@@ -298,6 +303,7 @@ public class Issue implements IsSerializable {
                 .add("body" , body)
                 .add("comments" , comments)
                 .add("mentions" , mentions)
+                .add("participants", participants)
                 .add("events" , events)
                 .toString();
     }
