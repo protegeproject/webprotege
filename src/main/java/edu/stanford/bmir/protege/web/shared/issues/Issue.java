@@ -87,24 +87,25 @@ public class Issue implements IsSerializable {
 
     /**
      * Creates an issues record
-     * @param projectId    The project that the issue pertains to.
-     * @param number       The issue number.
-     * @param creator      The issue creator.  That is, the user id of the person that created the issue.
-     * @param createdAt    A timestamp specifying when the issue was created.
-     * @param updatedAt    A timestamp specifying when the issue was last updated.  An empty value indicates that the
-*                     issue has not been updated.
+     *
+     * @param projectId      The project that the issue pertains to.
+     * @param number         The issue number.
+     * @param creator        The issue creator.  That is, the user id of the person that created the issue.
+     * @param createdAt      A timestamp specifying when the issue was created.
+     * @param updatedAt      A timestamp specifying when the issue was last updated.  An empty value indicates that the
+     *                       issue has not been updated.
      * @param targetEntities A collection of entities that the issue pertains to.  The user may explicitly attach
      *                       this issue to entities using this mechanism.
-     * @param title        The issue title.  May be empty.
-     * @param body         The issue body. May be empty.
-     * @param status       The status of the issue.
-     * @param assignees    The UserId of the person that the issue was assigned to. An absent value indicates that the
-*                     issue has not been assigned to any user.
-     * @param milestone    A milestone for the issue.  An empty string indicates that there is no milestone set.
-     * @param lockSetting  The setting that specifies whether or not the issue is locked.
-     * @param labels       A list of labels for the issue.  The values in the list must not be {@code null}.
-     * @param mentions     A list of Mentions that occur in the body of the issue or in issue comments.
-     * @param participants A list of users that participate in the tracking of this issue.
+     * @param title          The issue title.  May be empty.
+     * @param body           The issue body. May be empty.
+     * @param status         The status of the issue.
+     * @param assignees      The UserId of the person that the issue was assigned to. An absent value indicates that the
+     *                       issue has not been assigned to any user.
+     * @param milestone      A milestone for the issue.  An empty string indicates that there is no milestone set.
+     * @param lockSetting    The setting that specifies whether or not the issue is locked.
+     * @param labels         A list of labels for the issue.  The values in the list must not be {@code null}.
+     * @param mentions       A list of Mentions that occur in the body of the issue or in issue comments.
+     * @param participants   A list of users that participate in the tracking of this issue.
      */
     public Issue(@Nonnull ProjectId projectId,
                  int number,
@@ -185,83 +186,157 @@ public class Issue implements IsSerializable {
     private Issue() {
     }
 
+    /**
+     * Gets the ProjectId of the project that this issue is contained in.
+     * @return The {@link ProjectId}.
+     */
     @Nonnull
     public ProjectId getProjectId() {
         return projectId;
     }
 
+    /**
+     * Gets the number of this issue.  The number is unique within a given project.
+     * @return The number.  An int greater than zero.
+     */
     public int getNumber() {
         return number;
     }
 
+    /**
+     * Gets the title of this issue.
+     * @return The title.  May be empty.
+     */
     @Nonnull
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Gets the body of this issue.
+     * @return The body.  May be empty.
+     */
     @Nonnull
     public String getBody() {
         return body;
     }
 
+    /**
+     * Get the creator of this issue.
+     * @return The {@link UserId} that identifies the creator of this issue.
+     */
     @Nonnull
     public UserId getCreator() {
         return creator;
     }
 
+    /**
+     * Gets the time that this issue was created.
+     * @return A long representing a timestamp of when this issue was created.
+     */
     public long getCreatedAt() {
         return createdAt;
     }
 
+    /**
+     * Gets the time that this issue was updated.  It is up to calling code to ensure that this timestamp behaves as
+     * expected.  Calling code may want to use {@link IssueBuilder}, which takes care of updating the timestamp when
+     * the issue built.
+     * @return A long representing a timestamp of when this issue was update.  May be empty if the issue has not been
+     * updated since it was created.
+     */
     public Optional<Long> getUpdatedAt() {
         return Optional.ofNullable(updatedAt);
     }
 
+    /**
+     * Gets a collection of target entities that this issue is associated with.
+     * @return A collection of entities.  May be empty.
+     */
     @Nonnull
-    public List<OWLEntity> getTargetEntities() {
+    public ImmutableList<OWLEntity> getTargetEntities() {
         return ImmutableList.copyOf(targetEntities);
     }
 
+    /**
+     * Gets the status of this issue.
+     * @return The {@link Status}.
+     */
     @Nonnull
     public Status getStatus() {
         return status;
     }
 
+    /**
+     * Gets a list of people that this issue has been assigned to.
+     * @return A possibly empty list of assignees for this issue.
+     */
     @Nonnull
-    public List<UserId> getAssignees() {
+    public ImmutableList<UserId> getAssignees() {
         return ImmutableList.copyOf(assignees);
     }
 
+    /**
+     * Gets the {@link Milestone} for this issue.
+     * @return A {@link Milestone} for this issue.  May be empty if no milestone has been set.
+     */
     @Nonnull
     public Optional<Milestone> getMilestone() {
         return Optional.ofNullable(milestone);
     }
 
+    /**
+     * Gets the labels for this issue.
+     * @return A list of labels for this issue.  May be an empty list.
+     */
     @Nonnull
     public ImmutableList<String> getLabels() {
         return ImmutableList.copyOf(labels);
     }
 
+    /**
+     * Gets a list of comments for this issue.
+     * @return A possibly empty list of comments for this issue.
+     */
     @Nonnull
     public ImmutableList<Comment> getComments() {
         return ImmutableList.copyOf(comments);
     }
 
+    /**
+     * Gets a list of {@link Mention}s for this issue.  A {@link Mention} identifies the mention of a user, entity,
+     * revision or other issue in the body of this issue or in a comment on this issue.
+     * @return A list of {@link Mention}s.  Possibly empty.
+     */
     @Nonnull
     public ImmutableList<Mention> getMentions() {
         return ImmutableList.copyOf(mentions);
     }
 
+    /**
+     * Gets the participants for this issue.  The participants are intended to be the issue creator and anyone that
+     * has been mentioned in the body of the issue or in the body of a comment on the issue at some time in the past.
+     * This is not enforced by {@link Issue}.  Client code should use {@link IssueBuilder} to assist in this.
+     * @return A list of participants.
+     */
     @Nonnull
     public List<UserId> getParticipants() {
         return ImmutableList.copyOf(participants);
     }
 
+    /**
+     * Gets the {@link LockSetting} for this issue that specifies whether or not this issue is locked.
+     * @return The {@link LockSetting}.
+     */
     @Nonnull
     public LockSetting getLockSetting() {
         return lockSetting;
     }
 
+    /**
+     * Gets a list of events for this issue.
+     * @return A list of events.  The list may be empty.
+     */
     @Nonnull
     public List<IssueEvent> getEvents() {
         return ImmutableList.copyOf(events);
@@ -325,7 +400,7 @@ public class Issue implements IsSerializable {
                 .add("owner" , creator)
                 .add("createdAt" , createdAt)
                 .add("updatedAt" , updatedAt)
-                .add("targetEntities", targetEntities)
+                .add("targetEntities" , targetEntities)
                 .addValue(status)
                 .add("assignees" , assignees)
                 .add("milestone" , milestone)
