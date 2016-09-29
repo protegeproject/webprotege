@@ -51,7 +51,7 @@ public class IssueBuilder {
     private Optional<Milestone> milestone = Optional.empty();
 
     @Nonnull
-    private Locked locked = Locked.UNLOCKED;
+    private LockSetting lockSetting = LockSetting.UNLOCKED;
 
     @Nonnull
     private List<String> labels = new ArrayList<>();
@@ -75,7 +75,7 @@ public class IssueBuilder {
         this.createdAt = createdAt;
     }
 
-    public IssueBuilder(@Nonnull ProjectId projectId, int number, @Nonnull UserId creator, long createdAt, @Nonnull Optional<Long> updatedAt, @Nonnull String title, @Nonnull String body, @Nonnull Status status, @Nonnull Optional<UserId> assignee, @Nonnull Optional<Milestone> milestone, @Nonnull  Locked locked, @Nonnull List<String> labels, @Nonnull List<Comment> comments, @Nonnull List<Mention> mentions, @Nonnull List<UserId> participants, @Nonnull List<IssueEvent> events) {
+    public IssueBuilder(@Nonnull ProjectId projectId, int number, @Nonnull UserId creator, long createdAt, @Nonnull Optional<Long> updatedAt, @Nonnull String title, @Nonnull String body, @Nonnull Status status, @Nonnull Optional<UserId> assignee, @Nonnull Optional<Milestone> milestone, @Nonnull LockSetting lockSetting, @Nonnull List<String> labels, @Nonnull List<Comment> comments, @Nonnull List<Mention> mentions, @Nonnull List<UserId> participants, @Nonnull List<IssueEvent> events) {
         this.projectId = checkNotNull(projectId);
         this.number = number;
         this.creator = checkNotNull(creator);
@@ -86,7 +86,7 @@ public class IssueBuilder {
         this.status = checkNotNull(status);
         this.assignee = checkNotNull(assignee);
         this.milestone = checkNotNull(milestone);
-        this.locked = checkNotNull(locked);
+        this.lockSetting = checkNotNull(lockSetting);
         this.labels.addAll(checkNotNull(labels));
         this.comments.addAll(checkNotNull(comments));
         this.mentions.addAll(checkNotNull(mentions));
@@ -115,7 +115,7 @@ public class IssueBuilder {
                 status,
                 assignee,
                 milestone,
-                locked,
+                lockSetting,
                 ImmutableList.copyOf(labels),
                 ImmutableList.copyOf(comments),
                 ImmutableList.copyOf(parsedMentions.build()),
@@ -182,12 +182,6 @@ public class IssueBuilder {
     }
 
     @Nonnull
-    public IssueBuilder withAssignee(@Nonnull UserId assignee) {
-        this.assignee = Optional.of(assignee);
-        return this;
-    }
-
-    @Nonnull
     public IssueBuilder assignTo(@Nonnull UserId assignee, @Nonnull UserId userId, long timestamp) {
         Optional<UserId> theAssignee = Optional.of(checkNotNull(assignee));
         if (!this.assignee.equals(theAssignee)) {
@@ -209,12 +203,6 @@ public class IssueBuilder {
     }
 
     @Nonnull
-    public IssueBuilder withMilestone(@Nonnull Milestone milestone) {
-        this.milestone = Optional.of(checkNotNull(milestone));
-        return this;
-    }
-
-    @Nonnull
     public IssueBuilder milestone(@Nonnull Milestone milestone, UserId userId, long timestamp) {
         Optional<Milestone> theMilestone = Optional.of(checkNotNull(milestone));
         if (!this.milestone.equals(theMilestone)) {
@@ -232,12 +220,6 @@ public class IssueBuilder {
             this.updatedAt = Optional.of(timestamp);
             this.events.add(new IssueDemilestoned(checkNotNull(userId), timestamp, m));
         });
-        return this;
-    }
-
-    @Nonnull
-    public IssueBuilder withLabels(@Nonnull Collection<String> labels) {
-        this.labels.addAll(checkNotNull(labels));
         return this;
     }
 
@@ -269,8 +251,8 @@ public class IssueBuilder {
 
     @Nonnull
     public IssueBuilder lock(@Nonnull UserId userId, long timestamp) {
-        if(!this.locked.equals(Locked.LOCKED)) {
-            this.locked = Locked.LOCKED;
+        if(!this.lockSetting.equals(LockSetting.LOCKED)) {
+            this.lockSetting = LockSetting.LOCKED;
             this.updatedAt = Optional.of(timestamp);
             this.events.add(new IssueLocked(checkNotNull(userId), timestamp));
         }
@@ -279,18 +261,11 @@ public class IssueBuilder {
 
     @Nonnull
     public IssueBuilder unlock(@Nonnull UserId userId, long timestamp) {
-        if(!this.locked.equals(Locked.UNLOCKED)) {
-            this.locked = Locked.UNLOCKED;
+        if(!this.lockSetting.equals(LockSetting.UNLOCKED)) {
+            this.lockSetting = LockSetting.UNLOCKED;
             this.updatedAt = Optional.of(timestamp);
             this.events.add(new IssueUnlocked(checkNotNull(userId), timestamp));
         }
-        return this;
-    }
-
-    @Nonnull
-    public IssueBuilder setMentions(@Nonnull Collection<Mention> mentions) {
-        this.mentions.clear();
-        this.mentions.addAll(ImmutableSet.copyOf(checkNotNull(mentions)));
         return this;
     }
 
