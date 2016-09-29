@@ -5,7 +5,7 @@ package edu.stanford.bmir.protege.web.shared.issues;
  * Stanford Center for Biomedical Informatics Research
  * 29 Sep 2016
  */
-public enum Locked {
+public enum LockSetting {
 
     LOCKED,
 
