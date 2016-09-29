@@ -1,6 +1,10 @@
 package edu.stanford.bmir.protege.web.shared.issues;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import edu.stanford.bmir.protege.web.shared.user.UserId;
+
+import javax.annotation.Nonnull;
+import java.util.Optional;
 
 /**
  * Matthew Horridge
@@ -11,4 +15,12 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  */
 public interface Mention extends IsSerializable {
 
+    /**
+     * If this mention mentions a UserId then this method returns the UserId.
+     * @return The UserId.
+     */
+    @Nonnull
+    default Optional<UserId> getMentionedUserId() {
+        return Optional.empty();
+    }
 }
