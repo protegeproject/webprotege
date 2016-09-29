@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  * Stanford Center for Biomedical Informatics Research
  * 27 Jul 16
  */
-public interface IssueRecordRepository extends Repository<Issue, Long> {
+public interface IssueRepository extends Repository<Issue, Long> {
 
     Issue save(Issue s);
 
