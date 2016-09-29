@@ -51,6 +51,9 @@ public class IssueBuilder {
     private Optional<Milestone> milestone = Optional.empty();
 
     @Nonnull
+    private Locked locked = Locked.UNLOCKED;
+
+    @Nonnull
     private List<String> labels = new ArrayList<>();
 
     @Nonnull
@@ -72,7 +75,7 @@ public class IssueBuilder {
         this.createdAt = createdAt;
     }
 
-    public IssueBuilder(@Nonnull ProjectId projectId, int number, @Nonnull UserId creator, long createdAt, @Nonnull Optional<Long> updatedAt, @Nonnull String title, @Nonnull String body, @Nonnull Status status, @Nonnull Optional<UserId> assignee, @Nonnull Optional<Milestone> milestone, @Nonnull List<String> labels, @Nonnull List<Comment> comments, @Nonnull List<Mention> mentions, @Nonnull List<UserId> participants, @Nonnull List<IssueEvent> events) {
+    public IssueBuilder(@Nonnull ProjectId projectId, int number, @Nonnull UserId creator, long createdAt, @Nonnull Optional<Long> updatedAt, @Nonnull String title, @Nonnull String body, @Nonnull Status status, @Nonnull Optional<UserId> assignee, @Nonnull Optional<Milestone> milestone, @Nonnull  Locked locked, @Nonnull List<String> labels, @Nonnull List<Comment> comments, @Nonnull List<Mention> mentions, @Nonnull List<UserId> participants, @Nonnull List<IssueEvent> events) {
         this.projectId = checkNotNull(projectId);
         this.number = number;
         this.creator = checkNotNull(creator);
@@ -83,6 +86,7 @@ public class IssueBuilder {
         this.status = checkNotNull(status);
         this.assignee = checkNotNull(assignee);
         this.milestone = checkNotNull(milestone);
+        this.locked = checkNotNull(locked);
         this.labels.addAll(checkNotNull(labels));
         this.comments.addAll(checkNotNull(comments));
         this.mentions.addAll(checkNotNull(mentions));
@@ -111,12 +115,12 @@ public class IssueBuilder {
                 status,
                 assignee,
                 milestone,
+                locked,
                 ImmutableList.copyOf(labels),
                 ImmutableList.copyOf(comments),
                 ImmutableList.copyOf(parsedMentions.build()),
                 ImmutableList.copyOf(participants),
-                ImmutableList.copyOf(events)
-        );
+                ImmutableList.copyOf(events));
     }
 
     @Nonnull
@@ -259,6 +263,26 @@ public class IssueBuilder {
     public IssueBuilder addComment(@Nonnull Comment comment, long timestamp) {
         if (this.comments.add(checkNotNull(comment))) {
             this.updatedAt = Optional.of(timestamp);
+        }
+        return this;
+    }
+
+    @Nonnull
+    public IssueBuilder lock(@Nonnull UserId userId, long timestamp) {
+        if(!this.locked.equals(Locked.LOCKED)) {
+            this.locked = Locked.LOCKED;
+            this.updatedAt = Optional.of(timestamp);
+            this.events.add(new IssueLocked(checkNotNull(userId), timestamp));
+        }
+        return this;
+    }
+
+    @Nonnull
+    public IssueBuilder unlock(@Nonnull UserId userId, long timestamp) {
+        if(!this.locked.equals(Locked.UNLOCKED)) {
+            this.locked = Locked.UNLOCKED;
+            this.updatedAt = Optional.of(timestamp);
+            this.events.add(new IssueUnlocked(checkNotNull(userId), timestamp));
         }
         return this;
     }
