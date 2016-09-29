@@ -14,8 +14,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -128,11 +126,55 @@ public class IssueBuilder_TestCase {
     }
 
     @Test
-    public void shouldBuildIssueWithSpecifiedTargetEntities() {
-        List<OWLEntity> entities = Collections.singletonList(mock(OWLEntity.class));
-        builder.setTargetEntities(entities);
+    public void shouldBuildIssueWithSpecifiedTargetEntity() {
+        OWLEntity entity = mock(OWLEntity.class);
+        builder.addTargetEntity(entity, userId, TIMESTAMP);
         Issue issue = builder.build(mentionParser);
-        assertThat(issue.getTargetEntities(), is(entities));
+        assertThat(issue.getTargetEntities(), hasItem(entity));
+    }
+
+    @Test
+    public void shouldBuildIssueWithAddedTargetEntityEvent() {
+        OWLEntity entity = mock(OWLEntity.class);
+        builder.addTargetEntity(entity, userId, TIMESTAMP);
+        Issue issue = builder.build(mentionParser);
+        assertThat(issue.getEvents(), hasItem(new IssueTargetAdded(userId, TIMESTAMP, entity)));
+    }
+
+
+    @Test
+    public void shouldBuildIssueWithUpdatedTimestampOnAddTargetEntity() {
+        OWLEntity entity = mock(OWLEntity.class);
+        builder.addTargetEntity(entity, userId, TIMESTAMP);
+        Issue issue = builder.build(mentionParser);
+        assertThatIssueUpdatedTimestampWasUpdated(issue);
+    }
+
+    @Test
+    public void shouldBuildIssueWithoutRemovedTargetEntity() {
+        OWLEntity entity = mock(OWLEntity.class);
+        builder.addTargetEntity(entity, userId, TIMESTAMP);
+        builder.removeTargetEntity(entity, userId, TIMESTAMP);
+        Issue issue = builder.build(mentionParser);
+        assertThat(issue.getTargetEntities(), is(empty()));
+    }
+
+    @Test
+    public void shouldBuildIssueWithRemovedTargetEntityEvent() {
+        OWLEntity entity = mock(OWLEntity.class);
+        builder.addTargetEntity(entity, userId, TIMESTAMP);
+        builder.removeTargetEntity(entity, userId, TIMESTAMP);
+        Issue issue = builder.build(mentionParser);
+        assertThat(issue.getEvents(), hasItem(new IssueTargetRemoved(userId, TIMESTAMP, entity)));
+    }
+
+    @Test
+    public void shouldBuildIssueWithUpdatedTimestampOnRemoveTargetEntity() {
+        OWLEntity entity = mock(OWLEntity.class);
+        builder.addTargetEntity(entity, userId, TIMESTAMP - 5);
+        builder.removeTargetEntity(entity, userId, TIMESTAMP);
+        Issue issue = builder.build(mentionParser);
+        assertThatIssueUpdatedTimestampWasUpdated(issue);
     }
 
     @Test

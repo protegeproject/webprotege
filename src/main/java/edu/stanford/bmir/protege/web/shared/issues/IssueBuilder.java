@@ -4,14 +4,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import edu.stanford.bmir.protege.web.shared.issues.events.*;
 import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
-import edu.stanford.bmir.protege.web.shared.issues.mention.UserIdMention;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -305,9 +303,21 @@ public class IssueBuilder {
         return this;
     }
 
-    public IssueBuilder setTargetEntities(@Nonnull Collection<OWLEntity> targetEntity) {
-        this.targetEntities.clear();
-        this.targetEntities.addAll(targetEntity);
+    @Nonnull
+    public IssueBuilder addTargetEntity(@Nonnull OWLEntity targetEntity, @Nonnull  UserId userId, long timestamp) {
+        if(targetEntities.add(targetEntity)) {
+            updatedAt = Optional.of(timestamp);
+            events.add(new IssueTargetAdded(checkNotNull(userId), timestamp, targetEntity));
+        }
+        return this;
+    }
+
+    @Nonnull
+    public IssueBuilder removeTargetEntity(@Nonnull OWLEntity targetEntity, @Nonnull  UserId userId, long timestamp) {
+        if(targetEntities.remove(targetEntity)) {
+            updatedAt = Optional.of(timestamp);
+            events.add(new IssueTargetRemoved(checkNotNull(userId), timestamp, targetEntity));
+        }
         return this;
     }
 
