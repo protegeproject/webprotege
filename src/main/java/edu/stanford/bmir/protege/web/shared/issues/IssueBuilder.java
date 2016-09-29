@@ -6,6 +6,7 @@ import edu.stanford.bmir.protege.web.shared.issues.events.*;
 import edu.stanford.bmir.protege.web.shared.issues.mention.MentionParser;
 import edu.stanford.bmir.protege.web.shared.project.ProjectId;
 import edu.stanford.bmir.protege.web.shared.user.UserId;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ public class IssueBuilder {
     private Optional<Long> updatedAt = Optional.empty();
 
     @Nonnull
+    private List<OWLEntity> targetEntities = new ArrayList<>();
+
+    @Nonnull
     private String title = "";
 
     @Nonnull
@@ -45,7 +49,7 @@ public class IssueBuilder {
     private Status status = Status.OPEN;
 
     @Nonnull
-    private Optional<UserId> assignee = Optional.empty();
+    private List<UserId> assignees = new ArrayList<>();
 
     @Nonnull
     private Optional<Milestone> milestone = Optional.empty();
@@ -75,16 +79,17 @@ public class IssueBuilder {
         this.createdAt = createdAt;
     }
 
-    public IssueBuilder(@Nonnull ProjectId projectId, int number, @Nonnull UserId creator, long createdAt, @Nonnull Optional<Long> updatedAt, @Nonnull String title, @Nonnull String body, @Nonnull Status status, @Nonnull Optional<UserId> assignee, @Nonnull Optional<Milestone> milestone, @Nonnull LockSetting lockSetting, @Nonnull List<String> labels, @Nonnull List<Comment> comments, @Nonnull List<Mention> mentions, @Nonnull List<UserId> participants, @Nonnull List<IssueEvent> events) {
+    public IssueBuilder(@Nonnull ProjectId projectId, int number, @Nonnull UserId creator, long createdAt, @Nonnull Optional<Long> updatedAt, @Nonnull  List<OWLEntity> targetEntities, @Nonnull String title, @Nonnull String body, @Nonnull Status status, @Nonnull List<UserId> assignees, @Nonnull Optional<Milestone> milestone, @Nonnull LockSetting lockSetting, @Nonnull List<String> labels, @Nonnull List<Comment> comments, @Nonnull List<Mention> mentions, @Nonnull List<UserId> participants, @Nonnull List<IssueEvent> events) {
         this.projectId = checkNotNull(projectId);
         this.number = number;
         this.creator = checkNotNull(creator);
         this.createdAt = checkNotNull(createdAt);
         this.updatedAt = checkNotNull(updatedAt);
+        this.targetEntities.addAll(checkNotNull(targetEntities));
         this.title = checkNotNull(title);
         this.body = checkNotNull(body);
         this.status = checkNotNull(status);
-        this.assignee = checkNotNull(assignee);
+        this.assignees = checkNotNull(assignees);
         this.milestone = checkNotNull(milestone);
         this.lockSetting = checkNotNull(lockSetting);
         this.labels.addAll(checkNotNull(labels));
@@ -110,17 +115,17 @@ public class IssueBuilder {
                 creator,
                 createdAt,
                 updatedAt,
+                ImmutableList.copyOf(targetEntities),
                 title,
                 body,
                 status,
-                assignee,
+                ImmutableList.copyOf(assignees),
                 milestone,
                 lockSetting,
                 ImmutableList.copyOf(labels),
                 ImmutableList.copyOf(comments),
                 ImmutableList.copyOf(parsedMentions.build()),
-                ImmutableList.copyOf(participants),
-                ImmutableList.copyOf(events));
+                ImmutableList.copyOf(participants), ImmutableList.copyOf(events));
     }
 
     @Nonnull
@@ -183,9 +188,8 @@ public class IssueBuilder {
 
     @Nonnull
     public IssueBuilder assignTo(@Nonnull UserId assignee, @Nonnull UserId userId, long timestamp) {
-        Optional<UserId> theAssignee = Optional.of(checkNotNull(assignee));
-        if (!this.assignee.equals(theAssignee)) {
-            this.assignee = theAssignee;
+        if (!this.assignees.contains(assignee)) {
+            this.assignees.add(assignee);
             this.updatedAt = Optional.of(timestamp);
             this.events.add(new IssueAssigned(checkNotNull(userId), timestamp, assignee));
         }
@@ -193,12 +197,12 @@ public class IssueBuilder {
     }
 
     @Nonnull
-    public IssueBuilder unassign(@Nonnull UserId userId, long timestamp) {
-        this.assignee.ifPresent(u -> {
+    public IssueBuilder unassign(@Nonnull  UserId assignee, @Nonnull UserId userId, long timestamp) {
+        if (!this.assignees.contains(checkNotNull(assignee))) {
             this.updatedAt = Optional.of(timestamp);
-            this.events.add(new IssueUnassigned(checkNotNull(userId), timestamp, u));
-            this.assignee = Optional.empty();
-        });
+            this.events.add(new IssueUnassigned(checkNotNull(userId), timestamp, assignee));
+            this.assignees.add(assignee);
+        }
         return this;
     }
 
@@ -280,6 +284,12 @@ public class IssueBuilder {
     @Nonnull
     public IssueBuilder removeParticipant(@Nonnull UserId participant) {
         this.participants.remove(checkNotNull(participant));
+        return this;
+    }
+
+    public IssueBuilder setTargetEntities(@Nonnull Collection<OWLEntity> targetEntity) {
+        this.targetEntities.clear();
+        this.targetEntities.addAll(targetEntity);
         return this;
     }
 
