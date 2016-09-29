@@ -63,6 +63,9 @@ public class Issue implements IsSerializable {
     private Milestone milestone;
 
     @Nonnull
+    private Locked locked;
+
+    @Nonnull
     private List<String> labels;
 
     @Nonnull
@@ -80,19 +83,19 @@ public class Issue implements IsSerializable {
 
     /**
      * Creates an issues record
-     *
-     * @param projectId    The project that the issue pertains to.
+     *  @param projectId    The project that the issue pertains to.
      * @param number       The issue number.
      * @param creator      The issue creator.  That is, the user id of the person that created the issue.
      * @param createdAt    A timestamp specifying when the issue was created.
      * @param updatedAt    A timestamp specifying when the issue was last updated.  An empty value indicates that the
-     *                     issue has not been updated.
+*                     issue has not been updated.
      * @param title        The issue title.  May be empty.
      * @param body         The issue body. May be empty.
      * @param status       The status of the issue.
      * @param assignee     The UserId of the person that the issue was assigned to. An absent value indicates that the
-     *                     issue has not been assigned to any user.
+*                     issue has not been assigned to any user.
      * @param milestone    A milestone for the issue.  An empty string indicates that there is no milestone set.
+     * @param locked
      * @param labels       A list of labels for the issue.  The values in the list must not be {@code null}.
      * @param mentions     A list of Mentions that occur in the body of the issue or in issue comments.
      * @param participants A list of users that participate in the tracking of this issue.
@@ -107,7 +110,7 @@ public class Issue implements IsSerializable {
                  @Nonnull Status status,
                  @Nonnull Optional<UserId> assignee,
                  @Nonnull Optional<Milestone> milestone,
-                 @Nonnull ImmutableList<String> labels,
+                 @Nonnull Locked locked, @Nonnull ImmutableList<String> labels,
                  @Nonnull ImmutableList<Comment> comments,
                  @Nonnull ImmutableList<Mention> mentions,
                  ImmutableList<UserId> participants,
@@ -122,6 +125,7 @@ public class Issue implements IsSerializable {
         this.status = checkNotNull(status);
         this.assignee = checkNotNull(assignee).orElse(null);
         this.milestone = checkNotNull(milestone).orElse(null);
+        this.locked = checkNotNull(locked);
         this.labels = checkNotNull(labels);
         this.mentions = checkNotNull(mentions);
         this.events = checkNotNull(events);
@@ -143,6 +147,7 @@ public class Issue implements IsSerializable {
                     @Nonnull Status status,
                     @Nullable UserId assignee,
                     @Nullable Milestone milestone,
+                    @Nonnull  Locked locked,
                     @Nonnull List<String> labels,
                     @Nonnull List<Comment> comments,
                     @Nonnull List<Mention> mentions,
@@ -158,6 +163,7 @@ public class Issue implements IsSerializable {
         this.status = checkNotNull(status);
         this.assignee = assignee;
         this.milestone = milestone;
+        this.locked = checkNotNull(locked);
         this.labels = ImmutableList.copyOf(checkNotNull(labels));
         this.comments = ImmutableList.copyOf(checkNotNull(comments));
         this.mentions = ImmutableList.copyOf(checkNotNull(mentions));
@@ -237,6 +243,11 @@ public class Issue implements IsSerializable {
     }
 
     @Nonnull
+    public Locked getLocked() {
+        return locked;
+    }
+
+    @Nonnull
     public List<IssueEvent> getEvents() {
         return ImmutableList.copyOf(events);
     }
@@ -255,6 +266,7 @@ public class Issue implements IsSerializable {
                 status,
                 assignee,
                 milestone,
+                locked,
                 labels,
                 events,
                 participants,
@@ -281,6 +293,7 @@ public class Issue implements IsSerializable {
                 && this.status == other.status
                 && Objects.equal(this.assignee, other.assignee)
                 && Objects.equal(this.milestone, other.milestone)
+                && this.locked.equals(other.locked)
                 && this.labels.equals(other.labels)
                 && this.comments.equals(other.comments)
                 && this.mentions.equals(other.mentions)
@@ -299,6 +312,7 @@ public class Issue implements IsSerializable {
                 .addValue(status)
                 .add("assignee" , assignee)
                 .add("milestone" , milestone)
+                .add("locked", locked)
                 .add("labels" , labels)
                 .add("body" , body)
                 .add("comments" , comments)
@@ -342,12 +356,12 @@ public class Issue implements IsSerializable {
                 status,
                 Optional.ofNullable(assignee),
                 Optional.ofNullable(milestone),
+                locked,
                 labels,
                 comments,
                 mentions,
                 participants,
-                events
-        );
+                events);
     }
 
 }
