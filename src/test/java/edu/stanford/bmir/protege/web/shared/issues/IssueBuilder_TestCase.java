@@ -17,9 +17,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -392,7 +390,7 @@ public class IssueBuilder_TestCase {
         when(userIdMention.getMentionedUserId()).thenReturn(Optional.of(participant));
         when(parsedMention.getParsedMention()).thenReturn(userIdMention);
         Issue issue = builder.build(mentionParser);
-        assertThat(issue.getParticipants(), hasItem(participant));
+        assertThat(issue.getParticipants(), hasItems(creator, participant));
     }
 
 

@@ -109,6 +109,7 @@ public class IssueBuilder {
                 .forEach(mentionsBuilder::add);
         ImmutableSet<Mention> mentions = mentionsBuilder.build();
         ImmutableSet.Builder<UserId> participantsBuilder = ImmutableSet.builder();
+        participantsBuilder.add(creator);
         participantsBuilder.addAll(participants);
         mentions.stream()
                 .map(m -> m.getMentionedUserId())
